@@ -31,18 +31,6 @@ function forms_onload() {
     forms_onloadHandlers = null;
 }
 
-// Handlers that are to be called at the end of the document
-// (called before the closing body element)
-var forms_afterLoadHandler = new Array();
-
-function forms_afterLoad() {
-    for (var i = 0; i < forms_afterLoadHandler.length; i++) {
-        forms_afterLoadHandler[i].forms_afterLoad(forms_afterLoadHandler[i].fieldId);
-    }
-    // Clear it (we no more need them)
-    forms_afterLoadHandler = null;
-}
-
 // Handlers that are to be called in form's "onsubmit" event
 // FIXME: this single var implies only one form per page, and needs to be
 //       visited if we decide to support several forms per page.

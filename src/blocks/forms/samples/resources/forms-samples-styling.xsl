@@ -40,8 +40,7 @@
           +-->
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
-      <xsl:apply-templates/>
-      <xsl:apply-templates select="." mode="forms-afterload"/>       
+      <xsl:apply-templates/>   
     </body>
   </xsl:template>
 

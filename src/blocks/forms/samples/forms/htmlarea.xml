@@ -21,9 +21,7 @@
   <fd:widgets>
     <fd:field id="data1">
       <fd:label>in div; configuration within cForms template</fd:label>
-      <fd:datatype base="string">
-        <fd:convertor type="htmlcleaner" config="resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml"/>
-      </fd:datatype>
+      <fd:datatype base="string"/>
     </fd:field>    
     <fd:field id="data2">
       <fd:label>in a table</fd:label>

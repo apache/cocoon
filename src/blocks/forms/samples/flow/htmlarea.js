@@ -22,7 +22,7 @@ function htmlarea() {
 
     var model = form.getModel();
     var htmldata = { 
-                      "data1" : new Packages.org.apache.cocoon.xml.StringXMLizable(model.data1),
+                      "data1" : model.data1,
                       "data2" : new Packages.org.apache.cocoon.xml.StringXMLizable(model.data2)
                    }
     cocoon.sendPage("htmlarea-success-pipeline", htmldata);
