@@ -50,22 +50,21 @@
 */
 package org.apache.cocoon.precept.stores.dom.simple;
 
-import org.xml.sax.Attributes;
-
-import org.xml.sax.ContentHandler;
-
-import org.xml.sax.SAXException;
-
-import org.xml.sax.helpers.AttributesImpl;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.cocoon.precept.Constraint;
-
-
-import java.util.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
- * @version CVS $Id: ElementNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: ElementNode.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
  */
 public class ElementNode extends Node {
 

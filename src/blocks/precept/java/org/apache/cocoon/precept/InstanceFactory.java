@@ -54,14 +54,14 @@ package org.apache.cocoon.precept;
 import java.util.HashMap;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.precept.preceptors.PreceptorBuilder;
@@ -69,13 +69,14 @@ import org.apache.cocoon.precept.preceptors.PreceptorBuilder;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 18, 2002
- * @version CVS $Id: InstanceFactory.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
+ * @version CVS $Id: InstanceFactory.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
  */
-public class InstanceFactory extends AbstractLogEnabled implements Component, Configurable, Composable, ThreadSafe {
+public class InstanceFactory extends AbstractLogEnabled
+        implements Component, Configurable, Serviceable, ThreadSafe {
 
     public final static String ROLE = "org.apache.cocoon.precept.InstanceFactory";
 
-    private ComponentManager manager = null;
+    private ServiceManager manager = null;
     private HashMap instanceConfigurationMap;
 
     public void configure(Configuration conf) throws ConfigurationException {
@@ -99,25 +100,25 @@ public class InstanceFactory extends AbstractLogEnabled implements Component, Co
         }
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
     public Instance createInstance(String name) {
         getLogger().debug("creating instance [" + String.valueOf(name) + "]");
         Configuration instanceConf = (Configuration) instanceConfigurationMap.get(name);
-        ComponentSelector instanceSelector = null;
+        ServiceSelector instanceSelector = null;
         Instance instance = null;
         try {
-            instanceSelector = (ComponentSelector) manager.lookup(Instance.ROLE + "Selector");
+            instanceSelector = (ServiceSelector) manager.lookup(Instance.ROLE + "Selector");
             instance = (Instance) instanceSelector.select(instanceConf.getAttribute("impl"));
 
             Configuration builderConf = instanceConf.getChild("preceptor");
             if (builderConf != null) {
-                ComponentSelector preceptorBuilderSelector = null;
+                ServiceSelector preceptorBuilderSelector = null;
                 PreceptorBuilder preceptorBuilder = null;
                 try {
-                    preceptorBuilderSelector = (ComponentSelector) manager.lookup(PreceptorBuilder.ROLE + "Selector");
+                    preceptorBuilderSelector = (ServiceSelector) manager.lookup(PreceptorBuilder.ROLE + "Selector");
                     preceptorBuilder = (PreceptorBuilder) preceptorBuilderSelector.select(builderConf.getAttribute("impl"));
 
                     String uri = builderConf.getAttribute("uri");
@@ -129,7 +130,7 @@ public class InstanceFactory extends AbstractLogEnabled implements Component, Co
 
                     instance.setPreceptor(newPreceptor);
                 }
-                catch (ComponentException e) {
+                catch (ServiceException e) {
                     if (preceptorBuilderSelector != null) {
                         getLogger().error("could not get preceptor builder", e);
                     }
@@ -150,7 +151,7 @@ public class InstanceFactory extends AbstractLogEnabled implements Component, Co
         catch (ConfigurationException e) {
             getLogger().error("", e);
         }
-        catch (ComponentException e) {
+        catch (ServiceException e) {
             getLogger().error("could not get instance selector", e);
         }
         finally {

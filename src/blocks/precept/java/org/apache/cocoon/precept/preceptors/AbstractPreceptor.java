@@ -50,22 +50,24 @@
 */
 package org.apache.cocoon.precept.preceptors;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.precept.Preceptor;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 18, 2002
- * @version CVS $Id: AbstractPreceptor.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: AbstractPreceptor.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
  */
-public abstract class AbstractPreceptor extends AbstractLogEnabled implements Preceptor, Composable {
-    protected ComponentManager manager;
+public abstract class AbstractPreceptor extends AbstractLogEnabled
+        implements Preceptor, Serviceable {
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    protected ServiceManager manager;
+
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 }
