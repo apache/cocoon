@@ -201,19 +201,19 @@
 
   <changes>
  <release version="@version@" date="@date@">
-     <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
-       Portal: Request content length and content type are required in portlet ActionRequest 
-       for custom upload handling.     
-    </action>
-    <action dev="RG" type="add" fixes-bug="31857">
-        Portal: Added support for page labels
-    </action>
-    <action dev="RG" type="fix" fixes-bug="31854">
-        Javaflow: JavaInterpreter initialize method was not thread safe
-    </action>
-    <action dev="RG" type="add" fixes-bug="31229">
-        Portal: Generate subnavigation for non-selected tabs    
-    </action>
+   <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+     Portal: Request content length and content type are required in portlet ActionRequest 
+     for custom upload handling.     
+   </action>
+   <action dev="RG" type="add" fixes-bug="31857">
+     Portal: Added support for page labels
+   </action>
+   <action dev="RG" type="fix" fixes-bug="31854">
+     Javaflow: JavaInterpreter initialize method was not thread safe
+   </action>
+   <action dev="RG" type="add" fixes-bug="31229">
+     Portal: Generate subnavigation for non-selected tabs    
+   </action>
    <action dev="VG" type="fix">
      Scratchpad block: Restored CastorTransformer support for context beans,
      restored bean lookup logic, fixed sample.
