@@ -34,6 +34,7 @@ import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -801,13 +802,20 @@ public abstract class AbstractCachingProcessingPipeline
      * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
-        if (this.cachedResponse != null && this.toCacheSourceValidities != null) {
-            final AggregatedValidity validity = new AggregatedValidity();
-            for (int i=0; i < this.toCacheSourceValidities.length; i++) {
-                validity.add(this.toCacheSourceValidities[i]);
+        if (this.cachedResponse != null) {
+            if (this.toCacheSourceValidities != null) {
+                // This means that the pipeline is valid based on the validities 
+                // of the individual components
+                final AggregatedValidity validity = new AggregatedValidity();
+                for (int i=0; i < this.toCacheSourceValidities.length; i++) {
+                    validity.add(this.toCacheSourceValidities[i]);
+                }
+                return validity;
             }
-            return validity;
-
+            else {
+                // This means that the pipeline is valid because it has not yet expired
+                return NOPValidity.SHARED_INSTANCE;
+            }
         } else {
             int vals = 0;
 
