@@ -65,10 +65,8 @@ import java.util.StringTokenizer;
  * based on a particular locale.
  * 
  * @cocoon.sitemap.component.name   i18n
+ * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.logger sitemap.transformer.i18n
- * @cocoon.sitemap.component.documentation.caching
- *               TBD
- *
  *
  *
  * <h3>i18n transformer</h3>
