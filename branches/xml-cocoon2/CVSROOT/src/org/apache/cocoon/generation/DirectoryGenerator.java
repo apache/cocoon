@@ -59,7 +59,7 @@ import org.apache.cocoon.ResourceNotFoundException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-09 20:51:11 $ */
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-11 19:13:19 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -100,7 +100,8 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      * @param   par
      *      configuration parameters
      */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+        throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
         String dateFormatString = par.getParameter("dateFormat", null);

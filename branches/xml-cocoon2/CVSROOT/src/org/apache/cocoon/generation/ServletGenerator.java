@@ -8,6 +8,7 @@
 package org.apache.cocoon.generation;
 
 import java.util.Map;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +20,15 @@ import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-09 22:16:55 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-11 19:13:19 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer, Poolable {
@@ -34,7 +37,8 @@ implements Composer, Poolable {
     protected HttpServletResponse response=null;
     protected ServletContext context=null;
 
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) 
+        throws ProcessingException, SAXException, IOException {
       super.setup(resolver, objectModel, src, par);
       this.request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
       this.response = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);

@@ -57,7 +57,7 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-05 16:23:09 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-11 19:13:19 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -98,7 +98,8 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
     /**
      * Set the use-store parameter
      */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+        throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.useStore = par.getParameterAsBoolean("use-store", this.defaultUseStore);
     }

@@ -8,18 +8,21 @@
 package org.apache.cocoon.generation;
 
 import java.util.Map;
+import java.io.IOException;
 
 import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 14:43:46 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-11 19:13:19 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
 implements Generator {
@@ -37,7 +40,8 @@ implements Generator {
      * Set the <code>EntityResolver</code>, object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) 
+        throws ProcessingException, SAXException, IOException {
         this.resolver=resolver;
         this.objectModel=objectModel;
         this.source=src;
