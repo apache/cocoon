@@ -92,7 +92,8 @@
   
   Cocoon compiles sitemaps into java classes to increase runtime performance,
   this is done only at startup and only if the sitemap file is modified, for 
-  all the other requests the compiled sitemap is executed.
+  all the other requests the compiled sitemap is executed. See question #7 
+  for information on how to pre-compile the sitemap and the XSP's.
   
  
   3) Why is cocoon.war so big?
@@ -128,6 +129,17 @@
   normally much more responsive and users normally have more experience in
   solving installation problems than developers do.
 
+  7) What are the steps to pre-compile the sitemap and XSP's?
+
+  Step #1.  Set the "work-directory" parameter in web.xml as follows:
+      <init-param>
+       <param-name>work-directory</param-name>
+       <param-value>WEB-INF/classes</param-value>
+      </init-param>
+  Step #2. Set the auto-reload to false in your sitemap.xmap as follows:
+      <parameter name="auto-reload" value="false"/>
+  Step #3. Use "-Dcompile.xsp=yes" in your build command line when you are
+       building your WAR file.
   
   Happy hacking with Apache Cocoon.
 
