@@ -8,6 +8,7 @@
     <menu-item label="Index" href="index.html"/>
   </menu>
   <menu label="Using Cocoon">
+    <menu-item label="Samples" href="howto-explore-samples.html"/>
     <menu-item label="XMLForm" href="xmlform-wizard/howto-xmlform-wizard.html"/>
     <menu-item label="Paginator" href="howto-paginator-transformer.html"/>
     <menu-item label="HTML-PDF" href="howto-html-pdf-publishing.html"/>
