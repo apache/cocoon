@@ -86,7 +86,7 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.3 2003/05/16 06:17:24 gianugo Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.4 2003/05/16 23:24:32 gianugo Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled  
     implements Source, XMLizable {
@@ -393,7 +393,7 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     public String getScheme() {
-        return this.getScheme();
+        return url.substring(url.indexOf('/') - 1);
     }
 
     public SourceValidity getValidity() {
