@@ -16,6 +16,7 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -66,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.10 2004/03/05 13:01:46 bdelacretaz Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.11 2004/03/28 05:29:04 antonio Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
@@ -152,7 +153,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      *
      * @return "1"
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return "1";
     }
 

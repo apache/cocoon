@@ -36,11 +36,10 @@ import org.apache.batik.ext.awt.image.spi.MagicNumberRegistryEntry;
 import org.apache.batik.ext.awt.image.spi.URLRegistryEntry;
 import org.apache.batik.util.ParsedURL;
 
-
 /**
  * This Image tag registy entry is setup to wrap the core JDK Image stream tools.  
  * 
- * @version CVS $Id: StreamJDKRegistryEntry.java,v 1.3 2004/03/05 13:01:45 bdelacretaz Exp $
+ * @version CVS $Id: StreamJDKRegistryEntry.java,v 1.4 2004/03/28 05:29:04 antonio Exp $
  */
 public class StreamJDKRegistryEntry extends AbstractRegistryEntry 
     implements URLRegistryEntry {
@@ -72,8 +71,9 @@ public class StreamJDKRegistryEntry extends AbstractRegistryEntry
      */
     public boolean isCompatibleURL(ParsedURL purl) {
         String contentType = purl.getContentType();
-        if (contentType == null)
+        if (contentType == null) {
             return false;
+        }
 
         Iterator iter = this.getMimeTypes().iterator();
         while (iter.hasNext()) {
@@ -116,13 +116,14 @@ public class StreamJDKRegistryEntry extends AbstractRegistryEntry
 
         Toolkit tk = Toolkit.getDefaultToolkit();
         final Image img = tk.createImage(buffer);
-        if (img == null)
+        if (img == null) {
             return null;
+        }
 
         RenderedImage ri = loadImage(img);
-        if (ri == null)
+        if (ri == null) {
             return null;
-
+        }
         return new RedRable(GraphicsUtil.wrap(ri));
     }
 
@@ -134,10 +135,11 @@ public class StreamJDKRegistryEntry extends AbstractRegistryEntry
     public RenderedImage loadImage(Image img) {
         // In some cases the image will be a
         // BufferedImage (subclass of RenderedImage).
-        if (img instanceof RenderedImage)
+        if (img instanceof RenderedImage) {
             return (RenderedImage)img;
+        }
 
-                    // Setup the mediaTracker.
+        // Setup the mediaTracker.
         int myID;
         synchronized (mediaTracker) {
             myID = id++;
@@ -161,12 +163,12 @@ public class StreamJDKRegistryEntry extends AbstractRegistryEntry
         mediaTracker.removeImage(img, myID);
 
         if ((img.getWidth(null)  == -1)||
-            (img.getHeight(null) == -1))
+            (img.getHeight(null) == -1)) {
             return null;
+        }
 
-                    // Build the image to .
-        BufferedImage bi = null;
-        bi = new BufferedImage(img.getWidth(null),
+        // Build the image to .
+        BufferedImage bi = new BufferedImage(img.getWidth(null),
                                img.getHeight(null),
                                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = bi.createGraphics();
