@@ -18,21 +18,20 @@ Installation Instructions:
 Build Instructions:
    To build, run
 
-     java org.apache.tools.ant.Main
+     java org.apache.tools.ant.Main <target>
 
-   on the directory where this file is located.
+   on the directory where this file is located with the target you want.
 
 Authors:
   Stefano Mazzocchi <stefano@apache.org>
 
 Fixme:
-  - design better package abstraction and build system
-  - make better javadoc task
+  - design better package abstraction
 
 Copyright:
   Copyright (c) 1999 The Apache Software Foundation.
 
-   $Id: build.xml,v 1.6 1999-12-10 22:34:49 stefano Exp $
+   $Id: build.xml,v 1.7 1999-12-11 14:23:31 stefano Exp $
 
 ==================================================================== -->
 
@@ -133,8 +132,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-<!--  <target name="docs" depends="docs-convert"> -->
-  <target name="docs">
+  <target name="docs" depends="docs-convert">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${sbk.docs}/book.xml"/>
     <java class="${doc.generator}" args="targetDirectory=${build.docs} ${sbk.docs}/book.xml ${style}"/>
