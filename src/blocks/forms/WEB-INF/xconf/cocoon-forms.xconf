@@ -21,7 +21,7 @@
     +-->
 <components>
   <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-xsp.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-profiler.xconf"/>
 
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/forms/forms.roles"/>
