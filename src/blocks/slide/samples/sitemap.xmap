@@ -86,7 +86,7 @@
   </map:component-configurations>
 
 
-  <map:pipeline internal-only="true">
+  <map:pipeline internal-only="true" type="noncaching">
    <map:match pattern="principallist">
     <map:generate type="principallist">
      <map:parameter name="principalprovider" value="slide"/>
