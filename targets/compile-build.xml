@@ -133,7 +133,7 @@
     <xslt in="${gump.descriptor}"
           out="${build.temp}/blocks-build.xml"
           processor="trax"
-          style="${tools}/src/blocks-build.xsl"/>
+          style="${tools.src}/blocks-build.xsl"/>
   </target>
 
   <!-- patch the cocoon role file -->
