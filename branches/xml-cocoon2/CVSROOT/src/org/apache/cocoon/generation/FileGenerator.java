@@ -31,6 +31,8 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.util.pool.Pool;
+import org.apache.cocoon.PoolClient;
 
 /**
  *
@@ -57,9 +59,9 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-19 15:58:08 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-19 21:13:30 $
  */
-public class FileGenerator extends ComposerGenerator implements ThreadSafe, Configurable {
+public class FileGenerator extends ComposerGenerator implements PoolClient, Configurable {
 
     /** The store service instance */
     private Store store = null;
@@ -69,6 +71,16 @@ public class FileGenerator extends ComposerGenerator implements ThreadSafe, Conf
 
     /** The default configuration for useStore */
     private boolean defaultUseStore;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this

@@ -21,7 +21,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.util.pool.Pool;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.PoolClient;
 import org.apache.avalon.Loggable;
 
 /**
@@ -41,11 +42,11 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-16 22:07:39 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-19 21:13:34 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, ThreadSafe
+  implements ContentHandler, LexicalHandler, PoolClient
 {
   /**
    * The sitemap-defined server pages program generator
@@ -53,6 +54,16 @@ public class ServerPagesGenerator
   protected static ProgramGenerator programGenerator = null;
 
   protected static URLFactory factory = null;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
   /**
    * Set the global component manager. This method sets the sitemap-defined
