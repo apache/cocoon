@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<root
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+  <p>P1</p>
+  <p>P2</p>
+
+<xi:include href="resource://org/apache/cocoon/transformation/xinclude-incl.xml"
+/>
+
+  <p>P3</p>
+  <p>P4</p>
+</root>
