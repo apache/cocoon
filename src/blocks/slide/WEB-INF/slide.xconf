@@ -25,9 +25,9 @@
             <store name="tx">
                 <nodestore classname="org.apache.cocoon.components.slide.impl.ContextTxXMLFileDescriptorsStore">
                     <!-- rootpath parameter is relative to the webapp context path -->
-                    <parameter name="rootpath">slide</parameter>
+                    <parameter name="rootpath">slide/store/metadata</parameter>
                     <!-- workpath parameter is relative to the cocoon work directory -->
-                    <parameter name="workpath">slide</parameter>
+                    <parameter name="workpath">slide/work/metadata</parameter>
                     <parameter name="encoding">UTF-8</parameter>
                 </nodestore>
                 <securitystore>
@@ -43,8 +43,8 @@
                     <reference store="nodestore"/>
                 </revisiondescriptorstore>
                 <contentstore classname="org.apache.cocoon.components.slide.impl.ContextTxFileContentStore">
-                    <parameter name="rootpath">slide</parameter>
-                    <parameter name="workpath">slide</parameter>
+                    <parameter name="rootpath">slide/store/content</parameter>
+                    <parameter name="workpath">slide/work/content</parameter>
                 </contentstore>
             </store>
             <scope match="/" store="tx"/>
