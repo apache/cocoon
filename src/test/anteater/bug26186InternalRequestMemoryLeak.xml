@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Cocoon Stress Test" default="main">
+  <taskdef resource="META-INF/Anteater.tasks"/>
+  <typedef resource="META-INF/Anteater.types"/>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <property name="url" value="http://localhost:8888/samples/xsp/java/resolver"/>
+
+  <target name="main">
+    <foreach list="0,1,2,3,4,5" target="multiplier1" param="m1"/>
+  </target>
+  <target name="multiplier1">
+    <foreach list="0,1,2,3,4,5,6,7,8,9" target="multiplier2" param="m2"/>
+  </target>
+  <target name="multiplier2">
+    <foreach list="0,1,2,3,4,5,6,7,8,9" target="multiplier3" param="m3"/>
+  </target>
+  <target name="multiplier3">
+    <foreach list="0,1,2,3,4,5,6,7,8,9" target="multiplier4" param="m4"/>
+  </target>
+  <target name="multiplier4">
+    <foreach list="0,1,2,3,4,5,6,7,8,9" target="content" param="m5"/>
+  </target>
+  <target name="content">
+    <echo>request no. ${m1}${m2}${m3}${m4}${m5}</echo>
+    <httpRequest href="${url}">
+      <match>
+        <responseCode value="200"/>
+        <regexp>An XSP Page using a source</regexp>
+      </match>
+    </httpRequest>
+  </target>
+</project>
+
