@@ -89,9 +89,7 @@ public class DateWrapper {
     public void setYear(String year) {
         split.put("year", year);
     }
-    /**
-     * @return
-     */
+
     public String toString() {
         return "Wrapped Date as combined='" + getCombined() + "' as split=[" 
                 + getDay() + ", " + getMonth() + ", " + getYear() + "]";

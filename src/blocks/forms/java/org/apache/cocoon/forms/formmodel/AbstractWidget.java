@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.15 2004/04/30 08:19:04 bruno Exp $
+ * @version $Id: AbstractWidget.java,v 1.16 2004/05/01 00:05:44 joerg Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -160,7 +160,7 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * @inheritDoc 
+     * {@inheritDoc}
      * 
      * Abstract implementation throws a {@link UnsupportedOperationException}.
      * Concrete subclass widgets need to override when supporting event broadcasting.
@@ -222,7 +222,7 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      * 
      * Delegates to the {@link #getDefinition()} to generate the 'label' part of
      * the display-data of this widget.  
@@ -302,7 +302,7 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      * 
      * This will generate some standard XML consisting of a simple wrapper 
      * element (name provided by {@link #getXMLElementName()}) with attributes
@@ -311,7 +311,7 @@ public abstract class AbstractWidget implements Widget {
      * {@link #generateItemSaxFragment(ContentHandler, Locale)}.
      * 
      * <pre>
-     * &lt;fi:{@link #getXMLElementName()} {@link #getXMLElementAttributes() &gt;
+     * &lt;fi:{@link #getXMLElementName()} {@link #getXMLElementAttributes()} &gt;
      *   {@link #generateDisplayData(ContentHandler)} (i.e. help, label, ...)
      * 
      *   {@link #generateItemSaxFragment(ContentHandler, Locale)}

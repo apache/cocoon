@@ -35,7 +35,7 @@ import java.util.Map;
  * the JSR-168 (Portlet) environment.
  *
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id: ActionResponse.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: ActionResponse.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
  */
 public final class ActionResponse extends PortletResponse {
 
@@ -44,7 +44,7 @@ public final class ActionResponse extends PortletResponse {
 
     /**
      * Creates a ActionResponse based on a real
-     * {@see ActionResponse} object
+     * {@link ActionResponse} object
      */
     protected ActionResponse(javax.portlet.ActionResponse response,
                              PortletPreferences preferences,
@@ -108,8 +108,8 @@ public final class ActionResponse extends PortletResponse {
      *
      * Redirects to self (starting with the question mark) are processed
      * differently from other redirects: redirect parameters are parsed and
-     * set on response using {@see ActionResponse#setRenderParameter(String, String)}
-     * method, {@see ActionResponse#sendRedirect(String)} method is not called.
+     * set on response using {@link ActionResponse#setRenderParameter(String, String)}
+     * method, {@link ActionResponse#sendRedirect(String)} method is not called.
      *
      * @param location
      * @throws IOException
@@ -162,7 +162,7 @@ public final class ActionResponse extends PortletResponse {
     // ActionResponse API methods
 
     /**
-     * Type cast portletResponse to {@see ActionResponse}
+     * Type cast portletResponse to {@link ActionResponse}
      *
      * @return type casted portletResponse
      */

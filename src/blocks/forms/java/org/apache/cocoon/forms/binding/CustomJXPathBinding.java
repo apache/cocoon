@@ -42,7 +42,7 @@ public class CustomJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs CustomJXPathBinding
      * 
-     * @param commonAtts common configuration attributes {@link JXPathBindingBuilderBase.CommonAttributes}
+     * @param commonAtts common configuration attributes {@link org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes}
      * @param widgetId id of the widget to bind to
      * @param xpath jxpath expression to narrow down the context to before calling the wrapped Binding
      * @param wrappedBinding the actual custom written Binding implementation of {@link Binding}
