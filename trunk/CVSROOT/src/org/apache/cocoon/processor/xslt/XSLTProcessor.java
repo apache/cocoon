@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.11 2000-04-14 17:15:45 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.12 2000-04-27 17:57:17 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,6 +58,7 @@ import org.w3c.dom.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
+import org.apache.cocoon.logger.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
 import org.apache.cocoon.transformer.*;
@@ -70,7 +71,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-04-14 17:15:45 $
+ * @version $Revision: 1.12 $ $Date: 2000-04-27 17:57:17 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -80,11 +81,13 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
     private Parser parser;
     private Store store;
     private Transformer transformer;
+    private Logger logger;
 
     public void init(Director director) {
         this.parser = (Parser) director.getActor("parser");
         this.store = (Store) director.getActor("store");
         this.transformer = (Transformer) director.getActor("transformer");
+        this.logger = (Logger) director.getActor("logger");
     }
 
     public Document process(Document document, Dictionary parameters) throws Exception {
