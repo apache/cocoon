@@ -198,8 +198,12 @@
    </actions>
   </todo>
 
+
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" due-to="Sascha-Matthias Kulawik" due-to-email="sascha@kulawik.de">
+     Authentication block: Add authenticator for JAAS.
+   </action>
    <action dev="VG" type="remove">
      Flowscript: Removed support for passing sitemap parameters into flowscript
      function as positional arguments. Use cocoon.parameters instead.
@@ -367,7 +371,7 @@
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
  </release>
- <release version="2.1.6" date="TBD">
+ <release version="2.1.6" date="November 19 2004">
    <action dev="AG" type="fix" fixes-bug="23118" due-to="Jorg Heymans" due-to-email="jh@domek.be">
      Lucene: SearchGenerator incorrectly counts previous-index. Reported by: Tomasz Nowak (tnowak-p@netventure.pl)
    </action>
@@ -381,7 +385,7 @@
      Fix: Webmail sample broken.
    </action>
    <action dev="AG" type="fix" fixes-bug="32214" due-to="Rick Tessner" due-to-email="rick@apache.org">
-     Fix: Context directory not required to be writable by the CLI
+     Fix: Context directory not required to be writable by the CLI.
    </action>
    <action dev="CZ" type="fix" fixes-bug="32199">
      Portal: If a coplet has an error, the error-uri has been called twice. This is fixed now.
@@ -396,13 +400,13 @@
      for custom upload handling.     
    </action>
    <action dev="RG" type="add" fixes-bug="31857">
-     Portal: Added support for page labels
+     Portal: Added support for page labels.
    </action>
    <action dev="RG" type="fix" fixes-bug="31854">
-     Javaflow: JavaInterpreter initialize method was not thread safe
+     Javaflow: JavaInterpreter initialize method was not thread safe.
    </action>
    <action dev="RG" type="add" fixes-bug="31229">
-     Portal: Generate subnavigation for non-selected tabs    
+     Portal: Generate subnavigation for non-selected tabs.
    </action>
    <action dev="VG" type="fix">
      Scratchpad block: Restored CastorTransformer support for context beans,
@@ -411,21 +415,21 @@
    <action dev="SW" type="fix">
      The CocoonBean now creates its own private logger hierarchy, thus avoiding to
      pollute the CocoonServlet hierarchy when called in that context (e.g. when
-     generating a static site from a CMS)
+     generating a static site from a CMS).
    </action>
    <action dev="GP" type="add">
      Added replacement for Excalibur Event package in
      org.apache.cocoon.components.thread and migrated most classes using their own
-     threads to that package
+     threads to that package.
    </action>
    <action dev="AG" type="update">
-     Updated antlr to 2.7.4, db-ojb to 1.0.1
+     Updated antlr to 2.7.4, db-ojb to 1.0.1.
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
-     Javaflow block: Support inherited methods
+     Javaflow block: Support inherited methods.
    </action>
    <action dev="TC" type="add">
-     Javaflow block: Add parameter support
+     Javaflow block: Add parameter support.
    </action>
    <action dev="SW" type="add">
      CForms block: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
@@ -433,7 +437,7 @@
    </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
      Scratchpad block: BetwixtTransformer: removed deprecation warning with
-     latest betwixt
+     latest betwixt.
    </action>
    <action dev="SW" type="fix" fixes-bug="25951">
      Flowscript: enforce the explicit declaration of variables in the global
@@ -455,7 +459,7 @@
    </action>
    <action dev="AG" type="fix" fixes-bug="31564" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
      XSP - JXPath logicsheet: Allow use relative contexts in &lt;jxpath:for-each&gt;.
-           Add a new tag &lt;jpath:set-lenient lenient="true|false"&gt;
+           Add a new tag &lt;jpath:set-lenient lenient="true|false"&gt;.
    </action>
    <action dev="AG" type="update">
      Updated commons-httpclient to 2.0.2, groovy to 1.0-beta-7, commons-betwixt to 0.6.
@@ -464,9 +468,6 @@
      Flow invocations (function calls or continuation invocations) should always
      result in a response. Flowscripts with no response are prohibited.
    </action>
-   <action dev="CZ" type="add" due-to="Sascha-Matthias Kulawik" due-to-email="sascha@kulawik.de">
-     Authentication block: Add authenticator for JAAS.
-   </action>
    <action dev="CZ" type="add" due-to="Juergen Seitz" due-to-email="Juergen.Seitz@Basf-It-Services.Com">
      Portal block: Apply batch for configuring the type handling in the Castor converter.
    </action>
@@ -474,7 +475,7 @@
      Fix bug in SessionPropagatorAction.
    </action>
    <action dev="CZ" type="fix" fixes-bug="22707" due-to="Jeff Ramsdale" due-to-email="jefe182@earthlink.net">
-     Fix syntax error in build.bat on Windows ME
+     Fix syntax error in build.bat on Windows ME.
    </action>
    <action dev="CZ" type="fix" fixes-bug="29996" due-to="Christian Mayrhuber" due-to-email="christian.mayrhuber@gmx.net">
      Portal block: Apply patch for rendering a link of the selected tab in TabContentAspect.
@@ -483,30 +484,30 @@
      Portal block: Apply patch for handling GET method when no enctype is set in CopletTransformer.
    </action>
    <action dev="TC" type="fix" fixes-bug="31545">
-     Throw a more meaningful exception if charset classes are missing
+     Throw a more meaningful exception if charset classes are missing.
    </action>
    <action dev="TC" type="fix" fixes-bug="30874">
-     Fixes the SQLTransformer not to close the statement twice
+     Fixes the SQLTransformer not to close the statement twice.
    </action>
    <action dev="TC" type="fix" fixes-bug="30994">
-     Change constructor to be public in order to fix bug 30270
+     Change constructor to be public in order to fix bug 30270.
    </action>
    <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
      Forms block: added possibility to add a SelectionList based on Java.
    </action>
    <action dev="AG" type="fix" fixes-bug="28680" due-to="David Crossley" due-to-email="crossley@apache.org">
      HTML serialization has no space between publicId and systemId.
-     Updated xalan to 2.6.1-dev-20041008T0304
+     Updated xalan to 2.6.1-dev-20041008T0304.
    </action>
    <action dev="VG" type="add">
      Scratchpad block: Implemented support of parallel loading of included
      sources in the IncludeTransformer.
    </action>
    <action dev="AG" type="update">
-     Updated commons-lang to 2.0-20041007T2305. Now cocoon compiles in java 1.5
+     Updated commons-lang to 2.0-20041007T2305. Now cocoon compiles in java 1.5.
    </action>
    <action dev="AG" type="update">
-     Updated jdt-core to 3.0.1
+     Updated jdt-core to 3.0.1.
    </action>
    <action dev="VG" type="add">
      Faces block: Added JSF CarStore demo.
@@ -522,7 +523,7 @@
      Remove jisp from distribution.
    </action>
    <action dev="AG" type="fix" fixes-bug="31493" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
-     XSP logicsheet jpath.xsl: incorrect call to JXPathContext.compile
+     XSP logicsheet jpath.xsl: incorrect call to JXPathContext.compile.
    </action>
    <action dev="VG" type="fix" fixes-bug="28485">
      Mail block: Support multiple SMTP servers, not only default one.
@@ -587,7 +588,7 @@
      Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
    </action>
    <action dev="AG" type="update">
-     Updated jexl to 1.0, lucene to 1.4.1
+     Updated jexl to 1.0, lucene to 1.4.1.
    </action>
    <action dev="DC" type="add" fixes-bug="30321" due-to="Colin Adams">
      Selector for matching the request headers using a regular expression.
@@ -616,7 +617,7 @@
    </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,
-     xreporter-expression to 20040701, ehcache to 0.9,
+     xreporter-expression to 20040701, ehcache to 0.9.
    </action>
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
@@ -647,7 +648,7 @@
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
      POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1, nekohtml to 0.9.3,
      hsqldb to 1.7.2, jcs to 1.1-dev-20040811, quartz to 1.4.2, asm to 1.4.3,
-     asm-util to 1.4.3 and groovy to 1.0-beta6
+     asm-util to 1.4.3 and groovy to 1.0-beta6.
    </action>
    <action dev="CZ" type="fix">
      Mail block: The mail transformer ignored configured toAddresses from a
