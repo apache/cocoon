@@ -88,7 +88,6 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
     private String enteredValue;
     private List fields = new ArrayList();
     private Map fieldsById = new HashMap();
-    private boolean satisfiesSplitExpr = false;
     private ValidationError validationError;
 
     protected AggregateField(AggregateFieldDefinition definition) {
@@ -106,7 +105,6 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
 
     public void readFromRequest(FormContext formContext) {
         enteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
-        satisfiesSplitExpr = false;
         validationError = null;
 
         // whitespace & empty field handling
@@ -133,7 +131,13 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
                     // objects)
                     ((Field)fieldsById.get(splitMapping.getFieldId())).setValue(result);
                 }
-                satisfiesSplitExpr = true;
+            } else {
+                // set values of the fields to null
+                Iterator fieldsIt = fields.iterator();
+                while (fieldsIt.hasNext()) {
+                    Field field = (Field)fieldsIt.next();
+                    field.setValue(null);
+                }
             }
         }
     }
@@ -142,7 +146,7 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
      * Always returns a String for this widget (or null).
      */
     public Object getValue() {
-        if (satisfiesSplitExpr) {
+        if (fieldsHaveValues()) {
             String value;
             try {
                 value = (String)definition.getCombineExpression().evaluate(new ExpressionContextImpl(this, true));
@@ -157,6 +161,19 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
         }
     }
 
+    /**
+     * Returns true if their is at least one field which has a value.
+     */
+    private boolean fieldsHaveValues() {
+        Iterator fieldsIt = fields.iterator();
+        while (fieldsIt.hasNext()) {
+            Field field = (Field)fieldsIt.next();
+            if (field.getValue() != null)
+                return true;
+        }
+        return false;
+    }
+
     public boolean validate(FormContext formContext) {
         // valid unless proven otherwise
         validationError = null;
@@ -166,7 +183,7 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
             return false;
         } else if (enteredValue == null)
             return true;
-        else if (!satisfiesSplitExpr) {
+        else if (!fieldsHaveValues()) {
             Object splitFailMessage = definition.getSplitFailMessage();
             if (splitFailMessage != null)
                 validationError = new ValidationError(splitFailMessage);
