@@ -60,15 +60,17 @@ import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
  * A selection list that takes its values from the flow page data.
- * 
+ *
  * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.4 2003/12/10 23:34:11 ugo Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.5 2004/01/29 03:18:05 vgritsenko Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -78,7 +80,7 @@ public class FlowJXPathSelectionList implements SelectionList {
     private String labelPath;
     private Datatype datatype;
     private Object model;
-    
+
     public FlowJXPathSelectionList(Context context, String listPath, String valuePath, String labelPath, Datatype datatype) {
         this.context = context;
         this.listPath = listPath;
@@ -86,13 +88,13 @@ public class FlowJXPathSelectionList implements SelectionList {
         this.labelPath = labelPath;
         this.datatype = datatype;
     }
-    
+
     /**
      * Builds a dynamic selection list from an in-memory collection.
      * @see org.apache.cocoon.woody.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
-     * @param model The collection used as a model for the selection list. 
+     * @param model The collection used as a model for the selection list.
      * @param valuePath An XPath expression referring to the attribute used
-     * to populate the values of the list's items. 
+     * to populate the values of the list's items.
      * @param labelPath An XPath expression referring to the attribute used
      * to populate the labels of the list's items.
      * @param datatype
@@ -109,62 +111,68 @@ public class FlowJXPathSelectionList implements SelectionList {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-
         JXPathContext ctx = null;
         Iterator iter = null;
         if (model == null) {
             Object flowData = FlowHelper.getContextObject(ContextHelper.getObjectModel(this.context));
-        
             if (flowData == null) {
                 throw new SAXException("No flow data to produce selection list");
             }
+
             // Move to the list location
             ctx = JXPathContext.newContext(flowData);
-        
+
             // Iterate on all elements of the list
             iter = ctx.iteratePointers(this.listPath);
-        }
-        else {
+        } else {
             // Move to the list location
             ctx = JXPathContext.newContext(model);
-        
+
             // Iterate on all elements of the list
             iter = ctx.iteratePointers(".");
         }
-        
+
         // Start the selection-list
         contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
-        
-        while(iter.hasNext()) {
 
+        while(iter.hasNext()) {
             String stringValue = "";
-            String stringLabel = null;
+            Object label = null;
+
             // Get a context on the current item
             Pointer ptr = (Pointer)iter.next();
             if (ptr.getValue() != null) {
                 JXPathContext itemCtx = ctx.getRelativeContext(ptr);
-                
+
                 // Get the value as a string
                 Object value = itemCtx.getValue(this.valuePath);
                 stringValue = this.datatype.convertToString(value, locale);
-                
+
                 // Get the label (can be ommitted)
                 itemCtx.setLenient(true);
-                Object label = itemCtx.getValue(this.labelPath);
-                stringLabel = (label == null) ? stringValue : label.toString();
+                label = itemCtx.getValue(this.labelPath);
+                if (label == null) {
+                    label = stringValue;
+                }
             }
+
             // Output this item
             AttributesImpl itemAttrs = new AttributesImpl();
             itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
-            if (stringLabel != null) {
+            if (label != null) {
                 contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-                contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
+                if (label instanceof XMLizable) {
+                    ((XMLizable)label).toSAX(contentHandler);
+                } else {
+                    String stringLabel = label.toString();
+                    contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
+                }
                 contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
             }
             contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
         }
-        
+
         // End the selection-list
         contentHandler.endElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL);
     }
