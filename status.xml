@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.232 2004/01/30 09:45:39 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.233 2004/01/31 00:07:01 antonio Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+     <action dev="AG" type="update">
+     Updated POI to 2.0-final
+   </action>
    <action dev="CZ" type="fix" fixes-bug="26186" due-to-email="michael.gerzabek@gmx.net" due-to="Michael Gerzabek">
      Fixing memory leak in the cocoon protocol.
    </action>
