@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.77 $ $Date: 2001-04-04 06:11:40 $
+ * @version CVS $Revision: 1.1.4.78 $ $Date: 2001-04-04 18:06:30 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -122,14 +122,16 @@ public class CocoonServlet extends HttpServlet {
         } else {
             workDir = (File) context.getAttribute("javax.servlet.context.tempdir");
         }
+
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
-		String uploadDirParam = conf.getInitParameter("upload-directory");
+        String uploadDirParam = conf.getInitParameter("upload-directory");
         if ((uploadDirParam != null) && (uploadDirParam.trim().equals("") == false)) {
-			this.uploadDir = IOUtils.createFile( new File(context.getRealPath("/")) , uploadDirParam);
-		} else	{
-			this.uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
-		}
+            this.uploadDir = IOUtils.createFile( new File(context.getRealPath("/")) , uploadDirParam);
+        } else	{
+            this.uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
+        }
+
         this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
         this.uploadDir.mkdirs();
 

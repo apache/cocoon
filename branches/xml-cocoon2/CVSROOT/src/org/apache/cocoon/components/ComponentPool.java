@@ -89,16 +89,6 @@ public class ComponentPool extends AbstractLoggable implements Pool, Initializab
             }
         }
 
-        if ((this.availableResources.size() < this.initial) && (this.availableResources.size() > 0)) {
-            while (this.availableResources.size() < this.initial) {
-                try {
-                    this.availableResources.add(this.factory.newInstance());
-                } catch (Exception e) {
-                    getLogger().warn("Could not create poolable resource", e);
-                }
-            }
-        }
-
         if (this.availableResources.size() > 0) {
             this.initialized = true;
         }
