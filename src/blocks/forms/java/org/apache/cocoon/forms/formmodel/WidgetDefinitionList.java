@@ -27,9 +27,9 @@ import java.util.Map;
  * Helper class for the Definition implementation of widgets containing
  * other widgets.
  * 
- * @version $Id: ContainerDefinitionDelegate.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: WidgetDefinitionList.java,v 1.1 2004/04/21 20:30:49 mpo Exp $
  */
-public class ContainerDefinitionDelegate {
+public class WidgetDefinitionList {
     private List widgetDefinitions = new ArrayList();
     private Map widgetDefinitionsById = new HashMap();
     private WidgetDefinition definition;
@@ -39,7 +39,7 @@ public class ContainerDefinitionDelegate {
     /**
      * @param definition the widget definition to which this container delegate belongs
      */
-    public ContainerDefinitionDelegate(WidgetDefinition definition) {
+    public WidgetDefinitionList(WidgetDefinition definition) {
         this.definition = definition;
         resolving = false;
     }

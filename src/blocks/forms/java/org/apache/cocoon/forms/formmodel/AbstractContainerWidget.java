@@ -28,20 +28,20 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.7 2004/04/21 20:30:49 mpo Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     
     /**
      * List of contained widgets.
      */
-    protected ContainerDelegate widgets;
+    protected WidgetList widgets;
 
     /** 
      * Constructs AbstractContainerWidget
      */
     public AbstractContainerWidget() {
-        widgets = new ContainerDelegate();
+        widgets = new WidgetList();
     }
 
     public void addWidget(Widget widget) {

@@ -21,14 +21,14 @@ import java.util.List;
 /**
  * The {@link AbstractContainerDefinition} corresponding to an {@link AbstractContainerWidget}.
  *
- * @version $Id: AbstractContainerDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id: AbstractContainerDefinition.java,v 1.3 2004/04/21 20:30:49 mpo Exp $
  */
 public abstract class AbstractContainerDefinition
         extends AbstractWidgetDefinition implements ContainerDefinition {
-    protected ContainerDefinitionDelegate definitions;
+    protected WidgetDefinitionList definitions;
 
     public AbstractContainerDefinition() {
-        definitions = new ContainerDefinitionDelegate(this);
+        definitions = new WidgetDefinitionList(this);
     }
 
     public void createWidget(Widget parent, String id) {

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField} for more information.
  *
- * @version $Id: AggregateFieldDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AggregateFieldDefinition.java,v 1.2 2004/04/21 20:30:49 mpo Exp $
  */
 public class AggregateFieldDefinition extends FieldDefinition {
 
@@ -62,7 +62,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
     /**
      *
      */
-    private ContainerDefinitionDelegate container = new ContainerDefinitionDelegate(this);
+    private WidgetDefinitionList container = new WidgetDefinitionList(this);
 
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
