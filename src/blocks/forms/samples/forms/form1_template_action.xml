@@ -114,6 +114,9 @@
                   <ft:repeater-widget-label id="contacts" widget-id="email"/>
                 </th>
                 <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="birthdate"/>
+                </th>
+                <th>
                   <ft:repeater-widget-label id="contacts" widget-id="select"/>
                 </th>
               </tr>
@@ -132,6 +135,9 @@
                   </td>
                   <td>
                     <ft:widget id="email"/>
+                  </td>
+                  <td>
+                    <ft:widget id="birthdate"/>
                   </td>
                   <td>
                     <ft:widget id="select"/>
