@@ -68,7 +68,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * the results of <code>toDOM()</code> that must be implemented by concrete subclasses.
  *
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractDOMFragment.java,v 1.1 2003/03/09 00:09:45 pier Exp $
+ * @version CVS $Id: AbstractDOMFragment.java,v 1.2 2003/03/14 08:24:12 cziegeler Exp $
  */
 
 public abstract class AbstractDOMFragment implements XMLFragment {
@@ -103,7 +103,9 @@ public abstract class AbstractDOMFragment implements XMLFragment {
         }
 
         // Stream the document fragment
+        handler.startDocument();
         DOMStreamer streamer = new DOMStreamer(handler);
         streamer.stream(df);
+        handler.endDocument();
     }
 }

@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SourceUtil.java,v 1.1 2003/03/09 00:09:12 pier Exp $
+ * @version $Id: SourceUtil.java,v 1.2 2003/03/14 08:24:12 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -412,10 +412,6 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if ( null != serializerName) {
-                    // Lookup the Serializer
-	                // FIXME (CZ) : Due to the CM hierarchy we don't get the
-	                // correct serializer selector...
-	                // we now use the getSitemapComponentManager()
 					ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
 
 	                ComponentSelector selector = null;
@@ -426,8 +422,10 @@ public final class SourceUtil {
 	                     serializer = (Serializer)selector.select(serializerName);
 	                     oStream = ws.getOutputStream();
 	                     serializer.setOutputStream(oStream);
+                         serializer.startDocument();
 	                     DOMStreamer streamer = new DOMStreamer(serializer);
 	                     streamer.stream(frag);
+                         serializer.endDocument();
 	                } catch (ComponentException e) {
 	                	throw new ProcessingException("Unable to lookup serializer.", e);
 					} finally {
@@ -455,11 +453,6 @@ public final class SourceUtil {
             } else {
             	String content;
 				if ( null != serializerName) {
-	                // and now serializing...
-	                // Lookup the Serializer
-	                // FIXME (CZ) : Due to the CM hierarchy we don't get the
-	                // correct serializer selector...
-					// we now use the getSitemapComponentManager()
 					ComponentManager  manager = CocoonComponentManager.getSitemapComponentManager();
                     
                     ComponentSelector selector = null;
@@ -469,8 +462,10 @@ public final class SourceUtil {
                         selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
                         serializer = (Serializer)selector.select(serializerName);
                         serializer.setOutputStream(oStream);
+                        serializer.startDocument();
                         DOMStreamer streamer = new DOMStreamer(serializer);
                         streamer.stream(frag);
+                        serializer.endDocument();
 					} catch (ComponentException e) {
 						throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
