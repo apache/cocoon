@@ -70,10 +70,10 @@ import org.xml.sax.SAXException;
  * <code>SitemapSource</code>.
  * 
  * @see org.apache.cocoon.components.source.impl.SitemapSource
- * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
+ * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.4 2003/10/29 14:39:08 vgritsenko Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.5 2004/02/24 10:33:32 joerg Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 

@@ -116,7 +116,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.23 2004/02/20 18:48:23 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.24 2004/02/24 10:33:33 joerg Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -626,7 +626,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * Compile filename as JavaScript code
      *
      * @param cx Rhino context
-     * @param environment source resolver
      * @param fileName resource uri
      * @return compiled script
      */
@@ -676,7 +675,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      *
      * @param funName a <code>String</code> value
      * @param params a <code>List</code> value
-     * @param environment an <code>Environment</code> value
+     * @param redirector
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params,
