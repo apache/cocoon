@@ -2,7 +2,15 @@
 
 <!--
     convert a page so that is is usable as input for the SWFSerializer
-    $Id: page2swf.xsl,v 1.2 2003/05/03 07:35:03 bdelacretaz Exp $
+    $Id: page2swf.xsl,v 1.3 2003/05/05 08:22:11 bdelacretaz Exp $
+
+    Bugzilla 19619 note: (bdelacretaz@codeconsult.ch): the value of
+    some Glyph.char attributes in this file seems to have been corrupted in CVS,
+    I had to comment out some of them below to prevent the SWFSerializer
+    from complaining.
+
+    Most probably, the font definition below is not correct over the
+    whole character set.
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -410,11 +418,7 @@
             <ShapeRaw>EDVLNGfbNge5J9m34Gy1XnGqWO2uX5uPXZTeCKtm34qlT4A= </ShapeRaw>
         </Glyph>
 
-<!--
-    TODO see bugzilla 19619, apparently there are weird characters in the rest of this font
-    definition which cause the XSL transform to fail. I didn't investigate, just commented them out
-
-        <Glyph char="{" advance="342" xmin="29" ymin="-745" xmax="318" ymax="216">
+        <Glyph char="{{" advance="342" xmin="29" ymin="-745" xmax="318" ymax="216">
 
             <ShapeRaw>EDVk+ov2U7MjLMAbyc3eJgCDOAEH+hFL3bazsuo7RLSty5lhMMl4A17QJ0lCIiA6UgNYAMx+yn6E
                 m25+JINK55deb1Ym+tn/ppgCm+N2Xxe0bJc+y1/2a6VN/M7ZTGwRdmCN4ArNoHJShawzPIZMljIl
@@ -423,7 +427,7 @@
         <Glyph char="|" advance="266" xmin="94" ymin="-745" xmax="173" ymax="216">
             <ShapeRaw>EDVitov5Xg7Fjyw/2E8A </ShapeRaw>
         </Glyph>
-        <Glyph char="}" advance="342" xmin="24" ymin="-745" xmax="313" ymax="216">
+        <Glyph char="}}" advance="342" xmin="24" ymin="-745" xmax="313" ymax="216">
 
             <ShapeRaw>EDVg0ov2o4RKgFlTUpU0GT7wOgpgBaCCKUQiMlJTBRMB2VKW0B0FJc5Twim+CIAVNv63S+1XQ1Jo
                 zcfJcfIRrhBtCTZscx8rQAR3TCPaAX0wBBgu/KIkGL8pi+s2yxsumnN0aQBK7f6Ll+X+HOXhyoAM
@@ -442,9 +446,11 @@
             <ShapeRaw>EDVoWs5mw86yAJqwAxyiW8YyrJci72p4FV2+SHwVjp/U1gV3AoW3yQ+C1phVyUDCY6I0MAmXQA1z
                 9lnmwR21AJ48ANhRJeFrrK2LPaHXuo11/qWkGzYvtode6jqcP11B7mZQ1GEAmXQBAKNvYugA </ShapeRaw>
         </Glyph>
+<!-- encoding for ? already present??
         <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
+-->
         <Glyph char="‚" advance="228" xmin="54" ymin="-104" xmax="159" ymax="136">
             <ShapeRaw>EDUp/1ZgBD8B6XWopFdeq5I3qdTKN0Aa2pR2ZjYYdlSA </ShapeRaw>
         </Glyph>
@@ -495,19 +501,23 @@
             <ShapeRaw>EDVoxpH4Gf2VfgrvdcHAlmyrcFqbr64FV2VbglHZlp94d74AJ7SANnjJ95mQBX5wBXyPk5yPlE0A
                 J0IACIb9mdBWQaw02gQc6HN0IQA2zgBMDojzHKQoAEyiAHNzOOdwAK5OALPx9zNjXNgASzgFBCAA  </ShapeRaw>
         </Glyph>
+<!-- encoding for ? already present??
         <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
+-->
         <Glyph char="Ž" advance="626" xmin="21" ymin="-915" xmax="600" ymax="0">
 
             <ShapeRaw>EDVpMr1544RhwOpsq3Jb3ZpuK7xXtTKngmfZqeRBuyrgrJ9MLab1ewzb8ejNig35S6bDPtOVVAA= </ShapeRaw>
         </Glyph>
+<!-- encoding for ? already present??
         <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
         <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
+        -->
         <Glyph char="‘" advance="228" xmin="64" ymin="-745" xmax="169" ymax="-505">
             <ShapeRaw>EDVihs92WnYn9mtmAL0Q4pSthds1lkckhea8vMv/V6i8wA== </ShapeRaw>
         </Glyph>
@@ -560,9 +570,11 @@
                 ZltmNrCXawAOpgBdIzCYuP0oAmQAAuy5i7LAJ2YAndPNm08y+AAVoc2LwJNN9Wmxsy2LMUBLEAV1
                 M2sU/SQA </ShapeRaw>
         </Glyph>
+<!-- encoding for ? already present??
         <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
+-->
         <Glyph char="ž" advance="512" xmin="20" ymin="-737" xmax="490" ymax="0">
 
             <ShapeRaw>EDVkQrp2m9XsM2/HozYoN+Uumwz7TlVBUs0Z7ZsD3JPs2/A2Wq841Sx21y/Nx67KbwRVs2/FUp8A  </ShapeRaw>
@@ -1048,7 +1060,6 @@
             <ShapeRaw>EDVn3vb582Q5NwLHcQy6FmErLhK1QGuN12+1XrZiNbDtpek2jd7pIq583vZsMPEbk02k73KPhFov
                 EcbK2FoFYeqP7C9ss2xRbM0CsmlH9he2WbYotmaA </ShapeRaw>
         </Glyph>
-        -->
     </Font>
     <Text id="2" name="content" xmin="-2300" xmax="3000" ymin="-40"
         ymax="442" selectable="yes" leftmargin="0.0" rightmargin="0.0"
