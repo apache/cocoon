@@ -90,7 +90,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.8 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.9 2003/11/27 02:16:24 vgritsenko Exp $
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 
@@ -141,6 +141,7 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
         this.contentHandler.startPrefixMapping(PREFIX, URI);
 
         attribute(attr, "target", request.getRequestURI());
+        attribute(attr, "sitemap", request.getSitemapURI());
         attribute(attr, "source", (this.source != null ? this.source : ""));
         start("request", attr);
 
