@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -19,7 +19,11 @@
   <message key="general.field-required">此域是必须的</message>
 
   <message key="datatype.conversion-failed">不是一个有效的{0}类型.</message>
-  <message key="datatype.long">整型数字</message>
+  <message key="datatype.long">整数</message>
+  <message key="datatype.decimal">小数</message> 
+  <message key="datatype.double">小数</message> 
+  <message key="datatype.float">小数</message> 
+  <message key="datatype.integer">整数</message> 
   <message key="datatype.date">日期</message>
 
   <message key="validation.string.exact-length">应为{0}个字符.</message>
