@@ -36,7 +36,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @version CVS $Id: FormsPipelineConfig.java,v 1.3 2004/03/18 21:04:39 joerg Exp $
+ * @version CVS $Id: FormsPipelineConfig.java,v 1.4 2004/04/09 16:25:18 mpo Exp $
  */
 public class FormsPipelineConfig {
 
@@ -115,7 +115,7 @@ public class FormsPipelineConfig {
 
         String attributeName = parameters.getParameter("attribute-name", null);
         String actionExpression = parameters.getParameter("form-action", null);
-        String formMethod = parameters.getParameter("form-method", "POST");
+        String formMethod = parameters.getParameter("form-method", null);
         //TODO (20031223 mpo)think about adding form-encoding for the Generator.
         // Note generator will also need some text to go on the submit-button? 
         // Alternative to adding more here is to apply xinclude ?
@@ -275,10 +275,20 @@ public class FormsPipelineConfig {
      * Note: wi:form-template copies this from its wt:form-template counterpart.
      * 
      * @return the value of the 'form-method' sitemap parameter to the pipeline 
-     * component. Defaults to 'POST' if it was not set.
+     * component. (or 'null' if it was not set.)
      */
     public String getFormMethod() {
         return formMethod;
+    }
+    
+    
+    /**
+     * Sets the form method to use in the generator/transformer that uses this.
+     * 
+     * @param method to use in the generated form should be "POST", "GET" or null
+     */
+    public void setFormMethod(String method) {
+        this.formMethod = method;
     }
 
     /**
@@ -293,7 +303,9 @@ public class FormsPipelineConfig {
         if (getFormAction() != null) {
             formAtts.addCDATAAttribute("action", getFormAction());
         }
-        formAtts.addCDATAAttribute("method", getFormMethod());
+        if (getFormMethod() != null){
+            formAtts.addCDATAAttribute("method", getFormMethod());
+        }
         return formAtts;
     }
 }
