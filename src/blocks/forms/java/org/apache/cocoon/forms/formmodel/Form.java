@@ -228,7 +228,7 @@ public class Form extends AbstractContainerWidget {
             // if the form has an ID, it is used as part of the submitId too
             // this has ID has to be cut off
             if(this.getId() != null && !"".equals(this.getId())) {
-                System.out.println("was jumping in");
+                submitId = submitId.substring(submitId.indexOf('.')+1);
             }
             StringTokenizer stok = new StringTokenizer(submitId, ".");
             Widget submit = this;
