@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: capture.xsl,v 1.1 2003/03/09 00:08:56 pier Exp $-->
+<!-- $Id: capture.xsl,v 1.2 2003/03/26 16:37:23 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -60,7 +60,7 @@
  * content production.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:56 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/03/26 16:37:23 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -85,6 +85,7 @@
       <xsp:include>org.apache.cocoon.components.sax.XMLByteStreamFragment</xsp:include>
       <xsp:include>org.apache.cocoon.xml.XMLFragment</xsp:include>
       <xsp:include>org.apache.cocoon.xml.dom.DOMBuilder</xsp:include>
+      <xsp:include>org.apache.excalibur.xml.dom.DOMParser</xsp:include>
       <xsp:include>org.w3c.dom.DocumentFragment</xsp:include>
       <xsp:include>org.w3c.dom.Node</xsp:include>
       <xsp:include>org.xml.sax.ContentHandler</xsp:include>
@@ -92,7 +93,7 @@
     </xsp:structure>
     <xsl:if test="//capture:dom-variable or //capture:dom-request-attr">
       <xsp:logic>
-        private Parser captureParser;
+        private DOMParser captureParser;
       </xsp:logic>
     </xsl:if>
    <xsl:apply-templates/>
@@ -109,7 +110,7 @@
       <xsl:when test="//capture:dom-variable or //capture:dom-request-attr">
         <xsp:logic>
         try {
-          this.captureParser = (Parser)this.manager.lookup(Parser.ROLE);
+          this.captureParser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
         } catch(Exception e) {
           throw new ProcessingException("Cannot get parser" , e);
         }
@@ -118,7 +119,7 @@
         <xsl:apply-templates/>
         <xsp:logic>
         } finally {
-          this.manager.release(this.captureParser);
+          this.manager.release((Component)this.captureParser);
         }
         </xsp:logic>
       </xsl:when>
@@ -215,7 +216,7 @@
     LexicalHandler lexicalHandler_<xsl:value-of select="$id"/> = this.lexicalHandler;
     // Create a DOMBuilder that will feed a DocumentFragment
     DocumentFragment fragment_<xsl:value-of select="$id"/> =
-      this.captureParser.newDocument().createDocumentFragment();
+      this.captureParser.createDocument().createDocumentFragment();
     DOMBuilder builder_<xsl:value-of select="$id"/> = new DOMBuilder(fragment_<xsl:value-of select="$id"/>);
     try {
       this.contentHandler = builder_<xsl:value-of select="$id"/>;
@@ -248,7 +249,7 @@
     LexicalHandler lexicalHandler_<xsl:value-of select="$id"/> = this.lexicalHandler;
     // Create a DOMBuilder that will feed a DocumentFragment
     DocumentFragment fragment_<xsl:value-of select="$id"/> =
-      this.captureParser.newDocument().createDocumentFragment();
+      this.captureParser.createDocument().createDocumentFragment();
     DOMBuilder builder_<xsl:value-of select="$id"/> = new DOMBuilder(fragment_<xsl:value-of select="$id"/>);
     try {
       this.contentHandler = builder_<xsl:value-of select="$id"/>;
