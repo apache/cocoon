@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.14 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public final class PipelinesNode extends SimpleParentProcessingNode
                                  implements Serviceable, Disposable {
@@ -96,11 +96,10 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         } catch (Exception ex) {
             if (this.errorHandler != null) {
                 // Invoke pipelines handler
-                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env);
-            } else {
-                // No handler : propagate
-                throw ex;
+                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env, context);
             }
+            // No handler : propagate
+            throw ex;
         }
     }
 

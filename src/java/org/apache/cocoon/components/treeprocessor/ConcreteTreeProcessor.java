@@ -58,8 +58,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** The component info needed to build child processors */
     private ProcessorComponentInfo componentInfo;
 
-    private Map sitemapComponentConfigurations;
-
     private Configuration componentConfigurations;
 
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
@@ -144,7 +142,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 	/** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
-        this.sitemapComponentConfigurations = null;
     }
 
     public Configuration[] getComponentConfigurations() {
