@@ -50,6 +50,7 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
 import org.apache.cocoon.core.container.handler.InstanceComponentHandler;
 import org.apache.cocoon.core.container.handler.LazyHandler;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -674,7 +675,11 @@ public class CoreServiceManager
             
             loadURI(src, loadedURIs, includeStatement);
         } else {
-            final String ending = includeStatement.getAttribute("postfix", null);
+            final String pattern = includeStatement.getAttribute("pattern", null);
+            int[] parsedPattern = null;
+            if ( pattern != null ) {
+                parsedPattern = WildcardHelper.compilePattern(pattern);
+            }
             Source directory = null;
             try {
                 directory = this.cachedSourceResolver.resolveURI(directoryURI, contextURI, CONTEXT_PARAMETERS);
@@ -682,7 +687,7 @@ public class CoreServiceManager
                     final Iterator children = ((TraversableSource)directory).getChildren().iterator();
                     while ( children.hasNext() ) {
                         final Source s = (Source)children.next();
-                        if ( ending == null || s.getURI().endsWith(ending) ) {
+                        if ( parsedPattern == null || this.match(s.getURI(), parsedPattern)) {
                             this.loadURI(s, loadedURIs, includeStatement);
                         }
                     }
@@ -766,6 +771,13 @@ public class CoreServiceManager
         }        
     }
 
+    private boolean match(String uri, int[] parsedPattern ) {
+        int pos = uri.lastIndexOf('/');
+        if ( pos != -1 ) {
+            uri = uri.substring(pos+1);
+        }
+        return WildcardHelper.match(null, uri, parsedPattern);      
+    }
     /**
      * Release the source resolver that may have been created by the first call to
      * loadConfiguration().
