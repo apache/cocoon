@@ -131,9 +131,18 @@ public class BooleanField extends AbstractWidget {
         return value;
     }
 
+    /**
+     * Sets value of the field. If value is null, it is considered to be false
+     * (see class comment).
+     */
     public void setValue(Object object) {
-        if (!(object instanceof Boolean))
+        if (object == null) {
+            object = Boolean.FALSE;
+        }
+        
+        if (!(object instanceof Boolean)) {
             throw new RuntimeException("Cannot set value of boolean field \"" + getFullyQualifiedId() + "\" to a non-Boolean value.");
+        }
         
         Object oldValue = value;
         value = (Boolean)object;
