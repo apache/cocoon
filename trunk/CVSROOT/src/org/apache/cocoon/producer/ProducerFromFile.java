@@ -1,4 +1,4 @@
-/*-- $Id: FileProducer.java,v 1.3 1999-11-09 02:30:54 dirkx Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.1 1999-12-02 11:52:01 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,14 +59,14 @@ import org.apache.cocoon.framework.*;
 
 /**
  * This class implements the producer interface in order to produce a document
- * based on the path provided as "PathTranslated". This should work on most
- * of the servlet engine available.
+ * based on its tranlated path. This should work on most of the servlet engine 
+ * available, even if we should use getResource().
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:54 $
+ * @version $Revision: 1.1 $ $Date: 1999-12-02 11:52:01 $
  */
 
-public class FileProducer extends AbstractProducer implements Status {
+public class ProducerFromFile extends AbstractProducer implements Status {
     
     private Monitor monitor = new Monitor(10);
     
@@ -92,6 +92,6 @@ public class FileProducer extends AbstractProducer implements Status {
     }
     
     public String getStatus() {
-        return "File Producer";
+        return "Producer from local file";
     }
 }
