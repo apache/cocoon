@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,13 +40,13 @@ import org.xml.sax.InputSource;
 
 /**
  * Component implementing the {@link FormManager} role.
- * 
- * @version $Id: DefaultFormManager.java,v 1.18 2004/03/09 13:54:25 reinhard Exp $
+ *
+ * @version $Id$
  */
-public class DefaultFormManager 
-  extends AbstractLogEnabled 
+public class DefaultFormManager
+  extends AbstractLogEnabled
   implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
-      
+
     protected static final String PREFIX = "WoodyForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
@@ -105,9 +105,9 @@ public class DefaultFormManager
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
                 formDocument = DomHelper.parse(inputSource);
-            }
-            catch (Exception exc) {
-                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            } catch (Exception e) {
+                throw new CascadingException("Could not parse form definition from " +
+                                             source.getURI(), e);
             }
 
             Element formElement = formDocument.getDocumentElement();
@@ -127,8 +127,12 @@ public class DefaultFormManager
      * Disposable
      */
     public void dispose() {
-        widgetDefinitionBuilderSelector.dispose();
-        this.manager = null;
+        if (this.widgetDefinitionBuilderSelector != null) {
+            this.widgetDefinitionBuilderSelector.dispose();
+            this.widgetDefinitionBuilderSelector = null;
+        }
+        this.manager.release(this.cacheManager);
         this.cacheManager = null;
+        this.manager = null;
     }
 }
