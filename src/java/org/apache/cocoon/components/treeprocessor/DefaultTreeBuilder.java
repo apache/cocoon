@@ -71,7 +71,7 @@ public class DefaultTreeBuilder
     protected ServiceManager ownManager;
 
     // -------------------------------------
-    
+
     /**
      * Component processor of the parent manager (can be null for the root sitemap)
      */
@@ -118,7 +118,7 @@ public class DefaultTreeBuilder
     public void service(ServiceManager manager) throws ServiceException {
         this.ownManager = manager;
     }
-    
+
     /**
      * Get the location of the treebuilder config file. Can be overridden for other versions.
      * @return
@@ -126,10 +126,10 @@ public class DefaultTreeBuilder
     protected String getBuilderConfigURL() {
         return "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
     }
-    
+
     public void initialize() throws Exception {
         // Load the builder config file
-        SourceResolver resolver = (SourceResolver)this.ownManager.lookup(SourceResolver.ROLE);
+        SourceResolver resolver = (SourceResolver) this.ownManager.lookup(SourceResolver.ROLE);
         String url = getBuilderConfigURL();
         Configuration config;
         try {
@@ -141,12 +141,12 @@ public class DefaultTreeBuilder
             } finally {
                 resolver.release(src);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new ConfigurationException("Could not load TreeBuilder configuration from " + url, e);
         } finally {
             this.ownManager.release(resolver);
         }
-        
+
         // Create the NodeBuilder selector.
         CocoonServiceSelector selector = new CocoonServiceSelector() {
             protected String getComponentInstanceName() {
@@ -168,8 +168,9 @@ public class DefaultTreeBuilder
         );
 
         this.builderSelector = selector;
-        
+
     }
+
 
     public void setParentProcessorManager(ServiceManager manager) {
         this.parentProcessorManager = manager;
@@ -201,8 +202,7 @@ public class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected ServiceManager createServiceManager(Configuration tree) throws Exception
-    {
+    protected ServiceManager createServiceManager(Configuration tree) throws Exception {
         return this.ownManager;
     }
 
@@ -238,7 +238,7 @@ public class DefaultTreeBuilder
     }
 
     public ProcessingNodeBuilder createNodeBuilder(Configuration config) throws Exception {
-        //FIXME : check namespace
+        // FIXME : check namespace
         String nodeName = config.getName();
 
         if (this.getLogger().isDebugEnabled()) {
@@ -306,7 +306,7 @@ public class DefaultTreeBuilder
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree) throws Exception {
-        
+
         // The namespace use in the whole sitemap is the one of the root element
         this.namespace = tree.getNamespace();
 
@@ -433,7 +433,7 @@ public class DefaultTreeBuilder
         if (type == null) {
             type = getProcessor().getComponentInfo().getDefaultType(role);
         }
-        
+
         if (type == null) {
             throw new ConfigurationException("No default type exists for 'map:" + statement.getName() +
                 "' at " + statement.getLocation()
@@ -450,7 +450,7 @@ public class DefaultTreeBuilder
                 statement.getName() + "' at " + statement.getLocation(),
                 ce
             );
-        }            
+        }
 
         this.processorManager.release(selector);
 
@@ -462,9 +462,8 @@ public class DefaultTreeBuilder
 
         return type;
     }
-    
+
     public void recycle() {
-        
         // Reset all data created during the build
         this.attributes.clear();
         this.canGetNode = false;
