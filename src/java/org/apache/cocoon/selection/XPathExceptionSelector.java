@@ -58,7 +58,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -86,7 +86,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @since 2.1
- * @version CVS $Id: XPathExceptionSelector.java,v 1.6 2003/08/12 06:01:40 cziegeler Exp $
+ * @version CVS $Id: XPathExceptionSelector.java,v 1.7 2004/02/05 12:16:58 cziegeler Exp $
  */
 public class XPathExceptionSelector extends ExceptionSelector
   implements Configurable {
@@ -103,7 +103,7 @@ public class XPathExceptionSelector extends ExceptionSelector
         for (int i = 0; i < children.length; i++) {
             // Check if there are XPath-Expressions configured
             xPathChildren = children[i].getChildren("xpath");
-            Map xPathMap = new SequencedHashMap(11);
+            Map xPathMap = new LinkedMap(11);
 
             for (int j = 0; j < xPathChildren.length; j++) {
                 Configuration xPathChild = xPathChildren[j];
