@@ -30,6 +30,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
@@ -121,6 +122,9 @@ public class ContainerTestCase extends TestCase {
     /** The service manager to use */
     private ServiceManager manager;
 
+    /** The context */
+    private Context context;
+    
     /** Return the logger */
     protected Logger getLogger() {
         return logger;
@@ -184,11 +188,10 @@ public class ContainerTestCase extends TestCase {
             conf = new DefaultConfiguration("", "-");
         }
 
-        final Context context = this.setupContext( conf.getChild( "context" ) );
+        this.context = this.setupContext( conf.getChild( "context" ) );
 
         this.setupManagers( conf.getChild( "components" ),
-                            conf.getChild( "roles" ),
-                            context );
+                            conf.getChild( "roles" ));
     }
 
     /* (non-Javadoc)
@@ -259,8 +262,7 @@ public class ContainerTestCase extends TestCase {
     }
     
     final private void setupManagers( final Configuration confCM,
-                                      final Configuration confRM,
-                                      final Context context )
+                                      final Configuration confRM)
     throws Exception {
         // Setup the RoleManager
         RoleManager roleManager = new RoleManager();
@@ -270,7 +272,7 @@ public class ContainerTestCase extends TestCase {
         // Set up the ComponentLocator
         CocoonServiceManager ecManager = new CocoonServiceManager(null, null);
         ecManager.enableLogging( this.getLogger() );
-        ecManager.contextualize( context );
+        ecManager.contextualize( this.context );
         ecManager.setRoleManager( roleManager );
         ecManager.setLoggerManager( new DefaultLoggerManager(this.logger));
         ecManager.configure( confCM );
@@ -288,6 +290,35 @@ public class ContainerTestCase extends TestCase {
         manager.release( object );
     }
     
+    private Object getComponent(String classname,
+                                  Configuration conf,
+                                  Parameters p) 
+    throws Exception {
+        final Object instance = Class.forName(classname).newInstance();
+        ContainerUtil.enableLogging(instance, getLogger());
+        ContainerUtil.contextualize(instance, this.context);
+        ContainerUtil.service(instance, getManager());
+        ContainerUtil.configure(instance, conf);
+        ContainerUtil.parameterize(instance, p);
+        ContainerUtil.initialize(instance);
+        return instance;
+    }
+    
+    protected Object getComponent(String classname,
+                                  Configuration conf) 
+    throws Exception {
+        return this.getComponent(classname, conf, null);
+    }
+
+    protected Object getComponent(String classname,
+                                  Parameters p) 
+    throws Exception {
+        return this.getComponent(classname, null, p);
+    }
+    
+     /**
+     * We use this simple logger manager that sends all output to the console (logger)
+     */
     protected static class DefaultLoggerManager implements LoggerManager {
         
         private Logger logger;
