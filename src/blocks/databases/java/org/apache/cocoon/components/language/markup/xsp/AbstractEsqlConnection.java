@@ -59,7 +59,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.5 2003/06/09 10:55:47 tcurdt Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.6 2003/06/23 14:00:50 tcurdt Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -185,22 +185,16 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
                      database.indexOf("interbase") > -1 ||
                      database.indexOf("access") > -1 ||
                      database.indexOf("sap db") > -1 ||
+                     database.indexOf("firebird") > -1 ||
                      database.indexOf("sybase sql server") > -1) {
                 query = new JdbcEsqlQuery(getConnection(),queryString);
             }
             else {
-                getLogger().warn("Unrecognized database: \"" + String.valueOf(database) + "\"");
+                getLogger().warn("Your database [" + String.valueOf(database) + "] is not being recognized yet." +
+                                 " Using the generic [jdbc] query as default. " +
+                                 " Please report this to cocoon-dev or to tcurdt.at.apache.org directly.");
 
-                // temp start
-                String message = "The database detection method has changed.\nIf your database "+
-                                 "is not being recognized (anymore) you can either fix it in the Cocoon2EsqlConnection class, "+
-                                 " file it to bugzilla, report it to cocoon-dev or to me (tcurdt.at.apache.org) directly.\n" +
-                                 " Only be sure to include the database string \"" + String.valueOf(database) + "\" in your post.";
-                getLogger().error( message );
-                throw new SQLException( message );
-                // temp stop
-
-                //query = new JdbcEsqlQuery(getConnection(),queryString);
+                query = new JdbcEsqlQuery(getConnection(),queryString);
             }
         }
         else if ("sybase".equalsIgnoreCase(type)) {
