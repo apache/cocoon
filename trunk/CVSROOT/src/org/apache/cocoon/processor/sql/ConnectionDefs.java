@@ -57,7 +57,7 @@ import java.util.*;
  * Default connection values.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
+ * @version $Revision: 1.6 $ $Date: 2000-02-03 19:23:31 $
  */
 
 public class ConnectionDefs {
@@ -184,9 +184,13 @@ public class ConnectionDefs {
 	}
 
     public Properties getQueryProperties(String name) {
-        if (name == null || name.equals("")) return getQueryProperties();
+        if (name == null || name.equals("")) {
+			return getQueryProperties();
+		}
 		Properties props = (Properties)query_props_table.get(name);
-		if (props != null) return getQueryProperties();
+		if (props == null) {
+			return getQueryProperties();
+		}
 		return (Properties)props.clone();
     }
 

@@ -102,9 +102,8 @@ class ColumnFormatter {
 		return format;
 	}
 
-	protected void addColumnNode(Document document, Element parent, Column column, ResultSet rs, int i) throws SQLException {
+	protected void addColumnNode(Document document, Element parent, Column column, ResultSet rs, int i, String value) throws SQLException {
 		String format = getFormat(column);
-		String value;
 		if (format != null) {
 			if (column.type.equals("timestamp") || column.type.equals("time") || column.type.equals("date") || column.type.equals("datetime")) {
 				SimpleDateFormat date_format = new SimpleDateFormat(format);
@@ -132,7 +131,7 @@ class ColumnFormatter {
 				}
 			}
 		}
-		parent.appendChild(document.createTextNode(rs.getString(i)));
+		parent.appendChild(document.createTextNode(value));
 	}
 
 }

@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.7 $ $Date: 1999-12-08 07:37:08 $
+ * @version $Revision: 1.8 $ $Date: 2000-02-03 19:23:31 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -279,7 +279,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                             column_element.setAttribute("NULL","YES");
                             column_element.appendChild(document.createTextNode(""));
                         } else {
-							formatter.addColumnNode(document,column_element,columns[i],rs,i+1);
+							formatter.addColumnNode(document,column_element,columns[i],rs,i+1,value);
                         }
                         row_node.appendChild(column_element);
                     }
