@@ -369,7 +369,7 @@ a Java 1.2 compatible JVM is required for this target.
     <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
     <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
-    <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
+    <copydir src="${samples.dir}" dest="${dist.dir}/samples" filtering="on"/>
     <copydir src="${build.docs.printer}" dest="${dist.dir}/docs/printer"/>
     <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
     <copydir src="${docs.dir}" dest="${dist.dir}" includes="changes.xml, todo.xml"/>
