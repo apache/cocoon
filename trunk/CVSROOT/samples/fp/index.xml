@@ -34,23 +34,12 @@
     <title>Another Item</title>
     <body>This field for instance, is handled as XML. If you write bad XML into it and try to save, you should get a parser error.</body>
     <figure>images/image2.jpg</figure>
-    <date>12/07/2000 12:31:48</date>
+    <date>22/07/2000 01:38:16</date>
   </item>
-  
-  
-	
-	<item>
-	<title>Novità di Stefano</title>
-	<body>Mitico!!!</body>
-	<figure>images/image1.jpg</figure>
-	<date>21/07/2000 10:00:26</date></item><item>
-	<title>Your News Item Title</title>
-	<body>Your Body Text</body>
-	<figure>images/image1.jpg</figure>
-	<date>21/07/2000 09:59:54</date></item><item>
+ 
+  <item>
     <title>Lorem ipsum</title>
     <body>
-<p>Stefano dice <strong>ciao</strong></p>
       <p>Lorem ipsum dolor sit <em>amet</em>, consectetuer adipiscing elit, 
       sed diam nonummy nibheuis erat volutpat. Ut wisi enim ad minim veniam, 
       quis nostrud exerci tation ullamcorper suscipit lobortis nisul ut aliquip 
@@ -62,7 +51,7 @@
       facilisis at vero eros et accumsan et iusto odio dignissim quiblandit 
       prasent.</p>
     </body>
-    <date>21/07/2000 09:59:40</date>
-    <figure>images/image2.jpg</figure>
+    <date>22/07/2000 01:38:26</date>
+    <figure>images/image3.jpg</figure>
   </item>  
 </page>
