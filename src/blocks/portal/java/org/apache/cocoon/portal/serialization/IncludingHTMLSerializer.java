@@ -17,10 +17,8 @@ package org.apache.cocoon.portal.serialization;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.cocoon.serialization.HTMLSerializer;
@@ -38,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: IncludingHTMLSerializer.java,v 1.2 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: IncludingHTMLSerializer.java,v 1.3 2004/03/15 10:14:39 cziegeler Exp $
  */
 public class IncludingHTMLSerializer 
     extends HTMLSerializer {
@@ -47,7 +45,7 @@ public class IncludingHTMLSerializer
     
     public static final String NAMESPACE = "http://apache.org/cocoon/portal/include";
     
-    protected List orderedPortletList = new ArrayList(20);
+    protected LinkedList orderedPortletList = new LinkedList();
     
     protected static final char token = '~';
     
@@ -103,7 +101,7 @@ public class IncludingHTMLSerializer
                 value = (String)map.get(portletId);
             }
             if ( value != null ) {
-                this.orderedPortletList.add(value);
+                this.orderedPortletList.addFirst(value);
                 this.characters(tokens, 0, tokens.length);
             }
         }
@@ -120,18 +118,16 @@ public class IncludingHTMLSerializer
 class ReplacingOutputStream extends OutputStream {
     
     /** Stream */
-    protected OutputStream stream;
+    protected final OutputStream stream;
     
     protected boolean inKey;
     
-    protected Iterator valueIterator;
-    
-    protected List orderedValues;
+    protected final LinkedList orderedValues;
     
     /**
      * Constructor
      */
-    public ReplacingOutputStream(OutputStream stream, List values) {
+    public ReplacingOutputStream(OutputStream stream, LinkedList values) {
         this.stream = stream;    
         this.orderedValues = values;
         this.inKey = false;
@@ -231,10 +227,7 @@ class ReplacingOutputStream extends OutputStream {
      * Write next value
      */
     protected void writeNextValue() throws IOException {
-        if ( this.valueIterator == null ) {
-            this.valueIterator = this.orderedValues.iterator();
-        }
-        final String value = (String)this.valueIterator.next();
+        final String value = (String)this.orderedValues.removeLast();
         if ( value != null ) {
             this.stream.write(value.getBytes(), 0, value.length());
         }        

@@ -32,12 +32,14 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistryImpl;
 import org.apache.cocoon.portal.pluto.service.log.LogServiceImpl;
+import org.apache.cocoon.portal.pluto.services.PropertyManagerServiceImpl;
 import org.apache.cocoon.portal.pluto.services.factory.FactoryManagerServiceImpl;
 import org.apache.pluto.services.ContainerService;
 import org.apache.pluto.services.PortletContainerEnvironment;
 import org.apache.pluto.services.factory.FactoryManagerService;
 import org.apache.pluto.services.information.InformationProviderService;
 import org.apache.pluto.services.log.LogService;
+import org.apache.pluto.services.property.PropertyManagerService;
 import org.apache.pluto.services.title.DynamicTitleService;
 
 /**
@@ -45,7 +47,7 @@ import org.apache.pluto.services.title.DynamicTitleService;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.4 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.5 2004/03/15 10:14:39 cziegeler Exp $
  */
 public class PortletContainerEnvironmentImpl 
 extends AbstractLogEnabled
@@ -91,6 +93,8 @@ implements PortletContainerEnvironment, Serviceable, Disposable, Initializable, 
                 this.init(new FactoryManagerServiceImpl()));
         this.staticServices.put(DynamicTitleService.class.getName(), 
                 this.init(new DynamicTitleServiceImpl()));
+        this.staticServices.put(PropertyManagerService.class.getName(),
+        		this.init(new PropertyManagerServiceImpl()));
     }
 
     /**
