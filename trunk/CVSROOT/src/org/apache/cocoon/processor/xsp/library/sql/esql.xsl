@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.51 2001-01-17 20:19:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.52 2001-01-17 20:20:21 balld Exp $-->
 <!--
 
  ============================================================================
@@ -187,6 +187,9 @@
     </xsp:structure>
     <xsp:logic>
       <xsl:choose>
+        <xsl:when test="$environment = 'cocoon1'">
+          static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
+        </xsl:when>
         <xsl:when test="$environment = 'cocoon2'">
           private static ComponentSelector _esql_selector = null;
 
@@ -202,9 +205,6 @@
           }
         </xsl:when>
       </xsl:choose>
-      <xsl:if test="$environment = 'cocoon1'">
-        static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
-      </xsl:if>
       class EsqlConnection {
         <xsl:choose>
           <xsl:when test="$environment = 'cocoon1'">
