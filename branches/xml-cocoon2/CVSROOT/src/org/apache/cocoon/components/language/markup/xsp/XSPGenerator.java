@@ -12,17 +12,21 @@ import org.apache.cocoon.Roles;
 import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.apache.cocoon.generation.AbstractServerPage;
 
 /**
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:43:30 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-10 22:38:54 $
  */
 public abstract class XSPGenerator extends AbstractServerPage {
 
   protected Parser parser;
+  protected Logger log = LogKit.getLoggerFor("cocoon");
 
   /**
    * Set the current <code>ComponentManager</code> instance used by this
@@ -33,6 +37,11 @@ public abstract class XSPGenerator extends AbstractServerPage {
   public void compose(ComponentManager manager) {
     super.compose(manager);
 
-    this.parser = (Parser) this.manager.lookup(Roles.PARSER);
+    try {
+        log.debug("Looking up " + Roles.PARSER);
+        this.parser = (Parser) this.manager.lookup(Roles.PARSER);
+    } catch (Exception e) {
+        log.error("Can't find component", e);
+    }
   }
 }

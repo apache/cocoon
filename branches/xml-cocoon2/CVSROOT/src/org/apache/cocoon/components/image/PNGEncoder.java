@@ -8,13 +8,16 @@
 
 package org.apache.cocoon.components.image;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.Parameters;
 import org.apache.avalon.*;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import com.sun.image.codec.jpeg.*;
 import com.keypoint.PngEncoder;
+
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
 
 /**
  * A Portable Network Graphics (PNG) Image Encoder.  This class delegates the
@@ -26,29 +29,31 @@ import com.keypoint.PngEncoder;
  */
 public class PNGEncoder implements ImageEncoder, Configurable {
 
+    private Logger log = LogKit.getLoggerFor("cocoon");
+
     /** Compression level for gzip (default: 7) */
     private int compression;
     /** Whether to encode the alpha channel (default: yes) */
     private boolean alpha;
 
     public void configure(Configuration conf) throws ConfigurationException {
-		// Using the passed Configuration, generate a far more friendly Parameters object.
-		Parameters p = Parameters.fromConfiguration(conf);
-		compression = p.getParameterAsInteger("compression", 7);
-		alpha = p.getParameterAsBoolean("alpha", true);
-		//System.err.println("PNG Encoder[compression: " + compression + ", alpha: " + alpha + "]");
+        // Using the passed Configuration, generate a far more friendly Parameters object.
+        Parameters p = Parameters.fromConfiguration(conf);
+        compression = p.getParameterAsInteger("compression", 7);
+        alpha = p.getParameterAsBoolean("alpha", true);
+        log.debug("PNG Encoder[compression: " + compression + ", alpha: " + alpha + "]");
     }
 
     public String getMimeType() {
-		return "image/png";
+        return "image/png";
     }
 
     public void encode(BufferedImage image, OutputStream out) throws IOException {
-		// Get an instance of the compressor
-		PngEncoder enc = new PngEncoder(image, alpha);
-		// Set the compression ratio
-		enc.setCompressionLevel(compression);
-		// Encode and output
-		out.write(enc.pngEncode());
+        // Get an instance of the compressor
+        PngEncoder enc = new PngEncoder(image, alpha);
+        // Set the compression ratio
+        enc.setCompressionLevel(compression);
+        // Encode and output
+        out.write(enc.pngEncode());
     }
 }

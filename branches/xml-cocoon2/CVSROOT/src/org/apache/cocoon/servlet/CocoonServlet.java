@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -32,6 +35,10 @@ import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+import org.apache.log.Priority;
+
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -40,10 +47,12 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.24 $ $Date: 2000-10-30 19:01:08 $
+ * @version CVS $Revision: 1.1.4.25 $ $Date: 2000-11-10 22:38:55 $
  */
- 
+
 public class CocoonServlet extends HttpServlet {
+
+    private Logger log = null;
 
     final long second = 1000;
     final long minute = 60 * second;
@@ -62,13 +71,21 @@ public class CocoonServlet extends HttpServlet {
      */
     public void init(ServletConfig conf) throws ServletException {
 
+        try {
+            log = LogKit.createLogger("cocoon", new URL("file:../logs/cocoon.log"), Priority.INFO);
+        } catch (MalformedURLException mue) {
+            LogKit.log("Could not set up Cocoon Logger, will use screen instead", mue);
+        }
+
+        LogKit.setGlobalPriority(Priority.INFO);
+
         super.init(conf);
 
         this.context = conf.getServletContext();
 
         // WARNING (SM): the line below BREAKS the Servlet API portability of
         // web applications.
-        // This is a hack to go around java compiler design problems that 
+        // This is a hack to go around java compiler design problems that
         // do not allow applications to force their own classloader to the
         // compiler during compilation.
         // We look for a specific Tomcat attribute so we are bound to Tomcat
@@ -82,7 +99,7 @@ public class CocoonServlet extends HttpServlet {
         // (I don't know if any do) or, for other servlet containers, you have
         // to extract all the libraries and place them in the system classpath
         // or the compilation of sitemaps and XSP will fail.
-        // I know this sucks, but I don't have the energy to write a java 
+        // I know this sucks, but I don't have the energy to write a java
         // compiler to fix this :(
         this.classpath = (String) context.getAttribute(Cocoon.CATALINA_SERVLET_CLASSPATH);
         if (this.classpath == null) {
@@ -90,7 +107,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
-        
+
         String configFileName = conf.getInitParameter("configurations");
         if (configFileName == null) {
             throw new ServletException("Servlet initialization argument 'configurations' not specified");
@@ -160,8 +177,8 @@ public class CocoonServlet extends HttpServlet {
 
         if (uri.length() == 0) {
             /* empty relative URI
-                 -> HTTP-redirect from /cocoon to /cocoon/ to avoid 
-                    StringIndexOutOfBoundsException when calling 
+                 -> HTTP-redirect from /cocoon to /cocoon/ to avoid
+                    StringIndexOutOfBoundsException when calling
                     "".charAt(0)
                else process URI normally
             */
@@ -178,7 +195,7 @@ public class CocoonServlet extends HttpServlet {
 
             if (!this.cocoon.process(env)) {
 
-                // FIXME (NKB) It is not true that !this.cocoon.process(env) 
+                // FIXME (NKB) It is not true that !this.cocoon.process(env)
                 // means only SC_NOT_FOUND
                 res.setStatus(res.SC_NOT_FOUND);
 
@@ -230,9 +247,9 @@ public class CocoonServlet extends HttpServlet {
             return null;
         }
     }
-    
+
     private void showTime(ServletOutputStream out, boolean hide, long time) throws IOException {
-        
+
         out.print((hide) ? "<!-- " : "<p>");
 
         out.print("Processed by " + Cocoon.COMPLETE_NAME + " in ");

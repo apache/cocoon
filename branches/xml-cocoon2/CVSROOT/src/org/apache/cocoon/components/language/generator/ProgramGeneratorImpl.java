@@ -38,6 +38,9 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
 import org.apache.cocoon.util.IOUtils;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
 
@@ -49,11 +52,13 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-10-19 20:21:15 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-11-10 22:38:53 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
 {
+
+    private Logger log = LogKit.getLoggerFor("cocoon");
   /** The auto-reloading option */
   protected boolean autoReload = true;
 
@@ -80,10 +85,18 @@ public class ProgramGeneratorImpl
    * @param manager The global component manager
    */
   public void compose(ComponentManager manager) {
-    this.manager = manager;
-    this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
-    this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
-    this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
+      this.manager = manager;
+
+      try {
+          log.debug("Lookup " + Roles.MARKUP_LANGUAGE);
+          this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
+	  log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
+          this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
+	  log.debug("Lookup " + Roles.COCOON);
+          this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
+      } catch (Exception e) {
+          log.error("Could not lookup Component", e);
+      }
   }
 
   /**

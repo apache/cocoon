@@ -10,15 +10,20 @@ package org.apache.cocoon.xml;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 /**
  * This abstract class provides default implementation of the methods specified
  * by the <code>XMLProducer</code> interface. 
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-27 14:33:37 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-10 22:38:56 $
  */
 public abstract class AbstractXMLProducer implements XMLProducer {
+
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     
     /** The <code>ContentHandler</code> receiving SAX events. */
     protected ContentHandler contentHandler;

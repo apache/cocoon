@@ -31,15 +31,23 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 /**
- * The <code>DOMBuilder</code> is a utility class that will generate a W3C
+ * The <code>DOMBuilder</code> is a utility cl		Object hint = null;
+		String className = null;
+
+                try {
+ass that will generate a W3C
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-28 10:14:24 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-10 22:38:56 $
  */
 public class DOMBuilder implements XMLConsumer {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     /** The document was not started */
     private static final int S_AVAIL=0;
     /** State between startDTD() and endDTD() */

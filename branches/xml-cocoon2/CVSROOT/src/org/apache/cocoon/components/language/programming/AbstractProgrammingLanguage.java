@@ -18,17 +18,22 @@ import org.apache.avalon.Parameters;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * Base implementation of <code>ProgrammingLanguage</code>. This class sets the
  * <code>CodeFormatter</code> instance and deletes source program files after
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 14:43:35 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 22:38:54 $
  */
 public abstract class AbstractProgrammingLanguage
   implements ProgrammingLanguage, Configurable
 {
+  protected Logger log = LogKit.getLoggerFor("cocoon");
+
   /** The source code formatter */
   protected Class codeFormatter;
 
@@ -39,8 +44,10 @@ public abstract class AbstractProgrammingLanguage
    */
   public void configure(Configuration conf) throws ConfigurationException {
       try {
+          log.debug("Setting the parameters");
           this.setParameters( Parameters.fromConfiguration(conf) );
       } catch (Exception e) {
+          log.error("Could not set Parameters", e);
           throw new ConfigurationException("Could not get parameters because: " +
                                            e.getMessage());
       }
@@ -60,7 +67,9 @@ public abstract class AbstractProgrammingLanguage
       if (className != null) {
         this.codeFormatter = ClassUtils.loadClass(className);
       }
-    } catch (Exception e) { }
+    } catch (Exception e) {
+       log.error("Error with \"code-formatter\" parameter", e);
+    }
   }
 
   /**
@@ -73,7 +82,9 @@ public abstract class AbstractProgrammingLanguage
     if (this.codeFormatter != null) {
       try {
         return (CodeFormatter) this.codeFormatter.newInstance();
-      } catch (Exception e) { }
+      } catch (Exception e) {
+          log.error("Error instantiating CodeFormatter", e);
+      }
     }
 
     return null;

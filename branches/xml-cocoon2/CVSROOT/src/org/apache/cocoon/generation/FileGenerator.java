@@ -13,12 +13,14 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.xml.sax.SAXException;
+import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentNotAccessibleException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-19 14:43:48 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-10 22:38:54 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable {
 
@@ -26,10 +28,16 @@ public class FileGenerator extends ComposerGenerator implements Poolable {
      * Generate XML data.
      */
     public void generate()
-    throws IOException, SAXException {
-        Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
-        parser.setContentHandler(this.contentHandler);
-        parser.setLexicalHandler(this.lexicalHandler);
-        parser.parse(super.resolver.resolveEntity(null,this.source));
+    throws IOException, SAXException, ProcessingException {
+        try {
+            log.debug("Looking up " + Roles.PARSER);
+            Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
+
+            parser.setContentHandler(this.contentHandler);
+            parser.setLexicalHandler(this.lexicalHandler);
+            parser.parse(super.resolver.resolveEntity(null,this.source));
+	} catch (Exception e) {
+	   log.error("Could not get parser", e);
+	}
     }    
 }

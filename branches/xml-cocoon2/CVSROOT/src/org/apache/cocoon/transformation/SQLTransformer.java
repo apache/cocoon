@@ -25,6 +25,9 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.util.ClassUtils;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.Attributes;
@@ -38,12 +41,12 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-19 14:44:34 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-10 22:38:55 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer {
 
-    protected boolean debug = true;
+    private Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The SQL namespace **/
     public static final String my_uri = "http://apache.org/cocoon/SQL";
@@ -96,34 +99,31 @@ public class SQLTransformer extends AbstractTransformer {
     /** BEGIN SitemapComponent methods **/
 
     public void setup(EntityResolver resolver, Map objectModel,
-                      String source, Parameters parameters) 
+                      String source, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         current_state = STATE_OUTSIDE;
 
         // Check the driver
         String parameter = parameters.getParameter("driver",null);
         if (parameter != null) {
-            if (debug) {
-                System.err.println("DRIVER: "+parameter);
-            }
+            log.debug("DRIVER: "+parameter);
+
             default_properties.setProperty("driver",parameter);
         }
 
         // Check the dburl
         parameter = parameters.getParameter("dburl",null);
         if (parameter != null) {
-            if (debug) {
-                System.err.println("DBURL: "+parameter);
-            }
+            log.debug("DBURL: "+parameter);
+
             default_properties.setProperty("dburl",parameter);
         }
 
         // Check the username
         parameter = parameters.getParameter("username",null);
         if (parameter != null) {
-            if (debug) {
-                System.err.println("USERNAME: "+parameter);
-            }
+            log.debug("USERNAME: "+parameter);
+
             default_properties.setProperty("username",parameter);
         }
 
@@ -206,7 +206,7 @@ public class SQLTransformer extends AbstractTransformer {
                 current_state = STATE_INSIDE_QUERY_ELEMENT;
                 String isupdate =
                     attributes.getValue("", MAGIC_UPDATE_ATTRIBUTE);
-		if (isupdate != null && !isupdate.equalsIgnoreCase("false"))
+        if (isupdate != null && !isupdate.equalsIgnoreCase("false"))
                     getCurrentQuery().setUpdate(true);
                 break;
             default:
@@ -220,10 +220,9 @@ public class SQLTransformer extends AbstractTransformer {
                 if (current_value.length() > 0) {
                     getCurrentQuery().addQueryPart(
                       current_value.toString());
-                    if (debug) {
-                        System.err.println("QUERY IS \""+
+                    log.debug("QUERY IS \""+
                                            current_value.toString() + "\"");
-                    }
+
                     current_value.setLength(0);
                 }
                 current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
@@ -238,11 +237,10 @@ public class SQLTransformer extends AbstractTransformer {
             case STATE_INSIDE_VALUE_ELEMENT:
                 getCurrentQuery().setParameter(current_name,
                                                current_value.toString());
-                if (debug) {
-                    System.err.println("SETTING VALUE ELEMENT name {"+
+                log.debug("SETTING VALUE ELEMENT name {"+
                                        current_name + "} value {"+
                                        current_value.toString() + "}");
-                }
+
                 current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
             default:
@@ -285,16 +283,14 @@ public class SQLTransformer extends AbstractTransformer {
                                                MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE + " attribute");
                 }
                 AncestorValue av = new AncestorValue(level, name);
-                if (debug) {
-                    System.err.println("ANCESTOR VALUE "+level + " "+name);
-                }
+                log.debug("ANCESTOR VALUE "+level + " "+name);
+
                 if (current_value.length() > 0) {
                     getCurrentQuery().addQueryPart(
                       current_value.toString());
-                    if (debug) {
-                        System.err.println("QUERY IS \""+
+                    log.debug("QUERY IS \""+
                                            current_value.toString() + "\"");
-                    }
+
                     current_value.setLength(0);
                 }
                 getCurrentQuery().addQueryPart(av);
@@ -322,8 +318,8 @@ public class SQLTransformer extends AbstractTransformer {
     /** BEGIN SAX ContentHandler handlers **/
 
     public void setDocumentLocator(Locator locator) {
-        System.err.println("PUBLIC ID"+locator.getPublicId());
-        System.err.println("SYSTEM ID"+locator.getSystemId());
+        log.info("PUBLIC ID"+locator.getPublicId());
+        log.info("SYSTEM ID"+locator.getSystemId());
         if (super.contentHandler != null)
             super.contentHandler.setDocumentLocator(locator);
     }
@@ -334,9 +330,8 @@ public class SQLTransformer extends AbstractTransformer {
             super.startElement(uri, name, raw, attributes);
             return;
         }
-        if (debug) {
-            System.err.println("RECEIVED START ELEMENT "+name);
-        }
+        log.debug("RECEIVED START ELEMENT "+name);
+
         if (name.equals(MAGIC_EXECUTE_QUERY)) {
             startExecuteQueryElement();
         } else if (name.equals(MAGIC_QUERY)) {
@@ -354,10 +349,9 @@ public class SQLTransformer extends AbstractTransformer {
             super.endElement(uri, name, raw);
             return;
         }
-        if (debug) {
-            System.err.println("RECEIVED END ELEMENT "+name + "("+uri +
+        log.debug("RECEIVED END ELEMENT "+name + "("+uri +
                                ")");
-        }
+
         if (name.equals(MAGIC_EXECUTE_QUERY)) {
             endExecuteQueryElement();
         } else if (name.equals(MAGIC_QUERY)) {
@@ -377,10 +371,9 @@ public class SQLTransformer extends AbstractTransformer {
                 current_state != STATE_INSIDE_QUERY_ELEMENT) {
             super.characters(ary, start, length);
         }
-        if (debug) {
-            System.err.println("RECEIVED CHARACTERS: "+
+        log.debug("RECEIVED CHARACTERS: "+
                                new String(ary, start, length));
-        }
+
         current_value.append(ary, start, length);
     }
 
@@ -443,11 +436,11 @@ public class SQLTransformer extends AbstractTransformer {
         /** And the results' metadata **/
         protected ResultSetMetaData md = null;
 
-	/** If this query is actually an update (insert, update, delete) **/
-	protected boolean isupdate = false;
+    /** If this query is actually an update (insert, update, delete) **/
+    protected boolean isupdate = false;
 
-	/** If it is an update/etc, the return value (num rows modified) **/
-	protected int rv = -1;
+    /** If it is an update/etc, the return value (num rows modified) **/
+    protected int rv = -1;
 
         /** The parts of the query **/
         protected Vector query_parts = new Vector();
@@ -541,9 +534,9 @@ public class SQLTransformer extends AbstractTransformer {
         protected boolean next() throws SQLException {
             try {
                 // if rv is not -1, then an SQL insert, update, etc, has
-		// happened (see JDBC docs - return codes for executeUpdate)
-	        if (rv != -1)
-		    return true;
+        // happened (see JDBC docs - return codes for executeUpdate)
+            if (rv != -1)
+            return true;
                 if (rs == null || !rs.next()) {
                     close();
                     return false;
@@ -560,7 +553,7 @@ public class SQLTransformer extends AbstractTransformer {
                 if (rs != null)
                     rs.close();
                 st.close();
-            } finally { 
+            } finally {
                 conn.close();
             }
         }
@@ -572,7 +565,7 @@ public class SQLTransformer extends AbstractTransformer {
         protected void serializeRow() throws SQLException, SAXException {
             AttributesImpl attr = new AttributesImpl();
 
-	    if (!isupdate) {
+        if (!isupdate) {
                 for (int i = 1; i <= md.getColumnCount(); i++) {
                     transformer.start(md.getColumnName(i).toLowerCase(), attr);
                     try {
@@ -588,7 +581,7 @@ public class SQLTransformer extends AbstractTransformer {
                 transformer.data(String.valueOf(rv));
                 transformer.end("returncode");
                 rv = -1; // we only want the return code shown once.
-	    }
+        }
         }
 
     }

@@ -17,15 +17,21 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.Component;
 import org.apache.avalon.Parameters;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-30 18:37:41 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-10 22:38:52 $
  */
 public class HelloAction implements Action {
+
+    private Logger log = LogKit.getLoggerFor("cocoon");
+
     /**
      * A simple Action that logs if the <code>Session</code> object
      * has been created
@@ -48,12 +54,12 @@ public class HelloAction implements Action {
             } else {
                 if (session != null) {
                     if (session.isNew()) {
-                        System.out.println("Session is new");
+                        log.debug("Session is new");
                     } else {
-                        System.out.println("Session is old");
+                        log.debug("Session is old");
                     }
                 } else {
-                    System.out.println("A session object was not created");
+                    log.debug("A session object was not created");
                 }
             }
         }

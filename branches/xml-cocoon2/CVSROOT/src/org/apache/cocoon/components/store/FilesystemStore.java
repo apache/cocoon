@@ -5,13 +5,18 @@ import java.util.Enumeration;
 
 import org.apache.cocoon.util.IOUtils;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import java.io.IOException;
 
 public class FilesystemStore implements Store {
   /** The directory repository */
   protected File directoryFile;
   protected volatile String directoryPath;
-  
+
+  private Logger log = LogKit.getLoggerFor("cocoon");
+
   /**
    * Constructor
    */
@@ -31,8 +36,8 @@ public class FilesystemStore implements Store {
       /* Create it anew */
       if (!this.directoryFile.mkdir()) {
         throw new IOException(
-	  "Error creating store directory '" + this.directoryPath + "': "
-	);
+      "Error creating store directory '" + this.directoryPath + "': "
+    );
       }
     }
 
@@ -68,13 +73,13 @@ public class FilesystemStore implements Store {
 
     return null;
   }
-  
+
   /**
    * Store the given object in a persistent state.
    * 1) Null values generate empty directories.
    * 2) String values are dumped to text files
    * 3) Object values are serialized
-   */ 
+   */
   public void store(Object key, Object value) {
     try {
       File file = fileFromKey(key);
@@ -89,7 +94,7 @@ public class FilesystemStore implements Store {
       if (value == null) { /* Directory */
         if (file.exists()) {
           if (!file.delete()) { /* FAILURE */
-           // System.err.println("File cannot be deleted: " + file.toString());
+           log.error("File cannot be deleted: " + file.toString());
            return;
           }
         }
@@ -107,7 +112,7 @@ public class FilesystemStore implements Store {
 
   /**
    * Holds the given object in a volatile state.
-   */ 
+   */
   public void hold(Object key, Object value) {
     this.store(key, value);
     File file = (File) this.get(key);
@@ -115,7 +120,7 @@ public class FilesystemStore implements Store {
       file.deleteOnExit();
     }
   }
-  
+
   /**
    * Remove the object associated to the given key.
    */
@@ -125,7 +130,7 @@ public class FilesystemStore implements Store {
       file.delete();
     }
   }
-  
+
   /**
    * Indicates if the given key is associated to a contained object.
    */
@@ -136,7 +141,7 @@ public class FilesystemStore implements Store {
     }
     return file.exists();
   }
-  
+
   /**
    * Returns the list of stored files as an Enumeration of Files
    */

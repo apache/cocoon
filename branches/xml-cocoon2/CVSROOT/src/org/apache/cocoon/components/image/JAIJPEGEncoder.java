@@ -16,6 +16,9 @@ import java.awt.image.*;
 import com.sun.media.jai.codec.JPEGEncodeParam;
 import com.sun.media.jai.codec.ImageCodec;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * A JPEG Image Encoder.  This class delegates the actual compression to
  * the codecs supplied with the Java Advanced Imaging API.
@@ -25,36 +28,38 @@ import com.sun.media.jai.codec.ImageCodec;
  */
 public class JAIJPEGEncoder implements ImageEncoder, Configurable {
 
+    private Logger log = LogKit.getLoggerFor("cocoon");
+
     /** The quality level. The default is 0.75 (high quality) */
     private float quality;
 
     public void configure(Configuration conf) throws ConfigurationException {
-		// Using the passed Configuration, generate a far more friendly Parameters object.
-		Parameters p = Parameters.fromConfiguration(conf);
-		quality = p.getParameterAsFloat("quality", 0.75f);
-		//System.err.println("Quality set to " + quality);
+        // Using the passed Configuration, generate a far more friendly Parameters object.
+        Parameters p = Parameters.fromConfiguration(conf);
+        quality = p.getParameterAsFloat("quality", 0.75f);
+        log.debug("Quality set to " + quality);
     }
 
     public String getMimeType() {
-		return "image/jpeg";
+        return "image/jpeg";
     }
 
     public void encode(BufferedImage image, OutputStream out) throws IOException {
-		// The JPEG encoder requires 3 band byte-based images, so create a new image
-		// TODO: find a faster way of doing this
-		int w = image.getWidth();
-		int h = image.getHeight();
-		BufferedImage noalpha = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
-		Raster raster = image.getRaster().createChild(0, 0, w, h, 0, 0, new int[] {0, 1, 2});
-		noalpha.setData(raster);
+        // The JPEG encoder requires 3 band byte-based images, so create a new image
+        // TODO: find a faster way of doing this
+        int w = image.getWidth();
+        int h = image.getHeight();
+        BufferedImage noalpha = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
+        Raster raster = image.getRaster().createChild(0, 0, w, h, 0, 0, new int[] {0, 1, 2});
+        noalpha.setData(raster);
 
-		JPEGEncodeParam param = new JPEGEncodeParam();
-		param.setQuality(quality);
-		com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder("JPEG", out, param);
-		if (encoder != null) {
-			encoder.encode(noalpha);
-		} else {
-			throw new RuntimeException("JPEG Encoder not found");
-		}
+        JPEGEncodeParam param = new JPEGEncodeParam();
+        param.setQuality(quality);
+        com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder("JPEG", out, param);
+        if (encoder != null) {
+            encoder.encode(noalpha);
+        } else {
+            throw new RuntimeException("JPEG Encoder not found");
+        }
     }
 }

@@ -34,7 +34,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 14:43:50 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 22:38:54 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -55,8 +55,13 @@ public class ServerPagesGenerator
     super.compose(manager);
 
     if (programGenerator == null) {
-      programGenerator = (ProgramGenerator)
-        this.manager.lookup(Roles.PROGRAM_GENERATOR);
+      log.debug("Looking up " + Roles.PROGRAM_GENERATOR);
+      try {
+          programGenerator = (ProgramGenerator)
+              this.manager.lookup(Roles.PROGRAM_GENERATOR);
+      } catch (Exception e) {
+          log.error("Could not find ProgramGenerator", e);
+      }
     }
   }
 

@@ -60,8 +60,13 @@ public abstract class AbstractDOMTransformer extends DOMBuilder
 	public void compose(ComponentManager manager) {
 		this.manager = manager;
 		// Get a parser and use it as a DOM factory
-		Parser p = (Parser)manager.lookup(Roles.PARSER);
-		super.factory = (DOMFactory)p;
+		try {
+		    log.debug("Looking up " + Roles.PARSER);
+		    Parser p = (Parser)manager.lookup(Roles.PARSER);
+		    super.factory = (DOMFactory)p;
+		} catch (Exception e) {
+		    log.error("Could not find component", e);
+		}
 	}
 
     /**

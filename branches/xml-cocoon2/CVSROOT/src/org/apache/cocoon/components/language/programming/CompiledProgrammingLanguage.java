@@ -26,7 +26,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-19 14:43:36 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-10 22:38:54 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -73,7 +73,12 @@ public abstract class CompiledProgrammingLanguage
    */
   public void compose(ComponentManager manager) {
     this.manager = manager;
-    this.classpath = ((Cocoon) this.manager.lookup(Roles.COCOON)).getClasspath();
+    try {
+        log.debug("Looking up " + Roles.COCOON);
+        this.classpath = ((Cocoon) this.manager.lookup(Roles.COCOON)).getClasspath();
+    } catch (Exception e) {
+        log.error("Could not find component", e);
+    }
   }
 
   /**

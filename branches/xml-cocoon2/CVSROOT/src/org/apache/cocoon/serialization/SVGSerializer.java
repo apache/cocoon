@@ -60,19 +60,26 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
     public void configure(Configuration conf) throws ConfigurationException {
         this.config = conf;
 
-        // First, get a DOM parser for the DOM Builder to work with.
-        super.factory= (Parser) this.manager.lookup(Roles.PARSER);
+        try {
+	    log.debug("Looking up " + Roles.PARSER);
+            // First, get a DOM parser for the DOM Builder to work with.
+            super.factory= (Parser) this.manager.lookup(Roles.PARSER);
+	} catch (Exception e) {
+	    log.error("Could not find component", e);
+	}
 
         // What image encoder do I use?
         String enc = this.config.getChild("encoder").getValue();
         if (enc == null) {
-            throw new ConfigurationException("No Image Encoder specified."/*, conf*/);
+            throw new ConfigurationException("No Image Encoder specified.");
         }
         
         try {
+	    log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
 	    ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
             this.encoder = (ImageEncoder) selector.select(enc);
-        } catch (ComponentNotFoundException e) {
+        } catch (Exception e) {
+	    log.error("Could not select " + Roles.IMAGE_ENCODER, e);
             throw new ConfigurationException("The ImageEncoder '" 
                 + enc + "' cannot be found. Check your component configuration in the sitemap"/*, conf*/);
         }

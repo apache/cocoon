@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.60 $ $Date: 2000-11-06 13:49:30 $
+     * @version CVS $Revision: 1.1.2.61 $ $Date: 2000-11-10 22:38:53 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -202,7 +202,7 @@
           load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration(""), null);
 
           <!-- Configure generators -->
-          <xsl:call-template name="config-components">
+	  <xsl:call-template name="config-components">
             <xsl:with-param name="name">generator</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:generators/map:generator"/>

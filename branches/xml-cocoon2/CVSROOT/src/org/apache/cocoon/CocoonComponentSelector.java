@@ -31,7 +31,7 @@ import org.apache.cocoon.util.ComponentPoolController;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-23 19:29:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-10 22:38:52 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer {
     /** Hashmap of all components which this ComponentManager knows about.
@@ -154,7 +154,8 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
      * @param componentClass the class to retrieve an instance of.
      * @return and instance of the component.
      */
-    private Component getThreadsafeComponent(Class componentClass) {
+    private Component getThreadsafeComponent(Class componentClass)
+    throws ComponentNotAccessibleException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
         if ( component == null ) {

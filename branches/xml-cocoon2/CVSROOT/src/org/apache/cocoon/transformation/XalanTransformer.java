@@ -17,6 +17,7 @@ import java.text.StringCharacterIterator;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.Component;
+import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
@@ -52,7 +53,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-11-10 12:32:01 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2000-11-10 22:38:55 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -128,7 +129,8 @@ implements Transformer, Composer, Poolable, Configurable {
     /**
      * Configure this transformer.
      */
-    public void configure(Configuration conf) {
+    public void configure(Configuration conf)
+    throws ConfigurationException {
         if (conf != null) {
             Configuration child = conf.getChild("use-cache");
             if (child != null) {
@@ -142,7 +144,12 @@ implements Transformer, Composer, Poolable, Configurable {
      * <code>Composer</code>.
      */
     public void compose(ComponentManager manager) {
-        this.store = (Store) manager.lookup(Roles.STORE);
+        try {
+	    log.debug("Looking up " + Roles.STORE);
+            this.store = (Store) manager.lookup(Roles.STORE);
+	} catch (Exception e) {
+	    log.error("Could not find component", e);
+	}
     }
 
     /**

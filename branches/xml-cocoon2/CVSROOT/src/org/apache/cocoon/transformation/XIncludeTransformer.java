@@ -35,6 +35,9 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.xpath.XPathAPI;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 /**
  * My first pass at an XInclude transformation. Currently it should set the base URI
  * from the SAX Locator's system id but allow it to be overridden by xml:base
@@ -43,11 +46,11 @@ import org.apache.xpath.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-01 20:19:05 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-10 22:38:55 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
-    protected boolean debug = false;
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     protected ComponentManager manager = null;
 
@@ -82,9 +85,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             throws ProcessingException, SAXException, IOException {}
     /*
         try {
-            System.err.println("SOURCE: "+source);
+            log.debug("SOURCE: "+source);
             base_xmlbase_uri = new URL(source);
-            System.err.println("SOURCE URI: "+base_xmlbase_uri.toString());
+            log.debug("SOURCE URI: "+base_xmlbase_uri.toString());
         } catch (MalformedURLException e) {
             throw new ProcessingException(e.getMessage());
         }
@@ -163,7 +166,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
     }
 
     protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
-        if (debug) { System.err.println("Processing XInclude element: href="+href+", parse="+parse); }
+        log.debug("Processing XInclude element: href="+href+", parse="+parse);
         URL url;
         String suffix;
         int index = href.indexOf('#');
@@ -174,11 +177,11 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             url = new URL(current_xmlbase_uri,href.substring(0,index));
             suffix = href.substring(index+1);
         }
-        if (debug) { System.err.println("URL: "+url+"\nSuffix: "+suffix); }
+        log.debug("URL: "+url+"\nSuffix: "+suffix);
         Object object = url.getContent();
-        if (debug) { System.err.println("Object: "+object); }
+        log.debug("Object: "+object);
         if (parse.equals("text")) {
-            if (debug) { System.err.println("Parse type is text"); }
+            log.debug("Parse type is text");
             if (object instanceof Reader) {
                 Reader reader = (Reader)object;
                 int read;
@@ -202,8 +205,15 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 }
             }
         } else if (parse.equals("xml")) {
-            if (debug) { System.err.println("Parse type is XML"); }
-            Parser parser = (Parser)manager.lookup(Roles.PARSER);
+            log.debug("Parse type is XML");
+	    Parser parser = null;
+	    try {
+	        log.debug("Looking up " + Roles.PARSER);
+                parser = (Parser)manager.lookup(Roles.PARSER);
+	    } catch (Exception e) {
+	        log.error("Could not find component", e);
+		return;
+	    }
             InputSource input;
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);
@@ -214,7 +224,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             }
             if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
                 String xpath = suffix.substring(9,suffix.length()-1);
-                if (debug) { System.err.println("XPath is "+xpath); }
+                log.debug("XPath is "+xpath);
                 DOMBuilder builder = new DOMBuilder(parser);
                 parser.setContentHandler(builder);
                 parser.setLexicalHandler(builder);
@@ -228,7 +238,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 }
             } else {
                 XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
-                xinclude_handler.debug = debug;
                 parser.setContentHandler(xinclude_handler);
                 parser.setLexicalHandler(xinclude_handler);
                 parser.parse(input);
@@ -252,12 +261,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         }
 
         public void startDocument() {
-            if (debug) { System.err.println("Internal start document received"); }
+            log.debug("Internal start document received");
             /** We don't pass start document on to the "real" handler **/
         }
 
         public void endDocument() {
-            if (debug) { System.err.println("Internal end document received"); }
+            log.debug("Internal end document received");
             /** We don't pass end document on to the "real" handler **/
         }
 
@@ -273,7 +282,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
         public void startElement(String namespace, String name, String raw,
             Attributes attr) throws SAXException {
-            if (debug) { System.err.println("Internal element received: "+name); }
+            log.debug("Internal element received: "+name);
             content_handler.startElement(namespace,name,raw,attr);
         }
 

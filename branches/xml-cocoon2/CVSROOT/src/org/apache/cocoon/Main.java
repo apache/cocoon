@@ -15,12 +15,19 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.OutputStream;
 
+import java.net.MalformedURLException;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+
+import org.apache.avalon.util.cli.CLArgsParser;
+import org.apache.avalon.util.cli.CLOption;
+import org.apache.avalon.util.cli.CLOptionDescriptor;
+import org.apache.avalon.util.cli.CLUtil;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -30,15 +37,60 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+import org.apache.log.Priority;
 
 /**
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.12 $ $Date: 2000-10-06 21:25:27 $
+ * @version CVS $Revision: 1.1.4.13 $ $Date: 2000-11-10 22:38:52 $
  */
 
 public class Main {
+
+    protected static Logger log = null;
+
+    protected static final int HELP_OPT =        'h';
+    protected static final int VERSION_OPT =     'v';
+    protected static final int LOG_URL_OPT =     'l';
+    protected static final int LOG_LEVEL_OPT =   'u';
+    protected static final int CONTEXT_DIR_OPT = 'c';
+    protected static final int DEST_DIR_OPT =    'd';
+    protected static final int WORK_DIR_OPT =    'w';
+
+    protected static final CLOptionDescriptor [] options = new CLOptionDescriptor [] {
+        new CLOptionDescriptor("help",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               HELP_OPT,
+                               "print this message and exit"),
+        new CLOptionDescriptor("version",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               VERSION_OPT,
+                               "print the version information and exit"),
+        new CLOptionDescriptor("logUrl",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               LOG_URL_OPT,
+                               "use given file/URL for log"),
+        new CLOptionDescriptor("logLevel",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               LOG_LEVEL_OPT,
+                               "choose the minimum log level for logging (DEBUG, INFO, WARN, ERROR, FATAL_ERROR)"),
+        new CLOptionDescriptor("contextDir",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CONTEXT_DIR_OPT,
+                               "use given dir as context"),
+        new CLOptionDescriptor("destDir",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               DEST_DIR_OPT,
+                               "use given dir as destination"),
+        new CLOptionDescriptor("workDir",
+                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               WORK_DIR_OPT,
+                               "use given dir as working directory")
+    };
+
 
     public static void main(String[] args) throws Exception {
 
@@ -46,81 +98,106 @@ public class Main {
         String contextDir = Cocoon.DEFAULT_CONTEXT_DIR;
         String workDir = Cocoon.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
-        
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+        CLArgsParser parser = new CLArgsParser(args, options);
+        String logUrl = "";
+        String unprocessed[];
+        String logLevel = "DEBUG";
 
-            if (arg.equals("-h") || arg.equals("--help")) {
-                printUsage();
-            } else if (arg.equals("-v") || arg.equals("--version")) {
-                printVersion();
-            } else if (arg.equals("-d") || arg.equals("--destDir")) {
-                try {
-                    destDir = args[i + 1];
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    error("Careful, you must specify a destination dir when " +
-                        "using the -d/--destDir argument");
-                }
-            } else if (arg.equals("-w") || arg.equals("--workDir")) {
-                try {
-                    workDir = args[i + 1];
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    error("Careful, you must specify a destination dir when " +
-                        "using the -w/--workDir argument");
-                }
-            } else if (arg.equals("-c") || arg.equals("--contextDir")) {
-                try {
-                    contextDir = args[i + 1];
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    error("Careful, you must specify a configuration file when " +
-                        "using the -c/--contextDir argument");
-                }
-            } else if (arg.equals("-l") || arg.equals("--logFile")) {
-                try {
-                    String logFile = args[i + 1];
-                    i++;
-                    PrintStream out = new PrintStream(new FileOutputStream(logFile));
-                    System.setOut(out);
-                    System.setErr(out);
-                } catch (IOException e) {
-                    error("Cannot write on the specified log file. " +
-                        "Please, make sure the path exists and you have write permissions.");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    error("Careful, you must specify a log file when " +
-                        "using the -l/--logFile argument");
-                }
-            } else if (arg.startsWith("-")) {
-                // we don't have any more args to recognize!
-                error("Sorry, cannot recognize the argument: " + arg + "\n");
-            } else {
-                // if it's no other arg, it must be the starting URI
-                targets.add(arg);
+        LogKit.setGlobalPriority(Priority.DEBUG);
+
+        List clOptions = parser.getArguements();
+        int size = clOptions.size();
+
+        for (int i = 0; i < size; i++) {
+            CLOption option = (CLOption) clOptions.get(i);
+
+            switch (option.getId()) {
+                case 0:
+                    LogKit.log("Sorry, cannot recognize the argument: \'" + option.getId() + "\'\n");
+                    break;
+
+                case Main.HELP_OPT:
+                    printUsage();
+                    break;
+
+                case Main.VERSION_OPT:
+                    printVersion();
+                    break;
+
+                case Main.DEST_DIR_OPT:
+                    destDir = option.getArguement();
+                    break;
+
+                case Main.WORK_DIR_OPT:
+                    workDir = option.getArguement();
+                    break;
+
+                case Main.CONTEXT_DIR_OPT:
+                    contextDir = option.getArguement();
+                    break;
+
+                case Main.LOG_URL_OPT:
+                    logUrl = option.getArguement();
+                    break;
+
+                case Main.LOG_LEVEL_OPT:
+                    logLevel = option.getArguement();
+                    break;
             }
+        }
 
+        unprocessed = parser.getUnparsedArgs();
+        for (int i = 0; i < unprocessed.length; i++) {
+            targets.add(unprocessed[i]);
+        }
+
+        try {
+            log = LogKit.createLogger("cocoon", logUrl, logLevel);
+        } catch (MalformedURLException mue) {
+            LogKit.log("Cannot write on the specified log file. " +
+                        "Please, make sure the path exists and you have write permissions.",
+                        mue);
+            System.exit(1);
+        }
+
+        if (destDir.equals("")) {
+            log.fatalError("Careful, you must specify a destination dir when " +
+                        "using the -d/--destDir argument");
+            System.exit(1);
+        }
+
+        if (contextDir.equals("")) {
+            log.error("Careful, you must specify a configuration file when " +
+                        "using the -c/--contextDir argument");
+            System.exit(1);
+        }
+
+        if (workDir.equals("")) {
+            log.error("Careful, you must specify a destination dir when " +
+                        "using the -w/--workDir argument");
+            System.exit(1);
         }
 
         if (targets.size() == 0) {
-            error("Please, specify at least one starting URI.");
+            log.error("Please, specify at least one starting URI.");
+            System.exit(1);
         }
-        
+
         try {
             File dest = getDir(destDir, "destination");
             File work = getDir(workDir, "working");
             File context = getDir(contextDir, "context");
             File conf = getConfigurationFile(context);
             Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
-            log("Warming up...");
-            log(" [Cocoon might need to compile the sitemaps, this might take a while]");
+            log.info("Warming up...");
+            log.info(" [Cocoon might need to compile the sitemaps, this might take a while]");
             main.warmup();
-            log("...ready, let's go:");
+            log.info("...ready, let's go:");
             main.process(targets);
-            log("Done");
+            log.info("Done");
         } catch (Exception e) {
-            error("Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
-            e.printStackTrace();
+            log.fatalError("Exception caught ", e);
+            System.exit(1);
         }
     }
 
@@ -138,35 +215,17 @@ public class Main {
         msg.append("------------------------------------------------------------------------ " + lSep + lSep);
         msg.append("Usage: java org.apache.cocoon.Main [options] [targets]" + lSep + lSep);
         msg.append("Options: " + lSep);
-        msg.append("  -h/--help              print this message and exit" + lSep);
-        msg.append("  -v/--version           print the version information and exit" + lSep);
-        msg.append("  -l/--logFile <file>    use given file for log" + lSep);
-        msg.append("  -c/--contextDir <file> use given dir as context" + lSep);
-        msg.append("  -d/--destDir <dir>     use given dir as destination" + lSep);
-        msg.append("  -w/--workDir <dir>     use given dir as working directory" + lSep + lSep);
+        msg.append(CLUtil.describeOptions(Main.options).toString());
         msg.append("Note: the context directory defaults to '" + Cocoon.DEFAULT_CONTEXT_DIR + "'" + lSep);
         System.out.println(msg.toString());
-        System.exit(1);
+        System.exit(0);
     }
 
-    public static void log(String msg) {
-        System.out.println("[log] " + msg);
-    }
-
-    public static void warning(String msg) {
-        System.out.println("[warning] " + msg);
-    }
-
-    public static void error(String msg) {
-        System.err.println("[error] " + msg);
-        System.exit(1);
-    }
-    
     private static File getConfigurationFile(File dir) throws Exception {
 
         File f = new File(dir, Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
-        
+
         f = new File(System.getProperty("user.dir") + File.separator + Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
@@ -196,9 +255,9 @@ public class Main {
 
         return d;
     }
-    
+
     // -----------------------------------------------------------------------
-    
+
     private Cocoon cocoon;
     private File destDir;
     private File context;
@@ -243,20 +302,20 @@ public class Main {
      *  <li>after the complete list of links is translated, the link-translating
      *      view of the resource is called to obtain a link-translated version
      *      of the resource with the given link map</li>
-     *  <li>the resource is saved on disk and the URI MIME type is checked for 
+     *  <li>the resource is saved on disk and the URI MIME type is checked for
      *      consistency with the URI and, if the extension is inconsistent
      *      or absent, the file is renamed</li>
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
     public String processURI(String uri, int level) throws Exception {
-        log(leaf(level) + uri);
+        log.info("Processing URI: " + leaf(level) + uri);
 
         Collection links = this.getLinks(uri);
         Map translatedLinks = new HashMap(links.size());
         Iterator i = links.iterator();
         while (i.hasNext()) {
-            log(tree(level));
+            log.info(tree(level));
             String path = NetUtils.getPath(uri);
             String relativeLink = (String) i.next();
             String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
@@ -264,7 +323,7 @@ public class Main {
             String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
             translatedLinks.put(relativeLink, translatedRelativeLink);
         }
-        
+
         String filename = mangle(uri);
         File file = IOUtils.createFile(destDir, filename);
         FileOutputStream output = new FileOutputStream(file);
@@ -273,7 +332,7 @@ public class Main {
 
         String ext = NetUtils.getExtension(filename);
         String defaultExt = MIMEUtils.getDefaultExtension(type);
-        
+
         if ((ext == null) || (!ext.equals(defaultExt))) {
             filename += defaultExt;
             File newFile = IOUtils.createFile(destDir, filename);
@@ -281,36 +340,39 @@ public class Main {
             file = newFile;
         }
 
-        log(tree(level));
+        log.info(tree(level));
 
         if (type == null) {
-            log(leaf(level + 1) + "[broken link]--> " + filename);
+            log.warn(leaf(level + 1) + "[broken link]--> " + filename);
             resourceUnavailable(file);
         } else {
-            log(leaf(level + 1) + "[" + type + "]--> " + filename);
+            log.info(leaf(level + 1) + "[" + type + "]--> " + filename);
         }
-        
+
         return filename;
-    }        
+    }
 
     void resourceUnavailable(File file) throws IOException {
         PrintStream out = new PrintStream(new FileOutputStream(file));
         out.println(
            "<html><head><title>Page Not Available</title></head>" +
            "<body><h1 align=\"center\">Page Not Available</h1>" +
-           "<body><p align=\"center\">Generated by " + 
+           "<body><p align=\"center\">Generated by " +
            Cocoon.COMPLETE_NAME +
            "</p></body></html>"
         );
-        out.close();        
+        out.close();
     }
-    
+
     String mangle(String uri) {
+        log.debug("mangle(\"" + uri + "\")");
         if (uri.charAt(uri.length() - 1) == '/') uri += Cocoon.INDEX_URI;
         uri = uri.replace('"', '\'');
-        return uri.replace('?','_');
+        uri = uri.replace('?', '_');
+        log.debug(uri);
+        return uri;
     }
-    
+
     String leaf(int level) {
         if (level == 0) return "";
         return tree(level - 2) + "+--";
@@ -323,7 +385,7 @@ public class Main {
         }
         return buffer.toString();
     }
-    
+
     Collection getLinks(String uri) throws Exception {
         HashMap parameters = new HashMap();
         String deparameterizedURI = NetUtils.deparameterize(uri, parameters);

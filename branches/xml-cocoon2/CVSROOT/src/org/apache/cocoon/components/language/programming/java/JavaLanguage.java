@@ -30,7 +30,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-19 14:43:40 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-10 22:38:54 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
 
@@ -91,8 +91,13 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     super.compose(manager);
 
     if (this.classLoaderManager == null) {
-      this.classLoaderManager =
-        (ClassLoaderManager) this.manager.lookup(Roles.CLASS_LOADER);
+      try {
+          log.debug("Looking up " + Roles.CLASS_LOADER);
+          this.classLoaderManager =
+            (ClassLoaderManager) this.manager.lookup(Roles.CLASS_LOADER);
+      } catch (Exception e) {
+          log.error("Could not find component", e);
+      }
     }
   }
 

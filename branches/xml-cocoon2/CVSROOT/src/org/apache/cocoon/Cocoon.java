@@ -36,6 +36,9 @@ import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
 
@@ -43,10 +46,12 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.35 $ $Date: 2000-11-08 20:34:46 $
+ * @version CVS $Revision: 1.4.2.36 $ $Date: 2000-11-10 22:38:52 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
+
+    private Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The table of role-class */
     private HashMap components = new HashMap();
@@ -82,15 +87,19 @@ public class Cocoon
      * Create a new <code>Cocoon</code> instance.
      */
     protected Cocoon() throws ConfigurationException {
+        log.debug("New Cocoon object.");
         // Set the system properties needed by Xalan2.
         setSystemProperties();
 
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
+        log.debug("Using parser: " + parser);
+
         try {
             this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser),null);
         } catch ( Exception e ) {
+            log.error("Could not load parser, Cocoon object not created.", e);
             throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage());
         }
         this.componentManager.addComponentInstance(Roles.COCOON, this);
@@ -101,24 +110,28 @@ public class Cocoon
      * the specified file.
      */
     public Cocoon(File configurationFile, String classpath, String workDir)
-    throws SAXException, IOException, ConfigurationException {
+    throws SAXException, IOException, ConfigurationException,
+    ComponentNotFoundException, ComponentNotAccessibleException {
         this();
 
         this.classpath = classpath;
+        log.debug("Classpath = " + classpath);
 
         this.workDir = workDir;
+        log.debug("Work directory = " + workDir);
 
         this.configurationFile = configurationFile;
         if (!configurationFile.isFile()) {
+            log.error("Could not open configuration file, Cocoon object not created");
             throw new FileNotFoundException(configurationFile.toString());
         }
 
         Parser p = (Parser) this.lookup(Roles.PARSER);
         ConfigurationBuilder b = new ConfigurationBuilder();
-	String path = this.configurationFile.getPath();
+        String path = this.configurationFile.getPath();
         InputSource is = new InputSource(new FileReader(path));
-	is.setSystemId(path);
-	b.setXMLReader(p.getXMLReader());
+            is.setSystemId(path);
+        b.setXMLReader(p.getXMLReader());
         this.configure(b.build(is));
         this.root = this.configurationFile.getParentFile().toURL();
     }
@@ -128,6 +141,7 @@ public class Cocoon
      * @param root The new Cocoon root.
      */
     public void setRoot(URL root) {
+        log.debug("Root URL set to: " + root.toExternalForm());
         this.root = root;
     }
 
@@ -155,14 +169,18 @@ public class Cocoon
 
         this.configuration = conf;
 
+        log.debug("Root configuration: " + conf.getName());
         if (!"cocoon".equals(conf.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
+
+        log.debug("Configuration version: " + conf.getAttribute("version"));
         if (!CONF_VERSION.equals(conf.getAttribute("version"))) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '"
                 + CONF_VERSION + "'."/*, conf*/);
         }
 
+        log.debug("Setting up components...");
         // Set components
         Iterator e = conf.getChildren("component");
         while (e.hasNext()) {
@@ -170,18 +188,19 @@ public class Cocoon
             String role = co.getAttribute("role");
             String className = co.getAttribute("class");
             try {
+                log.debug("Adding component (" + role + " = " + className + ")");
                 componentManager.addComponent(role,ClassUtils.loadClass(className),co);
             } catch ( Exception ex ) {
+                log.error("Could not load class " + className, ex);
                 throw new ConfigurationException("Could not get class " + className
-                    + " for role " + role + ": " + ex.getMessage()/*,
-                    (Configuration)e*/
-                );
+                    + " for role " + role + ": " + ex.getMessage());
             }
         }
 
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
         if (sconf == null) {
+            log.error("Sitemap location is not specified");
             throw new ConfigurationException("No sitemap configuration");
         }
         this.sitemapManager = new Manager(null);
@@ -189,8 +208,11 @@ public class Cocoon
         this.sitemapManager.configure(conf);
         this.sitemapFileName = sconf.getAttribute("file");
         if (this.sitemapFileName == null) {
+            log.error("No sitemap file name");
             throw new ConfigurationException("No sitemap file name\n" + conf.toString());
         }
+
+        log.debug("Sitemap location = " + this.sitemapFileName);
     }
 
     /**

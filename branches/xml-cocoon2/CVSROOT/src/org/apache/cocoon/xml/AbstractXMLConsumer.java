@@ -13,15 +13,20 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This abstract class provides default implementation of the methods specified
  * by the <code>XMLConsumer</code> interface.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-10 22:38:56 $
  */
 public abstract class AbstractXMLConsumer implements XMLConsumer {
+
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /**
      * Receive an object for locating the origin of SAX document events.
