@@ -61,7 +61,7 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: NumericConverter.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: NumericConverter.java,v 1.3 2003/05/17 11:58:42 joerg Exp $
  */
 public class NumericConverter
 {
@@ -102,9 +102,6 @@ public class NumericConverter
      * Shortcut for extractDouble without a Validator
      *
      * @param value the string holding the double
-     * @param validator a Validator object; if null, no additional
-     *                  validation will be performed
-     *
      * @return a NumericResult object containing either the double
      *         value or an exception generated if there was a problem
      *         with the value;
@@ -165,9 +162,6 @@ public class NumericConverter
      * Shortcut for extractInteger without a Validator
      *
      * @param value the string holding the integer
-     * @param validator a Validator object; if null, no additional
-     *                  validation will be performed
-     *
      * @return a NumericResult object containing either the integer
      *         value or an exception generated if there was a problem
      *         with the value;
