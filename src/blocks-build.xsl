@@ -265,7 +265,7 @@
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
 
-    <target name="{@name}-excluded" if="exclude.block.{$block-name}">
+    <target name="{@name}-excluded" if="unless.exclude.block.{$block-name}">
       <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
     </target>
 
