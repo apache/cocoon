@@ -56,12 +56,15 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * SessionAttributeModule accesses session attributes. If the
@@ -71,7 +74,7 @@ import java.util.Map;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionAttributeModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: SessionAttributeModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $
  */
 public class SessionAttributeModule extends AbstractInputModule implements ThreadSafe {
 
@@ -121,14 +124,22 @@ public class SessionAttributeModule extends AbstractInputModule implements Threa
             } else {
                 suffix = "";
             }
-            List values = new LinkedList();
-            Enumeration names = request.getSession().getAttributeNames();
+            SortedSet names = new TreeSet();
+            Session session = request.getSession();
+            Enumeration allNames = session.getAttributeNames();
 
-            while (names.hasMoreElements()) {
-                String pname = (String) names.nextElement();
+            while (allNames.hasMoreElements()) {
+                String pname = (String) allNames.nextElement();
                 if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
-                    values.add( request.getSession().getAttribute( pname ) );
+                    names.add(pname);
                 }
+            }
+
+            List values = new LinkedList();
+            Iterator j = names.iterator();
+            while (j.hasNext()){
+                String pname = (String) j.next();
+                values.add( session.getAttribute(pname) );
             }
 
             return values.toArray();
