@@ -15,9 +15,13 @@
  */
 package org.apache.cocoon.components.flow.java.test;
 
+import java.util.Locale;
+
 import org.apache.cocoon.components.flow.java.*;
 import org.apache.cocoon.forms.FormContext;
-import java.util.Locale;
+/*import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.*;*/
 
 public class SimpleFlow extends AbstractSimpleFlow {
 
@@ -91,9 +95,27 @@ public class SimpleFlow extends AbstractSimpleFlow {
         System.out.println("end of flow");
         return new FooInner(12,12);
     }
+    
+    /*public void doTest() throws Exception {
+        
+        // This causes an error -> The class can not be registered at first call!!!
+        Query query = null;
+        Hits hits;
+        IndexSearcher searcher = null;
+        // end
+  
+        while(true) {
+            
+            this.sendPageAndWait("foo");
+            
+            query = QueryParser.parse("foo", "bar", new StandardAnalyzer());
+            // here comes the problem, because searcher is null, which must preserved by the continuation
+            hits = searcher.search(query);
+        }
+    }*/
 }
 
-class FooInner /*extends AbstractSimpleFlow*/ {
+class FooInner {
     public FooInner(int i, int j) {
 
     }

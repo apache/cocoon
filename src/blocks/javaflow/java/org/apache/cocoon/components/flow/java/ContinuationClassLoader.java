@@ -34,7 +34,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.7 2004/06/03 12:43:27 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.8 2004/06/03 14:30:39 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -143,13 +143,41 @@ public class ContinuationClassLoader extends ClassLoader {
                 // analyse the code of the method to create the frame
                 // information about every instruction
                 ControlFlowGraph cfg = new ControlFlowGraph(method);
+                
+                //System.out.println("analyse " + methods[i].getName());
                 analyse(clazz, method, cfg, ev);
-                // add intercepting code 
+                
+                // add intercepting code
+                //System.out.println("rewriting " + methods[i].getName());
                 rewrite(method, cfg);
+                
+                // make last optional check for consistency
+                /*System.out.println("check " + methods[i].getName());
+
+                try {
+                    cfg = new ControlFlowGraph(method);
+                    analyse(clazz, method, cfg, ev);
+                    printFrameInfo(method, cfg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new ClassNotFoundException("Rewritten method is not consistent", e);
+                }*/
+                
                 // make last optional check for consistency
                 clazz.replaceMethod(methods[i], method.getMethod());
             }
         }
+        
+        /*byte[] changed = clazz.getJavaClass().getBytes();
+        try {
+            java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten.class");
+            out.write(changed);
+            out.flush();
+            out.close();
+        } catch (java.io.IOException ioe) {
+            ioe.printStackTrace();
+        }*/
+        
         clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
         return clazz.getJavaClass().getBytes();
     }
@@ -258,6 +286,36 @@ public class ContinuationClassLoader extends ClassLoader {
                 }
             }
         }
+    }
+    
+    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
+        InstructionHandle handle = method.getInstructionList().getStart();
+        do {
+            System.out.println(handle);
+            try {
+                InstructionContext context = cfg.contextOf(handle);
+
+                Frame f = context.getOutFrame(new ArrayList());
+                
+                LocalVariables lvs = f.getLocals();
+                System.out.print("Locales: ");
+                for (int i = 0; i < lvs.maxLocals(); i++) {
+                    System.out.print(lvs.get(i) + ",");
+                }
+                System.out.println();
+
+                OperandStack os = f.getStack();
+                System.out.print(" Stack: ");
+                for (int i = 0; i < os.size(); i++) {
+                    System.out.print(os.peek(i) + ",");
+                }
+                System.out.println();
+            }
+            catch (AssertionViolatedException ave) {
+                System.out.println("no frame information");
+            }
+        }
+        while ((handle = handle.getNext()) != null);
     }
 
     private void rewrite(MethodGen method, ControlFlowGraph cfg)
@@ -483,7 +541,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP()); // TODO: check for types with two words on stack
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
-            } else if (type == null) {
+            } else if (type.equals(Type.NULL)) {
                 insList.append(InstructionConstants.POP);
             } else if (type instanceof UninitializedObjectType) {
                 // After the remove of new, there shouldn't be a
@@ -512,7 +570,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 if (type.getSize() < 2 && !type.equals(Type.FLOAT))
                     type = Type.INT;
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
-            } else if (type == null) {
+            } else if (type.equals(Type.NULL)) {
                 // no need to save null
             } else if (type instanceof UninitializedObjectType) {
                 // no need to save uninitialized objects
@@ -552,7 +610,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 insList.append(InstructionFactory.createStore(type, i));
-            } else if (type == null) {
+            } else if (type.equals(Type.NULL)) {
                 insList.append(new ACONST_NULL());
                 insList.append(InstructionFactory.createStore(new ObjectType("<null object>"), i));
             } else if (type instanceof UninitializedObjectType) {
@@ -561,7 +619,7 @@ public class ContinuationClassLoader extends ClassLoader {
             } else if (type instanceof ReferenceType) {
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-                if (!type.equals(Type.OBJECT) && (!type.equals(Type.NULL))) {
+                if (!type.equals(Type.OBJECT)) {
                     insList.append(insFactory.createCast(Type.OBJECT, type));
                 }
                 insList.append(InstructionFactory.createStore(type, i));
@@ -582,7 +640,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 }
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-            } else if (type == null) {
+            } else if (type.equals(Type.NULL)) {
                 insList.append(new ACONST_NULL());
             } else if (type instanceof UninitializedObjectType) {
                 // After the remove of new, there shouldn't be a
