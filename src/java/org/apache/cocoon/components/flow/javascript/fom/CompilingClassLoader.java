@@ -332,8 +332,7 @@ public class CompilingClassLoader extends ClassLoader {
                              errorHandler);
             List errorList = errorHandler.getErrorList();
             if (errorList.size() > 0) {
-                StringBuffer msg = new StringBuffer();
-                msg.append("Failed to compile Java class ");
+                StringBuffer msg = new StringBuffer("Failed to compile Java class ");
                 msg.append(className);
                 msg.append(": ");
                 Iterator iter = errorList.iterator();
