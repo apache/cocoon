@@ -56,6 +56,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
@@ -86,7 +87,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.4 2003/05/30 09:23:14 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.5 2003/07/11 08:59:03 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -169,7 +170,8 @@ public abstract class AbstractProcessingPipeline
     /**
      * Parameterizable Interface - Configuration
      */
-    public void parameterize(Parameters params) {
+    public void parameterize(Parameters params) 
+    throws ParameterException {
         this.configuration = params;
         final String expiresValue = params.getParameter("expires", null);
         if (expiresValue != null) {
