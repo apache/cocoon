@@ -59,11 +59,11 @@ import org.apache.excalibur.source.SourceException;
  *  
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Refresher.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: Refresher.java,v 1.2 2003/12/08 20:16:48 vgritsenko Exp $
  */
 public interface Refresher {
     
-	String ROLE = Refresher.class.getName();
+    String ROLE = Refresher.class.getName();
 
     /**
      * Refresh the content now.
