@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,9 +26,8 @@ import org.xml.sax.SAXException;
  * store SAX events and insert them in an XSP result using &lt;xsp:expr&gt;.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: XMLByteStreamFragment.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-
 public class XMLByteStreamFragment extends AbstractSAXFragment {
 
     /** The XML byte stream */
@@ -41,27 +40,17 @@ public class XMLByteStreamFragment extends AbstractSAXFragment {
      * @param bytes the XML byte stream representing the document fragment
      */
     public XMLByteStreamFragment(Object bytes) {
-        xmlBytes = bytes;
+        this.xmlBytes = bytes;
     }
 
     /**
      * Output the fragment. If the fragment is a document, start/endDocument
      * events are discarded.
      */
-    public void toSAX(ContentHandler ch)
-      throws SAXException {
-
+    public void toSAX(ContentHandler ch) throws SAXException {
         // Stream bytes and discard start/endDocument
-        XMLByteStreamInterpreter interp = new XMLByteStreamInterpreter();
-        EmbeddedXMLPipe pipe = new EmbeddedXMLPipe(ch);
-
-        // If ch is an XMLConsumer, set it as such so that XML comments are
-        // also deserialized.
-        if (ch instanceof XMLConsumer)
-            pipe.setConsumer((XMLConsumer) ch);
-
-        interp.setContentHandler(pipe);
-
-        interp.deserialize(xmlBytes);
+        XMLByteStreamInterpreter deserializer = new XMLByteStreamInterpreter();
+        deserializer.setContentHandler(new EmbeddedXMLPipe(ch));
+        deserializer.deserialize(this.xmlBytes);
     }
 }
