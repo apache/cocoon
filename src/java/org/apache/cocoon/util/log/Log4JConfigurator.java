@@ -22,8 +22,9 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * This is a configurator for log4j that supports variable substitution
- * 
- * @version CVS $Id: Log4JConfigurator.java,v 1.2 2004/06/14 14:07:09 cziegeler Exp $
+ *
+ * @since 2.1.6
+ * @version CVS $Id$
  */
 public class Log4JConfigurator extends DOMConfigurator {
 
