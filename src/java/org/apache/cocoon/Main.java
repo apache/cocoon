@@ -82,7 +82,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.18 2003/09/26 08:25:21 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.19 2003/09/26 17:08:08 upayavira Exp $
  */
 public class Main {
 
@@ -106,6 +106,7 @@ public class Main {
     protected static final String CONFIRM_EXTENSIONS_OPT = "e";
     protected static final String LOAD_CLASS_OPT =         "L";
     protected static final String DEFAULT_FILENAME_OPT =   "D";
+    protected static final String URI_GROUP_NAME_OPT =     "n";
 
     protected static final String HELP_LONG =               "help";
     protected static final String VERSION_LONG =            "version";
@@ -128,6 +129,7 @@ public class Main {
     protected static final String LOAD_CLASS_LONG =         "loadClass";
     protected static final String DEFAULT_FILENAME_LONG =   "defaultFilename";
     protected static final String URI_LONG =                "uri";
+    protected static final String URI_GROUP_NAME_LONG =     "uris";
 
     private static final String NODE_ROOT = "cocoon";
     private static final String ATTR_VERBOSE = "verbose";
@@ -172,7 +174,8 @@ public class Main {
     private static final String ATTR_URI_DESTURI = "dest";
 
     private static final String NODE_URIS = "uris";
-
+    private static final String ATTR_NAME = "name";
+    
     private static Options options;
     private static OutputStreamListener listener;
 
@@ -285,6 +288,11 @@ public class Main {
                                      true,
                                      "specify a filename to be appended to a URI when the"
                                      + " URI refers to a directory"));
+        options.addOption(new Option(URI_GROUP_NAME_OPT,
+                                     URI_GROUP_NAME_LONG,
+                                     true,
+                                     "specify which <uris> element to process in the configuration"
+                                     + " file specified with the -x parameter"));
     }
 
     /**
@@ -307,10 +315,15 @@ public class Main {
              printVersion();
         }
 
+        String uriGroup = null;
+        if (line.hasOption(URI_GROUP_NAME_OPT)) {
+            uriGroup = line.getOptionValue(URI_GROUP_NAME_OPT);
+        }
+            
         String destDir = null;
         if (line.hasOption(XCONF_OPT)) {
             // destDir from command line overrides one in xconf file
-            destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir);
+            destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir, uriGroup);
         }
         if (line.hasOption(DEST_DIR_OPT)) {
             destDir = line.getOptionValue(DEST_DIR_OPT);
@@ -435,7 +448,7 @@ public class Main {
      * @param cocoon a <code>CocoonBean</code> that will be configured by the xconf file
      * @param filename a <code>String</code> value
      */
-    private static String processXConf(CocoonBean cocoon, String filename, String destDir) {
+    private static String processXConf(CocoonBean cocoon, String filename, String destDir, String uriGroup) {
 
         try {
             final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -513,7 +526,7 @@ public class Main {
                         Main.parseURINode(cocoon, node, destDir);
 
                     } else if (nodeName.equals(NODE_URIS)) {
-                        Main.parseURIsNode(cocoon, node, destDir);
+                        Main.parseURIsNode(cocoon, node, destDir, uriGroup);
 
                     } else if (nodeName.equals(NODE_URI_FILE)) {
                         cocoon.addTargets(Main.processURIFile(getNodeValue(node)), destDir);
@@ -584,7 +597,7 @@ public class Main {
         }
     }
 
-    private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
+    private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir, String uriGroup) throws IllegalArgumentException {
 
         boolean followLinks = cocoon.followLinks();
         boolean confirmExtensions = cocoon.confirmExtensions();
@@ -592,7 +605,8 @@ public class Main {
         String destURI = destDir;
         String root = null;
         String type = null;
-
+        String name = null;
+        
         if (Main.hasAttribute(node, ATTR_FOLLOW_LINKS)) {
             followLinks = Main.getBooleanAttributeValue(node, ATTR_FOLLOW_LINKS);
         }
@@ -611,7 +625,13 @@ public class Main {
         if (Main.hasAttribute(node, ATTR_LOGGER)) {
             logger = Main.getAttributeValue(node, ATTR_LOGGER);
         }
-
+        if (Main.hasAttribute(node, ATTR_NAME)) {
+            name = Main.getAttributeValue(node, ATTR_NAME);
+            if (name != null && uriGroup != null && !name.equals(uriGroup)) {
+                // The user has not selected this URI group, so ignore it.
+                return;
+            }
+        }
         NodeList nodes = node.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node child = nodes.item(i);

@@ -247,13 +247,20 @@
        |   * type:               the method to be used to calculate
        |                         the destination URI. See above 
        |                         section on <uri> node for details.
+       | 
+       | Each <uris> node can have a name attribute. When a name
+       | attribute has been specified, the -n switch on the command
+       | line can be used to tell Cocoon to only process the URIs
+       | within this URI group. When no -n switch is given, all 
+       | <uris> nodes are processed. Thus, one xconf file can be 
+       | used to manage multiple sites.
        +-->
-   <uris follow-links="true">
+   <uris name="docs" follow-links="true">
      <uri type="append" src-prefix="docs/" src="index.html"
           dest="build/dest/" />
    </uris>
    
-   <uris follow-links="false"
+   <uris name="samples" follow-links="false"
          confirm-extensions="true"
          src-prefix="samples/"
          dest="build/dest/examples/"
