@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,9 +54,10 @@ import java.util.Map;
  * of new validity will be the same as of old one. Only timestamps have to be
  * recalculated and compared.</p>
  *
+ * @see IncludeTransformer
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @deprecated This transformer violates the avalon/cocoon design principles
- * @version CVS $Id: CachingCIncludeTransformer.java,v 1.3 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @deprecated This transformer violates the avalon/cocoon design principles. Use IncludeTransformer.
+ * @version CVS $Id$
  */
 public class CachingCIncludeTransformer extends AbstractTransformer
 implements Composable, Cacheable {
