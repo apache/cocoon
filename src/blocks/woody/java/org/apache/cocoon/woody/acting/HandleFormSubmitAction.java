@@ -61,6 +61,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.excalibur.source.Source;
 
 import java.util.Map;
 import java.util.Collections;
@@ -80,33 +81,38 @@ import java.util.Locale;
  */
 public class HandleFormSubmitAction extends AbstractWoodyAction implements Action, ThreadSafe, Composable {
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
         String formHandlerClassName = parameters.getParameter("formhandler", null);
 
-        Form form = formManager.createForm(resolver.resolveURI(formSource));
+        Source source = resolver.resolveURI(formSource);
+        try {
+            Form form = formManager.createForm(source);
 
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        FormHandler formHandler = null;
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            FormHandler formHandler = null;
 
-        if (formHandlerClassName != null) {
-            // TODO cache these classes
-            Class clazz = Class.forName(formHandlerClassName);
-            formHandler = (FormHandler)clazz.newInstance();
-            formHandler.setup(form);
-            form.setFormHandler(formHandler);
+            if (formHandlerClassName != null) {
+                // TODO cache these classes
+                Class clazz = Class.forName(formHandlerClassName);
+                formHandler = (FormHandler)clazz.newInstance();
+                formHandler.setup(form);
+                form.setFormHandler(formHandler);
+            }
+
+            FormContext formContext = new FormContext(request, Locale.US);
+
+            boolean finished = form.process(formContext);
+            request.setAttribute(formAttribute, form);
+
+            if (finished)
+                return Collections.EMPTY_MAP;
+            else
+                return null;
+        } finally {
+            resolver.release(source);
         }
-
-        FormContext formContext = new FormContext(request, Locale.US);
-
-        boolean finished = form.process(formContext);
-        request.setAttribute(formAttribute, form);
-
-        if (finished)
-            return Collections.EMPTY_MAP;
-        else
-            return null;
     }
 }

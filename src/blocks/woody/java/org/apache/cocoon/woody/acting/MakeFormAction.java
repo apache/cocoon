@@ -57,6 +57,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.woody.FormManager;
 import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.excalibur.source.Source;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.component.Composable;
@@ -82,15 +83,21 @@ public class MakeFormAction implements Action, ThreadSafe, Composable {
         formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
     }
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
 
-        Form form = formManager.createForm(resolver.resolveURI(formSource));
+        Source source = null;
+        try {
+            source = resolver.resolveURI(formSource);
+            Form form = formManager.createForm(source);
 
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(formAttribute, form);
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            request.setAttribute(formAttribute, form);
+        } finally {
+            resolver.release(source);
+        }
 
         return null;
     }
