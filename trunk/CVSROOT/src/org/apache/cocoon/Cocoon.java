@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.15 2000-05-10 15:02:06 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.16 2000-05-12 12:40:29 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.15 $ $Date: 2000-05-10 15:02:06 $
+ * @version $Revision: 1.16 $ $Date: 2000-05-12 12:40:29 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -115,9 +115,9 @@ public class Cocoon extends HttpServlet implements Defaults {
 
         try {
             // Create the configuration object
-            // if we are using a servlet container that is 2.1 or higher then we
+            // if we are using a servlet container that is 2.2 or higher then we
             // can use container based resources instead of files
-            if ((containerMajorVersion >= 2) && (containerMinorVersion > 0)) {
+            if ((containerMajorVersion >= 2) && (containerMinorVersion >= 2)) {
                try {
                    URL resource = config.getServletContext().getResource(confsName);
                    InputStream confsStream = resource.openConnection().getInputStream();
