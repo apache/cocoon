@@ -35,7 +35,7 @@ public class Core {
     /** Application <code>Context</code> Key for the settings @since 2.2 */
     public static final String CONTEXT_SETTINGS = "settings";
 
-    private static final ThreadLocal cleanup = new InheritableThreadLocal();
+    private static final ThreadLocal cleanup = new ThreadLocal();
     
     public static void addCleanupTask(CleanupTask task) {
         List l = (List)cleanup.get();

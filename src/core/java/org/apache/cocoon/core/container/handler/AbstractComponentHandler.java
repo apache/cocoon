@@ -97,6 +97,7 @@ implements ComponentHandler {
 
         if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
+            // FIXME : Activate proxied pooling as default
             info.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
             if ( "non-thread-safe-pooled".equals(info.getConfiguration().getAttribute("model", null))) {
                 info.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);

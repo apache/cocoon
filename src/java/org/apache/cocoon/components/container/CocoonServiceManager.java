@@ -55,6 +55,8 @@ public class CocoonServiceManager extends CoreServiceManager {
     }
     
     public void addComponent(String role, String clazz, Configuration config) throws ConfigurationException {
+        this.info.prepareConfig(role, clazz, config);
+
         super.addComponent(role, clazz, config);
         // Let's ProcessorComponentInfo do its stuff.
         // Note: if more behaviours of this kind are needed, we may setup an

@@ -30,31 +30,8 @@ import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.ComponentFactory;
 
 /**
- * The PoolableComponentHandler to make sure that poolable components are initialized
- * destroyed and pooled correctly.
- * <p>
- * Components which implement Poolable may be configured to be pooled using the following
- *  example configuration.  This example assumes that the user component class MyComp
- *  implements Poolable.
- * <p>
- * Configuration Example:
- * <pre>
- *   &lt;my-comp pool-max="8"/&gt;
- * </pre>
- * <p>
- * Roles Example:
- * <pre>
- *   &lt;role name="com.mypkg.MyComponent"
- *         shorthand="my-comp"
- *         default-class="com.mypkg.DefaultMyComponent"/&gt;
- * </pre>
- * <p>
- * Configuration Attributes:
- * <ul>
- * <li>The <code>pool-max</code> attribute is used to set the maximum number of components which
- *  will be pooled. (Defaults to "8") If additional instances are required, they're created,
- *  but not pooled.</li>
- * </ul>
+ * This is an extension to the {@link org.apache.cocoon.core.container.handler.NonThreadSafePoolableComponentHandler}
+ * that uses proxies to make the poolable components thread safe.
  *
  * @version $Id$
  */
@@ -78,7 +55,13 @@ extends NonThreadSafePoolableComponentHandler {
                                      final Configuration config )
     throws Exception {
         super(info, logger, factory, config);
-        this.interfaces = this.guessWorkInterfaces(factory.getCreatedClass());
+        final HashSet workInterfaces = new HashSet();
+
+        // Get *all* interfaces
+        this.guessWorkInterfaces( factory.getCreatedClass(), workInterfaces );
+
+        this.interfaces = (Class[]) workInterfaces.toArray( new Class[workInterfaces.size()] );
+        System.out.println("New poolable handler for " + factory.getCreatedClass());
     }
     
     /* (non-Javadoc)
@@ -95,6 +78,9 @@ extends NonThreadSafePoolableComponentHandler {
         // nothing to do
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doInitialize()
+     */
     protected void doInitialize() {
         // nothing to do here
     }
@@ -103,23 +89,6 @@ extends NonThreadSafePoolableComponentHandler {
         return Proxy.newProxyInstance(this.factory.getCreatedClass().getClassLoader(), 
                                       this.interfaces, 
                                       new ProxyHandler(this));
-    }
-
-    /**
-     * Get a list of interfaces to proxy by scanning through
-     * all interfaces a class implements and skipping invalid interfaces
-     * (as defined in {@link #INVALID_INTERFACES}).
-     *
-     * @param clazz the class
-     * @return the list of interfaces to proxy
-     */
-    protected Class[] guessWorkInterfaces( final Class clazz ) {
-        final HashSet workInterfaces = new HashSet();
-
-        // Get *all* interfaces
-        this.guessWorkInterfaces( clazz, workInterfaces );
-
-        return (Class[]) workInterfaces.toArray( new Class[workInterfaces.size()] );
     }
 
     /**
@@ -155,7 +124,7 @@ extends NonThreadSafePoolableComponentHandler {
 
     protected static final class ProxyHandler implements InvocationHandler, Core.CleanupTask {
         
-        private ThreadLocal componentHolder = new InheritableThreadLocal();
+        private final ThreadLocal componentHolder = new ThreadLocal();
         private final PoolableComponentHandler handler;
         
         public ProxyHandler(PoolableComponentHandler handler) {
@@ -188,11 +157,9 @@ extends NonThreadSafePoolableComponentHandler {
         public void invoke() {
             try {
                 final Object o = this.componentHolder.get();
-                /*if ( o == null ) {
-                    System.out.println("Releasing null for " + this.handler.factory.getCreatedClass());
-                } else {
-                    System.out.println("Releasing: " + o);
-                }*/
+                if ( o == null ) {
+                    System.out.println(this.hashCode() + "/" + Thread.currentThread() + " : Releasing null for " + this.handler.factory.getCreatedClass());
+                }
                 this.handler.putIntoPool(o);
             } catch (Exception ignore) {
                 // we ignore this

@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -54,6 +55,7 @@ public class ProcessorComponentInfo {
     private static final String TRANSFORMER_PREFIX = Transformer.ROLE + "/";
     private static final String SERIALIZER_PREFIX = Serializer.ROLE + "/";
     private static final String READER_PREFIX = Reader.ROLE + "/";
+    private static final String PIPELINE_PREFIX = ProcessingPipeline.ROLE + "/";
     
     private static final Set DEFAULT_ROLES = new HashSet(Arrays.asList(new String[] {
             Generator.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
@@ -111,6 +113,25 @@ public class ProcessorComponentInfo {
         }
     }
     
+    /**
+     * Prepares the configuration for pooled sitemap components:
+     * Per default pooled components are proxied - we override this
+     * for generators, transformers, serializers, readers and pipes
+     * @param role the component's role
+     * @param clazz the component's class
+     * @param config the component's configuration
+     */
+    public void prepareConfig(String role, String clazz, Configuration config) {
+        if (role.startsWith(GENERATOR_PREFIX)
+            || role.startsWith(TRANSFORMER_PREFIX)
+            || role.startsWith(SERIALIZER_PREFIX)
+            || role.startsWith(READER_PREFIX)
+            || role.startsWith(PIPELINE_PREFIX)) {
+            
+            ((DefaultConfiguration)config).setAttribute("model", "non-thread-safe-pooled");
+        }
+    }
+
     public void roleAliased(String existingRole, String newRole) {
         if (DEFAULT_ROLES.contains(newRole)) {
             // A default role for a sitemap component has been added
