@@ -65,34 +65,34 @@ public class ByteLen {
 /**
  * Default constructor.
  * As of Jan 8, 2001, this is not used.
-*/
-	public ByteLen() {}
+ */
+    public ByteLen() {}
 
 /**
  * Constructor used in the
- * {@link com.palserv.XMidi.MX#deltaToInt(byte[],int) MX.deltaToInt}
+ * {@link org.apache.cocoon.components.midi.xmidi.Utils#deltaToInt(byte[],int) MX.deltaToInt}
  * method to create this class, which it then returns.
  * @param byte[] b - a byte array; used to set ba
  * @param int l - a length; used to set len
-*/
-	public ByteLen(byte[] b, int l) {
-		ba = b;
-		len = l;
-	}
+ */
+    public ByteLen(byte[] b, int l) {
+        ba = b;
+        len = l;
+    }
 
 /**
  * A byte array.
-*/
-	public byte[] ba;
+ */
+    public byte[] ba;
 
 /**
  * As used in the
- * {@link com.palserv.XMidi.MX#deltaToInt(byte[],int) MX.deltaToInt}
+ * {@link org.apache.cocoon.components.midi.xmidi.Utils#deltaToInt(byte[],int) MX.deltaToInt}
  * method, it is the length of the delta field being converted,
  * not the length of the array.
  * <p>
  * There is nothing about this class that requires that this variable
  * be used in this way.  It could be any int.
-*/
-	public int len;
+ */
+    public int len;
 }
