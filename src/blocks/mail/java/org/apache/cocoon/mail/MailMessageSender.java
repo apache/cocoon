@@ -15,19 +15,23 @@
  */
 package org.apache.cocoon.mail;
 
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.datasource.FilePartDataSource;
 import org.apache.cocoon.mail.datasource.SourceDataSource;
 import org.apache.cocoon.servlet.multipart.Part;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -63,10 +67,12 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.12 2004/05/09 20:05:59 haul Exp $
+ * @version CVS $Id$
  */
 public class MailMessageSender extends AbstractLogEnabled 
-    implements MailSender, Parameterizable, Initializable, Component {
+    implements MailSender, Parameterizable, Serviceable, Initializable, Component {
+
+    private ServiceManager manager;
 
     private MimeMessage message;
     private String from;
@@ -197,12 +203,39 @@ public class MailMessageSender extends AbstractLogEnabled
         this.message = new MimeMessage(session);
         this.attachmentList = new ArrayList();
     }
+    
+    public void service(ServiceManager manager) {
+        this.manager = manager;   
+    }
+    
+    /** Assemble the message from the defined fields and send it.
+     * @throws AddressException when problems with email addresses are found
+     * @throws MessagingException when message could not be send.
+     */
+    public void send() throws AddressException, MessagingException {
+        SourceResolver resolver = null;
+        try {
+            resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+            doSend(resolver);
+        } catch(ServiceException se) {
+            throw new CascadingRuntimeException("Cannot get Source Resolver to send mail", se);
+        } finally {
+            this.manager.release(resolver);
+        }
+    }
 
     /** Assemble the message from the defined fields and send it.
      * @throws AddressException when problems with email addresses are found
      * @throws MessagingException when message could not be send.
      */
-    public void send(SourceResolver resolver)
+    public void send(org.apache.cocoon.environment.SourceResolver resolver)
+        throws AddressException, MessagingException {
+        
+        // resolver is automatically down-casted
+        doSend(resolver);
+    }
+    
+    public void doSend(SourceResolver resolver)
         throws AddressException, MessagingException {
         List sourcesList = new ArrayList();
 
@@ -375,11 +408,28 @@ public class MailMessageSender extends AbstractLogEnabled
     }
 
     /**
+     * Invokes the {@link #send()} method but catches any exception thrown. This 
+     * method is intended to be used from the sendmail logicsheet. 
+     * @return true when successful
+     */
+    public boolean sendIt() {
+        boolean success = false;
+        try {
+            this.exception = null;
+            this.send();
+            success = true;
+        } catch (Exception e) {
+            this.exception = e;
+        }
+        return success;
+    }
+
+    /**
      * Invokes the {@link #send(SourceResolver)} method but catches any exception thrown. This 
      * method is intended to be used from the sendmail logicsheet. 
      * @return true when successful
      */
-    public boolean sendIt(SourceResolver resolver) {
+    public boolean sendIt(org.apache.cocoon.environment.SourceResolver resolver) {
         boolean success = false;
         try {
             this.exception = null;
