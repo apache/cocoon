@@ -47,6 +47,9 @@ package org.apache.cocoon.components.flow;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+
 import java.util.Map;
 
 /**
@@ -109,5 +112,17 @@ public class FlowHelper {
     public final static void setContextObject(Map objectModel, Object obj) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(CONTEXT_OBJECT, obj);
+    }
+    
+    /**
+     * Unwrap a Rhino object (getting the raw java object) and convert undefined to null
+     */
+    public static Object unwrap(Object obj) {
+        if (obj instanceof Wrapper) {
+            obj = ((Wrapper)obj).unwrap();
+        } else if (obj == Undefined.instance) {
+            obj = null;
+        }
+        return obj;
     }
 }
