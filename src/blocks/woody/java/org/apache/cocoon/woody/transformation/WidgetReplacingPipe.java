@@ -371,6 +371,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             contentHandler.endPrefixMapping(Constants.WI_PREFIX);
         } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals("continuation-id")) {
             // nothing
+        } else {
+            super.endElement(namespaceURI, localName, qName);
         }
         elementNestingCounter--;
     }
