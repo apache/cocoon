@@ -1,4 +1,4 @@
-/*-- $Id: RedirectException.java,v 1.1 2000-11-20 18:35:59 greenrd Exp $ --
+/*-- $Id: RedirectException.java,v 1.2 2001-01-24 15:52:15 greenrd Exp $ --
  
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,13 +55,9 @@ package org.apache.cocoon.response;
  * Hack to handle redirects correctly with Tomcat 3.1.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.1 $ $Date: 2000-11-20 18:35:59 $
+ * @version $Revision: 1.2 $ $Date: 2001-01-24 15:52:15 $
  */
 
 public class RedirectException extends RuntimeException {
-  /**
-   * Package-private constructor - this should only be called from
-   * HttpServletResponseFacade.
-   */
-  RedirectException () {}  
+  public RedirectException () {}  
 }
