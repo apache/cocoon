@@ -41,7 +41,7 @@ import org.apache.log.Hierarchy;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.7 2004/07/12 13:29:57 antonio Exp $
+ * @version CVS $Id: IOUtils.java,v 1.8 2004/07/17 00:03:27 huber Exp $
  */
 public class IOUtils {
 
@@ -215,7 +215,7 @@ public class IOUtils {
 
       if (path[i].equals("..")) {
         int lio;
-        for (lio = buffer.length() - 2; lio >= 0; i--) {
+        for (lio = buffer.length() - 2; lio >= 0; lio--) {
           if (buffer.substring(lio).startsWith(File.separator)) {
             break;
           }
