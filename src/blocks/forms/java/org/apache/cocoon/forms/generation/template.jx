@@ -1,0 +1,60 @@
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+<jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">  
+<jx:parameter name="action"/>  
+<jx:parameter name="method"/>
+<fi:form-template xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
+                action="${action}" method="${method}">
+<jx:set var="context_widget_" value="#{.}"/>
+<jx:evalBody/>
+</fi:form-template>
+</jx:macro>
+
+<jx:macro name="widget" targetNamespace="http://apache.org/cocoon/forms/1.0#template">  
+<jx:parameter name="id"/>  
+  <jx:set var="context_widget_" value="${context_widget_.getWidget(id)}"/>
+  <jx:set var="list_" value="${java.util.LinkedList()}"/>
+  <jx:set var="buffer_" value="${Packages.org.apache.cocoon.forms.generation.SaxBuffer(list_)}"/>
+  <jx:if test="${empty locale}">
+    <jx:set var="locale" value="${java.util.Locale.getDefault()}"/>
+  </jx:if>
+  ${context_widget_.unwrap().generateSaxFragment(buffer_, locale)}
+  <jx:set var="endElement_" value="${list_.removeLast()}"/>
+  ${buffer_.toSAX(cocoon.consumer)}
+  <jx:evalBody/>
+  ${endElement_.send(cocoon.consumer)}
+</jx:macro>
+
+<jx:macro name="repeater-widget-label" targetNamespace="http://apache.org/cocoon/forms/1.0#template">  
+<jx:parameter name="id"/>  
+<jx:parameter name="widget-id"/>
+${context_widget_.getWidget(id).unwrap().generateWidgetLabel(this['widget-id'], cocoon.consumer)}
+</jx:macro>
+
+<jx:macro name="widget-label" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+<jx:parameter name="id"/>
+${context_widget_.getWidget(id).unwrap().generateLabel(cocoon.consumer)}
+</jx:macro>
+
+<jx:macro name="repeater-size" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+<jx:parameter name="id"/>
+${context_widget_.getWidget(id).unwrap().generateSize(cocoon.consumer)}
+</jx:macro>
+
+<jx:macro name="repeater-widget" targetNamespace="http://apache.org/cocoon/forms/1.0#template" xmlns:ft="http://apache.org/cocoon/forms/1.0#template">  
+<jx:parameter name="id"/>
+  <jx:set var="repeater_" value="${context_widget_.getWidget(id)}"/>
+  <jx:set var="lastRow_" value="${repeater_.length - 1}"/>
+  <jx:forEach varStatus="loop_" begin="0" end="${lastRow_}">
+      <jx:set var="context_widget_" value="${repeater_.getRow(loop_.index)}"/> 
+      <jx:evalBody/>
+  </jx:forEach>
+</jx:macro>
+
+<jx:macro name="continuation-id" targetNamespace="http://apache.org/cocoon/forms/1.0#template">  
+<fi:continuation-id xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">${cocoon.continuation.id}</fi:continuation-id> 
+</jx:macro>
+
+
+</jx:template>
+
