@@ -205,16 +205,19 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Allow recursive Flow invocations with processPipelineTo.
+   </action>
    <action dev="SW" type="fix">
-	Forms block: rename <code>fd:on-activate</code> to <code>fd:on-action</code> on
-	<code>fd:row-action</code> and <code>fd:repeater-action</code> for consistency
-	with <code>fd:action</code> and <code>fd:submit</code>.
+     Forms block: rename <code>fd:on-activate</code> to <code>fd:on-action</code> on
+     <code>fd:row-action</code> and <code>fd:repeater-action</code> for consistency
+     with <code>fd:action</code> and <code>fd:submit</code>.
    </action>
    <action dev="CZ" type="update">
      Cache the mime-type of readers and serializers.
    </action>
    <action dev="AG" type="fix" fixes-bug="30372" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
-      The daylight time cause error when timezone is CST. Updated icu4j to 3.0.
+     The daylight time cause error when timezone is CST. Updated icu4j to 3.0.
    </action>
    <action dev="AG" type="fix" fixes-bug="31407" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Upgrading DELI block from version 0.9.8 to x020904.
