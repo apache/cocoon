@@ -290,7 +290,6 @@ public abstract class AbstractWidget implements Widget {
         }
     }
 
-
     public boolean validate() {
         // Test validators from the widget definition
         if (!getDefinition().validate(this)) {
@@ -423,9 +422,9 @@ public abstract class AbstractWidget implements Widget {
         contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
 
         generateDisplayData(contentHandler);
-        
+
         generateItemSaxFragment(contentHandler, locale);
-        
+
         contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
     }
 
