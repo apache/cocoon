@@ -35,11 +35,11 @@
         <li>xpath: Sets the XPath the XPath Directory Generator should use for queries on XML files.
             If you don't set this parameter it will behave like the Directory Generator.</li>
         <li>xmlFiles: The xml files pattern. Specifies the files that should be handled as XML
-            files. Only on the files matching this pattern an XPath query will be tried. The XPath
-            Directory Generator does not fail on files that are no XML files or that are not
+            files. XPath queries will only be tried on files matching this pattern. The XPath
+            Directory Generator does not fail on non-XML files or files that are not
             well-formed or not valid. All Exceptions on parsing the files will be caught and
-            ignored. But of course useless parsing and throwing and catching exceptions is very
-            time consuming, so you should not make the pattern to generic.<br/>
+            ignored. But of course, useless parsing, throwing and catching exceptions is very
+            time consuming, so the <code>xmlFiles</code> pattern should not be too generic.<br/>
             If you specify an empty pattern all files will be handled as XML files. The default
             pattern when not specifying this parameter is <code>\.xml$</code>, so that all files
             ending <code>.xml</code> are handled as XML files.<br/>
