@@ -1,7 +1,6 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -37,6 +36,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * TODO Refactor all of this to use the MailCommandManager, etc...
  *
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>
+ * @version CVS $Id: IMAPGenerator.java,v 1.5 2003/12/22 13:38:22 joerg Exp $
  */
 public class IMAPGenerator extends AbstractGenerator {
     
@@ -49,7 +49,6 @@ public class IMAPGenerator extends AbstractGenerator {
     
     private Properties props = new Properties();
     private Message message[] = null;
-    private Date messageSentDate = null;
     
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
@@ -151,7 +150,6 @@ public class IMAPGenerator extends AbstractGenerator {
 
         this.props = null;
         this.message = null;
-        this.messageSentDate = null;
 
         super.recycle();
 
