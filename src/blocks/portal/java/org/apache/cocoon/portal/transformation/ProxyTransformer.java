@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.8 2004/03/19 14:21:06 cziegeler Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.9 2004/03/20 16:33:42 joerg Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -229,7 +229,6 @@ public class ProxyTransformer
 
     /**
      * Processes the request to the external application
-     * @throws SAXException on any exceptions while sending the request.
      */
     protected void processRequest() {
         try {
@@ -420,7 +419,6 @@ public class ProxyTransformer
      * Reads the HTML document from given connection and returns a correct W3C DOM XHTML document
      * @param connection hte HttpURLConnection to read from
      * @return the result as valid W3C DOM XHTML document
-     * @throws IOException if any exceptions occure while reading from the url connection.
      */
     protected Document readXML(HttpURLConnection connection) {
         try {
@@ -623,8 +621,6 @@ public class ProxyTransformer
     * @param parameters
     * @return CopletInstanceData
     * @throws ProcessingException
-    * @throws IOException
-    * @throws SAXException
     */
     public static CopletInstanceData getInstanceData(ServiceManager manager,
                                                      Map objectModel,
