@@ -41,7 +41,7 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.6 2001-04-24 20:18:27 dims Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.7 2001-04-24 20:21:26 giacomo Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -55,14 +55,8 @@ public class ContentAggregator extends ContentHandlerWrapper
     /** the namespace of the root element */
     protected String rootElementNS;
 
-    /** the elements of the parts */
-    protected ArrayList partElements = new ArrayList();
-
-    /** the namespaces of the parts */
-    protected ArrayList partNSs = new ArrayList();
-
-    /** the URIs of the parts */
-    protected ArrayList partURIs = new ArrayList();
+    /** the parts */
+    protected ArrayList parts = new ArrayList();
 
     /** The current <code>Environment</code>. */
     protected Environment environment;
@@ -97,6 +91,9 @@ public class ContentAggregator extends ContentHandlerWrapper
     /** Stacks namespaces during processing */
     private ArrayList currentNS = new ArrayList();
 
+    /** Indicates the position in the stack of the root element of the aggregated content */
+    private int rootElementIndex;
+
     /**
      * Pass the <code>ComponentManager</code> to the <code>composer</code>.
      * The <code>Composable</code> implementation should use the specified
@@ -112,6 +109,24 @@ public class ContentAggregator extends ContentHandlerWrapper
         }
     }
 
+    /** This object holds the part parts :) */
+    private class Part {
+        public String uri;
+        public String element;
+        public String namespace;
+        boolean stripRootElement;
+        public Part (String uri, String element, String namespace, String stripRoot) {
+            this.uri = uri;
+            this.element = element;
+            this.namespace = namespace;
+            if (stripRoot.equals("yes") || stripRoot.equals("true")) {
+                this.stripRootElement = true;
+            } else {
+                this.stripRootElement = false;
+            }
+        }
+    }
+
     /**
      * generates the content
      */
@@ -122,23 +137,29 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.startElem(this.rootElementNS, this.rootElement);
         try {
             for (int i = 0; i < this.partEventPipelines.size(); i++) {
-                String ns = (String)this.partNSs.get(i);
+                Part part = (Part)this.parts.get(i);
+                this.rootElementIndex = (part.stripRootElement ? 0 : -1);
+                String ns = part.namespace;
                 if (ns.equals("")) {
                     ns = this.getNS();
                 }
-                this.startElem(ns, (String)this.partElements.get(i));
+                if (!part.element.equals("")) {
+                    this.startElem(ns, part.element);
+                }
                 EventPipeline ep = (EventPipeline)this.partEventPipelines.get(i);
                 ((XMLProducer)ep).setConsumer(this);
                 try {
-                    this.environment.pushURI((String)this.partURIs.get(i));
+                    this.environment.pushURI(part.uri);
                     ep.process(this.environment);
                 } catch (Exception e) {
-                    getLogger().error("ContentAggregator: cannot process event pipeline for URI " + this.partURIs.get(i), e);
-                    throw new ProcessingException ("ContentAggregator: cannot process event pipeline for URI " + this.partURIs.get(i), e);
+                    getLogger().error("ContentAggregator: cannot process event pipeline for URI " + part.uri, e);
+                    throw new ProcessingException ("ContentAggregator: cannot process event pipeline for URI " + part.uri, e);
                 } finally {
                     this.manager.release(ep);
                     this.environment.popURI();
-                    this.endElem((String)this.partElements.get(i));
+                    if (!part.element.equals("")) {
+                        this.endElem(part.element);
+                    }
                 }
             }
         } finally {
@@ -152,9 +173,9 @@ public class ContentAggregator extends ContentHandlerWrapper
         if (this.partEventPipelines.size() == 0) {
             EventPipeline eventPipeline = null;
             StreamPipeline pipeline = null;
-            for (int i = 0; i < this.partElements.size(); i++) {
-                getLogger().debug("ContentAggregator: collecting internal resource "
-                        + (String)this.partURIs.get(i));
+            for (int i = 0; i < this.parts.size(); i++) {
+                Part part = (Part)this.parts.get(i);
+                getLogger().debug("ContentAggregator: collecting internal resource " + part.uri);
                 try {
                     eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
                     this.partEventPipelines.add(eventPipeline);
@@ -170,7 +191,7 @@ public class ContentAggregator extends ContentHandlerWrapper
                     throw new ProcessingException ("could not set event pipeline on stream pipeline", cme);
                 }
                 try {
-                    this.environment.pushURI((String)this.partURIs.get(i));
+                    this.environment.pushURI(part.uri);
                     this.sitemap.process(this.environment, pipeline, eventPipeline);
                 } catch (Exception cme) {
                     getLogger().error("ContentAggregator: could not process pipeline", cme);
@@ -220,16 +241,10 @@ public class ContentAggregator extends ContentHandlerWrapper
         }
         getLogger().debug("ContentAggregator: root element='" + element + "' ns='" + namespace + "'");
     }
-
-    public void addPart(String uri, String element, String namespace) {
-        if (namespace == null) {
-            this.partNSs.add("");
-        } else {
-            this.partNSs.add(namespace);
-        }
-        this.partURIs.add(uri);
-        this.partElements.add(element);
-        getLogger().debug("ContentAggregator: part uri='" + uri + "' element='" + element + "' ns='" + namespace + "'");
+    
+    public void addPart(String uri, String element, String namespace, String stripRootElement) {
+        this.parts.add(new Part(uri, element, namespace, stripRootElement));
+        getLogger().debug("ContentAggregator: part uri='" + uri + "' element='" + element + "' ns='" + namespace + "' stripRootElement='" + stripRootElement + "'");
     }
 
     /**
@@ -271,9 +286,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.parameters = null;
         this.rootElement = null;
         this.rootElementNS = null;
-        this.partURIs.clear();
-        this.partElements.clear();
-        this.partNSs.clear();
+        this.parts.clear();
         this.environment = null;
         this.partEventPipelines.clear();
         this.currentNS.clear();
@@ -344,11 +357,22 @@ public class ContentAggregator extends ContentHandlerWrapper
         if (ns.equals("")) {
             ns = (String)this.getNS();
         }
-        this.documentHandler.startElement(this.pushNS(ns), localName, qName, atts);
+        this.pushNS(ns);
+        if (rootElementIndex != 0) {
+            this.documentHandler.startElement(ns, localName, qName, atts);
+        } else {
+            rootElementIndex = currentNS.size();
+            getLogger().debug("ContentAggregator: skipping root element start event " + rootElementIndex);
+        }
     }
 
     public void endElement (String namespaceURI, String localName,
                   String qName) throws SAXException {
-        this.documentHandler.endElement((String)this.popNS(), localName, qName);
+        if (rootElementIndex != currentNS.size()) {
+            this.documentHandler.endElement((String)this.popNS(), localName, qName);
+        } else {
+            this.popNS();
+            getLogger().debug("ContentAggregator: ignoring root element end event " + rootElementIndex);
+        }
     }
 }

@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.105 2001-04-24 20:18:23 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.106 2001-04-24 20:21:27 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -976,21 +976,14 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="@ns">
-        <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", null);
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
     <xsl:apply-templates select="./map:part">
       <xsl:with-param name="ca"><xsl:value-of select="$ca"/></xsl:with-param>
     </xsl:apply-templates>
   </xsl:template> <!-- match="map:aggregate" -->
 
   <!-- generate the code to match a aggregates part definition -->
-  <xsl:template match="map:aggregate/map:part">
+  <xsl:template match="map:part">
     <xsl:param name="ca"/>
     <xsl:if test="not (@src)">
       <xsl:call-template name="error">
@@ -999,24 +992,8 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    <!--
-    <xsl:if test="not (@element)">
-      <xsl:call-template name="error">
-        <xsl:with-param name="message">
-          element attribute missing in aggregates part element
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-    -->
-    <xsl:choose>
-      <xsl:when test="@ns">
-        <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", null);
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!-- match="map:aggregate/map:part" -->
+    <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>", "<xsl:value-of select="@strip-root"/>");
+  </xsl:template> <!-- match="map:part" -->
 
   <!-- collect parameter definitions -->
   <xsl:template match="map:pipeline//parameter | map:action-set//parameter">
