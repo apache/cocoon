@@ -37,7 +37,7 @@
                 <li>Build a multi-language website using XML dictionaries to translate menus and messages</li>
                 <li>Build web portals using the latest JSR-168 standard</li>
                 <li>Write web applications with little code and no state management code using the Flow subsystem</li>
-                <li>Allow java objects to be edited from a WAP device</li>
+                <li>Allow Java objects to be edited from a WAP device</li>
             </ul>
             The combination of components available in Cocoon applies
             to widely varied types of applications. This explains why more and more companies are making Cocoon

@@ -31,6 +31,7 @@
     <map:flow id="flow" language="javascript">
         <map:script src="number-guess/guess-number.js"/>
         <map:script src="multi-page/multi-page.js"/>
+        <map:script src="java-shapes/java-shapes.js"/>
     </map:flow>
 
     <!-- reusable parts of pipelines -->

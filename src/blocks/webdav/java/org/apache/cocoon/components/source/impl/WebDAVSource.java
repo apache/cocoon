@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.28 2004/04/13 17:13:29 stephan Exp $
+ * @version $Id$
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
@@ -602,8 +602,13 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
-        String path = isCollection()?"..":".";
-      
+        String path;
+        if (this.url.getEscapedPath().endsWith("/")) {
+            path = "..";
+        }
+        else {
+            path = ".";
+        }
         try {
             HttpURL parentURL;
             if (url instanceof HttpsURL) {
@@ -749,8 +754,19 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
         try {
             if (!this.resource.mkcolMethod()) {
                 int status = this.resource.getStatusCode();
+                if (status == 409) {
+                    // parent does not exist, create it and try again
+                    ((ModifiableTraversableSource) getParent()).makeCollection();
+                    makeCollection();
+                }
+                else if (status == 404) {
+                    // apparently mod_dav_svn wrongly returns 404
+                    // on MKCOL when parent does not exist
+                    ((ModifiableTraversableSource) getParent()).makeCollection();
+                    makeCollection();
+                }
                 // Ignore status 405 - Not allowed: collection already exists
-                if (status != 405) {
+                else if (status != 405) {
                     final String msg = 
                         "Unable to create collection " + getSecureURI()
                         + ". Server responded " + this.resource.getStatusCode()
@@ -938,7 +954,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      */
     public void moveTo(Source source) throws SourceException {
         if (source instanceof WebDAVSource) {
+            initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
             WebDAVSource destination = (WebDAVSource)source;
+            destination.initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
             try {            
                  this.resource.moveMethod(destination.resource.getHttpURL().getPath());
             } catch (HttpException e) {
@@ -960,7 +978,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      */
     public void copyTo(Source source) throws SourceException {
         if (source instanceof WebDAVSource) {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
             WebDAVSource destination = (WebDAVSource)source;
+            destination.initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
             try {
                 this.resource.copyMethod(destination.resource.getHttpURL().getPath());
             } catch (HttpException e) {

@@ -29,7 +29,7 @@
 
     <content>
         <h2>${hint}</h2>
-        <form method="post" action="${continuation.id}.continue">
+        <form method="post" action="${cocoon.continuation.id}.continue">
             <input type="text" name="answer"/>
             <input type="submit"/>
         </form>

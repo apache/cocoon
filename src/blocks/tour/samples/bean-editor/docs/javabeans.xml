@@ -26,7 +26,7 @@
         <h2>Interfaces</h2>
         <p>
             Here's the interface of the DatabaseFacade class, which is used by our
-            Flowscript code to "talk" to the java beans:
+            Flowscript code to "talk" to the Java beans:
             <pre class="code">
 /** access the Database */
 public static DatabaseFacade getInstance();
@@ -72,7 +72,7 @@ public void setComment(String m_comment);
 
         <h2>Access from Flowscript</h2>
         <p>
-            Here's a code excerpt showing how Flowscript code can access java classes.
+            Here's a code excerpt showing how Flowscript code can access Java classes.
         </p>
         <pre class="code">
 var db = Packages.org.apache.cocoon.samples.tour.beans.DatabaseFacade.getInstance();
@@ -80,7 +80,7 @@ var db = Packages.org.apache.cocoon.samples.tour.beans.DatabaseFacade.getInstanc
 list = db.getTasks();
         </pre>
         <p>
-            Simple enough. The "official" way of accessing java components in a Cocoon
+            Simple enough. The "official" way of accessing Java components in a Cocoon
             application would be to use the Avalon lookup mechanisms, but this wouldn't
             add much to our example so we took the easy way here.
         </p>
