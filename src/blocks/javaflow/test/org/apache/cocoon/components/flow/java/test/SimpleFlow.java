@@ -141,7 +141,7 @@ public class SimpleFlow extends AbstractSimpleFlow {
         
          while(true) {
             
-             this.sendPageAndWait("test.jxt");
+             sendPageAndWait("test.jxt");
              throw new FooException("test", 123);
          }
      }
