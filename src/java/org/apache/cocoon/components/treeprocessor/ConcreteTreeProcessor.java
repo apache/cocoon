@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,52 +38,50 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 
-
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
- * 
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.1 2004/06/05 08:18:50 sylvain Exp $
+ *
+ * @version $Id: ConcreteTreeProcessor.java,v 1.1 2004/06/05 08:18:50 sylvain Exp $
  */
-public class ConcreteTreeProcessor 
-extends AbstractLogEnabled 
-implements Processor, Disposable {
+public class ConcreteTreeProcessor extends AbstractLogEnabled
+                                   implements Processor, Disposable {
 
 	/** The processor that wraps us */
 	private TreeProcessor wrappingProcessor;
-	
+
 	/** Component manager defined by the &lt;map:components&gt; of this sitemap */
     ComponentManager sitemapComponentManager;
-    
+
   	/** Processing nodes that need to be disposed with this processor */
     private List disposableNodes;
-   
+
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
-    
+
     private Map sitemapComponentConfigurations;
-    
+
     private Configuration componentConfigurations;
-    
+
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
-    
+
 	/** Builds a concrete processig, given the wrapping processor */
 	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
 		this.wrappingProcessor = wrappingProcessor;
 	}
-	
+
 	/** Set the processor data, result of the treebuilder job */
 	public void setProcessorData(ComponentManager manager, ProcessingNode rootNode, List disposableNodes) {
 		if (this.sitemapComponentManager != null) {
 			throw new IllegalStateException("setProcessorData() can only be called once");
 		}
-		
+
 		this.sitemapComponentManager = manager;
 		this.rootNode = rootNode;
 		this.disposableNodes = disposableNodes;
 	}
-	
+
 	/** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
@@ -97,30 +95,30 @@ implements Processor, Disposable {
     public Map getComponentConfigurations() {
         // do we have the sitemap configurations prepared for this processor?
         if ( null == this.sitemapComponentConfigurations ) {
-            
+
             synchronized (this) {
 
                 if ( this.sitemapComponentConfigurations == null ) {
                     // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null 
-                                                     ? null 
+                    final Configuration[] childs = (this.componentConfigurations == null
+                                                     ? null
                                                      : this.componentConfigurations.getChildren());
-                    
+
                     if ( null != childs ) {
-        
+
                         if ( null == this.wrappingProcessor.parent ) {
                             this.sitemapComponentConfigurations = new HashMap(12);
                         } else {
                             // copy all configurations from parent
                             this.sitemapComponentConfigurations = new HashMap(
-                            			this.wrappingProcessor.parent.getComponentConfigurations()); 
+                            			this.wrappingProcessor.parent.getComponentConfigurations());
                         }
-                        
+
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
-                            
+
                             final String r = this.wrappingProcessor.roleManager.getRoleForName(childs[m].getName());
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
+                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                              (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
                         }
                     } else {
@@ -129,14 +127,14 @@ implements Processor, Disposable {
                             this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
                         } else {
                             // use configuration from parent
-                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations(); 
+                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations();
                         }
                     }
                 }
             }
         }
         return this.sitemapComponentConfigurations;    }
-	
+
     /**
      * Mark this processor as needing to be disposed. Actual call to {@link #dispose()} will occur when
      * all request processings on this processor will be terminated.
@@ -146,21 +144,21 @@ implements Processor, Disposable {
 		synchronized(this) {
 			this.requestCount--;
 		}
-		
+
 		if (this.requestCount < 0) {
 			// No more users : dispose right now
 			dispose();
 		}
 	}
-	
+
 	public TreeProcessor getWrappingProcessor() {
 		return this.wrappingProcessor;
 	}
-	
+
 	public Processor getRootProcessor() {
 		return this.wrappingProcessor.getRootProcessor();
 	}
-	
+
     /**
      * Process the given <code>Environment</code> producing the output.
      * @return If the processing is successfull <code>true</code> is returned.
@@ -173,9 +171,7 @@ implements Processor, Disposable {
      */
     public boolean process(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext();
-
         context.enableLogging(getLogger());
-
         try {
             return process(environment, context);
         } finally {
@@ -190,12 +186,10 @@ implements Processor, Disposable {
      */
     public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
-        InvokeContext context = new InvokeContext( true );
-
+        InvokeContext context = new InvokeContext(true);
         context.enableLogging(getLogger());
-
         try {
-            if ( process(environment, context) ) {
+            if (process(environment, context)) {
                 return context.getProcessingPipeline();
             } else {
                 return null;
@@ -214,14 +208,13 @@ implements Processor, Disposable {
      */
     protected boolean process(Environment environment, InvokeContext context)
     throws Exception {
-    	
+
     		// Increment the concurrent requests count
     		synchronized(this) {
     			requestCount++;
     		}
 
     		try {
-    			
     	        // and now process
                 CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
 
@@ -239,7 +232,7 @@ implements Processor, Disposable {
             boolean success = false;
     	        try {
     	            success = this.rootNode.invoke(environment, context);
-    	            
+
     	            return success;
 
     	        } finally {
@@ -250,46 +243,46 @@ implements Processor, Disposable {
     	        }
 
     		} finally {
-    			
+
     			// Decrement the concurrent request count
     			synchronized(this) {
     				requestCount--;
     			}
-    			
+
     			if(requestCount < 0) {
     				// Marked for disposal and no more concurrent requests.
     				dispose();
     			}
     		}
     }
-        
+
     private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
-        
+
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
         // we may have other redirects that will in turn also change the facade delegate
-        
+
         MutableEnvironmentFacade facade = environment instanceof MutableEnvironmentFacade ?
             ((MutableEnvironmentFacade)environment) : null;
-        
+
         if (facade != null) {
             // Consider the facade delegate (the real environment)
             environment = facade.getDelegate();
         }
-        
+
         // test if this is a call from flow
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
         Environment newEnv = new ForwardEnvironmentWrapper(environment, this.sitemapComponentManager, uri, getLogger());
         if ( isRedirect ) {
             ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
         }
-        
+
         if (facade != null) {
             // Change the facade delegate
             facade.setDelegate((EnvironmentWrapper)newEnv);
             newEnv = facade;
         }
-        
+
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
         if (newEnv.getRootContext().equals(newEnv.getContext())) {
@@ -297,11 +290,11 @@ implements Processor, Disposable {
         } else {
             processor = this;
         }
-        
+
         // Process the redirect
         // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
         // context.reset();
-        // The following is a fix for bug #26854 and #26571        
+        // The following is a fix for bug #26854 and #26571
         final boolean result = processor.process(newEnv, context);
         if ( facade != null ) {
             newEnv = facade.getDelegate();
@@ -311,7 +304,7 @@ implements Processor, Disposable {
         }
         return result;
     }
-    
+
 	/* (non-Javadoc)
 	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
 	 */
@@ -324,23 +317,23 @@ implements Processor, Disposable {
             }
             this.disposableNodes = null;
         }
-        
+
         // Ensure it won't be used anymore
         this.rootNode = null;
 	}
-    
+
     public String toString() {
         return "ConcreteTreeProcessor - " + wrappingProcessor.source.getURI();
     }
-    
+
     private class TreeProcessorRedirector extends ForwardRedirector {
-        
+
         private InvokeContext context;
         public TreeProcessorRedirector(Environment env, InvokeContext context) {
             super(env);
             this.context = context;
         }
-        
+
         protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
             try {
                 ConcreteTreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
@@ -355,7 +348,7 @@ implements Processor, Disposable {
             }
         }
     }
-    
+
     /**
      * Local extension of EnvironmentWrapper to propagate otherwise blocked
      * methods to the actual environment.
@@ -363,7 +356,7 @@ implements Processor, Disposable {
     private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
         public ForwardEnvironmentWrapper(Environment env,
-            ComponentManager manager, String uri, Logger logger) 
+            ComponentManager manager, String uri, Logger logger)
         throws MalformedURLException {
             super(env, manager, uri, logger, false);
         }
@@ -387,10 +380,9 @@ implements Processor, Disposable {
         public boolean isResponseModified(long lastModified) {
             return environment.isResponseModified(lastModified);
         }
-        
+
         public void setResponseIsNotModified() {
             environment.setResponseIsNotModified();
         }
     }
-
 }
