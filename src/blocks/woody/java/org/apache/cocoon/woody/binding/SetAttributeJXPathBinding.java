@@ -69,7 +69,8 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs SetAttributeJXPathBinding
      */
-    public SetAttributeJXPathBinding(String attName, String attValue) {
+    public SetAttributeJXPathBinding(boolean loadEnabled, boolean saveEnabled, String attName, String attValue) {
+        super(loadEnabled, saveEnabled);
         this.name = attName;
         this.value = attValue;
     }
@@ -77,14 +78,14 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     /**
      * Do-Nothing implementation.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         //this does nothing in the loading of things
     }
 
     /**
      * Sets the attribute value on the passed JXPathContext
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void doSave(Widget frmModel, JXPathContext jxpc) {
         jxpc.setValue("@" + this.name, this.value);
         if (getLogger().isDebugEnabled())
             getLogger().debug("done saving " + toString());

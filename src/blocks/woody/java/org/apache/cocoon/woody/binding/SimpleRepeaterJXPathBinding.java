@@ -77,7 +77,8 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final boolean deleteIfEmpty;
 
     public SimpleRepeaterJXPathBinding(
-      String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
+            boolean loadEnabled, boolean saveEnabled, String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
+        super(loadEnabled, saveEnabled);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
@@ -86,7 +87,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.deleteIfEmpty = deleteIfEmpty;
     }
 
-    public void loadFormFromModel(Widget frmModel, JXPathContext jctx) {
+    public void doLoad(Widget frmModel, JXPathContext jctx) {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
         
@@ -127,7 +128,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
             getLogger().debug("done loading rows " + toString());
     }
 
-    public void saveFormToModel(Widget frmModel, JXPathContext jctx) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 

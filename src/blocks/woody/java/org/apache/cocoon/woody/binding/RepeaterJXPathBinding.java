@@ -87,23 +87,26 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, 
+    public RepeaterJXPathBinding(boolean loadEnabled, boolean saveEnabled, 
+                                 String repeaterId, String repeaterPath, 
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
-        this(repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
+        this(loadEnabled, saveEnabled, repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
     }
 
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, 
+    public RepeaterJXPathBinding(boolean loadEnabled, boolean saveEnabled, 
+                                 String repeaterId, String repeaterPath, 
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  Convertor convertor, Locale convertorLocale, 
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
+        super(loadEnabled, saveEnabled);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
@@ -111,12 +114,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowIdPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new ValueJXPathBinding(uniqueRowId, uniqueRowPath, true, null, convertor, convertorLocale);
+            new ValueJXPathBinding(true, true, uniqueRowId, uniqueRowPath, null, convertor, convertorLocale);
         this.uniqueRowIdConvertor = convertor;
         this.uniqueRowIdConvertorLocale = convertorLocale;
-        this.rowBinding = new ComposedJXPathBindingBase(childBindings);
+        this.rowBinding = new ComposedJXPathBindingBase(true, true, childBindings);
         this.insertRowBinding = insertBinding;
-        this.deleteRowBinding = new ComposedJXPathBindingBase(deleteBindings);
+        this.deleteRowBinding = new ComposedJXPathBindingBase(true, true, deleteBindings);
     }
 
 
@@ -125,7 +128,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * objectModelContext and Repeater to the repeated rows before handing 
      * over to the actual binding-children.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
         repeater.removeRows();
@@ -158,7 +161,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * updated, inserted or removed.  Depending on what happened the appropriate
      * child-bindings are alowed to visit the narrowed contexts.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 

@@ -75,14 +75,15 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertNodeJXPathBinding
      */
-    public InsertNodeJXPathBinding(DocumentFragment domTemplate) {       
+    public InsertNodeJXPathBinding(boolean loadEnabled, boolean saveEnabled, DocumentFragment domTemplate) {
+        super(loadEnabled, saveEnabled);
         this.template = domTemplate;
     }
 
     /**
      * Do-nothing implementation of the interface.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         // doesn't do a thing when loading.
     }
 
@@ -92,7 +93,7 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
      * The factory will inserts a clone of the 'template' DocumentFragment 
      * inside this object into the target objectmodel.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void doSave(Widget frmModel, JXPathContext jxpc) {
 
         jxpc.setFactory(new AbstractFactory() {
             public boolean createObject(JXPathContext context, Pointer pointer,

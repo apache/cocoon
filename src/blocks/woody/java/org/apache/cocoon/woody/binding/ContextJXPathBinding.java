@@ -69,8 +69,8 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
      */
-    public ContextJXPathBinding(String contextPath, JXPathBindingBase[] childBindings) {
-        super(childBindings);
+    public ContextJXPathBinding(boolean loadEnabled, boolean saveEnabled, String contextPath, JXPathBindingBase[] childBindings) {
+        super(loadEnabled, saveEnabled, childBindings);
         this.xpath = contextPath;
     }
 
@@ -78,11 +78,11 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * Actively performs the binding from the ObjectModel wrapped in a jxpath 
      * context to the Woody-form.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Pointer ptr = jxpc.getPointer(this.xpath);
         if (ptr.getNode() != null) {
             JXPathContext subContext = jxpc.getRelativeContext(ptr);
-            super.loadFormFromModel(frmModel, subContext);
+            super.doLoad(frmModel, subContext);
             if (getLogger().isDebugEnabled())
                 getLogger().debug("done loading " + toString());
         } else {
@@ -96,7 +96,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * Actively performs the binding from the Woody-form to the ObjectModel 
      * wrapped in a jxpath context.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Pointer ptr = jxpc.getPointer(this.xpath);
         if (ptr.getNode() == null) {
             jxpc.createPath(this.xpath);
@@ -104,7 +104,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
             ptr = jxpc.getPointer(this.xpath);
         }
         JXPathContext subContext = jxpc.getRelativeContext(ptr);
-        super.saveFormToModel(frmModel, subContext);
+        super.doSave(frmModel, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done saving " + toString());
         }

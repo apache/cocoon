@@ -52,14 +52,24 @@ package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Abstract base class enabling the logging.
+ * Abstract base class enabling logging and supporting the intrepretation of 
+ * common configuration settings on all specific implementations of
+ * {@see org.apache.cocoon.woody.binding.JXPathBindingBase}.
+ * 
+ * Common supported configurations:
+ * <ul>
+ * <li>Attribute direction="load|save|both": {@see #getDirectionAttributes(Element)}</li>
+ * </ul>
  */
 public abstract class JXpathBindingBuilderBase implements LogEnabled {
 
     private Logger logger;
+    private static final int LOAD_DIRECTION = 0;
+    private static final int SAVE_DIRECTION = 1;
 
     /**
      * Receives the Avalon logger to use.
@@ -90,4 +100,62 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
         Element bindingElm,
         JXPathBindingManager.Assistant assistant) throws BindingException;
 
+    /**
+     * Helper method for interpreting the direction="" attribute which is supported
+     * on each of the Bindings.  Direction can hold one of the following values:
+     * <ol><li><code>load</code>: This binding will only load.</li>
+     * <li><code>save</code>: This binding will only save.</li>
+     * <li><code>both</code>: This binding will perform both operations.</li>
+     * </ol>
+     * @param bindingElm
+     * @return an instance of DirectionAttributes
+     * @throws BindingException
+     */
+     static DirectionAttributes getDirectionAttributes(Element bindingElm) throws BindingException {
+        try {
+            String direction = DomHelper.getAttribute(bindingElm, "direction", "both");                       
+            return new DirectionAttributes(direction);
+        } catch (BindingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
+        }
+     }
+    
+     /**
+      * DirectionAttributes is a simple helper class for holding the distinct data
+      * member fields indicating the activity of the sepearate load and save 
+      * actions of a given binding.
+      */
+     static class DirectionAttributes{
+        final boolean loadEnabled;
+        final boolean saveEnabled;
+        
+        DirectionAttributes(String direction){
+            this(isLoadEnabled(direction), isSaveEnabled(direction));
+        }
+        
+        DirectionAttributes(boolean loadEnabled, boolean saveEnabled){
+                this.loadEnabled = loadEnabled;
+            this.saveEnabled = saveEnabled;
+        }
+        
+        /** 
+         * Interprets the value of the direction attribute into activity of the load action.
+         * @param direction
+         * @return true if direction is either set to "both" or "load"
+         */
+        private static boolean isLoadEnabled(String direction) {            
+            return "both".equals(direction) || "load".equals(direction);
+        }
+        
+        /** 
+         * Interprets the value of the direction attribute into activity of the save action.
+         * @param direction
+         * @return true if direction is either set to "both" or "save"
+         */
+        private static boolean isSaveEnabled(String direction) {            
+            return "both".equals(direction) || "save".equals(direction);
+        }       
+    }
 }

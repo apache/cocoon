@@ -79,11 +79,6 @@ public class ValueJXPathBinding extends JXPathBindingBase {
     /**
      * Flag indicating if the objectModel-property can be altered or not
      */
-    private final boolean readonly;
-
-    /**
-     * Flag indicating if the objectModel-property can be altered or not
-     */
     private final JXPathBindingBase updateBinding;
 
     /**
@@ -103,12 +98,12 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      *
      * @param convertor may be null
      */
-    public ValueJXPathBinding(String widgetId, String xpath, boolean readonly, JXPathBindingBase[] updateBindings,
+    public ValueJXPathBinding(boolean loadEnabled, boolean saveEnabled, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
                               Convertor convertor, Locale convertorLocale) {
+        super(loadEnabled, saveEnabled);
         this.fieldId = widgetId;
         this.xpath = xpath;
-        this.readonly = readonly;
-        this.updateBinding = new ComposedJXPathBindingBase(updateBindings);
+        this.updateBinding = new ComposedJXPathBindingBase(true, true, updateBindings);
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
     }
@@ -117,7 +112,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      * Actively performs the binding from the ObjectModel wrapped in a jxpath
      * context to the Woody-form-widget specified in this object.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         try {
             Widget widget = frmModel.getWidget(this.fieldId);
             Object value = jxpc.getValue(this.xpath);
@@ -143,53 +138,51 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      * Actively performs the binding from the Woody-form to the ObjectModel
      * wrapped in a jxpath context
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        if (!this.readonly) {
-            try {
-                Widget widget = frmModel.getWidget(this.fieldId);
-                Object value = widget.getValue();
-                if (value != null && convertor != null) {
-                    value = convertor.convertToString(value, convertorLocale, null);
-                }
-
-                Object oldValue = jxpc.getValue(this.xpath);
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("value= " + value + "-- oldvalue=" + oldValue);
-                }
-
-                boolean update = false;
-
-                if ((value == null && oldValue != null) || value != null && !value.equals(oldValue)) {
-                    // first update the value itself
-                    jxpc.createPathAndSetValue(this.xpath, value);
-
-                    // now perform any other bindings that need to be performed when the value is updated
-                    JXPathContext subContext = null;
-                    try {
-                        subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-                    } catch (JXPathException e) {
-                        // if the value has been set to null and the underlying model is a bean, then
-                        // JXPath will not be able to create a relative context
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("(Ignorable) problem binding field " + widget.getFullyQualifiedId(), e);
-                        }
-                    }
-                    if (subContext != null) {
-                        this.updateBinding.saveFormToModel(frmModel, subContext);
-                    }
-
-                    update = true;
-                }
-
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("done saving " + toString() + " -- value= " + value + " -- on-update == " + update);
-                }
-            } catch (Exception e) {
-                throw new BindingException("Problem binding field " + this.fieldId +
-                                           " (parent = \"" + frmModel.getFullyQualifiedId() + "\") to xpath " +
-                                           this.xpath + " (context xpath = \"" + jxpc.getContextPointer().asPath() + "\")",
-                                           e);
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        try {
+            Widget widget = frmModel.getWidget(this.fieldId);
+            Object value = widget.getValue();
+            if (value != null && convertor != null) {
+                value = convertor.convertToString(value, convertorLocale, null);
             }
+
+            Object oldValue = jxpc.getValue(this.xpath);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("value= " + value + "-- oldvalue=" + oldValue);
+            }
+
+            boolean update = false;
+
+            if ((value == null && oldValue != null) || value != null && !value.equals(oldValue)) {
+                // first update the value itself
+                jxpc.createPathAndSetValue(this.xpath, value);
+
+                // now perform any other bindings that need to be performed when the value is updated
+                JXPathContext subContext = null;
+                try {
+                    subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+                } catch (JXPathException e) {
+                    // if the value has been set to null and the underlying model is a bean, then
+                    // JXPath will not be able to create a relative context
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("(Ignorable) problem binding field " + widget.getFullyQualifiedId(), e);
+                    }
+                }
+                if (subContext != null) {
+                    this.updateBinding.saveFormToModel(frmModel, subContext);
+                }
+
+                update = true;
+            }
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("done saving " + toString() + " -- value= " + value + " -- on-update == " + update);
+            }
+        } catch (Exception e) {
+            throw new BindingException("Problem binding field " + this.fieldId +
+                                       " (parent = \"" + frmModel.getFullyQualifiedId() + "\") to xpath " +
+                                       this.xpath + " (context xpath = \"" + jxpc.getContextPointer().asPath() + "\")",
+                                       e);
         }
     }
 

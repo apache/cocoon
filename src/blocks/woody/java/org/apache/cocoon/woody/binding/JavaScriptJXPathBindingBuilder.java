@@ -81,33 +81,36 @@ import org.w3c.dom.Element;
  * <li><code>jxpathPointer</code>: the JXPath pointer corresponding to the "path" attribute,
  * <li><code>jxpathContext</code> (not shown): the JXPath context corresponding to the "path" attribute
  * </ul>
- * The &lt;wb:save-form&gt; snippet should be ommitted if the "read-only" attribute is present.
+ * <b>Notes:</b><ul>
+ * <li>The &lt;wb:save-form&gt; snippet should be ommitted if the "direction" attribute is set to "load".</li>
+ * <li>The &lt;wb:load-form&gt; snippet should be ommitted if the "direction" attribute is set to "save".</li>
+ * </ul>
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.1 2003/10/03 13:40:41 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.2 2003/12/16 15:05:54 mpo Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
+            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(element); 
+            
             String id = DomHelper.getAttribute(element, "id");
             String path = DomHelper.getAttribute(element, "path");
             
-            boolean readOnly = DomHelper.getAttributeAsBoolean(element, "read-only", false);
-        
-
-            Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
-            Script loadScript = JavaScriptHelper.buildScript(loadElem);
+            Script loadScript = null;
+            if (directionAtts.loadEnabled) {
+                Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
+                loadScript = JavaScriptHelper.buildScript(loadElem);
+            }
             
-            Script saveScript;
-            if (readOnly) {
-                saveScript = null;
-            } else {
+            Script saveScript = null;
+            if (directionAtts.saveEnabled) {
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
                 saveScript = JavaScriptHelper.buildScript(saveElem);
             }
 
-            return new JavaScriptJXPathBinding(id, path, loadScript, saveScript);
+            return new JavaScriptJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, id, path, loadScript, saveScript);
 
         } catch(Exception e) {
             throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);
