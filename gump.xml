@@ -1104,7 +1104,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-ojb" status="unstable" dir="src/blocks/ojb">
+  <project name="cocoon-block-ojb" status="stable" dir="src/blocks/ojb">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
