@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.195 2003/11/14 13:04:06 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.196 2003/11/16 18:47:13 antonio Exp $:-->
 
 <status>
  <developers>
@@ -181,6 +181,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated Jetty to 4.2.14
+   </action>
    <action dev="CZ" type="fix" fixes-bug="24093">
      Disable accessing files outside the context via the context protocol.
    </action> 
