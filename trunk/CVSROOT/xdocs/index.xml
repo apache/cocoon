@@ -122,6 +122,18 @@
   </p>
  </s1>
 
+ <s1 title="Are there books that cover this stuff?">
+  <p>
+   Yes, even if XML publishing is a brand new area, the incredible acceptance
+   of these technologies urged editors to provide books that covered the subject.
+   While many books that cover XML exist, one of them dedicates an entire chapter
+   to XML publishing frameworks and Cocoon in particular and that chapter
+   was made available free of charge 
+   <link href="http://www.oreilly.com/catalog/javaxml/chapter/ch09.html">here</link>.
+   Our greatful thanks go to both O'Reilly and Brett McLaughlin for this.
+  </p>
+ </s1>
+ 
  <s1 title="Where do I get it?">
   <p>
    Here is the <link href="http://xml.apache.org/cocoon/dist/">download area</link>.
