@@ -50,19 +50,13 @@
 */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.PortalService;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -72,63 +66,38 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.5 2003/05/23 15:04:04 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.1 2003/05/23 15:04:04 cziegeler Exp $
  */
-public class URICopletAdapter 
-    extends AbstractCopletAdapter
-    implements Disposable {
+public abstract class AbstractCopletAdapter 
+    extends AbstractLogEnabled
+    implements CopletAdapter, ThreadSafe, Composable {
 	
-    /** The source resolver */
-    protected SourceResolver resolver;
-    
+    /** The component manager */
+    protected ComponentManager manager;
+
     /**
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
      */
     public void compose(ComponentManager componentManager)
-    throws ComponentException {
-        super.compose( componentManager );
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        throws ComponentException {
+        this.manager = componentManager;
     }
 
     
-    public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
+    public abstract void streamContent(CopletInstanceData coplet, 
+                                         ContentHandler contentHandler)
+    throws SAXException; 
+    
+    
+    public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-		String uri = (String)coplet.getCopletData().getAttribute("uri");
-		Source copletSource = null;
-		PortalService portalService = null;
-		try {
-			if (uri.startsWith("cocoon:")) {
-				portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-				HashMap par = new HashMap();
-				par.put(Constants.PORTAL_NAME_KEY, portalService.getPortalName());
-				par.put(Constants.COPLET_ID_KEY, coplet.getId());
-            
-				copletSource = this.resolver.resolveURI(uri, null, par);
-			} else {
-				copletSource = this.resolver.resolveURI(uri);
-			}
-			SourceUtil.toSAX(copletSource, contentHandler);
-		} catch (IOException ioe) {
-			throw new SAXException("IOException", ioe);
-		} catch (ProcessingException pe) {
-			throw new SAXException("ProcessingException", pe);
-		} catch (ComponentException ce) {
-			throw new SAXException("ComponentException", ce);
-		} finally {
-			this.resolver.release(copletSource);
-			this.manager.release(portalService);
-		}
+        this.streamContent( coplet, contentHandler );
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.resolver );
-            this.resolver = null;
-            this.manager = null;
-        }
+    public void init(CopletInstanceData coplet) {
     }
-
+    
+    public void destroy(CopletInstanceData coplet) {
+    }
+    
 }

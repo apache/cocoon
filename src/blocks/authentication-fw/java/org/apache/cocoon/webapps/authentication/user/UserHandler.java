@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.6 2003/05/04 20:43:23 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.7 2003/05/23 15:04:04 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -124,6 +124,7 @@ implements java.io.Serializable {
     /**
      * Create Application Context.
      * This context is destroyed when the user logs out of the handler
+     * FIXME - this should be moved into the Manager
      */
     public synchronized SessionContext createApplicationContext(String name,
                                                                   String loadURI,
