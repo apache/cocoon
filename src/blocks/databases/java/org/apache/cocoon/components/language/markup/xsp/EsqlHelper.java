@@ -68,7 +68,7 @@ import java.sql.Types;
  *
  * based on the orginal esql.xsl
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: EsqlHelper.java,v 1.2 2003/10/06 16:03:10 haul Exp $
+ * @version CVS $Id: EsqlHelper.java,v 1.3 2004/02/28 04:17:50 antonio Exp $
  */
 
 public class EsqlHelper {
@@ -76,7 +76,7 @@ public class EsqlHelper {
     private static Boolean TRUE;
 
     static {
-        EsqlHelper.TRUE = new Boolean(true);
+        EsqlHelper.TRUE = Boolean.TRUE;
     }
 
     /** returns byte array from BLOB

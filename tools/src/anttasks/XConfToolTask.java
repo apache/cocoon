@@ -97,7 +97,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.13 $ $Date: 2004/02/15 21:28:51 $
+ * @version CVS $Revision: 1.14 $ $Date: 2004/02/28 04:17:50 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -172,7 +172,7 @@ public final class XConfToolTask extends MatchingTask {
             builderFactory.setNamespaceAware(false);
             builderFactory.setAttribute(
                 "http://apache.org/xml/features/nonvalidating/load-external-dtd",
-                new Boolean(false));
+                Boolean.FALSE);
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
             final Transformer transformer = TransformerFactory.newInstance().newTransformer();
 

@@ -84,7 +84,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * "name_1" must also exist and vice versa.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterExistsAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: RequestParameterExistsAction.java,v 1.2 2004/02/28 04:17:50 antonio Exp $
  */
 public class RequestParameterExistsAction extends AbstractConfigurableAction
 {
@@ -183,7 +183,7 @@ public class RequestParameterExistsAction extends AbstractConfigurableAction
                     "  Parameter is [" + sp1.prefix + " * " + sp1.pstfix + "] ");
             }
             Enumeration requestParams = request.getParameterNames();
-            Boolean dummy = new Boolean(true);
+            Boolean dummy = Boolean.TRUE;
             while (requestParams.hasMoreElements()) {
                 String paramName = (String) requestParams.nextElement();
                 String match = getMatch(paramName, sp1);
