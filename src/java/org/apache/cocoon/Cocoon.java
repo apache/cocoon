@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.10 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: Cocoon.java,v 1.11 2003/08/05 16:56:20 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -127,6 +127,8 @@ public class Cocoon
 
     private ThreadManager threads;
 
+    private CommandManager commands;
+    
     /** The application context */
     private Context context;
 
@@ -195,8 +197,7 @@ public class Cocoon
             
             try {
                 DefaultContext setup = (DefaultContext)this.context;
-                threads = new TPCThreadManager();
-                CommandManager commands = new CommandManager();
+                this.threads = new TPCThreadManager();
                 
                 Parameters params = new Parameters();
                 params.setParameter("threads-per-processor", "1");
@@ -205,13 +206,15 @@ public class Cocoon
                 params.setParameter("force-shutdown", "false");
                 params.makeReadOnly();
                 
-                ContainerUtil.enableLogging(threads, getLogger().getChildLogger("thread.manager"));
-                ContainerUtil.parameterize(threads, params);
-                ContainerUtil.initialize(threads);
+                ContainerUtil.enableLogging(this.threads, getLogger().getChildLogger("thread.manager"));
+                ContainerUtil.parameterize(this.threads, params);
+                ContainerUtil.initialize(this.threads);
                 
-                threads.register(commands);
+                this.commands = new CommandManager();
+                ContainerUtil.enableLogging(this.commands, getLogger().getChildLogger("thread.manager"));
+                this.threads.register(this.commands);
                 
-                setup.put(Queue.ROLE, commands.getCommandSink());
+                setup.put(Queue.ROLE, this.commands.getCommandSink());
                 
                 setup.makeReadOnly();
             } catch (Exception e) {
@@ -488,9 +491,21 @@ public class Cocoon
      * Dispose this instance
      */
     public void dispose() {
-        this.componentManager.release(this.threadSafeProcessor);
-        ContainerUtil.dispose(threads);
-        ContainerUtil.dispose(this.componentManager);
+        ContainerUtil.dispose(this.commands);
+        this.commands = null;
+        ContainerUtil.dispose(this.threads);
+        this.threads = null;
+        
+        if ( this.componentManager != null ) {
+            this.componentManager.release(this.threadSafeProcessor);
+            this.threadSafeProcessor = null;
+            
+            ContainerUtil.dispose(this.componentManager);
+            this.componentManager = null;
+        }
+        
+        this.context = null;
+        
         this.disposed = true;
     }
 
