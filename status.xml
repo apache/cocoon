@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.243 2004/02/15 10:15:55 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.244 2004/02/16 04:42:18 antonio Exp $:-->
 
 <status>
  <developers>
@@ -196,7 +196,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
- <action dev="AG" type="update">
+   <action dev="AG" type="update">
+     Updated commons-httpclient to 2.0-final
+   </action>
+   <action dev="AG" type="update">
      Updated jdtcore to 2.1.2, and Ant to 1.6.1
    </action>
    <action dev="CZ" type="update" fixes-bug="26896" due-to-email="jon.evans@misgl.com" due-to="Jon Evans">
