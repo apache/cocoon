@@ -59,6 +59,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: CastorTransformer.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {
     private static final String CASTOR_URI = "http://castor.exolab.org/cocoontransfomer";

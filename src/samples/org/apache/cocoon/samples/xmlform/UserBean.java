@@ -19,9 +19,9 @@ import java.util.Set;
  * DOM Nodes, which are handled correctly by the
  * framework when referenced via XPath.
  *
+ * @version CVS $Id: UserBean.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
  */
-   
-public class UserBean 
+public class UserBean
 {
   private String fname = "Donald";
   private String lname = "Duck";

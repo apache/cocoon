@@ -63,14 +63,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 
- * Test class for the Validation API 
+ * Test class for the Validation API
  *
  * Takes 2 command line arguments.
  *
  * First is the location of a Schematron Schema file
  * Second is the validation phase to use
  *
+ * @version CVS $Id: ZValidationTest.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public class ZValidationTest {
 

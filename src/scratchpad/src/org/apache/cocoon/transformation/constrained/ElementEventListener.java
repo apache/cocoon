@@ -56,6 +56,7 @@ import java.util.EventListener;
 /**
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
+ * @version CVS $Id: ElementEventListener.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public interface ElementEventListener extends EventListener {
 

@@ -132,8 +132,9 @@ import javax.servlet.http.*;
  *   and sends it into the cocoon pipeline.
  * </p>
  *
- * @author                 <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version                CVS $Id: CocoonFilterGeneratorImpl.java,v 1.1 2003/03/09 00:10:13 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ *
  * @servlet:filter-name    CocoonFilterGeneratorImpl
  */
 public class CocoonFilterGeneratorImpl implements Filter {

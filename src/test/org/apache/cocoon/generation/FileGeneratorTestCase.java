@@ -55,6 +55,10 @@ import java.util.HashMap;
 
 import org.apache.avalon.framework.parameters.Parameters;
 
+/**
+ *
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.2 2003/03/16 18:03:56 vgritsenko Exp $
+ */
 public class FileGeneratorTestCase extends AbstractGeneratorTestCase
 {
   public FileGeneratorTestCase(String name)

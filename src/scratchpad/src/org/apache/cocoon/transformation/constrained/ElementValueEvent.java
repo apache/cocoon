@@ -51,13 +51,12 @@
 
 package org.apache.cocoon.transformation.constrained;
 
-
 import org.xml.sax.Attributes;
-
 
 /**
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
+ * @version CVS $Id: ElementValueEvent.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public class ElementValueEvent extends ContainerElementEndEvent {
 

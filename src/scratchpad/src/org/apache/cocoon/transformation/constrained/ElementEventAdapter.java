@@ -39,14 +39,14 @@
  */
 package org.apache.cocoon.transformation.constrained;
 
-
 /**
- *@author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
+ *
+ * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
+ * @version CVS $Id: ElementEventAdapter.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public abstract class ElementEventAdapter implements ElementEventListener {
 
 	public void containerElementEnded(ContainerElementEndEvent e) throws Exception { }
-
 
 	public void elementValueRecieved(ElementValueEvent e) throws Exception { }
 
