@@ -64,7 +64,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.5 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.6 2004/03/11 18:46:31 joerg Exp $
  */
 public class ResourceReader 
 extends AbstractReader 
@@ -261,12 +261,12 @@ implements CacheableProcessingComponent, Parameterizable {
             else {
                 response.addHeader("Vary", "Host");
             }
-            
+
             long lastModified = getLastModified();
             if (lastModified > 0) {
                 response.setDateHeader("Last-Modified", lastModified);
             }
-            
+
             try {
                 inputStream = inputSource.getInputStream();
             }

@@ -56,24 +56,24 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     </dd>
  *     <dt>&lt;scale(Red|Green|Blue)&gt;</dt>
  *     <dd>This parameter is optional. When specified it will cause the 
- *	specified color component in the image to be multiplied by the 
- *	specified floating point value.
+ *         specified color component in the image to be multiplied by the 
+ *         specified floating point value.
  *     </dd>
  *     <dt>&lt;offset(Red|Green|Blue)&gt;</dt>
  *     <dd>This parameter is optional. When specified it will cause the 
- *	specified color component in the image to be incremented by the 
- *	specified floating point value.
+ *         specified color component in the image to be incremented by the 
+ *         specified floating point value.
  *     </dd>
  *     <dt>&lt;grayscale&gt;</dt>
  *     <dd>This parameter is optional. When specified and set to true it
- *	will cause each image pixel to be normalized. 
+ *         will cause each image pixel to be normalized. 
  *     </dd>
  *   </dl>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.7 2004/03/08 23:32:50 joerg Exp $
+ * @version CVS $Id: ImageReader.java,v 1.8 2004/03/11 18:46:31 joerg Exp $
  */
 final public class ImageReader extends ResourceReader {
 
@@ -103,7 +103,7 @@ final public class ImageReader extends ResourceReader {
         scaleColor[2] = par.getParameterAsFloat("scaleBlue", -1.0f);
         offsetColor[0] = par.getParameterAsFloat("offsetRed", 0.0f);
         offsetColor[1] = par.getParameterAsFloat("offsetGreen", 0.0f);
-        offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);	
+        offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);
 
         boolean filterColor = false;
 
@@ -117,7 +117,7 @@ final public class ImageReader extends ResourceReader {
                 filterColor = true;
             }
         }
-        
+
         if (filterColor) {
             colorFilter = new RescaleOp(scaleColor, offsetColor, null);
         } else {
@@ -129,8 +129,8 @@ final public class ImageReader extends ResourceReader {
             grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         } else {
             grayscaleFilter = null;
-        }	
-	
+        }   
+
         String enlargePar = par.getParameter("allow-enlarging", ENLARGE_DEFAULT);
         if ("true".equalsIgnoreCase(enlargePar) || "yes".equalsIgnoreCase(enlargePar)){
             enlarge = true;
@@ -217,28 +217,28 @@ final public class ImageReader extends ResourceReader {
             try {
                 JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(inputStream);
                 BufferedImage original = decoder.decodeAsBufferedImage();
-            	BufferedImage currentImage = original;
+                BufferedImage currentImage = original;
 
-            	if (width > 0 || height > 0) {
-	                JPEGDecodeParam decodeParam = decoder.getJPEGDecodeParam();
-        	        double ow = decodeParam.getWidth();
-	                double oh = decodeParam.getHeight();
+                if (width > 0 || height > 0) {
+                    JPEGDecodeParam decodeParam = decoder.getJPEGDecodeParam();
+                    double ow = decodeParam.getWidth();
+                    double oh = decodeParam.getHeight();
 
-	                AffineTransformOp filter = new AffineTransformOp(getTransform(ow, oh, width, height), AffineTransformOp.TYPE_BILINEAR);
-        	        WritableRaster scaledRaster = filter.createCompatibleDestRaster(currentImage.getRaster());
+                    AffineTransformOp filter = new AffineTransformOp(getTransform(ow, oh, width, height), AffineTransformOp.TYPE_BILINEAR);
+                    WritableRaster scaledRaster = filter.createCompatibleDestRaster(currentImage.getRaster());
 
-	                filter.filter(currentImage.getRaster(), scaledRaster);
+                    filter.filter(currentImage.getRaster(), scaledRaster);
 
-	                currentImage = new BufferedImage(original.getColorModel(), scaledRaster, true, null);
-            	}
+                    currentImage = new BufferedImage(original.getColorModel(), scaledRaster, true, null);
+                }
 
-            	if (null != grayscaleFilter) {
-            	    grayscaleFilter.filter(currentImage, currentImage);
-            	}
+                if (null != grayscaleFilter) {
+                    grayscaleFilter.filter(currentImage, currentImage);
+                }
 
-            	if (null != colorFilter) {
-            	    colorFilter.filter(currentImage, currentImage);
-            	}
+                if (null != colorFilter) {
+                    colorFilter.filter(currentImage, currentImage);
+                }
 
                 if (!handleJVMBug()) {
                     if (getLogger().isDebugEnabled()) {
