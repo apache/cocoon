@@ -3,7 +3,7 @@
 <!--+
     | Authentication (with flow) block samples sitemap.
     |
-    | CVS $Id: flow.xmap,v 1.4 2003/11/18 06:24:14 antonio Exp $
+    | CVS $Id: flow.xmap,v 1.5 2003/11/18 06:37:27 antonio Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -77,7 +77,7 @@
     </map:pipeline>
 
     <map:pipeline internal-only="true">
-      <!-- This is the authentication respource -->
+      <!-- This is the authentication resource -->
       <map:match pattern="authenticate">
         <map:generate src="docs/userlist.xml"/>
         <map:transform src="stylesheets/authenticate.xsl">
@@ -85,9 +85,7 @@
         </map:transform>
         <map:serialize type="xml"/>
       </map:match>
-    </map:pipeline>
 
-    <map:pipeline internal-only="true">
       <map:match pattern="internal/login">
         <map:generate src="docs/login.xml"/>
         <map:transform src="stylesheets/simple-page2html.xsl"/>
