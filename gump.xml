@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.92 2003/10/22 18:53:06 gcasper Exp $
+    | CVS $Id: gump.xml,v 1.93 2003/10/22 19:28:08 gcasper Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -590,7 +590,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-slide">
+  <project name="cocoon-block-slide" status="unstable">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
