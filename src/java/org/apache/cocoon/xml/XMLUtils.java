@@ -44,11 +44,15 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.9 2004/06/18 12:01:26 vgritsenko Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.10 2004/06/18 12:38:31 vgritsenko Exp $
  */
 public class XMLUtils {
 
     public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
+
+    private static final Properties XML_FORMAT = createDefaultPropertiesForXML(false);
+    private static final Properties XML_FORMAT_NODECL = createDefaultPropertiesForXML(true);
+
 
     // FIXME: parent parameter not used anymore
     // Using parent because some dom implementations like jtidy are bugged,
@@ -145,13 +149,9 @@ public class XMLUtils {
     }
 
     /**
-     * Create a new properties set for serializing xml
-     * The omit xml declaration property can be controlled by the flag.
-     * Method: xml
-     * Omit xml declaration: according to the flag
-     * Indent: yes
+     * Method for static initializer
      */
-    public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
+    private static Properties createDefaultPropertiesForXML(boolean omitXMLDeclaration) {
         final Properties format = new Properties();
         format.put(OutputKeys.METHOD, "xml");
         format.put(OutputKeys.OMIT_XML_DECLARATION, (omitXMLDeclaration ? "yes" : "no"));
@@ -160,9 +160,37 @@ public class XMLUtils {
     }
 
     /**
-     * Serialize a DOM node to a String.
-     * The format of the output can be specified with the properties.
+     * Create a new properties set for serializing xml.
+     * The omit xml declaration property can be controlled by the flag.
+     *
+     * <ul>
+     * <li>Method: xml
+     * <li>Omit xml declaration: according to the flag
+     * <li>Indent: yes
+     * </ul>
+     */
+    public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
+        return new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
+    }
+
+    /**
+     * Serialize a DOM node into a string using format created by
+     * <code>createPropertiesForXML(false)</code>.
+     *
+     * @see #createPropertiesForXML
+     */
+    public static String serializeNode(Node node)
+    throws ProcessingException {
+        // Don't create new properties as we do not intend to modify defaults.
+        return serializeNode(node, XML_FORMAT);
+    }
+
+    /**
+     * Serialize a DOM node into a string.
      * If the node is null the empty string is returned.
+     *
+     * @param format The format of the output to be used by SAX transformer.
+     * @see OutputKeys
      */
     public static String serializeNode(Node node, Properties format)
     throws ProcessingException {

@@ -94,7 +94,7 @@ function bindingSample(sampleCode, backendType) {
  * String representation .
  */
 function serializeNode(node) {
-    return Packages.org.apache.cocoon.xml.XMLUtils.serializeNodeToXML(node);
+    return Packages.org.apache.cocoon.xml.XMLUtils.serializeNode(node);
 }
 
 /** 
