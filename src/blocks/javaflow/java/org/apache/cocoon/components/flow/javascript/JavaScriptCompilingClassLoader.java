@@ -104,7 +104,8 @@ public class JavaScriptCompilingClassLoader extends ClassLoader implements Servi
         cx.setErrorReporter(reporter);
         
         cx.setGeneratingSource(true);
-        cx.setTargetPackage("");
+        // doesn't compile with Rhino 1.6 
+        // cx.setTargetPackage("");
 
         //ClassNameHelper nameHelper = ClassNameHelper.get(cx);
         String filename = ((String) sources.get(classname))+".js";
@@ -124,7 +125,9 @@ public class JavaScriptCompilingClassLoader extends ClassLoader implements Servi
         //String out = f.getParent() == null ? className : f.getParent() + File.separator + className;
         String out = System.getProperty("java.io.tmpdir") + File.separator + className;
         //nameHelper.setTargetClassFileName(out);*/
-        cx.setTargetClassFileName(out);
+        
+        // doesn't compile with Rhino 1.6 
+        // cx.setTargetClassFileName(out);
 
         System.out.println("out=" + out);
 
