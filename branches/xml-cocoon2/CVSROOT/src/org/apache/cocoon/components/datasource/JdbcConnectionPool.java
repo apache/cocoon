@@ -26,7 +26,7 @@ import java.util.List;
  * thread to manage the number of SQL Connections.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:34 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-29 19:12:01 $
  */
 public class JdbcConnectionPool implements Pool, Runnable, Disposable, Loggable, Initializable {
     private final String dburl;
@@ -140,17 +140,25 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable, Loggable,
             if (this.ready.size() < this.min) {
                 log.debug("There are not enough Connections for pool: " + this.dburl);
                 while ((this.ready.size() < this.min) && (this.currentCount < this.max)) {
-                    this.ready.add(this.createJdbcConnection());
+                    synchronized (this.ready) {
+                        this.ready.add(this.createJdbcConnection());
+                    }
                 }
-            } else {
+            }
+
+            if (this.ready.size() > this.min) {
                 log.debug("Trimming excess fat from pool: " + this.dburl);
                 while (this.ready.size() > this.min) {
-                    this.recycle((Recyclable) this.ready.remove(0));
+                    synchronized (this.ready) {
+                        this.recycle((Recyclable) this.ready.remove(0));
+                    }
+
+                    log.debug("JdbcConnection '" + this.dburl + "' has been removed from the pool.");
                 }
             }
 
             try {
-                Thread.sleep(1 * 60 * 1000);
+                this.wait(1 * 60 * 1000);
             } catch (InterruptedException ie) {
                 log.warn("Caught an InterruptedException", ie);
             }

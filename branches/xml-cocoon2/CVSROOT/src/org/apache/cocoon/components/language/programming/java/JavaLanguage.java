@@ -19,6 +19,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
@@ -31,7 +32,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-18 19:12:09 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-29 19:12:08 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -139,6 +140,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     try {
 
       AbstractJavaCompiler compiler = (AbstractJavaCompiler) this.compilerClass.newInstance();
+      if (compiler instanceof Loggable) {
+          ((Loggable) compiler).setLogger(this.log);
+      }
 
       int pos = name.lastIndexOf(File.separatorChar);
       String filename = name.substring(pos + 1);
@@ -260,12 +264,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
 
   private String expandDirs(String d) throws LanguageException {
     File dir = new File(d);
-	if ( ! dir.isDirectory() ) {
-		throw new LanguageException(
-			"Attempted to retrieve directory listing of non-directory "
-			+ dir.toString()
-		);
-	}
+    if ( ! dir.isDirectory() ) {
+        throw new LanguageException(
+            "Attempted to retrieve directory listing of non-directory "
+            + dir.toString()
+        );
+    }
     File[] files = dir.listFiles(new JavaArchiveFilter());
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < files.length; i++) {
