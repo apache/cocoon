@@ -102,6 +102,14 @@ public abstract class AbstractEnvironment implements Environment {
     public String getView() {
         return this.view;
     }
+    
+    // Response methods
+
+    /**
+     * Set a status code
+     */
+    public void setStatus(int statusCode) {
+    }
 
     // Object model method
 

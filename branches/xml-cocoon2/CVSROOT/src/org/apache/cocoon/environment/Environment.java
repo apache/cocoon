@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction 
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-22 23:07:18 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-31 14:56:34 $
  */
 
 public interface Environment extends EntityResolver {
@@ -34,6 +34,7 @@ public interface Environment extends EntityResolver {
 
     // Response methods
     public void setContentType (String mimeType); 
+    public void setStatus (int statusCode); 
     public OutputStream getOutputStream() throws IOException; 
 
     // Object model

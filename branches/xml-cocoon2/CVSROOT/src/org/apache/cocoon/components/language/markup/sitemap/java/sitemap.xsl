@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-08-27 09:08:01 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2000-08-31 14:56:31 $
 -->
 
 <xsl:stylesheet 
@@ -432,6 +432,9 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:with-param>
     </xsl:call-template> 
+    <xsl:if test="@status-code">
+      environment.setStatus(<xsl:value-of select="@status-code"/>);
+    </xsl:if>
     return pipeline.process (environment);
   </xsl:template> <!-- match="map:serialize" --> 
 

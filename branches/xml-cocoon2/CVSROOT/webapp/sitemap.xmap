@@ -75,6 +75,7 @@
 <!-- =========================== Resources ================================= --> 
 
  <map:resources>
+
   <map:resource name="slides">
    <map:generate src="docs/samples/slides/slides.xml"/> 
    <map:transform src="stylesheets/slides-navigation.xsl"/> 
@@ -230,7 +231,7 @@
 
    <map:handle-errors> 
     <map:transform src="stylesheets/system/error2html.xsl"/>
-    <map:serialize/> 
+    <map:serialize status-code="500"/> 
    </map:handle-errors> 
 
   </map:pipeline>
