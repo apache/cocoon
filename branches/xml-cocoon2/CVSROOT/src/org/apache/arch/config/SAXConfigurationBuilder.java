@@ -13,7 +13,6 @@ import java.util.Vector;
 import org.xml.sax.Attributes;
 import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.DocumentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -24,9 +23,10 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:04 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-06-09 01:04:44 $
  */
-public class SAXConfigurationBuilder implements ContentHandler, DocumentHandler {
+public class SAXConfigurationBuilder implements ContentHandler {
+
     /** The current Locator. */
     private Locator locator=null;
     /** The stack of ConfigurationImpl object. */
@@ -133,19 +133,6 @@ public class SAXConfigurationBuilder implements ContentHandler, DocumentHandler 
         this.startElement(name,t);
     }
 
-    /**
-     * Receive notification of the beginning of an element.
-     */
-    public void startElement(String name, AttributeList a)
-    throws SAXException {
-        Hashtable t=new Hashtable();
-        // Process the attributes
-        for (int x=0; x<a.getLength(); x++) {
-            t.put(a.getName(x),a.getValue(x));
-        }
-        this.startElement(name,t);
-    }
-
     /** Receive notification of the beginning of an element. */
     private void startElement(String name, Hashtable t)
     throws SAXException {
@@ -175,14 +162,9 @@ public class SAXConfigurationBuilder implements ContentHandler, DocumentHandler 
      */
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
-        this.endElement(this.resolve(uri,loc,raw));
-    }
-
-    /**
-     * Receive notification of the end of an element.
-     */
-    public void endElement(String name)
-    throws SAXException {
+        // Keep resolution so that we can implement proper element
+        // closing later.
+        // String res = this.resolve(uri,loc,raw);
         // NOTE: (PF) Should we check for proper element closing????
         this.stack.setSize(this.stack.size()-1);
     }
