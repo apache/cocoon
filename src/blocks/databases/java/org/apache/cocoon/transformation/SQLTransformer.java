@@ -72,6 +72,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -86,7 +87,8 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: SQLTransformer.java,v 1.6 2003/06/11 00:28:31 joerg Exp $
+ * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
+ * @version CVS $Id: SQLTransformer.java,v 1.7 2003/07/18 14:46:30 gianugo Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -127,6 +129,7 @@ public class SQLTransformer
     public static final String MAGIC_NAME_ATTRIBUTE = "name";
     public static final String MAGIC_STORED_PROCEDURE_ATTRIBUTE = "isstoredprocedure";
     public static final String MAGIC_UPDATE_ATTRIBUTE = "isupdate";
+	  public static final String CLOB_ENCODING = "clob-encoding";
 
     /** The states we are allowed to be in **/
     protected static final int STATE_OUTSIDE = 0;
@@ -184,6 +187,9 @@ public class SQLTransformer
     protected XMLDeserializer interpreter;
     protected SAXParser parser;
 
+    /** Encoding we use for CLOB field */
+	protected String clobEncoding;
+	
     /**
      * Constructor
      */
@@ -263,6 +269,7 @@ public class SQLTransformer
         this.current_state = SQLTransformer.STATE_OUTSIDE;
 
         this.showNrOfRows = parameters.getParameterAsBoolean( SQLTransformer.MAGIC_NR_OF_ROWS, false );
+		    this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
         if ( getLogger().isDebugEnabled() ) {
             if ( this.parameters.getParameter( SQLTransformer.MAGIC_CONNECTION , null ) != null ) {
                 getLogger().debug( "CONNECTION: " + this.parameters.getParameter( SQLTransformer.MAGIC_CONNECTION , null ) );
@@ -274,6 +281,7 @@ public class SQLTransformer
             getLogger().debug( "ROW-ELEMENT: " + parameters.getParameter( SQLTransformer.MAGIC_ROW_ELEMENT, "row" ) );
             getLogger().debug( "NS-URI: " + parameters.getParameter( SQLTransformer.MAGIC_NS_URI_ELEMENT, NAMESPACE ) );
             getLogger().debug( "NS-PREFIX: " + parameters.getParameter( SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "" ) );
+			      getLogger().debug( "CLOB_ENCODING: " + clobEncoding );
         }
    }
 
@@ -1114,9 +1122,26 @@ public class SQLTransformer
         }
 
         protected String getColumnValue( int i ) throws SQLException {
+			int numberOfChar = 1024;
             String retval =  SQLTransformer.getStringValue( rs.getObject( i ) );
-            if (rs.getMetaData().getColumnType(i) == 8)
+			
+			if (rs.getMetaData().getColumnType(i) == 8) {
             retval = SQLTransformer.getStringValue( rs.getBigDecimal( i ) );
+			} else if (rs.getMetaData().getColumnType(i) == java.sql.Types.CLOB) {
+				Clob clob = rs.getClob(i);
+				InputStream inputStream = clob.getAsciiStream();
+				byte[] readByte = new byte[numberOfChar];
+				StringBuffer buffer = new StringBuffer();
+				try {
+					while(inputStream.read(readByte) > -1) {
+						String string = new String(readByte, clobEncoding);
+						buffer.append(string);
+					}
+				} catch(java.io.IOException ioException) {
+					throw new SQLException("Error reading stream from CLOB");
+				}
+				retval = buffer.toString();
+			}
             return retval;
         }
 
