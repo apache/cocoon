@@ -142,6 +142,16 @@ function showForm1() {
     wid.drinks.value = ["Jupiler", "Coca Cola"];
 
     //
+    // You can do additional validation of a form in your flowscript by
+    // assigning a function to the form's 'onValidate' property:
+    //
+    form.onValidate = function() {
+        if (wid.cowheight.value == 3) {
+            wid.cowheight.setValidationError("cowheight cannot be 3");
+        }
+    }
+
+    //
     // You can set additional properties on any widget that will
     // be accessible in the pipeline (e.g. with JXTemplateGenerator)
     //
@@ -153,6 +163,10 @@ function showForm1() {
     //
     form.showForm("form1-display-pipeline");
     print("cowheight = "+wid.cowheight.value);
+    if (wid.cowheight.value == 2) {
+      wid.cowheight.setValidationError("cowheight cannot be 2");
+      form.redisplay();
+    }
 }
 
 function selectCar() {

@@ -502,8 +502,29 @@ public class ScriptableWidget extends ScriptableObject {
             } else {
                 ((Field)delegate).setValidationError(validationError);
             }
+            formWidget.notifyValidationErrorListener(this, validationError);
         }
     }
+
+    private void notifyValidationErrorListener(ScriptableWidget widget,
+                                               ValidationError error) {
+        Object fun = getProperty(this, "validationErrorListener");
+        if (fun instanceof Function) {
+            try {
+                Scriptable scope = getTopLevelScope(this);
+                Scriptable thisObj = scope;
+                Context cx = Context.getCurrentContext();
+                Object[] args = new Object[2];
+                args[0] = widget;
+                args[1] = error;
+                ((Function)fun).call(cx, scope, thisObj, args);
+            } catch (Exception exc) {
+                throw Context.reportRuntimeError(exc.getMessage());
+            }
+        }
+    }
+
+
 
     public Widget jsFunction_unwrap() {
         return delegate;

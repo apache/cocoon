@@ -69,10 +69,9 @@ function Form(uri) {
         formMgr = cocoon.getComponent(FormManager.ROLE);
         resolver = cocoon.getComponent(SourceResolver.ROLE);
         src = resolver.resolveURI(uri);
-        this.form = formMgr.createForm(src);
+        var form = formMgr.createForm(src);
         this.binding = null;
-        this.eventHandler = null;
-        this.formWidget = new Widget(this.form);
+        this.formWidget = new Widget(form);
         this.local = cocoon.createPageLocal();
     } finally {
         cocoon.releaseComponent(formMgr);
@@ -99,10 +98,6 @@ Form.prototype.getWidget = function(name) {
 
 /**
  * Manages the display of a form and its validation.
- *
- * On return, the calling code can check some properties to know the form result :
- * - "isValid" : true if the form was sucessfully validated
- *
  * @parameter uri the page uri (like in cocoon.sendPageAndWait())
  */
 
@@ -110,13 +105,23 @@ Form.prototype.showForm = function(uri, fun) {
     var FormContext = Packages.org.apache.cocoon.woody.FormContext;
     this.local.webContinuation = cocoon.createWebContinuation();
     // this is needed by the WoodyTemplateTransformer:
-    this.formWidget["woody-form"] = this.formWidget.unwrap();
-    cocoon.request.setAttribute("woody-form", this.form);
+    var javaWidget = this.formWidget.unwrap();;
+    this.formWidget["woody-form"] = javaWidget;
+    cocoon.request.setAttribute("woody-form", javaWidget);
     var wk = cocoon.sendPageAndWait(uri, this.formWidget, fun);
     var formContext = 
-        new FormContext(cocoon.request, this.form.getLocale());
-    this.isValid = this.form.process(formContext);
-    if (!this.isValid) {
+        new FormContext(cocoon.request, javaWidget.getLocale());
+    var userErrors = 0;
+    this.formWidget.validationErrorListener = function(widget, error) {
+        if (error != null) {
+            userErrors++;
+        }
+    }
+    var finished = javaWidget.process(formContext);
+    if (this.onValidate) {
+        this.onValidate(this);
+    }
+    if (!finished || userErrors > 0) {
         this.redisplay();
     }
     return wk;
@@ -157,12 +162,12 @@ Form.prototype.load = function(object) {
     if (this.binding == null) {
         throw new Error("Binding not configured for this form.");
     }
-    this.binding.loadFormFromModel(this.form, object);
+    this.binding.loadFormFromModel(this.formWidget.unwrap(), object);
 }
 
 Form.prototype.save = function(object) {
     if (this.binding == null) {
         throw new Error("Binding not configured for this form.");
     }
-    this.binding.saveFormToModel(this.form, object);
+    this.binding.saveFormToModel(this.formWidget.unwrap(), object);
 }
