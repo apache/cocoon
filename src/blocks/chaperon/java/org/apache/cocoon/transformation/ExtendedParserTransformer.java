@@ -91,7 +91,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ExtendedParserTransformer.java,v 1.1 2004/01/20 15:23:57 stephan Exp $
+ * @version CVS $Id: ExtendedParserTransformer.java,v 1.2 2004/01/22 13:24:53 joerg Exp $
  */
 public class ExtendedParserTransformer extends ExtendedDirectParserProcessor implements Transformer,
                                                                                         LogEnabled,
@@ -208,7 +208,7 @@ public class ExtendedParserTransformer extends ExtendedDirectParserProcessor imp
 
         UnmarshalHandler unmarshalHandler = unmarshaller.createHandler();
         SourceUtil.toSAX(this.manager, this.grammarSource, null,
-                         unmarshaller.getContentHandler(unmarshalHandler));
+                         Unmarshaller.getContentHandler(unmarshalHandler));
 
         ExtendedGrammar grammar = (ExtendedGrammar)unmarshalHandler.getObject();
 
