@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.2 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.3 2003/08/26 06:43:32 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -280,6 +280,8 @@ public class PipelineAuthenticator
 
             if (doc != null) {
                 data = DOMUtil.getFirstNodeFromPath(doc, new String[] {"authentication","data"}, false);
+            } else {
+                doc = DOMUtil.createDocument();
             }
 
             // now create the following xml:
