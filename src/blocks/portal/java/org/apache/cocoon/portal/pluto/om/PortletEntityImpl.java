@@ -131,7 +131,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#store()
      */
     public void store() throws IOException {
-        coplet.getProfileManager().saveUserCopletInstance(null);
+        coplet.getProfileManager().saveUserCopletInstanceDatas(null);
     }
 
 }

@@ -148,7 +148,10 @@ public class AuthenticationProfileManager
         return layout;
     }
 
-    public void saveUserCopletInstance(String layoutKey) {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserCopletInstanceDatas(java.lang.String)
+     */
+    public void saveUserCopletInstanceDatas(String layoutKey) {
         ProfileLS adapter = null;
         PortalService service = null;
         try {
@@ -158,28 +161,24 @@ public class AuthenticationProfileManager
                 layoutKey = service.getDefaultLayoutKey();
             }
 
-            RequestState state = this.getRequestState();
-            UserHandler handler = state.getHandler();
+            final RequestState state = this.getRequestState();
+            final UserHandler handler = state.getHandler();
 
-            HashMap parameters = new HashMap();
+            final HashMap parameters = new HashMap();
             parameters.put("type", "user");
-            parameters.put("config",
-                state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
+            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
             parameters.put("handler", handler);
             parameters.put("profiletype", "copletinstancedata");
 
-            Map key = this.buildKey(service, parameters, layoutKey, false);
+            final Map key = this.buildKey(service, parameters, layoutKey, false);
 
-            // save coplet instance data
-            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager) service.getAttribute("CopletInstanceData:" +
+            final  CopletInstanceDataManager profileManager = ((CopletInstanceDataManager) service.getAttribute("CopletInstanceData:" +
                 layoutKey));
             adapter.saveProfile(key, parameters, profileManager);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO
             throw new CascadingRuntimeException("Exception during save profile", e);
-        }
-        finally {
+        } finally {
             this.manager.release(adapter);
             this.manager.release(service);
         }
@@ -198,25 +197,17 @@ public class AuthenticationProfileManager
                 layoutKey = service.getDefaultLayoutKey();
             }
 
-            RequestState state = this.getRequestState();
-            UserHandler handler = state.getHandler();
+            final RequestState state = this.getRequestState();
+            final UserHandler handler = state.getHandler();
 
-            HashMap parameters = new HashMap();
+            final HashMap parameters = new HashMap();
             parameters.put("type", "user");
             parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
             parameters.put("handler", handler);
-            parameters.put("profiletype", "copletinstancedata");
-
-            Map key = this.buildKey(service, parameters, layoutKey, false);
-    
-            // save coplet instance data
-            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey));
-            adapter.saveProfile(key, parameters, profileManager);
-
-            // save layout data
             parameters.put("profiletype", "layout");
-            key = this.buildKey(service, parameters, layoutKey, false);
-            Layout layout = (Layout)service.getAttribute("Layout:" + layoutKey);
+
+            final Map key = this.buildKey(service, parameters, layoutKey, false);
+            final Layout layout = (Layout)service.getAttribute("Layout:" + layoutKey);
             adapter.saveProfile(key, parameters, layout);
             
         } catch (Exception e) {
