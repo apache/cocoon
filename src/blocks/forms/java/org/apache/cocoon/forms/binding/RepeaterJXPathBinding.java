@@ -102,7 +102,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             throw new BindingException("The repeater with the ID [" + this.repeaterId
                     + "] referenced in the binding does not exist in the form definition.");
         }
-        repeater.removeRows();
+        repeater.clear();
         int initialSize = repeater.getSize();
 
         // build a jxpath iterator for pointers
