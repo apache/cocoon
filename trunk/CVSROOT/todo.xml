@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.65 2001-01-27 14:41:47 greenrd Exp $
+  $Id: todo.xml,v 1.66 2001-02-06 12:49:20 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,15 @@
  </devs>
 
  <actions priority="high">
+  <action context="code" assigned-to="RDG">
+   LiteralFormatter
+  </action>
+  <action context="code" assigned-to="RDG">
+   Make redirect semantics configurable in cocoon.properties
+  </action>
+  <action context="code" assigned-to="RDG" bugid="25">
+   Fix redundant XSP namespace declarations output quirk.
+  </action>
   <action context="code" assigned-to="RDG" bugid="39">
    Fix caching bug with Lynx.
   </action>
@@ -126,9 +135,6 @@
   </action>
   <action context="code" assigned-to="RDG" bugid="14">
    Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
-  </action>
-  <action context="code" assigned-to="RDG" bugid="25">
-   Fix redundant XSP namespace declarations output quirk.
   </action>
   <action context="docs">
    Make authors appear on all HTML docs (where appropriate).
