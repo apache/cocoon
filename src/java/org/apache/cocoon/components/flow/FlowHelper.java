@@ -44,6 +44,7 @@
 
 */
 package org.apache.cocoon.components.flow;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import java.util.Map;
@@ -53,55 +54,60 @@ import java.util.Map;
  * view layer. A view can obtain the context object sent by a flow
  * script and the current web continuation, if any.
  */
+public class FlowHelper {
 
-public class Flow {
+    /**
+     * Request attribute name used to store flow context.
+     */
+    public static final String CONTEXT_OBJECT = "cocoon.flow.context";
 
-    public static String CONTEXT_OBJECT_KEY = "cocoon.flow.context";
-    public static String WEB_CONTINUATION_KEY = "cocoon.flow.webcontinuation";
+    /**
+     * Request attribute name used to store flow continuation.
+     */
+    public static final String CONTINUATION_OBJECT = "cocoon.flow.continuation";
 
     /**
      * Get the flow context object associated with the current request
+     *
      * @param objectModel The Cocoon Environment's object model
      * @return The context object 
      */
-    public static Object getContextObject(Map objectModel) {
-	Request request = ObjectModelHelper.getRequest(objectModel);
-	return request.getAttribute(CONTEXT_OBJECT_KEY);
+    public final static Object getContextObject(Map objectModel) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        return request.getAttribute(CONTEXT_OBJECT);
     }
 
     /**
-     *
      * Get the web continuation associated with the current request
+     *
      * @param objectModel The Cocoon Environment's object model
      * @return The web continuation
-     *
      */
-    public static WebContinuation getWebContinuation(Map objectModel) {
-	Request request = ObjectModelHelper.getRequest(objectModel);
-	return (WebContinuation)request.getAttribute(WEB_CONTINUATION_KEY);
+    public final static WebContinuation getWebContinuation(Map objectModel) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        return (WebContinuation)request.getAttribute(CONTINUATION_OBJECT);
     }
 
     /**
-     *
      * Set the web continuation associated with the current request
+     *
      * @param objectModel The Cocoon Environment's object model
      * @param kont The web continuation
-     *
      */
-    public static void setWebContinuation(Map objectModel,
-					  WebContinuation kont) {
-	Request request = ObjectModelHelper.getRequest(objectModel);
-	request.setAttribute(WEB_CONTINUATION_KEY, kont);
+    public final static void setWebContinuation(Map objectModel,
+                                          WebContinuation kont) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        request.setAttribute(CONTINUATION_OBJECT, kont);
     }
 
     /**
      * Set the flow context object associated with the current request
+     *
      * @param objectModel The Cocoon Environment's object model
      * @param obj The context object 
      */
-    public static void setContextObject(Map objectModel, Object obj) {
-	Request request = ObjectModelHelper.getRequest(objectModel);
-	request.setAttribute(CONTEXT_OBJECT_KEY, obj);
+    public final static void setContextObject(Map objectModel, Object obj) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        request.setAttribute(CONTEXT_OBJECT, obj);
     }
-
 }

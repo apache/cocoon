@@ -59,7 +59,7 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.jxforms.validation.Violation;
 import org.apache.cocoon.components.jxforms.xmlform.Form;
@@ -1193,8 +1193,8 @@ public class JXFormsGenerator extends ComposerGenerator {
                 }
             }
         }
-        bean = Flow.getContextObject(objectModel);
-        kont = Flow.getWebContinuation(objectModel);
+        bean = FlowHelper.getContextObject(objectModel);
+        kont = FlowHelper.getWebContinuation(objectModel);
         this.objectModel = objectModel;
     }
 

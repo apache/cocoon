@@ -44,6 +44,7 @@
 
 */
 package org.apache.cocoon.components.flow.javascript;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -92,7 +93,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.19 2003/05/08 00:05:04 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.20 2003/05/18 16:36:40 vgritsenko Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -333,13 +334,13 @@ public class JavaScriptInterpreter extends AbstractInterpreter
     {
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession(true);
-
-        HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
-        if (userScopes == null)
-            return;
-
-        userScopes.remove(environment.getURIPrefix());
+        Session session = request.getSession(false);
+        if (session != null) {
+            HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
+            if (userScopes != null) {
+                userScopes.remove(environment.getURIPrefix());
+            }
+        }
     }
 
     /**
@@ -715,6 +716,3 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         super.forwardTo(uri, bizData, continuation, environment);
     }
 }
-
-
-

@@ -44,7 +44,8 @@
 
 */
 package org.apache.cocoon.components.flow.javascript;
-import org.apache.cocoon.components.flow.Flow;
+
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.mozilla.javascript.Scriptable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -56,12 +57,12 @@ import java.util.Map;
  * allow access to Java constructors) through this interface
  */
 
-public class JavaScriptFlow extends Flow {
+public class JavaScriptFlow extends FlowHelper {
 
-    public static final String COCOON_FLOW_JS_PACKAGES =
-	"cocoon.flow.js.rhino.packages";
-    public static final String COCOON_FLOW_JS_JAVA_PACKAGE =
-	"cocoon.flow.js.rhino.packages.java";
+    public static final String PACKAGES_OBJECT =
+            "cocoon.flow.js.packages";
+    public static final String JAVA_PACKAGE_OBJECT =
+            "cocoon.flow.js.packages.java";
 
     /** 
      * Return the JS "Packages" property (that gives access to Java
@@ -71,7 +72,7 @@ public class JavaScriptFlow extends Flow {
      */
     public static Scriptable getPackages(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        return (Scriptable)request.getAttribute(COCOON_FLOW_JS_PACKAGES);
+        return (Scriptable)request.getAttribute(PACKAGES_OBJECT);
     }
 
 
@@ -83,29 +84,26 @@ public class JavaScriptFlow extends Flow {
      */
     public static Scriptable getJavaPackage(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        return (Scriptable)request.getAttribute(COCOON_FLOW_JS_JAVA_PACKAGE);
+        return (Scriptable)request.getAttribute(JAVA_PACKAGE_OBJECT);
     }
 
 
     /** 
      * Set the JS "Packages" property in the current request
      * @param objectModel The Cocoon Environment's object model
-     * @return The Packages property
      */
     public static void setPackages(Map objectModel, Scriptable pkgs) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(COCOON_FLOW_JS_PACKAGES, pkgs);
+        request.setAttribute(PACKAGES_OBJECT, pkgs);
     }
 
     /** 
      * Set the JS "java" property in the current request
      * @param objectModel The Cocoon Environment's object model
-     * @return The "java" property
      */
     public static void setJavaPackage(Map objectModel, Scriptable javaPkg) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(COCOON_FLOW_JS_JAVA_PACKAGE, javaPkg);
+        request.setAttribute(JAVA_PACKAGE_OBJECT, javaPkg);
     }
-
 }
 

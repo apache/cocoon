@@ -69,7 +69,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -175,7 +175,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.8 2003/05/07 11:36:18 cziegeler Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.9 2003/05/18 16:36:41 vgritsenko Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -857,10 +857,10 @@ public class FlowVelocityGenerator extends ComposerGenerator
         this.resolverContext.put(CONTEXT_SOURCE_CACHE_KEY, new HashMap());
 
         // FIXME: Initialize the Velocity context. Use objectModel to pass these
-        final Object bean = Flow.getContextObject(objectModel);
+        final Object bean = FlowHelper.getContextObject(objectModel);
         if (bean != null) {
 
-            final WebContinuation kont = Flow.getWebContinuation(objectModel);
+            final WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
 
             // Hack? I use JXPath to determine the properties of the bean object
             final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(bean.getClass());
