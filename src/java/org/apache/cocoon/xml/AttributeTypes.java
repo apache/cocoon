@@ -54,23 +54,23 @@ package org.apache.cocoon.xml;
  * Insert the type's description here.
  * 
  * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id: AttributeTypes.java,v 1.1 2003/05/06 12:09:20 cziegeler Exp $
+ * @version CVS $Id: AttributeTypes.java,v 1.2 2003/05/11 08:26:34 jefft Exp $
  */
 public interface AttributeTypes
 {
-    public static final String CDATA = "CDATA";
-    public static final String ENTITY = "ENTITY";
-    public static final String ENTITIES = "ENTITIES";
-    public static final String ID = "ID";
-    public static final String IDREF = "IDREF";
-    public static final String IDREFS = "IDREFS";
-    public static final String NAME = "NAME";
-    public static final String NAMES = "NAMES";
-    public static final String NMTOKEN = "NMTOKEN";
-    public static final String NMTOKENS = "NMTOKENS";
-    public static final String NOTATION = "NOTATION";
-    public static final String NUMBER = "NUMBER";
-    public static final String NUMBERS = "NUMBERS";
-    public static final String NUTOKEN = "NUTOKEN";
-    public static final String NUTOKENS = "NUTOKENS";
+    String CDATA = "CDATA";
+    String ENTITY = "ENTITY";
+    String ENTITIES = "ENTITIES";
+    String ID = "ID";
+    String IDREF = "IDREF";
+    String IDREFS = "IDREFS";
+    String NAME = "NAME";
+    String NAMES = "NAMES";
+    String NMTOKEN = "NMTOKEN";
+    String NMTOKENS = "NMTOKENS";
+    String NOTATION = "NOTATION";
+    String NUMBER = "NUMBER";
+    String NUMBERS = "NUMBERS";
+    String NUTOKEN = "NUTOKEN";
+    String NUTOKENS = "NUTOKENS";
 }
