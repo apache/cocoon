@@ -7,15 +7,15 @@
  *****************************************************************************/
 package org.apache.cocoon.generators;
 
-import org.apache.arch.Composer;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.Cocoon;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 03:41:49 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:56 $
  */
 public abstract class ComposerGenerator extends AbstractGenerator
 implements Composer {

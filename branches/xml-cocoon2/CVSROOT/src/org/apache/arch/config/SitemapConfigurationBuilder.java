@@ -16,6 +16,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
+import org.apache.avalon.ConfigurationImpl;
+import org.apache.avalon.Configuration;
 
 /**
  * This utility class will create a <code>Configuration</code> tree from an
@@ -23,7 +25,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 04:57:42 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:34 $
  */
 public class SitemapConfigurationBuilder {
 
@@ -31,15 +33,15 @@ public class SitemapConfigurationBuilder {
      * Return a new Configuration object.
      */
     public Configuration newConfiguration(String name) {
-        return(new ConfigurationImpl (name));
+        return new ConfigurationImpl(name);
     }
- 
+
     /** 
      * Add an attribute to this configuration element, returning its old 
      * value or <b>null</b>. 
      */ 
-    public void addAttribute(String name, String value, Configuration conf) { 
-        ((ConfigurationImpl)conf).addAttribute(name,value); 
+    public void addAttribute(String name, String value, Configuration conf) {
+        ((ConfigurationImpl)conf).addAttribute(name,value);
     } 
  
     /** 
@@ -49,4 +51,4 @@ public class SitemapConfigurationBuilder {
     public void addConfiguration(Configuration child, Configuration conf) { 
         ((ConfigurationImpl)conf).addConfiguration(child); 
     } 
-}
+} 

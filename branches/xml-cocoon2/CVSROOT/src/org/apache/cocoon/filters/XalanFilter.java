@@ -10,11 +10,11 @@ package org.apache.cocoon.filters;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.text.StringCharacterIterator;
-import org.apache.arch.Component;
-import org.apache.arch.ComponentManager;
-import org.apache.arch.Composer;
+import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
 import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.ProcessingException;
@@ -35,7 +35,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-06-24 20:16:10 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:54 $
  */
 public class XalanFilter extends DocumentHandlerWrapper
 implements Filter, Composer {

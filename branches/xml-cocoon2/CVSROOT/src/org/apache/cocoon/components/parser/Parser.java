@@ -8,7 +8,7 @@
 package org.apache.cocoon.components.parser;
 
 import java.io.IOException;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.util.DOMFactory;
 import org.xml.sax.InputSource;
@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-05-24 23:13:14 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-11 03:09:52 $
  */
 public interface Parser extends Component, XMLProducer, DOMFactory {
     

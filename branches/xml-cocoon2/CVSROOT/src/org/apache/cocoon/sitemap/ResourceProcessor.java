@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.arch.Component;
-import org.apache.arch.ComponentManager;
-import org.apache.arch.Composer;
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
+import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:09 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:10:04 $
  */
 public class ResourceProcessor implements Composer, Configurable, Processor {
 

@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.classloader;
 
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:53 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:36 $
  */
 public interface ClassLoaderManager extends Component {
   /**

@@ -8,7 +8,7 @@
 package org.apache.cocoon.components.language.markup;
 
 import org.w3c.dom.Document;
-import org.apache.arch.named.NamedComponent;
+import org.apache.avalon.NamedComponent;
 
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
@@ -18,7 +18,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:56 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:38 $
  */
 public interface MarkupLanguage extends NamedComponent {
   /**

@@ -23,15 +23,15 @@ import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 
-import org.apache.arch.Composer;
-import org.apache.arch.Component;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
 
-import org.apache.cocoon.Parameters;
-import org.apache.arch.named.AbstractNamedComponent;
+import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.AbstractNamedComponent;
 
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.components.store.MemoryStore;
@@ -49,7 +49,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:55 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:38 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent

@@ -25,11 +25,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Document;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.arch.ComponentManager;
-import org.apache.arch.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
 import org.apache.cocoon.xml.util.DOMBuilder;
 import org.apache.cocoon.xml.util.DOMStreamer;
 import org.apache.cocoon.xml.util.XPathAPI;
@@ -42,7 +42,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-05-11 03:28:28 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-11 03:09:54 $ $Author: bloritsch $
  */
 public class XIncludeFilter extends AbstractFilter implements Composer {
 

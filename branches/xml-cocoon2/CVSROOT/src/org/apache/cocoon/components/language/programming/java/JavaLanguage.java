@@ -10,11 +10,11 @@ package org.apache.cocoon.components.language.programming.java;
 import java.io.File;
 import java.util.Vector;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 
-import org.apache.arch.Composer;
-import org.apache.arch.Component;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 
@@ -26,7 +26,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:05 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:50 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
   /** The class loader */

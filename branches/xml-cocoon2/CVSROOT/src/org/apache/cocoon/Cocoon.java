@@ -15,16 +15,16 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.arch.Component;
-import org.apache.arch.Composer;
-import org.apache.arch.ComponentManager;
-import org.apache.arch.ComponentNotFoundException;
-import org.apache.arch.ComponentNotAccessibleException;
-import org.apache.arch.Modifiable;
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
-import org.apache.arch.config.SAXConfigurationBuilder;
+import org.apache.avalon.Component;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.Modifiable;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.SAXConfigurationBuilder;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.serializers.Serializer;
 import org.apache.cocoon.sitemap.Sitemap;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.8 $ $Date: 2000-07-06 18:58:29 $
+ * @version CVS $Revision: 1.4.2.9 $ $Date: 2000-07-11 03:09:35 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,

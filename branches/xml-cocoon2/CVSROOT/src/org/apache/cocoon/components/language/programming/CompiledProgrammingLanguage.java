@@ -9,11 +9,11 @@ package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 
-import org.apache.arch.Composer;
-import org.apache.arch.Component;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
 
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -23,7 +23,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:25:59 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:46 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage

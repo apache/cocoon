@@ -11,8 +11,8 @@ import java.util.Vector;
 import java.io.IOException;
 import java.io.OutputStream;
 
-//import org.apache.arch.config.ConfigurationException;
-import org.apache.cocoon.Parameters;
+//import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
@@ -26,9 +26,8 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 16:54:46 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:10:04 $
  */
-
 public class ResourcePipeline {
     private Generator generator = null;
     private Parameters generatorParam = null;
@@ -61,8 +60,8 @@ public class ResourcePipeline {
         this.filterParams.add (param);
     }
 
-    public boolean startPipeline (Request req, Response res, OutputStream out) 
-    throws ProcessingException, IOException, SAXException {
+    public boolean startPipeline (Request req, Response res, OutputStream out)
+                            throws ProcessingException, IOException, SAXException {
         if (generator == null) {
             throw new ProcessingException ("Generator not specified");
         }
@@ -75,17 +74,19 @@ public class ResourcePipeline {
         Filter filter = null;
         XMLProducer producer = generator;
         int i = filters.size();
-        for (int j=0; j < i; j++) { 
+
+        for (int j=0; j < i; j++) {
             filter = (Filter) filters.elementAt (j);
-            filter.setup (req, res, (String)filterSources.elementAt (j), 
-                          (Parameters)filterParams.elementAt (j));
+            filter.setup (req, res, (String)filterSources.elementAt (j),
+                           (Parameters)filterParams.elementAt (j));
             producer.setConsumer (filter);
             producer = filter;
         }
+
         serializer.setup (req, res, serializerSource, generatorParam);
         serializer.setOutputStream (out);
         producer.setConsumer (serializer);
         generator.generate();
         return true;
     }
-}
+} 

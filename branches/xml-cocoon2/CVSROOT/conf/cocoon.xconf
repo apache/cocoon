@@ -6,7 +6,7 @@
   <component role="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
   <component role="store" class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component role="factory" class="org.apache.arch.named.NamedComponentManagerImpl">
+  <component role="factory" class="org.apache.avalon.NamedComponentManagerImpl">
     <component-type name="programming-language">
       <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
         <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>

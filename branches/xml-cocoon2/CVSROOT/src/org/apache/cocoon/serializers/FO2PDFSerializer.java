@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
-import org.apache.cocoon.xml.util.DocumentHandlerWrapper; 
+import org.apache.cocoon.xml.util.DocumentHandlerWrapper;
 
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
@@ -31,15 +31,15 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-04-01 07:42:53 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:10:00 $
  *
  */
 public class FO2PDFSerializer extends DocumentHandlerWrapper 
-        implements Serializer {
+        implements Serializer { 
 
     /**
-      * The FOP driver 
-      */
+     * The FOP driver 
+     */
     private Driver driver = null;
 
     /**
@@ -60,8 +60,7 @@ public class FO2PDFSerializer extends DocumentHandlerWrapper
      */
     public void setOutputStream(OutputStream out) {
         driver.setWriter(new PrintWriter(out));
-    }
- 
+    }  
     /** 
      * Receive notification of the end of a document. 
      */ 
@@ -77,4 +76,4 @@ public class FO2PDFSerializer extends DocumentHandlerWrapper
             throw new SAXException (e); 
         } 
     } 
-}
+} 

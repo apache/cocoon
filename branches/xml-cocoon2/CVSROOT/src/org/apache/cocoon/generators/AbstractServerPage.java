@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generators;
 
-import org.apache.arch.Modifiable;
+import org.apache.avalon.Modifiable;
 
 import java.io.File;
 import org.apache.cocoon.Request;
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-25 14:27:45 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:56 $
  */
 public abstract class AbstractServerPage
   extends ComposerGenerator

@@ -10,7 +10,7 @@ package org.apache.cocoon.serializers;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.sitemap.SitemapComponent;
@@ -20,7 +20,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:07 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-07-11 03:10:00 $
  */
 public abstract class AbstractSerializer extends AbstractXMLConsumer 
 implements Serializer {

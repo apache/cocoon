@@ -9,7 +9,7 @@ package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 /**
  *
@@ -19,7 +19,7 @@ import org.apache.arch.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 17:47:38 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:52 $
  */
 public class MemoryStore implements Store {
     

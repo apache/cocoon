@@ -9,12 +9,12 @@ package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
 
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 
-import org.apache.cocoon.Parameters;
-import org.apache.arch.named.AbstractNamedComponent;
+import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.AbstractNamedComponent;
 
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -24,7 +24,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:01 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:46 $
  */
 public abstract class AbstractProgrammingLanguage
   extends AbstractNamedComponent

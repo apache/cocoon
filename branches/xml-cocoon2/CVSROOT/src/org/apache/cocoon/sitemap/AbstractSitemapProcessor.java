@@ -7,14 +7,14 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import java.io.File; 
-import java.io.IOException; 
-import java.io.OutputStream; 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import org.apache.arch.ComponentManager; 
-import org.apache.arch.Composer;
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
 import org.apache.cocoon.ProcessingException; 
 import org.apache.cocoon.Processor; 
 import org.apache.cocoon.Request; 
@@ -22,16 +22,14 @@ import org.apache.cocoon.Response;
 
 import org.xml.sax.SAXException; 
 
-
 /**
  * Base class for XSP-generated <code>SitemapProcessor</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 04:57:50 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:10:03 $
  */
-public abstract class AbstractSitemapProcessor 
-        implements SitemapProcessor {
-     
+public abstract class AbstractSitemapProcessor
+         implements SitemapProcessor {      
     /** The component manager instance */ 
     protected ComponentManager manager=null; 
 
@@ -81,14 +79,10 @@ public abstract class AbstractSitemapProcessor
   public boolean hasContentChanged(Request request) {
     return true;
   }
-
-    /** 
+     /** 
      * Loads a class specified in a sitemap component definition
      */ 
-    protected Object load_component (String ClassURL, Configuration conf) {
-        return ("");
-    }
-
+    protected Object load_component (String ClassURL, Configuration conf) {         return ("");     } 
     /**
      * Resolve a link against a source into the target URI space.
      */
@@ -102,15 +96,4 @@ public abstract class AbstractSitemapProcessor
      * This method is supplied by the generated SitemapProcessor .
      */
     protected abstract ResourcePipeline constructPipeline (Request request, Response resposne);
-
-    /** Following methods are for testing purposes only and should later be deleted */
-    protected boolean uri_wildcard_matcher (String pattern) {
-       return (true);
-    }
-    protected boolean uri_regexp_matcher (String pattern) {
-       return (true);
-    }
-    protected boolean browser_matcher (String pattern) {
-       return (true);
-    }
-}
+     /** Following methods are for testing purposes only and should later be deleted */     protected boolean uri_wildcard_matcher (String pattern) {        return (true);     }     protected boolean uri_regexp_matcher (String pattern) {        return (true);     }     protected boolean browser_matcher (String pattern) {        return (true);     } } 

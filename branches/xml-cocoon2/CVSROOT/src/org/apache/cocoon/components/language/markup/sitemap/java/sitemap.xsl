@@ -23,10 +23,10 @@
     import java.util.Stack; 
     import java.util.Vector; 
 
-    import org.apache.arch.config.Configuration;
-    import org.apache.arch.config.ConfigurationException;
-    import org.apache.arch.config.SitemapConfigurationBuilder;
-    import org.apache.cocoon.Parameters; 
+    import org.apache.avalon.Configuration;
+    import org.apache.avalon.ConfigurationException;
+    import org.apache.avalon.SitemapConfigurationBuilder;
+    import org.apache.avalon.utils.Parameters; 
     import org.apache.cocoon.Request;
     import org.apache.cocoon.Response;
     import org.apache.cocoon.choosers.Chooser;
@@ -40,7 +40,7 @@
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-08 20:29:37 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-11 03:09:41 $
  */
 public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcessor {
     

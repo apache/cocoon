@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.filters;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
@@ -44,7 +44,7 @@ import java.util.Date;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-06-06 12:54:05 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:53 $
  *
  */
 public class LogFilter extends AbstractFilter {

@@ -8,14 +8,14 @@
 package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 /**
  * This interface defines a loader for programs automatically built from XML
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:00:30 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:37 $
  */
 public interface ProgramGenerator extends Component {
   /**

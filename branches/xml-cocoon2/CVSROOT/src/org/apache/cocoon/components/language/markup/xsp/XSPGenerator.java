@@ -8,7 +8,7 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.cocoon.Cocoon;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.apache.cocoon.generators.AbstractServerPage;
@@ -17,7 +17,7 @@ import org.apache.cocoon.generators.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-25 14:27:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:44 $
  */
 public abstract class XSPGenerator extends AbstractServerPage {
   /** The XSP Object Model */

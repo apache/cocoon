@@ -17,8 +17,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.arch.config.ConfigurationException;
-import org.apache.arch.ComponentNotAccessibleException;
+import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.SAXException;
@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.9 $ $Date: 2000-05-31 22:42:32 $
+ * @version CVS $Revision: 1.1.4.10 $ $Date: 2000-07-11 03:10:02 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;

@@ -1678,7 +1678,7 @@
 
 <source><![CDATA[
 <component role="factory"
-  class="org.apache.arch.named.NamedComponentManagerImpl">
+  class="org.apache.avalon.NamedComponentManagerImpl">
 
     <component-type name="programming-language">
 

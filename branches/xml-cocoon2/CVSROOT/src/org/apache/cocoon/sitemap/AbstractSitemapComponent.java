@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 
@@ -15,7 +15,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 03:44:18 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:10:03 $
  */
 public abstract class AbstractSitemapComponent implements SitemapComponent {
 

@@ -10,18 +10,16 @@ package org.apache.cocoon.components.language.generator;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.arch.Modifiable;
+import org.apache.avalon.Modifiable;
 
-import org.apache.arch.Composer;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.NamedComponentManager;
 
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
-
-import org.apache.arch.named.NamedComponentManager;
-
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.store.FilesystemStore;
@@ -40,7 +38,7 @@ import org.w3c.dom.Document;
 
 
 import org.xml.sax.InputSource;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -50,7 +48,7 @@ import java.io.FileNotFoundException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-05-24 21:25:54 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:09:37 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable

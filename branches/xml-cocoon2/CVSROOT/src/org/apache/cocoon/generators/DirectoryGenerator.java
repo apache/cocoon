@@ -16,7 +16,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 
@@ -53,7 +53,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-06-24 19:25:18 $ */
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-11 03:09:57 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */

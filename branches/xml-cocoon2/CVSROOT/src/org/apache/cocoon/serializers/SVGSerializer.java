@@ -7,7 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.serializers;
 
-import org.apache.arch.*;
+import org.apache.avalon.*;
+import org.apache.avalon.utils.*;
 import org.apache.cocoon.*;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.*;
@@ -50,7 +51,7 @@ import org.csiro.svgv.display.*;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-03-30 04:53:54 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:10:01 $
  */
 public class SVGSerializer extends DOMBuilder implements Serializer, Composer {
    

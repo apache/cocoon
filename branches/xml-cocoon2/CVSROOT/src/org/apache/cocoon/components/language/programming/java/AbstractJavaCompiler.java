@@ -11,14 +11,14 @@ package org.apache.cocoon.components.language.programming.java;
 
 import java.io.*;
 import java.util.*;
-import org.apache.arch.*;
+import org.apache.avalon.*;
 
 import org.apache.cocoon.components.language.programming.*;
 
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:04 $
+ * @version $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:49 $
  * @since 2.0
  */
 public abstract class AbstractJavaCompiler implements LanguageCompiler {

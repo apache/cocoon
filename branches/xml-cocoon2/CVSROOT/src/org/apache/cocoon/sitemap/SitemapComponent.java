@@ -8,8 +8,8 @@
 package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
-import org.apache.arch.Component;
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.Component;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.ProcessingException;
@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-28 18:43:21 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:10:04 $
  */
 public interface SitemapComponent extends Component {
 

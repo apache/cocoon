@@ -9,7 +9,7 @@
 package org.apache.cocoon.components.language.programming;
 
 import java.util.Vector;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
  * This interface defines a compiler's functionality for all
  * (Java-based) compiled languages
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:03 $
+ * @version $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:46 $
  * @since 2.0
  */
 public interface LanguageCompiler extends Component {

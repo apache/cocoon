@@ -2,9 +2,9 @@ package org.apache.cocoon.matcher;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.arch.config.Configurable;
-import org.apache.arch.config.Configuration;
-import org.apache.arch.config.ConfigurationException;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 
 public class FileAuthenticationMatcher extends AuthenticationMatcher implements Configurable {
 

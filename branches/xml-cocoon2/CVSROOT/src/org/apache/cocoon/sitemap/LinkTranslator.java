@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.arch.config.Configurable;
+import org.apache.avalon.Configurable;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.xml.AbstractXMLProducer;
@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-06-06 12:54:07 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-11 03:10:04 $
  */
 public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
 

@@ -19,8 +19,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.arch.Composer;
-import org.apache.arch.ComponentManager;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ import org.apache.cocoon.ProcessingException;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-05-24 20:20:17 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:09:57 $
  */
 public class ServerPagesGenerator
   extends ComposerGenerator

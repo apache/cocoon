@@ -8,7 +8,7 @@
 package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
-import org.apache.arch.Component;
+import org.apache.avalon.Component;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.apache.arch.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:47:39 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:09:52 $
  */
 public interface Store extends Component {
 

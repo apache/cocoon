@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.arch.named.NamedComponent;
+import org.apache.avalon.NamedComponent;
 
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -15,7 +15,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:03 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:46 $
  */
 public interface ProgrammingLanguage extends NamedComponent {
   /**

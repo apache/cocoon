@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.filters;
 
-import org.apache.cocoon.Parameters;
+import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.ProcessingException;
@@ -35,7 +35,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-04-19 06:28:01 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-11 03:09:53 $ $Author: bloritsch $
  */
 
 public class SQLFilter extends AbstractFilter {

@@ -37,7 +37,8 @@
     import org.xml.sax.*;
     import org.xml.sax.helpers.*;
 
-    import org.apache.arch.*;
+    import org.apache.avalon.*;
+    import org.apache.avalon.utils.*;
     import org.apache.cocoon.*;
     import org.apache.cocoon.generators.*;
     import org.apache.cocoon.components.parser.*;
