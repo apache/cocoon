@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -59,9 +58,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Matcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: Matcher.java,v 1.2 2003/10/25 21:59:50 ghoward Exp $
  */
-public interface Matcher extends Component {
+public interface Matcher {
 
     String ROLE = Matcher.class.getName();
 
