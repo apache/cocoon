@@ -10,6 +10,25 @@
   </header>
   <body>
     <figure src="images/cocoon.gif" alt="Cocoon"/>
+    <note>
+      <p><strong>Security warning</strong>: A major security hole has been found in XMLForm and JXForm that
+      can allow forged requests to execute arbitrary Java code on the server. This affects Cocoon 2.1 only
+      (not the 2.0.x versions).
+      </p>
+      <p>
+      As of 2003-09-03, this hole has been fixed in the latest CVS and a new version will be
+      released very soon. In the meantime, if you use XMLForm or JXForms, we urge you to update
+      the following source files and rebuild your Cocoon distribution:
+      <ul>
+       <li>XMLForm - in <code>src/blocks/xmlform/java/org/apache/cocoon/components/xmlform</code>:
+            update <link href="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/blocks/xmlform/java/org/apache/cocoon/components/xmlform/Form.java?rev=1.6">Form.java</link>
+       </li>
+        <li>JXForms - in <code>src/blocks/jxforms/java/org/apache/cocoon/components/jxforms/xmlform</code>:
+            update <link href="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/blocks/jxforms/java/org/apache/cocoon/components/jxforms/xmlform/Form.java?rev=1.4">Form.java</link>
+       </li>
+      </ul>
+      </p>
+    </note>
     <s1 title="What is Cocoon?">
       <p>
         Apache Cocoon is a web development framework built around the concepts of
