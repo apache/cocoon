@@ -77,8 +77,7 @@
 
       <target name="patch-conf" depends="init">
          <xpatch file="{string('${build.webapp}')}/sitemap.xmap"
-                 srcdir="{string('${blocks}')}"
-                 addcomments="true">
+                 srcdir="{string('${blocks}')}">
             <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
                <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
                <include name="{$block-name}/conf/**/*.xmap" unless="unless.exclude.block.{$block-name}"/>
@@ -89,7 +88,8 @@
          <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
             <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
             <xpatch file="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"
-                 srcdir="{string('${blocks}')}">
+                 srcdir="{string('${blocks}')}"
+                 addcomments="true">
               <include name="{$block-name}/conf/**/*.xconf" unless="unless.exclude.block.{$block-name}"/>
             </xpatch>
          </xsl:for-each>
