@@ -150,7 +150,6 @@ public class DefaultFormManager
 
             FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
             formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
-            formDefinition.resolve();
             storeFormDefinition(formDefinition, source);
         }
         return formDefinition;
