@@ -3,7 +3,7 @@
 <!--+
     | XMLDB Samples
     |
-    | CVS $Id: samples.xml,v 1.4 2004/01/22 03:42:12 vgritsenko Exp $
+    | CVS $Id: samples.xml,v 1.5 2004/02/12 18:41:03 joerg Exp $
     +-->
 
 <samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -37,14 +37,14 @@
     <sample name="Get Collection" href="db/cocoon/">
       Get /db/cocoon collection.
     </sample>
-    <sample name="Get Resource" href="db/cocoon/welcome">
-      Get /db/cocoon/welcome resource.
+    <sample name="Get Resource" href="db/cocoon/samples.xml">
+      Get /db/cocoon/samples.xml resource (the welcome page).
     </sample>
     <sample name="Query Collection" href="db/cocoon/?xpath=/samples/group">
       Query /db/cocoon collection.
     </sample>
-    <sample name="Query Resource" href="db/cocoon/welcome?xpath=/samples/group">
-      Query /db/cocoon/welcome resource (same query).
+    <sample name="Query Resource" href="db/cocoon/samples.xml?xpath=/samples/group">
+      Query /db/cocoon/samples.xml resource (same query).
     </sample>
   </group>
 </samples>
