@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.14 2003/10/30 12:31:05 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.15 2003/10/31 07:22:35 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -91,12 +91,6 @@ public class EnvironmentWrapper
 
     /** The request object */
     protected Request request;
-
-    /** The last uri */
-    protected String lastURI;
-    
-    /** The last prefix */
-    protected String lastPrefix;
 
     /** The stream to output to */
     protected OutputStream outputStream;
@@ -381,15 +375,6 @@ public class EnvironmentWrapper
     }
 
     /**
-     * Change the current context to the last one set by changeContext()
-     * and return last processor
-     */
-    public void changeToLastContext() {
-        this.uris = this.lastURI;
-        this.prefix = this.lastPrefix;
-    }
-
-    /**
      * Lookup an attribute in this instance, and if not found search it
      * in the wrapped environment.
      *
@@ -422,15 +407,6 @@ public class EnvironmentWrapper
      */
     public boolean isExternal() {
         return false;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
-     */
-    public void setURI(String prefix, String value) {
-        super.setURI(prefix, value);
-        this.lastURI = this.uris;
-        this.lastPrefix = this.prefix;
     }
 
 }

@@ -69,15 +69,11 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.8 2003/10/30 12:56:48 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.9 2003/10/31 07:22:35 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
-    
-    // Track the first values set for prefix and uri
-    private String prefix;
-    private String uri;
     
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
@@ -91,36 +87,19 @@ public class MutableEnvironmentFacade implements Environment {
         this.env = env;
     }
     
-    //----------------------------------
-    // EnvironmentWrapper-specific method (SW:still have to understand why SitemapSource needs them)
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
-        
-        // keep the values to restore them on the wrapped
-        // enviromnent in reset()
-        this.prefix = prefix;
-        this.uri = uri;
     }
 
     public void setOutputStream(OutputStream os) {
         this.env.setOutputStream(os);
     }
 
-    public void changeToLastContext() {
-        this.env.changeToLastContext();
-    }
-    
     // Move this to the Environment interface ?
     public String getRedirectURL() {
         return this.env.getRedirectURL();
     }
     
-    public void reset() {
-        this.env.reset();
-        this.env.setURI(this.uri, this.prefix);
-    }
-    //----------------------------------
-
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#getURI()
      */
@@ -275,5 +254,9 @@ public class MutableEnvironmentFacade implements Environment {
      */
     public boolean isExternal() {
         return env.isExternal();
+    }
+    
+    public void reset() {
+        this.env.reset();
     }
 }
