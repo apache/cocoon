@@ -487,9 +487,6 @@
       <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
         <include name="{$block-name}/conf/*.xconf"/>
       </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xlog"/>
-      </xpatch>
       <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
