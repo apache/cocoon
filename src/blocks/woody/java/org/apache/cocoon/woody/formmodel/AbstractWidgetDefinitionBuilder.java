@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
  *
- * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.15 2004/03/09 13:53:56 reinhard Exp $
+ * @version $Id$
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;
@@ -54,10 +54,10 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
-        this.widgetDefinitionBuilderSelector = (ServiceSelector)serviceManager.lookup( WidgetDefinitionBuilder.class.getName() + "Selector");
-        this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
-        this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
-        this.widgetValidatorBuilderSelector = (ServiceSelector)serviceManager.lookup(WidgetValidatorBuilder.ROLE + "Selector");
+        this.widgetDefinitionBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetDefinitionBuilder.class.getName() + "Selector");
+        this.datatypeManager = (DatatypeManager) serviceManager.lookup(DatatypeManager.ROLE);
+        this.expressionManager = (ExpressionManager) serviceManager.lookup(ExpressionManager.ROLE);
+        this.widgetValidatorBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetValidatorBuilder.ROLE + "Selector");
     }
 
     protected void setLocation(Element widgetElement, AbstractWidgetDefinition widgetDefinition) {
@@ -143,9 +143,14 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     }
 
     public void dispose() {
-        serviceManager.release(widgetDefinitionBuilderSelector);
-        serviceManager.release(datatypeManager);
-        serviceManager.release(expressionManager);
-        serviceManager.release(widgetValidatorBuilderSelector);
+        this.serviceManager.release(this.widgetDefinitionBuilderSelector);
+        this.widgetDefinitionBuilderSelector = null;
+        this.serviceManager.release(this.datatypeManager);
+        this.datatypeManager = null;
+        this.serviceManager.release(this.expressionManager);
+        this.expressionManager = null;
+        this.serviceManager.release(this.widgetValidatorBuilderSelector);
+        this.widgetValidatorBuilderSelector = null;
+        this.serviceManager = null;
     }
 }
