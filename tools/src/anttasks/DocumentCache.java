@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 10:49:41 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/05/01 16:12:05 $
  */
 public final class DocumentCache {
 
@@ -72,8 +72,9 @@ public final class DocumentCache {
         }  
     }
 
-    public static Document getDocument(String fileName, Task task) 
-    throws SAXException {
+    public static Document getDocument(File file, Task task) 
+    throws SAXException, IOException {
+        final String fileName = file.toURL().toExternalForm();
         Document document = (Document)fileCache.get(fileName);
         if ( document != null ) {
             task.log("Using file from cache: " + fileName, Project.MSG_DEBUG);
@@ -90,8 +91,10 @@ public final class DocumentCache {
         return document;
     }
     
-    public static void storeDocument(String fileName, Document document, Task task) {  
-        task.log("Storing file in cache: " + fileName, Project.MSG_DEBUG);
+    public static void storeDocument(File file, Document document, Task task) 
+    throws IOException {  
+        task.log("Storing file in cache: " + file, Project.MSG_DEBUG);
+        final String fileName = file.toURL().toExternalForm();
         fileCache.put(fileName, document);
     }
 
