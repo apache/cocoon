@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.4 2004/02/06 13:07:17 cziegeler Exp $
+ * @version CVS $Id: PortletAdapter.java,v 1.5 2004/03/04 09:17:48 cziegeler Exp $
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -194,7 +194,7 @@ public class PortletAdapter
                                         "include", "portal:include", attr);
             contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
                                       "include", "portal:include");
-            contentHandler.endPrefixMapping("portlet");
+            contentHandler.endPrefixMapping("portal");
         } catch (SAXException se) {
             throw se;
         } catch (Exception e) {
