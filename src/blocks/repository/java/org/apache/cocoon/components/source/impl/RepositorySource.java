@@ -55,6 +55,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -232,14 +233,24 @@ implements Source, ModifiableTraversableSource, InspectableSource, Recyclable {
         m_delegate.refresh();
     }
     
+    
     // ---------------------------------------------------- ModifiableTraversableSource
     
     public Source getChild(String name) throws SourceException {
-        return m_delegate.getChild(name);
+        return new RepositorySource((ModifiableTraversableSource) m_delegate.getChild(name),
+            m_manager,getLogger());
     }
 
     public Collection getChildren() throws SourceException {
-        return m_delegate.getChildren();
+    	Collection result = new ArrayList();
+		Iterator iter = m_delegate.getChildren().iterator();
+    	while(iter.hasNext()) {
+    		result.add(new RepositorySource(
+    		    (ModifiableTraversableSource) iter.next(),
+    		    m_manager,
+    		    getLogger()));
+    	}
+        return result;
     }
 
     public String getName() {
@@ -247,7 +258,8 @@ implements Source, ModifiableTraversableSource, InspectableSource, Recyclable {
     }
 
     public Source getParent() throws SourceException {
-        return m_delegate.getParent();
+        return new RepositorySource((ModifiableTraversableSource) m_delegate.getParent(), 
+        	m_manager, getLogger());
     }
 
     public boolean isCollection() {
