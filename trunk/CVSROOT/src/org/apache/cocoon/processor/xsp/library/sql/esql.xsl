@@ -255,6 +255,9 @@
 	       }
 	       _esql_session.resultset.close();
 	       _esql_session.statement.close();
+	       if (!_esql_results) {
+                <xsl:apply-templates select="esql:no-results/*"/>
+	       }
 	       } catch (Exception _esql_e) {
 		<exception>
 		 <message><xsp:expr>_esql_e.getMessage()</xsp:expr></message>
@@ -272,8 +275,6 @@
 	        _esql_session = (EsqlSession)_esql_sessions.pop();
 	       }
 	      }
-	      if (!_esql_results) {
-               <xsl:apply-templates select="esql:no-results/*"/>
 	     }
 	</xsp:logic>
 </xsl:template>
