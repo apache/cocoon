@@ -189,5 +189,5 @@ Form.prototype.save = function(object) {
     if (this.binding_ == null) {
         throw new Error("Binding not configured for this form.");
     }
-    this.binding.saveFormToModel(this.formWidget_.unwrap(), object);
+    this.binding_.saveFormToModel(this.formWidget_.unwrap(), object);
 }
