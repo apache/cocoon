@@ -45,7 +45,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
 </source>
 
      <p>To use the pool, you need to have the appropriate properties defined
-        in your <i>cocoon.properties</i> file. The important ones are listed below.
+        in your <em>cocoon.properties</em> file. The important ones are listed below.
         This is an example of creating a default pool for use with Oracle. Currently
         Turbine supports a wide number of different databases. If your database
         is not already supported, please subscribe to the mailing list and ask
@@ -237,8 +237,8 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     
     }
     ]]></source>
-    <p>Please see the <a href="http://java.apache.org/turbine/getting_started.html">getting
-    started</a> documentation at the <a href="http://java.apache.org/turbine">Turbine</a>
+    <p>Please see the <link href="http://java.apache.org/turbine/getting_started.html">getting
+    started</link> documentation at the <link href="http://java.apache.org/turbine">Turbine</link>
     homepage for more information about Turbine.
     </p>
   </s1>

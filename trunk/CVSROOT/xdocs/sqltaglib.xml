@@ -14,7 +14,7 @@
   resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
   		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
         <p>If you are going to use connection pools, then make sure that you have followed the 
-           <a href="connection-pool.html">installation</a> steps for the connection pools.</p>
+           <link href="connection-pool.html">installation</link> steps for the connection pools.</p>
 	</s1>
 
 	<s1 title="Configuration">
@@ -81,9 +81,9 @@
 		<dd>The namespace prefix to use when creating result elements. FIXME - we should ask for a namespace URI and prefix, right?</dd>
 		<dt><code>column-format</code></dt>
 		<dd>Indicates that a column needs special formatting. See the column formatting section.</dd>
-        <dt><code><strong>*</strong></code></dt>
+        <dt><code>*</code></dt>
 		<dd>Indicates that this is manditory ONLY if you are NOT using the connection pool</dd>
-        <dt><code><strong>**</strong></code></dt>
+        <dt><code>**</code></dt>
 		<dd>Indicates that this is manditory ONLY if you ARE using the connection pool</dd>
 		</dl>
 		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.
