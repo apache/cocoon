@@ -55,13 +55,13 @@ import java.io.IOException;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * A stateless utitlity service intended to be used by flowscripts to help
+ * A stateless utility service intended to be used by flowscripts to help
  * them with persistent operations on sources.
  * 
  * <p>
- * Each operation return a status code that is based on RFC 2518 (WebDAV).
+ * Each operation returns a status code that is based on RFC 2518 (WebDAV).
  * This does not mean to it cannot be used outside of a WebDAV context.
- * It is reusing a standard to enable richer communication between
+ * It is reusing a standard to enable rich communication between
  * the flow layer and the service layer.
  * </p>
  * 
