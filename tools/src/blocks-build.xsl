@@ -258,7 +258,7 @@
                stylesheetfile="${{resources.javadoc}}/javadoc.css"
                useexternalfile="yes"
                additionalparam="${{javadoc.additionalparam}}"
-               maxmemory="128m">
+               maxmemory="192m">
 
         <link packagelistloc="${{resources.javadoc}}/avalon-excalibur"
               offline="true" href="http://excalibur.apache.org/apidocs"/>
@@ -274,6 +274,10 @@
               offline="true" href="http://xml.apache.org/xalan-j/apidocs"/>
         <link packagelistloc="${{resources.javadoc}}/xerces"
               offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"/>
+        <link packagelistloc="${{resources.javadoc}}/log4j"
+              offline="true" href="http://logging.apache.org/log4j/docs/api"/>
+        <link packagelistloc="${{resources.javadoc}}/logkit"
+              offline="true" href="http://avalon.apache.org/avalon/runtime/3.3.0/impl"/>
 
         <tag name="avalon.component"   scope="types"   description="Avalon component" />
         <tag name="avalon.service"     scope="types"   description="Implements service:" />
