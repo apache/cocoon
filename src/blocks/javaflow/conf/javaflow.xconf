@@ -15,5 +15,5 @@
   limitations under the License.
 -->
 <xconf xpath="/cocoon/flow-interpreters" unless="component-instance[@name='java']">
-  <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter"/>
+  <component-instance name="java" class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 </xconf>
