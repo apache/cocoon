@@ -198,6 +198,20 @@
     </tr>
   </xsl:template>
 
+  <!-- action : on a single line -->
+  <xsl:template match="wi:action" mode="group-columns-content">
+    <tr>
+      <td colspan="2"><xsl:apply-templates select="."/></td>
+    </tr>
+  </xsl:template>
+
+  <!-- any other element : on a single line -->
+  <xsl:template match="*" mode="group-columns-content">
+    <tr>
+      <td colspan="2"><xsl:apply-templates select="."/></td>
+    </tr>
+  </xsl:template>
+
   <!-- double-list multivaluefield : lists under the label -->
   <xsl:template match="wi:multivaluefield[wi:styling/@list-type='double-listbox']" mode="group-columns-content">
     <tr align="center">

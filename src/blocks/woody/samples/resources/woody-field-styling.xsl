@@ -4,44 +4,18 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
+  
+  <xsl:param name="resources-uri">resources</xsl:param>
 
-  <!-- must be called in <head> to load calendar script and setup the CSS -->
+  <!-- must be called in <head>  -->
   <xsl:template name="woody-field-head">
-    <xsl:param name="uri" select="'resources'"/>
-    <xsl:param name="div">woody_calendarDiv</xsl:param>
-
-    <!-- use this for debugging
-    <script src="{$uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$uri}/mattkruse-lib/date.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$uri}/mattkruse-lib/OptionTransfer.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$uri}/mattkruse-lib/selectbox.js" language="JavaScript" type="text/javascript"/>
-    -->
-    <script src="{$uri}/mattkruse-lib.js" language="JavaScript" type="text/javascript"/>
-
-    <script src="{$uri}/woody-lib.js" language="JavaScript" type="text/javascript"/>
-    <script language="JavaScript" type="text/javascript">
-      // Setup calendar
-      <xsl:choose>
-        <xsl:when test="$div">
-      var woody_calendar = CalendarPopup('<xsl:value-of select="$div"/>');
-        </xsl:when>
-        <xsl:otherwise>
-      var woody_calendar = CalendarPopup();
-        </xsl:otherwise>
-      </xsl:choose>
-      woody_calendar.setWeekStartDay(1);
-      woody_calendar.showYearNavigation();
-      woody_calendar.showYearNavigationInput();
-      //FIXME: avoid this and simply write them in the CSS?
-      document.write(woody_calendar.getStyles());
-    </script>
+    <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$resources-uri}/woody-lib.js" language="JavaScript" type="text/javascript"/>
   </xsl:template>
 
   <!--+
-      | must be called in <head> to load help popups, calendar script,
-      | and setup the CSS
+      | must be called in <body>
       +-->
   <xsl:template name="woody-field-body">
     <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
@@ -49,7 +23,6 @@
       // Register woody startup function
       document.body.onload = woody_init;
     </script-->
-    <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
 
   <!--+
@@ -58,7 +31,7 @@
   <xsl:template match="wi:field">
     <input name="{@id}" id="{@id}" value="{wi:value}" title="{wi:hint}">
       <xsl:if test="wi:styling">
-        <xsl:copy-of select="wi:styling/@*"/>
+        <xsl:copy-of select="wi:styling/@*[not(name() = 'submit-on-change')]"/>
       </xsl:if>
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
@@ -67,6 +40,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
+  <!--+
+      | 
+      +-->
   <xsl:template match="wi:*" mode="common">
     <!-- validation message -->
     <xsl:apply-templates select="wi:validation-message"/>
@@ -77,6 +53,9 @@
     <xsl:apply-templates select="wi:help"/>
   </xsl:template>
 
+  <!--+
+      | 
+      +-->
   <xsl:template match="wi:help">
     <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
       <xsl:apply-templates select="node()"/>
@@ -87,6 +66,9 @@
     <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
   </xsl:template>
 
+  <!--+
+      | 
+      +-->
   <xsl:template match="wi:validation-message">
     <a href="#" class="woody-validation-message-indicator" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
   </xsl:template>
@@ -94,7 +76,7 @@
   <!--+
       | Hidden wi:field : produce input with type='hidden'
       +-->
-  <xsl:template match="wi:field[wi:styling[@type='hidden']]" priority="2">
+  <xsl:template match="wi:field[wi:styling/@type='hidden']" priority="2">
     <input type="hidden" name="{@id}" id="{@id}" value="{wi:value}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
@@ -201,7 +183,7 @@
   <!--+
       | wi:field with a selection list and @type 'output'
       +-->
-  <xsl:template match="wi:field[wi:selection-list and wi:styling[@type='output']]" priority="3">
+  <xsl:template match="wi:field[wi:selection-list and wi:styling/@type='output']" priority="3">
     <xsl:variable name="value" select="wi:value"/>
     <xsl:variable name="selected" select="wi:selection-list/wi:item[@value = $value]"/>
     <xsl:choose>
@@ -217,13 +199,14 @@
   <!--+
       | wi:field with @type 'textarea'
       +-->
-  <xsl:template match="wi:field[wi:styling[@type='textarea']]">
+  <xsl:template match="wi:field[wi:styling/@type='textarea']">
     <textarea id="{@id}" name="{@id}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
-      <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
-      <xsl:copy-of select="wi:value/node()"/>
+      <xsl:copy-of select="wi:styling/@*[not(name() = 'type' or name() ='submit-on-change')]"/>
+      <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
+      <xsl:copy-of select="translate(wi:value/node(), '&#13;','')"/>
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
@@ -231,29 +214,8 @@
   <!--+
       | wi:field with @type 'output' : rendered as text
       +-->
-  <xsl:template match="wi:field[wi:styling[@type='output']]" priority="2">
+  <xsl:template match="wi:field[wi:styling/@type='output']" priority="2">
     <xsl:copy-of select="wi:value/node()"/>
-  </xsl:template>
-
-  <!--+
-      | wi:field with @type 'date' : use CalendarPopup
-      +-->
-  <xsl:template match="wi:field[wi:styling[@type='date']]">
-    <xsl:variable name="id" select="generate-id()"/>
-    <xsl:variable name="format">
-      <xsl:choose>
-        <xsl:when test="wi:styling/@format"><xsl:value-of select="wi:styling/@format"/></xsl:when>
-        <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <input id="{@id}" name="{@id}" value="{wi:value}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
-      <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
-    </input>
-    <a href="#" onClick="woody_calendar.select(woody_getForm(this)['{@id}'],'{generate-id()}','{$format}'); return false;" NAME="{generate-id()}" ID="{generate-id()}"><img src="resources/cal.gif" border="0" alt="Calendar"/></a>
-    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--+
@@ -271,6 +233,7 @@
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
+      <xsl:copy-of select="@*[not(name() = 'submit-on-change')]"/>
       <xsl:if test="wi:value/text() = 'true'">
         <xsl:attribute name="checked">true</xsl:attribute>
       </xsl:if>
@@ -281,7 +244,7 @@
   <!--+
       | wi:booleanfield with @type 'output' : rendered as text
       +-->
-  <xsl:template match="wi:booleanfield[wi:styling[@type='output']]">
+  <xsl:template match="wi:booleanfield[wi:styling/@type='output']">
     <xsl:choose>
       <xsl:when test="wi:value = 'true'">
         yes
@@ -319,7 +282,7 @@
   <!--+
       | wi:multivaluefield : produce a list of checkboxes
       +-->
-  <xsl:template match="wi:multivaluefield[wi:styling[@list-type='checkbox']]">
+  <xsl:template match="wi:multivaluefield[wi:styling/@list-type='checkbox']">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
 
@@ -369,81 +332,6 @@
       </select>
     </span>
     <xsl:apply-templates select="." mode="common"/>
-  </xsl:template>
-
-  <!--+
-      | wi:multivaluefield : produce a double selection list
-      +-->
-  <xsl:template match="wi:multivaluefield[wi:styling[@list-type='double-listbox']]">
-    <xsl:variable name="id" select="@id"/>
-    <xsl:variable name="values" select="wi:values/wi:value/text()"/>
-    <xsl:variable name="size">
-      <xsl:choose>
-        <xsl:when test="wi:styling/@listbox-size">
-          <xsl:value-of select="wi:styling/@listbox-size"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>5</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <span  class="woody-doubleList" title="{wi:hint}">
-      <table>
-        <tr>
-          <td>
-            <!-- select for the unselected values -->
-            <select ondblclick="opt{generate-id()}.transferRight()" id="{@id}.unselected" name="{@id}.unselected" size="{$size}" multiple="multiple">
-              <xsl:for-each select="wi:selection-list/wi:item">
-                <xsl:variable name="value" select="@value"/>
-                <xsl:if test="not($values[. = $value])">
-                  <option value="{$value}">
-                    <xsl:copy-of select="wi:label/node()"/>
-                  </option>
-                </xsl:if>
-              </xsl:for-each>
-            </select>
-          </td>
-          <td align="center" valign="middle">
-            <!-- command buttons -->
-            <!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
-            <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;" onclick="opt{generate-id()}.transferRight()"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.transferAllRight()"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;" onclick="opt{generate-id()}.transferLeft()"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.transferAllLeft()"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:apply-templates select="." mode="common"/>
-          </td>
-          <td>
-            <!-- select for the selected values -->
-            <select ondblclick="opt{generate-id()}.transferLeft()" id="{@id}" name="{@id}" size="{$size}" multiple="multiple">
-              <xsl:for-each select="wi:selection-list/wi:item">
-                <xsl:variable name="value" select="@value"/>
-                <xsl:if test="$values[. = $value]">
-                  <option value="{$value}">
-                    <xsl:copy-of select="wi:label/node()"/>
-                  </option>
-                </xsl:if>
-              </xsl:for-each>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <script language="JavaScript">
-        var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
-      </script>
-    </span>
   </xsl:template>
 
   <!--+
