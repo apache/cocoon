@@ -1,4 +1,4 @@
-/*-- $Id: JikesJavaCompiler.java,v 1.1 2000-08-18 22:43:59 stefano Exp $ --
+/*-- $Id: JikesJavaCompiler.java,v 1.2 2000-10-15 23:00:25 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -150,10 +150,7 @@ public class JikesJavaCompiler
         {
             return false;
         }
-        boolean isOkay = exitValue == 0;
-        if(tmpErr.size() > 0)
-            isOkay = false;
-        return isOkay;
+        return tmpErr.size () == 0;
     }
 
     public void setClasspath(String classpath)
