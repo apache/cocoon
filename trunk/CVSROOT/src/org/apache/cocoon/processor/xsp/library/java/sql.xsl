@@ -22,7 +22,7 @@
 			<xsl:apply-templates select="@*"/>
 		</xsl:copy>
 		<xsp:structure>
-			<xsp:include>org.apache.cocoon.processor.xsp.library.XSPSQLLibrary</xsp:include>
+			<xsp:include>org.apache.cocoon.processor.xsp.library.sql.XSPSQLLibrary</xsp:include>
 		</xsp:structure>
 		<xsl:apply-templates/>
 	</xsp:page>
@@ -149,12 +149,9 @@
 			<xsl:with-param name="content" select="sql:query"/>
 		</xsl:call-template>
 	</xsl:variable>
-	<xsp:logic>
-		XSPSQLLibrary sqllib = new XSPSQLLibrary();
-	</xsp:logic>
 	<xsp:content>
 	<xsp:expr>
-		sqllib.processQuery(
+		XSPSQLLibrary.processQuery(
 			document,
 			String.valueOf(<xsl:copy-of select="$driver"/>),
 			String.valueOf(<xsl:copy-of select="$dburl"/>),

@@ -53,10 +53,11 @@
 <!-- written by Ricardo Rocha "ricardo@apache.org" -->
 
 
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:request="http://www.apache.org/1999/XSP/Request"
+  version="1.0"
 >
   <!-- *** ServletRequest Templates *** -->
 
