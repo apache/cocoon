@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.13 2000-05-01 20:53:53 balld Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.14 2000-05-05 03:35:56 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.13 $ $Date: 2000-05-01 20:53:53 $
+ * @version $Revision: 1.14 $ $Date: 2000-05-05 03:35:56 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -107,13 +107,20 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
                 String name = (String) enum.nextElement();
 				StringCharacterIterator iter = new StringCharacterIterator(name);
 				boolean valid_name = true;
-				for (char c = iter.first(); c != iter.DONE; c = iter.next()) {
+				char c = iter.first();
+				if (!(Character.isLetter(c) || c == '_')) {
+					valid_name = false;
+				} else {
+					c = iter.next();
+				}
+				while (valid_name && c != iter.DONE) {
 					if (!(Character.isLetterOrDigit(c) ||
 						c == '-' ||
 						c == '_' ||
 						c == '.')) {
 						valid_name = false;
-						break;
+					} else {
+						c = iter.next();
 					}
 				}
 				if (valid_name) {
