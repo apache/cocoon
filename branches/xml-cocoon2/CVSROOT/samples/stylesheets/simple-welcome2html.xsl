@@ -10,12 +10,9 @@
    <body bgcolor="#ffffff">
     <p align="center">The Apache Software Foundation is proud to present...</p>
 
-    <!-- Need to implement <read> in the sitemap before turning this on (SM) -->
     <p align="center"><img border="0" src="{welcome/logo/@href}"/></p>
 
-    <h1 align="center"><xsl:value-of select="welcome/@title"/></h1>
-
-    <h3 align="center">version 2.0a1</h3>
+    <h3 align="center">version @version@</h3>
 
     <p><br/></p>
 
@@ -23,7 +20,7 @@
 
     <p align="center">
      <font size="-1">
-      Copyright &#169; 1999-2000 <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
+      Copyright &#169; @year@ <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
       All rights reserved.
      </font>
     </p>
@@ -35,7 +32,7 @@
   <div align="center">
   <table border="0" width="60%">
    <tr>
-    <td width="100%" bgcolor="#e0e0e0">
+    <td width="100%" bgcolor="#0086b2">
      <big><xsl:value-of select="@name"/></big>
     </td>
    </tr>
