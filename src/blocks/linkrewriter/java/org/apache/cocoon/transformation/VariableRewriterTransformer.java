@@ -28,7 +28,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
+import org.apache.cocoon.components.modules.input.InputModuleHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.VariableConfiguration;
 import org.xml.sax.Attributes;
@@ -134,7 +134,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: VariableRewriterTransformer.java,v 1.7 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: VariableRewriterTransformer.java,v 1.8 2004/05/26 11:23:47 unico Exp $
  */
 public class VariableRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Disposable
@@ -156,7 +156,7 @@ public class VariableRewriterTransformer
      * Recreated once per invocation. */
     private Configuration conf; 
 
-    private XSPModuleHelper modHelper;
+    private InputModuleHelper modHelper;
 
     private String badLinkStr;
 
@@ -175,7 +175,7 @@ public class VariableRewriterTransformer
      */
     public void initialize() throws Exception {
         this.namespaceURI = NAMESPACE;
-        this.modHelper = new XSPModuleHelper();
+        this.modHelper = new InputModuleHelper();
         modHelper.setup(this.manager);
     }
 
