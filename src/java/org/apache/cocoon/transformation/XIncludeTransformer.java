@@ -56,7 +56,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.19 2004/03/22 13:41:44 joerg Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.20 2004/05/28 22:07:55 mpo Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -397,7 +397,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                             xmlConsumer.setDocumentLocator(locator);
                     } catch (ResourceNotFoundException e) {
                         useFallback = true;
-                        fallBackException = new CascadingException("Resouce not found: " + url.getURI());
+                        fallBackException = new CascadingException("Resource not found: " + url.getURI());
                         getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } catch (ParseException e) {
                         // this exception is thrown in case of an invalid xpointer expression
