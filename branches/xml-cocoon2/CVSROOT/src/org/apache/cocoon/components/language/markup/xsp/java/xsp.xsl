@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-03 15:38:11 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-05 15:00:48 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -66,7 +66,7 @@
      */
     public class <xsl:value-of select="@file-name"/> extends XSPGenerator {
         Logger log = null;
-        Logger cocoonLogger = LogKit.getLoggerFor("cocoon");
+        static Logger cocoonLogger = LogKit.getLoggerFor("cocoon");
 
         static {
             dateCreated = <xsl:value-of select="@creation-date"/>L;
