@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.160 2000-12-08 12:48:28 greenrd Exp $ 
+  $Id: changes.xml,v 1.161 2000-12-08 22:54:39 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added LinkEncodingProcessor, designed to encode all links with session ids if
+   necessary, using response.encodeUrl().
+  </action>
   <action dev="RDG" type="fix" due-to="Corey O'Donovan" 
    due-to-email="od@feersumendjinns.com">
    Added removeValue template and remove duplicate putValue template from session taglib,
