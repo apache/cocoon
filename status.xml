@@ -202,6 +202,29 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     Implemented error handling for the internal requests. Error handling for
+     the internal requests configured using <code>when</code> attribute on
+     the <code>handle-errors</code> element. Supported values are: <ul>
+     <li><code>external</code>: This error handler should be used only on
+     external requests (default);</li>
+     <li><code>internal</code>: This error handler should be used only on
+     internal requests;</li>
+     <li><code>always</code>: This error handler can be used for all
+     requests.</li>
+     </ul>
+     Currently, if internal error handling is enabled, only inner most error handler
+     will be used for errors which happened during internal pipeline
+     processing.
+   </action>
+   <action dev="VG" type="fix">
+     Sitemap now properly throws ResourceNotFound exception for not matched
+     requests even if last pipeline marked as an internal pipeline.
+   </action>
+   <action dev="VG" type="fix">
+     Sitemap handle-errors now reports an error if generator is missing, or
+     if type attribute (deprecated) specified and generator is present.
+   </action>
    <action dev="AG" type="update">
      Updated quartz to 1.4.5, jcs to 1.2.5-dev-20050313.
    </action>

@@ -25,6 +25,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
@@ -38,7 +39,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled
                                 implements Composable {
@@ -52,14 +53,14 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
 
     /**
      * Error handling node for the ResourceNotFoundException
+     * (deprecated)
      */
-    private ProcessingNode error404;
+    private HandleErrorsNode error404;
 
     /**
      * Error handling node for all other exceptions
      */
-    private ProcessingNode error500;
-
+    private HandleErrorsNode error500;
 
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
@@ -73,46 +74,98 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         this.manager = manager;
     }
 
-    void setHandledErrorsLogger(Logger logger) {
-        this.handledErrorsLogger = logger;
-    }
-
     void set404Handler(ProcessingNode node) {
-        this.error404 = node;
+        this.error404 = (HandleErrorsNode) node;
     }
 
     void set500Handler(ProcessingNode node) {
-        this.error500 = node;
+        this.error500 = (HandleErrorsNode) node;
     }
 
+    /**
+     * @return true if has no error handler nodes set
+     */
+    public boolean isEmpty() {
+        return this.error404 == null && this.error500 == null;
+    }
+
+    public boolean isInternal() {
+        return this.error500 != null && this.error500.isInternal();
+    }
+
+    public boolean isExternal() {
+        return this.error500 != null && this.error500.isExternal();
+    }
+
+    /**
+     * Handle error.
+     */
     public boolean invokeErrorHandler(Exception ex,
                                       Environment env,
                                       InvokeContext context)
     throws Exception {
-        if (!env.isExternal() && !env.isInternalRedirect()) {
-            // Propagate exception on internal requests
+        return prepareErrorHandler(ex, env, context) != null;
+    }
+
+    /**
+     * Prepare error handler for the internal pipeline error handling.
+     *
+     * <p>If building pipeline only, error handling pipeline will be
+     * built and returned. If building and executing pipeline,
+     * error handling pipeline will be built and executed.</p>
+     */
+    public ProcessingPipeline prepareErrorHandler(Exception ex,
+                                                  Environment env,
+                                                  InvokeContext context)
+    throws Exception {
+        boolean internal = !env.isExternal() && !env.isInternalRedirect();
+
+        if (internal && !isInternal()) {
+            // Propagate exception on internal request: No internal handler.
             throw ex;
-        } else if (error404 != null && ex instanceof ResourceNotFoundException) {
-            // Invoke 404-specific handler
-            return invokeErrorHandler(error404, ex, env, context);
+        } else if (!internal && !isExternal()) {
+            // Propagate exception on external request: No external handler.
+            throw ex;
+        } else if (!internal && error404 != null && ex instanceof ResourceNotFoundException) {
+            // Invoke 404-specific handler: Only on external requests. Deprecated.
+            return prepareErrorHandler(error404, ex, env, context);
         } else if (error500 != null) {
             // Invoke global handler
-            return invokeErrorHandler(error500, ex, env, context);
+            return prepareErrorHandler(error500, ex, env, context);
         }
 
-        // No handler : propagate
+        // Exception was not handled in this error handler, propagate.
         throw ex;
     }
 
+    /**
+     * Handle error using specified error handler processing node.
+     */
     public boolean invokeErrorHandler(ProcessingNode node,
                                       Exception ex,
                                       Environment env,
                                       InvokeContext context)
     throws Exception {
+        return prepareErrorHandler(node, ex, env, context) != null;
+    }
+
+    /**
+     * Prepare (or execute) error handler using specified error handler
+     * processing node.
+     *
+     * <p>If building pipeline only, error handling pipeline will be
+     * built and returned. If building and executing pipeline,
+     * error handling pipeline will be built and executed.</p>
+     */
+    private ProcessingPipeline prepareErrorHandler(ProcessingNode node,
+                                                   Exception ex,
+                                                   Environment env,
+                                                   InvokeContext context)
+    throws Exception {
         this.handledErrorsLogger.error(ex.getMessage(), ex);
 
         try {
-            prepare(env, ex);
+            prepare(context, env, ex);
 
             // Create error context
             InvokeContext errorContext = new InvokeContext(context.isBuildingPipelineOnly());
@@ -123,7 +176,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                 // Process error handling node
                 if (node.invoke(env, errorContext)) {
                     // Exception was handled.
-                    return true;
+                    return errorContext.getProcessingPipeline();
                 }
             } finally {
                 errorContext.dispose();
@@ -138,7 +191,10 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         throw ex;
     }
 
-    private void prepare(Environment env, Exception ex)
+    /**
+     * Build notifying object
+     */
+    private void prepare(InvokeContext context, Environment env, Exception ex)
     throws IOException, ComponentException {
         Map objectModel = env.getObjectModel();
         if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
@@ -146,7 +202,9 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
 
             // Try to reset the response to avoid mixing already produced output
             // and error page.
-            env.tryResetResponse();
+            if (!context.isBuildingPipelineOnly()) {
+                env.tryResetResponse();
+            }
 
             // Create a Notifying
             NotifyingBuilder notifyingBuilder = (NotifyingBuilder) this.manager.lookup(NotifyingBuilder.ROLE);
