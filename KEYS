@@ -167,3 +167,44 @@ P3RXhAIbDAAKCRATLknU5B7cfgWMAJ9w/IX0FwxyOhwCveM1PDrVWxT4dQCfaG22
 PDGaBFWsUIyQDUGS56dkC0k=
 =4pJn
 -----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/015AFC8A 2004-06-18 Bertrand Delacretaz <bdelacretaz@apache.org>
+sig 3       015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+uid                            Bertrand Delacretaz <bdelacretaz@codeconsult.ch>
+sig 3       015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+sub  2048g/AC136A02 2004-06-18
+sig         015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.4 (Darwin)
+
+mQGiBEDSjpsRBAC6qu/5vv5ETRaTEwrZI1gbepp2tNNBqIVfYEZlF8jnWhUk1sdm
++bvqNMPf1B+ZQqjmctLoa+OKVd4vQEgdxclUYCkjuk2iWRX/iRJ61Zm1myuaBfhN
+v0mRBduoSG+2+cIBq3ODQld/BPFotfL+giLdHF6SMjMl0BYcCOqZZGhhGwCg88wL
+wNpY/ZPBtiUXzozD0wCDs6MD/ApczG73dG9H3BCPmp7y41ZbYZHpxiS9Mz9mLJNk
+HMcx4iOzZnptX71UGG58nnBc+VDPooJdzzZywYhHhyz4uSrvMqS5DYquH5HEzMLE
+jKNf0EGay9SHbpbT808YJIKogLgUhuUXe/MrzOdhEEfj+c8Q0iLEmOnNYjFRvakV
+ei8gA/wKwnnQbQvgHyanZsus4WQRRRhbIZFM/qsmM4+McnI9TveDRYjoNwI5tbwY
+aKF+FS9XAbMTBfXZggdjlyYy7J8LZyfm/yyb7BBq6++Owpj3Y/6DPgg1jqJ9Lenc
+04uJATQiXNFS4k38eUtxWQ8lutc4W+3gy4M86mTFwfYVikRr7rQwQmVydHJhbmQg
+RGVsYWNyZXRheiA8YmRlbGFjcmV0YXpAY29kZWNvbnN1bHQuY2g+iF4EExECAB4F
+AkDSjpsCGwMGCwkIBwMCAxUCAwMWAgECHgECF4AACgkQN/aP9QFa/Ip0DwCgyqeU
+b6ClVLmPOnsHeikXUeyuHOYAn2WW/Gq9kk5vOfJ2bv/lS5sH+lRgtCxCZXJ0cmFu
+ZCBEZWxhY3JldGF6IDxiZGVsYWNyZXRhekBhcGFjaGUub3JnPoheBBMRAgAeBQJA
+0o/yAhsDBgsJCAcDAgMVAgMDFgIBAh4BAheAAAoJEDf2j/UBWvyKoVIAoLZIjDpT
+DUQb99MWGAIhd5hKbwlGAJ9QG+DT2qEF1vtgOHucWg1ljhPpUbkCDQRA0o6rEAgA
+8P1i9oUjHzQVfneNgWA3QTuWwbfmd6OKgPR7FHkmPpZBOCmNby65lB9St1aQxtp9
+jBm2TjyO8JDbJzL1K2TYXRI6iE1lh2btoCng7v6jr8lXyJkYtVB4IZe9l5mnslSR
+a17asd+8aJSqY4vz+vVP9cng2SXpxWAaEjrwujyuPYqy9aUtY/L9eQNuA+nKcvFl
+iwCHJhfUqMYaKd7IUoz5fP4XPki5kuLvb0VTvBcq7aqmr9SMxjhkUI0ijaGGk72t
+KdgHKarsAcl5/BZioRtxiAlM8VLz+tycxcxb12e+SLb3BE+Grg6KSqK3PuhHnsf7
+7rFwEFuuvtZabIIYq7l6YwADBgf9H47O3taUb9VFmiV7D6j7Yjcxka2qbtu7NIdG
+XwGlbLts6zoCzoOwFaPbw9Ieo3Uscw5jnmb+wkaZXkz5UrCjObsHaW0V/rm2XVvj
+dginu8IDClmwK1q8ifYY4oc671Prm/B1ms1Rqmm/duVFzSSncUK5YsiC2QJ29f+c
+JU5Prbq+LaHipHoVPg59fm3hxMza1mtbeFyIIyISBPawEAD4tu0SARsAcvNEKkAu
+r6Cr/BZ1C2MPkc51kJVBf0EHO+7bpoJmDeG9ZZ3lnfKo1ciTnXbOvAO7z/AO0i4G
+4tJPxFro065inGT1GMwxEWyY+fYHiVlc7RCB2WBGa347FKe5PohJBBgRAgAJBQJA
+0o6rAhsMAAoJEDf2j/UBWvyKRWsAoMxSxAZfW7xkuy5Szp3zCwV0XCq4AJwMkBVz
+cq5NWtNY2fQF2m3CfZAq8g==
+=9k02
+-----END PGP PUBLIC KEY BLOCK-----
