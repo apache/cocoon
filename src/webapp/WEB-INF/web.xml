@@ -308,22 +308,20 @@
     <!--
        If true, Avalon Excalibur instrumentation will be enabled on all
        Instrumentable components with Cocoon and your Cocoon application.
-
+    -->
     <init-param>
       <param-name>enable-instrumentation</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
-    -->
 
     <!--
        This defines the location of the instrument manager configuration, only
        used if the init-param enable-instrumentation is enabled.
-
+    -->
     <init-param>
       <param-name>instrumentation-config</param-name>
       <param-value>/WEB-INF/instrumentation.xconf</param-value>
     </init-param>
-    -->
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding
