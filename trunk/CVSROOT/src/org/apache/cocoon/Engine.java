@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.35 2000-10-15 22:43:13 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.36 2000-11-01 20:12:17 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,13 +75,13 @@ import org.apache.cocoon.interpreter.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.35 $ $Date: 2000-10-15 22:43:13 $
+ * @version $Revision: 1.36 $ $Date: 2000-11-01 20:12:17 $
  */
 
 public class Engine implements Defaults {
 
     private Block blocker = new Block();
-    private boolean VERBOSE, PROFILE;
+    private boolean VERBOSE, PROFILE, LASTMODIFIED;
 
     private static Hashtable engineInstances = new Hashtable(2, 0.90f);
 
@@ -186,6 +186,7 @@ public class Engine implements Defaults {
         manager.setRole("browsers", browsers);
 
         VERBOSE = configurations.get ("verbosity", "false").equals ("true");
+        LASTMODIFIED = configurations.get ("lastmodified", "true").equals ("true");
 
         // If enabled, create the profiler and register it
         PROFILE = configurations.get ("profiler.enabled", "false").equals ("true");
@@ -303,7 +304,7 @@ public class Engine implements Defaults {
                 // a valid instance (no changeable points have changed)
                 page = cache.getPage(request);
 
-                // if the page isn't in cache block any furhter access to this page
+                // if the page isn't in cache block any further access to this page
                 // until it get's put into cache
                 if ( page == null ) {
 
@@ -318,11 +319,10 @@ public class Engine implements Defaults {
                 }
             }
 
-            // the page was not found in the cache or the cache was
-            // disabled, we need to process it
-
-
             if (page == null) {
+
+                // the page was not found in the cache or the cache was
+                // disabled, we need to process it
 
                 if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
 
@@ -394,6 +394,9 @@ public class Engine implements Defaults {
                             page.setContentType(formatter.getMIMEType());
                         }
 
+                        // cache the created page.
+                        cache.setPage(page, request);
+
                         // page is done without memory errors so exit the loop
                         break;
                     } catch (OutOfMemoryError e) {
@@ -421,6 +424,11 @@ public class Engine implements Defaults {
                 // set the response content type
                 response.setContentType(page.getContentType());
 
+                // set the Last-Modified header if this option is enabled in cocoon.properties
+                if (LASTMODIFIED) {
+                   response.setDateHeader ("Last-Modified", cache.getLastModified (request));
+                }
+
                 // get the output writer
                 PrintWriter out = response.getWriter();
 
@@ -446,9 +454,6 @@ public class Engine implements Defaults {
 
             if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
             if (PROFILE) profiler.finishEvent (requestMarker, WHOLE_REQUEST);
-
-            // cache the created page.
-            cache.setPage(page, request);
 
         } finally {
             // if there is a lock make sure it is released,

@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.12 2000-05-16 21:11:51 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.13 2000-11-01 20:12:28 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,7 +67,7 @@ import org.apache.cocoon.framework.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:michel.lehon@outwares.com">Michel Lehon</a>
- * @version $Revision: 1.12 $ $Date: 2000-05-16 21:11:51 $
+ * @version $Revision: 1.13 $ $Date: 2000-11-01 20:12:28 $
  */
 
 public class MemoryStore implements Store, Status, Configurable, Runnable {
@@ -103,16 +103,17 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
 
     class Container {
         public Object object;
-        public long time = 0;
+        public long time = 0, timeAdded = 0;
         public int count = 0;
 
         public Container(Object object) {
             this.object = object;
+            timeAdded = System.currentTimeMillis ();
         }
     }
 
     /**
-     * Initialize the MemoryStore. 
+     * Initialize the MemoryStore.
      * A few options can be used :
      * <UL>
      *  <LI>freememory = How much memory to keep free for normal jvm operation. (Default: 1 Mb)</LI>
@@ -209,6 +210,14 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Gets the time this object was added.
+     * @throws NullPointerException if the object is not in the store.
+     */
+    public long getTime(Object key) throws NullPointerException {
+      return ((Container) hashtable.get (key)).timeAdded;
     }
 
     /**

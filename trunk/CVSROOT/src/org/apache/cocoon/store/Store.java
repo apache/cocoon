@@ -1,4 +1,4 @@
-/*-- $Id: Store.java,v 1.6 2000-02-14 00:59:19 stefano Exp $ --
+/*-- $Id: Store.java,v 1.7 2000-11-01 20:12:27 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
  * implement.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-02-14 00:59:19 $
+ * @version $Revision: 1.7 $ $Date: 2000-11-01 20:12:27 $
  */
 
 public interface Store {
@@ -68,6 +68,12 @@ public interface Store {
      * Get the object associated to the given unique key.
      */
     Object get(Object key);
+
+    /**
+     * Get the time the object was added.
+     * @throws NullPointerException if the object is not in the store.
+     */
+    long getTime(Object key);
 
     /**
      * Store the given object in a persistent state. It is up to the

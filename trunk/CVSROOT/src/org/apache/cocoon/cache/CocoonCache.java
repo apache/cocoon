@@ -1,4 +1,4 @@
-/*-- $Id: CocoonCache.java,v 1.6 2000-02-14 00:59:18 stefano Exp $ --
+/*-- $Id: CocoonCache.java,v 1.7 2000-11-01 20:12:40 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  * statically and dynamically generated.
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $Date: 2000/02/13 18:29:18 $
+ * @version $Revision: 1.7 $Date: 2000/02/14 00:59:18 $
  */
 public class CocoonCache implements Cache, Status {
 
@@ -96,6 +96,20 @@ public class CocoonCache implements Cache, Status {
         }
 
         return (changed) ? null : page;
+    }
+
+    /**
+     * Get the time that this request was added to the cache.
+     * If the request is no longer in the cache (maybe it was
+     * cleared due to low memory), just returns the current time.
+     */
+    public long getLastModified(HttpServletRequest request) {
+      try {
+        return store.getTime (request);
+      }
+      catch (NullPointerException ex) {
+        return System.currentTimeMillis ();
+      }
     }
 
     /**
