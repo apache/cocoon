@@ -52,18 +52,16 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 
-import org.apache.cocoon.util.TraxErrorHandler;
-//import org.apache.cocoon.caching.CacheValidity;
-//import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.TraxErrorHandler;
 
 import org.apache.excalibur.source.SourceValidity;
 
@@ -71,27 +69,28 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import org.xmldb.api.DatabaseManager;
+import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.Resource;
-import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.modules.XUpdateQueryService;
-
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerConfigurationException;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * This transformer allows to perform resource creation, deletion, and
@@ -99,7 +98,7 @@ import java.util.Properties;
  *
  * <p>Definition:</p>
  * <pre>
- * &lt;map:transformer     name="xmldb"     src="www.XMLDBTransformer"&gt;
+ * &lt;map:transformer name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer"&gt;
  *   &lt;driver&gt;org.apache.xindice.client.xmldb.DatabaseImpl&lt;/driver&gt;
  *   &lt;base&gt;xmldb:xindice:///db/collection&lt;/base&gt;
  * &lt;/map:transformer&gt;
@@ -157,7 +156,7 @@ import java.util.Properties;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.3 2003/07/09 21:36:53 joerg Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Configurable, Initializable {
