@@ -46,7 +46,7 @@ import java.util.Map;
  * sitemap) is given below. This configuration shows default values.
  * </p>
  * <pre>
- *   &lt;map:matcher name="i18n" src="org.apache.cocoon.matching.I18nMatcher"&gt;
+ *   &lt;map:matcher name="i18n" src="org.apache.cocoon.matching.LocaleMatcher"&gt;
  *     &lt;locale-attribute&gt;locale&lt;/locale-attribute&gt;
  *     &lt;negotiate&gt;false&lt;/negotiate&gt;
  *     &lt;use-locale&gt;true&lt;/use-locale&gt;
@@ -147,7 +147,7 @@ import java.util.Map;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public class I18nMatcher extends AbstractLogEnabled
+public class LocaleMatcher extends AbstractLogEnabled
                          implements Matcher, ThreadSafe, Serviceable, Configurable {
 
     private static final String DEFAULT_LOCALE_ATTRIBUTE = "locale";
