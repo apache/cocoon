@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.commandline.CommandLineResponse;
  * for pipeline calls which are not externally triggered.
  * 
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: BackgroundEnvironment.java,v 1.1 2003/12/19 08:57:23 reinhard Exp $
+ * @version CVS $Id: BackgroundEnvironment.java,v 1.1 2003/12/19 11:00:52 reinhard Exp $
  *
  * @since 2.1.4
  */
