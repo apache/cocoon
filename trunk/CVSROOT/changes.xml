@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.33 2000-02-23 14:02:13 stefano Exp $
+  $Id: changes.xml,v 1.34 2000-02-27 23:06:48 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,23 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+   Added Xerces 0.19.5
+  </action>
+  <action dev="SM" type="fix">
+   Commented out LDAP processor that caused some problems since the JNDI.jar
+   package is not shipped with Cocoon.
+  </action>
+  <action dev="SM" type="fix">
+   Moved our package in front of the system classpath in the build scripts
+   to avoid versioning conflicts with packages installed on the system.
+  </action>
+  <action dev="SM" type="fix">
+   Added version information to the XSLT files since latest Xalan complained.
+  </action>
+ </release>
+
+ <release version="1.7" date="February 24, 2000">
   <action dev="SM" type="update">
     Fixed docs creation problem due to an XSLT problem that appeared after
     updating Xalan.
