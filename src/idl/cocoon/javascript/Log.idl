@@ -54,14 +54,54 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   Interface to the Cocoon log facility.
+ * </p>
  *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
+interface Log {
 
-    interface Script {
-    };
+    /**
+     * Log a debug message.
+     *
+     * @param message the message.
+     */
+    void debug(in string message);
 
-    #include "cocoon/flow/javascript/_module.idl"
+    /**
+     * Log an information message.
+     *
+     * @param message the message.
+     */
+    void info(in string message);
 
+    /**
+     * Log a warning message.
+     *
+     * @param message the message.
+     */
+    void warn(in string message);
+
+    /**
+     * Log an error message.
+     *
+     * @param message the message.
+     */
+    void error(in string message);
 };

@@ -54,14 +54,120 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   Interface to various Cocoon abstractions.
+ * </p>
  *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
+interface Cocoon {
 
-    interface Script {
-    };
+    readonly attribute cocoon::Request request;
+    readonly attribute cocoon::Response response;
+    readonly attribute cocoon::Session session;
+    readonly attribute cocoon::Context_ context_;
+    readonly attribute cocoon::Environment environment;
+    readonly attribute cocoon::ComponentManager componentManager;
+    readonly attribute cocoon::StringArray parameters;
 
-    #include "cocoon/flow/javascript/_module.idl"
+
+    /**
+     * Call the Cocoon sitemap for the given URI, sending the output of the
+     * eventually matched pipeline to the specified outputstream.
+     *
+     * @param uri The URI for which the request should be generated.
+     * @param biz Extra data associated with the subrequest.
+     * @param out An OutputStream where the output should be written to.
+     * @return Whatever the Cocoon processor returns (????).
+     * @exception Exception If an error occurs.
+     */
+    boolean process(in string uri, in Object object, in java::OutputStream stream);
+
+    /**
+     *  Set the Scope object in the session object of the current
+     *  user. This effectively means that at the next invocation from the
+     *  sitemap of a JavaScript function (using the &lt;map:call
+     *  function="..."&gt;), will obtain the same scope as the current
+     *  one.
+     */
+    void createSession();
+
+    /**
+     *  Remove the Scope object from the session object of the current
+     *  user.
+     */
+    void removeSession();
+
+
+    /**
+     * Forward the request to a Cocoon pipeline.
+     *
+     * @param URI a <code>String</code>, the URI of the forwarded request
+     * @param bizData an <code>Object</code>, the business data object
+     * to be made available to the forwarded pipeline
+     * @param continuation a <code>WebContinuation</code>, the
+     * continuation to be called to resume the processing
+     */
+    void forwardTo(in string uri, in Object bizData, in WebContinuation continuation);
+
+    /**
+     * Load the file specified as argument.
+     * @param filename a <code>String</code> value
+     * @return an <code>Object</code> value
+     */
+
+    Object load(in string filename);
+
+    /**
+     * Dump to Log file all <code>WebContinuation</code>s
+     * in the system
+     */
+    void displayAllContinuations();
+
+    /**
+     * Call an action from JS
+     */
+    void callAction(in string type, in string source, in Object parameters);
+    /**
+     * Obtain value from InputModule
+     * @param type (not sure)
+     * @param attribute_ (not sure)
+     */
+    Object inputModuleGetAttribute(in string type, in string attribute_);
+
+    /**
+     * Set an attribute (starts transaction, commit or rollback required!)
+     * @param type (not sure)
+     * @param attribute_ (not sure)
+     * @param value (not sure)
+     */
+    void outputModuleSetAttribute(in string type, in string attribute_, in Object value);
+
+    /**
+     * Makes attributes permanent (ends transaction)
+     * @param type (not sure)
+     */
+    void outputModuleCommit(in string type);
+
+    /**
+     * Deletes attributes (ends transaction)
+     * @param type (not sure)
+     */
+    void outputModuleRollback(in string type);
 
 };
