@@ -64,21 +64,30 @@ import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This generator renders the complete portal.
+ * More precisly, this generator is the starting point for the portal
+ * rendering. The generator delegates the rendering process to
+ * to {@link PortalManager} component.
+ * This generator needs one runtime configuration: the name of
+ * the portal to render as a sitemap parameter named "portal-name".
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.4 2003/12/09 15:56:15 cziegeler Exp $
  */
 public class PortalGenerator 
 extends ServiceableGenerator {
 
-	/**
+	/* (non-Javadoc)
 	 * @see org.apache.cocoon.generation.Generator#generate()
 	 */
 	public void generate()
-		throws IOException, SAXException, ProcessingException {
+    throws IOException, SAXException, ProcessingException {
         
+        // start the portal rendering
+        // 1. event processing
+        // 2. rendering
         PortalManager pm = null;
         try {
             pm = (PortalManager)this.manager.lookup(PortalManager.ROLE);
@@ -95,12 +104,14 @@ extends ServiceableGenerator {
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public void setup(SourceResolver resolver,
-                       Map objectModel,
-                       String src,
-                       Parameters par)
+                      Map objectModel,
+                      String src,
+                      Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
+        // instantiate the portal service for this request
+        // and set the portal-name
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
