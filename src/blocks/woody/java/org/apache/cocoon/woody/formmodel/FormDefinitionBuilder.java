@@ -65,9 +65,9 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         formDefinition.setId("");
         setDisplayData(formElement, formDefinition);
 
-        // all child elements of the form element, that are in woody's namespace, are supposed
-        // to be widgets
-        Element[] widgetElements = DomHelper.getChildElements(formElement, Constants.WD_NS);
+        Element widgetsElement = DomHelper.getChildElement(formElement, Constants.WD_NS, "widgets", true);
+        // All child elements of the widgets element are widgets
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);
