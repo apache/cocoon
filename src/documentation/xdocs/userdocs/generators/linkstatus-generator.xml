@@ -30,7 +30,7 @@
  <body>
   <s1 title="LinkStatus Generator">
    <p>
-    The LinkStatus Generator emits a list of links that are reachable. Please note that it is available only in Cocoon 2.1.
+    The LinkStatus Generator emits a list of links that are reachable. 
    </p>
    <p>
     The LinkStatusGenerator has serveral configuration options.
@@ -74,11 +74,6 @@
      <dt>accept</dt>
      <dd>Not currently used</dd>
    </dl>
-   <ul>
-    <li>Name : linkStatus</li>
-    <li>Class: org.apache.cocoon.generation.LinkStatusGenerator</li>
-    <li>Cacheable: no.</li>
-   </ul>
    <p>
     A simple example might help to use the LinkStatusGenerator effectivly:
    </p>

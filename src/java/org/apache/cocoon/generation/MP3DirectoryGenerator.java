@@ -32,26 +32,9 @@ import java.io.RandomAccessFile;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 
- * <p>
- * Following extra attributes added to valid MP3 files:
- * <blockquote>
- *   <dl>
- *   <dt> frequency
- *   <dd> the frequency of the MP3 file in KHz (most common: 44.1)
- *   <dt> bitrate
- *   <dd> the bitrate of the MP3 file in Kbit, from 8 to 448.
- *   <dt> mode
- *   <dd> the mode of the MP3 file, one of the following: Stereo, Joint stereo,
- *        Dual channel, Single channel.
- *   <dt> variable-rate (optional)
- *   <dd> value is "yes" if VBR header is detected
- *   <dt> title, artitst, album, year, comment, track, genre (all optional)
- *   <dd> values obtained from MP3 ID3 tag
- *   </dl>
- * </blockquote>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.5 2004/05/26 14:11:33 cziegeler Exp $
+ * @version CVS $Id: MP3DirectoryGenerator.java,v 1.6 2004/05/27 08:23:58 cziegeler Exp $
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {
