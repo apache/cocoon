@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.237 2004/02/06 10:10:14 ugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.238 2004/02/10 05:00:11 antonio Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated iText to 1.02
+   </action>
    <action dev="SW" type="add">
    	 Woody block: every widget can now have a validator. This allows for example repeaters to perform
    	 inter-row validation or overall form-level validation.
@@ -213,7 +216,7 @@
      of the reader. Fixed also a minor bug in the last-modified detection.
    </action>
    <action dev="GP" type="add" >
-     OJB-Block: Added our own OJB ConnectionFactory which uses the 
+     OJB-Block: Added our own OJB ConnectionFactory which uses the
      DataSources configured in cocoon.xconf
    </action>
    <action dev="AG" type="update">
