@@ -179,6 +179,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 //if rowIdValue != null --> iterate nodes to find match 
                 Iterator rowPointers =
                     repeaterContext.iteratePointers(this.rowPath);
+                boolean found = false;
                 while (rowPointers.hasNext()) {
                     Pointer jxp = (Pointer) rowPointers.next();
                     JXPathContext rowContext =
@@ -198,8 +199,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                         this.rowBinding.saveFormToModel(thisRow, rowContext);
                         //        --> store rowIdValue in list of updatedRowIds
                         updatedRowIds.add(rowIdValue);
+                        found = true;
                         break;
                     }
+                }
+                if (!found) {
+                    // this is a new row
+                    rowsToInsert.add(thisRow);
+                    // also add it to the updated row id's so that this row doesn't get deleted
+                    updatedRowIds.add(rowIdValue);
                 }
             } else {
                 //if rowId == null --> remember to insert this one later
