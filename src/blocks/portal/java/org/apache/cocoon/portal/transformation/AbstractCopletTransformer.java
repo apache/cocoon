@@ -52,8 +52,8 @@ package org.apache.cocoon.portal.transformation;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.3 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -128,7 +128,7 @@ extends AbstractSAXTransformer {
             }
                 
             return object;
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new SAXException("Error getting portal service.", e);
         } finally {
             this.manager.release( portalService );

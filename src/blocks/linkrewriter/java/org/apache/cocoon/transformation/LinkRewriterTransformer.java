@@ -58,6 +58,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -179,10 +182,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.8 2003/09/24 22:04:40 cziegeler Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.9 2003/10/21 12:39:16 cziegeler Exp $
  */
 public class LinkRewriterTransformer
-    extends AbstractSAXTransformer implements Initializable, Configurable
+    extends AbstractSAXTransformer implements Composable, Initializable, Configurable
 {
 
     private static String NAMESPACE="";
@@ -205,6 +208,8 @@ public class LinkRewriterTransformer
 
     private String badLinkStr;
 
+    private ComponentManager componentManager;
+    
     /**
      * Configure this component from the map:transformer block.  Called before
      * initialization and setup.
@@ -221,7 +226,7 @@ public class LinkRewriterTransformer
     public void initialize() throws Exception {
         this.namespaceURI = NAMESPACE;
         this.modHelper = new XSPModuleHelper();
-        modHelper.setup(this.manager);
+        modHelper.setup(this.componentManager);
     }
 
     /**
@@ -392,6 +397,13 @@ public class LinkRewriterTransformer
             }
         }
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.componentManager = manager;
     }
 
 }

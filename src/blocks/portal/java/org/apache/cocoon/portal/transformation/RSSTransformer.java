@@ -55,9 +55,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
@@ -75,7 +74,7 @@ import org.xml.sax.SAXException;
  * It's actually a quick hack...
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RSSTransformer.java,v 1.3 2003/07/12 14:21:06 cziegeler Exp $
+ * @version CVS $Id: RSSTransformer.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
  */
 public final class RSSTransformer
 extends AbstractSAXTransformer {
@@ -138,7 +137,7 @@ extends AbstractSAXTransformer {
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        this.manager.release( (Component) this.xmlizer );
+        this.manager.release( this.xmlizer );
         this.manager.release( this.deserializer );
         this.xmlizer = null;
         this.deserializer = null;
@@ -158,7 +157,7 @@ extends AbstractSAXTransformer {
         try {
             this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
             this.deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup component.", ce);
         }
     }

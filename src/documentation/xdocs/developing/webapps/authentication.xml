@@ -679,8 +679,7 @@
         <p>In the example above, if the user is already logged he is
           redirected to the <em>loggedInStartPage</em> document. If he is not logged in
           for the given handler, the usual start page is generated.</p>
-        <p>Both actions, the <em>auth-protect</em> and the
-          <em>auth-loggedIn</em> action return - if the user is logged in for the
+        <p>The <em>auth-protect</em> action returns - if the user is logged in for the
           given handler - all values from the context to the sitemap, e.g. ID, role etc.
           These values can be used within the other components:</p>
         <source>&lt;map:match pattern"protected"&gt;

@@ -52,12 +52,14 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.*;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
@@ -88,11 +90,11 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.11 2003/10/06 16:29:59 haul Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.12 2003/10/21 12:39:17 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
-  implements Composable, Disposable, Configurable {
+  implements Disposable, Configurable {
 
     /** The SQL namespace **/
     public static final String NAMESPACE = "http://apache.org/cocoon/SQL/2.0";
@@ -178,7 +180,7 @@ public class SQLTransformer
     protected String outUri;
 
     /** The database selector */
-    protected ComponentSelector dbSelector;
+    protected ServiceSelector dbSelector;
 
     /** The format for serializing xml */
     protected Properties format;
@@ -207,14 +209,14 @@ public class SQLTransformer
     protected Connection conn;
 
     /**
-     * Composable
+     * Serviceable
      */
-    public void compose( ComponentManager manager ) throws ComponentException {
-        super.compose(manager);
+    public void service( ServiceManager manager ) throws ServiceException {
+        super.service(manager);
         this.queries = new Vector();
         try {
-            this.dbSelector = (ComponentSelector) manager.lookup( DataSourceComponent.ROLE + "Selector" );
-        } catch ( ComponentException cme ) {
+            this.dbSelector = (ServiceSelector) manager.lookup( DataSourceComponent.ROLE + "Selector" );
+        } catch ( ServiceException cme ) {
             getLogger().warn( "Could not get the DataSource Selector", cme );
         }
     }
@@ -236,7 +238,7 @@ public class SQLTransformer
         this.queries.clear();
         this.outUri = null;
         this.outPrefix = null;
-        this.manager.release((Component)this.parser);
+        this.manager.release(this.parser);
         this.parser = null;
         this.manager.release(this.compiler);
         this.compiler = null;
@@ -1026,7 +1028,7 @@ public class SQLTransformer
                                     }
                                 }
                             }
-                        } catch ( ComponentException cme ) {
+                        } catch ( ServiceException cme ) {
                              transformer.getTheLogger().error( "Could not use connection: " + connection, cme );
                         } finally {
                             if ( datasource != null ) this.transformer.dbSelector.release( datasource );
@@ -1230,7 +1232,7 @@ public class SQLTransformer
             query_parts.addElement( object );
         }
 
-        protected void serializeData(ComponentManager manager, String value)
+        protected void serializeData(ServiceManager manager, String value)
                 throws SQLException, SAXException {
             if (value != null) {
                 value = value.trim();
@@ -1272,7 +1274,7 @@ public class SQLTransformer
             }
         }
 
-        protected void serializeRow(ComponentManager manager)
+        protected void serializeRow(ServiceManager manager)
         throws SQLException, SAXException {
             AttributesImpl attr = new AttributesImpl();
             if ( !isupdate && !isstoredprocedure ) {
@@ -1289,7 +1291,7 @@ public class SQLTransformer
             }
         }
 
-        protected void serializeStoredProcedure(ComponentManager manager)
+        protected void serializeStoredProcedure(ServiceManager manager)
         throws SQLException, SAXException {
             if ( outParametersNames == null || cst == null )
                 return;

@@ -56,14 +56,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -79,31 +79,31 @@ import org.xml.sax.SAXException;
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.3 2003/08/04 03:06:31 joerg Exp $
+ * @version CVS $Id: DefaultContextManager.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
-implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, Disposable {
+implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable, Disposable {
 
-    /** The <code>ComponentManager</code> */
-    private ComponentManager manager;
+    /** The <code>ServiceManager</code> */
+    private ServiceManager manager;
 
     /** The context */
     private Context context;
     
     /** selector for context provider */
-    private ComponentSelector contextSelector;
+    private ServiceSelector contextSelector;
     
     /* The list of reserved contexts */
     static private final String[] reservedContextNames = {"session",
                                                             "context"};
     /**
-     * Avalon Composer Interface
+     * Avalon Serviceable Interface
      */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
+    public void service(ServiceManager manager) 
+    throws ServiceException {
         this.manager = manager;
-        this.contextSelector = (ComponentSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
+        this.contextSelector = (ServiceSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
     }
 
     /**
@@ -147,9 +147,9 @@ implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, 
             try {
                 provider = (SessionContextProvider)this.contextSelector.select( name );
                 found = true;
-            } catch (ComponentException ignore) {
+            } catch (ServiceException ignore) {
             } finally {
-                this.contextSelector.release( (Component)provider);
+                this.contextSelector.release(provider);
             }
         }
         return found;
@@ -166,9 +166,9 @@ implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, 
         try {
             provider = (SessionContextProvider)this.contextSelector.select( name );
             exists = provider.existsSessionContext( name );
-        } catch (ComponentException ignore) {
+        } catch (ServiceException ignore) {
         } finally {
-            this.contextSelector.release( (Component)provider);
+            this.contextSelector.release(provider);
         }
 
         return exists;
@@ -187,9 +187,9 @@ implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, 
             synchronized (provider) {
                 context = provider.getSessionContext(name);
             }
-        } catch (ComponentException ignore) {
+        } catch (ServiceException ignore) {
         } finally {
-            this.contextSelector.release( (Component)provider);
+            this.contextSelector.release(provider);
         }
 
         return context;

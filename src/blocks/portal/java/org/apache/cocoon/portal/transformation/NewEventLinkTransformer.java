@@ -52,7 +52,7 @@ package org.apache.cocoon.portal.transformation;
 
 import java.util.Stack;
 
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
@@ -91,7 +91,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.2 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: NewEventLinkTransformer.java,v 1.3 2003/10/21 12:39:16 cziegeler Exp $
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
@@ -245,7 +245,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                 // insert event link
                 newAttributes.setValue(index, eventLink);
             }
-            catch (ComponentException e) {
+            catch (ServiceException e) {
                 throw new SAXException(e);
             }
             finally {

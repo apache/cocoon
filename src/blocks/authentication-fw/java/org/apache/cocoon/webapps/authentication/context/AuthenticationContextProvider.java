@@ -51,10 +51,10 @@
 package org.apache.cocoon.webapps.authentication.context;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
@@ -68,13 +68,13 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.5 2003/05/23 12:35:32 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.6 2003/10/21 12:39:16 cziegeler Exp $
 */
 public final class AuthenticationContextProvider
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Component, Composable {
+implements SessionContextProvider, ThreadSafe, Component, Serviceable {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     /**
      * Get the context
@@ -92,9 +92,9 @@ implements SessionContextProvider, ThreadSafe, Component, Composable {
             try {
                 authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
                 state = authManager.getState();
-            } catch (ComponentException ignore) {
+            } catch (ServiceException ignore) {
             } finally {
-                this.manager.release( (Component)authManager );
+                this.manager.release( authManager );
             }
             
             if ( null != state ) {
@@ -116,9 +116,9 @@ implements SessionContextProvider, ThreadSafe, Component, Composable {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager)  {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

@@ -55,13 +55,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -79,29 +79,22 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.4 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: DefaultFormManager.java,v 1.5 2003/10/21 12:39:16 cziegeler Exp $
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
-implements Composable, Component, FormManager, ThreadSafe, Contextualizable
+implements Serviceable, Component, FormManager, ThreadSafe, Contextualizable
      /*,RequestProcessingListener, SitemapProcessingListener*/ {
 
     /** This session attribute is used to store the information for the inputxml tags */
     private static final String ATTRIBUTE_INPUTXML_STORAGE = "org.apache.cocoon.webapps.session.InputXMLStorage";
 
-    /** The <code>ComponentManager</code> */
-    private ComponentManager manager;
+    /** The <code>ServiceManager</code> */
+    private ServiceManager manager;
 
     /** The context */
     private Context context;
     
-    /**
-     * Avalon Composer Interface
-     */
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
-    }
-
     /**
      * Get the context
      */
@@ -111,10 +104,10 @@ implements Composable, Component, FormManager, ThreadSafe, Contextualizable
         try {
             contextManager = (ContextManager) this.manager.lookup(ContextManager.ROLE);
             return contextManager.getContext( name );
-        } catch (ComponentException ce ) {
+        } catch (ServiceException ce ) {
             throw new ProcessingException("Unable to lookup context manager.", ce);
         } finally {
-            this.manager.release( (Component) contextManager);
+            this.manager.release(contextManager);
         }
     }
     
@@ -124,10 +117,10 @@ implements Composable, Component, FormManager, ThreadSafe, Contextualizable
         try {
             sessionManager = (SessionManager) this.manager.lookup(SessionManager.ROLE);
             return sessionManager.getContextFragment( context, path );
-        } catch (ComponentException ce ) {
+        } catch (ServiceException ce ) {
             throw new ProcessingException("Unable to lookup session manager.", ce);
         } finally {
-            this.manager.release( (Component) sessionManager);
+            this.manager.release(sessionManager);
         }        
     }
     
@@ -268,6 +261,13 @@ implements Composable, Component, FormManager, ThreadSafe, Contextualizable
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
 }

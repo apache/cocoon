@@ -52,13 +52,13 @@ package org.apache.cocoon.webapps.session.components;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -81,36 +81,36 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: DefaultSessionManager.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
-implements Composable, Component, ThreadSafe, SessionManager, Disposable, Contextualizable {
+implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Contextualizable {
 
     /** The context */
     private Context context;
     
-    /** The <code>ComponentManager</code> */
-    private ComponentManager manager;
+    /** The <code>ServiceManager</code> */
+    private ServiceManager manager;
 
     /** The context manager */
     private ContextManager contextManager;
     
     /**
-     * Avalon Composable Interface
-     */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
-        this.manager = manager;
-        this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
-    }
+    * Avalon Serviceable Interface
+    */
+   public void service(ServiceManager manager) 
+   throws ServiceException {
+       this.manager = manager;
+       this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+   }
 
     /**
      * Avalon Disposable Interface
      */
     public void dispose() {
         if (this.manager != null ) {
-            this.manager.release( (Component)this.contextManager);
+            this.manager.release(this.contextManager);
             this.manager = null;
             this.contextManager = null;
         }
