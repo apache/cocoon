@@ -17,7 +17,7 @@
 
 <components>
   <!-- depends on the repository block -->
-  <include src="WEB-INF/xconf/cocoon-repository.xconf"/>
+  <include src="cocoon-repository.xconf"/>
   
   <component role="org.apache.cocoon.components.repository.RepositoryManager"
              class="org.apache.cocoon.components.repository.RepositoryManager"
