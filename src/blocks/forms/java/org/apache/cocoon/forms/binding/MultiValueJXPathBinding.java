@@ -108,6 +108,9 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             public boolean createObject(JXPathContext context, Pointer pointer,
                                         Object parent, String name, int index) {
                 final Object o = context.getValue(name);
+		if( o == null ) {
+		    return false;
+		}
                 if( Collection.class.isAssignableFrom( o.getClass() ) ) {
                     ((Collection)context.getValue(name)).add(null);
                 } else if( o.getClass().isArray() ) {
