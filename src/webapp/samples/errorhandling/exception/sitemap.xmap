@@ -6,12 +6,16 @@
 			<map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator"/>
 		</map:generators>
 	</map:components>
+
 	<map:pipelines>
+
 		<map:pipeline>
+
 			<map:match pattern="exception">
 				<map:generate type="exception"/>
 				<map:serialize/>
 			</map:match>
+
 			<map:handle-errors>
 				<map:select type="exception">
 					<map:when test="validation">
@@ -20,7 +24,9 @@
 					</map:when>
 				</map:select>
 			</map:handle-errors>
+
 		</map:pipeline>
+
 		<map:handle-errors>
 			<map:select type="exception">
 				<map:when test="application1">
@@ -37,5 +43,6 @@
 				</map:when>
 			</map:select>
 		</map:handle-errors>
+
 	</map:pipelines>
 </map:sitemap>
