@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.8 2004/06/28 08:28:38 stephan Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.9 2004/07/04 17:52:29 huber Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -77,7 +77,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     private MockResponse response = new MockResponse();
     private MockContext context = new MockContext();
     private MockRedirector redirector = new MockRedirector();
-    private HashMap objectmodel = new HashMap();
+    private Map objectmodel = new HashMap();
 
     /**
      * Create a new composite test case.
@@ -169,7 +169,49 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         }
         return result;
     }
-    
+
+    /**
+     * Select with a pattern.
+     *
+     * @param type Hint of the matcher. 
+     * @param expression Expression for the selector.
+     * @param parameters Matcher parameters.
+     */
+    public final boolean select(String type, String expression, Parameters parameters) {
+
+        ComponentSelector selector = null;
+        org.apache.cocoon.selection.Selector sel = null;
+        SourceResolver resolver = null;
+
+        boolean result = false;
+        try {
+            selector = (ComponentSelector) this.manager.lookup(org.apache.cocoon.selection.Selector.ROLE +
+                "Selector");
+            assertNotNull("Test lookup of selector selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if selector name is not null", type);
+            sel = (org.apache.cocoon.selection.Selector) selector.select(type);
+            assertNotNull("Test lookup of selector", sel);
+            
+
+            result = sel.select(expression, objectmodel, parameters);
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve selector", ce);
+            fail("Could not retrieve selector: " + ce.toString());
+        } finally {
+            if (sel != null) {
+                selector.release(sel);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return result;
+    }
+
     /**
      * Perform the action component.
      *
@@ -327,20 +369,25 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             ce.printStackTrace();
             fail("Could not retrieve transformer:"+ce.toString());
         } finally {
-            if (transformer!=null)
+            if (transformer!=null) {
                 selector.release(transformer);
+            }
 
-            if (selector!=null)
+            if (selector!=null) {
                 this.manager.release(selector);
+            }
 
-            if (inputsource!=null)
+            if (inputsource!=null) {
                 resolver.release(inputsource);
+            }
 
-            if (resolver!=null)
+            if (resolver!=null) {
                 this.manager.release(resolver);
+            }
 
-            if (parser!=null)
+            if (parser!=null) {
                 this.manager.release((Component) parser);
+            }
         }
 
         return document; 
