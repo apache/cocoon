@@ -26,6 +26,7 @@
     <menu-item label="XML Validation" href="validation.html"/>
     <menu-item label="Databases" href="databases.html"/>
     <menu-item label="Modules" href="modules.html"/>
+    <menu-item label="Profiler" href="profiler.html"/>
   </menu>
 
 </book>
