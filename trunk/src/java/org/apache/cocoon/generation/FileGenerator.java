@@ -72,7 +72,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.5 2003/09/18 14:43:48 vgritsenko Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.6 2003/10/22 18:02:29 bloritsch Exp $
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -84,12 +84,12 @@ implements CacheableProcessingComponent {
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
      */
-    public void recycle() {
+    public void reset() {
         if (null != this.inputSource) {
             super.resolver.release(this.inputSource);
             this.inputSource = null;
         }
-        super.recycle();
+        super.reset();
     }
 
     /**

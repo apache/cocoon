@@ -93,7 +93,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.5 2003/10/15 16:55:00 bloritsch Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.6 2003/10/22 18:02:29 bloritsch Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -289,7 +289,7 @@ public class ServerPagesGenerator extends ServletGenerator
     /**
      * Recycle the generator by removing references
      */
-    public void recycle() {
+    public void reset() {
         if (this.generator != null) {
             this.programGenerator.release(this.generator);
             this.generator = null;
@@ -299,10 +299,10 @@ public class ServerPagesGenerator extends ServletGenerator
             this.inputSource = null;
         }
         if (this.completionPipe != null) {
-            this.completionPipe.recycle();
+            this.completionPipe.reset();
             this.completionPipe = null;
         }
-        super.recycle();
+        super.reset();
     }
 
     /**
@@ -474,9 +474,9 @@ public class ServerPagesGenerator extends ServletGenerator
             }
         }
 
-        public void recycle() {
+        public void reset() {
             this.eventStack.clear();
-            super.recycle();
+            super.reset();
         }
     }
 }

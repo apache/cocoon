@@ -50,7 +50,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -62,6 +61,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.Tokenizer;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
+import org.apache.excalibur.mpool.Resettable;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -85,9 +85,9 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.5 2003/10/22 18:02:29 bloritsch Exp $
  */
-public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
+public class LinkStatusGenerator extends ServiceableGenerator implements Resettable, Configurable {
     /** The URI of the namespace of this generator. */
     protected static final String URI =
             "http://apache.org/cocoon/linkstatus/2.0";
@@ -679,8 +679,8 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
         return false;
     }
 
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
 
         this.attributes = null;
         //this.excludeCrawlingURL = null;

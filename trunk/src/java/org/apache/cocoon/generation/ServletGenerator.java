@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.3 2003/10/15 16:55:01 bloritsch Exp $
+ * @version CVS $Id: ServletGenerator.java,v 1.4 2003/10/22 18:02:29 bloritsch Exp $
  */
 public abstract class ServletGenerator extends ServiceableGenerator {
 
@@ -87,8 +87,8 @@ public abstract class ServletGenerator extends ServiceableGenerator {
     /**
      * Recycle the generator by removing references
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.request = null;
         this.response = null;
         this.context = null;

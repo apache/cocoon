@@ -123,10 +123,10 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.9 2003/09/25 17:28:38 joerg Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.10 2003/10/22 18:02:29 bloritsch Exp $
  */
-public class DirectoryGenerator 
-    extends ServiceableGenerator 
+public class DirectoryGenerator
+    extends ServiceableGenerator
     implements CacheableProcessingComponent {
 
     /** Constant for the file protocol. */
@@ -286,7 +286,7 @@ public class DirectoryGenerator
      * is initially empty since the files that define it are not known before
      * generation has occured. So the returned object is kept by the generator
      * and filled with each of the files that are traversed.
-     * 
+     *
      * @see DirectoryGenerator.DirValidity
      */
     public SourceValidity getValidity() {
@@ -298,7 +298,7 @@ public class DirectoryGenerator
 
     /**
      * Generate XML data.
-     * 
+     *
      * @throws SAXException  if an error occurs while outputting the document
      * @throws ProcessingException  if the requsted URI isn't a directory on the local filesystem
      */
@@ -336,7 +336,7 @@ public class DirectoryGenerator
 
     /**
      * Creates a stack containing the ancestors of File up to specified directory.
-     * 
+     *
      * @param path the File whose ancestors shall be retrieved
      * @return a Stack containing the ancestors.
      */
@@ -360,7 +360,7 @@ public class DirectoryGenerator
     /**
      * Adds recursively the path from the directory matched by the root pattern
      * down to the requested directory.
-     * 
+     *
      * @param path       the requested directory.
      * @param ancestors  the stack of the ancestors.
      * @throws SAXException
@@ -380,7 +380,7 @@ public class DirectoryGenerator
      * Adds a single node to the generated document. If the path is a
      * directory, and depth is greater than zero, then recursive calls
      * are made to add nodes for the directory's children.
-     * 
+     *
      * @param path   the file/directory to process
      * @param depth  how deep to scan the directory
      * @throws SAXException  if an error occurs while constructing nodes
@@ -461,7 +461,7 @@ public class DirectoryGenerator
 
     /**
      * Begins a named node and calls setNodeAttributes to set its attributes.
-     * 
+     *
      * @param nodeName  the name of the new node
      * @param path      the file/directory to use when setting attributes
      * @throws SAXException  if an error occurs while creating the node
@@ -478,7 +478,7 @@ public class DirectoryGenerator
      * Sets the attributes for a given path. The default method sets attributes
      * for the name of thefile/directory and for the last modification time
      * of the path.
-     * 
+     *
      * @param path  the file/directory to use when setting attributes
      * @throws SAXException  if an error occurs while setting the attributes
      */
@@ -504,7 +504,7 @@ public class DirectoryGenerator
 
     /**
      * Ends the named node.
-     * 
+     *
      * @param nodeName  the name of the new node
      * @throws SAXException  if an error occurs while closing the node
      */
@@ -514,7 +514,7 @@ public class DirectoryGenerator
 
     /**
      * Determines if a given File is the defined root.
-     * 
+     *
      * @param path  the File to check
      * @return true if the File is the root or the root pattern is not set,
      *         false otherwise.
@@ -525,7 +525,7 @@ public class DirectoryGenerator
 
     /**
      * Determines if a given File shall be visible.
-     * 
+     *
      * @param path  the File to check
      * @return true if the File shall be visible or the include Pattern is <code>null</code>,
      *         false otherwise.
@@ -536,7 +536,7 @@ public class DirectoryGenerator
 
     /**
      * Determines if a given File shall be excluded from viewing.
-     * 
+     *
      * @param path  the File to check
      * @return false if the given File shall not be excluded or the exclude Pattern is <code>null</code>,
      *         true otherwise.
@@ -548,7 +548,7 @@ public class DirectoryGenerator
     /**
      * Recycle resources
      */
-    public void recycle() {
+    public void reset() {
         this.cacheKeyParList = null;
         this.attributes = null;
         this.dateFormatter = null;
@@ -556,7 +556,7 @@ public class DirectoryGenerator
         this.includeRE = null;
         this.excludeRE = null;
         this.validity = null;
-        super.recycle();
+        super.reset();
     }
 
     /** Specific validity class, that holds all files that have been generated */

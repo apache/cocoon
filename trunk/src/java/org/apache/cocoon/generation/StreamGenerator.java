@@ -87,7 +87,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.6 2003/10/22 18:02:29 bloritsch Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
@@ -103,20 +103,20 @@ public class StreamGenerator extends ServiceableGenerator
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.inputSource = null;
     }
 
     /**
      * Generate XML data out of request InputStream.
      */
-    public void generate() 
+    public void generate()
     throws IOException, SAXException, ProcessingException {
         SAXParser parser = null;
         int len = 0;
         String contentType = null;
-        
+
         Request request = ObjectModelHelper.getRequest(this.objectModel);
         try {
             contentType = request.getContentType();

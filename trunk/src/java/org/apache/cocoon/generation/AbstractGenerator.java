@@ -63,13 +63,13 @@ import java.util.Map;
  * An abstract class that can be used to implement an own generator.
  * If you need other components, use the {@link ServiceableGenerator}
  * instead.
- * 
+ *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.3 2003/10/22 18:02:29 bloritsch Exp $
  */
-public abstract class AbstractGenerator 
-    extends AbstractXMLProducer 
+public abstract class AbstractGenerator
+    extends AbstractXMLProducer
     implements Generator {
 
     /** The current <code>SourceResolver</code>. */
@@ -96,8 +96,8 @@ public abstract class AbstractGenerator
     /**
      * Recycle the generator by removing references
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.resolver = null;
         this.objectModel = null;
         this.source = null;

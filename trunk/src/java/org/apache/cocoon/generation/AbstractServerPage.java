@@ -72,11 +72,11 @@ import java.io.Serializable;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.4 2003/10/15 18:03:53 cziegeler Exp $
+ * @version CVS $Id: AbstractServerPage.java,v 1.5 2003/10/22 18:02:29 bloritsch Exp $
  */
 public abstract class AbstractServerPage
-  extends ServletGenerator 
-  implements CompiledComponent, CacheableProcessingComponent, Recomposable {
+  extends ServletGenerator
+  implements CompiledComponent, CacheableProcessingComponent {
     /**
      * Code generators should produce a constructor
      * block that initializes the generator's
@@ -96,14 +96,6 @@ public abstract class AbstractServerPage
     protected long dateCreated = -1L;
     /** The dependency file list */
     protected File[] dependencies = null;
-
-    /**
-     * Recompose with the actual <code>ComponentManager</code> that should
-     * be used.
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
 
     /**
      * Determines whether this generator's source files have changed
