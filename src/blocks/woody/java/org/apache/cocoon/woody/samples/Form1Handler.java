@@ -51,37 +51,21 @@
 package org.apache.cocoon.woody.samples;
 
 import org.apache.cocoon.woody.FormHandler;
-import org.apache.cocoon.woody.formmodel.Form;
-import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.event.ActionEvent;
+import org.apache.cocoon.woody.event.RepeaterHandler;
+import org.apache.cocoon.woody.formmodel.Form;
 
 /**
  * Example FormHandler for the "Form1" sample form.
  */
 public class Form1Handler implements FormHandler {
-    private Form form;
-
+    private RepeaterHandler delegate = new RepeaterHandler("contacts", "add-contact", "remove-selected-contacts", "select");
+    
     public void setup(Form form) {
-        this.form = form;
+        this.delegate.setup(form);
     }
 
     public void handleActionEvent(ActionEvent actionEvent) {
-        String command = actionEvent.getActionCommand();
-
-        if (command.equals("add-contact")) {
-            Repeater repeater = (Repeater)form.getWidget("contacts");
-            repeater.addRow();
-        } else if (command.equals("remove-selected-contacts")) {
-            removeSelectedContacts();
-        }
-    }
-
-    private void removeSelectedContacts() {
-        Repeater repeater = (Repeater)form.getWidget("contacts");
-        for (int i = repeater.getSize() - 1; i >= 0; i--) {
-            boolean selected = ((Boolean)repeater.getWidget(i, "select").getValue()).booleanValue();
-            if (selected)
-                repeater.removeRow(i);
-        }
+        this.delegate.handleActionEvent(actionEvent);
     }
 }
