@@ -200,7 +200,7 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated antlr to 2.7.4
+     Updated antlr to 2.7.4, hsqldb to 1.7.2
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
      Javaflow: also support inherited methods
@@ -422,7 +422,7 @@
    <action dev="AG" type="update">
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
      POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1,
-     jcs to 1.1-dev-20040811, quartz to 1.4.2, asm to 1.4.3,
+     hsqldb to 1.7.2, jcs to 1.1-dev-20040811, quartz to 1.4.2, asm to 1.4.3,
      asm-util to 1.4.3 and groovy to 1.0-beta6
    </action>
    <action dev="CZ" type="fix">
