@@ -16,14 +16,21 @@
   <document id="technologies" label="Technologies" source="cocoon/technologies-sbk.xml"/>
   <document id="guide" label="User Guide" source="cocoon/guide-sbk.xml"/>
   <document id="dynamic" label="Dynamic Content" source="cocoon/dynamic-sbk.xml"/>
+  
+  <separator/>
+  
+  <document id="xsp" label="XSP Processor" source="cocoon/xspprocessor-sbk.xml"/>
   <document id="dcp" label="DCP Processor" source="cocoon/dcpprocessor-sbk.xml"/>
   <document id="sql" label="SQL Processor" source="cocoon/sqlprocessor-sbk.xml"/>
   <document id="ldap" label="LDAP Processor" source="cocoon/ldapprocessor-sbk.xml"/>
 
   <separator/>
 
+  <document id="wd-xsp" label="XSP WD" source="cocoon/WD-xsp-sbk.xml"/>
+
+  <separator/>
+
   <document id="cocoon2" label="Cocoon 2" source="cocoon/cocoon2-sbk.xml"/>
-  <document id="xsp" label="XSP WD" source="cocoon/WD-xsp-sbk.xml"/>
   <document id="javadoc" label="Javadoc XML" source="cocoon/javadoc-sbk.xml"/>
 
   <separator/>

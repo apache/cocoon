@@ -80,6 +80,11 @@
 </faq>
 
 <faq>
+ <question>Why do I keep getting FileNotFoundException under Tomcat 3.0?</question>
+ <answer>See question below</answer>
+</faq>
+
+<faq>
  <question>How come Cocoon doesn't work on Tomcat 3.0?</question>
  <answer>
   <p>You must apply this patch to Tomcat 3.0 and recompile it or it won't work.
@@ -178,6 +183,18 @@
     which is freely available.</p>
 </answer>
 </faq>
+
+<faq>
+<question>Why is my Internet Explorer not showing PDF or VRML samples?</question>
+<answer>
+  <p>This is a long-time problem with internet explorer which, illegally, 
+  reacts on URI extention rathen than returned MIME type. The only think you can
+  do for now is to map .pdf or .wrl to Cocoon for handling, but we know that
+  sucks. Don't worry, in the future, the sitemap proposal will allow you
+  to work around this magically. For now, just don't use IE :)</p>
+</answer>
+</faq>
+
 <faq>
 <question>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</question>
 <answer>

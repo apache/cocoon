@@ -206,6 +206,13 @@ public class DummyProducer
       transformation needs as well as simple tag evaluation/processing due to
       its extensible and programmable nature.
     </dd>
+    <dt>The XSP processor</dt>
+    <dd>
+      the <em>XSP</em> processor that evaluates XSP pages and compiles them into
+      producers. This processor allows you include programmatic logic into 
+      your pages as well as to separate the logic from the content. See the
+      <connect href="xsp-primer.xml">XSP user guide</connect> for more information.
+    </dd>
     <dt>The DCP processor</dt>
     <dd>
       the <em>DCP</em> processor that evaluates XML processing
@@ -221,20 +228,13 @@ public class DummyProducer
       depending on given parameters. See the <connect href="sqlprocessor.xml">SQL
       processor user guide</connect> for more information.
     </dd>
+    <dt>The LDAP processor</dt>
+    <dd>
+      the <em>LDAP</em> processor that evaluates simple tags
+      describing LDAP queries to directory services and formats their result-set in XML
+      depending on given parameters. See the <connect href="ldapprocessor.xml">LDAP
+      processor user guide</connect> for more information.
+    </dd>
   </dl>
-</s1>
-
-<s1 title="Future plans">
-  <p>While the above represents a complete set of usable components
-  for dynamic XML content generation, the Cocoon project aims to separate all
-  three layers (content, logic and style). While XSLT transformations allow a
-  perfect separation between content and style with the use of stylesheets, the
-  separation between content and logic in dynamically generated XML pages is not
-  achieved with current Cocoon features.</p>
-  
-  <p>To fill this whole, the <connect href="WD-xsp.xml">XSP
-  (eXtensible Server Pages) technology</connect> was proposed. While in the <em>working
-  draft</em> stage, we strongly believe that some of the issues expressed in that
-  specification will be keys to the future of dynamic XML.</p>
 </s1>
 </body></document>

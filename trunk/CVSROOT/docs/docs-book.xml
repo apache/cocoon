@@ -11,9 +11,17 @@
   <document id="technologies" label="Technologies" source="technologies-sbk.xml"/>
   <document id="guide" label="User Guide" source="guide-sbk.xml"/>
   <document id="dynamic" label="Dynamic Content" source="dynamic-sbk.xml"/>
+
+  <separator/>
+
+  <document id="xsp" label="XSP Processor" source="xspprocessor-sbk.xml"/>
   <document id="dcp" label="DCP Processor" source="dcpprocessor-sbk.xml"/>
   <document id="sql" label="SQL Processor" source="sqlprocessor-sbk.xml"/>
   <document id="ldap" label="LDAP Processor" source="ldapprocessor-sbk.xml"/>
+
+  <separator/>
+
+  <document id="wd-xsp" label="XSP WD" source="WD-xsp-sbk.xml"/>
 
   <separator/>
 
@@ -22,7 +30,6 @@
   <separator/>
 
   <document id="cocoon2" label="Cocoon 2" source="cocoon2-sbk.xml"/>
-  <document id="xsp" label="XSP WD" source="WD-xsp-sbk.xml"/>
   <document id="javadoc" label="Javadoc XML" source="javadoc-sbk.xml"/>
 
   <separator/>

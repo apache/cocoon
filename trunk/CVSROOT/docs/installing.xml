@@ -374,14 +374,10 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
    </p>
   </s2>
   
-  <s2 title="Installing Cocoon on Allaire JRun">
+  <s2 title="Installing Cocoon on other platforms">
    <p>Yet to be written! <em>Volunteers welcome!</em></p>
   </s2>
   
-  <s2 title="Installing Cocoon on NewAtlanta ServletExec">
-   <p>Yet to be written! <em>Volunteers welcome!</em></p>
-  </s2>  
-
  </s1>
  
  <s1 title="Working Systems">
@@ -389,31 +385,116 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
    Cocoon has been reported to be working on these systems:
   </p>
   
-  <ul>
-    <li>RedHat Linux 6.0 + Apache 1.3.9 + Apache JServ 1.0 + IBM JDK 1.1.8</li>
-    <li>RedHat Linux 6.0 + Apache 1.3.9 + Apache JServ 1.1b3 + IBM JDK 1.1.8</li>
-    <li>RedHat Linux 6.0 + Apache 1.3.9 + Apache JServ 1.0 + Blackdown JDK 1.2pre2</li>    
-    <li>RedHat Linux 6.1 + Apache 1.3.9 + JRun 2.3.3 + IBM JRE 1.1.8</li>
-    <li>Windows 98 + Apache 1.3.9 + Apache JServ 1.0 + IBM JDK 1.1.7</li>
-    <li>Windows 98 + Apache 1.3.9 + Apache JServ 1.1b3 + IBM JDK 1.1.7</li>
-    <li>Windows 98 + Apache 1.3.9 + Apache JServ 1.0 + Sun JDK 1.2.2</li>
-    <li>Windows 98 + Apache 1.3.9 + Apache JServ 1.1b3 + Sun JDK 1.2.2</li>
-    <li>Windows 98 + MS Personal Web Server + ServletExec 2.2 + Sun JDK 1.2.1</li>
-    <li>Windows NT 4.0 + IIS 4.0 + ServletExec 2.2 + Sun JDK 1.2.1</li>
-    <li>Windows NT 4.0 + IIS 4.0 + JRun 2.3.3 + Sun JDK 1.2.1</li>
-    <li>Windows NT 4.0 + Apache 1.3.9 + JRun 2.3.3 + Sun JDK 1.2.2</li>
-    <li>MacOS 8.6 + WebSTAR 4.0 + JRun 2.3 + MrJ 2.1.4</li>
-    <li>MacOS 8.6 + WebSTAR 4.0 + ServletExec 2.1 + Mrj 2.1.4</li>
-    <li>SunOS Netria 5.6 + Apache 1.3.9 + Apache JServ 1.1b3 + Sun JDK 1.1.7</li>
-    <li>SCO OpenServer 5 + WebLogic 4.5.1 + SCO JDK 1.1.7A</li>
-  </ul>
+  <table>
+  <tr>
+   <th>Operating System</th>
+   <th>Web Server</th>
+   <th>Servlet Engine</th>
+   <th>JVM</th>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Blackdown JDK 1.2pre2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1</td>
+   <td>Apache 1.3.9</td>
+   <td>JRun 2.3.3</td>
+   <td>IBM JRE 1.1.8</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>IBM JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>IBM JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>MS Personal Web Server</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>IIS 4.0</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>IIS 4.0</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>Apache 1.3.9</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td>WebSTAR 4.0</td>
+   <td>JRun 2.3</td>
+   <td>MrJ 2.1.4</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td>WebSTAR 4.0</td>
+   <td>ServletExec 2.1</td>
+   <td>Mrj 2.1.4</td>
+  </tr>
+  <tr>
+   <td>SunOS Netria 5.6</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>Sun JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>SCO OpenServer 5</td>
+   <td colspan="2">WebLogic 4.5.1</td>
+   <td>SCO JDK 1.1.7A</td>
+  </tr>
+  </table>
   
-  <p>
-   <em>Note:</em> due to a bug in <link href="http://www.blackdown.org">Blackdown
+  <note>
+   Eue to a bug in <link href="http://www.blackdown.org">Blackdown
    JDK 1.2pre2</link> for Linux, we suggest you to use green threads instead of the
    native ones which are much less stable, expecially highly concurrent operations
    like servlet engines and servlet execution.
-  </p>
+  </note>
   <p>
    Please, submit your feedback if you were able to install Cocoon on a
    different combination not listed above. Thanks.
