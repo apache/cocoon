@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.203 2001-01-27 14:15:24 greenrd Exp $ 
+  $Id: changes.xml,v 1.204 2001-02-01 21:02:47 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Sebastien Koechlin" due-to-email="skoechlin@ivision.fr">
+   Reversed change in 1.8.1 that ignored query string for XSLTProcessor caching
+  </action>
   <action dev="RDG" type="update">
    Changed default XSP encoding to UTF8, so that all characters are supported.
   </action>
@@ -76,7 +79,8 @@
 
  <release version="1.8.1" date="January 19 2001">
   <action dev="RDG" type="fix" due-to="Wayne Bayever" due-to-email="wbayever@yahoo.com">
-   XSLT stylesheet caching now ignores query string, as it should.
+   *** NOTE: This was a mistaken change that was later reversed in 1.8.3 - see above. ***
+   XSLTProcessor caching now ignores query string.
   </action>
   <action dev="RDG" type="update">
    Removed headers from cache key because this was breaking caching in 90% of static cases.
