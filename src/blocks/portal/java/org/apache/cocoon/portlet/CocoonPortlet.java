@@ -982,15 +982,16 @@ public class CocoonPortlet extends GenericPortlet {
     }
 
     /**
-     * Handle the "force-load" parameter.  This overcomes limits in
-     * many classpath issues.  One of the more notorious ones is a
-     * bug in WebSphere that does not load the URL handler for the
-     * "classloader://" protocol.  In order to overcome that bug,
-     * set "force-load" to "com.ibm.servlet.classloader.Handler".
+     * Handle the <code>load-class</code> parameter. This overcomes
+     * limits in many classpath issues. One of the more notorious
+     * ones is a bug in WebSphere that does not load the URL handler
+     * for the <code>classloader://</code> protocol. In order to
+     * overcome that bug, set <code>load-class</code> parameter to
+     * the <code>com.ibm.servlet.classloader.Handler</code> value.
      *
-     * If you need to force more than one class to load, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
+     * <p>If you need to load more than one class, then separate each
+     * entry with whitespace, a comma, or a semi-colon. Cocoon will
+     * strip any whitespace from the entry.</p>
      */
     private void forceLoad() {
         if (this.forceLoadParameter != null) {
