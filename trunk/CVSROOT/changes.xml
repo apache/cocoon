@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.121 2000-10-12 17:41:46 balld Exp $
+  $Id: changes.xml,v 1.122 2000-10-15 23:03:47 greenrd Exp $   
 -->
 
 <changes title="History of Changes">
@@ -17,24 +17,44 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Francisco Jr." due-to-email="fxjr@solar.com.br">
+   Better error determination for Jikes.
+  </action>
+  <action dev="RDG" type="update">
+   More informative exception information is now produced by taglibs.
+  </action>
+  <action dev="RDG" type="update">
+   Turned off Xerces schema checking so that validation does not require a schema.
+  </action>
+  <action dev="RDG" type="add" due-to="Terry Paddy" 
+   due-to-email="terry@rostersetc.com">
+   Added put-value to session taglib for JServ compatibility.
+  </action>
+  <action dev="RDG" type="fix" due-to="Hao Wang" due-to-email="hbwang@cs.wisc.edu">
+   Spaces are not trimmed from class names read from cocoon.properties (by Engine or Router)
+   so that extra spaces won't create odd startup errors.
+  </action>
   <action dev="DB" type="fix" due-to="Peter Verhage" due-to-email="peter@ibuildings.nl">
-   made xincludeprocessor default to parse="xml"
+   Made xincludeprocessor default to parse="xml"
   </action>
   <action dev="DB" type="fix">
-   put heapsize line back into cocoon.properties
+   Put heapsize line back into cocoon.properties
   </action>
   <action dev="DB" type="update">
-   a doozy of a patch to esql - i made it so that you can execute queries either in their own special methods or inlined code - both on the same page even (can't imagine why you'd want to tho)
+   A doozy of a patch to esql - i made it so that you can execute queries either in their
+   own special methods or inlined code - both on the same page even 
+   (can't imagine why you'd want to though)
   </action>
   <action dev="DB" type="update">
-   a couple of bugs fixed in esql, plus i added the first bit of prepared statement support. nothing but strings yet, but it works.
-  </action>
-  <action dev="RDG" type="update" due-to="Marco Pauck" due-to-email="?">
+   A couple of bugs fixed in esql, plus i added the first bit of prepared statement support.
+   Nothing but strings yet, but it works.
+  </action> 
+  <action dev="RDG" type="update" due-to="Marco Pauck" due-to-email="marco@pauck.de">
    Changed default WML output encoding to iso-8859-1.
   </action>
   <action dev="DB" type="update" due-to="Ugo Cei" due-to-email="ugo@fuoriorario.it">
-   improvements to mail logicsheet - specifically, now you can retrieve a set of messages by
-index, you can get the sent date, and some bugs were fixed.
+   Improvements to mail logicsheet - specifically, now you can retrieve a set of messages by
+   index, you can get the sent date, and some bugs were fixed.
   </action>
  </release>
 
