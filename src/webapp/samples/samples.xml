@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.32 2004/03/20 12:42:27 crossley Exp $
+    | CVS $Id: samples.xml,v 1.33 2004/03/20 12:57:17 crossley Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -87,10 +87,10 @@
     <sample href="components" name="Components">
       Some samples of various components that are included with the core,
       e.g. Stream Generators, Paginator Transformers, Image Readers.
-    </sample> 
-    <sample href="text-wrap/" name="Text wrap">
-      Addresses the problem of wrapping long lines of text in source elements.
-    </sample> 
+    </sample>
+    <sample href="misc" name="Miscellaneous samples">
+      Some stuff that does not fit into the other groups of samples.
+    </sample>
   </group>
   
   <group name="Block Samples">

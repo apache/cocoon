@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.21 2004/03/17 20:35:40 cziegeler Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.22 2004/03/20 12:57:17 crossley Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -104,6 +104,14 @@
 
    <map:match pattern="components">
     <map:generate src="components-samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="misc">
+    <map:generate src="misc-samples.xml"/>
     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
