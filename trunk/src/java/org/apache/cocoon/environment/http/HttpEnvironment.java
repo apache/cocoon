@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.3 2003/04/09 09:52:50 stefano Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.4 2003/04/29 10:45:21 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -100,7 +100,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
      * and HttpServletResponse objects
      */
     public HttpEnvironment (String uri,
-                            URL rootURL,
+                            String root,
                             HttpServletRequest req,
                             HttpServletResponse res,
                             ServletContext servletContext,
@@ -108,7 +108,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
                             String containerEncoding,
                             String defaultFormEncoding)
      throws MalformedURLException, IOException {
-        super(uri, req.getParameter(Constants.VIEW_PARAM), rootURL, extractAction(req));
+        super(uri, req.getParameter(Constants.VIEW_PARAM), root, extractAction(req));
 
         this.request = new HttpRequest(req, this);
         this.request.setCharacterEncoding(defaultFormEncoding);

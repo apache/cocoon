@@ -50,6 +50,10 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -59,15 +63,13 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.excalibur.source.Source;
 
 /**
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: MountNode.java,v 1.2 2003/04/29 10:45:20 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -114,6 +116,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
+        String oldContext   = env.getContext();
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
@@ -132,7 +135,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             }
         } finally {
             // Restore context
-            env.setContext(oldPrefix, oldURI);
+			env.setContext(oldPrefix, oldURI, oldContext);
 
             // Recompose pipelines which may have been recomposed by subsitemap
             context.recompose(this.manager);

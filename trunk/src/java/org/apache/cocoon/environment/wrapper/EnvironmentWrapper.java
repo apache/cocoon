@@ -53,7 +53,6 @@ package org.apache.cocoon.environment.wrapper;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -75,8 +74,9 @@ import org.xml.sax.SAXException;
  * It has the same properties except that the object model
  * contains a <code>RequestWrapper</code> object.
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.3 2003/03/16 17:49:14 vgritsenko Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.4 2003/04/29 10:45:20 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -95,7 +95,7 @@ public class EnvironmentWrapper
     protected Request request;
 
     /** The last context */
-    protected URL lastContext;
+    protected String lastContext;
 
     /** The last prefix */
     protected String lastPrefix;
@@ -142,12 +142,12 @@ public class EnvironmentWrapper
                               ComponentManager manager,
                               boolean          rawMode)
     throws MalformedURLException {
-        super(env.getURI(), env.getView(), env.getRootContext(), env.getAction());
+        super(env.getURI(), env.getView(), env.getContext(), env.getAction());
+        this.rootContext = env.getRootContext();
 
         this.enableLogging(logger);
         this.environment = env;
 
-        this.context = env.getContext();
         this.prefix = new StringBuffer(env.getURIPrefix());
 
         // create new object model and replace the request object
@@ -319,7 +319,7 @@ public class EnvironmentWrapper
     }
 
     public void changeContext(String prefix, String context)
-    throws MalformedURLException {
+    throws IOException {
         super.changeContext(prefix, context);
         this.lastContext = this.context;
         this.lastPrefix  = this.prefix.toString();

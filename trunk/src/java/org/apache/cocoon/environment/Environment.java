@@ -52,16 +52,16 @@ package org.apache.cocoon.environment;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
 /**
  * Base interface for an environment abstraction
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: Environment.java,v 1.2 2003/04/29 10:45:21 cziegeler Exp $
  */
 
 public interface Environment
@@ -80,12 +80,12 @@ public interface Environment
     /**
      * Get the Root Context
      */
-    URL getRootContext();
+	String getRootContext();
 
     /**
      * Get current context
      */
-    URL getContext();
+	String getContext();
 
     /**
      * Get the view to process
@@ -97,11 +97,11 @@ public interface Environment
      */
     String getAction();
 
-    /**
-     * Set the context. This is similar to changeContext()
-     * except that it is absolute.
-     */
-    void setContext(String prefix, String uri);
+	/**
+	 * Set the context. This is similar to changeContext()
+	 * except that it is absolute.
+	 */
+	void setContext(String prefix, String uri, String context);
 
     /**
      * Change the context from uriprefix to context

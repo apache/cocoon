@@ -97,12 +97,12 @@ import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -121,7 +121,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.5 2003/04/27 17:00:44 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.6 2003/04/29 10:45:21 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -239,7 +239,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * This is the url to the servlet context directory
      */
-    protected URL servletContextURL;
+    protected String servletContextURL;
     
     /**
      * The RequestFactory is responsible for wrapping multipart-encoded
@@ -338,16 +338,16 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             if (path.indexOf(':') > 1) {
-                this.servletContextURL = new URL(path);
+                this.servletContextURL = path;
             } else {
-                this.servletContextURL = new File(path).toURL();
+                this.servletContextURL = new File(path).toURL().toExternalForm();
             }
         } catch (MalformedURLException me) {
             // VG: Novell has absolute file names starting with the
             // volume name which is easily more then one letter.
             // Examples: sys:/apache/cocoon or sys:\apache\cocoon
             try {
-                this.servletContextURL = new File(path).toURL();
+                this.servletContextURL = new File(path).toURL().toExternalForm();
             } catch (MalformedURLException ignored) {
                 throw new ServletException("Unable to determine servlet context URL.", me);
             }

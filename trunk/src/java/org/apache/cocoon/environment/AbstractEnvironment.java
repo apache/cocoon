@@ -80,9 +80,10 @@ import org.xml.sax.SAXException;
 /**
  * Base class for any environment
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.8 2003/04/28 12:37:37 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.9 2003/04/29 10:45:21 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -99,10 +100,13 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     protected String action = null;
 
      /** The Context path */
-    protected URL context = null;
+    protected String context = null;
+
+	/** The context path stored temporarily between constructor and startingProcessing */
+    private String tempInitContext = null;
 
     /** The root context path */
-    protected URL rootContext = null;
+    protected String rootContext = null;
 
     /** The servlet object model */
     protected HashMap objectModel = null;
@@ -129,24 +133,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     static protected Constructor avalonToCocoonSourceWrapper;
 
     /** Do we have our components ? */
-    protected boolean initializedComponents;
+    protected boolean initializedComponents = false;
     
-    /**
-     * Constructs the abstract environment
-     */
-    public AbstractEnvironment(String uri, String view, String file)
-    throws MalformedURLException {
-        this(uri, view, new File(file), null);
-    }
-
-    /**
-     * Constructs the abstract environment
-     */
-    public AbstractEnvironment(String uri, String view, String file, String action)
-    throws MalformedURLException {
-        this(uri, view, new File(file), action);
-    }
-
     /**
      * Constructs the abstract environment
      */
@@ -160,21 +148,20 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public AbstractEnvironment(String uri, String view, File file, String action)
     throws MalformedURLException {
-        this(uri, view, file.toURL(), action);
+        this(uri, view, file.toURL().toExternalForm(), action);
     }
 
-    /**
-     * Constructs the abstract environment
-     */
-    public AbstractEnvironment(String uri, String view, URL context, String action)
-    throws MalformedURLException {
-        this.uris = uri;
-        this.view = view;
-        this.context = context;
-        this.action = action;
-        this.objectModel = new HashMap();
-        this.rootContext = context;
-    }
+	/**
+	 * Constructs the abstract environment
+	 */
+	public AbstractEnvironment(String uri, String view, String context, String action)
+	throws MalformedURLException {
+		this.uris = uri;
+		this.view = view;
+		this.tempInitContext = context;
+		this.action = action;
+		this.objectModel = new HashMap();
+	}
 
     // Sitemap methods
 
@@ -188,14 +175,20 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /**
      * Get the Root Context
      */
-    public URL getRootContext() {
+    public String getRootContext() {
+		if ( !this.initializedComponents) {
+			this.initComponents();
+		}
         return this.rootContext;
     }
 
     /**
      * Get the current Context
      */
-    public URL getContext() {
+    public String getContext() {
+		if ( !this.initializedComponents) {
+			this.initComponents();
+		}
         return this.context;
     }
 
@@ -219,31 +212,35 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /**
      * Set the context.
      */
-    protected void setContext(URL context) {
+    protected void setContext(String context) {
         this.context = context;
     }
 
-    /**
-     * Set the context. This is similar to changeContext()
-     * except that it is absolute.
-     */
-    public void setContext(String prefix, String uri) {
-        this.setContext(getRootContext());
-        this.setURIPrefix(prefix == null ? "" : prefix);
-        this.uris = uri;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Reset context to " + this.context);
-        }
-    }
+	/**
+	 * Set the context. This is similar to changeContext()
+	 * except that it is absolute.
+	 */
+	public void setContext(String prefix, String uri, String context) {
+		this.setContext(context);
+		this.setURIPrefix(prefix == null ? "" : prefix);
+		this.uris = uri;
+		if (getLogger().isDebugEnabled()) {
+			getLogger().debug("Reset context to " + this.context);
+		}
+	}
 
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
     public void changeContext(String prefix, String newContext)
-    throws MalformedURLException {
+    throws IOException {
+		if ( !this.initializedComponents) {
+			this.initComponents();
+		}
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
-            getLogger().debug("  from context(" + this.context.toExternalForm() + ") and prefix(" + this.prefix + ")");
+            getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
             getLogger().debug("  to context(" + newContext + ") and prefix(" + prefix + ")");
             getLogger().debug("  at URI " + this.uris);
         }
@@ -265,13 +262,20 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             }
         }
 
-        if (this.context.getProtocol().equals("zip")) {
+        if (SourceUtil.getScheme(this.context).equals("zip")) {
             // if the resource is zipped into a war file (e.g. Weblogic temp deployment)
             // FIXME (VG): Is this still required? Better to unify both cases.
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Base context is zip: " + this.context);
             }
-            this.context = new URL(this.context.toString() + newContext);
+            
+            org.apache.excalibur.source.Source source = null;
+            try {
+            	source = this.sourceResolver.resolveURI(this.context + newContext);
+            	this.context = source.getURI();
+            } finally {
+            	this.sourceResolver.release(source);
+            }
         } else {
             String sContext;
             // if we got a absolute context or one with a protocol resolve it
@@ -283,7 +287,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                 sContext = newContext;
             } else {
                 // context is relative to old one
-                sContext = new URL(this.context, newContext).toString();
+                sContext = new URL(new URL(this.context), newContext).toString();
             }
 
             // Cut the file name part from context (if present)
@@ -291,11 +295,18 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             if (i != -1 && i + 1 < sContext.length()) {
                 sContext = sContext.substring(0, i + 1);
             }
-            this.context = new URL(sContext);
+            
+            org.apache.excalibur.source.Source source = null;
+            try {
+	            source = this.sourceResolver.resolveURI(sContext);
+				this.context = source.getURI();
+			} finally {
+				this.sourceResolver.release(source);
+			}
         }
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("New context is " + this.context.toExternalForm());
+            getLogger().debug("New context is " + this.context);
         }
     }
 
@@ -573,11 +584,25 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             this.manager = CocoonComponentManager.getSitemapComponentManager();
             this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
             this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-
+			if (this.tempInitContext != null) {
+				org.apache.excalibur.source.Source source = null;
+				try {
+					source = this.sourceResolver.resolveURI(this.tempInitContext);
+					this.context = source.getURI();
+					
+					if (this.rootContext == null) // hack for EnvironmentWrapper
+						this.rootContext = this.context;
+				} finally {
+					this.sourceResolver.release(source);
+				}
+				this.tempInitContext = null;
+			}
         } catch (ComponentException ce) {
             // this should never happen!
             throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        }
+		} catch (IOException ie) {
+			throw new CascadingRuntimeException("Unable to resolve URI: "+this.tempInitContext, ie);
+		}
     }
     
 	/**
