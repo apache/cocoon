@@ -51,6 +51,8 @@
 package org.apache.cocoon.portal.transformation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
@@ -85,7 +87,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.11 2003/12/11 15:36:04 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.12 2003/12/12 14:42:34 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -111,6 +113,21 @@ extends AbstractCopletTransformer {
      */
     public static final String LINK_ELEM = "link";
 
+    /** Create a link containing several events */
+    public static final String LINKS_ELEM = "links";
+    
+    /** The content for the links element */
+    public static final String CONTENT_ELEM = "content";
+
+    /** Are we inside a links element? */
+    protected boolean insideLinks;
+    
+    /** The collected list of events */
+    protected List collectedEvents = new ArrayList();
+    
+    /** The content of the links */
+    protected String content;
+    
     /**
      * Creates new CopletTransformer.
      */
@@ -118,6 +135,17 @@ extends AbstractCopletTransformer {
         this.defaultNamespaceURI = NAMESPACE_URI;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#setupTransforming()
+     */
+    public void setupTransforming()
+    throws IOException, ProcessingException, SAXException {
+        super.setupTransforming();
+        this.insideLinks = false;
+        this.content = null;
+        this.collectedEvents.clear();
+    }
+
     /**
      * Overridden from superclass.
      */
@@ -180,15 +208,27 @@ extends AbstractCopletTransformer {
                         final CopletInstanceData cid = this.getCopletInstanceData(copletId);
                         event = new CopletJXPathEvent(cid, path, value);
                     }
-                    final String href = linkService.getLinkURI(event);
-                    this.output(href, format, newAttrs );
+                    if ( this.insideLinks ) {
+                        this.collectedEvents.add(event);
+                    } else {
+                        final String href = linkService.getLinkURI(event);
+                        this.output(href, format, newAttrs );
+                    }
                 }
             } catch (ServiceException e) {
                 throw new SAXException("Error getting portal service.", e);
             } finally {
                 this.manager.release( portalService );
             }
-            
+        } else if (name.equals(LINKS_ELEM) ) {
+            this.insideLinks = true;
+            String format = attr.getValue("format");
+            if ( format == null ) {
+                format = "html-link";
+            }
+            this.stack.push(format);
+        } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
+            this.startTextRecording();
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
@@ -199,11 +239,38 @@ extends AbstractCopletTransformer {
      */
     public void endTransformingElement(String uri, String name, String raw) 
     throws ProcessingException, IOException, SAXException {
-        if ( name.equals(LINK_ELEM) ) {
+        if ( name.equals(LINK_ELEM) || name.equals(LINKS_ELEM)) {
             String elem = (String)this.stack.pop();
             if ( elem.length() > 0 ) {
                 this.sendEndElementEvent(elem);
             }
+        } else if ( name.equals(LINKS_ELEM) ) {
+            this.insideLinks = false;
+            final String format = (String)this.stack.pop();
+            PortalService portalService = null;
+            try {
+                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+                final LinkService linkService = portalService.getComponentManager().getLinkService();
+                
+                final String href = linkService.getLinkURI(this.collectedEvents);
+                final AttributesImpl newAttrs = new AttributesImpl();
+                this.output(href, format, newAttrs );
+            } catch (ServiceException e) {
+                throw new SAXException("Error getting portal service.", e);
+            } finally {
+                this.manager.release( portalService );
+            }
+            this.collectedEvents.clear();
+            if ( this.content != null ) {
+                this.sendTextEvent(this.content);
+                this.content = null;
+            }
+            String elem = (String)this.stack.pop();
+            if ( elem.length() > 0 ) {
+                this.sendEndElementEvent(elem);
+            }
+        } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
+            this.content = this.endTextRecording();
         } else if (!name.equals(COPLET_ELEM)) {
             super.endTransformingElement(uri, name, raw);
         }  
@@ -230,9 +297,11 @@ extends AbstractCopletTransformer {
             this.stack.push("form");
         } else if ( "text".equals(format) ) {
             this.sendTextEvent(uri);
+            this.stack.push("");
         } else if ( "parameters".equals(format) ) {
             final String value = uri.substring(uri.indexOf('?')+1);
             this.sendTextEvent(value);
+            this.stack.push("");
         } else {
             // own format
             newAttrs.addCDATAAttribute("href", uri);
