@@ -63,7 +63,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.82 $ $Date: 2001-04-19 19:05:23 $
+ * @version CVS $Revision: 1.1.4.83 $ $Date: 2001-04-20 07:16:16 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -390,7 +390,7 @@ public class CocoonServlet extends HttpServlet {
             n.setMessage("Internal servlet error");
             n.setDescription("Cocoon was not initialized.");
             n.addExtraDescription("request-uri", request.getRequestURI());
-            Notifier.notify(n, request, res);
+            res.setContentType(Notifier.notify(n, res.getOutputStream()));;
 
             return;
         }
@@ -439,7 +439,7 @@ public class CocoonServlet extends HttpServlet {
                                  + "\" was not found.");
                 n.addExtraDescription("request-uri", request.getRequestURI());
                 n.addExtraDescription("path-info", uri);
-                Notifier.notify(n, request, res);
+                res.setContentType(Notifier.notify(n, res.getOutputStream()));;
             }
         } catch (ResourceNotFoundException rse) {
             log.warn("The resource was not found", rse);
@@ -455,7 +455,7 @@ public class CocoonServlet extends HttpServlet {
                              + "\" was not found.");
             n.addExtraDescription("request-uri", request.getRequestURI());
             n.addExtraDescription("path-info", uri);
-            Notifier.notify(n, request, res);
+            res.setContentType(Notifier.notify(n, res.getOutputStream()));;
         } catch (Exception e) {
             log.error("Problem with servlet", e);
             //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
@@ -465,7 +465,7 @@ public class CocoonServlet extends HttpServlet {
             n.setSource("Cocoon servlet");
             n.addExtraDescription("request-uri", request.getRequestURI());
             n.addExtraDescription("path-info", uri);
-            Notifier.notify(n, request, res);
+            res.setContentType(Notifier.notify(n, res.getOutputStream()));;
         }
 
         ServletOutputStream out = res.getOutputStream();

@@ -14,13 +14,8 @@ import java.util.Iterator;
 
 import java.text.DateFormat;
 
-import java.io.PrintStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletOutputStream;
+import java.io.OutputStream;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -32,21 +27,24 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-02 11:49:42 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-20 07:16:09 $
  */
 
 public class Notifier {
 
     /**
-     * Generate notification information as servlet response
+     * Generate notification information as a response.
+     * The notification is directly written to the OutputStream.
+     * @param  n The <code>Notificable</code> object
+     * @param outputStream The output stream the notification is written to
+     * @return The content type for this notification
+     *         (currently always text/html)
      */
-    public static void notify(Notificable n, HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public static String notify(Notificable n, OutputStream outputStream)
+    throws IOException {
 
         StringBuffer sb = new StringBuffer();
 
-        // FIXME (SM) how can we send the error with the proper content type?
-
-        res.setContentType("text/html");
         sb.append("<html><head><title>").append(n.getTitle()).append("</title>");
         sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
         sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
@@ -74,7 +72,10 @@ public class Notifier {
         sb.append("<HR size=\"1\" noshade>");
         sb.append("</body></html>");
 
-        res.getOutputStream().print(sb.toString());
+        outputStream.write(sb.toString().getBytes());
+        // FIXME (SM) how can we send the error with the proper content type?
+
+        return "text/html";
     }
 
     /**
