@@ -48,7 +48,7 @@ import org.apache.fop.render.Renderer;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.11 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class FOPSerializer extends AbstractSerializer implements
   Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
@@ -58,7 +58,7 @@ public class FOPSerializer extends AbstractSerializer implements
     /**
      * The Renderer Factory to use
      */
-    protected static RendererFactory factory = ExtendableRendererFactory.getRendererFactoryImplementation();
+    protected final static RendererFactory factory = ExtendableRendererFactory.getRendererFactoryImplementation();
 
     /**
      * The <code>Driver</code> which is FOP.

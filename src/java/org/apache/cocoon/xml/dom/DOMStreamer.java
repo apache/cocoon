@@ -78,7 +78,7 @@ public class DOMStreamer implements XMLProducer {
     protected DefaultDOMStreamer defaultDOMStreamer = new DefaultDOMStreamer();
 
     /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
-    protected static TransformerFactory factory = TransformerFactory.newInstance();
+    protected final static TransformerFactory factory = TransformerFactory.newInstance();
 
     /**
      * Create a new <code>DOMStreamer</code> instance.

@@ -34,15 +34,15 @@ import org.apache.excalibur.source.SourceResolver;
  * &lt;svg:image xlink:href="..."/> to use any of the protocols handled by Cocoon.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SourceProtocolHandler.java,v 1.3 2004/03/28 05:29:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
 
     /** Thread-local source resolver */
-    protected static InheritableThreadLocal localResolver = new InheritableThreadLocal();
+    protected final static InheritableThreadLocal localResolver = new InheritableThreadLocal();
 
     /** Batik's original default handler */        
-    protected static ParsedURLProtocolHandler defaultHandler;
+    protected final static ParsedURLProtocolHandler defaultHandler = ParsedURL.getHandler(null); // Keep the default handler, if any
 
     /**
      * Change the default handler used by Batik to resolve URLs to a handler
@@ -56,9 +56,6 @@ public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
      * @param logger the logger for logging.
      */
     static {        
-        // Keep the default handler, if any
-        SourceProtocolHandler.defaultHandler = ParsedURL.getHandler(null);
-
         // Set the default handler to our handler
         ParsedURL.registerHandler(new SourceProtocolHandler(null));
 
