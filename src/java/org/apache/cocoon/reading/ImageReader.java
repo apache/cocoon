@@ -92,7 +92,7 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: ImageReader.java,v 1.4 2003/12/12 09:41:33 huber Exp $
  */
 final public class ImageReader extends ResourceReader {
 
@@ -202,19 +202,31 @@ final public class ImageReader extends ResourceReader {
                 WritableRaster scaled = filter.createCompatibleDestRaster(original);
                 filter.filter(original, scaled);
 
-                // JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-
-                ByteArrayOutputStream bstream = new ByteArrayOutputStream();
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
-                encoder.encode(scaled);
-                out.write(bstream.toByteArray());
+                if (!handleJVMBug()) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug( "No need to handle JVM bug" );
+                    }
+                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+                    encoder.encode(scaled);
+                } else {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug( "Need to handle JVM bug" );
+                    }
+                    ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
+                    encoder.encode(scaled);
+                    out.write(bstream.toByteArray());
+                }
 
                 out.flush();
             } catch (ImageFormatException e) {
                 throw new ProcessingException("Error reading the image. Note that only JPEG images are currently supported.");
+            } finally {
+              // Bugzilla Bug 25069, close inputStream in finally block
+              // this will close inputStream even if processStream throws
+              // an exception
+              inputStream.close();
             }
-
-            inputStream.close();
         } else {
             // only read the resource - no modifications requested
             if (getLogger().isDebugEnabled()) {
@@ -237,5 +249,39 @@ final public class ImageReader extends ResourceReader {
         } else {
             return super.getKey();
         }
+    }
+
+    /**
+     * Determine if workaround for Bug Id 4502892 is neccessary.
+     * This method assumes that Bug is present if 
+     * java.version is undeterminable, and for java.version
+     * 1.1, 1.2, 1.3, all other java.version do not need the Bug handling
+     *
+     * @return true if we should handle the JVM bug, else false
+     */
+    protected boolean handleJVMBug() {
+        // java.version=1.4.0
+        String java_version = System.getProperty( "java.version", "0.0.0" );
+        boolean handleJVMBug = true;
+        
+        char major = java_version.charAt(0);
+        char minor = java_version.charAt(2);
+        
+        // make 0.0, 1.1, 1.2, 1.3 handleJVMBug = true
+        if (major == '0' || major == '1') {
+            if (minor == '0' || minor == '1' || minor == '2' || minor == '3') {
+                handleJVMBug = true;
+            } else {
+                handleJVMBug = false;
+            }
+        } else {
+            handleJVMBug = true;
+        }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug( "Running java.version " + String.valueOf(java_version) + 
+              " need to handle JVM bug " + String.valueOf(handleJVMBug) );
+        }
+        
+        return handleJVMBug;
     }
 }
