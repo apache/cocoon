@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -52,7 +54,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.81 $ $Date: 2001-04-30 14:16:53 $
+ * @version CVS $Revision: 1.4.2.82 $ $Date: 2001-05-07 16:13:51 $
  */
 public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -162,7 +164,6 @@ public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, I
         DefaultRoleManager drm = new DefaultRoleManager();
         drm.setLogger(getLogger());
         drm.configure(roleConfig);
-        this.componentManager.setRoleManager(drm);
         roleConfig = null;
 
         try {
@@ -190,6 +191,35 @@ public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, I
         if (Constants.CONF_VERSION.equals(conf.getAttribute("version")) == false) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
         }
+
+        String userRoles = conf.getAttribute("user-roles", "");
+        if ("".equals(userRoles) == false) {
+            try {
+                p = (Parser)this.componentManager.lookup(Roles.PARSER);
+                SAXConfigurationHandler b = new SAXConfigurationHandler();
+                ClassLoader cl = (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER);
+                File location = new File(new File((String)this.context.get(Constants.CONTEXT_ROOT_PATH)), userRoles);
+                InputSource is = new InputSource(new BufferedInputStream(new FileInputStream(location)));
+                p.setContentHandler(b);
+                is.setSystemId(this.configurationFile.toExternalForm());
+                p.parse(is);
+                roleConfig = b.getConfiguration();
+            } catch (Exception e) {
+                getLogger().error("Could not configure Cocoon environment", e);
+                throw new ConfigurationException("Error trying to load configurations", e);
+            } finally {
+                if (p != null) this.componentManager.release((Component) p);
+            }
+
+            DefaultRoleManager urm = new DefaultRoleManager(drm);
+            urm.setLogger(getLogger());
+            urm.configure(roleConfig);
+            roleConfig = null;
+            drm = urm;
+        }
+
+        this.componentManager.setRoleManager(drm);
+
         getLogger().debug("Setting up components...");
         this.componentManager.configure(conf);
         getLogger().debug("Setting up the sitemap.");
