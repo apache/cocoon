@@ -23,6 +23,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Poolable;
 
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.url.URLFactory;
 
@@ -39,7 +40,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-14 22:12:28 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-16 18:34:00 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -49,6 +50,8 @@ public class ServerPagesGenerator
    * The sitemap-defined server pages program generator
    */
   protected static ProgramGenerator programGenerator = null;
+
+  protected static URLFactory factory = null;
 
   /**
    * Set the global component manager. This method sets the sitemap-defined
@@ -62,8 +65,9 @@ public class ServerPagesGenerator
     if (programGenerator == null) {
       getLogger().debug("Looking up " + Roles.PROGRAM_GENERATOR);
       try {
-          programGenerator = (ProgramGenerator)
-              this.manager.lookup(Roles.PROGRAM_GENERATOR);
+          this.programGenerator = (ProgramGenerator)
+              manager.lookup(Roles.PROGRAM_GENERATOR);
+          this.factory = (URLFactory) manager.lookup(Roles.URL_FACTORY);
       } catch (Exception e) {
           getLogger().error("Could not find ProgramGenerator", e);
       }
@@ -107,13 +111,8 @@ public class ServerPagesGenerator
 
     String systemId = inputSource.getSystemId();
 
-    URL url = null;
-    try {
-        url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(systemId);
-    } catch (Exception e) {
-        getLogger().error ("cannot obtain the URLFactory", e);
-        throw new SAXException("cannot obtain the URLFactory", e);
-    }
+    URL url = factory.getURL(systemId);
+
     if (!url.getProtocol().equals("file")) {
       throw new ResourceNotFoundException("Not a file: " + url.toString());
     }
@@ -124,24 +123,26 @@ public class ServerPagesGenerator
       throw new ResourceNotFoundException("Can't read file: " + url.toString());
     }
 
-    String markupLanguage = this.parameters.getParameter(
-      "markup-language", DEFAULT_MARKUP_LANGUAGE
-    );
-    String programmingLanguage = this.parameters.getParameter(
-      "programming-language", DEFAULT_PROGRAMMING_LANGUAGE
-    );
+    if (this.markupLanguage == null) {
+        this.markupLanguage = this.parameters.getParameter(
+          "markup-language", DEFAULT_MARKUP_LANGUAGE
+        );
+        this.programmingLanguage = this.parameters.getParameter(
+          "programming-language", DEFAULT_PROGRAMMING_LANGUAGE
+        );
+    }
 
     Generator generator = null;
 
     try {
       generator = (Generator)
-        programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
+        programGenerator.load(file, this.markupLanguage, this.programmingLanguage, this.resolver);
     } catch (Exception e) {
       getLogger().warn("ServerPagesGenerator.generate()", e);
       throw new ResourceNotFoundException(e.getMessage(), e);
     }
 
-    if (generator instanceof Loggable) {
+/*    if (generator instanceof Loggable) {
         ((Loggable) generator).setLogger(getLogger());
     }
 
@@ -154,7 +155,7 @@ public class ServerPagesGenerator
             throw new ProcessingException("Could not compose generator");
         }
     }
-
+*/
     generator.setContentHandler(this);
     generator.setLexicalHandler(this);
     generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
@@ -167,29 +168,31 @@ public class ServerPagesGenerator
 
       switch (eventData.eventType) {
         case DOCUMENT:
-      this.contentHandler.endDocument();
-      break;
-    case ELEMENT:
-      this.contentHandler.endElement(
-        eventData.getNamespaceURI(),
-        eventData.getLocalName(),
-        eventData.getRawName()
-      );
-      break;
-    case PREFIX_MAPPING:
-      this.contentHandler.endPrefixMapping(eventData.getPrefix());
-      break;
-    case CDATA:
-      this.lexicalHandler.endCDATA();
-      break;
-    case DTD:
-      this.lexicalHandler.endDTD();
-      break;
-    case ENTITY:
-      this.lexicalHandler.endEntity(eventData.getName());
-      break;
+          this.contentHandler.endDocument();
+          break;
+        case ELEMENT:
+          this.contentHandler.endElement(
+            eventData.getNamespaceURI(),
+            eventData.getLocalName(),
+            eventData.getRawName()
+          );
+          break;
+        case PREFIX_MAPPING:
+          this.contentHandler.endPrefixMapping(eventData.getPrefix());
+          break;
+        case CDATA:
+          this.lexicalHandler.endCDATA();
+          break;
+        case DTD:
+          this.lexicalHandler.endDTD();
+          break;
+        case ENTITY:
+          this.lexicalHandler.endEntity(eventData.getName());
+          break;
       }
     }
+
+    ((CompiledComponent) generator).recycle();
   }
 
   /* Handlers */
