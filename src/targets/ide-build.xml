@@ -84,7 +84,7 @@
         <filter token="SRC_DIRS" value="${srcs}"/>
         <filter token="LIBS" value="${libs}"/>
         <filter token="MOCKS_DIRS" value="${mockss}"/>
-        <filter token="OUTPUT_DIR" value="${build.root}/eclipse/classes"/>
+        <filter token="OUTPUT_DIR" value="${ide.eclipse.outputdir}"/>
       </filterset>
     </copy>
 
