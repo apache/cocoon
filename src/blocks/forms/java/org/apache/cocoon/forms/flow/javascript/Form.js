@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.6 2004/04/25 12:12:09 sylvain Exp $
+ * @version CVS $Id: Form.js,v 1.7 2004/04/27 12:06:49 bruno Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -103,8 +103,7 @@ Form.prototype.showForm = function(uri, bizData) {
         var k = cocoon.sendPageAndWait(uri, bizData);
         if (result == null) result = k;
         
-        var formContext = 
-            Packages.org.apache.cocoon.forms.flow.javascript.FormsFlowHelper.getFormContext(cocoon, this.locale);
+        var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
 
         // Prematurely add the bizData as in the object model so that event listeners can use it
         // (the same is done by cocoon.sendPage())
