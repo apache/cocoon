@@ -45,7 +45,8 @@ import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
  */
 public class SynchronousChannel
     extends EDU.oswego.cs.dl.util.concurrent.SynchronousChannel
-    implements Queue
+    // This is ridiculous, but Queue must be fully qualified to compile in JDK1.3
+    implements org.apache.cocoon.components.thread.Queue
 {
     //~ Methods ----------------------------------------------------------------
 
