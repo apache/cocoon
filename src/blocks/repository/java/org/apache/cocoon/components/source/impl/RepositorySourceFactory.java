@@ -112,6 +112,7 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
             throw new SourceException(message);
         }
         return new RepositorySource(
+            m_name,    
             (ModifiableTraversableSource) source, 
             m_manager,
             getLogger());
