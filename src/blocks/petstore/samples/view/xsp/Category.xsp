@@ -6,7 +6,7 @@
   xmlns:jpath="http://apache.org/xsp/jpath/1.0"
   >
 
-    <site>
+    <site view="xsp">
         <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
         <backpointer name="Main Menu" do="index.do" />
         <category>

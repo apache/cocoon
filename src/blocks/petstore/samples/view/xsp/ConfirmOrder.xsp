@@ -6,12 +6,12 @@
   xmlns:jpath="http://apache.org/xsp/jpath/1.0"
   >
 
-    <site>
-    <!--    <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute> -->
+    <site view="xsp">
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
         <backpointer name="Main Menu" do="index.do" />
         <message>Please confirm the information below and then press continue...</message>
         <panel>
-            <xsp:attribute name="header">Order #<jpath:value-of select="order/orderId" /></xsp:attribute>
+            <xsp:attribute name="header">Order</xsp:attribute>
             <xsp:attribute name="subheader"><jpath:value-of select="order/orderDate" /></xsp:attribute>
             
             <panel label="Payment Details">

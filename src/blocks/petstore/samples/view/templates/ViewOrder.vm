@@ -4,13 +4,13 @@
 <tr><td bgcolor="#FFFF88">
 <a href="index.do"><b><font color="BLACK" size="2">&lt;&lt; Main Menu</font></b></a>
 </td></tr>
-<tr><td bgcolor="#FFFF88">
+<!--<tr><td bgcolor="#FFFF88">
 <a href="viewOrder.do?webservice=true&amp;orderId=$order.orderId">
  <font color="BLACK" size="2"><B>
    View with Web Service
  </B></font>
 </a>
-</td></tr>
+</td></tr>-->
 
 
 </table>
@@ -18,115 +18,105 @@
   <center><b>$message</b></center>
 #end
 
-<p>
 
 <table width="60%" align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
 <tr bgcolor="#FFFF88"><td align="center" colspan="2">
-  <font size="4"><b>Order #$order.orderId</b></font>
-  <br /><font size="3"><b>$fmt.formatDate($order.orderDate, 'yyyy/MM/dd hh:mm:ss')</b></font>
+  <font size="4"><b>Order #$archivedOrder.orderId</b></font>
+  <br /><font size="3"><b>$fmt.formatDate($archivedOrder.orderDate, 'yyyy/MM/dd hh:mm:ss')</b></font>
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
 <font color="GREEN" size="4"><b>Payment Details</b></font>
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
 Card Type:</td><td>
-$order.cardType
+$archivedOrder.cardType
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Card Number:</td><td>$order.creditCard<font color="red" size="2">* Fake number!</font>
+Card Number:</td><td>$archivedOrder.creditCard<font color="red" size="2">* Fake number!</font>
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Expiry Date (MM/YYYY):</td><td>$order.expiryDate
+Expiry Date (MM/YYYY):</td><td>$archivedOrder.exprdate
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
 <font color="GREEN" size="4"><b>Billing Address</b></font>
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-First name:</td><td>$order.billToFirstName
+First name:</td><td>$archivedOrder.billToFirstName
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Last name:</td><td>$order.billToLastName
+Last name:</td><td>$archivedOrder.billToLastName
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Address 1:</td><td>$order.billAddress1
+Address 1:</td><td>$archivedOrder.billaddr1
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Address 2:</td><td>$order.billAddress2
+Address 2:</td><td>$archivedOrder.billaddr2
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-City: </td><td>$order.billCity
+City: </td><td>$archivedOrder.billCity
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-State:</td><td>$order.billState
+State:</td><td>$archivedOrder.billState
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Zip:</td><td>$order.billZip
+Zip:</td><td>$archivedOrder.billZip
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Country: </td><td>$order.billCountry
+Country: </td><td>$archivedOrder.billCountry
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
 <font color="GREEN" size="4"><b>Shipping Address</b></font>
 </td></tr><tr bgcolor="#FFFF88"><td>
-First name:</td><td>$order.shipToFirstName
+First name:</td><td>$archivedOrder.shipToFirstName
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Last name:</td><td>$order.shipToLastName
+Last name:</td><td>$archivedOrder.shipToLastName
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Address 1:</td><td>$order.shipAddress1
+Address 1:</td><td>$archivedOrder.shipaddr1
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Address 2:</td><td>$order.shipAddress2
+Address 2:</td><td>$archivedOrder.shipaddr2
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-City: </td><td>$order.shipCity
+City: </td><td>$archivedOrder.shipCity
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-State:</td><td>$order.shipState
+State:</td><td>$archivedOrder.shipState
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Zip:</td><td>$order.shipZip
+Zip:</td><td>$archivedOrder.shipZip
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Country: </td><td>$order.shipCountry
+Country: </td><td>$archivedOrder.shipCountry
 </td></tr>
 <tr bgcolor="#FFFF88"><td>
-Courier: </td><td>$order.courier
+Courier: </td><td>$archivedOrder.courier
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
-  <b><font color="GREEN" size="4">Status:</font> $order.status</b>
+  <b><font color="GREEN" size="4">Status:</font> $archivedOrder.status</b>
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
 <table width="100%" align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="3">
   <tr bgcolor="#CCCCCC">
+  <td><b>Pos.</b></td>
   <td><b>Item ID</b></td>
-  <td><b>Description</b></td>
   <td><b>Quantity</b></td>
-  <td><b>Price</b></td>
+  <td><b>List Price</b></td>
+  <td><b>Total Cost</b></td>
   </tr>
-#foreach ($cartItem in $itemList)
-  <tr bgcolor="#FFFF88">
-  <td><b><a href="viewItem.do?itemId=$cartItem.item.itemId"><font color="BLACK">$cartItem.item.itemId</font></a></b></td>
-  <td>
-   #if ($cartItem.item) 
-	$!cartItem.item.attr1
-	$!cartItem.item.attr2
-	$!cartItem.item.attr3
-	$!cartItem.item.attr4
-	$!cartItem.item.attr5
-	$!cartItem.item.product.name	
-  #else
-  <i>{description unavailable}</i>
-  #end
-  </td>
+#foreach ($lineItem in $lineItemList)
 
-  <td>$cartItem.quantity.intValue()</td>
-  <td align="right">$cartItem.item.listPrice</td>
+  <tr bgcolor="#FFFF88">
+  <td>$lineItem.linenum.intValue().</td>
+  <td><b><a href="viewItem.do?itemId=$cartItem.item.itemId"><font color="BLACK">$lineItem.itemId</font></a></b></td>
+  <td>$lineItem.quantity.intValue()</td>
+  <td align="right">$fmt.formatNumber($lineItem.unitprice, '$#,##0.00')</td>
+  <td align="right">$fmt.formatNumber($lineItem.total, '$#,##0.00')</td>
   </tr>
 #end
   <tr bgcolor="#FFFF88">
-  <td colspan="4" align="right"><b>Total: $fmt.formatNumber($order.totalPrice, '$#,##0.00')</b></td>
+  <td colspan="5" align="right"><b>Total: $fmt.formatNumber($archivedOrder.totalPrice, '$#,##0.00')</b></td>
   </tr>
 </table>
 </td></tr>
@@ -135,7 +125,6 @@ Courier: </td><td>$order.courier
 
 </table>
 
-</p>
 #parse ("view/templates/IncludeBottom.vm")
 
 

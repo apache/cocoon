@@ -46,13 +46,13 @@
 
 // Page Flow for PetStore Application
 
-// load JXForms support
-cocoon.load("resource://org/apache/cocoon/components/jxforms/flow/javascript/JXForm.js");
+// load WOODY support
+cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
 var MAX_RESULTS = 5;
 
-var VIEW = "Velocity";
-var EXT = ".vm";
+var VIEW = "jexl";
+var EXT = ".jexl";
 
 
 function Format() {
@@ -100,13 +100,13 @@ function getPetStore() {
 function setView() {
     VIEW = cocoon.request.get("view");
     print("setView: VIEW="+VIEW);
-    if (VIEW == "Velocity") {
+    if (VIEW == "velocity") {
         EXT = ".vm";
-    } else if (VIEW == "Xsp") {
+    } else if (VIEW == "xsp") {
         EXT = ".xsp";
-    } else if (VIEW == "Jexl") {
+    } else if (VIEW == "jexl") {
         EXT = ".jexl";
-    } else if (VIEW == "JXPath") {
+    } else if (VIEW == "jxpath") {
         EXT = ".jxpath";
     }
     print("EXT="+EXT);
@@ -118,7 +118,6 @@ function index() {
     setView();
     getPetStore();
     cocoon.sendPage("view/index" + EXT, {
-            view: VIEW,
             accountForm: accountForm,
             categoryList: categoryList,
     });
@@ -133,12 +132,11 @@ function viewCart() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            view: VIEW,
             accountForm: accountForm,
             cartForm: cartForm,
             fmt: fmt,
-            cartItems: cartItems
-
+            cartItems: cartItems,
+            label: "Shopping Cart"
     });
 }
 
@@ -152,10 +150,11 @@ function removeItemFromCart() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            view: VIEW,
             fmt: fmt,
             accountForm: accountForm,
-            cartForm: cartForm, cartItems: cartItems
+            cartForm: cartForm,
+            cartItems: cartItems,
+            label: "Shopping Cart"
     });
 }
 
@@ -169,11 +168,11 @@ function updateCartQuantities() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            view: VIEW,
             fmt: fmt,
             accountForm: accountForm,
             cartForm:cartForm,
-            cartItems: cartItems
+            cartItems: cartItems,
+            label: "Shopping Cart"
     });
 }
 
@@ -187,14 +186,13 @@ function addItemToCart() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            view: VIEW,
             fmt: fmt,
             accountForm: accountForm,
             cartForm: cartForm,
-            cartItems: cartItems
+            cartItems: cartItems,
+            label: "Shopping Cart"
     });
 }
-
 
 // Category page
 
@@ -255,7 +253,6 @@ function viewProduct() {
                                                skipResults,
                                                maxResults);
         cocoon.sendPageAndWait("view/Product" + EXT, {
-                        view: VIEW,
                         accountForm: accountForm,
                         fmt: fmt,
                         product: product,
@@ -282,7 +279,6 @@ function viewItem() {
     var itemId = cocoon.request.getParameter("itemId");
     var item = getPetStore().getItem(itemId);
     cocoon.sendPage("view/Item" + EXT, {
-             view: VIEW,
              accountForm: accountForm,
              cartForm: cartForm,
              item: item,
@@ -292,7 +288,6 @@ function viewItem() {
     });
 }
 
-
 // Sign-on page
 
 function signonForm() {
@@ -300,22 +295,28 @@ function signonForm() {
     index();
 }
 
-function signOn() {
+function signOn(process) {
     if (cocoon.request.get("signoff") != null) {
         accountForm = new AccountForm();
         cartForm = new CartForm();
     } else {
         var message = "";
+        var registerType;
+        if (process) {
+            registerType = process;
+        } else {
+            registerType = "new";
+        }
         while (true) {
             cocoon.sendPageAndWait("view/SignonForm" + EXT, {
-                            view: VIEW,
                             accountForm: accountForm,
-                            message: message
+                            message: message,
+                            registerType: registerType
             });
             var username = cocoon.request.get("username");
             var password = cocoon.request.get("password");
             print("getting account: " + username);
-            account = getPetStore().getAccount(username, password);
+            var account = getPetStore().getAccount(username, password);
             if (account == null) {
                 message = "Invalid username or password";
             } else {
@@ -328,47 +329,91 @@ function signOn() {
     }
 }
 
-// Account Form
+// Account Forms
 
-function newAccountForm() {
-    print("new account");
-    var accountForm = new AccountForm();
-    var account = new Account();
-    cocoon.sendPageAndWait("view/NewAccountForm" + EXT, {
-                     view: VIEW,
-                     accountForm: accountForm,
-                     account: account,
-                     categoryList: categoryList
-    });
+function editAccount() {
+    editAccountData();
+    cocoon.sendPage("index.do");
+
 }
 
-//
-// Edit Account page: example of using JXForms in a flow script
-//
-
-
-function validateZIP(field) {
-    var valid = "0123456789-";
-    var hyphencount = 0;
-    if (field.length != 5 && field.length != 10) {
-        throw "Please enter your 5 digit or 5 digit+4 zip code.";
-    }
-    for (var i=0; i < field.length; i++) {
-        var temp = "" + field.substring(i, i+1);
-        if (temp == "-") hyphencount++;
-        if (valid.indexOf(temp) == "-1") {
-            throw "Invalid characters in your zip code";
-        }
-    }
-    if (hyphencount > 1 || (field.length == 10 && field.charAt(5) != "-")) {
-        throw "The hyphen character should be used with a properly formatted 5 digit+four zip code, like '12345-6789'";
-    }
+function newAccount() {
+    newAccountData();
+    cocoon.sendPage("index.do");
 }
 
-function validateEmail(value) {
-    var reg  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return reg.test(value);
+function instantAccount() {
+    newAccountData();
+    cocoon.sendPage("checkout.do");
 }
+
+function editAccountData() {
+    var editAccountDataForm = new Form("view/forms/editAccountForm_d.xml");
+    var model = editAccountDataForm.getModel();
+    model.message = "";
+    model.username = accountForm.username;
+    model.changePwdOption = false;
+    model.password = "";
+    model.retypepassword = "";
+    model.firstname = accountForm.account.firstname;
+    model.lastname = accountForm.account.lastname;
+    model.email = accountForm.account.email;
+    model.phone= accountForm.account.phone;
+    model.addr1 = accountForm.account.addr1;
+    model.addr2 = accountForm.account.addr2;
+    model.city = accountForm.account.city;
+    model.state = accountForm.account.state;
+    model.zip = accountForm.account.zip;
+    model.country = accountForm.account.country;
+    model.langpref = accountForm.account.langpref;
+    model.favcategory = accountForm.account.favcategory;
+    model.mylistopt = accountForm.account.mylistopt;
+    model.banneropt = accountForm.account.banneropt;
+
+    editAccountDataForm.showForm("view/editAccountForm.cforms");
+    while ((model.changePwdOption == true) && ((model.password != model.retypepassword) || (model.password==null)))     {
+    model.message = "Passwords don't match!";
+    editAccountDataForm.showForm("view/editAccountForm.cforms");
+    }
+
+    if (accountForm.signOn == false) {
+    var update = getPetStore().updateAccount(model);
+    } else {
+    var insert = getPetStore().insertAccount(model);
+    accountForm.signOn = false;
+    }
+
+    if (model.changePwdOption == true) {
+        var chPwd = getPetStore().updateSignon(accountForm.username, model.password);
+        accountForm.password = model.password;
+    }
+
+    accountForm.account = getPetStore().getAccount(accountForm.username, accountForm.password);
+}
+
+function newAccountData() {
+    var newAccountDataForm = new Form("view/forms/newAccountForm_d.xml");
+    var model = newAccountDataForm.getModel();
+
+    model.message = "";
+    model.username = "";
+    model.password = "";
+    model.retypepassword = "";
+
+    newAccountDataForm.showForm("view/newAccountForm.cforms");
+    while (getPetStore().testDuplicateLogin(model.username) > 0) {
+    model.message = "Username already in use. Please choose another username.";
+    newAccountDataForm.showForm("view/newAccountForm.cforms");
+    }
+    var insertNewUser = getPetStore().insertNewUser(model);
+    print("insertNewUser: "+insertNewUser);
+    accountForm = new AccountForm(model.username, model.password);
+    accountForm.account = new Account();
+    editAccountData();
+
+}
+
+// Search
 
 function empty(str) {
     return str == null ||
@@ -377,83 +422,77 @@ function empty(str) {
                   str.length == 0);
 }
 
-function editAccountForm(form) {
-    var model = {accountForm: accountForm,
-                 account: accountForm.account,
-                 categoryList: categoryList,
-                 username: accountForm.account.userid,
-                 password: "",
-                 password2: ""};
-    form.setModel(model);
-    form.sendView("view/jxforms/EditUserInformation.xml",
-                  function(form) {
-        if (empty(model.username)) {
-            form.addViolation("/userName", "User ID is required");
-        } else {
-          if (empty(model.password)) {
-              form.addViolation("/password", "Password is required");
-          } else if (model.password != model.password2) {
-              form.addViolation("/password2", "Passwords don't match");
-          }
-        }
-    });
-    form.sendView("view/jxforms/EditAccountInformation.xml",
-                  function(form) {
-        if (empty(account.firstName)) {
-            form.addViolation("/account/firstName", "First name is required");
-        }
-        if (empty(account.lastName)) {
-            form.addViolation("/account/lastName", "Last name is required");
-        }
-        if (!validateEmail(account.email)) {
-            form.addViolation("/account/email", "Email address is invalid");
-        }
-        try {
-            validateZIP(account.zip);
-        } catch (e) {
-            form.addViolation("/account/zip", e);
-        }
-
-    });
-    form.sendView("view/jxforms/EditProfileInformation.xml");
-    form.finish();
-    index();
-}
-
-// Search
-
 function searchProducts() {
     var keyword = cocoon.request.get("keyword");
     if (empty(keyword)) {
         cocoon.sendPage("view/Error" + EXT, {
-            view: VIEW,
+            accountForm: accountForm,
             message: "Please enter a keyword to search for, then press the search button"
         });
         return;
     }
-    var skipResults = 0;
-    var maxResults = 3;
+    var skipSearchResults = 0;
+    var maxSearchResults = 3;
     while (true) {
         var result =
-            getPetStore().searchProductList(keyword, skipResults,
-                                            maxResults);
+            getPetStore().searchProductList(keyword, skipSearchResults,
+                                            maxSearchResults);
+        var lastPage = !result.isLimitedByMaxRows;
+        var rowCount = result.rowCount;
         cocoon.sendPageAndWait("view/SearchProducts" + EXT, {
-                        view: VIEW,
+                        accountForm: accountForm,
                         searchResultsProductList: result.rows,
-                        firstPage: skipResults == 0,
-                        lastPage: !result.isLimitedByMaxRows
+                        firstPage: skipSearchResults == 0,
+                        lastPage: lastPage
         });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            if (skipResults != 0) {
-                skipResults -= maxResults;
+            if (skipSearchResults != 0) {
+                skipSearchResults -= maxSearchResults;
             }
         } else if (page == "next") {
-            if (!result.isLimitedByMaxRows) {
-                skipResults += result.rowCount;
+            if (!lastPage) {
+                skipSearchResults += rowCount;
             }
         }
     }
+}
+
+function billingForm(order) {
+
+    var billingForm = new Form("view/forms/newOrderForm_d.xml");
+    var model = billingForm.getModel();
+    model.cardType = order.cardType;
+    model.creditCard = order.creditCard;
+    model.expiryDate = order.expiryDate;
+    model.billToFirstName = order.billToFirstName;
+    model.billToLastName = order.billToLastName;
+    model.billAddress1 = order.billAddress1;
+    model.billAddress2 = order.billAddress2;
+    model.billCity = order.billCity;
+    model.billState = order.billState;
+    model.billZip = order.billZip;
+    model.billCountry = order.billCountry;
+    model.shippingAddressRequired = false;
+    billingForm.showForm("view/newOrderForm.cforms");
+    return model;
+}
+
+function shippingForm(order) {
+        var shippingForm = new Form("view/forms/newShippingForm_d.xml");
+        var model = shippingForm.getModel();
+        model.shipToFirstName = order.shipToFirstName;
+        model.shipToLastName = order.shipToLastName;
+        model.shipAddress1 = order.shipAddress1;
+        model.shipAddress2 = order.shipAddress2;
+        model.shipCity= order.shipCity;
+        model.shipState= order.shipState;
+        model.shipZip= order.shipZip;
+        model.shipCountry= order.shipCountry;
+        shippingForm.showForm("view/newShippingForm.cforms");
+        return model;
+
+
 }
 
 // Checkout
@@ -464,56 +503,89 @@ function checkout() {
         var cartItem = cartForm.cart.cartItems[i];
         cartItems.push(cartItem);
     }
-    cocoon.sendPageAndWait("view/Checkout" + EXT, {
-                    view: VIEW,
+    cocoon.sendPageAndWait("view/Cart" + EXT, {
                     accountForm: accountForm,
                     cartForm: cartForm,
                     fmt: fmt,
-                    cartItems: cartItems
+                    cartItems: cartItems,
+                    label: "Checkout Summary"
     });
     if (accountForm.signOn) {
-        signOn();
+        signOn("instant");
     }
     var orderForm = new OrderForm();
     orderForm.initOrder(accountForm, cartForm);
-    var order = orderForm.order;
-    var valid = false;
-    while (!valid) {
-        cocoon.sendPageAndWait("view/NewOrderForm" + EXT, {
-                        accountForm: accountForm,
-                        view: VIEW,
-                        fmt: fmt,
-                        creditCardTypes: ["Visa", "MasterCard", "American Express"],
-                        order: order});
-        var shippingAddressRequired = cocoon.request.get("shippingAddressRequired");
-        if (shippingAddressRequired) {
-            cocoon.sendPageAndWait("view/ShippingForm" + EXT,
-                            {order: order, fmt: fmt, accountForm: accountForm});
-        }
-        // fix me !! do real validation
-        valid = true;
+
+var model = billingForm(orderForm.order);
+    orderForm.order.billToFirstName = model.billToFirstName;
+    orderForm.order.billToLastName = model.billToLastName;
+    orderForm.order.billAddress1 = model.billAddress1;
+    orderForm.order.billAddress2 = model.billAddress2;
+    orderForm.order.billCity = model.billCity;
+    orderForm.order.billState = model.billState;
+    orderForm.order.billZip = model.billZip;
+    orderForm.order.billCountry = model.billCountry;
+    orderForm.order.cardType = model.cardType;
+    orderForm.order.creditCard = model.creditCard;
+    orderForm.order.expiryDate = model.expiryDate;
+    orderForm.shippingAddressRequired = model.shippingAddressRequired;
+    if (orderForm.shippingAddressRequired == true) {
+        var model = shippingForm(orderForm.order);
+        orderForm.order.shipToFirstName = model.shipToFirstName;
+        orderForm.order.shipToLastName = model.shipToLastName;
+        orderForm.order.shipAddress1 = model.shipAddress1;
+        orderForm.order.shipAddress2 = model.shipAddress2;
+        orderForm.order.shipCity = model.shipCity;
+        orderForm.order.shipState = model.shipState;
+        orderForm.order.shipZip = model.shipZip;
+        orderForm.order.shipCountry = model.shipCountry;
     }
+
     cocoon.sendPageAndWait("view/ConfirmOrder" + EXT,
                     {accountForm: accountForm,
-                     view: VIEW, order: order, fmt: fmt});
+                    order: orderForm.order,
+                    fmt: fmt});
 
-    var oldCartForm = cartForm;
-    cartForm = new CartForm();
-    cocoon.sendPage("view/ViewOrder" + EXT,
-             {view: VIEW, order: order,
-              accountForm: accountForm,
-              itemList: order.lineItems,
-              fmt: fmt});
+    orderForm.confirmed = eval(cocoon.request.getParameter("confirmed"));
+
+    if ((cartForm.cart.numberOfItems > 0) && (orderForm.confirmed == true)) {
+        var lastOID = getPetStore().insertOrder(orderForm.order, accountForm.username);
+        cartForm = new CartForm();
+//        cocoon.sendPage("viewOrder.do?orderId=" + lastOID);
+		viewOrder(lastOID);
+    }
+    else {
+        cocoon.sendPage("index.do");
+    }
 }
 
 function listOrders() {
+    var orderList = getPetStore().getOrderList(accountForm.username);
+    cocoon.sendPage("view/ListOrders" + EXT, {
+            accountForm: accountForm,
+            fmt: fmt,
+            orderList: orderList
+    });
 }
 
-function viewOrder() {
-    var webservice = cocoon.request.get("webservice");
-    if (webservice) {
-    }
+function viewOrder(lastOID) {
+	var orderId;
+	var message;
+	if (lastOID != null) {
+		orderId = lastOID;
+		message = "Thank you, your order has been submitted.";
+	} else {
+		orderId = cocoon.request.getParameter("orderId");
+	}
+    var archivedOrder = getPetStore().getOrder(orderId, accountForm.username);
+    var lineItemList = getPetStore().getLineItems(orderId);
+    cocoon.sendPage("view/ViewOrder" + EXT, {
+            accountForm: accountForm,
+            fmt: fmt,
+            message: message,
+            archivedOrder: archivedOrder,
+            lineItemList: lineItemList.rows,
+            process: {label: "Ordered Items:",
+                       id: "checkout"}
+    });
 }
-
-
-

@@ -56,13 +56,13 @@ OrderForm.prototype.initOrder = function(accountForm, cartForm) {
     var acct = accountForm.account;
     this.order.username = accountForm.username;
     this.order.orderDate = new java.util.Date();
-    this.order.shipAddress = acct.addr1;
+    this.order.shipAddress1 = acct.addr1;
     this.order.shipAddress2 = acct.addr2;
     this.order.shipCity = acct.city;
     this.order.shipState = acct.state;
     this.order.shipZip = acct.zip;
     this.order.shipCountry = acct.country;
-    this.order.billAddress = acct.addr1;
+    this.order.billAddress1 = acct.addr1;
     this.order.billAddress2 = acct.addr2;
     this.order.billCity = acct.city;
     this.order.billState = acct.state;
@@ -96,7 +96,7 @@ function Order() {
     this.billState = "";
     this.billZip = "";
     this.billCountry = "";
-    this.courier = "";
+    this.courier = "UPS";
     this.totalPrice = 0;
     this.billToFirstName = "";
     this.billToLastName = "";
@@ -105,8 +105,8 @@ function Order() {
     this.creditCard = "";
     this.expiryDate = "";
     this.cardType = "";
-    this.locale = "";
-    this.status = "";
+    this.locale = "en";
+    this.status = "P";
     this.lineItems = [];
 }
 
@@ -114,21 +114,21 @@ function Account() {
     this.username = "";
     this.password = "";
     this.email = "";
-    this.firstName = "";
-    this.lastName = "";
+    this.firstname = "";
+    this.lastname = "";
     this.status = "";
-    this.address1 = "";
-    this.address2 = "";
+    this.addr1 = "";
+    this.addr2 = "";
     this.city = "";
     this.state = "";
     this.zip = "";
     this.country = "";
     this.phone = "";
-    this.favouriteCategoryId = "";
-    this.languagePreference = "";
-    this.listOption = false;
-    this.bannerOption = false;
-    this.bannerName = "";
+    this.favcategory = "FISH";
+    this.langpref = "english";
+    this.mylistopt = false;
+    this.banneropt = false;
+    this.bannername = "";
 }
 
 function AccountForm(username, password) {
@@ -142,6 +142,7 @@ function CartItem(cart, item) {
     this.item = item;
     this.quantity = 1
     this.listPrice = Number(item.listPrice);
+    this.total = this.listPrice * this.quantity;
     cart.subTotal += this.listPrice;
 }
 
@@ -149,6 +150,7 @@ CartItem.prototype.updateQuantity = function(newQuantity) {
     var delta = newQuantity - this.quantity;
     this.cart.subTotal += (this.item.listPrice * delta);
     this.quantity = newQuantity;
+    this.total += (this.item.listPrice * delta);
 }
 
 function Cart() {
@@ -520,11 +522,82 @@ PetStore.prototype.getItem = function(itemId) {
 
 PetStore.prototype.getAccount = function(username, password) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from ACCOUNT, PROFILE, SIGNON, BANNERDATA where ACCOUNT.USERID = ? and SIGNON.USERNAME = ACCOUNT.USERID and PROFILE.USERID = ACCOUNT.USERID and PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY", [username]);
+    var result = conn.query("select * from ACCOUNT, PROFILE, SIGNON, BANNERDATA where ACCOUNT.USERID = ? and SIGNON.USERNAME = ACCOUNT.USERID and SIGNON.PASSWORD = ? and PROFILE.USERID = ACCOUNT.USERID and PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY", [username, password]);
     
     var record = result.rows[0];
     conn.close();
     return record;
+}
+
+PetStore.prototype.updateSignon = function(username, newPassword) {
+    var conn = this.getConnection(this.poolId);
+    conn.update("UPDATE signon SET password = ? WHERE username = ?", [newPassword, username]);
+    conn.close();
+}
+
+PetStore.prototype.updateAccount = function(model) {
+    var conn = this.getConnection(this.poolId);
+    conn.update("UPDATE account SET email = ? , firstname = ?, lastname = ?, addr1 = ?, addr2 = ?, city = ?, state = ?, zip = ?, country = ?, phone = ?     where ACCOUNT.USERID = ? ", [model.email, model.firstname, model.lastname, model.addr1, model.addr2, model.city, model.state, model.zip, model.country, model.phone, model.username ]);
+    conn.update("UPDATE profile SET langpref = ? , favcategory = ?, mylistopt = ?, banneropt = ? WHERE profile.userid = ?", [model.langpref, model.favcategory, model.mylistopt, model.banneropt, model.username ]);
+    conn.close();
+}
+
+PetStore.prototype.insertAccount = function(model) {
+    var conn = this.getConnection(this.poolId);
+    conn.update("INSERT INTO account (userid, email, firstname, lastname, addr1, addr2, city, state, zip, country, phone) VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [model.username, model.email, model.firstname, model.lastname, model.addr1, model.addr2, model.city, model.state, model.zip, model.country, model.phone]);
+    conn.update("INSERT INTO profile (userid, langpref, favcategory, mylistopt, banneropt) VALUES (? , ?, ?, ?, ?)", [model.username, model.langpref, model.favcategory, model.mylistopt, model.banneropt]);
+    conn.close();
+}
+
+PetStore.prototype.testDuplicateLogin = function(username) {
+    var conn = this.getConnection(this.poolId);
+    var rs = conn.query("select count(*) as ROWCOUNT from signon where username = ?", [username]);
+    
+    var result = rs.rows[0].ROWCOUNT;
+    conn.close();
+    return Number(result);
+}
+
+PetStore.prototype.insertNewUser = function(model) {
+    var conn = this.getConnection(this.poolId);
+    conn.update("INSERT INTO signon (username, password) VALUES (?, ?)", [model.username, model.password]);
+    conn.close();
+}
+
+PetStore.prototype.insertOrder = function(order, username) {
+    var conn = this.getConnection(this.poolId);
+    var rs = conn.query("select max(orderid) AS nextOID from orders");
+    var currentOID = rs.rows[0].nextOID + 1;
+        currentOID = currentOID.toFixed(0);
+    conn.update("INSERT INTO orders (orderid, userid, orderdate, shipaddr1, shipaddr2, shipcity, shipstate, shipzip, shipcountry, billaddr1, billaddr2, billcity, billstate, billzip, billcountry, courier, totalprice, billtofirstname, billtolastname, shiptofirstname, shiptolastname, creditcard, exprdate, cardtype, locale) VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [currentOID, username, order.shipAddress1, order.shipAddress2, order.shipCity, order.shipState, order.shipZip, order.shipCountry, order.billAddress1, order.billAddress2, order.billCity, order.billState, order.billZip, order.billCountry, order.courier, order.totalPrice.toFixed(2), order.billToFirstName, order.billToLastName, order.shipToFirstName, order.shipToLastName, order.creditCard, order.expiryDate, order.cardType, order.locale]);
+    conn.update("INSERT INTO orderstatus (orderid, linenum, timestamp, status) VALUES (?, ?, NOW(), 'P')", [currentOID, currentOID]);
+    for (var i in order.lineItems) {
+        conn.update("INSERT INTO lineitem (orderid, linenum, itemid, quantity, unitprice) VALUES (?, ?, ?, ?, ?)", [currentOID, i, order.lineItems[i].item.ITEMID, order.lineItems[i].quantity.toFixed(0), order.lineItems[i].listPrice.toFixed(2)]);
+    }
+    conn.close();
+    return currentOID;
+}
+
+PetStore.prototype.getOrder = function(OID, username) {
+    var conn = this.getConnection(this.poolId);
+    var result = conn.query("SELECT * FROM orders, orderstatus WHERE orders.orderid = ? AND orders.userid = ? AND orders.orderid = orderstatus.orderid", [OID, username]);
+    var record = result.rows[0];
+    conn.close();
+    return record;
+}
+
+PetStore.prototype.getOrderList = function(username) {
+    var conn = this.getConnection(this.poolId);
+    var result = conn.query("SELECT orderid, orderdate, totalprice, status FROM orders, orderstatus WHERE orders.orderid = orderstatus.orderid AND orders.userid = ?", [username]);
+    conn.close();
+    return result.rows;
+}
+
+PetStore.prototype.getLineItems = function(OID) {
+    var conn = this.getConnection(this.poolId);
+    var result = conn.query("SELECT *, (quantity * unitprice) AS total FROM lineitem WHERE orderid = ? ORDER BY linenum", [OID]);
+    conn.close();
+    return result;
 }
 
 PetStore.prototype.getProduct = function(key, skipResults, maxResults) {

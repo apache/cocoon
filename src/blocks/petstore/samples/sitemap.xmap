@@ -6,11 +6,12 @@
   <map:components>
     <map:transformers default="xslt">
       <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
+      <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" logger="woody"/>
     </map:transformers>
     <map:generators default="file">
-      <map:generator label="content" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.VelocityGenerator"/>
-      <map:generator label="content" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
-      <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="sitemap.generator.jxforms"/>
+      <map:generator logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.VelocityGenerator"/>
+      <map:generator logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+      <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator" logger="woody"/>
     </map:generators>
     <map:flow-interpreters default="javascript"/>
     <map:serializers default="html"/>
@@ -32,12 +33,6 @@
       <map:serialize type="xml"/>
     </map:view>
     <map:view name="debug1" from-label="debug1">
-      <map:serialize type="xml"/>
-    </map:view>
-    <map:view name="debug2" from-label="debug2">
-      <map:serialize type="xml"/>
-    </map:view>
-    <map:view name="xml" from-label="xml">
       <map:serialize type="xml"/>
     </map:view>
   </map:views>
@@ -65,70 +60,37 @@
           <map:parameter name="page" value="{1}"/>
         </map:call>
       </map:match>
-      <map:match pattern="petstore">
-        <map:call function="jxform"/> <!--
-              Without parameters jxform() handles continuations:
-              The pattern I'm matching here, "petstore", must match the value
-              of the "action" attribute in the view's <xf:submit> element
-           -->
-      </map:match>
+
       <map:match pattern="">
         <map:call function="index"/>
-      </map:match>
-      <map:match pattern="editAccount.form">
-        <map:call function="jxform">
-          <map:parameter name="function" value="editAccountForm"/>
-          <map:parameter name="id" value="petstore-edit-account"/> <!--
-                  The value I supply here, "petstore-edit-account", must match
-                  the "id" attribute of the view's <xf:form> element
-             -->
-          <map:parameter name="validator-schema-ns"/> <!-- no validator -->
-          <map:parameter name="validator-schema"/> <!-- no validator -->
-        </map:call>
-      </map:match>
-
-      <map:match pattern="view/jxforms/*.xml">
-        <!-- original JXForms document -->
-        <map:generate type="jxforms" src="view/jxforms/{1}.xml"/>
-
-        <map:transform type="xalan" src="stylesheets/form2html.xsl"  label="debug1"/>
-
-        <map:transform type="xalan" src="../jxforms/stylesheets/jxforms2html.xsl" />
-
-
-        <map:transform type="xalan" src="stylesheets/site2html.xsl"  label="debug1"/>
-
-        <map:serialize type="html" />
       </map:match>
     </map:pipeline>
 
     <map:pipeline>
       <map:match pattern="view/*.xsp">
-        <map:generate src="view/xsp/{1}.xsp" type="serverpages"/>
+        <map:generate src="view/xsp/{1}.xsp" type="serverpages" label="debug"/>
         <map:transform src="stylesheets/site2html.xsl" />
-        <map:serialize type="html"/>
-      </map:match>
-      <map:match pattern="view/Cart.jxpath">
-        <map:generate src="view/jxpath/Cart.xml" type="jx" />
         <map:serialize type="html"/>
       </map:match>
       <map:match pattern="view/*.jxpath">
         <map:generate src="view/jxpath/{1}.xml" type="file" />
-        <map:transform type="jx" />
+        <map:transform type="jx"  label="debug"/>
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
       </map:match>
-      <map:match pattern="view/Cart.jexl">
-        <map:generate src="view/jexl/Cart.xml" type="jx" />
-        <map:serialize type="html"/>
-      </map:match>
       <map:match pattern="view/*.jexl">
-        <map:generate src="view/jexl/{1}.xml" type="jx" />
+        <map:generate src="view/jexl/{1}.xml" type="jx"  label="debug"/>
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
       </map:match>
       <map:match pattern="view/*.vm">
-        <map:generate src="view/templates/{1}.vm" type="velocity"/>
+        <map:generate src="view/templates/{1}.vm" type="velocity" label="debug"/>
+        <map:serialize type="html"/>
+      </map:match>
+      <map:match pattern="view/*.cforms">
+        <map:generate src="view/forms/{1}_t.xml" label="debug"/>
+        <map:transform type="woody" label="debug1"/>
+        <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
       </map:match>
     </map:pipeline>
@@ -136,6 +98,9 @@
     <map:pipeline>
       <map:match pattern="images/*.gif">
         <map:read mime-type="images/gif" src="images/{1}.gif"/>
+      </map:match>
+      <map:match pattern="images/*.jpg">
+        <map:read mime-type="images/jpeg" src="images/{1}.jpg"/>
       </map:match>
     </map:pipeline>
 

@@ -3,52 +3,47 @@
 <page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
-        <message></message>
-        <panel header="Order #${order.orderId}" subheader="${order.orderDate}">
+        <c:if test="${message}">
+            <message>${message}</message>
+        </c:if>
+        <panel header="Order #${archivedOrder.orderId}" subheader="${archivedOrder.orderDate}">
             <panel label="Payment Details">
-                <field label="Card Type">${order.cardType}</field>
-                <field label="Card Number">${order.creditCard}</field>
-                <field label="Expiry Date (MM/YYYY)">${order.expiryDate}</field>
+                <field label="Card Type">${archivedOrder.cardType}</field>
+                <field label="Card Number">${archivedOrder.creditCard}</field>
+                <field label="Expiry Date (MM/YYYY)">${archivedOrder.exprdate}</field>
             </panel>
             <panel label="Billing Address">
-                <field label="First name">${order.billToFirstName}</field>
-                <field label="Last name" >${order.billToLastName}</field>
-                <field label="Address 1" >${order.billAddress1}</field>
-                <field label="Address 2" >${order.billAddress2}</field>
-                <field label="City" >${order.billCity}</field>
-                <field label="State" >${order.billState}</field>
-                <field label="Zip" >${order.billZip}</field>
-                <field label="Country" >${order.billCountry}</field>
+                <field label="First name">${archivedOrder.billToFirstName}</field>
+                <field label="Last name" >${archivedOrder.billToLastName}</field>
+                <field label="Address 1" >${archivedOrder.billaddr1}</field>
+                <field label="Address 2" >${archivedOrder.billaddr2}</field>
+                <field label="City" >${archivedOrder.billCity}</field>
+                <field label="State" >${archivedOrder.billState}</field>
+                <field label="Zip" >${archivedOrder.billZip}</field>
+                <field label="Country" >${archivedOrder.billCountry}</field>
             </panel>
             <panel label="Shipping Address">
-                <field label="First name">${order.shipToFirstName}</field>
-                <field label="Last name" >${order.shipToLastName}</field>
-                <field label="Address 1" >${order.shipAddress1}</field>
-                <field label="Address 2" >${order.shipAddress2}</field>
-                <field label="City" >${order.shipCity}</field>
-                <field label="State" >${order.shipState}</field>
-                <field label="Zip" >${order.shipZip}</field>
-                <field label="Country" >${order.shipCountry}</field>
-                <field label="Courier" >${order.courier}</field>
+                <field label="First name">${archivedOrder.shipToFirstName}</field>
+                <field label="Last name" >${archivedOrder.shipToLastName}</field>
+                <field label="Address 1" >${archivedOrder.shipaddr1}</field>
+                <field label="Address 2" >${archivedOrder.shipaddr2}</field>
+                <field label="City" >${archivedOrder.shipCity}</field>
+                <field label="State" >${archivedOrder.shipState}</field>
+                <field label="Zip" >${archivedOrder.shipZip}</field>
+                <field label="Country" >${archivedOrder.shipCountry}</field>
+                <field label="Courier" >${archivedOrder.courier}</field>
             </panel>
-            <panel label="Status">
+            <panel label="Status:" value=" ${archivedOrder.status}">
                 <field empty="2">
                     <cart name="Status">
-                        <c:forEach var ="cartItem" items="${itemList}" >
-                            <item product-id="${cartItem.item.productId}" id="${cartItem.item.itemId}">
-                                <desc>
-                                    ${cartItem.item.attr1} 
-                                    ${cartItem.item.attr2} 
-                                    ${cartItem.item.attr3} 
-                                    ${cartItem.item.attr4} 
-                                    ${cartItem.item.attr5} 
-                                    ${cartItem.item.product.name} 
-                                </desc>
-                                <price>${cartItem.listPrice}</price>
-                                <quantity>${cartItem.quantity}</quantity>
-                            </item>
+                        <c:forEach var="lineItem" items="${lineItemList}" >
+                            <lineItem  linenum="${lineItem.linenum}" id="${lineItem.itemId}">
+                                <quantity>${lineItem.quantity}</quantity>
+                                <unitprice><c:formatNumber value="${lineItem.unitprice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></unitprice>
+                                <total><c:formatNumber value="${lineItem.total}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
+                            </lineItem>
                         </c:forEach>
-                        <total>${order.totalPrice}</total>
+                        <total label="Total"><c:formatNumber value="${archivedOrder.totalprice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
                     </cart>
                 </field>
             </panel>

@@ -1,4 +1,4 @@
-#parse("view/templates/IncludeTop.vm");
+#parse("view/templates/IncludeTop.vm")
 
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
 <tr><td bgcolor="#FFFF88">
