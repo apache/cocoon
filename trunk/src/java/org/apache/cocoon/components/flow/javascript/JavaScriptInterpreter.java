@@ -49,10 +49,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +70,20 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
-import org.mozilla.javascript.*;
+
 import org.mozilla.javascript.tools.debugger.ScopeProvider;
 import org.mozilla.javascript.tools.ToolErrorReporter;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.PropertyException;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Wrapper;
 
 /**
  * Interface with the JavaScript interpreter.
@@ -82,7 +91,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.6 2003/03/17 04:29:48 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.7 2003/03/20 02:46:32 vgritsenko Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -233,11 +242,9 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             // Define some functions on the top level scope
             String[] names = { "print" };
             try {
-                ((ScriptableObject)scope)
-                    .defineFunctionProperties(names, JSGlobal.class,
-                                              ScriptableObject.DONTENUM);
-            }
-            catch (PropertyException e) {
+                scope.defineFunctionProperties(names, JSGlobal.class,
+                                               ScriptableObject.DONTENUM);
+            } catch (PropertyException e) {
                 throw new Error(e.getMessage());
             }
 
@@ -262,7 +269,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      * can have a scope associated with it.
      *
      * @param environment an <code>Environment</code> value
-     * @param createSession a <code>boolean</code> value
      * @return a <code>Scriptable</code> value
      */
     public Scriptable getSessionScope(Environment environment)
@@ -333,11 +339,9 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      * script <code>cocoon.createSession()</code>. This will place the
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of
-     * callFunction().</p>
+     * {@link #callFunction(String, List, Environment))}.</p>
      *
      * @param environment an <code>Environment</code> value
-     * @param createNew a <code>boolean</code> value
-     * @param sourcesToBeCompiled list of Source's to compile 
      * @return a <code>Scriptable</code> value
      * @exception Exception if an error occurs
      */
@@ -492,6 +496,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                                  Source src) throws Exception {
         InputStream is = src.getInputStream();
         Reader reader = new BufferedReader(new InputStreamReader(is));
+        // FIXME: scope or this.scope?
         Script compiledScript = cx.compileReader(this.scope, reader,
                                                  src.getURI(), 
                                                  1, null);
@@ -551,15 +556,13 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 callFun = "callFunction"; // this will produce a better error message
             }
             ScriptRuntime.call(context, callFun, thrScope, callFunArgs, thrScope);
-        }
-        catch (JavaScriptException ex) {
-            EvaluatorException ee = 
+        } catch (JavaScriptException ex) {
+            EvaluatorException ee =
                 Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
 
                                                                         ex.getMessage()));
             throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
-        }
-        finally {
+        } finally {
             exitContext(thrScope);
         }
     }

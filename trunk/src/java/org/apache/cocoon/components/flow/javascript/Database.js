@@ -1,4 +1,6 @@
 //
+// CVS $Id: Database.js,v 1.2 2003/03/20 02:46:32 vgritsenko Exp $
+//
 // Prototype Database API
 //
 // TBD: Move this Database stuff to its own library outside of flow
@@ -16,5 +18,4 @@ Database.getConnection = function(selectorValue) {
 	cocoon.componentManager.release(selector);
     }
 }
-
 

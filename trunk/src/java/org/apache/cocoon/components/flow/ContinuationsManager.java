@@ -61,7 +61,7 @@ package org.apache.cocoon.components.flow;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
- * @version CVS $Id: ContinuationsManager.java,v 1.3 2003/03/20 01:24:57 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManager.java,v 1.4 2003/03/20 02:46:32 vgritsenko Exp $
  */
 public interface ContinuationsManager {
     public final String ROLE = ContinuationsManager.class.getName();
@@ -104,4 +104,10 @@ public interface ContinuationsManager {
      * <code>WebContinuation</code> could be found.
      */
     public WebContinuation lookupWebContinuation(String id);
+
+    /**
+     * Prints debug information about all web continuations into the log file.
+     * @see WebContinuation#display()
+     */
+    public void displayAllContinuations();
 }
