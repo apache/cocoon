@@ -25,17 +25,14 @@
     import java.io.OutputStream;
     import java.io.IOException;
 
-    import java.util.Map; 
-    import java.util.Stack; 
-    import java.util.Vector; 
+    import java.util.ArrayList; 
 
     import org.apache.avalon.Configuration;
     import org.apache.avalon.ConfigurationException;
     import org.apache.avalon.SAXConfigurationBuilder;
     import org.apache.avalon.utils.Parameters; 
 
-    import org.apache.cocoon.Request;
-    import org.apache.cocoon.Response;
+    import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.generation.Generator;
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.reading.Reader;
@@ -53,17 +50,13 @@
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-07-19 22:19:49 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-07-20 21:56:58 $
  */
 public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcessor {
     
-    SAXConfigurationBuilder confBuilder = new SAXConfigurationBuilder ();
     Parameters emptyParam = new Parameters(); 
 
     private Generator generator_error_handler = null;
-
-    /* FIXME: only for testing */
-    private boolean read (Request req, Response res, OutputStream out, String s, String a) {}
 
     <!-- generate variables for all components -->
     /** The generators */
@@ -111,7 +104,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
         <xsl:variable name="matcher-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
         <xsl:variable name="matcher-name">matcher_<xsl:value-of select='translate($matcher-name1,"&#39;","")'/></xsl:variable>
         <xsl:value-of select="java:getSource($matcher-factory-loader, string('class'), string($factory), string($matcher-name), string(@pattern), $config)"/>
-        private Map <xsl:value-of select="$matcher-name"/> (String pattern, Request request) {
+        private List <xsl:value-of select="$matcher-name"/> (String pattern, Environment environment) {
           <xsl:value-of select="java:getSource($matcher-factory-loader, string('method'), string($factory), string($matcher-name), string(@pattern), $config)"/>
         }
       </xsl:for-each>
@@ -127,7 +120,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
         <xsl:variable name="selector-name1" select="translate(@test,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
         <xsl:variable name="selector-name">selector_<xsl:value-of select='translate($selector-name1,"&#39;","")'/></xsl:variable>
         <xsl:value-of select="java:getSource($selector-factory-loader, string('class'), string($factory), string($selector-name), string(@test), $config)"/>
-        private boolean <xsl:value-of select="$selector-name"/> (String test, Request request) {
+        private boolean <xsl:value-of select="$selector-name"/> (String test, Environment environment) {
           <xsl:value-of select="java:getSource($selector-factory-loader, string('method'), string($factory), string($selector-name), string(@test), $config)"/>
         }
       </xsl:for-each>
@@ -140,7 +133,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:variable name="mounter-name">mounter_<xsl:value-of select='translate($mounter-name1,"&#39;","")'/></xsl:variable>
       <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
       <xsl:value-of select="java:getSource($matcher-factory-loader, string('class'), 'org.apache.cocoon.matching.RegexpURIMatcherFactory', string($mounter-name), string(@uri-expr), $config)"/>
-      private boolean <xsl:value-of select="$mounter-name"/> (String pattern, Request request) {
+      private boolean <xsl:value-of select="$mounter-name"/> (String pattern, Environment environment) {
         <xsl:value-of select="java:getSource($matcher-factory-loader, string('method'), 'org.apache.cocoon.matching.RegexpURIMatcherFactory', string($mounter-name), string(@uri-expr), $config)"/>
       }
     </xsl:for-each>
@@ -152,6 +145,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
      */
     public void setConfiguration(Configuration xconf) 
     throws ConfigurationException {
+      SAXConfigurationBuilder confBuilder = new SAXConfigurationBuilder ();
       AttributesImpl attr = new AttributesImpl();
 
     <!-- configure all components -->
@@ -207,7 +201,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
     /* SitemapManager sm = SitemapManager.getInstance(); */
     /* sm.beginRegistration (this); */
     <xsl:for-each select="/map:sitemap/map:pipelines//map:mount">  
-      /* sitemap_<xsl:value-of select="translate(./@uri-prefix, '- /{}', '___')"/> = sm.registerSitemap (this, "<xsl:value-of select="@src"/>"); */
+      /* sitemap_<xsl:value-of select="translate(./@uri-prefix, '- /{}', '___')"/> = sm.registerSitemap (this, substitute(listOfLists,"<xsl:value-of select="@src"/>")); */
       sitemap_<xsl:value-of select="translate(./@uri-prefix, '- /{}', '___')"/>.setConfiguration (null);
     </xsl:for-each>
     /* sm.endRegistration (this); */
@@ -215,9 +209,9 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
 
     <xsl:for-each select="/map:sitemap/map:resources/map:resource">
       private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline, 
-          Stack mapStack, Request request, Response response, OutputStream out) 
+          ArrayList listOfLists, Environment environment, OutputStream out) 
       throws SAXException, IOException, ProcessingException { 
-        Map map = null;
+        List list = null;
         Parameters param = null; 
         <xsl:apply-templates select="./*"/>
       }
@@ -227,11 +221,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
      * Process the given <code>Request</code> producing the output to the 
      * specified <code>Response</code> and <code>OutputStream</code>. 
      */ 
-    public boolean process(Request request, Response response, OutputStream out)  
+    public boolean process(Environment environment, OutputStream out)  
     throws SAXException, IOException, ProcessingException { 
       ResourcePipeline pipeline = new ResourcePipeline ();
-      Stack mapStack = new Stack();
-      Map map = null;
+      ArrayList listOfLists = new ArrayList();
+      ArrayList list = null;
       Parameters param = null; 
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         try {
@@ -244,7 +238,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
             <xsl:otherwise>
               pipeline.setGenerator (generator_error_handler, e.getMessage(), emptyParam);
               <xsl:apply-templates select="./map:handle-error/*"/>
-              return pipeline.process (request, response, out);
+              return pipeline.process (Environment environment, out);
             </xsl:otherwise>
           </xsl:choose>
         }
@@ -286,8 +280,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    if ((map = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", request)) != null) {
-       mapStack.push (map);  
+    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment)) != null) {
+       listOfLists.add (list);  
        <xsl:apply-templates/>
     }
   </xsl:template> <!-- match="map:match" -->
@@ -325,7 +319,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
           </xsl:choose>
         </xsl:for-each>
       </xsl:variable>
-      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", request)) {
+      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", environment)) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -359,7 +353,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:with-param name="method">setSerializer</xsl:with-param>
       <xsl:with-param name="prefix">serializer</xsl:with-param>
     </xsl:call-template> 
-    return pipeline.process (request, response, out);
+    return pipeline.process (environment, out);
   </xsl:template> <!-- match="map:serialize" --> 
 
   <xsl:template match="map:read">
@@ -368,24 +362,24 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:with-param name="method">setReader</xsl:with-param>
       <xsl:with-param name="prefix">reader</xsl:with-param>
     </xsl:call-template> 
-    return reader_<xsl:value-of select="translate(./@name, '- ', '__')"/>.process (request, response, out);
+    return reader_<xsl:value-of select="translate(./@name, '- ', '__')"/>.process (environment, out);
   </xsl:template> <!-- match="map:read" --> 
 
   <xsl:template match="map:mount">
     <xsl:variable name="src" select="@src"/>
     <xsl:variable name="pos"><xsl:value-of select="translate(./@uri-prefix, '- /{}', '___')"/></xsl:variable>
-    /* environment.addUriPrefix ("<xsl:value-of select="./@uri-prefix"/>"); */
-    return sitemap_<xsl:value-of select="$pos"/>.process(request, response, out);
+    environment.addUriPrefix (substitute(listOfLists,"<xsl:value-of select="./@uri-prefix"/>")); 
+    return sitemapManager.invoke (substitute(listOfLists,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@check-reload"/>", environment, out);
   </xsl:template> <!-- match="map:mount" -->
 
   <xsl:template match="map:redirect-to">
     <xsl:choose>
       <xsl:when test="@resource">
-        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, mapStack, request, response, out);
+        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, out);
       </xsl:when>
       <xsl:when test="@uri">
         // request.setUri ("<xsl:value-of select="@uri"/>");
-        // this.process(request, response, out);
+        // this.process(environment, out);
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="error">

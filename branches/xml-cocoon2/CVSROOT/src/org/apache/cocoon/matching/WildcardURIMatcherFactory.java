@@ -17,7 +17,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:19:55 $ 
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-20 21:57:03 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {
@@ -38,10 +38,10 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
     public String generateMethodLevel (String prefix, String pattern, DocumentFragment conf) 
     throws PatternException {
         StringBuffer result = new StringBuffer();
-        return result.append ("Stack stack = new Stack();")
-                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), ")
+        return result.append ("java.util.ArrayList list = new ArrayList();")
+                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, environment.getUri(), ")
                      .append(prefix).append("_expr))")
-                     .append ("return (Map) stack;")
+                     .append ("return list;")
                      .append ("else return null;").toString();
     }
 
@@ -63,10 +63,7 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
                   .append (',');
         }
         return result.append (sourcePattern[j])
-                     .append ("};")
-                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), expr))")
-                     .append ("return (Map) stack;")
-                     .append ("else return null;").toString();
+                     .append ("};").toString();
     }
 
     /**

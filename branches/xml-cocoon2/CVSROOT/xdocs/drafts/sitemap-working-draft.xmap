@@ -237,7 +237,7 @@ The following goals were identified as engineering constraints:
        depending on the matcher own logic (this is up to the matcher implementation).
    -->
   <map:matchers default="uri-wildcard">
-   <map:matcher name="uri-wildcard" src="org.apache.cocoon.matching.WildcardURIMatcherFactory">
+   <map:matcher name="uri-wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher">
     ...
    </map:matcher>
 

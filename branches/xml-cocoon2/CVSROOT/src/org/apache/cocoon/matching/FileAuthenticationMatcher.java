@@ -2,10 +2,13 @@ package org.apache.cocoon.matching;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
+import org.apache.cocoon.environment.Environment; 
 import org.apache.cocoon.Request; 
 import org.apache.cocoon.Response; 
 import org.apache.avalon.utils.Parameters; 
@@ -28,8 +31,8 @@ public class FileAuthenticationMatcher extends AuthenticationMatcher /* implemen
 		}
 	}
 
-	public Map match(String pattern, Request request) {
-            return (Map) new Hashtable();
+	public List match(String pattern, Environment environment) {
+            return new ArrayList();
         }
 	public boolean match(String user, String password) {
 		if (user == null || password == null) {

@@ -7,15 +7,15 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
-import java.util.Map;
+import java.util.List;
 
 import org.apache.cocoon.sitemap.SitemapComponent;
-import org.apache.cocoon.Request;
+import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:11 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-20 21:57:02 $
  */
 public interface Matcher extends SitemapComponent {
     /**
@@ -32,6 +32,6 @@ public interface Matcher extends SitemapComponent {
      *                contained in the pattern.
      *                If the return value is null there was no match.
      */
-    public Map match (String pattern, Request request);
+    public List match (String pattern, Environment environment);
 }
 

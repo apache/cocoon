@@ -21,13 +21,14 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-07-11 03:10:04 $
+ * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-07-20 21:57:14 $
  */
 public class Sitemap
 implements Composer, Configurable, Processor, LinkResolver {
@@ -89,6 +90,7 @@ implements Composer, Configurable, Processor, LinkResolver {
      * Process the given <code>Request</code> producing the output to the
      * specified <code>Response</code> and <code>OutputStream</code>.
      */
+    public boolean process(Environment environment, OutputStream out) {return true;}
     public boolean process(Request req, Response res, OutputStream out)
     throws SAXException, IOException, ProcessingException {
         if(this.partition!=null)
@@ -110,5 +112,9 @@ implements Composer, Configurable, Processor, LinkResolver {
         if (p!=null) return(p.resolve(source,part));
 
         return(null);
+    }
+
+    public boolean hasChanged () {
+        return false;
     }
 }

@@ -19,7 +19,7 @@ import org.w3c.dom.DocumentFragment;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-19 22:20:00 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-20 21:57:19 $ 
  */ 
 
 public class XSLTMatcherFactoryLoader {
@@ -29,17 +29,12 @@ public class XSLTMatcherFactoryLoader {
     public String getSource (String level, String matcherFactoryClassname, String pattern, 
         String prefix, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
-        MatcherFactory factory = null;
-/*
         MatcherFactory factory = (MatcherFactory) obj.get(matcherFactoryClassname);
         if (factory == null) {
-*/
             Class cl = this.getClass().getClassLoader().loadClass(matcherFactoryClassname);
             factory = (MatcherFactory) cl.newInstance();
-/*
             obj.put (matcherFactoryClassname, factory);
         }
-*/
         if ("class".equals(level)) {
             return factory.generateClassLevel (pattern, prefix, conf);
         } else {

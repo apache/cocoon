@@ -26,6 +26,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.SAXConfigurationBuilder;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.xml.sax.EntityResolver;
@@ -36,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.10 $ $Date: 2000-07-11 23:46:34 $
+ * @version CVS $Revision: 1.4.2.11 $ $Date: 2000-07-20 21:56:53 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -186,6 +187,7 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
      * Process the given <code>Request</code> producing the output to the
      * specified <code>Response</code> and <code>OutputStream</code>.
      */
+    public boolean process(Environment environment, OutputStream out) {return true;}
     public boolean process(Request req, Response res, OutputStream out)
     throws SAXException, IOException, ProcessingException {
         return(this.sitemap.process(req,res,out));

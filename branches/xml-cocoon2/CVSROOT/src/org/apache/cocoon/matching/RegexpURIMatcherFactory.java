@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-19 22:19:55 $ 
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-20 21:57:02 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
@@ -57,18 +57,18 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         StringBuffer sb = new StringBuffer ();
         String name         = prefix+"_re";
         String instructions = name + "PatternInstructions";
-        sb.append("java.util.Stack stack = new java.util.Stack ();")
+        sb.append("java.util.ArrayList list = new java.util.ArrayList ();")
           .append("if (").append(name).append("Pattern.match(request.getURI())) {");
         // Count number of parens
         int i = 0;
         int j = -1;
         while ((j = pattern.indexOf('(', j+1)) != -1) {
             if (j == 0 || pattern.charAt(j-1) != '\\') {
-                sb.append("stack.push (").append(name).append("Pattern.getParen(")
+                sb.append("list.add (").append(name).append("Pattern.getParen(")
                   .append(++i).append("));");
             }
         }
-        sb.append("return (java.util.Map) stack; } else { return null; }");
+        sb.append("return list; } else { return null; }");
         return sb.toString();
     }
 }

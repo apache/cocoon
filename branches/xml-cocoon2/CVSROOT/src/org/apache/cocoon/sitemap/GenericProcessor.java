@@ -22,12 +22,13 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
-import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.patterns.PatternException;
 import org.apache.cocoon.sitemap.patterns.PatternMatcher;
 import org.apache.cocoon.sitemap.patterns.PatternTranslator;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.SAXException;
 
@@ -35,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-07-11 23:46:53 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-07-20 21:57:13 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -124,6 +125,7 @@ implements Composer, Configurable, Processor, LinkResolver {
      * Process the given <code>Request</code> producing the output to the
      * specified <code>Response</code> and <code>OutputStream</code>.
      */
+    public boolean process(Environment environment, OutputStream out) {return true;}
     public boolean process(Request req, Response res, OutputStream out)
     throws SAXException, IOException, ProcessingException {
         if (!this.matcher.match(req.getUri())) return(false);
