@@ -5,27 +5,6 @@
 <faqs title="Frequently Asked Questions">
 
 <faq>
- <question>I keep on getting OutOfMemoryErrors but I've given the JVM
- a lot of memory. Are you sure this is not a memory leak? How do I fix this, then?
- </question>
- <answer>
-  <p>This is not a memory leak but an expected behavior. Which means: you can
-  tune the Cocoon configurations to avoid this.</p>
-  <p>The key is the <code>store.memory</code> configuration. This tells cocoon
-  to leave that much memory to the system for normal operation. Everything
-  else is taken by the memory cache!</p>
-  <p>If the <code>store.memory</code> configuration is lower than the amount
-  of memory required to process the running requests (all of them together!)
-  it might happen (Cocoon tries to do some cache garbage collection if this
-  happens) that OutOfMemoryErrors are triggered.</p>
-  <p>If the problem persist even highering your store memory, then it's a bug
-  and it should not happen.</p>
-  <note>Since Cocoon 1.7, garbage collection was added to the cache system
-  and this should prevent these OutOfMemory on almost all the possible circumstances</note>
- </answer>
-</faq>
-
-<faq>
  <question>I can't get XSP to work. What might be wrong?</question>
  <answer>
   <p>
@@ -45,6 +24,17 @@
     Since this directory may contain security sensible information, make sure
     you deny access (even read-only) to untrusted users.
   </note>
+
+  <p>
+   Another common problem is the system complaining about missing classes such as:
+  </p>
+
+  <source>java.lang.NoClassDefFoundError: sun/tools/javac/Main</source>
+
+  <p>
+   If this happens, make sure you have installed the <code>tools.jar</code>
+   package you find in <code>[jdk_home]/lib/tools.jar</code>.
+  </p>
  </answer>
 </faq>
 
@@ -57,7 +47,7 @@
 </faq>
 
 <faq>
- <question>Why DCP doesn't work with EcmaScript anymore?</question>
+ <question>Why DCP doesn't work with EcmaScript anymore? Where do I find the class <code>FESI/jslib/JSObject</code>?</question>
  <answer>
   <p>Since Cocoon now ships with all the required packages and Fesi is a
   very big package, we decided to make Ecmascript support for DCP optional.</p>
