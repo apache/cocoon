@@ -405,27 +405,6 @@
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
-
-  <project name="cocoon-block-php" status="stable">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="php"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-    <option project="phpservlt"/>
-
-    <work nested="tools/anttasks"/>
-    <work nested="build/cocoon-@@DATE@@/blocks/php/mocks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/php-block.jar"/>
-
-    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
-  </project>
-
   <project name="cocoon-block-python" status="stable">
     <package>org.apache.cocoon</package>
 
