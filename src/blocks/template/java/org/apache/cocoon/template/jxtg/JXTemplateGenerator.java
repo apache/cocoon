@@ -40,7 +40,6 @@ import org.apache.cocoon.template.jxtg.environment.JSIntrospector;
 import org.apache.cocoon.template.jxtg.environment.JXCacheKey;
 import org.apache.cocoon.template.jxtg.environment.JXSourceValidity;
 import org.apache.cocoon.template.jxtg.environment.MyVariables;
-import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
 import org.apache.cocoon.template.jxtg.script.Invoker;
@@ -290,8 +289,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements
         JXTExpression cacheKeyExpr = (JXTExpression) this.startDocument
                 .getTemplateProperty(JXTemplateGenerator.CACHE_KEY);
         try {
-            final Serializable templateKey = (Serializable) ValueHelper
-                    .getValue(cacheKeyExpr, globalJexlContext, jxpathContext);
+            final Serializable templateKey =
+                (Serializable) cacheKeyExpr.getValue(globalJexlContext, jxpathContext);
             if (templateKey != null) {
                 return new JXCacheKey(startDocument.getUri(), templateKey);
             }
@@ -312,8 +311,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements
         try {
             final SourceValidity sourceValidity = this.startDocument
                     .getSourceValidity();
-            final SourceValidity templateValidity = (SourceValidity) ValueHelper
-                    .getValue(validityExpr, globalJexlContext, jxpathContext);
+            final SourceValidity templateValidity =
+                (SourceValidity) validityExpr.getValue(globalJexlContext, jxpathContext);
             if (sourceValidity != null && templateValidity != null) {
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }

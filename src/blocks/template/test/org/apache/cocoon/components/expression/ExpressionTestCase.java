@@ -15,10 +15,17 @@
  */
 package org.apache.cocoon.components.expression;
 
+import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.CocoonTestCase;
 
 public class ExpressionTestCase extends CocoonTestCase {
+    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
+
+    protected Logger getLogger() {
+        return this.logger;
+    }
 
     public void testContext() {
         ExpressionContext parentContext = new ExpressionContext();
@@ -53,6 +60,7 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+        this.release(factory);
     }
 
     public void testFactoryJXPath() throws ExpressionException, ServiceException {
@@ -63,6 +71,7 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+        this.release(factory);
     }
 }
 

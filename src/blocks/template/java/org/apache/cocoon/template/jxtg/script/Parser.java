@@ -15,16 +15,11 @@
  */
 package org.apache.cocoon.template.jxtg.script;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
-import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.script.event.*;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -184,8 +179,8 @@ public class Parser implements ContentHandler, LexicalHandler {
             if (StringUtils.equals(attributeURI, JXTemplateGenerator.NS)) {
                 getStartEvent().getTemplateProperties().put(
                         elementAttributes.getLocalName(i),
-                        compileExpr(elementAttributes.getValue(i), null,
-                                locator));
+                        JXTExpression.compileExpr(elementAttributes.getValue(i), null,
+                                                  locator));
                 elementAttributes.removeAttribute(i--);
             }
         }
@@ -267,106 +262,9 @@ public class Parser implements ContentHandler, LexicalHandler {
     public void startEntity(String name) throws SAXException {
         addEvent(new StartEntity(locator, name));
     }
-
-    public static JXTExpression compile(final String variable, boolean xpath)
-            throws Exception {
-        Object compiled;
-        if (xpath) {
-            compiled = JXPathContext.compile(variable);
-        } else {
-            compiled = ExpressionFactory.createExpression(variable);
-        }
-        return new JXTExpression(variable, compiled);
-    }
-
-    public static JXTExpression compileBoolean(String val, String msg,
-            Locator location) throws SAXException {
-        JXTExpression res = compileExpr(val, msg, location);
-        if (res != null) {
-            if (res.getCompiledExpression() == null) {
-                res.setCompiledExpression(Boolean.valueOf(res.getRaw()));
-            }
-            return res;
-        }
-        return null;
-    }
-
-    /*
-     * Compile an integer expression (returns either a Compiled Expression or an
-     * Integer literal)
-     */
-    public static JXTExpression compileInt(String val, String msg,
-            Locator location) throws SAXException {
-        JXTExpression res = compileExpr(val, msg, location);
-        if (res != null) {
-            if (res.getCompiledExpression() == null) {
-                res.setCompiledExpression(Integer.valueOf(res.getRaw()));
-            }
-            return res;
-        }
-        return null;
-    }
-
-    public static JXTExpression compileExpr(String inStr) throws Exception {
-        try {
-            if (inStr == null) {
-                return null;
-            }
-            StringReader in = new StringReader(inStr.trim());
-            int ch;
-            boolean xpath = false;
-            boolean inExpr = false;
-            StringBuffer expr = new StringBuffer();
-            while ((ch = in.read()) != -1) {
-                char c = (char) ch;
-                if (inExpr) {
-                    if (c == '\\') {
-                        ch = in.read();
-                        expr.append((ch == -1) ? '\\' : (char) ch);
-                    } else if (c == '}') {
-                        return compile(expr.toString(), xpath);
-                    } else {
-                        expr.append(c);
-                    }
-                } else {
-                    if (c == '$' || c == '#') {
-                        ch = in.read();
-                        if (ch == '{') {
-                            inExpr = true;
-                            xpath = c == '#';
-                            continue;
-                        }
-                    }
-                    // hack: invalid expression?
-                    // just return the original and swallow exception
-                    return new JXTExpression(inStr, null);
-                }
-            }
-            if (inExpr) {
-                // unclosed #{} or ${}
-                throw new Exception("Unterminated " + (xpath ? "#" : "$") + "{");
-            }
-        } catch (IOException ignored) {
-            ignored.printStackTrace();
-        }
-        return new JXTExpression(inStr, null);
-    }
-
-    /**
-     * Compile a single Jexl expr (contained in ${}) or XPath expression
-     * (contained in #{})
-     */
-
-    public static JXTExpression compileExpr(String expr, String errorPrefix,
-            Locator location) throws SAXParseException {
-        try {
-            return compileExpr(expr);
-        } catch (Exception exc) {
-            throw new SAXParseException(errorPrefix + exc.getMessage(),
-                    location, exc);
-        } catch (Error err) {
-            throw new SAXParseException(errorPrefix + err.getMessage(),
-                    location, new ErrorHolder(err));
-        }
-    }
 }
+
+
+
+
+

@@ -18,7 +18,6 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -35,7 +34,8 @@ public class StartOut extends StartInstruction {
         Locator locator = getLocation();
         String value = attrs.getValue("value");
         if (value != null) {
-            this.compiledExpression = Parser.compileExpr(value, "out: \"value\": ", locator);
+            this.compiledExpression =
+                JXTExpression.compileExpr(value, "out: \"value\": ", locator);
             String lenientValue = attrs.getValue("lenient");
             this.lenient = lenientValue == null ? null : Boolean.valueOf(lenientValue);
         } else {

@@ -26,7 +26,6 @@ import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
 import org.apache.cocoon.template.jxtg.environment.MyVariables;
-import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.Literal;
 import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
@@ -80,8 +79,7 @@ public class Invoker {
                     } else {
                         JXTExpression expr = (JXTExpression) subst;
                         try {
-                            Object val = ValueHelper.getNode(expr, jexlContext,
-                                    jxpathContext);
+                            Object val = expr.getNode(jexlContext, jxpathContext);
                             if (val instanceof Node) {
                                 executeDOM(consumer, (Node) val);
                                 continue;
@@ -141,14 +139,13 @@ public class Invoker {
                 StartIf startIf = (StartIf) ev;
                 Object val;
                 try {
-                    val = ValueHelper.getValue(startIf.getTest(), jexlContext,
-                            jxpathContext, Boolean.TRUE);
+                    val = startIf.getTest().getValue(jexlContext, jxpathContext,
+                                                     Boolean.TRUE);
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), ev
-                            .getLocation(), e);
+                    throw new SAXParseException(e.getMessage(), ev.getLocation(), e);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), ev
-                            .getLocation(), new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.getLocation(),
+                                                new ErrorHolder(err));
                 }
                 boolean result = false;
                 if (val instanceof Boolean) {
@@ -167,22 +164,20 @@ public class Invoker {
                 int begin, end, step;
                 String var, varStatus;
                 try {
-                    iter = ValueHelper.getIterator(items,
-                                                   jexlContext, jxpathContext,
-                                                   ev.getLocation());
-                    begin = startForEach.getBegin() == null ? 0 : ValueHelper
-                            .getIntValue(startForEach.getBegin(), jexlContext,
-                                    jxpathContext);
-                    end = startForEach.getEnd() == null ? Integer.MAX_VALUE
-                            : ValueHelper.getIntValue(startForEach.getEnd(),
-                                    jexlContext, jxpathContext);
-                    step = startForEach.getStep() == null ? 1 : ValueHelper
-                            .getIntValue(startForEach.getStep(), jexlContext,
-                                    jxpathContext);
-                    var = ValueHelper.getStringValue(startForEach.getVar(),
-                            jexlContext, jxpathContext);
-                    varStatus = ValueHelper.getStringValue(startForEach
-                            .getVarStatus(), jexlContext, jxpathContext);
+                    iter = items.getIterator(jexlContext, jxpathContext,
+                                             ev.getLocation());
+                    begin = startForEach.getBegin() == null
+                        ? 0
+                        : startForEach.getBegin().getIntValue(jexlContext, jxpathContext);
+                    end = startForEach.getEnd() == null
+                        ? Integer.MAX_VALUE
+                        : startForEach.getEnd().getIntValue(jexlContext, jxpathContext);
+                    step = startForEach.getStep() == null
+                        ? 1
+                        : startForEach.getStep().getIntValue(jexlContext, jxpathContext);
+                    var = startForEach.getVar().getStringValue(jexlContext, jxpathContext);
+                    varStatus =
+                        startForEach.getVarStatus().getStringValue(jexlContext, jxpathContext);
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(), ev
                             .getLocation(), exc);
@@ -259,11 +254,10 @@ public class Invoker {
                 while (startWhen != null) {
                     Object val;
                     try {
-                        val = ValueHelper.getValue(startWhen.getTest(),
-                                jexlContext, jxpathContext, Boolean.TRUE);
+                        val = startWhen.getTest().getValue(jexlContext, jxpathContext,
+                                                           Boolean.TRUE);
                     } catch (Exception e) {
-                        throw new SAXParseException(e.getMessage(), ev
-                                .getLocation(), e);
+                        throw new SAXParseException(e.getMessage(), ev.getLocation(), e);
                     }
                     boolean result;
                     if (val instanceof Boolean) {
@@ -292,16 +286,13 @@ public class Invoker {
                 String var = null;
                 try {
                     if (startSet.getVar() != null) {
-                        var = ValueHelper.getStringValue(startSet.getVar(),
-                                jexlContext, jxpathContext);
+                        var = startSet.getVar().getStringValue(jexlContext, jxpathContext);
                     }
                     if (startSet.getValue() != null) {
-                        value = ValueHelper.getNode(startSet.getValue(),
-                                jexlContext, jxpathContext);
+                        value = startSet.getValue().getNode(jexlContext, jxpathContext);
                     }
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(), ev
-                            .getLocation(), exc);
+                    throw new SAXParseException(exc.getMessage(), ev.getLocation(), exc);
                 }
                 if (value == null) {
                     NodeList nodeList = toDOMNodeList("set", startSet,
@@ -343,8 +334,7 @@ public class Invoker {
                                         .getSubstitutions().get(0);
                                 Object val;
                                 try {
-                                    val = ValueHelper.getNode(expr,
-                                            jexlContext, jxpathContext);
+                                    val = expr.getNode(jexlContext, jxpathContext);
                                 } catch (Exception e) {
                                     throw new SAXParseException(e.getMessage(),
                                             ev.getLocation(), e);
@@ -367,8 +357,7 @@ public class Invoker {
                                         JXTExpression expr = (JXTExpression) subst;
                                         Object val;
                                         try {
-                                            val = ValueHelper.getValue(expr,
-                                                    jexlContext, jxpathContext);
+                                            val = expr.getValue(jexlContext, jxpathContext);
                                         } catch (Exception e) {
                                             throw new SAXParseException(e
                                                     .getMessage(), ev
@@ -447,8 +436,7 @@ public class Invoker {
                                 JXTExpression expr = (JXTExpression) subst;
                                 Object val;
                                 try {
-                                    val = ValueHelper.getValue(expr,
-                                            jexlContext, jxpathContext);
+                                    val = expr.getValue(jexlContext, jxpathContext);
                                 } catch (Exception e) {
                                     throw new SAXParseException(e.getMessage(),
                                             ev.getLocation(), e);
@@ -549,8 +537,8 @@ public class Invoker {
                 StartOut startOut = (StartOut) ev;
                 Object val;
                 try {
-                    val = ValueHelper.getNode(startOut.getCompiledExpression(),
-                            jexlContext, jxpathContext, startOut.getLenient());
+                    val = startOut.getCompiledExpression().getNode(jexlContext, jxpathContext,
+                                                                   startOut.getLenient());
                     if (val instanceof Node) {
                         executeDOM(consumer, (Node) val);
                     } else if (val instanceof NodeList) {
@@ -585,8 +573,7 @@ public class Invoker {
                 StartEval startEval = (StartEval) ev;
                 JXTExpression expr = startEval.getValue();
                 try {
-                    Object val = ValueHelper.getNode(expr, jexlContext,
-                            jxpathContext);
+                    Object val = expr.getNode(jexlContext, jxpathContext);
                     if (!(val instanceof StartElement)) {
                         throw new Exception(
                                 "macro invocation required instead of: " + val);
@@ -644,8 +631,7 @@ public class Invoker {
                             JXTExpression expr = (JXTExpression) subst;
                             Object val;
                             try {
-                                val = ValueHelper.getValue(expr, jexlContext,
-                                        jxpathContext);
+                                val = expr.getValue(jexlContext, jxpathContext);
                             } catch (Exception exc) {
                                 throw new SAXParseException(exc.getMessage(),
                                         ev.getLocation(), exc);
@@ -669,12 +655,10 @@ public class Invoker {
                 MyJexlContext selectJexl = jexlContext;
                 if (startImport.getSelect() != null) {
                     try {
-                        Object obj = ValueHelper.getValue(startImport
-                                .getSelect(), jexlContext, jxpathContext);
-                        selectJXPath = jxpathContextFactory.newContext(null,
-                                obj);
-                        selectJXPath.setVariables(jxpathContext
-                                .getVariables());
+                        Object obj =
+                            startImport.getSelect().getValue(jexlContext, jxpathContext);
+                        selectJXPath = jxpathContextFactory.newContext(null, obj);
+                        selectJXPath.setVariables(jxpathContext.getVariables());
                         selectJexl = new MyJexlContext(jexlContext);
                         JXTemplateGenerator.fillContext(obj, selectJexl);
                     } catch (Exception exc) {
@@ -728,9 +712,8 @@ public class Invoker {
             } else {
                 JXTExpression expr = (JXTExpression) subst;
                 try {
-                    Object val = ValueHelper.getValue(expr, executionContext
-                            .getJexlContext(), executionContext
-                            .getJXPathContext());
+                    Object val = expr.getValue(executionContext.getJexlContext(),
+                                               executionContext.getJXPathContext());
                     chars = val != null ? val.toString().toCharArray()
                             : ArrayUtils.EMPTY_CHAR_ARRAY;
                 } catch (Exception e) {

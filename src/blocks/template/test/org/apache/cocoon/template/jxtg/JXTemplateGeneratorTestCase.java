@@ -28,7 +28,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
-    Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
+    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
     String JX = "jx";
     Map flowContext = new HashMap();
@@ -46,7 +46,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         return this.flowContext;
     }
 
-    public Logger getLogger() {
+    protected Logger getLogger() {
         return this.logger;
     }
 

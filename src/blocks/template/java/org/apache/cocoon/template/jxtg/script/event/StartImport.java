@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -52,7 +51,7 @@ public class StartImport extends StartInstruction {
             // as the context object in the imported template
             String context = attrs.getValue("context");
             if (context != null) {
-                select = Parser.compileExpr(context, "import: \"context\": ", locator);
+                select = JXTExpression.compileExpr(context, "import: \"context\": ", locator);
             }
         } else {
             throw new SAXParseException("import: \"uri\" is required", locator, null);
