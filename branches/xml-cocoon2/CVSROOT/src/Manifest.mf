@@ -21,3 +21,6 @@ Mime-Type: application/xml
 
 Name: org/apache/cocoon/components/markup/xsp/java/xsp.xsl
 Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/sendmail.xsl
+Mime-Type: application/xml
