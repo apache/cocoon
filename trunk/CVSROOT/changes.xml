@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.53 2000-04-08 23:10:00 stefano Exp $
+  $Id: changes.xml,v 1.54 2000-04-13 10:40:14 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Rapha&euml;l Luta" due-to-email="luta.raphael@networks.vivendi.net">
+   Fixed a problem with XSP where PIs contained the string <em>xsp</em>.
+  </action>
+  <action dev="SM" type="fix" due-to="Roberto Moreda" due-to-email="moreda@alfa21.com" fixes-bug="112">
+   Fixed a problem with XSP packages containing dots and also fixes a problem with package generation.
+  </action>
   <action dev="SM" type="update" fixes-bug="102">
    Improved error message when XSP repository directory is not writable.
   </action>
