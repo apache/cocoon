@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
 /**
  * The class represent a manger for slide repositories
  * 
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.7 2004/04/13 15:16:37 unico Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.8 2004/05/03 16:08:35 unico Exp $
  */
 public class SlideRepositoryImpl extends AbstractLogEnabled
 implements SlideRepository, Contextualizable, Serviceable, Configurable, 
@@ -153,6 +153,7 @@ Initializable, Disposable, ThreadSafe  {
         }
         
         domain.start();
+        Domain.setInitialized(true);
     }
 
     public void dispose() {
