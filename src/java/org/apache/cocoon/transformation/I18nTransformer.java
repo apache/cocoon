@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.9 2003/05/22 16:01:57 bruno Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.10 2003/08/06 14:42:46 bruno Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -840,6 +840,9 @@ public class I18nTransformer extends AbstractTransformer
     // Untranslated message value
     private String untranslated;
 
+    /* A MirrorRecorder containing the contents of {@link #untranslated}. */
+    private MirrorRecorder untranslatedRecorder;
+
     // Cache at startup setting value
     private boolean cacheAtStartup;
 
@@ -993,6 +996,11 @@ public class I18nTransformer extends AbstractTransformer
             if (localUntranslated != null) {
                 globalUntranslated = untranslated;
                 untranslated = localUntranslated;
+            }
+
+            if (untranslated != null) {
+                untranslatedRecorder = new MirrorRecorder();
+                untranslatedRecorder.characters(untranslated.toCharArray(), 0, untranslated.length());
             }
 
             // Get current locale
@@ -1595,7 +1603,13 @@ public class I18nTransformer extends AbstractTransformer
                         // We have the key, but couldn't find a transltation
                         if (getLogger().isDebugEnabled())
                             debug("translation not found for key " + current_key);
-                        tr_text_recorder = text_recorder;
+                        // use the untranslated-text only when the content of the i18n:text
+                        // element was empty
+                        if (text_recorder.empty() && untranslatedRecorder != null) {
+                            tr_text_recorder = untranslatedRecorder;
+                        } else {
+                            tr_text_recorder = text_recorder;
+                        }
                     }
                 }
 
@@ -2107,11 +2121,9 @@ public class I18nTransformer extends AbstractTransformer
 
     public void recycle() {
         // restore untranslated-text if necessary
-        if (globalUntranslated != null &&
-                !untranslated.equals(globalUntranslated)) {
-
+        if (globalUntranslated != null)
             untranslated = globalUntranslated;
-        }
+        untranslatedRecorder = null;
 
         // clean up default catalogue
         factory.release(defaultCatalogue);
