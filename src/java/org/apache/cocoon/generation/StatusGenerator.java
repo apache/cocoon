@@ -64,7 +64,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.6 2004/05/19 08:44:27 cziegeler Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.7 2004/05/19 11:32:02 cziegeler Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -99,11 +99,16 @@ public class StatusGenerator extends ServiceableGenerator {
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        try {
+        if ( this.manager.hasService(StoreJanitor.ROLE) ) {
             this.storejanitor = (StoreJanitor)manager.lookup(StoreJanitor.ROLE);
-            this.store_persistent = (Store)this.manager.lookup(Store.ROLE);
-        } catch(ServiceException ce) {
+        } else {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
+        }
+        if ( this.manager.hasService(Store.PERSISTENT_STORE) ) {
+            this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
+        } else {
+            getLogger().info("Persistent Store is not available. We will use the general store instead.");
+            this.store_persistent = (Store)this.manager.lookup(Store.ROLE);
         }
     }
     
@@ -209,36 +214,75 @@ public class StatusGenerator extends ServiceableGenerator {
         // END ClassPath
 
         // BEGIN Cache
-        startGroup(ch, "Store-Janitor");
-
-        // For each element in StoreJanitor
-        Iterator i = this.storejanitor.iterator();
-        while (i.hasNext()) {
-            Store store = (Store) i.next();
-            startGroup(ch, store.getClass().getName()+" (hash = 0x"+Integer.toHexString(store.hashCode())+")" );
+        if ( this.storejanitor != null ) {
+            startGroup(ch, "Store-Janitor");
+    
+            // For each element in StoreJanitor
+            Iterator i = this.storejanitor.iterator();
+            while (i.hasNext()) {
+                Store store = (Store) i.next();
+                startGroup(ch, store.getClass().getName()+" (hash = 0x"+Integer.toHexString(store.hashCode())+")" );
+                int size = 0;
+                int empty = 0;
+                atts.clear();
+                atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
+                ch.startElement(namespace, "value", "value", atts);
+                // For each element in Store
+                Enumeration e = store.keys();
+                atts.clear();
+                while( e.hasMoreElements() ) {
+                    size++;
+                    Object key  = e.nextElement();
+                    Object val  = store.get( key );
+                    String line = null;
+                    if (val == null) {
+                        empty++;
+                    } else {
+                        line = key + " (class: " + val.getClass().getName() + ")";
+                        ch.startElement(namespace, "line", "line", atts);
+                        ch.characters(line.toCharArray(), 0, line.length());
+                        ch.endElement(namespace, "line", "line");
+                    }
+                }
+    
+                if (size == 0) {
+                    ch.startElement(namespace, "line", "line", atts);
+                    String value = "[empty]";
+                    ch.characters(value.toCharArray(), 0, value.length());
+                    ch.endElement(namespace, "line", "line");
+                }
+                ch.endElement(namespace, "value", "value");
+    
+                addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
+                endGroup(ch);
+            }
+            endGroup(ch);        
+        }
+        
+        if ( this.store_persistent != null ) {
+            startGroup(ch, store_persistent.getClass().getName()+" (hash = 0x"+Integer.toHexString(store_persistent.hashCode())+")");
             int size = 0;
             int empty = 0;
             atts.clear();
             atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
             ch.startElement(namespace, "value", "value", atts);
-            // For each element in Store
-            Enumeration e = store.keys();
-            atts.clear();
-            while( e.hasMoreElements() ) {
+            Enumeration enum = this.store_persistent.keys();
+            while (enum.hasMoreElements()) {
                 size++;
-                Object key  = e.nextElement();
-                Object val  = store.get( key );
+    
+                Object key  = enum.nextElement();
+                Object val  = store_persistent.get (key);
                 String line = null;
                 if (val == null) {
                     empty++;
                 } else {
-                    line = key + " (class: " + val.getClass().getName() + ")";
+                    line = key + " (class: " + val.getClass().getName() +  ")";
                     ch.startElement(namespace, "line", "line", atts);
                     ch.characters(line.toCharArray(), 0, line.length());
                     ch.endElement(namespace, "line", "line");
                 }
             }
-
+    
             if (size == 0) {
                 ch.startElement(namespace, "line", "line", atts);
                 String value = "[empty]";
@@ -246,45 +290,10 @@ public class StatusGenerator extends ServiceableGenerator {
                 ch.endElement(namespace, "line", "line");
             }
             ch.endElement(namespace, "value", "value");
-
+    
             addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
             endGroup(ch);
         }
-        endGroup(ch);        
-
-        startGroup(ch, store_persistent.getClass().getName()+" (hash = 0x"+Integer.toHexString(store_persistent.hashCode())+")");
-        int size = 0;
-        int empty = 0;
-        atts.clear();
-        atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
-        ch.startElement(namespace, "value", "value", atts);
-        Enumeration enum = this.store_persistent.keys();
-        while (enum.hasMoreElements()) {
-            size++;
-
-            Object key  = enum.nextElement();
-            Object val  = store_persistent.get (key);
-            String line = null;
-            if (val == null) {
-                empty++;
-            } else {
-                line = key + " (class: " + val.getClass().getName() +  ")";
-                ch.startElement(namespace, "line", "line", atts);
-                ch.characters(line.toCharArray(), 0, line.length());
-                ch.endElement(namespace, "line", "line");
-            }
-        }
-
-        if (size == 0) {
-            ch.startElement(namespace, "line", "line", atts);
-            String value = "[empty]";
-            ch.characters(value.toCharArray(), 0, value.length());
-            ch.endElement(namespace, "line", "line");
-        }
-        ch.endElement(namespace, "value", "value");
-
-        addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
-        endGroup(ch);
         // END Cache
 
         // BEGIN OS info

@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.25 2004/04/09 07:23:45 ugo Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.26 2004/05/19 11:32:02 cziegeler Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -148,11 +148,14 @@
    <map:match pattern="clearpersistentstore.html">
     <map:act type="clear-persistent-store">
      <map:generate src="status" type="status"/>
-    <map:transform src="context://stylesheets/system/status2html.xslt">
+     <map:transform src="context://stylesheets/system/status2html.xslt">
       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+     </map:transform>
      <map:serialize/>
     </map:act>
+    <map:generate src="no-persistent-store.xml"/>
+    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+    <map:serialize type="html"/>
    </map:match>
 
    <map:match pattern="request.html">
