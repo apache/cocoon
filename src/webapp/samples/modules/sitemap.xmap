@@ -262,12 +262,14 @@
 
       <map:match pattern="content/date.xml">
         <map:generate type="jx" src="properties.xml">
-          <map:parameter name="date" value="{date:date}"/>
+          <map:parameter name="format-in-config" value="{date:date}"/>
+          <map:parameter name="format-inline" value="{date:MMM d, yyyy}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="Date Input module (DateMetaModule)"/>
           <map:parameter name="description" value="Returns the current
-            date and time.  The format is specified in cocoon.xconf"/>
+            date and time.  The format is specified in cocoon.xconf or as the
+            data specified in the input module reference"/>
         </map:transform>
         <map:serialize/>
       </map:match>

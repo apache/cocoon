@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RG" type="update" fixes-bug="28360" due-to="Nico Verwer" due-to-email="nverwer@email.com">
+     DateInputModule now accepts date format string when specified in a sitemap.
+   </action>
    <action dev="RG" type="add">
      Portal: Added support for storing JSR-168 Portlet preferences.
    </action>
