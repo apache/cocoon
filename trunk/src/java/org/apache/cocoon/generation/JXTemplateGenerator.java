@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.18 2003/12/06 21:22:08 cziegeler Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.19 2003/12/08 10:09:55 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -965,7 +965,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     (org.apache.commons.jexl.Expression)compiled;
                 return e.evaluate(jexlContext);
             }
-            return compiled;
+            return expr.raw;
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof Exception) {
