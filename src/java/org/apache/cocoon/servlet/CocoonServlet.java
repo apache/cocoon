@@ -350,9 +350,11 @@ public class CocoonServlet extends HttpServlet {
         cacheDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
-
-        this.appContext.put(Constants.CONTEXT_CONFIG_URL,
-                            this.getConfigFile(this.settings.getConfiguration()));
+        
+        // update settings
+        final URL u = this.getConfigFile(this.settings.getConfiguration());
+        this.settings.setConfiguration(u.toExternalForm());
+        this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
 
         parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
         if (parentServiceManagerClass != null) {
@@ -1150,9 +1152,8 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             this.exception = null;
-            URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
             if (getLogger().isInfoEnabled()) {
-                getLogger().info("Reloading from: " + configFile.toExternalForm());
+                getLogger().info("Reloading from: " + this.settings.getConfiguration());
             }
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
             ContainerUtil.enableLogging(c, getCocoonLogger());

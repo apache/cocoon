@@ -23,6 +23,8 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
@@ -168,7 +170,8 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      * Uses the context to retrieve a default encoding for the serializers.
      */
     public void contextualize(Context context) throws ContextException {
-        String defaultEncoding  = (String)context.get(Constants.CONTEXT_DEFAULT_ENCODING);
+        final Settings s = Core.getSettings(context);
+        String defaultEncoding  = s.getFormEncoding();
         if (defaultEncoding != null) {
             this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);
         }
