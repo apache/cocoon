@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.29 2004/05/05 17:08:05 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.30 2004/05/17 18:39:58 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -377,8 +377,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     private Scriptable setSessionScope(Scriptable scope) throws Exception {
         Request request = ContextHelper.getRequest(this.avalonContext);
 
-        // Check that session is available (avoids IllegalStateException)
-        if (request.isRequestedSessionIdValid()) {
+        // FIXME: Where "session scope" should go when session is invalidated?
+        try {
             Session session = request.getSession(true);
 
             HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
@@ -389,6 +389,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
             // Attach the scope to the current context
             userScopes.put(getSitemapPath(), scope);
+        } catch (IllegalStateException e) {
+            // Session might be invalidated already.
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got '" + e + "' while trying to set session scope.", e);
+            }
         }
         return scope;
     }
