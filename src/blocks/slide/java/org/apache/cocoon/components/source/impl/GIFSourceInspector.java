@@ -72,12 +72,12 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: GIFSourceInspector.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: GIFSourceInspector.java,v 1.3 2003/05/19 10:02:05 stephan Exp $
  */
 public class GIFSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
 
-    private String PROPERTY_NS = "http://xml.apache.org/cocoon/GIFSourceInspector";
+    private String PROPERTY_NS = "http://apache.org/cocoon/inspector/gif/1.0";
     private static String IMAGE_WIDTH_PROPERTY_NAME = "width";
     private static String IMAGE_HEIGHT_PROPERTY_NAME = "height";
 

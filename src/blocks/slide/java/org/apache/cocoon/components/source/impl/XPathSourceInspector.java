@@ -79,12 +79,12 @@ import java.io.IOException;
  * This source inspector inspects XML files with a xpath expression
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.3 2003/05/19 10:02:05 stephan Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe, Parameterizable {
 
-    private String propertynamespace = "http://xml.apache.org/cocoon/XPathSourceInspector";
+    private String propertynamespace = "http://apache.org/cocoon/inspector/xpath/1.0";
     private String propertyname = "result";
     private String extension = null;
     private String xpath = null;

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:pl="http://xml.apache.org/cocoon/PrincipalListGenerator">
+                xmlns:pl="http://apache.org/cocoon/principal/1.0">
 
  <xsl:param name="name"/>
  <xsl:param name="password"/>

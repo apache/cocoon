@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pl="http://xml.apache.org/cocoon/PrincipalListGenerator" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pl="http://apache.org/cocoon/principal/1.0" version="1.0">
 
   <xsl:output indent="yes"/>
 

@@ -70,12 +70,12 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: JPEGSourceInspector.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: JPEGSourceInspector.java,v 1.4 2003/05/19 10:02:05 stephan Exp $
  */
 public class JPEGSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
 
-    private String PROPERTY_NS = "http://xml.apache.org/cocoon/JPEGSourceInspector";
+    private String PROPERTY_NS = "http://apache.org/cocoon/inspector/jpeg/1.0";
     private static String IMAGE_WIDTH_PROPERTY_NAME = "width";
     private static String IMAGE_HEIGHT_PROPERTY_NAME = "height";
 
