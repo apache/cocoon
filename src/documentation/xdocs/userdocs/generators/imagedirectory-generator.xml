@@ -22,8 +22,8 @@
       </ul>
       <p>The Image Directory provides all the functionality of the
       	<link href="directory-generator.html">Directory Generator</link>. Additionally it
-        checks if the files are images and adds their dimensions (<code>width</code>
-        and <code>height</code>) to the attributes. It's configured just as the
+        ensures that the files are images and adds their dimensions (<code>width</code>
+        and <code>height</code>) to the attributes. It is configured in the same way as the
         Directory Generator.</p>
     </s1>
   </body>
