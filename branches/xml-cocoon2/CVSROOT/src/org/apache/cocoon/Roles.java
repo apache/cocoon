@@ -12,7 +12,7 @@ package org.apache.cocoon;
  * Created this interface to specify the Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 20:28:31 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-19 18:10:34 $
  */
 
 public interface Roles {
@@ -31,4 +31,11 @@ public interface Roles {
     String DB_CONNECTION        = "org.apache.avalon.util.datasource.DataSourceComponentSelector";
     String URL_FACTORY          = "org.apache.cocoon.components.url.URLFactory";
 
+    String ACTIONS              = "org.apache.cocoon.acting.ActionSelector";
+    String SELECTORS            = "org.apache.cocoon.selection.SelectorSelector";
+    String MATCHERS             = "org.apache.cocoon.matching.MatcherSelector";
+    String GENERATORS           = "org.apache.cocoon.generation.GeneratorSelector";
+    String TRANSFORMERS         = "org.apache.cocoon.transformation.TransformerSelector";
+    String SERIALIZERS          = "org.apache.cocoon.serialization.SerializerSelector";
+    String READERS              = "org.apache.cocoon.reading.ReaderSelector";
 }
