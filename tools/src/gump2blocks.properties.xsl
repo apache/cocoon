@@ -65,6 +65,14 @@
 # using "build generate-blocks.properties". Any changes to blocks definitions
 # must be made in gump.xml, not here.
 
+# All blocks -------------------------------------------------------------------
+
+# Use this property to exclude all blocks at once
+# exclude.all.blocks=true
+
+# Use this property to include all blocks at once
+# include.all.blocks=true
+
 </desc:desc>
 
 <desc:desc name="stable">
