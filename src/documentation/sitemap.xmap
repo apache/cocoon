@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.1 2003/03/09 00:07:16 pier Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.2 2003/03/19 15:47:45 stefano Exp $ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components ================================ -->
@@ -13,7 +13,7 @@
   </map:generators>
 
   <map:transformers default="xslt">
-   <map:transformer     name="xslt"      src="org.apache.cocoon.transformation.TraxTransformer">
+   <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer">
     <use-request-parameters>false</use-request-parameters>
     <use-browser-capabilities-db>false</use-browser-capabilities-db>
    </map:transformer>
@@ -29,10 +29,6 @@
    </map:serializer>
    <map:serializer name="xml"    mime-type="text/xml"         src="org.apache.cocoon.serialization.XMLSerializer"/>
    <map:serializer name="links"                               src="org.apache.cocoon.serialization.LinkSerializer"/>
-   <map:serializer name="svg2jpeg" mime-type="image/jpeg"     src="org.apache.cocoon.serialization.SVGSerializer">
-       <parameter name="quality" type="float" value="1.0"/>
-   </map:serializer>
-   <map:serializer name="svg2png" mime-type="image/png"       src="org.apache.cocoon.serialization.SVGSerializer"/>
   </map:serializers>
 
   <map:matchers default="wildcard">
@@ -43,7 +39,6 @@
      <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
                    logger="core.processing-pipeline" pool-max="32" pool-min="8" pool-grow="4"/>
   </map:pipes>
-
 
  </map:components>
 
@@ -62,6 +57,7 @@
  </map:views>
 
 <!-- =========================== Resources ================================= -->
+  
   <map:resources>
     <map:resource name="book">
       <map:generate src="xdocs/{../1}book.xml"/>
@@ -77,7 +73,7 @@
 
  <map:pipelines>
 
-  <!-- C2 documentation pipeline -->
+  <!-- Cocoon documentation pipeline -->
   <map:pipeline>
    <map:match pattern="">
     <map:redirect-to uri="index.html"/>
@@ -104,6 +100,7 @@
      <map:transform src="stylesheets/document2html.xsl"/>
      <map:serialize/>
    </map:match>
+
    <!-- other ToDo docs -->
    <map:match pattern="body-**/todo-*.xml">
      <map:generate type="file-nolabel" src="xdocs/{1}/todo-{2}.xml"/>
@@ -119,6 +116,7 @@
      <map:transform src="stylesheets/document2html.xsl"/>
      <map:serialize/>
    </map:match>
+   
    <!-- other Changes docs -->
    <map:match pattern="body-**/changes-*.xml">
      <map:generate type="file-nolabel" src="xdocs/{1}/changes-{2}.xml"/>
@@ -136,8 +134,8 @@
      <map:serialize/>
    </map:match>
 
-
-   <!-- Generate the "doclist" - list of all documentation
+   <!-- 
+     Generate the "doclist" - list of all documentation
      The first match generates each book.xml and adds a new attribute "uri".
      The second match aggregates each book.xml into a doclist and
      then converts it to a document.
@@ -149,6 +147,7 @@
      </map:transform>
      <map:serialize type="xml"/>
    </map:match>
+   
    <map:match pattern="body-doclist.xml">
      <map:aggregate element="doclist">
        <map:part src="cocoon:/doclist/xdocs/book.xml"/>
@@ -183,23 +182,15 @@
      <map:serialize/>
    </map:match>
 
-   <map:match pattern="apidocs/**.html">
-     <map:read src="../apidocs/{1}.html" mime-type="text/html" />
-   </map:match>
-
-   <map:match pattern="apidocs/**.css">
-    <map:read src="../apidocs/{1}.css" mime-type="text/css"/>
-   </map:match>
-
    <map:match pattern="*.html">
     <map:aggregate element="site">
      <map:part src="cocoon:/book-{1}.xml"/>
      <map:part src="cocoon:/body-{1}.xml" label="content"/>
     </map:aggregate>
     <map:transform src="stylesheets/site2xhtml.xsl">
-       <map:parameter name="use-request-parameters" value="true"/>
-       <map:parameter name="header" value="graphics/{1}-header.jpg"/>
-     </map:transform>
+     <map:parameter name="use-request-parameters" value="true"/>
+     <map:parameter name="header" value="graphics/{1}-header.jpg"/>
+    </map:transform>
     <map:serialize/>
    </map:match>
 
@@ -209,9 +200,9 @@
      <map:part src="cocoon:/body-{1}/{2}.xml" label="content"/>
     </map:aggregate>
     <map:transform src="stylesheets/site2xhtml.xsl">
-       <map:parameter name="use-request-parameters" value="true"/>
-       <map:parameter name="header" value="graphics/{2}-header.jpg"/>
-     </map:transform>
+     <map:parameter name="use-request-parameters" value="true"/>
+     <map:parameter name="header" value="graphics/{2}-header.jpg"/>
+    </map:transform>
     <map:serialize/>
    </map:match>
 
@@ -237,6 +228,10 @@
     <map:read src="{1}.css" mime-type="text/css"/>
    </map:match>
 
+   <map:match pattern="favicon.ico">
+    <map:read src="images/cocoon.ico"/>
+   </map:match>
+   
    <map:match pattern="**images/*.png">
     <map:read src="images/{2}.png" mime-type="image/png"/>
    </map:match>
@@ -249,16 +244,8 @@
     <map:read src="images/{2}.gif" mime-type="image/gif"/>
    </map:match>
 
-   <map:match pattern="**graphics/**-*.jpg">
-     <map:generate src="svg/{3}.xml"/>
-     <map:transform src="svg/addlabel.xsl">
-       <map:parameter name="use-request-parameters" value="true"/>
-       <map:parameter name="label" value="{2}"/>
-     </map:transform>
-     <map:serialize type="svg2jpeg"/>
-   </map:match>
-
   </map:pipeline>
+
  </map:pipelines>
 
 </map:sitemap>
