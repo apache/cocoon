@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.13 1999-12-18 00:39:26 stefano Exp $
+  $Id: changes.xml,v 1.14 1999-12-23 01:26:53 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,21 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="SM" type="add" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
+  	Added examples on how to call the Cocoon engine from another servlet.
+  </action>
+  <action dev="SM" type="add">
+  	Added better documentation in the build.xml file for how to build Cocoon.
+  </action>
+  <action dev="SM" type="add" due-to="James Birchfield" due-to-email="jmbirchfield@proteus-technologies.com">
+  	Added LDAP processor documentation.
+  </action>
+  <action dev="SM" type="update" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
+  	Added the singleton pattern to Engine to allow use of Cocoon from Turbine.
+  </action>
+  <action dev="SM" type="fix" due-to="Richard A. Wells" due-to-email="raw@raw.com">
+    Fixed language and typos in technology.xml.
+  </action>
   <action dev="SM" type="add" due-to="James Birchfield" due-to-email="jmbirchfield@proteus-technologies.com">
     Added LDAP processor and samples.
   </action>
@@ -28,7 +43,7 @@
   <action dev="SM" type="add">
     Added the ability to return HTTP error messages from Cocoon.
   </action>
-  <action dev="DB" type="fix" due-to="Brett McLaughlin" due-to-email="martinguitar@hotmail.com">
+  <action dev="DB" type="fix" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
   	Added dummy methods to EngineWrapper for JSDK 2.2 compatibility
   </action>
   <action dev="DB" type="add">

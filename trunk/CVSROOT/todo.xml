@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.9 1999-12-14 23:59:58 stefano Exp $
+  $Id: todo.xml,v 1.10 1999-12-23 01:26:53 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -14,42 +14,31 @@
   <person name="Ricardo Rocha" email="ricard@apache.org" id="RR"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
- 
- <action priority="showstopper" context="docs">
-  Finish XML-ize the docs (DCP, SQL).
+
+ <action priority="high" assigned-to="SM" context="design">
+  Write SiteMap document.
  </action>
-
-
-
+ 
  <action priority="high" context="code">
   Implement "xsl:output" instead of "cocoon-format" PI and redesign
-  formatting subsystem.
+  formatting subsystem. (follows sitemap)
  </action>
 
  <action priority="high" context="code">
   Pass request/session parameters to the XSLT processors for dynamic
-  stylesheet operation.
+  stylesheet operation. (follows sitemap)
  </action>
 
  <action priority="high" context="code">
-  Work on external entities inclusion (follows sitemap stuff).
+  Work on external entities inclusion (follows sitemap).
  </action>
 
-
-
- <action priority="medium" assigned-to="SM" context="design">
-  Write SiteMap document.
+ <action priority="medium" context="code">
+  Implement the error handler subsystem
  </action>
 
  <action priority="medium" assigned-to="PF" context="design">
   Merge stylebook technology with Cocoon
  </action>
  
- 
- 
- <action priority="low" context="code">
-  make the error page formatted with the wanted mime type and not only HTML
-  (probably impossible in Cocoon1 model)
- </action>
-  
 </todo>
