@@ -180,6 +180,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    The object model and the components stored in the object model are now available
+    via the component context.
+  </action>
   <action dev="VG" type="fix" fixes-bug="20159" due-to="Hugh Leather" due-to-email="hughleat@hotmail.com">
    Logicsheets:
    Changed scope of and renamed temporary 'soap:call' XScript variable in &lt;soap:call&gt;.
