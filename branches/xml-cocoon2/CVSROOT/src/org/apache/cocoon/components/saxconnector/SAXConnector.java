@@ -11,8 +11,7 @@ import org.apache.cocoon.xml.XMLPipe;
 /**
  * Provides a connection between SAX components.
  * @author <a href="mailto:prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 19:07:44 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-24 20:18:25 $
  */
 public interface SAXConnector extends XMLPipe, Component, SitemapModelComponent {
-    public void setSitemap(Sitemap sitemap);
 }

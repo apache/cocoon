@@ -41,7 +41,7 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.5 2001-04-24 19:07:47 dims Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.6 2001-04-24 20:18:27 dims Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -157,7 +157,6 @@ public class ContentAggregator extends ContentHandlerWrapper
                         + (String)this.partURIs.get(i));
                 try {
                     eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
-                    eventPipeline.setSitemap(this.sitemap);
                     this.partEventPipelines.add(eventPipeline);
                     pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
                 } catch (ComponentException cme) {

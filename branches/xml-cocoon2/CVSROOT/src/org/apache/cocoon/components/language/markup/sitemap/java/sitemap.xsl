@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.104 2001-04-24 19:07:38 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.105 2001-04-24 20:18:23 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -376,7 +376,6 @@
         /* the &lt;code&gt;EventPipeline&lt;/code&gt; is used to collect the xml producing sitemap
            components and the &lt;code&gt;StreamPipeline&lt;/code&gt; to produce the requested resource */
         EventPipeline eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
-        eventPipeline.setSitemap(this);
         StreamPipeline pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
         pipeline.setEventPipeline(eventPipeline);
         boolean result = false;
@@ -457,7 +456,6 @@
             EventPipeline eventPipeline = null;
             try {
               eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
-              eventPipeline.setSitemap(this);
               pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
               pipeline.setEventPipeline(eventPipeline);
               List listOfMaps = (List)(new ArrayList());

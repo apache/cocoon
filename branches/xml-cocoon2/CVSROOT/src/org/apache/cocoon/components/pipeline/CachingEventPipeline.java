@@ -56,7 +56,7 @@ import org.xml.sax.EntityResolver;
  * does not cache! (If it would cache, the response would be cached twice!)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-24 19:07:41 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-24 20:18:24 $
  */
 public final class CachingEventPipeline
 extends AbstractEventPipeline
@@ -315,7 +315,6 @@ implements Disposable, CacheableEventPipeline {
                 // connect SAXConnector
                 SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
                 connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
-                connect.setSitemap(sitemap);
                 this.connectors.add(connect);
                 next = (XMLConsumer) connect;
                 prev.setConsumer(next);
@@ -336,7 +335,6 @@ implements Disposable, CacheableEventPipeline {
             // insert SAXConnector
             SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
             connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
-            connect.setSitemap(sitemap);
             this.connectors.add(connect);
             next = (XMLConsumer) connect;
             prev.setConsumer(next);

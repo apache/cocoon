@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Null implementation of the SAXConnector. Simply sends events on to the next component in the pipeline.
  * @author <a href="prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 19:07:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-24 20:18:25 $
  */
 public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXConnector {
 
@@ -26,10 +26,6 @@ public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXCo
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters params)
     throws ProcessingException, SAXException, IOException {
-        // do nothing.
-    }
-
-    public void setSitemap(Sitemap sitemap) {
         // do nothing.
     }
 }

@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-24 19:07:44 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-24 20:18:26 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Poolable, SAXConnector, Disposable {
 
@@ -87,10 +87,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         } catch (Exception e) {
             getLogger().error("cannot obtain URLFactory", e);
         }
-    }
-
-    public void setSitemap(Sitemap sitemap) {
-        this.sitemap = sitemap;
     }
 
     public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
