@@ -231,10 +231,10 @@ public class PageLabelLinkService extends DefaultLinkService {
         }
         String encodedLabel;
         try {
-            encodedLabel = SourceUtil.encode(label.toString(), "utf-8");
+            encodedLabel = SourceUtil.encode(label, "utf-8");
         }
         catch (Exception e) {
-            encodedLabel = SourceUtil.encode(label.toString());
+            encodedLabel = SourceUtil.encode(label);
         }
         uri.append(parmName).append('=').append(encodedLabel);
         return uri.toString();
