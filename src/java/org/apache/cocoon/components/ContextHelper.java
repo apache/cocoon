@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
@@ -29,7 +30,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.7 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.8 2004/05/26 08:39:49 cziegeler Exp $
  */
 
 public final class ContextHelper {
@@ -53,6 +54,11 @@ public final class ContextHelper {
         // Forbid instantiation
     }
 
+    /**
+     * Return the current request
+     * @param context The component context
+     * @return The request object
+     */
     public static final Request getRequest(Context context) {
         // the request object is always present
         try {
@@ -62,6 +68,11 @@ public final class ContextHelper {
         }
     }
 
+    /**
+     * Return the current response
+     * @param context The component context
+     * @return The response
+     */
     public static final Response getResponse(Context context) {
         // the response object is always present
         try {
@@ -71,6 +82,11 @@ public final class ContextHelper {
         }
     }
 
+    /**
+     * Return the current object model
+     * @param context The component context
+     * @return The object model
+     */
     public static final Map getObjectModel(Context context) {
         // the object model is always present
         try {
@@ -78,5 +94,20 @@ public final class ContextHelper {
         } catch (ContextException ce) {
             throw new CascadingRuntimeException("Unable to get the object model from the context.", ce);
         }
+    }
+    
+    /**
+     * Return the current sitemap service manager
+     * @param context The component context
+     * @return The sitemap manager if currently a request is processed
+     * @since 2.2
+     */
+    public static final ServiceManager getSitemapServiceManager(Context context) {
+        // the service manager is always present
+        try {
+            return (ServiceManager)context.get(CONTEXT_SITEMAP_SERVICE_MANAGER);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the service manager from the context.", ce);
+        }        
     }
 }

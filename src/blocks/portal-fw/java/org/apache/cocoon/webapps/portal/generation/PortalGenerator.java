@@ -30,11 +30,14 @@ import org.xml.sax.SAXException;
  * This generator generates the portal for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalGenerator.java,v 1.6 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.7 2004/05/26 08:39:49 cziegeler Exp $
 */
 public final class PortalGenerator
 extends ServiceableGenerator {
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate()
     throws IOException, SAXException, ProcessingException {
 

@@ -42,6 +42,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @author CZiegeler
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+/**
  *  The portal context
  *
  *  This context allows access to various parts of a portal profile.
@@ -60,7 +66,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.10 2004/05/26 08:39:49 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -115,7 +121,7 @@ implements SessionContext {
                               Map     objectModel,
                               PortalManager portal,
                               XPathProcessor xpathProcessor)
-    throws IOException, SAXException, ProcessingException {
+    throws ProcessingException {
         this.xpathProcessor = xpathProcessor;
         this.setup(name, null, null);
 
@@ -135,7 +141,7 @@ implements SessionContext {
             }
             this.statusProfile = (Element)info.get(PortalConstants.COPLETINFO_STATUSPROFILE);
         }
-        this.mediaType = (this.copletPars != null ? (String)copletPars.getParameter(PortalConstants.PARAMETER_MEDIA)
+        this.mediaType = (this.copletPars != null ? (String)this.copletPars.getParameter(PortalConstants.PARAMETER_MEDIA)
                                                   : portal.getMediaType());
         // get the profile
 
@@ -187,12 +193,12 @@ implements SessionContext {
      * Get the configuration DOM
      */
     private void getConfigurationDOM(PortalManager portal)
-    throws ProcessingException, IOException {
+    throws ProcessingException {
         if (this.configurationDOM == null && portal != null) {
             try {
                 String contextID = null;
                 if (this.copletID != null && this.copletNumber != null) {
-                    contextID = "coplet_"+copletID+"_"+copletNumber;
+                    contextID = "coplet_"+this.copletID+"_"+this.copletNumber;
                 }
                 DOMBuilder builder = new DOMBuilder();
                 builder.startDocument();
@@ -209,13 +215,15 @@ implements SessionContext {
         }
     }
 
-    /* Set the context name */
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setup(java.lang.String, java.lang.String, java.lang.String)
+     */
     public void setup(String value, String load, String save) {
-        name = value;
+        this.name = value;
     }
 
-    /**
-     * Get the xml fragment
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getXML(java.lang.String)
      */
     public synchronized DocumentFragment getXML(String path)
     throws ProcessingException {
@@ -237,7 +245,7 @@ implements SessionContext {
 
             if (this.statusProfile != null) {
                 if (this.copletID != null && this.copletNumber != null) {
-                    String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
+                    String statusPath = "customization/coplet[@id='"+this.copletID+"' and @number='"+this.copletNumber+"']";
                     try {
                         Node node = DOMUtil.getSingleNode(this.statusProfile, statusPath, this.xpathProcessor);
                         if (node != null) {
@@ -278,7 +286,7 @@ implements SessionContext {
 
             if (this.statusProfile != null) {
                 if (this.copletID != null && this.copletNumber != null) {
-                    String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
+                    String statusPath = "customization/coplet[@id='"+this.copletID+"' and @number='"+this.copletNumber+"']";
                     if (path.startsWith("coplet-data/")) {
                         statusPath = statusPath + path.substring(11);
                     }
@@ -329,7 +337,7 @@ implements SessionContext {
 
                 if (this.statusProfile != null) {
                     if (this.copletID != null && this.copletNumber != null) {
-                        String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
+                        String statusPath = "customization/coplet[@id='"+this.copletID+"' and @number='"+this.copletNumber+"']";
                         if (path.startsWith("coplet-data/")) {
                             statusPath = statusPath + path.substring(11);
                         }
@@ -366,28 +374,24 @@ implements SessionContext {
 
     }
 
-    /**
-     * Append a document fragment at the given path. The implementation of this
-     * method is context specific.
-     * Usually the children of the fragment are appended as new children of the
-     * node specified by the path.
-     * If the path is not existent it is created.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#appendXML(java.lang.String, org.w3c.dom.DocumentFragment)
      */
     public synchronized void appendXML(String path, DocumentFragment fragment)
     throws ProcessingException {
         throw new ProcessingException("appendXML() not implemented.");
     }
 
-    /**
-     * Remove nodes
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#removeXML(java.lang.String)
      */
     public synchronized void removeXML(String path)
     throws ProcessingException {
         throw new ProcessingException("removeXML() not implemented.");
     }
 
-    /**
-     * Get a copy the first node specified by the path.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getSingleNode(java.lang.String)
      */
     public synchronized Node getSingleNode(String path)
     throws ProcessingException {
@@ -396,8 +400,8 @@ implements SessionContext {
         // return result;
     }
 
-    /**
-     * Get a copy all the nodes specified by the path.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getNodeList(java.lang.String)
      */
     public synchronized NodeList getNodeList(String path)
     throws ProcessingException {
@@ -406,8 +410,8 @@ implements SessionContext {
         // return result;
     }
 
-    /**
-     * Set the value of a node. The node is copied before insertion.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setNode(java.lang.String, org.w3c.dom.Node)
      */
     public synchronized void setNode(String path, Node node)
     throws ProcessingException {
@@ -415,36 +419,35 @@ implements SessionContext {
     }
 
 
-    /**
-     * Set a context attribute. If value is null the attribute is removed.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setAttribute(java.lang.String, java.lang.Object)
      */
     public synchronized void setAttribute(String key, Object value) {
         if (value == null) {
-            attributes.remove(key);
+            this.attributes.remove(key);
         } else {
-            attributes.put(key, value);
+            this.attributes.put(key, value);
         }
     }
 
-    /**
-     * Get a context attribute. If the attribute is not available return null
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getAttribute(java.lang.String)
      */
     public synchronized Object getAttribute(String key) {
-        return attributes.get(key);
+        return this.attributes.get(key);
     }
 
-    /**
-     * Get a context attribute. If the attribute is not available the defaultObject is returned
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getAttribute(java.lang.String, java.lang.Object)
      */
     public synchronized Object getAttribute(String key, Object defaultObject) {
-        Object value = attributes.get(key);
+        Object value = this.attributes.get(key);
         if (value == null) value = defaultObject;
         return value;
     }
 
-    /**
-     * Get the value of this node. This is similiar to the xsl:value-of
-     * function. If the node does not exist, <code>null</code> is returned.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getValueOfNode(java.lang.String)
      */
     public synchronized String getValueOfNode(String path)
     throws ProcessingException {
@@ -453,18 +456,16 @@ implements SessionContext {
         // return value;
     }
 
-    /**
-     * Set the value of a node.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setValueOfNode(java.lang.String, java.lang.String)
      */
     public synchronized void setValueOfNode(String path, String value)
     throws ProcessingException {
         throw new ProcessingException("setValueOfNode() not implemented.");
     }
 
-    /**
-     * Stream the XML directly to the handler. This streams the contents of getXML()
-     * to the given handler without creating a DocumentFragment containing a copy
-     * of the data
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#streamXML(java.lang.String, org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler)
      */
     public synchronized boolean streamXML(String path,
                            ContentHandler contentHandler,
@@ -479,10 +480,8 @@ implements SessionContext {
         return streamed;
     }
 
-    /**
-     * Try to load XML into the context.
-     * If the context does not provide the ability of loading,
-     * an exception is thrown.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#loadXML(java.lang.String, org.apache.excalibur.source.SourceParameters)
      */
     public void loadXML(String path,
                         SourceParameters parameters)
@@ -490,10 +489,8 @@ implements SessionContext {
         throw new ProcessingException("The context " + this.name + " does not support loading.");
     }
 
-    /**
-     * Try to save XML from the context.
-     * If the context does not provide the ability of saving,
-     * an exception is thrown.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#saveXML(java.lang.String, org.apache.excalibur.source.SourceParameters)
      */
     public void saveXML(String path,
                         SourceParameters parameters)

@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.13 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: PortalManager.java,v 1.14 2004/05/26 08:39:49 cziegeler Exp $
 */
 public interface PortalManager {
 
@@ -92,7 +92,7 @@ public interface PortalManager {
      * This is only a public wrapper for the getConfiguration method.
      */
     void configurationTest()
-    throws ProcessingException, IOException, SAXException;
+    throws ProcessingException;
 
     /**
      * Include Portal URI into stream
@@ -102,7 +102,7 @@ public interface PortalManager {
                              String      profileID,
                              String      media,
                              String      contextID)
-    throws IOException, SAXException, ProcessingException;
+    throws SAXException, ProcessingException;
 
     /**
      * Show the admin configuration page.
@@ -114,7 +114,7 @@ public interface PortalManager {
      * Get the status profile
      */
     Element getStatusProfile()
-    throws SAXException, IOException, ProcessingException;
+    throws ProcessingException;
 
     /**
      * Show the portal.
@@ -123,13 +123,13 @@ public interface PortalManager {
     void showPortal(XMLConsumer consumer,
                     boolean configMode,
                     boolean adminProfile)
-    throws SAXException, ProcessingException, IOException;
+    throws SAXException, ProcessingException;
 
     /**
      * Check the authentication for the coplet. If it is not available do a redirect
      */
     boolean checkAuthentication(Redirector redirector, String copletID)
-    throws SAXException, IOException, ProcessingException;
+    throws IOException, ProcessingException;
         
     /**
      * Get the current media type
@@ -141,7 +141,7 @@ public interface PortalManager {
      * Get the portal context of the current application
      */
     SessionContext getContext(boolean create)
-    throws ProcessingException, IOException, SAXException;
+    throws ProcessingException;
 
     /**
      * Builds the key for caching

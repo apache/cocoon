@@ -22,9 +22,8 @@ import java.util.Map;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -50,17 +49,17 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.7 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id: CopletThread.java,v 1.8 2004/05/26 08:39:49 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
-    private Logger           logger;
-    private String           copletID;
-    private Map              objectModel;
-    private Object[]         loadedCoplet;
-    private ComponentManager  manager;
-    private SourceResolver   resolver;
-    private XPathProcessor   processor;
+    private Logger         logger;
+    private String         copletID;
+    private Map            objectModel;
+    private Object[]       loadedCoplet;
+    private ServiceManager manager;
+    private SourceResolver resolver;
+    private XPathProcessor processor;
     
     /**
      * Initialise all instance variables.
@@ -79,7 +78,7 @@ public final class CopletThread implements Runnable {
                      Map     objectModel,
                      Logger  logger,
                      Object[] loadedCoplet,
-                     ComponentManager manager,
+                     ServiceManager manager,
                      SourceResolver resolver,
                      XPathProcessor processor) {
         this.copletID = copletID;
@@ -97,7 +96,7 @@ public final class CopletThread implements Runnable {
     public void run() {
         XMLSerializer compiler = null;
         Element copletConf = (Element)this.loadedCoplet[1];
-        SourceParameters p = (SourceParameters)loadedCoplet[2];
+        SourceParameters p = (SourceParameters)this.loadedCoplet[2];
 
         try {
             // Determine the resource to load
@@ -119,7 +118,7 @@ public final class CopletThread implements Runnable {
 
             if (!handlesSizable && !p.getParameter("size", "max").equals("max")) {
                 // do nothing here
-                loadedCoplet[0] = new byte[0];
+                this.loadedCoplet[0] = new byte[0];
             } else {
 
                 compiler = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
@@ -161,33 +160,33 @@ public final class CopletThread implements Runnable {
                     includeFragment = size.equals("max");
                     if (!includeFragment) {
                         if (this.logger.isWarnEnabled()) {
-                            this.logger.warn("Minimized coplet '"+copletID+"' not handled correctly.");
+                            this.logger.warn("Minimized coplet '"+this.copletID+"' not handled correctly.");
                         }
                     }
                     if ( includeFragment ) {
                         if (this.logger.isDebugEnabled() ) {
-                            this.logger.debug("portal: Loading coplet " + copletID);
+                            this.logger.debug("portal: Loading coplet " + this.copletID);
                         }
                         // add the parameters to the request attributes
                         Map info = new HashMap(3);
                         SessionContextImpl.copletInfo.set(info);
                         info.put(PortalConstants.COPLETINFO_PARAMETERS, p);
                         info.put(PortalConstants.COPLETINFO_PORTALURI, request.getRequestURI());
-                        info.put(PortalConstants.COPLETINFO_STATUSPROFILE, loadedCoplet[7]);
+                        info.put(PortalConstants.COPLETINFO_STATUSPROFILE, this.loadedCoplet[7]);
                         XMLConsumer xc = new IncludeXMLConsumer(nextConsumer);
                         Source source = null;
                         try {
                             source = SourceUtil.getSource(resource, 
                                                           null, 
                                                           (handlesParameters ? p : null), 
-                                                          resolver);
+                                                          this.resolver);
                             SourceUtil.toSAX(source, xc);
                         } finally {
-                            resolver.release(source);
+                            this.resolver.release(source);
                         }
 
                         if (this.logger.isDebugEnabled()) {
-                            this.logger.debug("portal: Loaded coplet " + copletID);
+                            this.logger.debug("portal: Loaded coplet " + this.copletID);
                         }
                     }
                     if ( stylesheet != null ) {
@@ -197,36 +196,36 @@ public final class CopletThread implements Runnable {
                     SessionContextImpl.copletInfo.set(null);
                     if ( transformers != null ) {
                         for(int i=0; i < transformers.size(); i++) {
-                            this.manager.release( (Component)transformers.get(i));
+                            this.manager.release( transformers.get(i));
                             this.resolver.release( (Source)sources.get(i));
                         }
                     }
                 }
                 nextConsumer = null;
                 compiler.endDocument();
-                loadedCoplet[0] = compiler.getSAXFragment();
+                this.loadedCoplet[0] = compiler.getSAXFragment();
             }
         } catch (Exception local) {
             // this exception is ignored and an error message is included
             // later on when the coplet is processed
-            this.logger.error("Exception during processing of coplet: " + copletID, local);
+            this.logger.error("Exception during processing of coplet: " + this.copletID, local);
         } catch (Throwable local) {
             // this exception is ignored and an error message is included
             // later on when the coplet is processed
-            this.logger.error("Exception during processing of coplet: " + copletID, local);
+            this.logger.error("Exception during processing of coplet: " + this.copletID, local);
         } finally {
             if (compiler != null) {
                 this.manager.release(compiler);
             }
         }
-        loadedCoplet[6] = null;
-        copletID = null;
+        this.loadedCoplet[6] = null;
+        this.copletID = null;
         copletConf = null;
         this.logger = null;
-        objectModel = null;
+        this.objectModel = null;
         p = null;
-        loadedCoplet = null;
-        manager = null;
-        resolver = null;
+        this.loadedCoplet = null;
+        this.manager = null;
+        this.resolver = null;
     } // END run
 } // END CLASS
