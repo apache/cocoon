@@ -76,13 +76,20 @@ public class CompilingClassLoader extends ClassLoader {
 
     SourceResolver sourceResolver;
     JavaCompiler compiler;
-    Map output = new HashMap();
     List sourcePath = new LinkedList();
     HashSet sourceListeners = new HashSet();
+    ClassRepository classRepository;
 
     public interface SourceListener {
         public void sourceCompiled(Source src);
         public void sourceCompilationError(Source src, String error);
+    }
+
+    public interface ClassRepository {
+        public byte[] getCompiledClass(String className);
+        public void addCompiledClass(String className, 
+                                     Source source,
+                                     byte[] contents);
     }
 
     protected Class findClass(String className) 
@@ -92,9 +99,11 @@ public class CompilingClassLoader extends ClassLoader {
     }
 
     public CompilingClassLoader(ClassLoader parent,
-                                SourceResolver sourceResolver) {
+                                SourceResolver sourceResolver,
+                                ClassRepository classRepository) {
         super(parent);
         this.sourceResolver = sourceResolver;
+        this.classRepository = classRepository;
         this.compiler = new JavaCompilerImpl();
         this.sourcePath.add("");
     }
@@ -136,6 +145,14 @@ public class CompilingClassLoader extends ClassLoader {
         }
     }
 
+    public void setClassRepository(ClassRepository rep) {
+        classRepository = rep;
+    }
+
+    public ClassRepository getClassRepository() {
+        return classRepository;
+    }
+
     public void setSourcePath(String[] path) {
         synchronized (sourcePath) {
             sourcePath.clear();
@@ -146,7 +163,6 @@ public class CompilingClassLoader extends ClassLoader {
         }
     }
 
-    
     private Source getSource(String className) {
         synchronized (sourcePath) {
             Iterator iter = sourcePath.iterator();
@@ -228,7 +244,7 @@ public class CompilingClassLoader extends ClassLoader {
             getClassReader(final String className) 
 		throws IOException {
 		final byte[] bytes = 
-		    (byte[])output.get(className);
+		    (byte[])classRepository.getCompiledClass(className);
 		if (bytes != null) {
 		    return new JavaClassReader() {
 			    public String getClassName() {
@@ -281,9 +297,10 @@ public class CompilingClassLoader extends ClassLoader {
 			    }
 			    s.flush();
 			    System.out.println("Compiled: " + className);
-			    output.put(className,
-				    s.toByteArray());
                             Source src = getSource(className);
+			    classRepository.addCompiledClass(className,
+                                                             src,
+                                                             s.toByteArray());
                             notifyListeners(src, null);
                             releaseSource(src);
 			}
@@ -326,7 +343,8 @@ public class CompilingClassLoader extends ClassLoader {
 
 	private byte[] compile(String className) 
             throws ClassNotFoundException {
-	    byte[] result = (byte[])output.get(className);
+	    byte[] result = (byte[])
+                classRepository.getCompiledClass(className);
 	    if (result != null) {
 		return result;
 	    }
@@ -354,7 +372,7 @@ public class CompilingClassLoader extends ClassLoader {
                     throw new ClassCompilationException(msg);
                     
                 }
-                return (byte[])output.get(className);
+                return (byte[])classRepository.getCompiledClass(className);
             } finally {
                 releaseSource(src);
             }
