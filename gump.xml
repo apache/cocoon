@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.34 2003/04/06 17:51:35 stefano Exp $
+  CVS $Id: gump.xml,v 1.35 2003/04/07 11:55:19 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -582,6 +582,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="jta"/>
     <depend project="jakarta-slide"/>
 
     <work nested="tools/anttasks"/>
