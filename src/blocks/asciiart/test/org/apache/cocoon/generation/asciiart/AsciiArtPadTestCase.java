@@ -27,7 +27,7 @@ import junit.textui.TestRunner;
  *
  * @author huber.at.apache.org
  * @since 18. Dezember 2002
- * @version CVS $Id: AsciiArtPadTestCase.java,v 1.2 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AsciiArtPadTestCase extends TestCase {
 
@@ -179,6 +179,7 @@ public class AsciiArtPadTestCase extends TestCase {
      *@since
      */
     protected void setUp() throws Exception {
+        super.setUp();
         asciiArtPad = null;
     }
 
@@ -189,6 +190,7 @@ public class AsciiArtPadTestCase extends TestCase {
      *@exception  Exception  Description of the Exception
      */
     protected void tearDown() throws Exception {
+        super.tearDown();
         asciiArtPad = null;
     }
 }

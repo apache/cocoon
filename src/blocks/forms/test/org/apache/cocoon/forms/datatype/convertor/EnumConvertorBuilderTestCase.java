@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.3 2004/03/10 09:13:22 stephan Exp $
+ * @version CVS $Id$
  */
 public class EnumConvertorBuilderTestCase extends TestCase {
 
@@ -39,6 +39,7 @@ public class EnumConvertorBuilderTestCase extends TestCase {
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
+        super.setUp();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         parser = factory.newDocumentBuilder();
@@ -47,8 +48,6 @@ public class EnumConvertorBuilderTestCase extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    protected void tearDown() throws Exception {
-    }
 
     public EnumConvertorBuilderTestCase(String name) {
         super(name);

@@ -50,8 +50,9 @@ public class FlowTest extends TestCase {
     private MockRedirector redirector;
     private HashMap objectmodel;
 
-    public void setUp() {
+    public void setUp() throws Exception {
 
+        super.setUp();
         context = new ContinuationContext();
       
         DefaultContext avalonContext = new DefaultContext();
