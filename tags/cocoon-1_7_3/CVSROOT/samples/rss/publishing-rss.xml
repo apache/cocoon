@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="rss-html.xsl" type="text/xsl"?>
+<?xml-stylesheet href="fancy-rss-wml.xsl" type="text/xsl" media="wap"?>
+<?cocoon-process type="xslt"?>
+
+ <rss version="0.91">
+  <channel>
+   <title>About.com Publishing</title>
+    <link>http://publishing.about.com/</link>
+    <description>Keeping tabs on the book biz!</description>
+    <language>en-us</language>
+
+    <item>
+     <title>Amazon's Patents - The Problem and Resolution</title>
+     <link>http://publishing.about.com/arts/publishing/library/weekly/aa031000a.htm</link>
+     <description>Amazon's patent applications cause a public relations nightmare, and an opportunity for change.</description>
+    </item>
+
+    <item>
+     <title>Canadian Copyright Information</title>
+     <link>http://publishing.about.com/arts/publishing/msub11ca.htm</link>
+    </item>
+
+    <item>
+     <title>UK Copyright Information</title>
+     <link>http://publishing.about.com/arts/publishing/msub11uk.htm</link>
+    </item>
+
+    <item>
+     <title>Self-Syndication through RSS</title>
+     <link>http://publishing.about.com/library/blrss.htm</link>
+     <description>Your news, bestseller lists, and new release info could be the stuff portals are made of.</description>
+    </item>
+
+    <item>
+     <title>eMatter Not Rocketing</title>
+     <link>http://publishing.about.com/arts/publishing/library/weekly/aa022200a.htm</link>
+     <description>Why Fatbrain.com's epublishing program isn't living up to expectations. </description>
+    </item>      
+
+    <item>
+     <title>Forum: Build a Better e-Bookstore</title>
+     <link>http://about.delphi.com/ab-publishing/messages/?msg=213.1&amp;ctx=1</link>
+     <description>What is your vision for an ideal ebook bookstore?</description>
+    </item>
+  
+    <item>
+     <title>Race Relations in Publishing</title>
+     <link>http://publishing.about.com/arts/publishing/library/issues/bli_minorities.htm</link>
+     <description>Ethnic minorities feel snubbed by the industry.</description>
+    </item>
+    
+    <item>
+     <title>Barcodes for Books</title>
+     <link>http://publishing.about.com/arts/publishing/library/weekly/aa012500a.htm</link>
+     <description>Bookland EAN and UPC barcodes FAQ.</description>
+    </item>
+    
+    <item>
+     <title>How to Get a Children's Book Published</title>
+     <link>http://publishing.about.com/arts/publishing/library/blhowto1.htm</link>
+    </item>
+     
+    <item>
+     <title>Forum: Publish Your Poetry as eMatter</title>
+     <link>http://www.delphi.com/ab-publishing/messages/?msg=210.1&amp;ctx=1</link>
+    </item>
+    
+    <item>
+     <title>Forum: Prepublication Book Reviews</title>
+     <link>http://www.delphi.com/ab-publishing/messages/?msg=206.1&amp;ctx=1</link>
+    </item>
+    
+    <item>
+     <title>More Articles</title>
+     <link>http://publishing.about.com/arts/publishing/library/weekly/mpreviss.htm</link>
+    </item>
+
+    <item>
+     <title>Net Links</title>
+     <link>http://publishing.about.com/mlibrary.htm</link>
+    </item>
+   </channel>
+  </rss>

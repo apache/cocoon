@@ -1,0 +1,16 @@
+This directory includes everything you need to do the presentation that
+Stefano Mazzocchi <stefano@apache.org> gave at ApacheCON 2000. 
+These are the exact same slides used during the talk and they were presented 
+on Cocoon 1.7.1.
+
+Note that they made extensive use of new web technologies such as CSS and PNG, 
+so make sure you have a CSS + PNG capable web browser to access the pages. The
+presentation was tested under both MS-IE5 and Mozilla M14.
+
+This doesn't want to be an XML replacer for slide presentation applications, but
+a good example of a complex use of XML publishing. Also, the slide DTD is _very_
+rought since it was developed just for that purpose.
+
+We have no plans to support or moving further such DTDs or enforce its use, at
+the same time, we suggest you to take a look at how things are done and gain
+more knowledge on the possibilities of XML publishing.

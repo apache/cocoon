@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<book title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
+  <external href="../index.html"  label="Back"/>
+<separator/>
+  <external href="./dist"  label="Download"/>
+<separator/>
+  <page id="index" label="Index" source="index.xml"/>
+  <page id="license" label="License" source="license.xml"/>
+  <page id="install" label="Install" source="installing.xml"/>
+<separator/>
+  <page id="infrastracture" label="Infrastructure" source="infrastructure.xml"/>
+  <page id="technologies" label="Technologies" source="technologies.xml"/>
+  <page id="guide" label="User Guide" source="guide.xml"/>
+  <page id="dynamic" label="Dynamic Content" source="dynamic.xml"/>
+<separator/>
+  <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
+  <page id="sqltaglib" label="SQL XSP Taglib" source="sqltaglib.xml"/>
+  <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
+  <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
+  <page id="dcp" label="DCP Processor" source="dcpprocessor.xml"/>
+<separator/>
+  <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
+<separator/>
+  <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
+  <page id="javadoc" label="Javadoc XML" source="javadoc.xml"/>
+<separator/>
+  <faqs id="faqs" label="FAQ" source="faq.xml"/>
+  <changes id="changes" label="Changes" source="changes.xml"/>
+  <todo id="todo" label="Todo" source="todo.xml"/>
+<separator/>
+  <page id="livesites" label="Live Sites" source="livesites.xml"/>
+<separator/>
+  <external label="Code Repository" href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/"/>
+  <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
+  <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
+  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
+</book>
