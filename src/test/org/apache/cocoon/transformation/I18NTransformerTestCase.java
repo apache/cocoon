@@ -75,9 +75,9 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
         MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, this.manager, env);
+        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
         
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));
@@ -102,9 +102,9 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
         MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, this.manager, env);
+        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
         
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));

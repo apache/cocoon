@@ -17,23 +17,14 @@
 package org.apache.cocoon.core.container;
 
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
-import junit.framework.TestResult;
 
-import org.apache.avalon.excalibur.logger.DefaultLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
@@ -42,7 +33,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
 /**
- * JUnit TestCase for Avalon Components.
+ * JUnit TestCase for Cocoon Components.
  * <p>
  *   This class extends the JUnit TestCase class to setup an environment which
  *   makes it possible to easily test Avalon Components. The following methods
@@ -78,39 +69,6 @@ import org.apache.avalon.framework.service.ServiceManager;
  *         &lt;/para&gt;
  *       ]]&gt;
  *     &lt;/annotation&gt;
- *
- *     &lt;logkit log-level="INFO"&gt;
- *       &lt;factories&gt;
- *         &lt;factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/&gt;
- *         &lt;factory type="file" class="org.apache.avalon.excalibur.logger.factory.FileTargetFactory"/&gt;
- *       &lt;/factories&gt;
- *
- *       &lt;targets&gt;
- *         &lt;stream id="console"&gt;
- *           &lt;stream&gt;System.out&lt;/stream&gt;
- *           &lt;format type="avalon"&gt;
- *             %7.7{priority} %23.23{time:yyyy-MM-dd' 'HH:mm:ss.SSS} [%30.30{category}] (%{context}): %{message}\n%{throwable}
- *           &lt;/format&gt;
- *         &lt;/stream&gt;
- *         &lt;file id="log-file"&gt;
- *           &lt;filename&gt;TEST-{full test class name}.log&lt;/filename&gt;
- *           &lt;format type="avalon"&gt;
- *             %7.7{priority} %23.23{time:yyyy-MM-dd' 'HH:mm:ss.SSS} [%30.30{category}] (%{context}): %{message}\n%{throwable}
- *           &lt;/format&gt;
- *         &lt;/file&gt;
- *       &lt;/targets&gt;
- *
- *       &lt;categories&gt;
- *         &lt;category name="test" log-level="INFO"&gt;
- *           &lt;log-target id-ref="console"/&gt;
- *           &lt;log-target id-ref="log-file"/&gt;
- *         &lt;/category&gt;
- *         &lt;category name="jdbc" log-level="INFO"&gt;
- *           &lt;log-target id-ref="console"/&gt;
- *           &lt;log-target id-ref="log-file"/&gt;
- *         &lt;/category&gt;
- *       &lt;/categories&gt;
- *     &lt;/logkit&gt;
  *
  *     &lt;context&gt;
  *       &lt;entry name="foo" value="bar"/&gt;
@@ -154,46 +112,6 @@ import org.apache.avalon.framework.service.ServiceManager;
  *  <code>title</code> element, naming the test, and a <code>para</code>
  *  element which is used to describe the test.</dd>
  *
- * <dt>logkit</dt>
- * <dd>Configures the logger used by the test cases and the components used
- *  by the tests.  The <code>logkit</code> element takes two optional
- *  attributes:
- *      <dl>
- *      <dt>logger</dt><dd>Uses to name the logger which is used to bootstrap
- *       the LogKit logger.  (Defaults to <code>"lm"</code>)</dd>
- *      <dt>log-level</dt><dd>Because the logger used by the LogKit must be
- *       created before the Log Kit Manager is initialized, it must be fully
- *       configured before the <code>logkit</code> element is parsed.  This
- *       attribute allows the Log Kit's log priority to be set.  This log
- *       level will also become the default for the Role Manager, Component
- *       Manager, and all components if they do not have <code>category</code>
- *       elements declated in the <code>logkit</code> element.
- *       (Defaults to "INFO")</dd>
- *      </dl>
- *  The loggers used by test cases and components can be easily configured
- *  from within this file.  The default test configuration, shown above,
- *  includes a "test" category.  This category is used to configure the
- *  default logger for all test cases.  If it is set to "DEBUG", then all
- *  test debug logging will be enabled.  To enalble debug logging for a
- *  single test case, a child category must be defined for the
- *  "testCheckTotals" test case as follows:
- *  <pre>
- *       &lt;categories&gt;
- *         &lt;category name="test" log-level="INFO"&gt;
- *           &lt;log-target id-ref="console"/&gt;
- *           &lt;log-target id-ref="log-file"/&gt;
- *
- *           &lt;category name="testCheckTotals" log-level="DEBUG"&gt;
- *             &lt;log-target id-ref="console"/&gt;
- *             &lt;log-target id-ref="log-file"/&gt;
- *           &lt;/category&gt;
- *         &lt;/category&gt;
- *       &lt;/categories&gt;
- *  </pre>
- *  For general information on how to configure the LogKit Manager, please
- *  refer to the Log Kit documentation.
- * </dd>
- *
  * <dt>context</dt>
  * <dd>Allows context properties to be set in the context passed to any
  *  Contextualizable components.</dd>
@@ -220,50 +138,33 @@ import org.apache.avalon.framework.service.ServiceManager;
  */
 public class ContainerTestCase extends TestCase {
     
-    ///Format of default formatter
-    private static final String FORMAT =
-        "%7.7{priority} %23.23{time:yyyy-MM-dd' 'HH:mm:ss.SSS} [%30.30{category}] (%{context}): %{message}\n%{throwable}";
-
-    //The default logger
-    private Logger m_logger;
-    private CocoonServiceManager m_manager;
-    private LoggerManager m_logKitManager;
-    private static HashMap m_tests = new HashMap();
-
-    protected ServiceManager manager;
+    /** The default logger */
+    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG);
+    
+    /** The service manager to use */
+    private ServiceManager manager;
 
     public ContainerTestCase( final String name ) {
         super( name );
-
-        ArrayList methodList = (ArrayList)ContainerTestCase.m_tests.get( getClass() );
-
-        if( null == methodList )
-        {
-            Method[] methods = getClass().getMethods();
-            methodList = new ArrayList( methods.length );
-
-            for( int i = 0; i < methods.length; i++ )
-            {
-                String methodName = methods[ i ].getName();
-                if( methodName.startsWith( "test" ) &&
-                    ( Modifier.isPublic( methods[ i ].getModifiers() ) ) &&
-                    ( methods[ i ].getReturnType().equals( Void.TYPE ) ) &&
-                    ( methods[ i ].getParameterTypes().length == 0 ) )
-                {
-                    methodList.add( methodName );
-                }
-            }
-
-            ContainerTestCase.m_tests.put( getClass(), methodList );
-        }
     }
 
     /** Return the logger */
-    protected Logger getLogger()
-    {
-        return m_logger;
+    protected Logger getLogger() {
+        return logger;
     }
 
+    /** Return the service manager */
+    protected ServiceManager getManager() {
+        return this.manager;
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.prepare();
+    }
     /**
      * Initializes the ComponentLocator
      *
@@ -271,18 +172,14 @@ public class ContainerTestCase extends TestCase {
      * all '.' replaced by '/' and loaded as a resource via classpath
      */
     protected void prepare()
-        throws Exception
-    {
+    throws Exception {
         final String resourceName = getClass().getName().replace( '.', '/' ) + ".xtest";
         URL resource = getClass().getClassLoader().getResource( resourceName );
 
-        if( resource != null )
-        {
+        if( resource != null ) {
             getLogger().debug( "Loading resource " + resourceName );
             prepare( resource.openStream() );
-        }
-        else
-        {
+        } else {
             getLogger().debug( "Resource not found " + resourceName );
         }
     }
@@ -299,142 +196,44 @@ public class ContainerTestCase extends TestCase {
      * to the member variable m_logPriority.
      */
     protected final void prepare( final InputStream testconf )
-        throws Exception
-    {
-        getLogger().debug( "ExcaliburTestCase.initialize" );
+    throws Exception {
+        if ( getLogger().isDebugEnabled() ) {
+            getLogger().debug( "ContainerTestCase.initialize" );
+        }
 
         final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
         final Configuration conf = builder.build( testconf );
 
         String annotation = conf.getChild( "annotation" ).getValue( null );
 
-        if( ( null != annotation ) && !( "".equals( annotation ) ) )
-        {
-            m_logger.info( annotation );
+        if( ( null != annotation ) && !( "".equals( annotation ) ) ) {
+            this.logger.info( annotation );
         }
 
-        Context context = setupContext( conf.getChild( "context" ) );
+        Context context = this.setupContext( conf.getChild( "context" ) );
 
         setupManagers( conf.getChild( "components" ),
                        conf.getChild( "roles" ),
-                       conf.getChild( "logkit" ),
+                       conf.getChild( "logging" ),
                        context );
-        manager = m_manager;
+    }
 
-        setCurrentLogger( "prepare" );
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        this.done();
+        super.tearDown();
     }
 
     /**
      * Disposes the <code>ComponentLocator</code>
      */
-    final private void done()
-    {
-        if( null != m_manager )
-        {
-            m_manager.dispose();
+    final private void done() {
+        if( manager != null ) {
+            ContainerUtil.dispose(manager);
+            manager = null;
         }
-
-        m_manager = null;
-    }
-
-    /**
-     * Exctract the base class name of a class.
-     */
-    private String getBaseClassName( Class clazz )
-    {
-        String name = clazz.getName();
-        int pos = name.lastIndexOf( '.' );
-        if( pos >= 0 )
-        {
-            name = name.substring( pos + 1 );
-        }
-        return name;
-    }
-
-    /**
-     * Override <code>run</code> so that we can have code that is run once.
-     */
-    final public void run( TestResult result )
-    {
-        ArrayList methodList = (ArrayList)ContainerTestCase.m_tests.get( getClass() );
-
-        if( null == methodList || methodList.isEmpty() )
-        {
-            return; // The test was already run!  NOTE: this is a hack.
-        }
-
-        // Set the logger for the initialization phase.
-        setCurrentLogger( getBaseClassName( getClass() ) );
-
-        try
-        {
-            if( this instanceof Initializable )
-            {
-                ( (Initializable)this ).initialize();
-            }
-
-            prepare();
-
-            Iterator tests = methodList.iterator();
-
-            while( tests.hasNext() )
-            {
-                String methodName = (String)tests.next();
-                setName( methodName );
-                setCurrentLogger( methodName );
-
-                if( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug( "" );
-                    getLogger().debug( "========================================" );
-                    getLogger().debug( "  begin test: " + methodName );
-                    getLogger().debug( "========================================" );
-                }
-
-                super.run( result );
-
-                if( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug( "========================================" );
-                    getLogger().debug( "  end test: " + methodName );
-                    getLogger().debug( "========================================" );
-                    getLogger().debug( "" );
-                }
-            }
-
-        }
-        catch( Exception e )
-        {
-            System.out.println( e );
-            e.printStackTrace();
-            result.addError( this, e );
-        }
-        finally
-        {
-            done();
-
-            if( this instanceof Disposable )
-            {
-                try
-                {
-                    ( (Disposable)this ).dispose();
-                }
-                catch( Exception e )
-                {
-                    result.addFailure( this, new AssertionFailedError( "Disposal Error" ) );
-                }
-            }
-        }
-
-        methodList.clear();
-        ContainerTestCase.m_tests.put( getClass(), methodList );
-    }
-
-    /**
-     * Sets the logger which will be returned by getLogger and getLogEnabledLogger
-     */
-    final private void setCurrentLogger( String name ) {
-        m_logger = m_logKitManager.getLoggerForCategory( "test." + name );;
     }
 
     /**
@@ -445,75 +244,72 @@ public class ContainerTestCase extends TestCase {
      * to put additional objects into the context programmatically.
      */
     final private Context setupContext( final Configuration conf )
-        throws Exception
-    {
-        //FIXME(GP): This method should setup the Context object according to the
-        //           configuration spec. not yet completed
+    throws Exception {
         final DefaultContext context = new DefaultContext();
         final Configuration[] confs = conf.getChildren( "entry" );
-        for( int i = 0; i < confs.length; i++ )
-        {
+        for( int i = 0; i < confs.length; i++ ) {
             final String key = confs[ i ].getAttribute( "name" );
             final String value = confs[ i ].getAttribute( "value", null );
-            if( value == null )
-            {
+            if( value == null ) {
                 String clazz = confs[ i ].getAttribute( "class" );
                 Object obj = getClass().getClassLoader().loadClass( clazz ).newInstance();
                 context.put( key, obj );
-                if( getLogger().isInfoEnabled() )
-                    getLogger().info( "ExcaliburTestCase: added an instance of class " + clazz + " to context entry " + key );
-            }
-            else
-            {
+                if( getLogger().isInfoEnabled() ) {
+                    getLogger().info( "ContainerTestCase: added an instance of class " + clazz + " to context entry " + key );
+                }
+            } else {
                 context.put( key, value );
-                if( getLogger().isInfoEnabled() )
-                    getLogger().info( "ExcaliburTestCase: added value \"" + value + "\" to context entry " + key );
+                if( getLogger().isInfoEnabled() ) {
+                    getLogger().info( "ContainerTestCase: added value \"" + value + "\" to context entry " + key );
+                }
             }
         }
         addContext( context );
-        return ( context );
+        return context ;
     }
 
     /**
      * This method may be overwritten by subclasses to put additional objects
      * into the context programmatically.
      */
-    protected void addContext( DefaultContext context )
-    {
+    protected void addContext( DefaultContext context ) {
     }
 
     final private void setupManagers( final Configuration confCM,
                                       final Configuration confRM,
-                                      final Configuration confLM,
+                                      final Configuration loggingConf,
                                       final Context context )
-        throws Exception
-    {
-        // Setup the log manager.  Get the logger name and log level from attributes
-        //  in the <logkit> node
-        String lmLoggerName = confLM.getAttribute( "logger", "lm" );
-        String lmLogLevel = confLM.getAttribute( "log-level", "INFO" );
-        DefaultLoggerManager logKitManager = new DefaultLoggerManager();
-        logKitManager.enableLogging( new ConsoleLogger() );
-        logKitManager.contextualize( context );
-        logKitManager.configure( confLM );
-        m_logKitManager = logKitManager;
+    throws Exception {
+        // Get the log level from attributes
+        String lmLogLevel = loggingConf.getAttribute( "log-level", "DEBUG" );
+        int level = ConsoleLogger.LEVEL_DEBUG;
+        if ( lmLogLevel.equalsIgnoreCase("INFO") ) {
+            level = ConsoleLogger.LEVEL_INFO;
+        } else if ( lmLogLevel.equalsIgnoreCase("DISABLED") ) {
+            level = ConsoleLogger.LEVEL_DISABLED;
+        } else if ( lmLogLevel.equalsIgnoreCase("WARN") ) {
+            level = ConsoleLogger.LEVEL_WARN;
+        } else if ( lmLogLevel.equalsIgnoreCase("ERROR") ) {
+            level = ConsoleLogger.LEVEL_ERROR;
+        } else if ( lmLogLevel.equalsIgnoreCase("FATAL") ) {
+            level = ConsoleLogger.LEVEL_FATAL;
+        }
+        this.logger = new ConsoleLogger(level);
 
         // Setup the RoleManager
-        String rmLoggerName = confRM.getAttribute( "logger", "rm" );
         RoleManager roleManager = new RoleManager();
-        roleManager.enableLogging( logKitManager.getLoggerForCategory( rmLoggerName ) );
+        roleManager.enableLogging( this.getLogger() );
         roleManager.configure( confRM );
 
         // Set up the ComponentLocator
-        String cmLoggerName = confCM.getAttribute( "logger", "cm" );
         CocoonServiceManager ecManager = new CocoonServiceManager(null, null);
-        ecManager.enableLogging( logKitManager.getLoggerForCategory( cmLoggerName ) );
-        ecManager.setLoggerManager( logKitManager );
+        ecManager.enableLogging( this.getLogger() );
         ecManager.contextualize( context );
         ecManager.setRoleManager( roleManager );
+        ecManager.setLoggerManager( new DefaultLoggerManager(this.logger));
         ecManager.configure( confCM );
         ecManager.initialize();
-        m_manager = ecManager;
+        this.manager = ecManager;
     }
 
     protected final Object lookup( final String key )
@@ -524,5 +320,25 @@ public class ContainerTestCase extends TestCase {
     protected final void release( final Object object ) {
         manager.release( object );
     }
+    
+    protected static class DefaultLoggerManager implements LoggerManager {
+        
+        private Logger logger;
+        
+        public DefaultLoggerManager(Logger logger) {
+            this.logger = logger;
+        }
+        /* (non-Javadoc)
+         * @see org.apache.avalon.excalibur.logger.LoggerManager#getDefaultLogger()
+         */
+        public Logger getDefaultLogger() {
+            return this.logger;
+        }
+        /* (non-Javadoc)
+         * @see org.apache.avalon.excalibur.logger.LoggerManager#getLoggerForCategory(java.lang.String)
+         */
+        public Logger getLoggerForCategory(String arg0) {
+            return this.logger;
+        }
 }
-
+}

@@ -113,7 +113,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
     }
 
-    public void setUp() {
+    public void setUp() throws Exception {
+        super.setUp();
         objectmodel.clear();
 
         request.reset();
@@ -143,11 +144,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         Map result = null;
         try {
-            selector = (ServiceSelector) this.manager.lookup(Matcher.ROLE +
+            selector = (ServiceSelector) this.lookup(Matcher.ROLE +
                 "Selector");
             assertNotNull("Test lookup of matcher selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if matcher name is not null", type);
@@ -163,8 +164,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (matcher != null) {
                 selector.release(matcher);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            this.release(selector);
+            this.release(resolver);
         }
         return result;
     }
@@ -184,11 +185,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         boolean result = false;
         try {
-            selector = (ServiceSelector) this.manager.lookup(org.apache.cocoon.selection.Selector.ROLE +
+            selector = (ServiceSelector) this.lookup(org.apache.cocoon.selection.Selector.ROLE +
                 "Selector");
             assertNotNull("Test lookup of selector selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if selector name is not null", type);
@@ -205,8 +206,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (sel != null) {
                 selector.release(sel);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            this.release(selector);
+            this.release(resolver);
         }
         return result;
     }
@@ -228,18 +229,18 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         Map result = null;
         try {
-            selector = (ServiceSelector) this.manager.lookup(Action.ROLE +
+            selector = (ServiceSelector) this.lookup(Action.ROLE +
                 "Selector");
             assertNotNull("Test lookup of action selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if action name is not null", type);
             action = (Action) selector.select(type);
             assertNotNull("Test lookup of action", action);
 
-            result = action.act(redirector, new SourceResolverAdapter(resolver, manager),
+            result = action.act(redirector, new SourceResolverAdapter(resolver, this.getManager()),
                                 objectmodel, source, parameters);
 
         } catch (ServiceException ce) {
@@ -249,8 +250,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (action != null) {
                 selector.release(action);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            this.release(selector);
+            this.release(resolver);
         }
         return result;
     }
@@ -272,14 +273,14 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         Document document = null;
         try {
-            selector = (ServiceSelector) this.manager.lookup(Generator.ROLE +
+            selector = (ServiceSelector) this.lookup(Generator.ROLE +
                 "Selector");
             assertNotNull("Test lookup of generator selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) this.lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if generator name is not null", type);
@@ -287,7 +288,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             generator = (Generator) selector.select(type);
             assertNotNull("Test lookup of generator", generator);
 
-            generator.setup(new SourceResolverAdapter(resolver, manager),
+            generator.setup(new SourceResolverAdapter(resolver, getManager()),
                             objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -306,9 +307,9 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (generator != null) {
                 selector.release(generator);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
-            this.manager.release(parser);
+            this.release(selector);
+            this.release(resolver);
+            this.release(parser);
         }
 
         return document;
@@ -331,18 +332,18 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SAXParser parser = null;
         Source inputsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
+        assertNotNull("Test for component manager", this.getManager());
 
         Document document = null;
         try {
-            selector = (ServiceSelector) this.manager.lookup(Transformer.ROLE+
+            selector = (ServiceSelector) this.lookup(Transformer.ROLE+
                 "Selector");
             assertNotNull("Test lookup of transformer selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) this.lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
 
@@ -350,7 +351,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             transformer = (Transformer) selector.select(type);
             assertNotNull("Test lookup of transformer", transformer);
 
-            transformer.setup(new SourceResolverAdapter(resolver, manager),
+            transformer.setup(new SourceResolverAdapter(resolver, getManager()),
                                   objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -373,7 +374,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             }
 
             if (selector!=null) {
-                this.manager.release(selector);
+                this.release(selector);
             }
 
             if (inputsource!=null) {
@@ -381,11 +382,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             }
 
             if (resolver!=null) {
-                this.manager.release(resolver);
+                this.release(resolver);
             }
 
             if (parser!=null) {
-                this.manager.release(parser);
+                this.release(parser);
             }
         }
 
@@ -409,16 +410,16 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SourceResolver resolver = null;
         Source inputsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
+        assertNotNull("Test for component manager", this.getManager());
 
         ByteArrayOutputStream document = null;
 
         try {
-            selector = (ServiceSelector) this.manager.lookup(Serializer.ROLE+
+            selector = (ServiceSelector) this.lookup(Serializer.ROLE+
                 "Selector");
             assertNotNull("Test lookup of serializer selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if serializer name is not null", type);
@@ -441,7 +442,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             }
 
             if (selector!=null) {
-                this.manager.release(selector);
+                this.release(selector);
             }
 
             if (inputsource!=null) {
@@ -449,7 +450,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             }
 
             if (resolver!=null) {
-                this.manager.release(resolver);
+                this.release(resolver);
             }
         }
 
@@ -465,10 +466,10 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SourceResolver resolver = null;
 
         try {
-            selector = (ServiceSelector) this.manager.lookup(Interpreter.ROLE);
+            selector = (ServiceSelector) this.lookup(Interpreter.ROLE);
             assertNotNull("Test lookup of interpreter selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if interpreter name is not null", type);
@@ -493,8 +494,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (interpreter != null) {
                 selector.release(interpreter);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            this.release(selector);
+            this.release(resolver);
         }
         return FlowHelper.getWebContinuation(getObjectModel()).getId();
     }
@@ -508,10 +509,10 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SourceResolver resolver = null;
 
         try {
-            selector = (ServiceSelector) this.manager.lookup(Interpreter.ROLE);
+            selector = (ServiceSelector) this.lookup(Interpreter.ROLE);
             assertNotNull("Test lookup of interpreter selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if interpreter name is not null", type);
@@ -536,8 +537,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (interpreter != null) {
                 selector.release(interpreter);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            this.release(selector);
+            this.release(resolver);
         }
         return FlowHelper.getWebContinuation(getObjectModel()).getId();
     }
@@ -566,14 +567,14 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SAXParser parser = null;
         Source assertionsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
+        assertNotNull("Test for component manager", this.getManager());
 
         Document assertiondocument = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) this.lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null",
@@ -604,8 +605,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (resolver != null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release(parser);
+            this.release(resolver);
+            this.release(parser);
         }
 
         return assertiondocument;
@@ -624,15 +625,15 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         SAXParser parser = null;
         Source assertionsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
+        assertNotNull("Test for component manager", this.getManager());
 
         byte[] assertiondocument = null;
 
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) this.lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null", source);
@@ -665,8 +666,8 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             if (resolver!=null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release(parser);
+            this.release(resolver);
+            this.release(parser);
         }
 
         return assertiondocument;
