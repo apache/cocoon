@@ -55,19 +55,27 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Enumeration;
 import java.lang.reflect.Method;
 
 /**
  * The <code>AbstractMultiAction</code> provides a way
  * to call methods of an action specified by
- * the <code>method</code> parameter.
- * This can be extremly useful for action-sets.
+ * the <code>method</code> parameter or request parameter.
+ * This can be extremly useful for action-sets or as
+ * action-sets replacement.
+ *
+ * Example:
+ * <input type="submit" name="doSave" value="Save it"/>
+ * will call the method "doSave" of the MultiAction
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: AbstractMultiAction.java,v 1.3 2003/05/01 14:48:47 tcurdt Exp $
  */
 public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
@@ -76,6 +84,11 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
     private HashMap methodIndex;
 
+    private static final String removePrefix( String name ) {
+        int prefixLen = ACTION_METHOD_PREFIX.length();
+        return name.substring(prefixLen, prefixLen + 1).toLowerCase() + name.substring(prefixLen + 1);
+    }
+
     public void configure(Configuration conf) throws ConfigurationException {
         super.configure(conf);
 
@@ -83,12 +96,10 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
             Method[] methods = this.getClass().getMethods();
             methodIndex = new HashMap();
 
-            int prefixLen = ACTION_METHOD_PREFIX.length();
             for (int i = 0; i < methods.length; i++) {
                 String methodName = methods[i].getName();
                 if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
-                    String actionName = methodName.substring(prefixLen, prefixLen + 1).toLowerCase() +
-                            methodName.substring(prefixLen + 1);
+                    String actionName = removePrefix(methodName);
                     methodIndex.put(methodName, methods[i]);
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("registered method \"" + methodName + "\" as action \"" + actionName + "\"");
@@ -103,7 +114,29 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         String actionMethod = parameters.getParameter(ACTION_METHOD_PARAMETER, null);
-        if ((actionMethod != null) && (actionMethod.length() > 0)) {
+
+        if (actionMethod == null) {
+            Request req = ObjectModelHelper.getRequest(objectModel);
+            if (req != null) {
+                // checking request for action method parameters
+                String actionName;
+                for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
+                    String name = (String) e.nextElement();
+                    if (name.startsWith(ACTION_METHOD_PREFIX)) {
+                        if (name.endsWith(".x") || name.endsWith(".y")) {
+                            actionName = name.substring(ACTION_METHOD_PREFIX.length(), name.length() - 2);
+                        }
+                        else {
+                            actionName = name.substring(ACTION_METHOD_PREFIX.length());
+                        }
+                        actionMethod = removePrefix(actionName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if((actionMethod != null) && (actionMethod.length() > 0)) {
             Method method = (Method) methodIndex.get(actionMethod);
             if (method != null) {
                 return ((Map) method.invoke(this, new Object[]{redirector, resolver, objectModel, source, parameters}));
@@ -113,7 +146,7 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
         }
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("you need to specify the method with parameter \"" + ACTION_METHOD_PARAMETER + "\"");
+            getLogger().debug("you need to specify the method with parameter \"" + ACTION_METHOD_PARAMETER + "\" or have a request parameter starting with \"" + ACTION_METHOD_PREFIX + "\"");
         }
         return null;
     }
