@@ -61,19 +61,20 @@ be used to configure the chosen Forrest skin.
   <disable-xml-link>true</disable-xml-link>
   <!-- Do we want to disable w3c compliance links? -->
   <disable-compliance-links>false</disable-compliance-links>
-  
-  <searchsite-name>MyProject</searchsite-name>  
+
+  <searchsite-domain>xml.apache.org</searchsite-domain>
+  <searchsite-name>Cocoon</searchsite-name>  
 
   <!-- mandatory project logo
        skin: forrest-site renders it at the top -->
-  <project-name>MyProject</project-name>
-  <project-url>http://myproj.mygroup.org/</project-url>
+  <project-name>Apache Cocoon</project-name>
+  <project-url>http://xml.apache.org/cocoon/</project-url>
   <project-logo>images/project-logo.gif</project-logo>
 
   <!-- optional group logo
        skin: forrest-site renders it at the top-left corner -->
-  <group-name>MyGroup</group-name>
-  <group-url>http://mygroup.org</group-url>
+  <group-name>Apache</group-name>
+  <group-url>http://xml.apache.org</group-url>
   <group-logo>images/group-logo.gif</group-logo>
 
   <!-- optional host logo (e.g. sourceforge logo)
@@ -82,7 +83,7 @@ be used to configure the chosen Forrest skin.
   <host-logo></host-logo>
 
   <!-- The following are used to construct a copyright statement -->
-  <year>2002</year>
+  <year>1999-2003</year>
   <vendor>The Apache Software Foundation.</vendor>
 
   <!-- Some skins use this to form a 'breadcrumb trail' of links. If you don't
