@@ -25,6 +25,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.util.DOMUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 
@@ -36,11 +37,13 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.XMLReader;
 
+import org.apache.trax.Templates;
+import org.apache.trax.Processor;
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-10-19 14:44:37 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-10-19 16:40:00 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable {
@@ -49,27 +52,19 @@ implements Transformer, Composer, Poolable {
     private Store store = null;
 
     /** The XALAN Transformer */
-	trax.Transformer transformer = null;
+	org.apache.trax.Transformer transformer = null;
 
     /** Hash table for Templates */
     private static Hashtable templatesCache = new Hashtable();
 
-    private static trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
+    private static org.apache.trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException
     {
-        trax.Templates templates = (trax.Templates)templatesCache.get(xsluri);
+        Templates templates = (Templates)templatesCache.get(xsluri);
         if(templates == null)
         {
-    	    trax.Processor processor = 
-                org.apache.cocoon.util.DOMUtils.getXSLTProcessor();
-    	    XMLReader reader =
-        	    XMLReaderFactory.createXMLReader();
-            reader.setFeature("http://xml.org/sax/features/namespaces", true);
-    	    trax.TemplatesBuilder templatesBuilder =
-        	    processor.getTemplatesBuilder();
-    	    reader.setContentHandler (templatesBuilder);
-    	    reader.parse(resolver.resolveEntity(null,xsluri));
-    	    templates = templatesBuilder.getTemplates();
+    	    Processor processor = DOMUtils.getXSLTProcessor();
+	    templates = processor.process(resolver.resolveEntity(null, xsluri));
             templatesCache.put(xsluri,templates);
         }
         return templates.newTransformer();

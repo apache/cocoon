@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.32 $ $Date: 2000-10-19 14:42:29 $
+ * @version CVS $Revision: 1.4.2.33 $ $Date: 2000-10-19 16:39:05 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -97,7 +97,7 @@ public class Cocoon
          
         String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
         try {
-        trax.Processor.setPlatformDefaultProcessor(processor);
+        org.apache.trax.Processor.setPlatformDefaultProcessor(processor);
             this.components.put(Roles.PROCESSOR, ClassUtils.loadClass(processor));
         } catch (Exception e) {
             throw new ConfigurationException("Error creating processor (" + processor + ")");

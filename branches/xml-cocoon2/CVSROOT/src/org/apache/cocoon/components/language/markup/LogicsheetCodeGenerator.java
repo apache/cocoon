@@ -21,18 +21,18 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import java.io.IOException;
 import org.xml.sax.SAXException;
 
-import serialize.SerializerFactory;
-import serialize.Method;
-import serialize.Serializer;
-import serialize.OutputFormat;
+import org.apache.serialize.SerializerFactory;
+import org.apache.serialize.Method;
+import org.apache.serialize.Serializer;
+import org.apache.serialize.OutputFormat;
 
-import trax.Transformer;
+import org.apache.trax.Transformer;
 
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:43:16 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 16:39:26 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 

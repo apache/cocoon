@@ -32,10 +32,10 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 
-import trax.Templates;
-import trax.Processor;
-import trax.Transformer;
-import trax.TemplatesBuilder;
+import org.apache.trax.Templates;
+import org.apache.trax.Processor;
+import org.apache.trax.Transformer;
+import org.apache.trax.TemplatesBuilder;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -46,7 +46,7 @@ import trax.TemplatesBuilder;
  * This class should probably be based on an interface...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:43:15 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 16:39:23 $
  */
 public class Logicsheet {
     /**
@@ -257,12 +257,6 @@ public class Logicsheet {
             originalNamepaces.put(prefix, uri);
             super.startPrefixMapping(prefix, uri);
         }
-
-        public void startElement (String namespaceURI, String localName,
-        			      String qName, Attributes atts) throws SAXException {
-            super.startElement(namespaceURI, localName, qName, atts);
-        }
-
     }
 
     /**

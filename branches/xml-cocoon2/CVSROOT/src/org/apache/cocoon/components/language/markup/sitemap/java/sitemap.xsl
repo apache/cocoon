@@ -70,7 +70,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.49 $ $Date: 2000-10-19 14:43:23 $
+     * @version CVS $Revision: 1.1.2.50 $ $Date: 2000-10-19 16:39:44 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -388,9 +388,7 @@
     </xsl:variable>
 
     <!-- get the name of this matcher in case it is defined in this sitemap ? -->
-    <xsl:variable name="local-matcher">
-      <xsl:value-of select="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]"/>
-    </xsl:variable>
+    <xsl:variable name="local-matcher" select="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]"/>
 
     <!-- check if this matcher is a factory ? -->
     <xsl:variable name="is-factory">

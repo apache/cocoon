@@ -10,7 +10,10 @@ package org.apache.cocoon.util;
 import java.util.Vector;
 import java.util.Hashtable;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
@@ -18,24 +21,25 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.ProcessingInstruction;
 
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXNotSupportedException;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
 import java.util.NoSuchElementException;
 
-import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException; 
 import org.apache.xerces.parsers.DOMParser;
 
-import trax.Processor;
-import trax.Result;
-import trax.Transformer;
-import trax.Templates;
+import org.apache.trax.Processor;
+import org.apache.trax.ProcessorFactoryException;
+import org.apache.trax.Result;
+import org.apache.trax.Transformer;
+import org.apache.trax.Templates;
 
-import serialize.OutputFormat;
+import org.apache.serialize.OutputFormat;
 import org.apache.xalan.templates.StylesheetRoot;
 import org.apache.xalan.templates.Stylesheet;
 
@@ -46,23 +50,23 @@ import org.apache.xalan.templates.Stylesheet;
  * add (needed!) DOM support.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:44:09 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 16:40:12 $
  */
 public class DOMUtils {
 
   /** reuse the trax.Processor instance */
-  private static trax.Processor traxProcessor = null;
+  private static Processor traxProcessor = null;
 
   /** reuse the DocumentBuilder instance */
   private static DocumentBuilder docBuilder = null;
 
   /**
-   * Return a trax.Processor which can be used to process a style sheet.
+   * Return an org.apache.trax.Processor which can be used to process a style sheet.
    *
    * @return The Processor instance.
    */
-  public static trax.Processor getXSLTProcessor() 
-    throws trax.ProcessorFactoryException
+  public static Processor getXSLTProcessor() 
+    throws ProcessorFactoryException
   {
     if(traxProcessor == null)
       traxProcessor = Processor.newInstance("xslt");
@@ -75,7 +79,7 @@ public class DOMUtils {
    * @return The DocumentBuilder instance.
    */
   private static DocumentBuilder getDocumentBuilder() 
-    throws javax.xml.parsers.ParserConfigurationException
+    throws ParserConfigurationException
   {
     if(docBuilder == null)
     {
@@ -112,7 +116,7 @@ public class DOMUtils {
         throw(e);
       }
     } else {
-      throw new org.xml.sax.SAXNotSupportedException("DOM node processing not supported!");
+      throw new SAXNotSupportedException("DOM node processing not supported!");
     }
   }
 
@@ -220,11 +224,12 @@ public class DOMUtils {
    * @return A (possibly empty) vector containing all namespace declarations
    *         as a <code>String</code> array of 2 elements (attribue name, uri)
    */
-  public static Vector getNamespaces(trax.Templates templates) 
+  public static Vector getNamespaces(Templates templates) 
   {
     Vector vector = new Vector();
     // FIXME: Need to figure out how to get the namespaces from Templates.
-    //        The following code throws an exception. 
+    //        The following code throws an exception.
+    // (SSA) this method should not be needed anymore, as XSP went SAX based.
     /*
     try 
     {
