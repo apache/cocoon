@@ -140,12 +140,12 @@
 
     <map:pipeline>
       <!-- 1. matchers allow any nested components -->
-      <map:match pattern="test-one-1">
+      <map:match pattern="test-one-1" name="anchor-match">
         <map:generate src="one"/>
         <map:match pattern="test-one-2-nested">
           <map:transform src="two"/>
         </map:match>
-        <map:act type="request">
+        <map:act type="request" name="anchor-act">
           <map:transform src="three"/>
         </map:act>
         <map:select>
