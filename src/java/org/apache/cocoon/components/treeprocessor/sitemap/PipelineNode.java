@@ -72,7 +72,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.10 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.11 2004/01/19 08:43:16 antonio Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
@@ -152,42 +152,37 @@ public class PipelineNode
 
         boolean externalRequest = env.isExternal();
 
-        // Always fail on external resquests if internal only.
+        // Always fail on external request if pipeline is internal only.
         if (this.internalOnly && externalRequest) {
             return false;
         }
-
-        context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
-
+        context.inform(this.processingPipeline, this.parameters,
+                env.getObjectModel());
         try {
             if (invokeNodes(children, env, context)) {
                 return true;
-            } else if (this.isLast) {
-                String msg = "No pipeline matched request: " + env.getURIPrefix() + env.getURI();
-                throw new ResourceNotFoundException(msg);
-            } else {
+            } else if (!this.isLast) {
                 return false;
+            } else {
+                throw new ResourceNotFoundException(
+                        "No pipeline matched request: " + env.getURIPrefix()
+                        + env.getURI());
             }
         } catch (ConnectionResetException cre) {
             // Will be reported by CocoonServlet, rethrowing
             throw cre;
-
         } catch (Exception ex) {
-
             if (!externalRequest) {
                 // Propagate exception on internal requests
                 throw ex;
-
             } else if (error404 != null && ex instanceof ResourceNotFoundException) {
                 // Invoke 404-specific handler
                 handledErrorsLogger.error(ex.getMessage(), ex);
                 return errorHandlerHelper.invokeErrorHandler(error404, ex, env);
-
             } else if (error500 != null) {
                 // Invoke global handler
                 handledErrorsLogger.error(ex.getMessage(), ex);
                 return errorHandlerHelper.invokeErrorHandler(error500, ex, env);
-
             } else {
                 // No handler : propagate
                 throw ex;
@@ -195,4 +190,3 @@ public class PipelineNode
         }
     }
 }
-
