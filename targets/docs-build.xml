@@ -49,7 +49,7 @@
     <copy file="status.xml"
       tofile="${build.context}/xdocs/status.xml" filtering="on"/>
 
-	<!-- generate sitemap components docs -->
+	<!-- generate sitemap components docs using SitemapTask -->
     <sitemap-components docDir="${build.context}/xdocs/userdocs" source="${java}"/>
     <!-- -->
     
@@ -97,7 +97,7 @@ Not rebuilding docs, as they are up-to-date:
 
   <!-- Create docs -->
   <target name="docs"
-      depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, forrest"
+      depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, do-forrest"
       unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
