@@ -248,11 +248,11 @@ public class XMLResourceBundleFactory
             getLogger().debug("selecting from: " + name + ", locale: " + locale +
                               ", directory: " + directories[index]);
         }
-        String fileName = getFileName(directories[index], name, locale);
-        XMLResourceBundle bundle = selectCached(fileName);
+        String cacheKey = getCacheKey(directories, index, name, locale);
+        XMLResourceBundle bundle = selectCached(cacheKey);
         if (bundle == null) {
             synchronized (this) {
-                bundle = selectCached(fileName);
+                bundle = selectCached(cacheKey);
                 if (bundle == null) {
                     boolean localeAvailable = (locale != null && !locale.getLanguage().equals(""));
                     index++;
@@ -265,9 +265,10 @@ public class XMLResourceBundleFactory
                         // there are directories left to search for with this locale
                         parentBundle = _select(directories, index, name, locale);
                     }
-                    if (!isNotFoundBundle(fileName)) {
+                    if (!isNotFoundBundle(cacheKey)) {
+                        String fileName = getFileName(directories[index - 1], name, locale);
                         bundle = _loadBundle(name, fileName, locale, parentBundle);
-                        updateCache(fileName, bundle);
+                        updateCache(cacheKey, bundle);
                     }
                     if (bundle == null) {
                         return parentBundle;
@@ -339,6 +340,15 @@ public class XMLResourceBundleFactory
             newloc = new Locale(locale.getLanguage(), locale.getCountry(), "");
         }
         return newloc;
+    }
+
+    protected String getCacheKey(String[] directories, int index, String name, Locale locale) {
+        StringBuffer cacheKey = new StringBuffer();
+        for (; index < directories.length; index++) {
+            cacheKey.append(getFileName(directories[index], name, locale));
+            cacheKey.append(":");
+        }
+        return cacheKey.toString();
     }
 
     /**
