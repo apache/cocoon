@@ -15,13 +15,17 @@
   limitations under the License.
 -->
 <page>
- <title>B2B processing</title>
+  <title>B2B processing</title>
   <content>
-  <form action="process-order" id="FORM1" method="post" name="FORM1"
-        enctype="multipart/form-data">
-	<para>Upload your XML document here:</para>
-	<input type="file" name="Foo"/>
-	<input id="submit1" name="submit1" type="submit" value="Submit"/>
-  </form>
- </content>
+    <form action="process-order" id="FORM1" method="post" name="FORM1"
+       enctype="multipart/form-data">
+      <para>Note: You need to enable uploads in order for this to work! <br/>
+        To enable uploads, set parameter <i>enable-uploads</i> in
+        cocoon/WEB-INF/web.xml to <i>true</i>.
+      </para>
+      <para>Upload your XML document here:</para>
+      <input type="file" name="Foo"/>
+      <input id="submit1" name="submit1" type="submit" value="Submit"/>
+    </form>
+  </content>
 </page>
