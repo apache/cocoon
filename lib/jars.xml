@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.103 2003/09/25 09:10:58 antonio Exp $
+    | CVS $Id: jars.xml,v 1.104 2003/09/25 10:00:33 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -683,11 +683,14 @@
   </file>
 
   <file>
-    <title>???</title>
-    <description>???</description>
+    <title>SOAP with Attachments API for Java (SAAJ)</title>
+    <description>
+      SAAJ enables developers to produce and consume messages conforming to the
+      SOAP 1.1 specification and SOAP with Attachments note.
+    </description>
     <used-by>Axis block</used-by>
     <lib>axis/lib/axis-saaj-1.1.jar</lib>
-    <homepage>#</homepage>
+    <homepage>http://java.sun.com/xml/saaj/</homepage>
   </file>
 
   <file>
@@ -711,19 +714,27 @@
   </file>
 
   <file>
-    <title>???</title>
-    <description>???</description>
+    <title>Java API for XML-based RPC (JAX-RPC)</title>
+    <description>The JAX-RPC enables Java technology developers to build Web
+      applications and Web services incorporating XML based RPC functionality
+      according to the SOAP (Simple Object Access Protocol) 1.1 specification.
+      JAX-RPC provides the core API for developing and deploying web services
+      on the Java platform.
+    </description>
     <used-by>Axis block</used-by>
     <lib>axis/lib/axis-jaxrpc-1.1.jar</lib>
-    <homepage>#</homepage>
+    <homepage>http://java.sun.com/xml/jaxrpc/</homepage>
   </file>
 
   <file>
-    <title>???</title>
-    <description>???</description>
+    <title>Apache Axis</title>
+    <description>
+      Apache Axis is an implementation of the SOAP ("Simple Object Access
+      Protocol")
+    </description>
     <used-by>Axis block</used-by>
     <lib>axis/lib/axis-1.1.jar</lib>
-    <homepage>#</homepage>
+    <homepage>http://ws.apache.org/axis/</homepage>
   </file>
 
   <file>
@@ -760,7 +771,7 @@
     <title>Joost</title>
     <description>Streaming Transformation for XML (STX) library</description>
     <used-by>STX block</used-by>
-    <lib>stx/lib/joost-20030502.jar</lib>
+    <lib>stx/lib/joost-20030914.jar</lib>
     <homepage>http://joost.sourceforge.net/</homepage>
   </file>
 
@@ -771,7 +782,7 @@
       definitions from source files complete with JavaDoc @tags.
     </description>
     <used-by>QDoxSource (qdox block)</used-by>
-    <lib>qdox/lib/qdox-1.1.jar</lib>
+    <lib>qdox/lib/qdox-1.2.jar</lib>
     <homepage>http://qdox.codehaus.org</homepage>
    </file>
 
@@ -779,8 +790,8 @@
     <title>Quartz</title>
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
-    <lib>cron/lib/quartz-1.2.2.jar</lib>
-    <homepage>http://quartz.sf.net/</homepage>
+    <lib>cron/lib/quartz-1.2.3.jar</lib>
+    <homepage>http://www.part.net/quartz.html</homepage>
    </file>
 
    <file>
