@@ -56,84 +56,79 @@ import org.mozilla.javascript.Undefined;
 
 /**
  *
- * @version CVS $Id: JSWebContinuation.java,v 1.3 2003/08/26 09:05:52 mpo Exp $
+ * @version CVS $Id: JSWebContinuation.java,v 1.4 2004/01/21 14:31:25 vgritsenko Exp $
  */
-public class JSWebContinuation extends ScriptableObject
-{
-  protected JSCocoon cocoon;
-  protected WebContinuation wk;
-  protected ContinuationsManager continuationsMgr;
+public class JSWebContinuation extends ScriptableObject {
+    protected JSCocoon cocoon;
+    protected WebContinuation wk;
+    protected ContinuationsManager continuationsMgr;
 
-  public JSWebContinuation() {}
-
-  public String getClassName()
-  {
-    return "WebContinuation";
-  }
-
-  public JSCocoon getJSCocoon()
-  {
-    return cocoon;
-  }
-
-  public WebContinuation getWebContinuation()
-  {
-    return wk;
-  }
-
-  public static Scriptable jsConstructor(Context cx, Object[] args,
-                                         Function ctorObj, 
-                                         boolean inNewExpr)
-    throws Exception
-  {
-    JSCocoon cocoon = (JSCocoon)args[0];
-    ComponentManager manager = cocoon.getComponentManager();
-
-    ContinuationsManager contMgr
-      = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
-
-    Object kont = args[1];
-    JSWebContinuation pjswk = (JSWebContinuation)args[2];
-    WebContinuation pwk = (pjswk == null ? null : pjswk.wk);
-
-    int ttl;
-
-    if (args[3] == Undefined.instance)
-      ttl = 0;
-    else {
-      Number timeToLive = (Number)args[3];
-      ttl = (timeToLive == null ? 0 : timeToLive.intValue());
+    public JSWebContinuation() {
     }
 
-    JSWebContinuation jswk = new JSWebContinuation();
-    WebContinuation wk
-      = contMgr.createWebContinuation(kont, pwk, ttl, null);
-    wk.setUserObject(jswk);
+    public String getClassName() {
+        return "WebContinuation";
+    }
 
-    jswk.cocoon = cocoon;
-    jswk.wk = wk;
-    jswk.continuationsMgr = contMgr;
+    public JSCocoon getJSCocoon() {
+        return cocoon;
+    }
 
-    return jswk;
-  }
+    public WebContinuation getWebContinuation() {
+        return wk;
+    }
 
-  public String jsGet_id()
-  {
-    return wk.getId();
-  }
+    /**
+     * @param args Arguments: JSCocoon cocoon, Object continuation, JSWebContinuation parent, Number timeToLive
+     */
+    public static Scriptable jsConstructor(Context cx, Object[] args,
+                                           Function ctorObj,
+                                           boolean inNewExpr)
+            throws Exception {
+        JSCocoon cocoon = (JSCocoon) args[0];
+        ComponentManager manager = cocoon.getComponentManager();
 
-  public Object jsGet_continuation()
-  {
-    return wk.getContinuation();
-  }
+        ContinuationsManager contMgr
+                = (ContinuationsManager) manager.lookup(ContinuationsManager.ROLE);
 
-  public void jsFunction_invalidate()
-  {
-    continuationsMgr.invalidateWebContinuation(wk);
-  }
+        Object kont = args[1];
+        JSWebContinuation pjswk = (JSWebContinuation) args[2];
+        WebContinuation pwk = (pjswk == null ? null : pjswk.wk);
 
-  public void jsFunction_display()
-  {
-    wk.display();
-  }
+        int ttl;
+
+        if (args[3] == Undefined.instance) {
+            ttl = 0;
+        } else {
+            Number timeToLive = (Number) args[3];
+            ttl = (timeToLive == null ? 0 : timeToLive.intValue());
+        }
+
+        JSWebContinuation jswk = new JSWebContinuation();
+        WebContinuation wk
+                = contMgr.createWebContinuation(kont, pwk, ttl, null);
+        wk.setUserObject(jswk);
+
+        jswk.cocoon = cocoon;
+        jswk.wk = wk;
+        jswk.continuationsMgr = contMgr;
+
+        return jswk;
+    }
+
+    public String jsGet_id() {
+        return wk.getId();
+    }
+
+    public Object jsGet_continuation() {
+        return wk.getContinuation();
+    }
+
+    public void jsFunction_invalidate() {
+        continuationsMgr.invalidateWebContinuation(wk);
+    }
+
+    public void jsFunction_display() {
+        wk.display();
+    }
 }

@@ -96,7 +96,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.25 2004/01/19 17:53:38 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.26 2004/01/21 14:31:25 vgritsenko Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -154,7 +154,7 @@ public class FOM_Cocoon extends ScriptableObject {
             Map objectModel = environment.getObjectModel();
             request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
             request.setParentScope(getParentScope());
-            request.setPrototype(getClassPrototype(getParentScope(), 
+            request.setPrototype(getClassPrototype(getParentScope(),
                                                    "FOM_Request"));
             return request;
         }
@@ -167,7 +167,7 @@ public class FOM_Cocoon extends ScriptableObject {
             context =
                 new FOM_Context(ObjectModelHelper.getContext(objectModel));
             context.setParentScope(getParentScope());
-            context.setPrototype(getClassPrototype(getParentScope(), 
+            context.setPrototype(getClassPrototype(getParentScope(),
                                                    "FOM_Context"));
             return context;
         }
@@ -180,11 +180,11 @@ public class FOM_Cocoon extends ScriptableObject {
             response =
                 new FOM_Response(ObjectModelHelper.getResponse(objectModel));
             response.setParentScope(getParentScope());
-            response.setPrototype(getClassPrototype(getParentScope(), 
+            response.setPrototype(getClassPrototype(getParentScope(),
                                                     "FOM_Response"));
             return response;
         }
-        
+
         public FOM_Log getLog() {
             if (log != null) {
                 return log;
@@ -1528,13 +1528,13 @@ public class FOM_Cocoon extends ScriptableObject {
      * @param parent The parent of this continuation (may be null)
      * @param timeToLive Lifetime for this continuation (zero means no limit)
      */
-
-
     public FOM_WebContinuation makeWebContinuation(Continuation k,
                                                    FOM_WebContinuation parent,
                                                    int timeToLive)
         throws Exception {
-        if (k == null) return null;
+        if (k == null) {
+            return null;
+        }
         WebContinuation wk;
         ContinuationsManager contMgr;
         contMgr = (ContinuationsManager)
@@ -1549,5 +1549,4 @@ public class FOM_Cocoon extends ScriptableObject {
                                               result.getClassName()));
         return result;
     }
-
 }
