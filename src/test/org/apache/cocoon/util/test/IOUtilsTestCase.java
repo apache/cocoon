@@ -25,7 +25,7 @@ import org.apache.cocoon.util.IOUtils;
  *
  * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: IOUtilsTestCase.java,v 1.4 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id: IOUtilsTestCase.java,v 1.5 2004/04/18 23:06:11 ugo Exp $
  */
 public class IOUtilsTestCase extends TestCase
 {
@@ -62,7 +62,8 @@ public class IOUtilsTestCase extends TestCase
         Object[] test_values = {
                 new String[]{".", "__"},
                 new String[]{"", ""},
-                new String[]{"file://", "file_" + File.separator + "_" + File.separator + "_"},
+                new String[]{"file://", "file_"},
+                // was new String[]{"file://", "file_" + File.separator + "_" + File.separator + "_"},
                 new String[]{"/a/b/c", "a" + File.separator + "b" + File.separator + "c"},
                 new String[]{"\\a\\b\\c", "a" + File.separator + "b" + File.separator + "c"},
                 new String[]{"a/b/c", "a" + File.separator + "b" + File.separator + "c"},

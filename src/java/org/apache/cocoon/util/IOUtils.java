@@ -41,7 +41,7 @@ import org.apache.log.Hierarchy;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.4 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id: IOUtils.java,v 1.5 2004/04/18 23:06:11 ugo Exp $
  */
 public class IOUtils {
 
@@ -195,6 +195,9 @@ public class IOUtils {
    * @return The transformed filename
    */
   public static String normalizedFilename(String filename) {
+    if ("".equals(filename)) {
+        return "";
+    }
     if(File.separatorChar == '\\')
         filename = filename.replace('/','\\');
     else
