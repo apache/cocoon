@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.6 2003/10/31 21:41:59 vgritsenko Exp $
+ * @version CVS $Id: NetUtils.java,v 1.7 2003/11/16 00:52:08 vgritsenko Exp $
  */
 
 public class NetUtils {
@@ -396,18 +396,20 @@ public class NetUtils {
         }
 
         StringBuffer b = new StringBuffer(uri.length());
-
         for (int i = 0; (i < length) && (clean[i] != null); i++) {
             b.append(clean[i]);
-            if ((i+1 < length) && (clean[i+1] != null)) b.append("/");
+            if ((i+1 < length) && (clean[i+1] != null)) {
+                b.append("/");
+            } 
         }
-
         return b.toString();
     }
 
     /**
      * Remove parameters from a uri.
-     *
+     * Resulting Map will have either String for single value attributes,
+     * or String arrays for multivalue attributes.
+     * 
      * @param uri The uri path to deparameterize.
      * @param parameters The map that collects parameters.
      * @return The cleaned uri
@@ -426,24 +428,61 @@ public class NetUtils {
                 break;
             }
             String name = p.substring(0, k);
-            String value = p.substring(k+1);
-            parameters.put(name, value);
+            String value = p.substring(k + 1);
+            Object values = parameters.get(name);
+            if (values == null) {
+                parameters.put(name, value);
+            } else if (values.getClass().isArray()) {
+                String[] v1 = (String[])values;
+                String[] v2 = new String[v1.length + 1];
+                System.arraycopy(v1, 0, v2, 0, v1.length);
+                v2[v1.length] = value;
+                parameters.put(name, v2);
+            } else {
+                parameters.put(name, new String[]{values.toString(), value});
+            }
         }
         return uri.substring(0, i);
     }
 
+    /**
+     * Add parameters stored in the Map to the uri string.
+     * Map can contain Object values which will be converted to the string,
+     * or Object arrays, which will be treated as multivalue attributes.
+     * 
+     * @param uri The uri to add parameters into
+     * @param parameters The map containing parameters to be added
+     * @return The uri with added parameters
+     */
     public static String parameterize(String uri, Map parameters) {
         if (parameters.size() == 0) {
             return uri;
         }
         
         StringBuffer buffer = new StringBuffer(uri);
-        buffer.append('?');
+        if (uri.indexOf('&') != -1) {
+            buffer.append('?');
+        } else {
+            buffer.append('&');
+        }
+        
         for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry)i.next();
-            buffer.append(entry.getKey());
-            buffer.append('=');
-            buffer.append(entry.getValue());
+            if (entry.getValue().getClass().isArray()) {
+                Object[] value = (Object[])entry.getValue();
+                for (int j = 0; j < value.length; j++) {
+                    if (j > 0) {
+                        buffer.append('&');
+                    }
+                    buffer.append(entry.getKey());
+                    buffer.append('=');
+                    buffer.append(value[j]);
+                }
+            } else {
+                buffer.append(entry.getKey());
+                buffer.append('=');
+                buffer.append(entry.getValue());
+            }
             if (i.hasNext()) {
                 buffer.append('&');
             }

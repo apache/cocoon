@@ -63,7 +63,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.5 2003/11/16 00:52:08 vgritsenko Exp $
  */
 
 /*
@@ -159,6 +159,7 @@ public class CommandLineRequest implements Request {
     public String getSitemapURI() {
         return this.env.getURI();
     }
+    
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
 
@@ -176,7 +177,20 @@ public class CommandLineRequest implements Request {
     }
 
     public String getParameter(String name) {
-        return (this.parameters != null) ? (String)this.parameters.get(name) : null;
+        if (this.parameters == null) {
+            return null;
+        }
+        
+        final Object value = this.parameters.get(name);
+        if (value instanceof String) {
+            return (String)value;
+        } else {
+            final String[] values = (String[]) value;
+            if (values.length == 0) {
+                return null;
+            }
+            return values[0];
+        }
     }
 
     public Enumeration getParameterNames() {
@@ -184,34 +198,40 @@ public class CommandLineRequest implements Request {
     }
 
     public String[] getParameterValues(String name) {
-        final String value = this.getParameter(name);
-        if (value != null) {
-            return new String[] {value};
+        final Object value = this.parameters.get(name);
+        if (value instanceof String) {
+            return new String[] { (String)value };
+        } else {
+            return (String[]) value;
         }
-        return null;
     }
 
     public String getHeader(String name) {
         return (headers != null) ? (String) headers.get(name.toLowerCase()) : null;
     }
+
     public int getIntHeader(String name) {
         String header = (headers != null) ? (String) headers.get(name.toLowerCase()) : null;
         return (header != null) ? Integer.parseInt(header) : -1;
     }
+
     public long getDateHeader(String name) {
         //FIXME
         //throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
         return 0;
     }
+
     public Enumeration getHeaders(String name) {
         //throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
         return new EmptyEnumeration();
     } // FIXME
+
     public Enumeration getHeaderNames() {
-        if (headers != null)
+        if (headers != null) {
             return new IteratorWrapper(headers.keySet().iterator());
-        else
+        } else {
             return new EmptyEnumeration();
+        }
     }
 
     public String getCharacterEncoding() { return characterEncoding; }
@@ -233,7 +253,6 @@ public class CommandLineRequest implements Request {
     }
 
     /**
-     *
      * Returns the current session associated with this request,
      * or if the request does not have a session, creates one.
      *
@@ -241,14 +260,12 @@ public class CommandLineRequest implements Request {
      *                        with this request
      *
      * @see        #getSession(boolean)
-     *
      */
     public Session getSession() {
         return this.getSession(true);
     }
 
     /**
-     *
      * Returns the current <code>Session</code>
      * associated with this request or, if if there is no
      * current session and <code>create</code> is true, returns
@@ -272,15 +289,12 @@ public class CommandLineRequest implements Request {
      *          and the request has no valid session
      *
      * @see  #getSession()
-     *
-     *
      */
     public Session getSession(boolean create) {
         return CommandLineSession.getSession(create);
     }
 
     /**
-     *
      * Returns the session ID specified by the client. This may
      * not be the same as the ID of the actual session in use.
      * For example, if the request specified an old (expired)
@@ -295,7 +309,6 @@ public class CommandLineRequest implements Request {
      *                        not specify a session ID
      *
      * @see                #isRequestedSessionIdValid
-     *
      */
     public String getRequestedSessionId() {
         return (CommandLineSession.getSession(false) != null) ?
@@ -303,7 +316,6 @@ public class CommandLineRequest implements Request {
     }
 
     /**
-     *
      * Checks whether the requested session ID is still valid.
      *
      * @return                        <code>true</code> if this
@@ -313,14 +325,12 @@ public class CommandLineRequest implements Request {
      *
      * @see                        #getRequestedSessionId
      * @see                        #getSession
-     *
      */
     public boolean isRequestedSessionIdValid() {
         return (CommandLineSession.getSession(false) != null);
     }
 
     /**
-     *
      * Checks whether the requested session ID came in as a cookie.
      *
      * @return                        <code>true</code> if the session ID
@@ -329,14 +339,12 @@ public class CommandLineRequest implements Request {
      *
      *
      * @see                        #getSession
-     *
      */
     public boolean isRequestedSessionIdFromCookie() {
         return false;
     }
 
     /**
-     *
      * Checks whether the requested session ID came in as part of the
      * request URL.
      *
@@ -346,7 +354,6 @@ public class CommandLineRequest implements Request {
      *
      *
      * @see                        #getSession
-     *
      */
     public boolean isRequestedSessionIdFromURL() {
         return false;
@@ -354,7 +361,7 @@ public class CommandLineRequest implements Request {
 
     public Locale getLocale() { return Locale.getDefault(); }
     public Enumeration getLocales() {
-        throw new RuntimeException (this.getClass().getName() + ".getLocales() method not yet implemented!");
+        throw new RuntimeException (getClass().getName() + ".getLocales() method not yet implemented!");
     } // FIXME
 
     public String getAuthType() { return null; }
@@ -366,5 +373,4 @@ public class CommandLineRequest implements Request {
     public void setCharacterEncoding(java.lang.String env)
                           throws java.io.UnsupportedEncodingException { characterEncoding = env; }
     public StringBuffer getRequestURL() { return null; }
-
 }
