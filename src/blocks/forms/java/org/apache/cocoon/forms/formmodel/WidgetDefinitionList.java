@@ -27,7 +27,7 @@ import java.util.Map;
  * Helper class for the Definition implementation of widgets containing
  * other widgets.
  * 
- * @version $Id: WidgetDefinitionList.java,v 1.1 2004/04/21 20:30:49 mpo Exp $
+ * @version $Id: WidgetDefinitionList.java,v 1.2 2004/05/07 16:43:42 mpo Exp $
  */
 public class WidgetDefinitionList {
     private List widgetDefinitions = new ArrayList();
@@ -129,7 +129,7 @@ public class WidgetDefinitionList {
         }
         Widget widget = widgetDefinition.createInstance();
         if (widget != null)
-            ((ContainerWidget)parent).addWidget(widget);
+            ((ContainerWidget)parent).addChild(widget);
     }
 
     public void createWidgets(Widget parent) {
@@ -138,7 +138,7 @@ public class WidgetDefinitionList {
             WidgetDefinition widgetDefinition = (WidgetDefinition)definitionsIt.next();
             Widget widget = widgetDefinition.createInstance();
             if (widget != null)
-                ((ContainerWidget)parent).addWidget(widget);
+                ((ContainerWidget)parent).addChild(widget);
         }
     }
 }

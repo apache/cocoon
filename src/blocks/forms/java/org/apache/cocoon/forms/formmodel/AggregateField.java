@@ -49,7 +49,7 @@ import org.outerj.expression.ExpressionException;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.9 2004/05/07 13:42:10 mpo Exp $
+ * @version CVS $Id: AggregateField.java,v 1.10 2004/05/07 16:43:43 mpo Exp $
  */
 public class AggregateField extends Field implements ContainerWidget {
 
@@ -72,7 +72,7 @@ public class AggregateField extends Field implements ContainerWidget {
         return (AggregateFieldDefinition)getDefinition();
     }
 
-    public void addWidget(Widget widget) {
+    public void addChild(Widget widget) {
     	if (!(widget instanceof Field)) 
             throw new IllegalArgumentException("AggregateField can only contain fields.");
         addField((Field)widget);
@@ -85,7 +85,7 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
 
-    public boolean hasWidget(String id) {
+    public boolean hasChild(String id) {
         return this.fieldsById.containsKey(id);
     }
 
@@ -218,7 +218,7 @@ public class AggregateField extends Field implements ContainerWidget {
         return AGGREGATEFIELD_EL;
     }
       
-    public Widget getWidget(String id) {
+    public Widget getChild(String id) {
         return (Widget)fieldsById.get(id);
     }
 }

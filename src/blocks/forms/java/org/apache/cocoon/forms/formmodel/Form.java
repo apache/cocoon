@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.14 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id: Form.java,v 1.15 2004/05/07 16:43:42 mpo Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -207,7 +207,7 @@ public class Form extends AbstractContainerWidget {
             StringTokenizer stok = new StringTokenizer(submitId, ".");
             Widget submit = this;
             while (stok.hasMoreTokens()) {
-                submit = ((ContainerWidget)submit).getWidget(stok.nextToken());
+                submit = submit.lookupWidget(stok.nextToken());
                 if (submit == null) {
                     throw new IllegalArgumentException("Invalid submit id (no such widget): " + submitId);
                 }

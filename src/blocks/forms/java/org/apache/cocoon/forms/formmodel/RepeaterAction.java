@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see RepeaterActionDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RepeaterAction.java,v 1.3 2004/04/23 13:02:31 mpo Exp $
+ * @version CVS $Id: RepeaterAction.java,v 1.4 2004/05/07 16:43:42 mpo Exp $
  */
 public class RepeaterAction extends Action {
     
@@ -40,7 +40,7 @@ public class RepeaterAction extends Action {
             Widget widget;
             if (name != null) {
                 // Get the corresponding sibling
-                widget = ((ContainerWidget)getParent()).getWidget(name);
+                widget = ((ContainerWidget)getParent()).getChild(name);
             } else {
                 // Get the grand-parent (parent is the repeater row).
                 widget = getParent().getParent();

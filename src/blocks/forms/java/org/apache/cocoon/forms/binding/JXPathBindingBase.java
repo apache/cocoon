@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.4 2004/05/07 13:42:09 mpo Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.5 2004/05/07 16:43:42 mpo Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -116,9 +116,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         
         Widget childWidget = null;
         
-        if (parent instanceof ContainerWidget) {
-           childWidget = ((ContainerWidget) parent).getWidget(id);
-        }
+        childWidget = parent.lookupWidget(id);
             
         if (childWidget == null) {
             throw new RuntimeException(getClass().getName() + ": Widget \"" +

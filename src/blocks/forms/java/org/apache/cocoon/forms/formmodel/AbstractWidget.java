@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.17 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.18 2004/05/07 16:43:42 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -123,18 +123,6 @@ public abstract class AbstractWidget implements Widget {
         return this.form;
     }
 
-    
-    //TODO: check why this namespace property exists, it seems to be 
-    // deceptively resemblant to the getFullyQualifiedId, 
-    // looks like it can be removed, no?
-//    public String getNamespace() {    
-//        if (getParent() != null && getParent().getNamespace().length() > 0) {
-//            return getParent().getNamespace() + "." + getId();
-//        } else {
-//            return getId();
-//        }
-//    }
-
     public String getRequestParameterName() {
         Widget myParent = getParent();
         if (myParent != null) {
@@ -147,6 +135,50 @@ public abstract class AbstractWidget implements Widget {
         return getId();
     }
 
+	public Widget lookupWidget(String path)	{
+        
+        if (path == null && path.equals(""))
+            return this;
+        
+        Widget relativeWidget;
+        String relativePath = null;        
+        int sepPosition = path.indexOf("" + Widget.PATH_SEPARATOR);
+
+        if (sepPosition < 0) {
+            //last step
+            if (path.startsWith("..")) return getParent();
+            return getChild(path);
+        } else if (sepPosition == 0) {
+            //absolute path
+			relativeWidget = getForm();
+            relativePath = path.substring(1);
+        } else {
+        	if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
+        		relativeWidget = getParent();
+                relativePath = path.substring(3);
+            } else {
+                String childId = path.substring(0, sepPosition );
+                relativeWidget = getChild(childId);            
+                relativePath = path.substring(sepPosition+1);
+            }
+        }
+        
+        if (relativeWidget == null) return null;
+        return relativeWidget.lookupWidget(relativePath);
+	}
+    
+    /**
+     * 
+     * Concrete widgets that contain actual child widgets should override to 
+     * return the actual child-widget.
+     * 
+     * @param id of the child-widget
+     * @returns <code>null</code> if not overriden.
+     */
+    protected Widget getChild(String id) {
+    	return null;
+    }
+    
     public Object getValue() {
         return null;
     }

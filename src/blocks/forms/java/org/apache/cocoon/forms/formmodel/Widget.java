@@ -49,9 +49,15 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.12 2004/05/07 13:42:10 mpo Exp $
+ * @version CVS $Id: Widget.java,v 1.13 2004/05/07 16:43:43 mpo Exp $
  */
 public interface Widget {
+    
+    /**
+     * Widget-Separator used in path-like notations
+     * @see #lookupWidget(String)
+     */
+    public static final char PATH_SEPARATOR = '/';
 
     /**
      * @return  the source location of this widget.
@@ -89,6 +95,15 @@ public interface Widget {
      */
     public String getRequestParameterName();
 
+    /**
+     * Finds a widget relative to this one based on a path-like
+     * string (/-delimted) into the widget-tree structure.
+     * This supports '../' and '/' to point to  
+     * @return the found widget or <code>null</code> if allong the traversal
+     *   of the path an invalid section was encountered. 
+     */
+    public Widget lookupWidget(String path);
+    
     /**
      * Lets this widget read its data from a request. At this point the Widget
      * may try to convert the request parameter to its native datatype (if it

@@ -34,7 +34,7 @@ import java.util.Date;
  * meant to illustrate how you can prepopulate a Form instance before its
  * initial display.
  * 
- * @version $Id: InitForm1Action.java,v 1.3 2004/03/18 21:04:40 joerg Exp $
+ * @version $Id: InitForm1Action.java,v 1.4 2004/05/07 16:43:43 mpo Exp $
  */
 public class InitForm1Action extends AbstractFormsAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
@@ -44,10 +44,10 @@ public class InitForm1Action extends AbstractFormsAction {
 
         Form form = formManager.createForm(resolver.resolveURI(formSource));
 
-        Field birthDate = (Field)form.getWidget("birthdate");
+        Field birthDate = (Field)form.getChild("birthdate");
         birthDate.setValue(new Date());
 
-        Repeater repeater = (Repeater)form.getWidget("contacts");
+        Repeater repeater = (Repeater)form.getChild("contacts");
         repeater.addRow();
         Field field = (Field)repeater.getWidget(0, "firstname");
         field.setValue("Jules");
