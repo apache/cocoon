@@ -52,6 +52,9 @@ package org.apache.cocoon.components.flow.javascript.fom;
 
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Enumeration;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -79,7 +82,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.7 2003/06/30 19:11:10 reinhard Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.8 2003/07/02 17:05:37 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -206,10 +209,10 @@ public class FOM_Cocoon extends ScriptableObject {
     public Object jsFunction_getComponent( String id ) { 
         Object o = null;
         try {
-		  o = this.componentManager.lookup( id );
-		} catch (ComponentException e) {
-          o = null; 
-		}
+            o = this.componentManager.lookup( id );
+        } catch (ComponentException e) {
+            o = null; 
+        }
         return o;
     }
     
@@ -219,14 +222,11 @@ public class FOM_Cocoon extends ScriptableObject {
      * @param component - an <code>Object</code> that is an instance 
      * of <code>org.apache.avalon.framework.component.Component</code>
      */
-    public void jsFunction_releaseComponent( Object component ) 
-      throws JavaScriptException {
+    public void jsFunction_releaseComponent( Object component ) throws Exception {
         try {
-            this.componentManager.release( (Component) component );
+            this.componentManager.release( (Component) unwrap(component) );
         } catch( ClassCastException cce ) {
             throw new JavaScriptException( "Only components can be released!" );
-        } catch( Exception e ) {
-            throw new JavaScriptException( "Error during release of component occurred!" + e.getMessage() ); 
         }
     }
 
@@ -238,20 +238,14 @@ public class FOM_Cocoon extends ScriptableObject {
      * @exception JavaScriptException if an error occurs
      */
     public Object jsFunction_load( String filename ) 
-        throws JavaScriptException {
+        throws Exception {
         org.mozilla.javascript.Context cx = 
             org.mozilla.javascript.Context.getCurrentContext();
-        try {
-            Scriptable scope = getParentScope();
-            Script script = interpreter.compileScript( cx, 
-                                                       environment,
-                                                       filename );
-            return script.exec( cx, scope );
-        } catch( JavaScriptException e ) {
-            throw e;
-        } catch( Exception e ) {
-            throw new JavaScriptException( e );
-        }
+        Scriptable scope = getParentScope();
+        Script script = interpreter.compileScript( cx, 
+                                                   environment,
+                                                   filename );
+        return script.exec( cx, scope );
     }    
         
     public static class FOM_Request extends ScriptableObject {
@@ -284,7 +278,6 @@ public class FOM_Cocoon extends ScriptableObject {
 
         public void jsFunction_setAttribute(String name,
                                             Object value) {
-            
             request.setAttribute(name, unwrap(value));
         }
 
@@ -297,6 +290,20 @@ public class FOM_Cocoon extends ScriptableObject {
                 }
             }
             return result;
+        }
+
+        public Object[] getIds() {
+            if (request != null) {
+                List list = new LinkedList();
+                Enumeration e = request.getAttributeNames();
+                while (e.hasMoreElements()) {
+                    list.add(e.nextElement());
+                }
+                Object[] result = new Object[list.size()];
+                list.toArray(result);
+                return result;
+            }
+            return super.getIds();
         }
 
         public String jsFunction_getCharacterEncoding() {
@@ -476,6 +483,20 @@ public class FOM_Cocoon extends ScriptableObject {
             return "FOM_Session";
         }
 
+        public Object[] getIds() {
+            if (session != null) {
+                List list = new LinkedList();
+                Enumeration e = session.getAttributeNames();
+                while (e.hasMoreElements()) {
+                    list.add(e.nextElement());
+                }
+                Object[] result = new Object[list.size()];
+                list.toArray(result);
+                return result;
+            }
+            return super.getIds();
+        }
+
         public Object get(String name, Scriptable start) {
             Object result = super.get(name, start);
             if (result == NOT_FOUND && session != null) {
@@ -566,6 +587,20 @@ public class FOM_Cocoon extends ScriptableObject {
 
         public Object jsFunction_getInitParameter(String name) {
             return context.getInitParameter(name);
+        }
+
+        public Object[] getIds() {
+            if (context != null) {
+                List list = new LinkedList();
+                Enumeration e = context.getAttributeNames();
+                while (e.hasMoreElements()) {
+                    list.add(e.nextElement());
+                }
+                Object[] result = new Object[list.size()];
+                list.toArray(result);
+                return result;
+            }
+            return super.getIds();
         }
 
         public Object get(String name, Scriptable start) {
