@@ -57,8 +57,8 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.Main;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.bean.helpers.DelayedOutputStream;
 import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
@@ -67,7 +67,10 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
-import org.apache.cocoon.bean.destination.Destination;
+
+import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.Source;
 
 import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
 import org.apache.avalon.framework.context.DefaultContext;
@@ -103,38 +106,70 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: CocoonBean.java,v 1.5 2003/05/27 12:09:01 jefft Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.6 2003/06/04 09:25:53 upayavira Exp $
  */
 public class CocoonBean {
 
     protected static final String DEFAULT_USER_AGENT = Constants.COMPLETE_NAME;
     protected static final String DEFAULT_ACCEPT = "text/html, */*";
 
+    /**
+     * The directory to use as context root.
+     */
+    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
+
+    /**
+     * The diretory to use to use for the generated output.
+     */
+    public static final String DEFAULT_DEST_DIR = "./site";
+
+    /**
+     * The diretory to use for generated files.
+     */
+    public static final String DEFAULT_WORK_DIR = "./work";
+
+    /**
+     * How a default configuration file is named.
+     */
+    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
+
+    /**
+     * The default URI to be used when a URI requested refers to
+     * a directory, e.g. http://localhost:8080/site/
+     */
+    public static final String INDEX_URI = "index";
+
     // User Supplied Parameters
-    private String contextDir = Constants.DEFAULT_CONTEXT_DIR;
+    private String contextDir = CocoonBean.DEFAULT_CONTEXT_DIR;
     private String configFile = null;
-    private String brokenLinkFileName = null;
-    private String workDir = Constants.DEFAULT_WORK_DIR;
+
+    private String brokenLinkReportFile = null;
+    private String brokenLinkReportType = "text";
+    private boolean brokenLinkGenerate = false;
+    private String brokenLinkExtension = "";
+
+    private String workDir = CocoonBean.DEFAULT_WORK_DIR;
     private String logKit = null;
     private String logger = null;
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
-    private String defaultFilename = Constants.INDEX_URI;
+    private String defaultFilename = CocoonBean.INDEX_URI;
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
-    private List classList = null;
+    private List classList = new ArrayList();
+    private List brokenLinks = null;
+    private List targets = new ArrayList();
 
     // Objects used alongside User Supplied Parameters
     private File context;
     private File work;
     private File conf;
-    private PrintWriter brokenLinkWriter;
 
     // Internal Objects
     private CommandLineContext cliContext;
     private Cocoon cocoon;
-    private Destination dest;
+    private String destDir;
     private static Logger log;
     private Map attributes;
     private HashMap empty;
@@ -142,38 +177,53 @@ public class CocoonBean {
     private Map allTranslatedLinks;
     private boolean initialized;
     private boolean verbose;
+    SourceResolver sourceResolver;
+    //
+    // INITIALISATION METHOD
+    //
 
-    //
-    // CONSTRUCTORS AND INITIALISATION METHODS
-    //
-    public CocoonBean(String workingDir, String contextDir) throws IOException {
-        this(workingDir, contextDir, null);
+    public CocoonBean() {
     }
 
-    public CocoonBean(String workingDir, String contextDir, String configFile) throws IOException {
-        this.contextDir = contextDir;
-        this.workDir = workingDir;
-        this.configFile = configFile;
+    public void initialize() throws Exception {
+        // @todo@ when does the logger get initialised? uv
+        // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
+        if (destDir.equals("")) {
+            String error = "Careful, you must specify a destination dir when using the -d/--destDir argument";
+            log.fatalError(error);
+            System.out.println(error);
+            System.exit(1);
+        }
 
+        if (contextDir.equals("")) {
+            String error = "Careful, you must specify a configuration file when using the -c/--contextDir argument";
+            log.fatalError(error);
+            System.out.println(error);
+            System.exit(1);
+        }
+
+        if (workDir.equals("")) {
+            String error = "Careful, you must specify a destination dir when using the -w/--workDir argument";
+            log.fatalError(error);
+            System.out.println(error);
+            System.exit(1);
+        }
+
+        if (targets.size() == 0 && !precompileOnly) {
+            String error = "Please, specify at least one starting URI.";
+            log.fatalError(error);
+            System.out.println(error);
+            System.exit(1);
+        }
         setLogLevel("ERROR");
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");
 
-        this.conf = null;
-        if (null == this.configFile) {
-            this.conf = getConfigurationFile(context);
-        } else {
-             this.conf = new File(this.configFile);
-             if (!conf.exists()) {
-                 this.conf = new File(context, this.configFile);
-             }
-        }
-    }
+        this.conf = getConfigurationFile(this.context, this.configFile);
 
-    public void initialize() throws Exception {
         try {
             DefaultContext appContext = new DefaultContext();
-            appContext.put(Constants.CONTEXT_CLASS_LOADER, Main.class.getClassLoader());
+            appContext.put(Constants.CONTEXT_CLASS_LOADER, CocoonBean.class.getClassLoader());
             cliContext = new CommandLineContext(contextDir);
             cliContext.enableLogging(new LogKitLogger(log));
             appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
@@ -212,13 +262,15 @@ public class CocoonBean {
             cocoon.setLogKitManager(logKitManager);
             cocoon.initialize();
 
-            if (brokenLinkFileName != null) {
-                try {
-                    this.brokenLinkWriter = new PrintWriter(new FileWriter(new File(brokenLinkFileName)), true);
-                } catch (IOException ioe) {
-                    log.error("File does not exist: " + brokenLinkFileName);
-                }
+            if (brokenLinkReportFile!=null && !(new File(brokenLinkReportFile).exists())) {
+              log.error("Broken Link Report File does not exist: " + brokenLinkReportFile);
             }
+
+            if (brokenLinkReportFile!=null) {
+                brokenLinks= new ArrayList();
+            }
+            this.sourceResolver = (SourceResolver)cocoon.getComponentManager().lookup(SourceResolver.ROLE);
+
         } catch (Exception e) {
             log.fatalError("Exception caught", e);
             throw e;
@@ -227,39 +279,52 @@ public class CocoonBean {
     }
 
     /**
-     * Check for a configuration file in a specific directory.
+     * Look around for the configuration file.
      *
      * @param dir a <code>File</code> where to look for configuration files
      * @return a <code>File</code> representing the configuration
      * @exception IOException if an error occurs
      */
-    private static File getConfigurationFile(File dir) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("Trying configuration file at: " + dir + File.separator + Constants.DEFAULT_CONF_FILE);
+    private static File getConfigurationFile(File dir, String configFile) throws IOException {
+        File conf;
+        if (configFile == null) {
+            conf = tryConfigurationFile(dir + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+            if (conf == null) {
+                conf = tryConfigurationFile(dir + File.separator + "WEB-INF" + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+            }
+            if (conf == null) {
+                conf = tryConfigurationFile(System.getProperty("user.dir") + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+            }
+            if (conf == null) {
+                conf = tryConfigurationFile("/usr/local/etc/" + CocoonBean.DEFAULT_CONF_FILE);
+            }
+        } else {
+            conf = new File(configFile);
+            if (!conf.exists()) {
+                conf = new File(dir, configFile);
+            }
         }
-        File f = new File(dir, Constants.DEFAULT_CONF_FILE);
-        if (f.canRead()) {
-            return f;
+        if (conf == null) {
+            log.error("Could not find the configuration file.");
+            throw new FileNotFoundException("The configuration file could not be found.");
         }
+        return conf;
+    }
 
+    /**
+     * Try loading the configuration file from a single location
+     */
+    private static File tryConfigurationFile(String filename) throws IOException {
+        File conf;
         if (log.isDebugEnabled()) {
-            log.debug("Trying configuration file at: " + System.getProperty("user.dir") + File.separator + Constants.DEFAULT_CONF_FILE);
+            log.debug("Trying configuration file at: " + filename);
         }
-        f = new File(System.getProperty("user.dir"), Constants.DEFAULT_CONF_FILE);
-        if (f.canRead()) {
-            return f;
+        conf = new File(filename);
+        if (conf.canRead()) {
+            return conf;
+        } else {
+            return null;
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Trying configuration file at: /usr/local/etc/" + Constants.DEFAULT_CONF_FILE);
-        }
-        f = new File("/usr/local/etc/", Constants.DEFAULT_CONF_FILE);
-        if (f.canRead()) {
-            return f;
-        }
-
-        log.error("Could not find the configuration file.");
-        throw new FileNotFoundException("The configuration file could not be found.");
     }
 
     /**
@@ -366,6 +431,14 @@ public class CocoonBean {
         this.workDir = workDir;
     }
 
+    public void setDestDir(String destDir) {
+        this.destDir = destDir;
+    }
+
+    public void setConfigFile(String configFile) {
+        this.configFile = configFile;
+    }
+
     public void setAgentOptions(String userAgent) {
         this.userAgent = userAgent;
     }
@@ -373,7 +446,7 @@ public class CocoonBean {
     public void setAcceptOptions(String accept) {
         this.accept = accept;
     }
- 
+
     public void setDefaultFilename(String filename) {
         defaultFilename = filename;
     }
@@ -386,8 +459,20 @@ public class CocoonBean {
         this.confirmExtension = confirmExtension;
     }
 
-    public void setBrokenLinkFile(String filename){
-        this.brokenLinkFileName = filename;
+    public void setBrokenLinkReportFile(String filename){
+        this.brokenLinkReportFile = filename;
+    }
+
+    public void setBrokenLinkReportType(String brokenLinkReportType) {
+        this.brokenLinkReportType = brokenLinkReportType;
+    }
+
+    public void setBrokenLinkGenerate(boolean brokenLinkGenerate) {
+        this.brokenLinkGenerate = brokenLinkGenerate;
+    }
+
+    public void setBrokenLinkExtension(String brokenLinkExtension) {
+        this.brokenLinkExtension = brokenLinkExtension;
     }
 
     public void setPrecompileOnly(boolean precompileOnly){
@@ -397,27 +482,36 @@ public class CocoonBean {
     public void setVerbose(boolean verbose){
          this.verbose = verbose;
     }
-    
-    public void setLoadedClasses(List classList) {
-        this.classList = classList;
+
+    public void addLoadedClass(String className) {
+        this.classList.add(className);
     }
 
-    public Logger getLogger(){
-        return CocoonBean.log;
+    public void addLoadedClasses(List classList) {
+        this.classList.addAll(classList);
     }
 
-    public boolean isPrecompileOnly(){
-        return this.precompileOnly;
+    public void addTarget(String sourceURI) {
+        targets.add(new Target(sourceURI, destDir));
     }
-
-    public String getContextDir(){
-        return this.contextDir;
+    public void addTarget(String type, String root, String sourceURI, String destURI){
+        targets.add(new Target(type, root, sourceURI, destURI));
     }
-
-    public String getWorkDir(){
-        return this.workDir;
+  
+    public void addTarget(String type, String sourceURI, String destURI){
+        targets.add(new Target(type, sourceURI, destURI));
     }
-
+  
+    public void addTarget(String sourceURI, String destURI){
+        targets.add(new Target(sourceURI, destURI));
+    }
+    public void addTargets(List uris) {
+        Iterator i = uris.iterator();
+        while (i.hasNext()) {
+            Target target = new Target((String)i.next(), destDir);
+            targets.add(target);
+        }
+    }
     /**
      * Process single URI into given output stream.
      *
@@ -425,31 +519,52 @@ public class CocoonBean {
      * @param outputStream to write generated contents into
      */
     public void processURI(String uri, OutputStream outputStream) throws Exception {
+
         if (!initialized) {
             initialize();
         }
-        attributes = new HashMap();
-        empty = new HashMap();
-        allProcessedLinks = new HashMap();
-        allTranslatedLinks = new HashMap();
-
         log.info("Processing URI: " + uri);
-        processURI(uri);
-    }
 
-    public void process(List uris, Destination destination) throws Exception {
-        dest = destination;
+        // Get parameters, deparameterized URI and path from URI
+        final TreeMap parameters = new TreeMap();
+        final String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
+        final String suri = NetUtils.parameterize(deparameterizedURI, parameters);
+        parameters.put("user-agent", userAgent);
+        parameters.put("accept", accept);
 
-        if (!initialized){
-            initialize();
+        // Get file name from URI (without path)
+        String pageURI = deparameterizedURI;
+        if (pageURI.indexOf("/") != -1) {
+            pageURI = pageURI.substring(pageURI.lastIndexOf("/") + 1);
+            if (pageURI.length() == 0) {
+                pageURI = "./";
+            }
         }
-        attributes = new HashMap();
-        empty = new HashMap();
-        allProcessedLinks = new HashMap();
-        allTranslatedLinks = new HashMap();
 
-        if (process(uris, precompileOnly) == 0) {
-            recursivelyPrecompile(context, context);
+        String filename;
+        if (confirmExtension) {
+            filename = (String)allTranslatedLinks.get(suri);
+            if (filename == null) {
+                filename = mangle(suri);
+                final String type = getType(deparameterizedURI, parameters);
+                final String ext = NetUtils.getExtension(filename);
+                final String defaultExt = MIMEUtils.getDefaultExtension(type);
+                if ((ext == null) || (!ext.equals(defaultExt))) {
+                    filename += defaultExt;
+                }
+            }
+        } else {
+            filename = suri;
+        }
+        if ("".equals(filename)) {
+            outputStream.close();
+            return;
+        }
+
+        int status = getPage(deparameterizedURI, parameters, null, null, outputStream);
+
+        if (status >=400) {
+           throw new ProcessingException("Resource not found: "+status);
         }
     }
 
@@ -474,56 +589,67 @@ public class CocoonBean {
 
     /**
      * Process the URI list and process them all independently.
-     * @param uris a <code>Collection</code> of URIs
-     * @param precompileOnly a <code>boolean</code> denoting to process XSP only
-     * @return an <code>int</code> value with the number of links processed
      * @exception Exception if an error occurs
      */
-    private int process(Collection uris, boolean precompileOnly) throws Exception {
+    public void process() throws Exception {
+
+        if (!initialized){
+            initialize();
+        }
+        attributes = new HashMap();
+        empty = new HashMap();
+        allProcessedLinks = new HashMap();
+        allTranslatedLinks = new HashMap();
 
         int nCount = 0;
-        ArrayList links = new java.util.ArrayList();
-        Iterator i = uris.iterator();
-        String next;
+        Target target;
+
+        HashMap targetMap = new java.util.HashMap();
+        Iterator i = targets.iterator();
         while (i.hasNext()) {
-            next = (String)i.next();
-            if (!links.contains(next)) {
-                links.add(next);
+            target = (Target)i.next();
+            if (!targetMap.containsKey(target.getHashCode())) {
+                targetMap.put(target.getHashCode(), target);
             }
         }
-        while (links.size() > 0) {
-            String url = (String)links.get(0);
 
+        while (targetMap.size() > 0) {
+            String hashCode = (String)(new ArrayList(targetMap.keySet()).get(0));
+            target = (Target)targetMap.get(hashCode);
             try {
-                if (allProcessedLinks.get(url) == null) {
+                if (allProcessedLinks.get(hashCode) == null) {
                     if (precompileOnly) {
-                        this.processXSP(url);
+                        this.processXSP(target.getSourceURI());
                     } else if (this.followLinks) {
-                        i = processURI(url).iterator();
+                        i = processTarget(target).iterator();
                         while (i.hasNext()) {
-                            next = (String)i.next();
-                            if (!links.contains(next)) {
-                                links.add(next);
+                            target = (Target)i.next();
+                            if (!targetMap.containsKey(target.getHashCode())) {
+                                targetMap.put(target.getHashCode(), target);
                             }
                         }
                     } else {
-                        processURI(url);
+                        processTarget(target);
                     }
                 }
             } catch (ResourceNotFoundException rnfe) {
-                printBroken (url, rnfe.getMessage());
+                printBroken (target.getSourceURI(), rnfe.getMessage());
             }
 
-            links.remove(url);
+            targetMap.remove(target.getHashCode());
             nCount++;
 
             if (log.isInfoEnabled()) {
                 log.info("  Memory used: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
-                log.info("  Processed, Translated & Left: " + allProcessedLinks.size() + ", "  + allTranslatedLinks.size() + ", " + links.size());
+                log.info("  Processed, Translated & Left: " + allProcessedLinks.size() + ", "  + allTranslatedLinks.size() + ", " + targetMap.size());
             }
         }
 
-        return nCount;
+        if (nCount == 0) {
+            recursivelyPrecompile(context, context);
+        }
+        outputBrokenLinks();
+
     }
 
     /**
@@ -581,8 +707,10 @@ public class CocoonBean {
     }
 
     /**
-     * Processes the given URI and return all links. The algorithm is the following:
+     * Processes the given Target and return all links.
      *
+     * If links are to be followed, and extensions checked then the algorithm is as
+     * follows:
      * <ul>
      *  <li>file name for the URI is generated. URI MIME type is checked for
      *      consistency with the URI and, if the extension is inconsistent
@@ -596,12 +724,25 @@ public class CocoonBean {
      *  <li>list of absolute URI is returned, for every URI which is not yet
      *      present in list of all translated URIs</li>
      * </ul>
-     * @param uri a <code>String</code> URI to process
-     * @return a <code>Collection</code> containing all links found
+     *
+     * If links are to be followed, but extensions are not checked, then the
+     * algorithm will be:
+     * <ul>
+     *   <li>The content for the page is generated</li>
+     *   <li>Whilst generating, all links are gathered by the LinkGatherer</li>
+     *   <li>Gathered links are added to the unprocessed links list, and
+     *       processing continues until all processing is complete
+     *   </li>
+     * </ul>
+     * @param target a <code>Target</code> target to process
+     * @return a <code>Collection</code> containing all links found, as 
+     * Target objects.
      * @exception Exception if an error occurs
      */
-    private Collection processURI(String uri) throws Exception {
+    private Collection processTarget(Target target) throws Exception {
         System.out.print(" * ");
+
+        String uri = target.getSourceURI();
 
         // Get parameters, deparameterized URI and path from URI
         final TreeMap parameters = new TreeMap();
@@ -620,10 +761,11 @@ public class CocoonBean {
             }
         }
 
-        String filename = (String)allTranslatedLinks.get(suri);
-        if (filename == null) {
-            filename = mangle(suri);
-            if (confirmExtension) {
+        String filename;
+        if (confirmExtension) {
+            filename = (String)allTranslatedLinks.get(suri);
+            if (filename == null) {
+                filename = mangle(suri);
                 final String type = getType(deparameterizedURI, parameters);
                 final String ext = NetUtils.getExtension(filename);
                 final String defaultExt = MIMEUtils.getDefaultExtension(type);
@@ -632,20 +774,22 @@ public class CocoonBean {
                         filename += defaultExt;
                     }
                 }
+                allTranslatedLinks.put(suri, filename);
             }
-            allTranslatedLinks.put(suri, filename);
+        } else {
+            filename = suri;
         }
         // Store processed URI list to avoid eternal loop
-        allProcessedLinks.put(suri, filename);
+        allProcessedLinks.put(target.getHashCode(),target);
 
         if ("".equals(filename)) {
             return new ArrayList();
         }
 
         // Process links
-        final ArrayList absoluteLinks = new ArrayList();
+        final List absoluteLinks = new ArrayList();
         final HashMap translatedLinks = new HashMap();
-        final ArrayList gatheredLinks = new ArrayList();
+        List gatheredLinks = new ArrayList();
 
         if (followLinks && confirmExtension) {
             final Iterator i = this.getLinks(deparameterizedURI, parameters).iterator();
@@ -687,11 +831,13 @@ public class CocoonBean {
 
         try {
             // Process URI
-            String file = NetUtils.decodePath(filename);
-            OutputStream output = dest.getOutputStream(file);
-
+            DelayedOutputStream output = new DelayedOutputStream();
             try{
-                getPage(deparameterizedURI, parameters, confirmExtension ? translatedLinks : null, gatheredLinks, output);
+                int status = getPage(deparameterizedURI, parameters, confirmExtension ? translatedLinks : null, gatheredLinks, output);
+
+                if (status >=400) {
+                    throw new ProcessingException("Resource not found: "+status);
+                }
 
                 if (followLinks && !confirmExtension) {
                     for (Iterator it=gatheredLinks.iterator();it.hasNext();){
@@ -711,10 +857,24 @@ public class CocoonBean {
 
                 printlnInfo(uri); // (can also output type returned by getPage)
             } catch(ProcessingException pe) {
-                printBroken(filename, DefaultNotifyingBuilder.getRootCause(pe).getMessage());
                 output.close();
-                resourceUnavailable(file, uri);
+                output = null;
+                if (brokenLinkGenerate) {
+                    String brokenFile = NetUtils.decodePath(filename);
+                    if (brokenLinkExtension!=null){
+                        brokenFile = brokenFile+brokenLinkExtension;
+                    }
+                    resourceUnavailable(target, uri);
+                }
+                printBroken(filename, DefaultNotifyingBuilder.getRootCause(pe).getMessage());
             } finally {
+                if (output != null) {
+
+                    OutputStream stream = target.getOutputStream(filename);
+
+                    output.setFileOutputStream(stream);
+                    output.flush();
+                }
                 try {
                     if (output != null)
                         output.close();
@@ -728,7 +888,15 @@ public class CocoonBean {
             if (verbose) System.out.println("Could not process URI: " + deparameterizedURI);
         }
 
-        return absoluteLinks;
+         List targets = new ArrayList();
+         for (Iterator i = absoluteLinks.iterator() ;i.hasNext();) {
+             String link = (String)i.next();
+             Target derivedTarget = target.getDerivedTarget(link);
+             if (derivedTarget != null) {
+                 targets.add(target.getDerivedTarget(link));
+             }
+         }
+         return targets;
     }
 
     /**
@@ -765,12 +933,67 @@ public class CocoonBean {
     }
 
     /**
+      * Print the message of a broken link.
+      *
+      * @param url the <code>URL</code> of the broken link
+      * @param cause of the broken link
+      */
+     private void printBroken(String url, String cause) {
+         int screenWidth = 67;
+         int causeWidth = screenWidth - 6;
+
+         printlnInfo("");
+         printlnInfo("-> [broken page] " + url +" <- ");
+         printlnInfo("");
+         printInfo("     ");
+
+         int causeLength = cause.length(), currentStart = -causeWidth, currentEnd = 0;
+         do {
+             currentStart += causeWidth;
+             currentEnd   += causeWidth;
+
+             if (currentEnd>causeLength) {
+                 currentEnd=causeLength;
+             }
+
+             printlnInfo(cause.substring(currentStart, currentEnd));
+             printInfo("     ");
+         } while(currentEnd < causeLength);
+
+         printlnInfo("");
+
+         if (null != this.brokenLinks) {
+             brokenLinks.add(url);
+         }
+     }
+
+     /**
+      * Print an info message.
+      *
+      * @param message the message to print
+      */
+     private void printlnInfo (String message) {
+         log.info(message);
+         if (verbose) System.out.println(message);
+     }
+
+     /**
+      * Print an info message.
+      *
+      * @param message the message to print
+      */
+     private void printInfo (String message) {
+         log.info(message);
+         if (verbose) System.out.print(message);
+     }
+
+    /**
      * Generate a <code>resourceUnavailable</code> message.
      *
-     * @param file being unavailable
+     * @param target being unavailable
      * @exception IOException if an error occurs
      */
-    private void resourceUnavailable(String file, String uri) throws IOException {
+    private void resourceUnavailable(Target target, String uri) throws IOException, ProcessingException {
         SimpleNotifyingBean n = new SimpleNotifyingBean(this);
         n.setType("resource-not-found");
         n.setTitle("Resource not Found");
@@ -778,14 +1001,49 @@ public class CocoonBean {
         n.setMessage("Page Not Available.");
         n.setDescription("The requested resource couldn't be found.");
         n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
-        n.addExtraDescription("missing-file", file.toString());
+        n.addExtraDescription("missing-file", uri);
 
-        PrintStream out = new PrintStream(dest.getOutputStream(file));
+        PrintStream out = new PrintStream(target.getOutputStream(uri));
         Notifier.notify(n, out, "text/html");
         out.flush();
         out.close();
     }
 
+    private void outputBrokenLinks() {
+        if (brokenLinkReportFile==null){
+            return;
+        } else if ("text".equalsIgnoreCase(brokenLinkReportType)) {
+            outputBrokenLinksAsText();
+        } else if ("xml".equalsIgnoreCase(brokenLinkReportType)) {
+            outputBrokenLinksAsXML();
+        }
+    }
+    private void outputBrokenLinksAsText(){
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(new FileWriter(new File(brokenLinkReportFile)), true);
+            for (Iterator i=brokenLinks.iterator();i.hasNext();){
+                writer.println((String)i.next());
+            }
+            writer.close();
+        } catch (IOException ioe) {
+            log.error("File does not exist: " + brokenLinkReportFile);
+        }
+    }
+    private void outputBrokenLinksAsXML(){
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(new FileWriter(new File(brokenLinkReportFile)), true);
+            writer.println("<broken-links>");
+            for (Iterator i=brokenLinks.iterator();i.hasNext();){
+                writer.println("  <link>" + (String)i.next()+"</link>");
+            }
+            writer.println("</broken-links>");
+            writer.close();
+        } catch (IOException ioe) {
+            log.error("File does not exist: " + brokenLinkReportFile);
+        }
+    }
     /**
      * Mangle a URI.
      *
@@ -837,7 +1095,7 @@ public class CocoonBean {
      * @return a <code>String</code> value for the content
      * @exception Exception if an error occurs
      */
-    protected String getPage(String deparameterizedURI, Map parameters, Map links, List gatheredLinks, OutputStream stream) throws Exception {
+    protected int getPage(String deparameterizedURI, Map parameters, Map links, List gatheredLinks, OutputStream stream) throws Exception {
         FileSavingEnvironment env = new FileSavingEnvironment(deparameterizedURI,
                                                               context,
                                                               attributes,
@@ -847,10 +1105,12 @@ public class CocoonBean {
                                                               cliContext,
                                                               stream,
                                                               new LogKitLogger(log));
+
         // Here Cocoon can throw an exception if there are errors in processing the page
         cocoon.process(env);
+
         // if we get here, the page was created :-)
-        return env.getContentType();
+        return env.getStatus();
     }
 
     /** Class <code>NullOutputStream</code> here. */
@@ -901,61 +1161,6 @@ public class CocoonBean {
     }
 
     /**
-     * Print the message of a broken link.
-     *
-     * @param url the <code>URL</code> of the broken link
-     * @param cause of the broken link
-     */
-    private void printBroken(String url, String cause) {
-        int screenWidth = 67;
-        int causeWidth = screenWidth - 6;
-
-        printlnInfo("");
-        printlnInfo("-> [broken page] " + url +" <- ");
-        printlnInfo("");
-        printInfo("     ");
-
-        int causeLength = cause.length(), currentStart = -causeWidth, currentEnd = 0;
-        do {
-            currentStart += causeWidth;
-            currentEnd   += causeWidth;
-
-            if (currentEnd>causeLength) {
-                currentEnd=causeLength;
-            }
-
-            printlnInfo(cause.substring(currentStart, currentEnd));
-            printInfo("     ");
-        } while(currentEnd < causeLength);
-
-        printlnInfo("");
-
-        if (null != this.brokenLinkWriter) {
-            this.brokenLinkWriter.println(url);
-        }
-    }
-
-    /**
-     * Print an info message.
-     *
-     * @param message the message to print
-     */
-    private void printlnInfo (String message) {
-        log.info(message);
-        if (verbose) System.out.println(message);
-    }
-
-    /**
-     * Print an info message.
-     *
-     * @param message the message to print
-     */
-    private void printInfo (String message) {
-        log.info(message);
-        if (verbose) System.out.print(message);
-    }
-
-    /**
      * This builds the important ClassPath used by this class.  It
      * does so in a neutral way.
      * It iterates in alphabetical order through every file in the
@@ -995,36 +1200,99 @@ public class CocoonBean {
         }
         return buildClassPath.toString();
      }
+
+    public class Target {
+        private static final String DEFAULT_TYPE = "default";
+        private static final String REPLACE_TYPE = "replace";
+        private static final String APPEND_TYPE = "append";
+        private static final String INSERT_TYPE = "insert";
+        private String type;
+        private String root;
+        private String sourceURI;
+        private String destURI;
+        
+        public Target(String type, String root, String sourceURI, String destURI){
+            this.type = type;
+            this.root = root;
+            this.sourceURI = NetUtils.normalize(sourceURI);
+            this.destURI = destURI;
+        }
+
+        public Target(String type, String sourceURI, String destURI){
+            this(type, "", sourceURI, destURI);
+        }
+
+        public Target(String sourceURI, String destURI){
+            this(DEFAULT_TYPE, "", sourceURI, destURI);
+        }
+
+        public Target getDerivedTarget(String newURI) throws ProcessingException {
+            if (!newURI.startsWith(root)) {
+                return null;
+            }
+            newURI = newURI.substring(root.length());
+            return new Target(this.type, this.root, newURI, this.destURI);
+        }
+        
+        public String getFinalURI(String actualSourceURI) throws ProcessingException {
+            if (!actualSourceURI.startsWith(root)) {
+                throw new ProcessingException("Derived target does not share same root: " + actualSourceURI);
+            }
+            actualSourceURI = actualSourceURI.substring(root.length());
+
+            if (DEFAULT_TYPE.equals(this.type)){
+                return this.getFinalURIWithDefault(actualSourceURI);
+            }
+            else if (REPLACE_TYPE.equals(this.type)){
+                return this.getFinalURIWithReplace(actualSourceURI);
+            }
+            else if (APPEND_TYPE.equals(this.type)){
+                return this.getFinalURIWithAppend(actualSourceURI);
+            }
+            else if (INSERT_TYPE.equals(this.type)){
+                return this.getFinalURIWithInsert(actualSourceURI);
+            } else {
+                throw new ProcessingException("Unknown mapper type: " + this.type);
+            }
+        }
+        private String getFinalURIWithDefault(String actualSourceURI){
+            return destDir + "/" + actualSourceURI;
+        }
+
+        private String getFinalURIWithAppend(String actualSourceURI){
+            return destURI + actualSourceURI;
+        }
+
+        private String getFinalURIWithReplace(String actualSourceURI){
+            return destURI;
+        }
+
+        private String getFinalURIWithInsert(String actualSourceURI) throws ProcessingException {
+            int starPos = destURI.indexOf("*");
+            if (starPos == -1) {
+                throw new ProcessingException("Missing * in replace mapper uri");
+            } else if (starPos == destURI.length()-1) {
+               return destURI.substring(0,starPos) + actualSourceURI;
+            } else {
+                return destURI.substring(0,starPos) + actualSourceURI + destURI.substring(starPos+1);
+            }
+        }
+   
+        public String getSourceURI() {
+            return root + sourceURI;
+        }
+        // @todo@ this is misusing the 'hashCode' name - hashCodes should be integer it seems, uv
+        public String getHashCode() {
+            return type + "|" + root +"|" + sourceURI + "|" + destURI;
+        }
+        public OutputStream getOutputStream(String filename) throws IOException, ProcessingException {
+            final String finalDestinationURI = this.getFinalURI(filename);
+            Source src = (Source) sourceResolver.resolveURI(finalDestinationURI);
+            if (!(src instanceof ModifiableSource)) {
+                throw new ProcessingException("Source is not Modifiable: "+finalDestinationURI);
+            }
+            ModifiableSource outputSource = (ModifiableSource) src;
+            return outputSource.getOutputStream();
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

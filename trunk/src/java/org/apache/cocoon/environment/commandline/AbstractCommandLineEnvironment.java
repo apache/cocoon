@@ -71,7 +71,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.2 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.3 2003/06/04 09:25:53 upayavira Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
@@ -81,6 +81,7 @@ implements Redirector {
     protected String contentType;
     protected int contentLength;
     protected boolean hasRedirected = false;
+    protected int statusCode;
 
     public AbstractCommandLineEnvironment(String uri,
                                           String view,
@@ -91,6 +92,7 @@ implements Redirector {
         super(uri, view, context);
         this.enableLogging(log);
         this.outputStream = stream;
+        this.statusCode = 0;
     }
 
     /**
@@ -166,6 +168,20 @@ implements Redirector {
     }
 
     /**
+     * Set the StatusCode
+     */
+    public void setStatus(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    /**
+     * Get the StatusCode
+     */
+    public int getStatus() {
+        return statusCode;
+    }
+
+    /**
      * Set the ContentType
      */
     public void setContentType(String contentType) {
@@ -185,8 +201,4 @@ implements Redirector {
     public String getContentType() {
         return this.contentType;
     }
-
-
 }
-
-
