@@ -52,19 +52,19 @@ package org.apache.cocoon.portal.layout;
 
 import java.util.Map;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractParameters.java,v 1.3 2003/05/22 06:55:15 cziegeler Exp $
+ * @version CVS $Id: AbstractParameters.java,v 1.4 2004/01/27 14:58:05 cziegeler Exp $
  */
 public abstract class AbstractParameters 
     implements Parameters {
 
-    protected Map parameters = new SequencedHashMap();
+    protected Map parameters = new LinkedMap();
      
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Parameters#getParameters()

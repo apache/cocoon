@@ -53,14 +53,14 @@ package org.apache.cocoon.portal.layout;
 import java.util.Map;
 
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.12 2004/01/27 11:14:13 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.13 2004/01/27 14:58:05 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractProducible 
@@ -70,7 +70,7 @@ public abstract class AbstractLayout
     
     protected Item parent;
     
-    protected Map parameters = new SequencedHashMap();
+    protected Map parameters = new LinkedMap();
      
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Parameters#getParameters()
