@@ -1,0 +1,3 @@
+<example xmlns:betwixt="http://apache.org/cocoon/betwixt/1.0">
+  <betwixt:include name="testBean" scope="request"/>
+</example>
