@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.4 2004/04/03 08:17:42 crossley Exp $-->
+<!-- $Id: welcome.xml,v 1.5 2004/04/06 08:52:52 mpo Exp $-->
 <samples name="CForms Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
  <group name="Back">
   <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -52,13 +52,13 @@
   <note>
   	Step-by-step tutorial into individual binding features:
   </note>
-  <sample name="1. Binding Simple Values" href="binding-01value.flow">fb:*/direction and fb:value/*</sample>
-  <sample name="2. Lenient Binding" href="binding-02lenient.flow">*/@lenient</sample>
+  <sample name="1. Binding Simple Values" href="binding-01value.flow">fb:*/@direction and fb:value/*</sample>
+  <sample name="2. Lenient Binding" href="binding-02lenient.flow">fb:*/@lenient</sample>
   <!-- TODO: provide more tutorial samples like these:
   <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate</sample>
   <sample name="4. Repeater Binding" href="binding-04repeater.flow">fb:repeater</sample>
-  <sample name="5. JavaScript Binding" href="binding-05js.flow">fb:javascript</sample>
   -->
+  <sample name="5. Custom Bindings using Java or Javascript" href="binding-05custom.flow">fb:javascript and fb:custom</sample>
  </group>
 
  <group name="Locales">

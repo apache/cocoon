@@ -199,3 +199,44 @@ function createJavaBeanFor02lenient() {
     }
     return bean;
 }
+
+/**
+ * sample conversion methods used by the javascript binding in '05custom'
+ */
+
+function doLoadConversion(backendValue, delimiter){
+  var presuffix = "" + delimiter + delimiter;
+  var result = "";
+  if (backendValue.startsWith(presuffix) 
+      && backendValue.endsWith(presuffix)
+      && backendValue.length() >= 4) {
+    result = backendValue.substring(2,backendValue.length() - 2);
+  }
+  return result;
+}
+
+function doSaveConversion(formValue, delimiter){
+  var result = "" + delimiter + delimiter + formValue + delimiter + delimiter;
+  return result;
+}
+
+/**
+ * Creates the JS Bean for sample '05custom'
+ */ 
+function createJSBeanFor05custom() {
+    var bean = {"jswrap-value": "--wrapped value--",
+                "custom-value": "**custom value**",
+                "config-value": "[[config value]]"};
+    return bean;
+}
+
+/**
+ * Creates the Java Bean for sample '05custom'
+ */ 
+function createJavaBeanFor05custom() {
+    var bean = new Packages.java.util.HashMap();
+    bean.put("jswrap-value", "--wrapped value--");
+    bean.put("custom-value", "**custom value**");
+    bean.put("config-value", "[[config value]]");
+    return bean;
+}
