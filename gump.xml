@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.153 2004/05/11 06:52:28 crossley Exp $
+    | CVS $Id: gump.xml,v 1.154 2004/05/23 13:56:09 antonio Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -65,6 +65,7 @@
 
     <depend project="jakarta-regexp"/>
     <depend project="jakarta-servletapi"/>
+    <depend project="jakarta-turbine-jcs"/>
 
     <depend project="commons-cli"/>
     <depend project="commons-httpclient"/>
@@ -148,7 +149,6 @@
     <depend project="commons-beanutils" inherit="all"/>
     <depend project="commons-digester" inherit="all"/>
     <depend project="jakarta-velocity" inherit="all"/>
-    <depend project="jakarta-turbine-jcs"/>
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
