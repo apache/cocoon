@@ -19,7 +19,7 @@ package org.apache.cocoon.components.serializers.encoding;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLEncoder.java,v 1.1 2004/04/21 09:33:22 pier Exp $
+ * @version CVS $Id: XMLEncoder.java,v 1.2 2004/04/27 18:35:21 pier Exp $
  */
 public class XMLEncoder extends CompiledEncoder {
 
@@ -37,6 +37,16 @@ public class XMLEncoder extends CompiledEncoder {
         super("X-W3C-XML");
     }
 
+    /**
+     * Create a new instance of this <code>XMLEncoder</code>.
+     *
+     * @param name A name for this <code>Encoding</code>.
+     * @throws NullPointerException If one of the arguments is <b>null</b>.
+     */
+    protected XMLEncoder(String name) {
+        super(name);
+    }
+    
     /**
      * Return true or false wether this encoding can encode the specified
      * character or not.

@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.serializers;
 
+import org.apache.cocoon.components.serializers.encoding.XHTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.xml.sax.SAXException;
 
@@ -23,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLSerializer.java,v 1.1 2004/04/21 09:33:22 pier Exp $
+ * @version CVS $Id: XHTMLSerializer.java,v 1.2 2004/04/27 18:35:21 pier Exp $
  */
 public class XHTMLSerializer extends XMLSerializer {
 
@@ -48,13 +49,22 @@ public class XHTMLSerializer extends XMLSerializer {
 
     /* ====================================================================== */
 
+    private static final XHTMLEncoder XHTML_ENCODER = new XHTMLEncoder();
+
     /**
      * Create a new instance of this <code>XHTMLSerializer</code>
      */
     public XHTMLSerializer() {
-        super();
+        super(XHTML_ENCODER);
     }
 
+    /**
+     * Create a new instance of this <code>XHTMLSerializer</code>
+     */
+    protected XHTMLSerializer(XHTMLEncoder encoder) {
+        super(encoder);
+    }
+    
     /**
      * Return the MIME Content-Type produced by this serializer.
      */
