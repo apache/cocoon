@@ -65,7 +65,7 @@ import org.apache.cocoon.util.HashMap;
  * getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractInputModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: AbstractInputModule.java,v 1.2 2003/03/12 13:27:04 haul Exp $
  */
 public abstract class AbstractInputModule extends AbstractLogEnabled
     implements InputModule, Configurable, Disposable {
@@ -91,7 +91,7 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
         this.settings = new HashMap(parameters.length);
         for (int i = 0; i < parameters.length; i++) {
             String key = parameters[i].getName();
-            String val = parameters[i].getValue();
+            String val = parameters[i].getValue("");
             this.settings.put (key, val);
         }
     }
