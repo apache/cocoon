@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.2 2003/03/10 16:41:07 stefano Exp $:
+       CVS: $Id: build.xml,v 1.3 2003/03/10 18:08:38 cziegeler Exp $:
 
 ============================================================================ -->
 
@@ -203,7 +203,7 @@
            classpathref="classpath">
          <src>
           <!-- [FIXME] THE DEPENDENCY ON DEPRECATED SHOULD GO AWAY!!!! -->
-          <!--path location="${deprecated.src}"/--> 
+          <path location="${deprecated.src}"/> 
           <path location="${java}"/>
          </src>
     </javac>
