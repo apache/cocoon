@@ -43,16 +43,6 @@
         <path location="${{build.mocks}}"/>
         <path location="${{build.dest}}"/>
         <pathelement path="${{build.webapp.webinf}}/classes/"/>
-<!--
-        <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <fileset dir="${{blocks}}/{$block-name}">
-            <include name="lib/*.jar"/>
-          </fileset>
-          <pathelement location="${{build.blocks}}/{$block-name}/dest"/>
-          <pathelement location="${{build.blocks}}/{$block-name}/samples"/>
-          <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
-        </xsl:for-each>-->
       </path>
 
       <path id="test.classpath">
