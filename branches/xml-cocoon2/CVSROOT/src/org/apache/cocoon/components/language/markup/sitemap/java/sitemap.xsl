@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.63 $ $Date: 2000-11-30 21:41:07 $
+     * @version CVS $Revision: 1.1.2.64 $ $Date: 2000-12-02 11:54:17 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -334,7 +334,7 @@
                 }
               </xsl:when>
               <xsl:otherwise>
-                log.error("Sitemap", ex);
+                log.error("Sitemap", e);
               </xsl:otherwise>
             </xsl:choose>
           }
