@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.11 2000-02-13 18:29:35 stefano Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.12 2000-03-13 21:26:45 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.Utils;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.11 $ $Date: 2000-02-13 18:29:35 $
+ * @version $Revision: 1.12 $ $Date: 2000-03-13 21:26:45 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -373,7 +373,7 @@ public class XSPUtil {
     return new String(inputBytes);
   }
 
-  /* Library Utility Methods */
+  /* Logicsheet Utility Methods */
   // Inclusion
   public static String getURLContents(String url) throws IOException {
     return getContents(new URL(url).openStream());
