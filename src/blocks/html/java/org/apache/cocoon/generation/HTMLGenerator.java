@@ -53,12 +53,26 @@ import org.w3c.tidy.Tidy;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * The html generator reads HTML from a source, converts it to XHTML
+ * and generates SAX Events.
+ * 
+ * @cocoon.sitemap.component.name   html
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.html
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the xml document for validation
+ * 
+ * @cocoon.sitemap.component.pooling.min   4
+ * @cocoon.sitemap.component.pooling.max  32
+ * @cocoon.sitemap.component.pooling.grow  4
+ *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.11 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.12 2004/05/03 13:07:26 cziegeler Exp $
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
