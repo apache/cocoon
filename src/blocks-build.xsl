@@ -43,7 +43,7 @@
         <path location="${{build.mocks}}"/>
         <path location="${{build.dest}}"/>
         <pathelement path="${{build.webapp.webinf}}/classes/"/>
-
+<!--
         <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
           <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
           <fileset dir="${{blocks}}/{$block-name}">
@@ -52,7 +52,7 @@
           <pathelement location="${{build.blocks}}/{$block-name}/dest"/>
           <pathelement location="${{build.blocks}}/{$block-name}/samples"/>
           <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
-        </xsl:for-each>
+        </xsl:for-each>-->
       </path>
 
       <path id="test.classpath">
@@ -251,6 +251,9 @@
             <include name="*.jar"/>
           </fileset>
           <path refid="classpath" />
+          <xsl:for-each select="$cocoon-blocks">
+            <path refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
+          </xsl:for-each>
         </classpath>
       </javadoc>
     </target>
@@ -315,7 +318,7 @@
                  target="${{target.vm}}"
                  nowarn="${{compiler.nowarn}}"
                  compiler="${{compiler}}">
-            <classpath refid="classpath"/>
+            <classpath refid="{$block-name}.classpath"/>
           </javac>
         </then>
       </if>
@@ -348,7 +351,7 @@
         <!-- Currently, we have no JVM dependent sources
         <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
         -->
-        <classpath refid="classpath"/>
+        <classpath refid="{$block-name}.classpath"/>
         <exclude name="**/samples/**/*.java"/>
       </javac>
 
@@ -385,7 +388,7 @@
         <!-- Currently, we have no JVM dependent sources
         <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
         -->
-        <classpath refid="classpath"/>
+        <classpath refid="{$block-name}.classpath"/>
         <include name="**/samples/**/*.java"/>
       </javac>
     </target>
@@ -517,6 +520,17 @@
       </xsl:if>
 
       <mkdir dir="${{build.blocks}}/{$block-name}/dest"/>
+
+      <path id="{$block-name}.classpath">
+        <path refid="classpath"/>
+        <fileset dir="${{blocks}}/{$block-name}">
+          <include name="lib/*.jar"/>
+        </fileset>
+        <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
+        <xsl:for-each select="$cocoon-block-dependencies">
+          <path refid="{substring-after(@project,'cocoon-block-')}.classpath"/>
+        </xsl:for-each>
+      </path>
     </target>
 
     <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
@@ -551,7 +565,7 @@
                  compiler="${{compiler}}">
             <src path="${{blocks}}/{$block-name}/test"/>
             <classpath>
-              <path refid="classpath"/>
+              <path refid="{$block-name}.classpath"/>
               <path refid="test.classpath"/>
               <pathelement location="${{build.test}}"/>
             </classpath>
@@ -560,7 +574,7 @@
           <junit printsummary="yes" haltonfailure="yes" fork="yes">
             <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
             <classpath>
-              <path refid="classpath"/>
+              <path refid="{$block-name}.classpath"/>
               <path refid="test.classpath"/>
               <pathelement location="${{build.test}}"/>
               <pathelement location="${{build.blocks}}/{$block-name}/test"/>
