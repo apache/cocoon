@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.189 2003/11/10 08:15:25 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.190 2003/11/11 12:06:57 crossley Exp $:-->
 
 <status>
  <developers>
@@ -200,7 +200,7 @@
      XMLByteStreamCompiler now handles also text nodes longer than 32 k.
    </action>
    <action dev="CZ" type="fix" fixes-bug="23538" due-to-email="samc@atnet.net.au" due-to="Sam Coward">
-     Applying patch from Sam Coward (samc@atnet.net.au) for reducing 
+     Reducing 
      setDocumentLocator calls in JXTemplateGenerator and JXFormsGenerator.
    </action>
    <action dev="BD" type="add" fixes-bug="24294" due-to="Jelle Alten" due-to-email="jelle@ordina.nl">
@@ -211,14 +211,13 @@
      patch from Grigorios Merenidis (Grigorios.Merenidis@Dresdner-Bank.com).
    </action>
    <action dev="CZ" type="fix" fixes-bug="24326" due-to-email="andrzej@chaeron.com" due-to="Andrzej Taramina">
-     SQLTransformer: Correcting handling of XML data with XML declarations. Applying
-     patch from Andrzej Taramina (andrzej@chaeron.com).
+     SQLTransformer: Correcting handling of XML data with XML declarations.
    </action>
    <action dev="CZ" type="fix" due-to="Volker Schmitt">
      Fixing threading problems in the ExtendedComponentSelector.
    </action>
    <action dev="CZ" type="fix" fixes-bug="24409" due-to-email="holz@fiz-chemie.de" due-to="Martin Holz">
-      Fixing namespace handling in the send-mail transformer (Patch submitted by Martin Holz).
+      Fixing namespace handling in the send-mail transformer.
    </action>
    <action dev="CZ" type="fix" due-to="Andrea Poeschl" due-to-email="poeschel@aidossoftware.com">
       Fixing precompilation of the XSPs for the CLI.
