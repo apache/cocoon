@@ -148,8 +148,6 @@ public class Repeater extends AbstractWidget {
                     removeRow(i);
                 }
             }
-        } else {
-            rows.clear();
         }
 
         // let the rows read their data from the request
