@@ -107,7 +107,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.3 2003/09/12 14:47:27 reinhard Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.4 2003/09/12 18:18:36 reinhard Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -131,16 +131,24 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     // in the Christoper Oliver's Rhino JavaScript implementation
     static int OPTIMIZATION_LEVEL = -2;
 
+    // the postfix of the resulting file streamed into the same directory as
+    // the basescript
+    // (RPO) added/changed by interception layer        
+    public static final String INTERCEPTION_POSTFIX = "_intercepted.js";
+    // end
+         
     /**
      * When was the last time we checked for script modifications. Used
      * only if {@link #reloadScripts} is true.
      */
     protected long lastTimeCheck = 0;
 
+    // (RPO) added/changed by interception layer      
     /**
      * Are interceptions enabled?
      */
     private boolean isInterceptionEnabled;
+    // end
 
     /**
      * Shared global scope for scripts and other immutable objects
@@ -490,6 +498,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                     JavaScriptAspectWeaver aspectWeaver = new JavaScriptAspectWeaver();
                     aspectWeaver.setEnvironment( environment );
                     aspectWeaver.enableLogging( this.getLogger() );
+                    aspectWeaver.setCopyResultScript( this.copyResultScript );
                     aspectWeaver.setStopExecutionFunctionsConf( this.stopExecutionFunctionsConf );
                     entry.setAspectWeaver( aspectWeaver );
                 }        
@@ -569,7 +578,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             this.getLogger().info( "Adding interceptions to script " + src.getURI() );
             Reader reader = new BufferedReader( 
                                     aspectWeaver.getInterceptedScriptAsReader() );
-            compiledScript = cx.compileReader(scope, reader, src.getURI() + "_intercepted", 1, null );            
+            compiledScript = cx.compileReader(scope, reader, src.getURI() + INTERCEPTION_POSTFIX, 1, null );            
         }
         return compiledScript;
     }
