@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- CVS $Id$ -->
 <cocoon version="2.1">
 
 <!--+
@@ -125,14 +125,14 @@
       | indirection, other components can be more generic and changes
       | to the application logic are easier.
       |
-      | A number of components already use InputModules: the sitemap processor, 
+      | A number of components already use InputModules: the sitemap processor,
       | flow, some matchers, the linkrewriting transformer, database actions
       | and more.
       |
       | For example the sitemap processor allows to obtain a value
       | named "foo" from an the InputModule for request parameters by
       | writing {request-param:foo} wherever a sitemap variable is
-      | allowed. 
+      | allowed.
       |
       | Some InputModules need the help of other InputModules to
       | obtain values and only apply a function to the obtained value
@@ -169,7 +169,7 @@
       <!--Eg: Mon, 28 Oct 2002 03:08:49 +1100 -->
     </component-instance>
     <component-instance logger="core.modules.input" name="nullinput"    class="org.apache.cocoon.components.modules.input.NullInputModule"/>
-    <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/> 
+    <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/>
     <component-instance logger="core.modules.input" name="naming"       class="org.apache.cocoon.components.modules.input.NamingInputModule">
     </component-instance>
     <component-instance logger="core.modules.input" name="cocoon-properties" class="org.apache.cocoon.components.modules.input.PropertiesFileModule">
@@ -190,7 +190,7 @@
       <input-module name="session-attr"/>
       <input-module name="defaults"/>
     </component-instance>
-    
+
     <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
          in the samples -->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
@@ -210,7 +210,7 @@
   </input-modules>
 
   <!--+
-      | OutputModules are companion modules for InputModules. 
+      | OutputModules are companion modules for InputModules.
       |
       | The same principles apply here, only that OutputModules allow
       | writing data to places. Apparently, there are a lot less
@@ -223,7 +223,7 @@
       | end. Until then, the value could not be read from the
       | corresponding InputModule. This behaviour is not enfored but
       | it should be expected. Omitting a commit or rollback is an
-      | error. 
+      | error.
       |
       | OutputModules are currently used by flow, a number of actions
       | and transformers.
@@ -304,7 +304,7 @@
       | XML Parser
       |
       | Apache Cocoon requires a JAXP 1.1 parser. The default parser is
-      | org.apache.excalibur.xml.impl.JaxpParser. 
+      | org.apache.excalibur.xml.impl.JaxpParser.
       | Note: If you have problems because your servlet environment uses its
       | own parser not conforming to JAXP 1.1 try using the alternative
       | XercesParser instead of the JaxpParser. To activate the XercesParser,
@@ -391,7 +391,7 @@
      <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </component>
-  
+
   <!--+
       | Xalan XSLT Processor
       +-->
@@ -438,7 +438,7 @@
   <transient-store logger="core.store.transient">
     <parameter name="maxobjects" value="1000"/>
   </transient-store>
-  
+
   <!--+
       | Store: generic store. The default implementation is an in-memory store
       | backed by a disk store (based on EHCache). This forms a two-stage
@@ -539,15 +539,15 @@
       | The Cache Manager is a component that can be used to cache content.
       | It is currently used by the cinclude transformer
       +-->
-  <component class="org.apache.cocoon.transformation.helpers.DefaultIncludeCacheManager" 
+  <component class="org.apache.cocoon.transformation.helpers.DefaultIncludeCacheManager"
              role="org.apache.cocoon.transformation.helpers.IncludeCacheManager">
     <!-- Set the preemptive-loader-url to a pipeline inside Cocoon that
-         contains the preemptive loader action. The URL must be absolute! 
-    <parameter name="preemptive-loader-url" 
+         contains the preemptive loader action. The URL must be absolute!
+    <parameter name="preemptive-loader-url"
                value="http://localhost:8080/cocoon/samples/cinclude/loader"/>
     -->
  </component>
- 
+
   <!--+
       | Runnable manager
       |
@@ -556,77 +556,77 @@
       +-->
   <runnable-manager logger="core.runnable">
     <!--+
-        | This is the default configuration of the runnable-manager. More 
+        | This is the default configuration of the runnable-manager. More
         | indepth information can be found at
         | http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html
         | The following elements can be used:
         |
         | thread-factory:        specifies the fully qualified class name of an
         |                        org.apache.cocoon.components.thread.ThreadFactory
-        |                        implementation. It is responsible to create Thread 
+        |                        implementation. It is responsible to create Thread
         |                        classes.
         | thread-pools:          container element for thread-pool elements.
         | name:                  required name of the pool.
-        | priority:              optional priority all threads of the pool will 
-        |                        have (the ThreadFactory will be set to this 
-        |                        priority).The possible values  are: 
+        | priority:              optional priority all threads of the pool will
+        |                        have (the ThreadFactory will be set to this
+        |                        priority).The possible values  are:
         |                          MIN:  corresponds to Thread#MIN_PRIORITY
         |                          NORM: corresponds to Thread#NORM_PRIORITY (default)
         |                          MAX:  corresponds to Thread#MAX_PRIORITY
-        | daemon:                whether newly created Threads should run in 
+        | daemon:                whether newly created Threads should run in
         |                        daemon mode or not. Default to false.
-        | queue-size:            optional size of a queue to hold Runnables if the 
+        | queue-size:            optional size of a queue to hold Runnables if the
         |                        pool is full. Possible values are:
         |                          less than 0:    unbounded (default)
         |                          equal to 0:     no queue at all
         |                          greater than 0: size of the queue
-        | max-pool-size:         optional maximum number of threads in the pool. 
-        |                        Defaults to 5. 
-        |                        NOTE: if a queue is specified (queue-sie != 0) 
+        | max-pool-size:         optional maximum number of threads in the pool.
+        |                        Defaults to 5.
+        |                        NOTE: if a queue is specified (queue-sie != 0)
         |                              this value will be ignored.
-        | min-pool-size:         optional minimum number of threads in the pool. 
-        |                        Defaults to 5. 
+        | min-pool-size:         optional minimum number of threads in the pool.
+        |                        Defaults to 5.
         |                        NOTE: if a queue has been specified (queue-sie != 0)
         |                              this value will be used as the maximum of
         |                              thread running concurrently.
-        | keep-alive-time-ms:    The time in ms an idle thread should keep alive 
-        |                        before it might get garbage collected. This 
+        | keep-alive-time-ms:    The time in ms an idle thread should keep alive
+        |                        before it might get garbage collected. This
         |                        defaults to 60000 ms.
         | block-policy;          The policy to be used if all resources (thread in
         |                        the pool and slots in the queue) are exhausted.
         |                        Possible values are:
         |                          ABORT:         Throw a RuntimeException
-        |                          DISCARD:       Throw away the current request 
+        |                          DISCARD:       Throw away the current request
         |                                         and return.
-        |                          DISCARDOLDEST: Throw away the oldest request 
+        |                          DISCARDOLDEST: Throw away the oldest request
         |                                         and return.
-        |                          RUN (default): The thread making the execute 
-        |                                         request runs the task itself. 
-        |                                         This policy helps guard against 
+        |                          RUN (default): The thread making the execute
+        |                                         request runs the task itself.
+        |                                         This policy helps guard against
         |                                         lockup.
-        |                          WAIT:          Wait until a thread becomes 
-        |                                         available. This policy should, in 
-        |                                         general, not be used if the 
-        |                                         minimum number of threads is zero, 
-        |                                         in which case a thread may never 
+        |                          WAIT:          Wait until a thread becomes
+        |                                         available. This policy should, in
+        |                                         general, not be used if the
+        |                                         minimum number of threads is zero,
+        |                                         in which case a thread may never
         |                                         become available.
-        | shutdown-graceful:     Terminate thread pool after processing all 
-        |                        Runnables currently in queue. Any Runnable entered 
-        |                        after this point will be discarded. A shut down 
-        |                        pool cannot be restarted. This also means that a 
-        |                        pool will need keep-alive-time-ms to terminate. 
+        | shutdown-graceful:     Terminate thread pool after processing all
+        |                        Runnables currently in queue. Any Runnable entered
+        |                        after this point will be discarded. A shut down
+        |                        pool cannot be restarted. This also means that a
+        |                        pool will need keep-alive-time-ms to terminate.
         |                        The default value not to shutdown graceful.
-        | shutdown-wait-time-ms: The time in ms to wait before issuing an 
-        |                        immediate shutdown after a graceful shutdown 
+        | shutdown-wait-time-ms: The time in ms to wait before issuing an
+        |                        immediate shutdown after a graceful shutdown
         |                        has been requested.
         +-->
     <thread-factory>org.apache.cocoon.components.thread.DefaultThreadFactory</thread-factory>
     <thread-pools>
       <!--+
-          | This is the default thread pool. It's use fits best for short 
+          | This is the default thread pool. It's use fits best for short
           | running background tasks.
           +-->
-      <thread-pool>  
+      <thread-pool>
         <name>default</name>
         <priority>NORM</priority>
         <daemon>false</daemon>
@@ -637,12 +637,12 @@
         <block-policy>RUN</block-policy>
         <shutdown-graceful>false</shutdown-graceful>
         <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
-      </thread-pool> 
+      </thread-pool>
       <!--+
-          | This thread pool should be used for daemons (permanently running 
+          | This thread pool should be used for daemons (permanently running
           | threads).
           +-->
-      <thread-pool>  
+      <thread-pool>
         <name>daemon</name>
         <priority>NORM</priority>
         <daemon>true</daemon>
@@ -653,7 +653,7 @@
         <block-policy>ABORT</block-policy>
         <shutdown-graceful>false</shutdown-graceful>
         <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
-      </thread-pool> 
+      </thread-pool>
     </thread-pools>
   </runnable-manager>
 </cocoon>

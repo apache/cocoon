@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.15 2004/04/05 12:34:23 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <samples name="Hello, World!">
 
@@ -39,7 +39,7 @@
     This page shows how a simple XML page can be presented in HTML.
    </sample>
    <sample name="XHTML" href="hello.xhtml">
-    This is the same page as above, but rendered in XHTML (which is the 
+    This is the same page as above, but rendered in XHTML (which is the
     well-formed XML version of HTML). Note that both the page and the
     stylesheet used to transform it didn't change from the previous
     example, Cocoon does everything for you by setting a different serializer.
@@ -58,7 +58,12 @@
     based on the XML syntax, it is possible to generate even vector graphics
     from your content. Here is an example that renders to  SVG (Scalable Vector
     Graphics). (You need an SVG plugin, or an SVG-capable browser to see this.)
-   </sample>   
+   </sample>
+   <sample name="SWF" href="hello.swf">
+    Flash is everywhere. In fact many people have the plugin installed.
+    Let Cocoon configure your flash movie. A little action script and you set.
+    See this sample how it works.
+   </sample>
    <sample name="Plain Text" href="hello.txt">
     Sometimes you don't need to be very fancy, so here is a plain text
     version of your content.
@@ -70,7 +75,7 @@
    </sample>
    <sample name="VoiceML" href="hello.vml">
     Or sometimes you don't even have a display in front of you, so you want to
-    hear your content, so here is a VoiceML representation of your content (you 
+    hear your content, so here is a VoiceML representation of your content (you
     need a VoiceML-capable agent to hear this).
    </sample>
    <sample name="Zip archive" href="hello.zip">
@@ -108,7 +113,7 @@
   <group name="Blocks Hello World!">
    <note>
     These samples only work if the corresponding blocks are activated
-    at build time. 
+    at build time.
    </note>
    <sample name="RTF" href="../blocks/jfor/hello.rtf">
     Hello from the jfor block in Rich Text Format.
@@ -124,9 +129,6 @@
    </sample>
    <sample name="PNG" href="../blocks/batik/hello.png">
     Hello from the batik block in PNG.
-   </sample>
-   <sample name="SWF" href="../blocks/swf/hello.swf">
-    Flashy hello from swf block! You need the appropriate (flash) plugin for your browser.
    </sample>
    <sample name="XLS" href="../blocks/poi/hello.xls">
     Hello in Excel spreadsheet format from the POI block.
