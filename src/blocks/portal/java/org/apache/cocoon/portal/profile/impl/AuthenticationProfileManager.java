@@ -32,6 +32,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 import org.apache.cocoon.portal.util.ProfileException;
@@ -537,4 +538,44 @@ public class AuthenticationProfileManager
        	}
     }
 
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getUser()
+     */
+    public PortalUser getUser() {
+        final RequestState state = this.getRequestState();
+        return new User(state);
+    }
+    
+    protected static final class User implements PortalUser {
+        
+        protected final RequestState state;
+        
+        public User(RequestState state) {
+            this.state = state;    
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#getGroup()
+         */
+        public String getGroup() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#getUserName()
+         */
+        public String getUserName() {
+            return this.state.getHandler().getUserId();
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
+         */
+        public boolean isUserInRole(String role) {
+            return this.state.getHandler().isUserInRole(role);
+        }
+    }
+    
 }

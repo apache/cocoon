@@ -17,6 +17,8 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.util.Map;
 
+import org.apache.cocoon.portal.profile.PortalUser;
+
 /**
  * Information about the current user.
  * This data object is used for loading the profile. It decouples the
@@ -25,7 +27,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version CVS $Id: MapProfileLS.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class UserInfo {
+public class UserInfo implements PortalUser {
     
     protected String userName;
     
@@ -96,5 +98,13 @@ public class UserInfo {
      */
     public String getPortalName() {
         return portalName;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
+     */
+    public boolean isUserInRole(String role) {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

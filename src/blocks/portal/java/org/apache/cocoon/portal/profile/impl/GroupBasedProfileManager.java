@@ -41,6 +41,7 @@ import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.map.LinkedMap;
@@ -617,5 +618,23 @@ public class GroupBasedProfileManager
         } finally {
             this.manager.release(service);
         }
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getUser()
+     */
+    public PortalUser getUser() {
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
+            final UserInfo info = this.provider.getUserInfo(service.getPortalName(), layoutKey);
+            return info;
+        } catch (Exception ce) {
+            throw new CascadingRuntimeException("Exception during getUser().", ce);
+        } finally {
+            this.manager.release(service);
+        }            
     }
 }
