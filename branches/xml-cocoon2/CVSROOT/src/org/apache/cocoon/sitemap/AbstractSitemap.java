@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.thread.SingleThreaded;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.context.Context;
 import org.apache.avalon.component.Component;
@@ -46,9 +46,9 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-23 17:53:41 $
+ * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-23 17:58:21 $
  */
-public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable, SingleThreaded {
+public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable, ThreadSafe {
     private Context context;
 
     private static final int BYTE_ARRAY_SIZE = 1024;
