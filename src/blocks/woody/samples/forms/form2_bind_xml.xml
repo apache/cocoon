@@ -10,8 +10,8 @@
 	path="/data/wrapper/context" >
 
   <wb:context path="info">
-  	<!-- the email value will not be saved because of the @readonly -->
-    <wb:value id="email"   path="email"         readonly="true"/>
+  	<!-- the email value will not be saved because of the @direction="load" -->
+    <wb:value id="email"   path="email"   direction="load"/>
 
 		<!-- jxpath binds to nodes as well as to attributes -->
     <wb:value id="number" path="number/@value">

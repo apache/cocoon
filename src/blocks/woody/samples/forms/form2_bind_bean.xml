@@ -10,8 +10,8 @@
 
 <wb:context xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" path="/" >
 
-  <!-- the email value will not be saved because of the @readonly -->
-  <wb:value id="email" path="email" readonly="true"/>
+  <!-- the email value will not be saved because of the @direction="load" -->
+  <wb:value id="email" path="email" direction="load"/>
   <wb:value id="ipaddress" path="ipAddress"/>
   <wb:value id="birthday" path="birthday"/>
   <wb:value id="number" path="aNumber"/>
