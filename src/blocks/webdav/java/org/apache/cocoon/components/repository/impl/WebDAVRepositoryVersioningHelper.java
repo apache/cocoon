@@ -26,6 +26,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.repository.helpers.CredentialsToken;
 import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.webdav.WebDAVUtil;
 import org.apache.commons.httpclient.HttpException;
 
@@ -128,18 +129,28 @@ implements RepositoryVersioningHelper, Serviceable, Disposable, Component {
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#isVersioned(java.lang.String)
      */
     public boolean isVersioned(String uri) {
-        //not yet implemented        
+        //not yet implemented
         throw new UnsupportedOperationException();
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#setVersioned(java.lang.String, boolean)
      */
-    public boolean setVersioned(String uri, boolean versioned) {
-        //not yet implemented
-        throw new UnsupportedOperationException();
+    public boolean setVersioned(final String uri, final boolean versioned) {            
+        try {
+            if(!versioned) // FIXME: Implement this via delete and create
+                throw new UnsupportedOperationException();                                        
+            else      
+                return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).versionControlMethod(this.repo.getAbsoluteURI(uri));                           
+        } catch (HttpException he) {
+            this.getLogger().error("HTTP Error while versioncontrol " + uri, he);
+        } catch (IOException ioe) {
+            this.getLogger().error("IO Error while versioncontrol " + uri, ioe);
+        }
+        
+        return false;
     }
-
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#getVersions(java.lang.String)
      */

@@ -66,13 +66,21 @@ public class WebDAVUtil {
      * @param content  the content to initialize the resource with.
      * @throws HttpException
      * @throws IOException
+     * @return Success
      */
     static public void createResource(String uri, String content)
     throws HttpException, IOException {
 
         HttpURL sourceURL = new HttpURL(uri);
-        (new WebdavResource(sourceURL, WebdavResource.NOACTION, WebdavResource.getDefaultDepth()))
-                           .putMethod(content);
+        System.out.println("WebDAVUtil ####### url="+uri + " content=" + content);
+        final WebdavResource resource = new WebdavResource(sourceURL, 
+                                                                                                WebdavResource.NOACTION, 
+                                                                                                WebdavResource.getDefaultDepth());
+                
+        if(!resource.putMethod(content))
+                    throw new HttpException("Error creating resource: " + uri
+                    + " Status: " + resource.getStatusCode()
+                    + " Message: " + resource.getStatusMessage());
     }
 
     /**
