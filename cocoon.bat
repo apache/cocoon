@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.16 2003/10/18 18:52:18 upayavira Exp $
+:: $Id: cocoon.bat,v 1.17 2003/10/19 00:47:05 crossley Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -54,7 +54,7 @@ set COCOON_HOME=.
 :gotHome
 
 if not "%COCOON_LIB%" == "" goto gotLib
-set COCOON_LIB=%COCOON_HOME%\build\webapp\WEB-INF\lib;%COCOON_HOME%\build\webapp\WEB-INF\classes
+set COCOON_LIB=%COCOON_HOME%\build\webapp\WEB-INF\lib
 :gotLib
 
 if not "%JETTY_PORT%" == "" goto gotJettyPort
@@ -81,7 +81,7 @@ set JAVA_DEBUG_PORT=8000
 
 :: ----- Set Up The Classpath --------------------------------------------------
 
-set CP=%COCOON_HOME%\tools\loader
+set CP=%COCOON_HOME%\tools\loader;%COCOON_HOME%\build\webapp\WEB-INF\classes
 
 :: ----- Check action ----------------------------------------------------------
 

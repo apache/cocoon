@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.8 2003/10/18 18:52:19 upayavira Exp $
+# $Id: cocoon.sh,v 1.9 2003/10/19 00:47:05 crossley Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -82,7 +82,7 @@ fi
 echo "$0: using $COCOON_WEBAPP_HOME as the webapp directory"
 
 if [ "$COCOON_LIB" = "" ] ; then
-  COCOON_LIB="$COCOON_WEBAPP_HOME/WEB-INF/lib:$COCOON_WEBAPP_HOME/WEB-INF/classes"
+  COCOON_LIB="$COCOON_WEBAPP_HOME/WEB-INF/lib"
 fi
 
 if [ "$JETTY_PORT" = "" ] ; then
@@ -108,7 +108,7 @@ ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
-LOADER_LIB="$COCOON_HOME/tools/loader"
+LOADER_LIB="$COCOON_HOME/tools/loader:$COCOON_WEBAPP_HOME/WEB-INF/classes"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
