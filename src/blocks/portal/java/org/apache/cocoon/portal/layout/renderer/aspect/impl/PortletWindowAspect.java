@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public final class PortletWindowAspect 
 extends AbstractAspect 
@@ -118,7 +118,7 @@ implements Contextualizable {
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        final PortletWindow window = (PortletWindow)copletInstanceData.getAttribute("window");
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
         if ( window == null ) {
             // no portlet window, so use a default behaviour
             XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
@@ -127,7 +127,7 @@ implements Contextualizable {
                 ((PortletWindowImpl)window).setLayout((CopletLayout)layout);
             }
             
-            String title = (String) copletInstanceData.getAttribute("dynamic-title");
+            String title = (String) copletInstanceData.getTemporaryAttribute("dynamic-title");
             if ( title == null ) {
                 final PortletDefinition def = window.getPortletEntity().getPortletDefinition();
                 try {
@@ -144,7 +144,7 @@ implements Contextualizable {
                 DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) context.getObjectModel().get("portlet-request"));
                 
                 // Sizing
-                WindowState ws = (WindowState)copletInstanceData.getAttribute("window-state"); 
+                WindowState ws = (WindowState)copletInstanceData.getTemporaryAttribute("window-state"); 
                 if ( ws == null ) {
                     ws = WindowState.NORMAL;
                 }
@@ -172,7 +172,7 @@ implements Contextualizable {
                 }
 
                 // portlet modes
-                PortletMode pm = (PortletMode)copletInstanceData.getAttribute("portlet-mode"); 
+                PortletMode pm = (PortletMode)copletInstanceData.getTemporaryAttribute("portlet-mode"); 
                 if ( pm == null ) {
                     pm = PortletMode.VIEW;
                 }

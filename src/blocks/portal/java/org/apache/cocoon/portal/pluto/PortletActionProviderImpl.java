@@ -28,7 +28,7 @@ import org.apache.pluto.services.information.PortletActionProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletActionProviderImpl.java,v 1.2 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletActionProviderImpl implements PortletActionProvider {
 
@@ -45,13 +45,13 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletMode(PortletMode mode) {
         if ( mode != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            PortletMode pm = (PortletMode) cid.getAttribute("portlet-mode");
+            PortletMode pm = (PortletMode) cid.getTemporaryAttribute("portlet-mode");
             if ( (pm == null && !mode.equals(PortletMode.VIEW)) 
                 || (pm != null && !pm.equals(mode)) ) {
                 if ( pm != null ) {
-                    cid.setAttribute("previous-portlet-mode", pm);
+                    cid.setTemporaryAttribute("previous-portlet-mode", pm);
                 }
-                cid.setAttribute("portlet-mode", mode);
+                cid.setTemporaryAttribute("portlet-mode", mode);
             }
         }
     }
@@ -62,13 +62,13 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletWindowState(WindowState state) {
         if ( state != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            WindowState ws = (WindowState) cid.getAttribute("window-state");
+            WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
             if ( (ws == null && !state.equals(PortletMode.VIEW)) 
                 || (ws != null && !ws.equals(state)) ) {
                 if ( ws != null ) {
-                    cid.setAttribute("previous-window-state", ws);
+                    cid.setTemporaryAttribute("previous-window-state", ws);
                 }
-                cid.setAttribute("window-state", state);
+                cid.setTemporaryAttribute("window-state", state);
             }
         }
     }

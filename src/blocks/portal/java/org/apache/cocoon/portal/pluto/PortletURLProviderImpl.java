@@ -43,7 +43,7 @@ import org.apache.pluto.services.information.PortletURLProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletURLProviderImpl.java,v 1.6 2004/03/19 07:24:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortletURLProviderImpl 
        implements PortletURLProvider, CopletInstanceEvent {
@@ -174,7 +174,7 @@ public class PortletURLProviderImpl
             Event sizingEvent = null;
             if ( cl != null ) {
                 final CopletInstanceData cid = cl.getCopletInstanceData();
-                WindowState oldState = (WindowState)cid.getAttribute("window-state"); 
+                WindowState oldState = (WindowState)cid.getTemporaryAttribute("window-state"); 
                 if ( oldState == null ) {
                     oldState = WindowState.NORMAL;
                 }

@@ -35,7 +35,7 @@ import org.apache.pluto.services.information.ResourceURLProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DynamicInformationProviderImpl.java,v 1.2 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DynamicInformationProviderImpl 
 implements DynamicInformationProvider {
@@ -81,7 +81,7 @@ implements DynamicInformationProvider {
      */
     public PortletMode getPortletMode(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        PortletMode pm = (PortletMode) cid.getAttribute("portlet-mode");
+        PortletMode pm = (PortletMode) cid.getTemporaryAttribute("portlet-mode");
         if ( pm == null ) {
             pm = PortletMode.VIEW;
         }
@@ -93,7 +93,7 @@ implements DynamicInformationProvider {
      */
     public PortletMode getPreviousPortletMode(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        PortletMode pm = (PortletMode) cid.getAttribute("previous-portlet-mode");
+        PortletMode pm = (PortletMode) cid.getTemporaryAttribute("previous-portlet-mode");
         return pm;
     }
 
@@ -102,7 +102,7 @@ implements DynamicInformationProvider {
      */
     public WindowState getWindowState(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        WindowState ws = (WindowState) cid.getAttribute("window-state");
+        WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
         if ( ws == null ) {
             ws = WindowState.NORMAL;
         }
@@ -114,7 +114,7 @@ implements DynamicInformationProvider {
      */
     public WindowState getPreviousWindowState(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        WindowState ws = (WindowState) cid.getAttribute("previous-window-state");        
+        WindowState ws = (WindowState) cid.getTemporaryAttribute("previous-window-state");        
         return ws;
     }
 
