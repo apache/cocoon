@@ -118,6 +118,13 @@
       | The <expirations-check> element specifies different policies for
       | expiring continuations. Currently only the "periodic" type is
       | supported.
+      |
+      | If you need higher security you can bind your continuations 
+      | to session. This way only the session that initially created
+      | the continuation can later resume it. Also if session gets 
+      | invalidated all continuations are invalidated as well. 
+      | Enable this feature for web applications by setting
+      | 'session-bound-continuations' to true.
       +-->
   <continuations-manager logger="flow.manager" time-to-live="3600000" 
                          session-bound-continuations="false" 
