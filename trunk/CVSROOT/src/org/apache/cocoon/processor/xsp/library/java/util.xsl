@@ -110,36 +110,64 @@
     } </xsp:logic>
   </xsl:template>
 
-  <!-- Include file contents as DOM -->
-  <xsl:template match="util:include-file">
-    <xsl:variable name="name">
+  <!-- Include URL contents as DOM -->
+  <xsl:template match="util:include-uri">
+    <xsl:variable name="href">
       <xsl:choose>
-        <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-        <xsl:when test="util:name">
+        <xsl:when test="@href">"<xsl:value-of select="@href"/>"</xsl:when>
+        <xsl:when test="util:href">
           <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="util:name"/>
+            <xsl:with-param name="content" select="util:href"/>
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
 
-    <xsp:logic>
-      xspCurrentNode.appendChild(
-        XSPUtil.cloneNode(
-          this.xspParser.parse(
-            new InputSource(
-              new FileReader(
-                XSPUtil.relativeFilename(
-                  <xsl:copy-of select="$name"/>,
-                  request
-                )
-              )
-            )
-          ).getDocumentElement(),
-          document
+    <!-- This should be an <xsp:expr> yielding Node... -->
+    <xsp:logic> {
+      String __name = String.valueOf(<xsl:copy-of select="$href"/>);
+
+      try {
+        URL __url = new URL(__name);
+        InputSource __is = new InputSource(__url.openStream());
+        __is.setSystemId(__url.toString());
+
+        xspCurrentNode.appendChild(
+          XSPUtil.cloneNode(
+            this.xspParser.parse(__is).getDocumentElement(),
+            document
+          )
+        );
+      } catch (Exception e) {
+        xspCurrentNode.appendChild(
+          document.createTextNode(
+            "{" + __name + "}"
+          )
+        );
+      }
+    } </xsp:logic>
+  </xsl:template>
+
+  <!-- Include expression as DOM -->
+  <xsl:template match="util:include-expr">
+    <xsl:variable name="expr">
+      <xsl:choose>
+        <xsl:when test="@expr">"<xsl:value-of select="@expr"/>"</xsl:when>
+        <xsl:when test="util:expr">
+          <xsl:apply-templates select="util:expr/*|util:expr/text()"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsp:expr>
+      this.xspParser.parse(
+        new InputSource(
+          new StringReader(
+	    String.valueOf(<xsl:copy-of select="$expr"/>)
+          )
         )
-      );
-    </xsp:logic>
+      ).getDocumentElement()
+    </xsp:expr>
   </xsl:template>
 
   <!-- Include file contents as text -->
