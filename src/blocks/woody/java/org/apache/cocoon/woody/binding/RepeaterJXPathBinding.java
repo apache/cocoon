@@ -191,7 +191,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                         } else {
                             getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
                         }                            
-                    }                        
+                    }
 
                     if (rowIdValue.equals(matchId)) {
                         // match! --> bind to children
@@ -212,7 +212,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         List rowsToDelete = new ArrayList();
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer) rowPointers.next();
-            JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
+            JXPathContext rowContext = repeaterContext.getRelativeContext((Pointer)jxp.clone());
 
             Object matchId = rowContext.getValue(this.uniqueRowIdPath);
             if (matchId != null && this.uniqueRowIdConvertor != null) {
@@ -221,8 +221,8 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 } else {
                     getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
                 }                            
-            }  
-            
+            }
+
             // check if matchPath was in list of updates, if not --> bind for delete
             if (!updatedRowIds.contains(matchId)) {
                 rowsToDelete.add(rowContext);
