@@ -50,18 +50,22 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-
+import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.ExtendedComponentSelector;
+import org.apache.cocoon.components.ComponentLocator;
 import org.apache.cocoon.components.pipeline.OutputComponentSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.ExtendedComponentSelector;
-
-import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
@@ -70,14 +74,12 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapComponentSelector;
 import org.apache.cocoon.transformation.Transformer;
 
-import java.util.*;
-
 /**
  * Component selector for sitemap components.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.2 2003/03/18 15:23:28 nicolaken Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.3 2003/06/18 11:06:31 cziegeler Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
@@ -133,11 +135,15 @@ implements OutputComponentSelector, SitemapComponentSelector {
     /** The parent selector, if it's of the current class */
     private SitemapComponentSelector parentSitemapSelector;
 
-    public void setParentSelector(ComponentSelector selector) {
-        super.setParentSelector(selector);
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.component.ComponentManager, java.lang.String)
+     */
+    public void setParentLocator(ComponentLocator locator)
+    throws ComponentException {
+        super.setParentLocator(locator);
 
-        if (selector instanceof SitemapComponentSelector) {
-            this.parentSitemapSelector = (SitemapComponentSelector)selector;
+        if (this.parentSelector instanceof SitemapComponentSelector) {
+            this.parentSitemapSelector = (SitemapComponentSelector)this.parentSelector;
         }
     }
 

@@ -50,13 +50,13 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.*;
+
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
@@ -69,13 +69,11 @@ import org.apache.cocoon.sitemap.SitemapComponentSelector;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
 
-import java.util.*;
-
 /**
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.3 2003/04/01 21:25:09 sylvain Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.4 2003/06/18 11:06:31 cziegeler Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -111,41 +109,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             this.logKit,
             config
         );
-
-        // Set parent of all selectors.
-        if (this.parentManager != null) {
-
-            for (int i = 0; i < ComponentsSelector.SELECTOR_ROLES.length; i++) {
-
-                String role = ComponentsSelector.SELECTOR_ROLES[i];
-
-                ComponentSelector parentSelector = null;
-                try {
-                    parentSelector = (ComponentSelector)this.parentManager.lookup(role);
-                } catch(Exception e) {
-                    // ignore and keep it null
-                }
-
-                if (parentSelector != null) {
-
-                    ExtendedComponentSelector localSelector = null;
-                    try {
-                        localSelector = (ExtendedComponentSelector)manager.lookup(role);
-
-                        if (localSelector != parentSelector) {
-                            // local selector wasn't given by chaining to the parent manager
-                            localSelector.setParentSelector(parentSelector);
-                        }
-                        manager.release(localSelector);
-
-                    } catch(Exception e) {
-                        // ignore
-                    }
-
-                    parentManager.release(parentSelector);
-                }
-            }
-        }
 
         return manager;
     }
