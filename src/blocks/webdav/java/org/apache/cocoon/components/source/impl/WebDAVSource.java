@@ -45,10 +45,12 @@ import org.apache.commons.httpclient.HttpsURL;
 import org.apache.commons.httpclient.URIException;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.ModifiableTraversableSource;
+import org.apache.excalibur.source.MoveableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
@@ -83,10 +85,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.27 2004/04/13 14:20:35 stephan Exp $
+ * @version $Id: WebDAVSource.java,v 1.28 2004/04/13 17:13:29 stephan Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
-implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
+implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
 
     private static final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
 
@@ -924,4 +926,50 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
 //            refresh();
 //        }
 //    }
+
+    // ---------------------------------------------------- MoveableSource
+    
+    /**
+     * Move the current source to a specified destination.
+     *
+     * @param source
+     *
+     * @throws SourceException If an exception occurs during the move.
+     */
+    public void moveTo(Source source) throws SourceException {
+        if (source instanceof WebDAVSource) {
+            WebDAVSource destination = (WebDAVSource)source;
+            try {            
+                 this.resource.moveMethod(destination.resource.getHttpURL().getPath());
+            } catch (HttpException e) {
+                throw new SourceException("Cannot move source '"+getSecureURI()+"'", e);
+            } catch (IOException e) {
+                throw new SourceException("Cannot move source '"+getSecureURI()+"'", e);
+            }
+        } else {
+            SourceUtil.move(this,source);
+        }
+    }
+
+    /**
+     * Copy the current source to a specified destination.
+     *
+     * @param source
+     *
+     * @throws SourceException If an exception occurs during the copy.
+     */
+    public void copyTo(Source source) throws SourceException {
+        if (source instanceof WebDAVSource) {
+            WebDAVSource destination = (WebDAVSource)source;
+            try {
+                this.resource.copyMethod(destination.resource.getHttpURL().getPath());
+            } catch (HttpException e) {
+                throw new SourceException("Cannot copy source '"+getSecureURI()+"'", e);
+            } catch (IOException e) {
+                throw new SourceException("Cannot copy source '"+getSecureURI()+"'", e);
+            }
+        } else {
+            SourceUtil.copy(this,source);
+        }
+    }
 }
