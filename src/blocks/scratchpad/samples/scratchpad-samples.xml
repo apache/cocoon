@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.1 2003/09/04 12:42:46 cziegeler Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.2 2003/09/06 13:23:31 reinhard Exp $ -->
 
 <samples>
 
@@ -28,4 +28,11 @@
       A test of the Jelly generator - you have to download and install the jelly.jar first!
     </sample>
   </group>
+
+  <group name="Intercepted Flow">
+    <sample name="Example" href="flow-interception/">
+      Show the usage intercepted JavaScript flow functions
+    </sample>
+  </group>
+  
 </samples>
