@@ -57,8 +57,9 @@ import org.apache.excalibur.source.SourceValidity;
  * {@link SourceValidity} object.
  *
  * @since 2.1
+ * @deprecated Use the Avalon Excalibur SourceValidity implementations instead
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SourceCacheValidity.java,v 1.1 2003/03/09 00:08:45 pier Exp $
+ * @version CVS $Id: SourceCacheValidity.java,v 1.2 2003/10/21 10:28:47 cziegeler Exp $
  */
 public final class SourceCacheValidity
 implements CacheValidity {
