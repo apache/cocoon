@@ -195,6 +195,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="fix" fixes-bug="19683">
+   Fixing the problem with eating spaces in custom transformers.
+  </action>
   <action dev="BD" type="add" fixes-bug="19619" due-to="Joerg Heinicke" due-to-email="joerg.heinicke@gmx.de">
    Hello World sample added for the SWF block (although page2swf.xsl contains incomplete font definition).
   </action>
