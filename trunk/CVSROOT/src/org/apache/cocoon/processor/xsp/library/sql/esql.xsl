@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.65 2001-02-15 20:14:51 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.66 2001-02-19 19:17:50 balld Exp $-->
 <!--
 
  ============================================================================
@@ -222,8 +222,7 @@
         </xsl:if>
         Connection connection = null;
         String dburl = null;
-        String username = null;
-        String password = null;
+        java.util.Properties info = new java.util.Properties();
         int use_limit_clause = 0;
         static final int LIMIT_CLAUSE_POSTGRESQL = 1;
         static final int LIMIT_CLAUSE_MYSQL = 2;
@@ -304,20 +303,17 @@
           }
           </xsl:if>
           try {
-            <xsl:choose>
-              <xsl:when test="esql:username">
-                _esql_connection.connection = DriverManager.getConnection(
-                  String.valueOf(<xsl:copy-of select="$dburl"/>),
-                  String.valueOf(<xsl:copy-of select="$username"/>),
-                  String.valueOf(<xsl:copy-of select="$password"/>)
-                );
-              </xsl:when>
-              <xsl:otherwise>
-                _esql_connection.connection = DriverManager.getConnection(
-                  String.valueOf(<xsl:copy-of select="$dburl"/>)
-                );
-              </xsl:otherwise>
-            </xsl:choose>
+            _esql_connection.dburl = String.valueOf(<xsl:copy-of select="$dburl"/>);
+            <xsl:if test="esql:username">
+              _esql_connection.info.put("user", String.valueOf(<xsl:copy-of select="$username"/>)); 
+            </xsl:if>
+            <xsl:if test="esql:password">
+              _esql_connection.info.put("password", String.valueOf(<xsl:copy-of select="$password"/>)); 
+            </xsl:if>
+            <xsl:for-each select="esql:property">
+              _esql_connection.info.put("<xsl:value-of select="@name"/>",<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>);
+            </xsl:for-each>
+            _esql_connection.connection = DriverManager.getConnection(_esql_connection.dburl, _esql_connection.info);
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
             throw new RuntimeException("Error opening connection to dburl: "+String.valueOf(<xsl:copy-of select="$dburl"/>));
           }
@@ -385,6 +381,7 @@
 <xsl:template match="esql:connection/esql:pool"/>
 <xsl:template match="esql:connection/esql:autocommit"/>
 <xsl:template match="esql:connection/esql:use-limit-clause"/>
+<xsl:template match="esql:connection/esql:property"/>
 
 <xsl:template match="esql:connection//esql:execute-query">
   <xsl:variable name="query"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:query"/></xsl:call-template></xsl:variable>
@@ -837,14 +834,24 @@
 <xsl:template name="get-string-encoded">
   <xsl:param name="column-spec"/>
   <xsl:param name="resultset"/>
-  <xsl:variable name="encoding"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:encoding"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="encoding">
+    <xsl:choose>
+      <xsl:when test="@encoding">"<xsl:value-of select="@encoding"/>"</xsl:when>
+      <xsl:when test="esql:encoding">
+        <xsl:call-template name="get-nested-string">
+          <xsl:with-param name="content" select="esql:encoding"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>default</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:choose>
-    <xsl:when test="esql:encoding">
-      new String (<xsl:value-of select="$resultset"/>.getBytes
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
+    <xsl:when test="$encoding = 'default'">
+      <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
     </xsl:when>
     <xsl:otherwise>
-      <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
+      new String (<xsl:value-of select="$resultset"/>.getBytes
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
