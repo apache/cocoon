@@ -538,13 +538,6 @@
   <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml-deserializer" pool-grow="4" pool-max="32" pool-min="8"/>
 
   <!--+
-      | The Monitor keeps track on changes to a Resource.
-      +-->
-  <monitor logger="core.monitor">
-    <thread frequency="10000" priority="5"/>
-  </monitor>
-
-  <!--+
       | The Cache Manager is a component that can be used to cache content.
       | It is currently used by the cinclude transformer
       +-->
