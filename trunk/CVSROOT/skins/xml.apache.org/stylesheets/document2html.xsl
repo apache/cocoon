@@ -15,8 +15,38 @@
   <xsl:if test="not(book)">
     <html>
       <head>
-        <script language="JavaScript" type="text/javascript" src="resources/script.js"/>
         <title><xsl:value-of select="document/header/title"/></title>
+<STYLE type="text/css">
+a.menu {
+  color: #FFFFFF;
+  text-align:left;               
+  font-size:12px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-weight:plain;
+  text-decoration:none;
+  padding-left: 14px
+}
+
+A.menu:hover {
+  color: #FFCC00
+}
+.menutitle {
+  color: #000000;
+  text-align:left;               
+  font-size:10px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-weight:bold;
+  padding-left: 8px
+}
+.menuselected {
+  color: #FFCC00;
+  text-align:left;               
+  font-size:12px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-weight:bold;
+  padding-left: 14px
+}
+</STYLE>     
       </head>
       <body text="#000000" link="#039acc" vlink="#0086b2" alink="#cc0000"
             topmargin="4" leftmargin="4" marginwidth="4" marginheight="4"
@@ -27,48 +57,38 @@
             <td width="135" height="60" rowspan="3" valign="top" align="left">
               <img width="135" height="60" src="resources/logo.gif" hspace="0" vspace="0" border="0"/>
             </td>
-            <td width="100%" height="5" valign="top" align="left" colspan="2" background="resources/line.gif">
-              <img width="1" height="5" src="resources/line.gif" hspace="0" vspace="0" border="0" align="left"/>
+            <td width="100%" height="0" valign="top" align="left" colSpan="2" rowspan="1" background="resources/line.gif">
             </td>
             <td width="29" height="60"  rowspan="3" valign="top" align="left">
               <img width="29" height="60" src="resources/right.gif" hspace="0" vspace="0" border="0"/>
             </td>
           </tr>
           <tr>
-            <td width="100%" height="35" valign="top" align="left" colspan="2" bgcolor="#0086b2">
-              <img src="graphics/{$id}-header.jpg" width="456" height="35" hspace="0" vspace="0" border="0" alt="{header/title}" align="right"/>
+            <td width="100%" height="35" valign="top" align="right" colspan="2" bgcolor="#0086b2">
+              <font size="5" face="Verdana, Arial, Helvetica, sans-serif" color="#ffffff"><xsl:value-of select="document/header/title"/></font>
             </td>
           </tr>
           <tr>
-            <td width="100%" height="20" valign="top" align="left" bgcolor="#0086b2" background="resources/bottom.gif">
-              <img width="3" height="20" src="resources/bottom.gif" hspace="0" vspace="0" border="0" align="left"/>
-            </td>
-            <td align="right" bgcolor="#0086b2" height="20" valign="top" width="288" background="resources/bottom.gif">
-              <table border="0" cellpadding="0" cellspacing="0" width="288">
+            <td align="right" bgcolor="#0086b2" height="20" valign="top" width="100%" colspan="2" background="resources/bottom.gif">
+               <table border="0" cellpadding="0" cellspacing="0" width="288">
                 <tr>
                   <td width="96" height="20" valign="top" align="left">
-                    <a href="http://xml.apache.org/" onMouseOver="rolloverOn('xml');" onMouseOut="rolloverOff('xml');" target="new">
-                      <img alt="http://xml.apache.org/" width="96" height="20" src="resources/button-xml-lo.gif"
-                           name="xml" hspace="0" vspace="0" border="0"
-                           onLoad="rolloverLoad('xml','resources/button-xml-hi.gif','resources/button-xml-lo.gif');"/>
+                    <a href="http://xml.apache.org/" target="new">
+                      <img alt="http://xml.apache.org/" width="96" height="20" src="resources/button-xml-lo.gif" name="xml" hspace="0" vspace="0" border="0"/>
                     </a>
                   </td>
                   <td width="96" height="20" valign="top" align="left">
-                    <a href="http://www.apache.org/" onMouseOver="rolloverOn('asf');" onMouseOut="rolloverOff('asf');" target="new">
-                      <img alt="http://www.apache.org/" width="96" height="20" src="resources/button-asf-lo.gif"
-                           name="asf" hspace="0" vspace="0" border="0"
-                           onLoad="rolloverLoad('asf','resources/button-asf-hi.gif','resources/button-asf-lo.gif');"/>
+                    <a href="http://www.apache.org/" target="new">
+                      <img alt="http://www.apache.org/" width="96" height="20" src="resources/button-asf-lo.gif" name="asf" hspace="0" vspace="0" border="0"/>
                     </a>
                   </td>
                   <td width="96" height="20" valign="top" align="left">
-                    <a href="http://www.w3.org/" onMouseOver="rolloverOn('w3c');" onMouseOut="rolloverOff('w3c');" target="new">
-                      <img alt="http://www.w3.org/" width="96" height="20" src="resources/button-w3c-lo.gif"
-                           name="w3c" hspace="0" vspace="0" border="0"
-                           onLoad="rolloverLoad('w3c','resources/button-w3c-hi.gif','resources/button-w3c-lo.gif');"/>
+                    <a href="http://www.w3.org/" target="new">
+                      <img alt="http://www.w3.org/" width="96" height="20" src="resources/button-w3c-lo.gif" name="w3c" hspace="0" vspace="0" border="0"/>
                     </a>
                   </td>
                 </tr>
-              </table>
+              </table>              
             </td>
           </tr>
         </table>
@@ -78,9 +98,19 @@
           <tr>
             <!-- THE SIDE BAR -->
             <td width="120" valign="top" align="left">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top" align="left">
               <img width="120" height="14" src="resources/join.gif" hspace="0" vspace="0" border="0"/><br/>
-                <xsl:apply-templates select="document($stylebook.project)"/>
+                  </td>
+                </tr>
+              <xsl:apply-templates select="document($stylebook.project)"/>
+                <tr>
+                  <td valign="top" align="left">
               <img width="120" height="14" src="resources/close.gif" hspace="0" vspace="0" border="0"/><br/>
+                  </td>
+                </tr>
+              </table>
             </td>
             <!-- THE CONTENT PANEL -->
             <td width="*" valign="top" align="left">
@@ -116,29 +146,35 @@
 <!-- ====================================================================== -->
 
   <xsl:template match="page|faqs|changes|todo|spec">
+    <tr>
+    <td valign="top" align="left" bgcolor="#959595" background="resources/label-background_a.gif">
     <xsl:if test="@id=$id">
-      <img src="graphics/{@id}-label-1.jpg" width="120" height="12" hspace="0" vspace="0" border="0" alt="{@label}"/>
+      <span class="menuselected"><xsl:value-of select="@label"/></span>
     </xsl:if>
     <xsl:if test="@id!=$id">
-      <a href="{@id}.html" onMouseOver="rolloverOn('side-{@id}');" onMouseOut="rolloverOff('side-{@id}');">
-        <img onLoad="rolloverLoad('side-{@id}','graphics/{@id}-label-2.jpg','graphics/{@id}-label-3.jpg');"
-             name="side-{@id}" src="graphics/{@id}-label-3.jpg" width="120" height="12" hspace="0" vspace="0" border="0" alt="{@label}"/>
-      </a>
+      <a href="{@id}.html" class="menu"><xsl:value-of select="@label"/></a>
     </xsl:if>
     <br/>
+    </td>
+    </tr>
   </xsl:template>
 
   <xsl:template match="external">
     <xsl:variable name="extid" select="concat('ext-',position())"/>
-    <a href="{@href}" onMouseOver="rolloverOn('side-{$extid}');" onMouseOut="rolloverOff('side-{$extid}');">
-      <img onLoad="rolloverLoad('side-{$extid}','graphics/{$extid}-label-2.jpg','graphics/{$extid}-label-3.jpg');"
-           name="side-{$extid}" src="graphics/{$extid}-label-3.jpg" width="120" height="12" hspace="0" vspace="0" border="0" alt="{@label}"/>
-    </a>
+    <tr>
+    <td valign="top" align="left" bgcolor="#959595" background="resources/label-background_a.gif">
+    <a href="{@href}" class="menu"><xsl:value-of select="@label"/></a>
     <br/>
+    </td>
+    </tr>
   </xsl:template>
 
   <xsl:template match="separator">
+    <tr>
+    <td valign="top" align="left" bgcolor="#959595">
     <img src="resources/separator.gif" width="120" height="6" hspace="0" vspace="0" border="0"/><br/>
+    </td>
+    </tr>
   </xsl:template>
   
 <!-- ====================================================================== -->
@@ -154,137 +190,31 @@
 <!-- ====================================================================== -->
 
   <xsl:template match="s1">
-   <div align="right">
-    <table border="0" width="98%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td width="100%" bgcolor="#0086b2">
-          <font size="+1" face="arial,helvetica,sanserif" color="#ffffff">
-            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
-         </td>
-        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-     </table>
-     <table border="0" width="98%" cellspacing="0" cellpadding="0">
-      <tr>
-       <td>
-        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
-       </td>
-      </tr>
-    </table>
-   </div>
-   <br/>
+    <font color="#0086b2" size="+2" face="verdana, helvetica, sans serif">
+      <xsl:value-of select="@title"/>
+    </font>
+    <hr size="1" style="color: #0086b2"/>
+    <xsl:apply-templates/>
   </xsl:template>
-
   <xsl:template match="s2">
-   <div align="right">
-    <table border="0" width="96%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td width="100%" bgcolor="#0086b2">
-          <font face="arial,helvetica,sanserif" color="#ffffff">
-            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
-         </td>
-        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-     </table>
-     <table border="0" width="96%" cellspacing="0" cellpadding="0">
-      <tr>
-       <td>
-        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
-       </td>
-      </tr>
-    </table>
-   </div>
-   <br/>
+    <font color="#0086b2" size="+1" face="verdana, helvetica, sans serif">
+      <b><xsl:value-of select="@title"/></b>
+    </font>
+    <xsl:apply-templates/>
   </xsl:template>
-
   <xsl:template match="s3">
-   <div align="right">
-    <table border="0" width="94%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td width="100%" bgcolor="#0086b2">
-          <font size="-1" face="arial,helvetica,sanserif" color="#ffffff">
-            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
-         </td>
-        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-     </table>
-     <table border="0" width="94%" cellspacing="0" cellpadding="0">
-      <tr>
-       <td>
-        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
-       </td>
-      </tr>
-    </table>
-   </div>
-   <br/>
+    <font color="#0086b2" size="+1" face="verdana, helvetica, sans serif">
+      <xsl:value-of select="@title"/>
+    </font>
+    <xsl:apply-templates/>
+  </xsl:template>
+  <xsl:template match="s4">
+    <font color="#0086b2" face="verdana, helvetica, sans serif">
+      <b><xsl:value-of select="@title"/></b>
+    </font>
+    <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="s4">
-   <div align="right">
-    <table border="0" width="92%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td width="100%" bgcolor="#0086b2">
-          <font size="-2" face="arial,helvetica,sanserif" color="#ffffff">
-            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
-         </td>
-        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
-        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-     </table>
-     <table border="0" width="92%" cellspacing="0" cellpadding="0">
-      <tr>
-       <td>
-        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
-       </td>
-      </tr>
-    </table>
-   </div>
-   <br/>
-  </xsl:template>
-    
 <!-- ====================================================================== -->
 <!-- footer section -->
 <!-- ====================================================================== -->
@@ -296,11 +226,10 @@
 <!-- ====================================================================== -->
 <!-- paragraph section -->
 <!-- ====================================================================== -->
-
   <xsl:template match="p">
-    <p align="justify"><xsl:apply-templates/></p>
+    <p><font face="verdana, helvetica, sans serif" color="black">
+    <xsl:apply-templates/></font></p>
   </xsl:template>
-
   <xsl:template match="note">
    <p>
     <table width="100%" cellspacing="3" cellpadding="0" border="0">
@@ -309,7 +238,7 @@
           <img src="resources/note.gif" width="28" height="29" vspace="0" hspace="0" border="0" alt="Note"/>
         </td>
         <td valign="top">
-          <font size="-1" face="arial,helvetica,sanserif" color="#000000">
+          <font size="-1" face="verdana, helvetica, sans serif" color="#000000">
             <i>
               <xsl:apply-templates/>
             </i>
@@ -319,7 +248,6 @@
     </table>
    </p>
   </xsl:template>
-
   <xsl:template match="source">
    <div align="center">
     <table cellspacing="4" cellpadding="0" border="0">
@@ -341,41 +269,48 @@
     </table>
    </div>
   </xsl:template>
-  
   <xsl:template match="fixme">
-   <!-- ignore on documentation -->
+    <!-- ignore on documentation -->
   </xsl:template>
-
+  
 <!-- ====================================================================== -->
 <!-- list section -->
 <!-- ====================================================================== -->
 
- <xsl:template match="ul|ol|dl">
-  <blockquote>
-   <xsl:copy>
-    <xsl:apply-templates/>
-   </xsl:copy>
-  </blockquote>
+ <xsl:template match="ul|ol">
+   <blockquote>
+     <xsl:copy>
+       <xsl:apply-templates/>
+     </xsl:copy>
+   </blockquote>
  </xsl:template>
  
  <xsl:template match="li">
-  <xsl:copy>
-   <xsl:apply-templates/>
-  </xsl:copy>
+   <xsl:copy><font face="verdana, helvetica, sans serif">
+     <xsl:apply-templates/>
+   </font></xsl:copy>
+ </xsl:template>
+
+ <xsl:template match="dl">
+   <blockquote><font face="verdana, helvetica, sans serif">
+     <xsl:copy>
+       <xsl:apply-templates/>
+     </xsl:copy>
+   </font></blockquote>
  </xsl:template>
 
  <xsl:template match="sl">
-  <ul>
-   <xsl:apply-templates/>
-  </ul>
+   <ul>
+     <xsl:apply-templates/>
+   </ul>
  </xsl:template>
 
  <xsl:template match="dt">
-  <li>
-   <strong><xsl:value-of select="."/></strong>
-   <xsl:text> - </xsl:text>
-   <xsl:apply-templates select="dd"/>   
-  </li>
+   <li>
+     <strong><xsl:value-of select="."/></strong>
+     <xsl:text> - </xsl:text>
+     <xsl:apply-templates select="dd"/>   
+   </li>
  </xsl:template>
  
 <!-- ====================================================================== -->

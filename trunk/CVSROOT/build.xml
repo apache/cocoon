@@ -99,7 +99,7 @@ These are the meaningful targets for this build file:
  - dist-zip -> generates the Cocoon distribution
  - dist-tgz -> generates the Cocoon distribution
  - clean -> restores the distribution to its original and clean state
- - site -> generates the web site in ../xml-site/targets/cocoon
+ - site -> generates the web site in ../xml-site/targets/cocoon1
 
 ====================================== FAQ =====================================
 
@@ -172,7 +172,7 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="dist.root" value="./dist"/>
     <property name="dist.dir" value="${dist.root}/${name}-${version}"/>
 
-    <property name="site" value="../xml-site/targets/cocoon"/>
+    <property name="site" value="../xml-site/targets/cocoon1"/>
 
     <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
     <available property="saxon.present" classname="com.icl.saxon.StyleSheet"/>
