@@ -48,39 +48,40 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.persistence;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.avalon.excalibur.pool.Poolable;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.SAXException;
 
 /**
- * Components implementing this marker interface have a lifecycle of one
- * request. This means if during one request a component accepting this
- * interface is looked up several times, it's always the same instance.
- * Each internal subrequest, e.g. using the cocoon protocol, is considered
- * as a new request. So an instance looked up in the "main" request is
- * not available to a subrequest.
- * In addition, the first time this component is looked up during a request,
- * the {@link #setup(SourceResolver, Map)} method is called.
+ * A request data store is a component that manages data that are
+ * linked to the current request.
+ * With the setRequestData() method you can link any object to the
+ * current request. This object can be fetched via getRequestData()
+ * as long as the request is running. This data is not available
+ * in any sub-request (cocoon: protocol calls).
+ * If you want to share data between the main request and any sub-request
+ * than you have to use the setGlobalRequestData etc. methods.
  * 
- * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
+ * This component is a replacement for the request lifecycle and
+ * global request lifecycle components.
  * 
- * @deprecated This component is deprecated. Use the 
- *             {@link org.apache.cocoon.components.persistence.RequestDataStore} instead.
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.4 2003/09/01 14:45:07 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: RequestDataStore.java,v 1.1 2003/09/01 14:45:07 cziegeler Exp $
+ * @since 2.1.1
  */
-public interface RequestLifecycleComponent extends Poolable {
+public interface RequestDataStore {
+        
+    String ROLE = RequestDataStore.class.getName();
+    
+    Object getRequestData(String key);
 
-    /**
-     * Set the {@link SourceResolver} and the objectModel 
-     * used to process the current request.
-     */
-    void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException;
+    void removeRequestData(String key);
+
+    void setRequestData(String key, Object value);
+
+    Object getGlobalRequestData(String key);
+
+    void removeGlobalRequestData(String key);
+
+    void setGlobalRequestData(String key, Object value);
 }

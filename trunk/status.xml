@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.132 2003/09/01 14:07:33 upayavira Exp $:-->
+<!-- CVS $Id: status.xml,v 1.133 2003/09/01 14:45:07 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     Adding new RequestDataStore component making the extra component
+     marker interfaces RequestLifeCycleComponent and 
+     GlobalRequestLifeCycleComponent obsolete.
+   </action>
    <action dev="UV" type="fix">
      Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir, 
      rather than CLI invocation dir.
