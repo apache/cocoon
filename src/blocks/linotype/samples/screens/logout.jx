@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h1 align="center"><a href="#{$request/contextPath}/">See ya!</a></h1>
+<h1 align="center"><a href="#{$request/contextPath}/samples/linotype/">See ya!</a></h1>
 
 </body>
 </html>
