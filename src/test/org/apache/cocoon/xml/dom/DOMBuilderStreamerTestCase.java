@@ -65,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Testcase for DOMStreamer and DOMBuilder.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.1 2003/04/16 13:10:00 stephan Exp $
+ * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.2 2003/04/22 07:37:19 stephan Exp $
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
@@ -146,6 +146,27 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
         Document document = XMLUnit.buildControlDocument("<bla:root xmlns:bla=\"http://xml.apache.org\"/>");
         //assertXMLEqual(document, builder.getDocument());
     }
+
+    /*public void testBuilderWithNSError()  throws Exception {
+        AttributesImpl atts = new AttributesImpl();
+
+        DOMBuilder builder = new DOMBuilder();
+
+        try {
+            builder.startDocument();
+            builder.startPrefixMapping("bla", "http://xml.apache.org");
+            atts.addAttribute( null, "bla", "xmlns:bla", "CDATA", "http://xml.apache.org");
+            builder.startElement("http://xml.apache.org", "root", "bla:root", atts);
+            builder.endElement("http://xml.apache.org", "root", "bla:root");
+            builder.endPrefixMapping("bla");
+            builder.endDocument();
+
+            fail("DOMBuilder should throw exception because of permitted attribute");
+        } catch (Exception e) {
+            // nothing
+        }
+    }*/
+
 
     public void testTestFacility() throws Exception {
         Document document = XMLUnit.getControlParser().newDocument();
