@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link BooleanFieldDefinition}s.
  * 
- * @version $Id: BooleanFieldDefinitionBuilder.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version $Id$
  */
 public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
@@ -31,7 +31,7 @@ public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuild
         setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
-        
+        setValidators(widgetElement, definition);
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {
             definition.addValueChangedListener((ValueChangedListener)iter.next());

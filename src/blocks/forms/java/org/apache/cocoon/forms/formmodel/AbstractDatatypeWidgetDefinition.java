@@ -29,7 +29,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  * 
- * @version $Id: AbstractDatatypeWidgetDefinition.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
@@ -97,6 +97,10 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     
     public boolean hasValueChangedListeners() {
         return this.listener != null;
+    }
+
+    public ValueChangedListener getValueChangedListener() {
+        return this.listener;
     }
 
 }

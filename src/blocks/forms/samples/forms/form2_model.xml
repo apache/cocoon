@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <fd:form
+  id="data"
   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 

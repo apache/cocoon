@@ -82,7 +82,7 @@
                row-path="contact">
 
     <fb:identity>
-      <fb:value id="id" path="@id">
+      <fb:value id="id" path="@id" direction="load">
         <!-- optional convertor to use for mapping the unique id -->
         <fd:convertor datatype="long" />
       </fb:value>
@@ -90,6 +90,16 @@
 
     <fb:on-bind>
         <!-- executed on updates AND right after the insert -->
+      <fb:javascript id="id" path="@id" direction="save">
+        <fb:save-form>
+          var appValue = jxpathPointer.getValue();
+          if (appValue == '') {
+              var precSiblId = jxpathContext.getValue("../preceding-sibling::contact/@id");
+              var newId = Number(precSiblId) + 1
+              jxpathPointer.setValue(newId.toFixed(0));
+          }
+        </fb:save-form>
+      </fb:javascript>
       <fb:value id="firstname" path="firstname" />
       <fb:value id="lastname"  path="lastname"  />
       <fb:value id="phone"     path="phone/@nr" />

@@ -34,31 +34,19 @@
   <content>
     <ft:form-template action="countryselector" method="POST">
       <ft:continuation-id/>
-      <table border="1">
-        <tr>
-          <td valign="top"><ft:widget-label id="us-nonus"/></td>
-          <td valign="top">
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
             <ft:widget id="us-nonus">
               <fi:styling submit-on-change="true"/>
             </ft:widget>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"><ft:widget-label id="country"/></td>
-          <td valign="top">
             <ft:widget id="country">
               <fi:styling submit-on-change="true"/>
             </ft:widget>
-          </td>
-        </tr>
-      </table>
-
-      <br/>
       <ft:widget id="message"/>
-      <br/>
-      <br/>
-      
       <input type="submit"/>
+        </fi:items>
+      </fi:group>
     </ft:form-template>
   </content>
 </page>

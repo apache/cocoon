@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.15 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id$
  */
 public class Form extends AbstractContainerWidget {
     
@@ -234,32 +234,11 @@ public class Form extends AbstractContainerWidget {
         if (this.listener != null) {
             this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
         }
-
         if (this.endProcessing != null) {
             return this.endProcessing.booleanValue();
         }
 
-        // Validate the form
-        this.phase = ProcessingPhase.VALIDATE;
-        this.isValid = doValidate();
-
-        if (this.endProcessing != null) {
-            return this.endProcessing.booleanValue();
-        }
-        
-        // Notify the end of the current phase
-        if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
-        }
-        
-        if (this.endProcessing != null) {
-            // De-validate the form if one of the listeners asked to end the processing
-            // This allows for additional application-level validation.
-            this.isValid = false;
-            return this.endProcessing.booleanValue();
-        }
-
-        return this.isValid;
+        return validate();
     }
     
     /**
@@ -289,18 +268,36 @@ public class Form extends AbstractContainerWidget {
         super.readFromRequest(formContext); 
     }
 
+    /**
+     * Performs validation phase of form processing.
+     */
     public boolean validate() {
-        throw new UnsupportedOperationException("Please use Form.process()");
+        // Validate the form
+        this.phase = ProcessingPhase.VALIDATE;
+        this.isValid = super.validate();
+
+        // FIXME: Is this check needed, before invoking the listener?
+        if (this.endProcessing != null) {
+            return this.endProcessing.booleanValue();
+        }
+
+        // Notify the end of the current phase
+        if (this.listener != null) {
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+        }
+        if (this.endProcessing != null) {
+            // De-validate the form if one of the listeners asked to end the processing
+            // This allows for additional application-level validation.
+            this.isValid = false;
+            return this.endProcessing.booleanValue();
     }
 
-    public boolean doValidate() {
-        return super.validate();
+        return this.isValid;
     }
 
     private static final String FORM_EL = "form";
 
     public String getXMLElementName() {
         return FORM_EL;
-    }
-    
+    }    
 }

@@ -31,7 +31,7 @@ import org.apache.commons.jxpath.Pointer;
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id$
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -52,6 +52,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowBinding = rowBinding;
+        this.rowBinding.setParent(this);
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
     }

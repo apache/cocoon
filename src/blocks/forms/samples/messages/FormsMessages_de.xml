@@ -18,9 +18,15 @@
 <catalogue xml:lang="de">
   <message key="general.field-required">Dieses Feld muss aufgefüllt werden.</message>
 
-  <message key="datatype.conversion-failed">Ungültige(s) {0}.</message>
+  <message key="datatype.conversion-failed">Ungültige {0}.</message>
+  <message key="datatype.decimal">Dezimalzahl</message>
+  <message key="datatype.integer">natürliche Zahl</message>
   <message key="datatype.long">natürliche Zahl</message>
-  <message key="datatype.date">Datum</message>
+  <message key="datatype.float">Dezimalzahl</message>
+  <message key="datatype.double">Dezimalzahl</message>
+  <message key="datatype.date.date">Datumsangabe</message>
+  <message key="datatype.date.time">Zeitangabe</message>
+  <message key="datatype.date.datetime">Datums- und Zeitangabe</message>
 
   <message key="validation.string.exact-length">Bitte geben Sie genau {0} Zeichen ein.</message>
   <message key="validation.string.range-length">Bitte geben Sie zwischen {0} und {1} Zeichen ein.</message>

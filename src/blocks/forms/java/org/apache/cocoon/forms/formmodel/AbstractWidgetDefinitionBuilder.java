@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
+import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.expression.ExpressionManager;
@@ -151,6 +153,13 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                     widgetValidatorBuilderSelector.release(builder);
                 }
             }
+        }
+    }
+
+    protected void setCreateListeners(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+        Iterator iter = buildEventListeners(widgetElement, "on-create", CreateListener.class).iterator();
+        while (iter.hasNext()) {
+            widgetDefinition.addCreateListener((CreateListener)iter.next());
         }
     }
 

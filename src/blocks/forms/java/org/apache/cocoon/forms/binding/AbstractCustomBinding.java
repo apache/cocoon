@@ -50,7 +50,11 @@ public abstract class AbstractCustomBinding implements Binding {
      * @throws BindingException
      */
     public final void loadFormFromModel(Widget frmModel, Object objModel) throws BindingException {
-        doLoad(frmModel, (JXPathContext)objModel);
+        try {
+            doLoad(frmModel, (JXPathContext)objModel);
+        } catch (Exception e) {
+            throw new BindingException("Error executing custom binding", e);
+        }
     }
 
     /**
@@ -63,7 +67,11 @@ public abstract class AbstractCustomBinding implements Binding {
      * @throws BindingException
      */
     public final void saveFormToModel(Widget frmModel, Object objModel) throws BindingException {
-        doSave(frmModel, (JXPathContext)objModel);
+        try {
+            doSave(frmModel, (JXPathContext)objModel);
+        } catch (Exception e) {
+            throw new BindingException("Error executing custom binding", e);
+        }
     }
     
     /**
@@ -71,6 +79,6 @@ public abstract class AbstractCustomBinding implements Binding {
      * @param frmModel
      * @param context
      */
-    protected abstract void doLoad(Widget frmModel, JXPathContext context) throws BindingException;
-    protected abstract void doSave(Widget frmModel, JXPathContext context) throws BindingException;
+    protected abstract void doLoad(Widget frmModel, JXPathContext context) throws Exception;
+    protected abstract void doSave(Widget frmModel, JXPathContext context) throws Exception;
 }

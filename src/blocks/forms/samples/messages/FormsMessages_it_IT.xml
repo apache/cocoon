@@ -19,8 +19,14 @@
   <message key="general.field-required">Questo campo è obbligatorio.</message>
 
   <message key="datatype.conversion-failed">Formato {0} non valido.</message>
+  <message key="datatype.decimal">#decimal number#</message>
+  <message key="datatype.integer">numero intero</message>
   <message key="datatype.long">numero intero</message>
-  <message key="datatype.date">data</message>
+  <message key="datatype.float">#decimal number#</message>
+  <message key="datatype.double">#decimal number#</message>
+  <message key="datatype.date.date">data</message>
+  <message key="datatype.date.time">#time#</message>
+  <message key="datatype.date.datetime">#date-time#</message>
 
   <message key="validation.string.exact-length">Questo campo deve essere lungo esattamente {0} caratteri.</message>
   <message key="validation.string.range-length">Questo campo deve contenere fra {0} e {1} caratteri.</message>

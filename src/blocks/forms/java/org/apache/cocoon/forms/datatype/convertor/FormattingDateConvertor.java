@@ -44,21 +44,21 @@ import java.text.ParseException;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDateConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
     private int style;
     /** See {@link #setVariant}. */
-    private int variant;
+    private String variant;
     /** Locale-specific formatting patterns. */
     private LocaleMap localizedPatterns;
     /** Non-locale specific formatting pattern. */
     private String nonLocalizedPattern;
 
-    public static final int DATE = 1;
-    public static final int TIME = 2;
-    public static final int DATE_TIME = 3;
+    public static final String DATE = "date";
+    public static final String TIME = "time";
+    public static final String DATE_TIME = "datetime";
 
     public FormattingDateConvertor() {
         this.style = java.text.DateFormat.SHORT;
@@ -71,7 +71,7 @@ public class FormattingDateConvertor implements Convertor {
         try {
             return new ConversionResult(dateFormat.parse(value));
         } catch (ParseException e) {
-            return ConversionResult.create("date");
+            return ConversionResult.create("date." + this.variant);
         }
     }
 
@@ -95,16 +95,12 @@ public class FormattingDateConvertor implements Convertor {
     protected DateFormat getDateFormat(Locale locale) {
         DateFormat dateFormat = null;
 
-        switch (variant) {
-            case DATE:
+        if (this.variant.equals(DATE)) {
                 dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
-                break;
-            case TIME:
+        } else if (this.variant.equals(TIME)) {
                 dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
-                break;
-            case DATE_TIME:
+        } else if (this.variant.equals(DATE_TIME)) {
                 dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
-                break;
         }
 
         String pattern = (String)localizedPatterns.get(locale);
@@ -129,10 +125,12 @@ public class FormattingDateConvertor implements Convertor {
         this.style = style;
     }
 
-    public void setVariant(int variant) {
-        if (variant != DATE && variant != TIME && variant != DATE_TIME)
+    public void setVariant(String variant) {
+        if (DATE.equals(variant) || TIME.equals(variant) || DATE_TIME.equals(variant)) {
+            this.variant = variant;
+        } else {
             throw new IllegalArgumentException("Invalid value for variant parameter.");
-        this.variant = variant;
+        }
     }
 
     public void addFormattingPattern(Locale locale, String pattern) {
@@ -146,13 +144,12 @@ public class FormattingDateConvertor implements Convertor {
     private static final String CONVERTOR_EL = "convertor";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        String pattern = (String)localizedPatterns.get(locale);
-        if (pattern == null)
-            pattern = nonLocalizedPattern;
+        String pattern = getDateFormat(locale).toPattern();
 
         if (pattern != null) {
             AttributesImpl attrs = new AttributesImpl();
             attrs.addCDATAAttribute("pattern", pattern);
+            attrs.addCDATAAttribute("variant", this.variant);
             contentHandler.startElement(Constants.INSTANCE_NS, CONVERTOR_EL, Constants.INSTANCE_PREFIX_COLON + CONVERTOR_EL, attrs);
             contentHandler.endElement(Constants.INSTANCE_NS, CONVERTOR_EL, Constants.INSTANCE_PREFIX_COLON + CONVERTOR_EL);
         }
