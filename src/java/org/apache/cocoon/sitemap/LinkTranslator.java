@@ -53,12 +53,9 @@ package org.apache.cocoon.sitemap;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -68,7 +65,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.4 2003/10/21 21:48:32 upayavira Exp $
+ * @version CVS $Id: LinkTranslator.java,v 1.5 2003/10/22 05:07:02 antonio Exp $
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {
     
