@@ -56,11 +56,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -76,9 +75,9 @@ import org.xml.sax.SAXException;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractSerializerTestCase.java,v 1.1 2003/08/11 08:31:24 stephan Exp $
+ * @version CVS $Id: AbstractSerializerTestCase.java,v 1.2 2004/03/05 07:51:44 cziegeler Exp $
  */
-public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
+public abstract class AbstractSerializerTestCase extends FortressTestCase {
     private HashMap objectmodel = new HashMap();
 
     /**
@@ -111,21 +110,19 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
     public final byte[] serialize(String type, Parameters parameters,
                                   Document input) {
 
-        ComponentSelector selector = null;
+        ServiceSelector selector = null;
         Serializer serializer = null;
         SourceResolver resolver = null;
         Source inputsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         ByteArrayOutputStream document = null;
 
         try {
-            selector = (ComponentSelector) this.manager.lookup(Serializer.ROLE+
+            selector = (ServiceSelector) lookup(Serializer.ROLE+
                 "Selector");
             assertNotNull("Test lookup of serializer selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if serializer name is not null", type);
@@ -139,7 +136,7 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             DOMStreamer streamer = new DOMStreamer(serializer);
 
             streamer.stream(input);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve serializer", ce);
             ce.printStackTrace();
             fail("Could not retrieve serializer:"+ce.toString());
@@ -155,7 +152,7 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             }
 
             if (selector!=null) {
-                this.manager.release(selector);
+                release(selector);
             }
 
             if (inputsource!=null) {
@@ -163,7 +160,7 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             }
 
             if (resolver!=null) {
-                this.manager.release(resolver);
+                release(resolver);
             }
         }
 
@@ -186,10 +183,10 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
         Document assertiondocument = null;
 
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null", source);
@@ -208,7 +205,7 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             assertNotNull("Test if assertion document exists",
                           assertiondocument);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: "+ce.toString());
         } catch (Exception e) {
@@ -218,8 +215,8 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             if (resolver!=null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;
@@ -238,15 +235,13 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
         SAXParser parser = null;
         Source assertionsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         byte[] assertiondocument = null;
 
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null", source);
@@ -269,7 +264,7 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
                 i++;
             }
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: "+ce.toString());
         } catch (Exception e) {
@@ -279,8 +274,8 @@ public abstract class AbstractSerializerTestCase extends ExcaliburTestCase {
             if (resolver!=null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;
