@@ -12,7 +12,6 @@ cocoon.sampledata
 *.iws
 *.iml
 mount-table.xml
-db
 tomcat
 tomcat.bat
 slide
