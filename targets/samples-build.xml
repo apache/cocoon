@@ -45,7 +45,6 @@
         <exclude name="**/*.png"/>
         <!-- filtering breaks UTF-8 files -->
         <exclude name="i18n/**"/>
-        <exclude name="hello-world/style/**"/>
       </fileset>
     </copy>
 
