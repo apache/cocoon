@@ -105,14 +105,13 @@ import org.apache.excalibur.source.SourceResolver;
  * </p>
  *    
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: I18nMatcher.java,v 1.3 2004/07/12 02:25:31 antonio Exp $
+ * @version CVS $Id: I18nMatcher.java,v 1.4 2004/07/14 06:06:08 antonio Exp $
  */
 public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Configurable {
 
     private ServiceManager manager;
     private SourceResolver resolver;
     private String requestParameterName;
-    private String sessionParameterName;
     private boolean useLocale;
     private boolean useLocales;
     private Locale defaultLocale;
@@ -127,13 +126,11 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
     private static final boolean DEFAULT_TEST_BLANK_LOCALE = true;
 
     private static final String MAP_LOCALE = "locale";
-    private static final String MAP_LOCALES = "locales";
     private static final String MAP_MATCHED_LOCALE = "matched-locale";
     private static final String MAP_SOURCE = "source";
     private static final String MAP_COUNTRY ="country";
     private static final String MAP_LANGUAGE ="language";
     private static final String MAP_VARIANT = "variant";
-    private static final String MAP_ENCODING = "encoding";
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
