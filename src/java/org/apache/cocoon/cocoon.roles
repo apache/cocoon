@@ -61,12 +61,16 @@
 
   <!-- Stores: -->
   <role name="org.apache.excalibur.store.Store"
-       shorthand="persistent-store"
+       shorthand="store"
        default-class="org.apache.cocoon.components.store.impl.DefaultStore"/>
+
+  <role name="org.apache.excalibur.store.Store/PersistentStore"
+        shorthand="persistent-store"
+        default-class="org.apache.cocoon.components.store.impl.DefaultPersistentStore"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
-        default-class="org.apache.excalibur.store.impl.MRUMemoryStore"/>
+        default-class="org.apache.cocoon.components.store.impl.DefaultTransientStore"/>
 
   <role name="org.apache.excalibur.store.StoreJanitor"
        shorthand="store-janitor"

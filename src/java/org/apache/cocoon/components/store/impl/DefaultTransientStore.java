@@ -55,19 +55,17 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.store.impl.MRUMemoryStore;
 
 /**
- * Default implementation of Cocoon's store. It's a <code>MRUMemoryStore</code> whose
- * "<code>use-persistent-cache</code>" parameter defaults to <code>true</code>.
- * <p>
- * This default setting allows the store to be an in-memory front-end to the persistent store.
+ * Default implementation of Cocoon's transient store. This is a <code>MRUMemoryStore</code>
+ * that cannot be backed by a persistent store (this ensure it is really transient).
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: DefaultStore.java,v 1.7 2003/12/11 18:20:08 sylvain Exp $
+ * @version CVS $Id: DefaultTransientStore.java,v 1.1 2003/12/11 18:20:08 sylvain Exp $
  */
-public class DefaultStore extends MRUMemoryStore {
+public class DefaultTransientStore extends MRUMemoryStore {
     
     public void parameterize(Parameters params) throws ParameterException {
-        if (!params.isParameter("use-persistent-cache")) {
-            params.setParameter("use-persistent-cache", "true");
+        if (params.getParameterAsBoolean("use-persistent-cache", false)) {
+            throw new ParameterException("A transient store cannot be backed by a persistent store.");
         }
         super.parameterize(params);
     }
