@@ -19,11 +19,11 @@ import org.w3c.dom.Element;
 
 /**
  * Interface for classes that can build ValidationRules from an XML description.
- * A ValidationRuleBuilder can be Composable.
+ * A ValidationRuleBuilder can be Serviceable.
  * A ValidationRuleBuilder should be thread safe, only one instance of it
  * will be created.
  * 
- * @version $Id: ValidationRuleBuilder.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id$
  */
 public interface ValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception;

@@ -37,14 +37,27 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     /**
      * Constructs AbstractContainerWidget
      */
-    public AbstractContainerWidget(AbstractWidgetDefinition definition) {
+    public AbstractContainerWidget(AbstractContainerDefinition definition) {
         super(definition);
         widgets = new WidgetList();
     }
 
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
+        Iterator it = this.getChildren();
+        while(it.hasNext()) {
+          ((Widget)it.next()).initialize();
+        }
+    }
+
     public void addChild(Widget widget) {
-        widget.setParent(this);
+        // order is important
         widgets.addWidget(widget);
+        widget.setParent(this);
     }
 
     public boolean hasChild(String id) {

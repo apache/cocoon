@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * The {@link WidgetDefinition} part of a BooleanField widget, see {@link BooleanField} for more information.
  * 
- * @version $Id: BooleanFieldDefinition.java,v 1.2 2004/04/22 14:44:31 mpo Exp $
+ * @version $Id$
  */
 public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     private ValueChangedListener listener;

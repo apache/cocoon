@@ -65,6 +65,7 @@ public class Repeater extends AbstractWidget
     public RepeaterRow addRow() {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         rows.add(repeaterRow);
+        repeaterRow.initialize();
         return repeaterRow;
     }
     
@@ -75,6 +76,7 @@ public class Repeater extends AbstractWidget
         } else {
             rows.add(index, repeaterRow);
         }
+        repeaterRow.initialize();
         return repeaterRow;
     }
 
@@ -309,7 +311,7 @@ public class Repeater extends AbstractWidget
 
     public class RepeaterRow extends AbstractContainerWidget {
 
-        public RepeaterRow(AbstractWidgetDefinition definition) {
+        public RepeaterRow(RepeaterDefinition definition) {
             super(definition);
             setParent(Repeater.this);
             ((ContainerDefinition)definition).createWidgets(this);

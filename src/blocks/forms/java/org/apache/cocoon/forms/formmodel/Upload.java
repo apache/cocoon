@@ -38,6 +38,11 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
+
+    private static final String UPLOAD_EL = "upload";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     private final UploadDefinition uploadDefinition;
     private Part part;
     private ValidationError validationError;
@@ -144,10 +149,6 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public void setValidationError(ValidationError error) {
         this.validationError = error;
     }
-
-    private static final String UPLOAD_EL = "upload";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
 
     /**
      * @return "upload"

@@ -21,7 +21,7 @@ import java.util.EventListener;
  * Base interface for all widget event listeners.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetListener.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id$
  */
 public interface WidgetListener extends EventListener {
 

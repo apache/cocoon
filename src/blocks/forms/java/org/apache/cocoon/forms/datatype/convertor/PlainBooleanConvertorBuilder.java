@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {PlainBooleanConvertor}s.
  *
- * @version CVS $Id: PlainBooleanConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class PlainBooleanConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

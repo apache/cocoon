@@ -46,6 +46,11 @@ import java.util.Locale;
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
+
+    private static final String FIELD_EL = "field";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     /** Overrides selection list defined in FieldDefinition, if any. */
     protected SelectionList selectionList;
     /** Additional listeners to those defined as part of the widget definition (if any). */
@@ -198,13 +203,15 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
             enteredValue = newEnteredValue;
             validationError = null;
+            Object oldValue = value;
             value = null;
             this.valueState = VALUE_UNPARSED;
 
             if (hasValueChangedListeners()) {
                 // Throw an event that will parse the value only if needed.
-                getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
-            }
+                // This event holds the old value and will lazily compute the new one if needed
+                getForm().addWidgetEvent(new DeferredValueChangedEvent(this, oldValue));
+    	        }
         }
     }
 
@@ -319,11 +326,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public boolean isRequired() {
         return getFieldDefinition().isRequired();
     }
-
-
-    private static final String FIELD_EL = "field";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
 
     /**
      * @return "field"

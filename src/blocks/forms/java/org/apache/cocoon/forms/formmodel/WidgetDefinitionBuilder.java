@@ -23,10 +23,10 @@ import org.w3c.dom.Element;
  * <p>These builder classes should be thread safe, only a single instance of them
  * will be created.
  *
- * <p>Implementations may implement Avalon's Composable interface to gain access
+ * <p>Implementations may implement Avalon's Serviceable interface to gain access
  * to other components.
  * 
- * @version CVS $Id: WidgetDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id$
  */
 public interface WidgetDefinitionBuilder {
 

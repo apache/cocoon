@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} part of a {@link Output} widget.
  * 
- * @version $Id: OutputDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class OutputDefinition extends AbstractDatatypeWidgetDefinition {
     public Widget createInstance() {

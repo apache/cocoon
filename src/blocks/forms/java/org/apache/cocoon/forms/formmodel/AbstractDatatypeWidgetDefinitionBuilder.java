@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for WidgetDefinitionBuilders that build widgets that have datatypes/selection lists.
  * 
- * @version $Id: AbstractDatatypeWidgetDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     

@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.event.*;
 
 /**
  * A discriminated union that references a discriminant value in another
@@ -48,20 +49,25 @@ public class Union extends AbstractContainerWidget {
         return definition;
     }
 
-    // TODO: This whole union mess is too dependent on undefined sequences of execution.
-    // These need to be ordered into a contract of sequences.
-
-    public void setParent(Widget widget) {
-        super.setParent(widget);
-        resolve();
-    }
-
-    // TODO: The "resolve" step currently expands each "New" into the list of widgets in the corresponding "Class".
-    // "resolve" should be changed to "expand", and a new step, "resolve" should be introduced which patches up any
-    // *widget* (not definition) references after the expansion has put all of the widgets in place.
-    public void resolve() {
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
         String caseWidgetId = definition.getCaseWidgetId();
-        caseWidget = ((ContainerWidget)getParent()).getChild(caseWidgetId);
+        this.caseWidget = getParent().lookupWidget(caseWidgetId);
+        if(this.caseWidget == null) {
+            throw new RuntimeException("Could not find case widget \""
+                + caseWidgetId + "\" for union \"" + getId() + "\" at " + getLocation());
+        }
+        ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(
+            new ValueChangedListener() {
+                public void valueChanged(ValueChangedEvent event) {
+                    Union.this.caseValue = (String)event.getNewValue();
+                }
+            }
+        );
     }
 
     /**
@@ -72,7 +78,7 @@ public class Union extends AbstractContainerWidget {
     }
 
     public Object getValue() {
-        return caseWidget.getValue();
+        return this.caseWidget.getValue();
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -80,18 +86,18 @@ public class Union extends AbstractContainerWidget {
             return;
 
         // Ensure the case widget has read its value
-        caseWidget.readFromRequest(formContext);
+        this.caseWidget.readFromRequest(formContext);
 
         Widget widget;
         // Read current case from request
         String newValue = (String)getValue();
         if (newValue != null && !newValue.equals("")) {
 
-            if (getForm().getSubmitWidget() == caseWidget && !newValue.equals(caseValue)) {
+            if (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue)) {
                 // If submitted by the case widget and its value has changed, read the values
-                // for the previous case values. This allows to keep any entered values
+                // for the previous case value. This allows to keep any already entered values
                 // despite the case change.
-                widget = getChild(caseValue);
+                widget = getChild(this.caseValue);
             } else {
                 // Get the corresponding widget (will create it if needed)
                 widget = getChild(newValue);
@@ -101,7 +107,7 @@ public class Union extends AbstractContainerWidget {
                 widget.readFromRequest(formContext);
             }
         }
-        caseValue = newValue;
+        this.caseValue = newValue;
     }
 
     // TODO: Simplify this logic.
@@ -120,8 +126,12 @@ public class Union extends AbstractContainerWidget {
     }
 
     public Widget getChild(String id) {
-        if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id))
+        if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id)) {
             ((ContainerDefinition)definition).createWidget(this, id);
+            Widget child = super.getChild(id);
+            child.initialize();
+            return child;
+        }
         return super.getChild(id);
     }
 

@@ -56,7 +56,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the single value rather than the fields as XML. For population of the
  * form both forms are however allowed.
  *
- * @version CVS $Id: XMLAdapter.java 30941 2004-07-29 19:56:58Z vgritsenko $
+ * @version CVS $Id$
  */
 public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
 

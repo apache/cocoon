@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation for
  * java.util.Date's (so includes a time-component).
- * @version $Id: DateType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version $Id$
  */
 public class DateType extends AbstractDatatype {
 

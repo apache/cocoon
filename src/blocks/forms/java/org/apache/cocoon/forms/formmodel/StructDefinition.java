@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Struct} widget.
  *
- * @version $Id: StructDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class StructDefinition extends AbstractContainerDefinition {
 

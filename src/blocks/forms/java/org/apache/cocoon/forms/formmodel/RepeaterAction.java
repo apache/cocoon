@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see RepeaterActionDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RepeaterAction.java,v 1.4 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id$
  */
 public class RepeaterAction extends Action {
     

@@ -36,7 +36,7 @@ import java.util.Locale;
  * cached as part of this object. In contrast, the {@link DynamicSelectionList}
  * will retrieve its content from its source each time it's needed.
  * 
- * @version $Id: StaticSelectionList.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id$
  */
 public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */

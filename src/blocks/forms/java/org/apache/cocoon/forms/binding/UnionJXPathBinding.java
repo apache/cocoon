@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * union widget.</li>
  * </ol>
  *
- * @version CVS $Id: UnionJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id$
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
 

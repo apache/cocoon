@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link SelectionList}s from an XML description.
  * 
- * @version CVS $Id: SelectionListBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version CVS $Id$
  */
 public interface SelectionListBuilder {
     

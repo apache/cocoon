@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 
 /**
  *
- * @version CVS $Id: PlainFloatConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class PlainFloatConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

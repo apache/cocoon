@@ -50,6 +50,12 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
+
+    private static final String MULTIVALUEFIELD_EL = "multivaluefield";
+    private static final String VALUES_EL = "values";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     private final MultiValueFieldDefinition definition;
 
     private SelectionList selectionList;
@@ -113,11 +119,6 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
         return validationError == null ? super.validate() : false;
     }
-
-    private static final String MULTIVALUEFIELD_EL = "multivaluefield";
-    private static final String VALUES_EL = "values";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
 
     /**
      * @return "multivaluefield"

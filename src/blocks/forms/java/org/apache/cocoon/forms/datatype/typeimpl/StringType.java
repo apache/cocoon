@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
 /**
  * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation
  * for strings.
- * @version $Id: StringType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version $Id$
  */
 public class StringType extends AbstractDatatype {
 

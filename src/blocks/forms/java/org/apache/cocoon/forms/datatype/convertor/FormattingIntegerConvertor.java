@@ -28,7 +28,7 @@ import java.text.ParseException;
  * so see there for more information.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: FormattingIntegerConvertor.java,v 1.2 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
 */
 public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
 
