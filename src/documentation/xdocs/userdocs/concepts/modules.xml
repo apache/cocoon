@@ -2,7 +2,6 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <document>
-
   <header>
     <title>Modules</title>
     <authors>
@@ -10,8 +9,7 @@
     </authors>
   </header>
 
-<body>
-
+  <body>
     <s1 title="Introduction">
       <p>
         Many sitemap components serve a purpose regardless how the input is
@@ -81,50 +79,58 @@
         <source>
 <![CDATA[
 <input-modules>
-   <component-instance name="request"   
-      class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
-   <component-instance name="attribute" 
-      class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
-   <component-instance name="URI"       
-      class="org.apache.cocoon.components.modules.input.RequestURIModule"/>
-   <component-instance name="context"       
-      class="org.apache.cocoon.components.modules.input.RequestContextPathModule"/>
-   <component-instance name="header"    
-      class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
-   <component-instance name="session"   
-      class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
-   <component-instance name="date"      
-      class="org.apache.cocoon.components.modules.input.DateInputModule"/>
-   <component-instance name="defaults"  
-      class="org.apache.cocoon.components.modules.input.DefaultsModule">
-     <input-module name="request"/>
-     <values>
-        <skin>defaultSkin</skin>
-        <base-url>http://localhost:8080/cocoon</base-url>
-     </values>
-   </component-instance>
+  <component-instance name="request"   
+  class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
+
+  <component-instance name="attribute" 
+  class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
+
+  <component-instance name="URI"       
+  class="org.apache.cocoon.components.modules.input.RequestURIModule"/>
+
+  <component-instance name="context"       
+  class="org.apache.cocoon.components.modules.input.RequestContextPathModule"/>
+
+  <component-instance name="header"    
+  class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
+
+  <component-instance name="session"   
+  class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
+
+  <component-instance name="date"      
+  class="org.apache.cocoon.components.modules.input.DateInputModule"/>
+
+  <component-instance name="defaults"  
+  class="org.apache.cocoon.components.modules.input.DefaultsModule">
+    <input-module name="request"/>
+    <values>
+      <skin>defaultSkin</skin>
+      <base-url>http://localhost:8080/cocoon</base-url>
+    </values>
+  </component-instance>
 </input-modules>
 
 <output-modules>
-   <component-instance name="attribute" 
-      class="org.apache.cocoon.components.modules.output.RequestAttributeOutputModule"/>
-   <component-instance name="session"   
-      class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
+  <component-instance name="attribute" 
+  class="org.apache.cocoon.components.modules.output.RequestAttributeOutputModule"/>
+
+  <component-instance name="session"   
+  class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
 </output-modules>
 
 <autoincrement-modules>
-   <component-instance name="auto" 
-      class="org.apache.cocoon.components.modules.database.HsqlIdentityAutoIncrementModule"/>
-<!--
-   <component-instance name="auto" 
-      class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/>
-   <component-instance name="auto" 
-      class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/>
-   <component-instance name="auto" 
-      class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/>
--->
-</autoincrement-modules>
-]]>
+  <component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.HsqlIdentityAutoIncrementModule"/>
+
+  <!--
+  <component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/>
+  <component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/>
+  <component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/>
+  -->
+</autoincrement-modules>]]>
         </source>
         <p>
           The above snippet declares a number of modules. After this, the
@@ -154,8 +160,7 @@
           </p>
           <source>
 <![CDATA[
-   <map:transform src="resources/stylesheets/{../skin}.xsl"/>
-]]>
+<map:transform src="resources/stylesheets/{../skin}.xsl"/>]]>
           </source>
           <p>
             The above example uses the variable <code>skin</code> declared
@@ -166,8 +171,7 @@
           </p>
           <source>
 <![CDATA[
-   <map:transform src="resources/stylesheets/{default:skin}.xsl"/>
-]]>
+<map:transform src="resources/stylesheets/{default:skin}.xsl"/>]]>
           </source>
           <p>
             Some of the input modules are JXPath-enabled, so you can use
@@ -177,8 +181,8 @@
           </p>
 	  <source>
 <![CDATA[
-    <map:parameter name="users-home-base" value="{system-property:substring-before(user.home, user.name)}"/>
-]]>
+<map:parameter name="users-home-base"
+  value="{system-property:substring-before(user.home, user.name)}"/>]]>
 	  </source>
         </s3>
         <s3 title="Step 2b: Use it on an XSP">
@@ -196,9 +200,8 @@
     xmlns:xsp="http://apache.org/xsp"  
     xmlns:input="http://apache.org/cocoon/xsp/input/1.0">
 
-<page>
-    
-  <title>Testing InputModules</title>
+  <page>
+    <title>Testing InputModules</title>
 
     <p>
       Parameter name=<input:get-attribute module="request-param"
@@ -209,8 +212,7 @@
                        as="xml" name="car"/>;
     </p>
   </page>
-</xsp:page>
-]]>
+</xsp:page>]]>
           </source>
         </s3>
         <s3 title="Step 2c: Have sitemap components use a module">
@@ -223,11 +225,10 @@
 <![CDATA[
 <map:matchers default="wildcard">
   <map:matcher name="cached-uri" 
-               src="org.apache.cocoon.matching.modular.CachingWildcardMatcher">
+      src="org.apache.cocoon.matching.modular.CachingWildcardMatcher">
     <input-module name="URI"/>
   </map:matcher>
-</map:matchers>
-]]>
+</map:matchers>]]>
           </source>
           <p>
             By replacing the input module name with any of the other declared
@@ -237,6 +238,5 @@
         </s3>
       </s2>
     </s1>
-
-</body>
+  </body>
 </document>
