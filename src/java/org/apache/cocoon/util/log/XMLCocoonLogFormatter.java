@@ -88,12 +88,13 @@ import java.util.StringTokenizer;
  * <li><code>rtime</code> : outputs the relative time (&lt;relative-time&gt;).<li>
  * <li><code>throwable</code> : outputs the exception (&lt;throwable&gt;).<li>
  * <li><code>priority</code> : outputs the priority (&lt;priority&gt;).<li>
+ * <li><code>host</code> : outputs the request host header (&lt;priority&gt;).<li>
  * </ul>
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLCocoonLogFormatter.java,v 1.1 2003/03/09 00:09:44 pier Exp $
+ * @version CVS $Id: XMLCocoonLogFormatter.java,v 1.2 2003/08/19 08:43:00 cziegeler Exp $
  */
 public class XMLCocoonLogFormatter
 implements Formatter {
@@ -111,6 +112,7 @@ implements Formatter {
     protected final static int         TYPE_CLASS        = 7;
     protected final static int         TYPE_CLASS_SHORT        = 8;
     protected final static int         TYPE_THREAD        = 9;
+    protected final static int         TYPE_HOST          = 10;
 
     public final static String[] typeStrings = new String[] {"uri", // 0
          "category",  // 1
@@ -121,7 +123,8 @@ implements Formatter {
          "priority",  // 6
          "class",    // 7
          "class:short", // 8
-         "thread"};  // 9
+         "thread",   // 9
+         "host"};   // 10
 
     protected final static String EOL = System.getProperty("line.separator", "\n");
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
@@ -215,6 +218,12 @@ implements Formatter {
                     sb.append(event.getPriority().getName());
                     sb.append("</priority>").append(EOL);
                     break;
+                
+                case TYPE_HOST:
+                    sb.append("<host>");
+                    sb.append(getHost(event.getContextMap()));
+                    sb.append("</host>");
+                    break;
             }
         }
         sb.append("</log-entry>");
@@ -243,6 +252,23 @@ implements Formatter {
         return result;
     }
 
+    private String getHost(ContextMap ctxMap) {
+        String result = "Unknown-host";
+        
+        if (ctxMap != null) {
+            Object context = ctxMap.get("objectModel");
+            if (context != null && context instanceof Map) {
+                // Get the request
+                Request request = ObjectModelHelper.getRequest((Map)context);
+                if (request != null) {
+                    result = request.getHeader("host");
+                }
+            }
+        }
+        
+        return result;
+    }
+    
     /**
      * Find the request id that is being processed.
      */
