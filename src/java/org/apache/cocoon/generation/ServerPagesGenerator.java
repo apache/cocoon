@@ -91,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.3 2003/09/04 14:53:51 cziegeler Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.4 2003/10/07 16:07:33 vgritsenko Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -143,10 +143,11 @@ public class ServerPagesGenerator extends ServletGenerator
      *         is currently not cacheable.
      */
     public Serializable getKey() {
-        Object generatorkey = generator.getKey();
-        if (generatorkey==null)
+        Object key = generator.getKey();
+        if (key == null) {
             return this.inputSource.getURI();
-        return this.inputSource.getURI() + '-' + generatorkey;
+        }
+        return this.inputSource.getURI() + '-' + key;
     }
 
     /**
@@ -198,6 +199,7 @@ public class ServerPagesGenerator extends ServletGenerator
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         }
+
         try {
             this.generator = (AbstractServerPage) programGenerator.load(this.manager,
                     this.inputSource, markupLanguage, programmingLanguage, this.resolver);
@@ -255,7 +257,7 @@ public class ServerPagesGenerator extends ServletGenerator
         locator.setSystemId(this.inputSource.getURI());
         this.contentHandler.setDocumentLocator(locator);
 
-        // log exception and ensure that generator is released.
+        // Log exception and ensure that generator is released.
         try {
             generator.generate();
         } catch (IOException e) {
@@ -271,8 +273,9 @@ public class ServerPagesGenerator extends ServletGenerator
             getLogger().debug("Exception in generate()", e);
             throw new ProcessingException("Exception in ServerPagesGenerator.generate()", e);
         } finally {
-            if (generator != null)
+            if (generator != null) {
                 programGenerator.release(generator);
+            }
             generator = null;
         }
 
@@ -286,11 +289,11 @@ public class ServerPagesGenerator extends ServletGenerator
      */
     public void recycle() {
         if (this.generator != null) {
-            programGenerator.release(this.generator);
+            this.programGenerator.release(this.generator);
             this.generator = null;
         }
         if (this.inputSource != null) {
-            this.resolver.release( this.inputSource );
+            this.resolver.release(this.inputSource);
             this.inputSource = null;
         }
         if (this.completionPipe != null) {
@@ -304,8 +307,9 @@ public class ServerPagesGenerator extends ServletGenerator
      * dispose
      */
     public void dispose() {
-        manager.release(this.programGenerator);
+        this.manager.release(this.programGenerator);
         this.programGenerator = null;
+        this.manager = null;
     }
 
     /* Completion pipe */

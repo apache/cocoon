@@ -85,7 +85,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.4 2003/08/12 01:41:33 vgritsenko Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.5 2003/10/07 16:07:33 vgritsenko Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -219,14 +219,21 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                   String markupLanguageName,
                                   String programmingLanguageName,
                                   SourceResolver resolver)
-        throws Exception {
+    throws Exception {
 
         final Source source = resolver.resolveURI(fileName);
-        return load(newManager, source, markupLanguageName, programmingLanguageName, resolver);
+        try {
+            return load(newManager, source, markupLanguageName, programmingLanguageName, resolver);
+        } finally {
+            resolver.release(source);
+        }
     }
 
     /**
-     * Load a program built from an XML document written in a <code>MarkupLanguage</code>
+     * Load a program built from an XML document written in a <code>MarkupLanguage</code>.
+     *
+     * This method does not releases passed source object. Caller of the method must release
+     * source when needed.
      *
      * @param source The input document's <code>File</code>
      * @param markupLanguageName The <code>MarkupLanguage</code> in which the input document is written
@@ -239,7 +246,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                   String markupLanguageName,
                                   String programmingLanguageName,
                                   SourceResolver resolver)
-            throws Exception {
+    throws Exception {
 
         final String id = source.getURI();
 
@@ -399,9 +406,9 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             if (programInstance instanceof Recomposable) {
                 ((Recomposable) programInstance).recompose(newManager);
             }
+
             return (programInstance);
         } finally {
-            resolver.release(source);
             this.markupSelector.release(markupLanguage);
             this.languageSelector.release(programmingLanguage);
         }
