@@ -52,6 +52,8 @@ package org.apache.cocoon.caching;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
+
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -62,7 +64,7 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.2 2003/07/13 03:10:10 ghoward Exp $
+ * @version CVS $Id: Cache.java,v 1.3 2003/07/31 14:28:18 cziegeler Exp $
  */
 public interface Cache
 extends Component {
@@ -78,7 +80,7 @@ extends Component {
      * @param response    the cached response
      */
     void store(Map              objectModel,
-               PipelineCacheKey key,
+               Serializable     key,
                CachedResponse   response)
     throws ProcessingException;
 
@@ -88,7 +90,7 @@ extends Component {
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      */
-    CachedResponse get(PipelineCacheKey key);
+    CachedResponse get(Serializable key);
 
     /**
      * Remove a cached response.
@@ -96,7 +98,7 @@ extends Component {
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      */
-    void remove(PipelineCacheKey key);
+    void remove(Serializable key);
     
     /**
      * clear cache of all cached responses 
@@ -106,5 +108,5 @@ extends Component {
     /**
      * See if a response is cached under this key.
      */
-    boolean containsKey(PipelineCacheKey key);
+    boolean containsKey(Serializable key);
 }
