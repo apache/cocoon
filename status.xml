@@ -170,12 +170,6 @@
     </action>
 
     <action context="code">
-      EventRecorder classes in o.a.c.transformation.helpers package are similar
-      to SaxBuffer. SaxBuffer should be extended (if it misses some functionality),
-      and EventRecorder deprecated and removed.
-    </action>
-
-    <action context="code">
       XMLize exception handling so that error pages can become more
       semantically meaningful. Currently all XSP compilation errors are
       stored in a single string. With XMLized exceptions we could display
@@ -201,6 +195,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="remove">
+     Removed EventRecorder (in o.a.c.t.helpers package).
+   </action>
    <action dev="AG" type="remove">
      Removed deprecated Pizza compiler support in XSP.
    </action>
@@ -222,23 +219,23 @@
      Polish i18n for CForms.
    </action>
    <action dev="CZ" type="update">
-    Create proxies for pooled components. Pooled components can now be used in the same
-    way as thread safe components, the client code does not need to know if they are pooled anymore.
+     Create proxies for pooled components. Pooled components can now be used in the same
+     way as thread safe components, the client code does not need to know if they are pooled anymore.
    </action>
    <action dev="CZ" type="update">
-    Move XSP logicsheets from the databases block to the xsp block.
+     Move XSP logicsheets from the databases block to the xsp block.
    </action>
    <action dev="CZ" type="update">
-    Move XSP logicsheets from the session-fw block to the xsp block.
+     Move XSP logicsheets from the session-fw block to the xsp block.
    </action>
    <action dev="TC" type="add">
-    javaflow: updated to the API change,
-    lazy method lookups,
-    cleaner context handling,
-    for the moment removed the dependency to the form block
+     javaflow: updated to the API change,
+     lazy method lookups,
+     cleaner context handling,
+     for the moment removed the dependency to the form block
    </action>
    <action dev="JH" type="fix" fixes-bug="33097">
-    Fixed caching of i18n bundles when using multiple locations.
+     Fixed caching of i18n bundles when using multiple locations.
    </action>
    <action dev="SW" type="add">
      Add an experimental lazy loading in the service manager that dramatically speeds up Cocoon init time
@@ -259,7 +256,7 @@
      esql: added support for derby
    </action>
    <action dev="LG" type="add" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
-     initial revision of new block: Cocoon Templates
+     Initial revision of new block: Cocoon Templates
    </action>
    <action dev="JQ" type="add">
      Added querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
@@ -429,6 +426,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      Deprecate EventRecorder (in o.a.c.t.helpers package). It will be
+      removed starting with Cocoon 2.2.
+    </action>
     <action dev="VG" type="fix" fixes-bug="26107">
       XSP Block: Note in the documentation that XSP namespace must be declared
       on the <code>xsp:page</code> element.
