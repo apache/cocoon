@@ -72,8 +72,6 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.servlet.multipart.PartOnDisk;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.webapps.authentication.AuthenticationManager;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -690,19 +688,18 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      * Get the current user
      */
     protected String getUser() {
-            AuthenticationManager authManager = null;
-            try {
-                authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-                RequestState rs = authManager.getState();
-            return rs.getHandler().getUserId();
-            } catch (ServiceException ignore) {
-                // ignore this
+        PortalService service = null;
+        try {
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            return service.getComponentManager().getProfileManager().getUser().getUserName();
+        } catch (ServiceException ignore) {
+            // ignore this
         } finally {
-            this.manager.release(authManager);
-            }
+            this.manager.release(service);
+        }
         return null;
         
-        }
+    }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBasketActions()
