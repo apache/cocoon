@@ -2,12 +2,14 @@
   package org.apache.cocoon.components.xpointer.parser;
 
   import org.apache.cocoon.components.xpointer.*;
+  import java.util.HashMap;
 
   public class XPointerFrameworkParser implements XPointerFrameworkParserConstants {
     private XPointer xpointer = new XPointer();
+    private HashMap namespaces = new HashMap();
 
     public static void main(String [] args) throws Exception {
-      System.out.println("zal dit parsen: " + args[0]);
+      System.out.println("will parse this: " + args[0]);
       XPointerFrameworkParser xfp = new XPointerFrameworkParser(new java.io.StringReader(args[0]));
       xfp.pointer();
     }
@@ -126,8 +128,20 @@
       // when going outside the scheme data, swith back to the default lexical state
       token_source.SwitchTo(DEFAULT);
 
+      // parse schemeName in prefix and localName
+      String schemeNamespace = null, schemeLocalName = null;
+      int colonPos = schemeName.indexOf(':');
+      if (colonPos != -1) {
+         String schemePrefix = schemeName.substring(0, colonPos);
+         schemeNamespace = (String)namespaces.get(schemePrefix);
+         schemeLocalName = schemeName.substring(colonPos + 1);
+       } else {
+         schemeLocalName = schemeName;
+       }
+
+
       // add the pointer part
-      if (schemeName.equals("xmlns")) {
+      if (schemeNamespace == null && schemeLocalName.equals("xmlns")) {
         int eqPos = schemeData.indexOf("=");
         if (eqPos == -1)
           {if (true) throw new ParseException("xmlns scheme data should contain an equals sign");}
@@ -137,8 +151,11 @@
         String prefix = schemeData.substring(0, eqPos).trim();
         String namespace = schemeData.substring(eqPos + 1, schemeData.length()).trim();
         xpointer.addPart(new XmlnsPart(prefix, namespace));
-      } else if (schemeName.equals("xpointer")) {
+        namespaces.put(prefix, namespace);
+      } else if (schemeNamespace == null && schemeLocalName.equals("xpointer")) {
         xpointer.addPart(new XPointerPart(schemeData));
+      } else if ("http://apache.org/cocoon/xpointer".equals(schemeNamespace) && schemeLocalName.equals("elementpath")) {
+        xpointer.addPart(new ElementPathPart(schemeData));
       } else {
         xpointer.addPart(new UnsupportedPart(schemeName));
       }
@@ -213,18 +230,6 @@
     return retval;
   }
 
-  final private boolean jj_3R_7() {
-    if (jj_scan_token(QName)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_1() {
-    if (jj_3R_4()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
   final private boolean jj_3R_6() {
     if (jj_scan_token(NCName)) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
@@ -246,6 +251,18 @@
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     if (jj_scan_token(LBRACE)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    return false;
+  }
+
+  final private boolean jj_3R_7() {
+    if (jj_scan_token(QName)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    return false;
+  }
+
+  final private boolean jj_3_1() {
+    if (jj_3R_4()) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     return false;
   }

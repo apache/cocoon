@@ -66,12 +66,14 @@ PARSER_BEGIN(XPointerFrameworkParser)
   package org.apache.cocoon.components.xpointer.parser;
 
   import org.apache.cocoon.components.xpointer.*;
+  import java.util.HashMap;
 
   public class XPointerFrameworkParser {
     private XPointer xpointer = new XPointer();
+    private HashMap namespaces = new HashMap();
 
     public static void main(String [] args) throws Exception {
-      System.out.println("zal dit parsen: " + args[0]);
+      System.out.println("will parse this: " + args[0]);
       XPointerFrameworkParser xfp = new XPointerFrameworkParser(new java.io.StringReader(args[0]));
       xfp.pointer();
     }
@@ -266,8 +268,20 @@ void pointerPart():
       // when going outside the scheme data, swith back to the default lexical state
       token_source.SwitchTo(DEFAULT);
 
+      // parse schemeName in prefix and localName
+      String schemeNamespace = null, schemeLocalName = null;
+      int colonPos = schemeName.indexOf(':');
+      if (colonPos != -1) {
+         String schemePrefix = schemeName.substring(0, colonPos);
+         schemeNamespace = (String)namespaces.get(schemePrefix);
+         schemeLocalName = schemeName.substring(colonPos + 1);
+       } else {
+         schemeLocalName = schemeName;
+       }
+
+
       // add the pointer part
-      if (schemeName.equals("xmlns")) {
+      if (schemeNamespace == null && schemeLocalName.equals("xmlns")) {
         int eqPos = schemeData.indexOf("=");
         if (eqPos == -1)
           throw new ParseException("xmlns scheme data should contain an equals sign");
@@ -277,8 +291,11 @@ void pointerPart():
         String prefix = schemeData.substring(0, eqPos).trim();
         String namespace = schemeData.substring(eqPos + 1, schemeData.length()).trim();
         xpointer.addPart(new XmlnsPart(prefix, namespace));
-      } else if (schemeName.equals("xpointer")) {
+        namespaces.put(prefix, namespace);
+      } else if (schemeNamespace == null && schemeLocalName.equals("xpointer")) {
         xpointer.addPart(new XPointerPart(schemeData));
+      } else if ("http://apache.org/cocoon/xpointer".equals(schemeNamespace) && schemeLocalName.equals("elementpath")) {
+        xpointer.addPart(new ElementPathPart(schemeData));
       } else {
         xpointer.addPart(new UnsupportedPart(schemeName));
       }
