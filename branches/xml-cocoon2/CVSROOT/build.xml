@@ -185,7 +185,6 @@ by the main ones.
     <available property="jai.present" classname="com.sun.media.jai.codec.ImageCodec">
       <classpath refid="classpath"/>
     </available>
-    <available property="action.present"  file="action.inc"/>
   </target>
 
   <!-- =================================================================== -->
@@ -211,14 +210,6 @@ by the main ones.
     <copydir src="${build.src}" dest="${build.dest}">
       <include name="**/Manifest.mf"/>
       <include name="**/*.xsl"/>
-    </copydir>
-
-    <copydir src="proposals/actions" dest="${build.src}/org/apache/cocoon/acting">
-      <include name="*.java" if="action.present"/>
-    </copydir>
-    <copydir src="proposals/actions"
-        dest="${build.src}/org/apache/cocoon/components/language/makeup/sitemap/java">
-      <include name="sitemap.xsl" if="action.present"/>
     </copydir>
 
     <javac srcdir="${build.src}"
@@ -268,10 +259,6 @@ by the main ones.
       <include name="**/*.gif"/>
       <include name="**/*.jpg"/>
       <include name="**/*.png"/>
-    </copydir>
-
-    <copydir src="proposals/actions" dest="${build.war}">
-      <include name="sitemap.xmap" if="action.present"/>
     </copydir>
   </target>
 
