@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.serialization;
 
 import java.io.IOException;
@@ -28,18 +28,18 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:15:37 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-05 00:24:13 $
  *
  */
 public class FOPSerializer extends AbstractSerializer implements MessageListener {
 
     /**
-     * The FOP driver 
+     * The FOP driver
      */
     private Driver driver = null;
 
     /**
-     * Create the FOP driver 
+     * Create the FOP driver
      */
     public FOPSerializer() {
         this.driver = new Driver();
@@ -56,7 +56,7 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
         this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
     }
-    
+
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
      */
@@ -64,20 +64,20 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         this.driver.setWriter(new PrintWriter(out));
         this.setContentHandler(this.driver.getContentHandler());
      }
- 
-    /** 
-     * Receive notification of the end of a document. 
-     */ 
-    public void endDocument() throws SAXException { 
+
+    /**
+     * Receive notification of the end of a document.
+     */
+    public void endDocument() throws SAXException {
         super.endDocument();
-        try { 
-            driver.format(); 
-            driver.render(); 
-        } catch (IOException e) { 
-            throw new SAXException (e); 
-        } catch (FOPException e) { 
-            throw new SAXException (e); 
-        } 
+        try {
+            driver.format();
+            driver.render();
+        } catch (IOException e) {
+            throw new SAXException (e);
+        } catch (FOPException e) {
+            throw new SAXException (e);
+        }
     }
 
     /**
@@ -86,12 +86,12 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
     public String getMimeType() {
         return "application/pdf";
     }
-    
-    /** 
+
+    /**
      * Receive FOP events.
-     */ 
+     */
     public void processMessage (MessageEvent event) {
-        // XXX (SM) 
+        // XXX (SM)
         // we should consume the events in some meaningful way
         // for example formatting them on the metapipeline
     }

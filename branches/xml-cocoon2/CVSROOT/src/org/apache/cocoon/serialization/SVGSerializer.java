@@ -61,20 +61,20 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
         this.config = conf;
 
         try {
-        log.debug("Looking up " + Roles.PARSER);
+            log.debug("Looking up " + Roles.PARSER);
             // First, get a DOM parser for the DOM Builder to work with.
             super.factory= (Parser) this.manager.lookup(Roles.PARSER);
-    } catch (Exception e) {
-        log.error("Could not find component", e);
-        throw new ConfigurationException("Could not find Parser", e);
-    }
+        } catch (Exception e) {
+            log.error("Could not find component", e);
+            throw new ConfigurationException("Could not find Parser", e);
+        }
 
         // What image encoder do I use?
         String enc = this.config.getChild("encoder").getValue();
 
         try {
-        log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
-        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
+            log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
+            ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
             this.encoder = (ImageEncoder) selector.select(enc);
         } catch (Exception e) {
             log.error("Could not select " + Roles.IMAGE_ENCODER, e);
@@ -86,10 +86,13 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
         if (this.encoder instanceof Configurable) {
             ((Configurable)this.encoder).configure(conf);
         }
+
         // Transparent or a solid colour background?
         this.transparent = this.config.getChild("transparent").getValueAsBoolean(false);
+
         if (!transparent) {
             String bg = this.config.getChild("background").getValue("#FFFFFF").trim();
+
             if (bg.startsWith("#")) {
                 bg = bg.substring(1);
             }
