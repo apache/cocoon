@@ -23,8 +23,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.xml.XMLUtils;
-import org.w3c.dom.Document;
 
 public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
@@ -108,19 +106,15 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxMacro.xml";
         String outputURI = docBase + "jxMacro-output.xml";
 
-        Document expected = load(outputURI);
-        getLogger().error( XMLUtils.serializeNode( expected ) );
-        Document actual = generate(JX, inputURI, EMPTY_PARAMS);
-        getLogger().error( XMLUtils.serializeNode( actual ) );
-        assertEqual( expected, actual );
+        assertEqual( load(outputURI), generate(JX, inputURI, EMPTY_PARAMS) );
     }
 
-//    public void testJXDynamicMacro() throws Exception {
-//        String inputURI = docBase + "jxDynamicMacro.xml";
-//        String outputURI = docBase + "jxDynamicMacro-output.xml";
-//
-//        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-//    }
+    public void testJXDynamicMacro() throws Exception {
+        String inputURI = docBase + "jxDynamicMacro.xml";
+        String outputURI = docBase + "jxDynamicMacro-output.xml";
+
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+    }
 
     public void testJXSet() throws Exception {
         String inputURI = docBase + "jxSet.xml";
