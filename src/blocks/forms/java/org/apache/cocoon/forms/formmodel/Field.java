@@ -385,7 +385,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * All Cocoon-supported protocols can be used.
      * The format of the XML produced by the source should be the
      * same as in case of inline specification of the selection list,
-     * thus the root element should be a <code>wd:selection-list</code>
+     * thus the root element should be a <code>fd:selection-list</code>
      * element.
      * @param uri The URI of the source.
      */
@@ -399,8 +399,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * (Java collection or array, or Javascript array) of objects. Each object
      * belonging to the collection should have a <em>value</em> property and a
      * <em>label</em> property, whose values are used to specify the <code>value</code>
-     * attribute and the contents of the <code>wd:label</code> child element
-     * of every <code>wd:item</code> in the list.
+     * attribute and the contents of the <code>fd:label</code> child element
+     * of every <code>fd:item</code> in the list.
      * <p>Access to the values of the above mentioned properties is done
      * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
      * @param model The collection used as a model for the selection list.

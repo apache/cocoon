@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,10 +39,11 @@ import java.util.Locale;
  * SelectionList implementation that always reads its content from the source
  * each time it is requested.
  *
- * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
- * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
- * 
- * @version $Id: DynamicSelectionList.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * <p>Note: the class {@link SelectionListBuilder} also interprets the same
+ * <code>fd:selection-list</code> XML, so if anything changes here to how that
+ * XML is interpreted, it also needs to change over there and vice versa.</p>
+ *
+ * @version $Id$
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;
@@ -61,9 +62,10 @@ public class DynamicSelectionList implements SelectionList {
 
     /*
      * This method is only used by a test case and by the public version
-     * of generateSaxFragment. 
+     * of generateSaxFragment.
      */
-    void generateSaxFragment(ContentHandler contentHandler, Locale locale, Source source) throws ProcessingException, SAXException, IOException {
+    void generateSaxFragment(ContentHandler contentHandler, Locale locale, Source source)
+    throws ProcessingException, SAXException, IOException {
         SelectionListHandler handler = new SelectionListHandler(locale);
         handler.setContentHandler(contentHandler);
         SourceUtil.toSAX(serviceManager, source, null, handler);
