@@ -1,18 +1,5 @@
-package org.apache.butterfly.components.pipeline.impl;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
-
-import java.io.IOException;
-
-import junit.framework.TestCase;
-
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-
 /*
- * Copyright 2004, Ugo Cei.
+ * Copyright 1999-2004 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +13,19 @@ import org.springframework.core.io.ClassPathResource;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.butterfly.components.pipeline.impl;
+
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
+
+import java.io.IOException;
+
+import junit.framework.TestCase;
+
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Description of GroovySitemapTestCase.
