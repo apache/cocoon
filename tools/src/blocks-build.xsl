@@ -382,19 +382,6 @@
 
     <target name="{$block-name}-compile" depends="{$block-name}-build,{$block-name}-prepare,{$block-name}-mocks">
 
-      <copy filtering="on" todir="${{build.blocks}}/{$block-name}/dest">
-        <fileset dir="${{blocks}}/{$block-name}/java">
-          <patternset refid="unprocessed.sources"/>
-        </fileset>
-      </copy>
-
-      <copy filtering="off" todir="${{build.blocks}}/{$block-name}/dest">
-        <fileset dir="${{blocks}}/{$block-name}/java">
-          <include name="**/Manifest.mf"/>
-          <include name="META-INF/**"/>
-        </fileset>
-      </copy>
-
       <!-- This is a little bit tricky:
            As the javac task checks, if a src directory is available and
            stops if its not available, we use the following property
@@ -426,6 +413,19 @@
         <classpath refid="classpath"/>
         <exclude name="**/samples/**/*.java"/>
       </javac>
+
+      <copy filtering="on" todir="${{build.blocks}}/{$block-name}/dest">
+        <fileset dir="${{blocks}}/{$block-name}/java">
+          <patternset refid="unprocessed.sources"/>
+        </fileset>
+      </copy>
+
+      <copy filtering="off" todir="${{build.blocks}}/{$block-name}/dest">
+        <fileset dir="${{blocks}}/{$block-name}/java">
+          <include name="**/Manifest.mf"/>
+          <include name="META-INF/**"/>
+        </fileset>
+      </copy>
 
       <jar jarfile="${{build.blocks}}/{$block-name}-block.jar" index="true">
         <fileset dir="${{build.blocks}}/{$block-name}/dest">
