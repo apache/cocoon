@@ -77,10 +77,10 @@
       <xsp:include>java.util.Properties</xsp:include>
     </xsp:structure>
     <xsp:logic>
-      static Properties _properties;
+      static Properties _sendmail_properties;
       static {
-        _properties = new Properties();
-        _properties.put("mail.smtp.host","127.0.0.1");
+        _sendmail_properties = new Properties();
+        _sendmail_properties.put("mail.smtp.host","127.0.0.1");
       }
     </xsp:logic>
     <xsl:apply-templates/>
@@ -95,23 +95,23 @@
   <xsl:variable name="smtphost"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:smtphost"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     try {
-      Properties _properties = new Properties(this._properties);
+      Properties _sendmail_properties = new Properties(this._properties);
       if (!"null".equals(String.valueOf(<xsl:copy-of select="$smtphost"/>))) {
-        _properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphost"/>));
+        _sendmail_properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphost"/>));
       }
       Session _sendmail_session = Session.getDefaultInstance(_properties,null);
-      Message _message = new MimeMessage(_sendmail_session);
-      InternetAddress _from = new InternetAddress(String.valueOf(<xsl:copy-of select="$from"/>));
-      _message.setFrom(_from);
-      InternetAddress _to = new InternetAddress(String.valueOf(<xsl:copy-of select="$to"/>));
-      _message.setRecipient(Message.RecipientType.TO,_to);
+      Message _sendmail_message = new MimeMessage(_sendmail_session);
+      InternetAddress _sendmail_from = new InternetAddress(String.valueOf(<xsl:copy-of select="$from"/>));
+      _message.setFrom(_sendmail_from);
+      InternetAddress _sendmail_to = new InternetAddress(String.valueOf(<xsl:copy-of select="$to"/>));
+      _message.setRecipient(Message.RecipientType.TO,_sendmail_to);
       _message.setSentDate(new Date());
       _message.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
       _message.setText(String.valueOf(<xsl:copy-of select="$body"/>));
-      Transport.send(_message);
-    } catch (AddressException e) {
+      Transport.send(_sendmail_message);
+    } catch (AddressException _sendmail_exception) {
       <error type="user">Your email address is invalid.</error>
-    } catch (MessagingException e) {
+    } catch (MessagingException _sendmail_exception) {
       <error type="server">An error occured while sending email.</error>
     }
   </xsp:logic>
