@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- $Id: build.xml,v 1.4 2004/07/27 15:52:32 ugo Exp $ -->
+
+<project default="webapp" basedir="." name="butterfly">
+
+  <target name="setProps" unless="setProps"
+    description="Set up the properties">
+    <property file="build.properties"/>
+  </target>
+  
+  <target name="init" depends="setProps"
+    description="Initialize the properties">
+    
+    <tstamp/>
+
+    <property name="dest" location="${basedir}/build"/>
+    <property name="webapp.dir" value="${dest}/webapp"/>
+    <property name="classes.dir" value="${dest}/classes"/>
+    <property name="test.dir" value="${dest}/test"/>
+  	<property name="lib.dir" location="lib"/>
+  	<property name="jetty.dir" value="tools/jetty"/>
+  	
+    <path id="classpath.path">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+        <fileset dir="lib/endorsed">
+          <include name="*.jar"/>
+        </fileset>
+    </path>
+
+  </target>
+
+  <target name="clean" depends="init"
+    description="Clean up build directories">
+    <delete dir="${dest}"/>
+  </target>
+  
+  <target name="compile" depends="init"
+    description="Compile Java classes"> 
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src/java" destdir="${classes.dir}" source="1.4" target="1.4" debug="yes"
+      excludes="**/*Test.java">
+      <classpath>
+        <path refid="classpath.path"/>
+      </classpath>
+    </javac>
+    <!-- Copy the Log4j properties file -->
+    <copy file="src/java/log4j.properties" todir="${classes.dir}"/>
+  </target>
+
+  <target name="webapp" depends="compile"
+    description="Build web application">
+    <copy todir="${webapp.dir}">
+      <fileset dir="src/webapp" excludes=".svn"/>
+    </copy>
+    <copy todir="${webapp.dir}/WEB-INF/lib">
+      <fileset dir="lib" includes="*.jar"/>
+    </copy>
+    <copy todir="${webapp.dir}/WEB-INF/classes">
+      <fileset dir="${classes.dir}"/>
+    </copy>
+    <!-- Copy applicationContext file -->
+    <copy file="src/java/applicationContext.xml" todir="${webapp.dir}/WEB-INF"/>
+  </target>
+	
+</project>

@@ -15,10 +15,10 @@
  */
 package org.apache.butterfly.environment;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.io.InputStream;
 
 /**
  * Defines an interface to provide client context information .

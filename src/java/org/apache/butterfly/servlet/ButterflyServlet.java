@@ -30,6 +30,8 @@ import org.apache.butterfly.environment.http.HttpEnvironment;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 /**
@@ -43,14 +45,21 @@ public class ButterflyServlet extends HttpServlet {
     private ServletContext servletContext;
     private String containerEncoding;
     private String defaultFormEncoding;
+    /** The Spring application context */
+    private WebApplicationContext applicationContext;
 
     /* (non-Javadoc)
      * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
      */
     public void init(ServletConfig conf) throws ServletException {
         this.servletContext = conf.getServletContext();
+        this.applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
+        /* FIXME: GenericServlet.getInitParameter causes an NPE. WTF???
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
+        */
+        this.containerEncoding = "ISO-8859-1";
+        this.defaultFormEncoding = "ISO-8859-1";
     }
     
     /* (non-Javadoc)

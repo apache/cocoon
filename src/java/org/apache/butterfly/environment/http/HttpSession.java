@@ -16,9 +16,9 @@
  */
 package org.apache.butterfly.environment.http;
 
-import org.apache.butterfly.environment.Session;
-
 import java.util.Enumeration;
+
+import org.apache.butterfly.environment.Session;
 
 /**
  *
