@@ -13,7 +13,7 @@
 
   <program-generator>
     <parameter name="auto-reload" value="true"/>
-    <parameter name="root-package" value="org.apache.cocoon"/>
+    <parameter name="root-package" value="org.apache.cocoon.www"/>
   </program-generator>
 
   <programming-languages>
