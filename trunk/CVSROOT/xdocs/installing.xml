@@ -387,6 +387,57 @@ You could also make these three configuration changes via
 
 </s2>
 
+<s2 title="Installing Cocoon on BEA WebLogic">
+ <p>WLS 5.1 implements Servlet 2.2. so it plugs in easily. Here's a quick recipe:</p>
+
+ <ul>
+  <li>Add the xerces, xalan, fop, servlet, and cocoon JAR files (from the
+   distribution) to your CLASSPATH. (See below). If you're using Java
+   2, you should also add the tools.jar file from the JDK distribution
+   to your CLASSPATH.</li>
+  <li>Create a new subdirectory tree of your WLS run time directory
+   "cocoonwar/WEB-INF" and copy the default web.xml file (from the
+   src directory of the distribution) there.</li>
+  <li>Copy the cocoon.properties from the conf directory of the
+   distribution to cocoonwar/WEB-INF and updated the web.xml file to 
+   refer to it.</li>
+  <li>Copy the samples directory from the distribution to cocoonwar</li>
+  <li>Map the web application into the WLS URI name space by adding the
+   following line to your weblogic.properties file: <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
+  </li>
+ </ul>
+
+ <p>Start WLS, point your browser at <em>http://localhost:7001/cocoon/samples/index.xml</em>
+ and away you go.</p>
+
+ <s3 title="Classpaths and XSP">
+ 
+ <p>To support hot deployment of EJB's and Servlets, WebLogic Server
+  uses its own class loader with its own classpath (the "WebLogic
+  classpath"). Normally you'd put all the WebLogic Server container
+  code, JDBC drivers, etc. in your Java CLASSPATH (so that WebLogic
+  Server can start up) and add all your application code (stuff that
+  needs to be able to be redeployable) to the WebLogic classpath.</p>
+
+  <p>Cocoon is effectively "container" code, and the XSP processor uses
+  dynamic classloading which only understands the Java CLASSPATH, so
+  you should put all of the Cocoon jars in CLASSPATH.</p>
+
+  <p>The big problem with this is that you can't use any code that loads
+  from the WebLogic classpath within XSP's. This includes all of the
+  WebLogic API, so is a PITA. To overcome this, either the way Cocoon
+  loads classes needs to be modified, or the
+  WebLogic Server class loader needs to be disabled (in which case you
+  have to be willing to live without hot redeployment).</p>
+
+  <p>To disable the WebLogic class loader, put your application classes,
+  the Cocoon jars and _all_ of the WebLogic Server stuff into the Java
+  CLASSPATH add -Dweblogic.system.disableWeblogicClassPath=true to the
+  Java command at the end of you WebLogic start script.</p>
+ </s3>
+
+</s2>
+
   <s2 title="Installing Cocoon on other platforms">
    <p>Yet to be written! <em>Volunteers welcome!</em></p>
   </s2>
@@ -573,6 +624,11 @@ You could also make these three configuration changes via
    <td>Netscape-Enterprise/3.6 SP3</td>
    <td>ServletExec 2.2</td>
    <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP4</td>
+   <td colspan="2">BEA WebLogic Server 5.1 SP3</td>
+   <td>Sun JDK 1.2.2</td>
   </tr>
   </table>
 
