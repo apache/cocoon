@@ -195,6 +195,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BD" type="add" fixes-bug="19619" due-to="Joerg Heinicke" due-to-email="joerg.heinicke@gmx.de">
+   Hello World sample added for the SWF block (although page2swf.xsl contains incomplete font definition).
+  </action>
   <action dev="CZ" type="update">
    Redesign/modularizing the authentication and session framework.
   </action>
