@@ -11,7 +11,7 @@
   <answer>
    <p>The short answer is that this is not a Cocoon issue. You need to
     read up on XSLT usage. Please see 
-    <link href="../mail-lists.html">other resources for XSLT,</link>
+    <link href="http://cocoon.apache.org/community/mail-lists.html">other resources for XSLT,</link>
     specifically, the XSL FAQ and discussion lists.
    </p>
    <p>The long answer is that you need to use the XSLT function

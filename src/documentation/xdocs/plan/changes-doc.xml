@@ -2,7 +2,7 @@
 <!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "../dtd/changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.1 2003/03/09 00:08:09 pier Exp $
+  $Id: changes-doc.xml,v 1.2 2003/07/03 14:47:57 cziegeler Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>
@@ -40,7 +40,7 @@
   </action>
     <action dev="DC" type="add">
     Added section to the 
-    <link href="../mail-lists.html">Mailing Lists</link> document to describe
+    <link href="http://cocoon.apache.org/community/mail-lists.html">Mailing Lists</link> document to describe
     the new <code>cocoon-docs</code> mailing list.
   </action>
     <action dev="NKB" type="add">
@@ -125,7 +125,7 @@
    and fixed some broken links.
   </action>
     <action dev="DC" type="add" fixes-bug="8989" due-to="Andreas Hochsteger" due-to-email="e9625392@student.tuwien.ac.at">
-   Added new <link href="../link/index.html">Cocoon Links</link> section
+   Added new <link href="http://cocoon.apache.org/link/index.html">Cocoon Links</link> section
    with a collection of links to various external sources.
   </action>
     <action dev="DS" type="update">

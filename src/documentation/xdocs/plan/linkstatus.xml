@@ -24,7 +24,7 @@ External links are a bit trickier. It is not really fair to banish them just
 because they were not accessible on the day that a link verification was run.
 Actually the external link situation is going to become an
 issue, now that we have accepted a whole section of 
-<link href="../link/index.html">Cocoon Links</link>
+<link href="http://cocoon.apache.org/link/index.html">Cocoon Links</link>
 docs devoted to external resources.
 </p>
 
