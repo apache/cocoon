@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: Repeater.java,v 1.5 2004/03/15 21:50:08 joerg Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;
@@ -279,7 +279,8 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
         WidgetDefinition widgetDefinition = repeaterDefinition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null)
-            throw new SAXException("Repeater \"" + getFullyQualifiedId() + "\" contains no widget with id \"" + widgetId + "\".");
+            throw new SAXException("Repeater \"" + getFullyQualifiedId() + "\" at " + this.getLocation()
+                                   + " contains no widget with id \"" + widgetId + "\".");
         widgetDefinition.generateLabel(contentHandler);
     }
 
