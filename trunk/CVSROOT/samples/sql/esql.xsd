@@ -23,27 +23,29 @@
           <element name="esql:query" type="string"/>
           <element name="esql:results" minOccurs="0" maxOccurs="1">
             <complexType mixed="true">
-              <!-- strings and stuff from other namespaces -->
               <element name="esql:row-results" minOccurs="0" maxOccurs="1">
                 <complexType mixed="true">
-                  <!-- strings and stuff from other namespaces -->
-                  <element name="esql:get-columns" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-string" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-date" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-time" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-timestamp" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-boolean" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-double" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-float" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-int" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-long" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-short" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-xml" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-row-position" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-column-name" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-column-label" minOccurs="0" maxOccurs="unbounded"/>
-                  <element name="esql:get-column-type-name" minOccurs="0" maxOccurs="unbounded"/>
-                  <!-- strings and stuff from other namespaces -->
+                  <sequence>
+                    <choice>
+                      <any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+                      <element name="esql:get-columns" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-string" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-date" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-time" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-timestamp" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-boolean" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-double" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-float" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-int" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-long" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-short" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-xml" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-row-position" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-column-name" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-column-label" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-column-type-name" minOccurs="0" maxOccurs="unbounded"/>
+                    </choice>
+                  </sequence>
                 </complexType>
               </element>
               <!-- strings and stuff from other namespaces -->
