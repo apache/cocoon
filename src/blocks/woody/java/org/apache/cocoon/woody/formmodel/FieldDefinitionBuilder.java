@@ -54,7 +54,6 @@ import java.util.Iterator;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.event.ValueChangedListener;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
@@ -77,7 +76,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
         buildSelectionList(widgetElement, fieldDefinition);
         
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedEvent.class).iterator();
+        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {
             fieldDefinition.addValueChangedListener((ValueChangedListener)iter.next());
         }

@@ -52,10 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import java.util.Iterator;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
  * Builds {@link ActionDefinition}s.
@@ -69,7 +68,7 @@ public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
         actionDefinition.setActionCommand(actionCommand);
 
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
+        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
         while (iter.hasNext()) {
             actionDefinition.addActionListener((ActionListener)iter.next());
         }
