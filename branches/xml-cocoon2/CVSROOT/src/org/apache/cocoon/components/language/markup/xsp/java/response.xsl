@@ -12,8 +12,8 @@
 <!-- XSP Response logicsheet for the Java language -->
 <xsl:stylesheet
   version="1.0"
-  xmlns:xsp="http://xml.apache.org/xsp"
-  xmlns:xsp-response="http://xml.apache.org/xsp/response"
+  xmlns:xsp="http://xml.apache.org/cocoon/xsp"
+  xmlns:xsp-response="http://xml.apache.org/cocoon/xsp/response"
 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >

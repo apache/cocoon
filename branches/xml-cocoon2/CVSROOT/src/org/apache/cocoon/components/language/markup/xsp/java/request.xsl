@@ -9,11 +9,11 @@
  ***************************************************************************** 
 -->
 
-<!-- XSP Response logicsheet for the Java language -->
+<!-- XSP Request logicsheet for the Java language -->
 <xsl:stylesheet
   version="1.0"
-  xmlns:xsp="http://xml.apache.org/xsp"
-  xmlns:xsp-request="http://xml.apache.org/xsp/request"
+  xmlns:xsp="http://xml.apache.org/cocoon/xsp"
+  xmlns:xsp-request="http://xml.apache.org/cocoon/xsp/request"
 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
