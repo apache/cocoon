@@ -354,7 +354,7 @@
       |            enable it on one xslt-processor, enable it on all.
       +-->
   <xslt-processor logger="core.xslt-processor">
-     <parameter name="use-store" value="false"/>
+     <parameter name="use-store" value="true"/>
      <parameter name="incremental-processing" value="false"/>
   </xslt-processor>
 
@@ -366,7 +366,7 @@
   <component logger="core.xslt-processor"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
              class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
+     <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </component>
   
@@ -376,7 +376,7 @@
   <component logger="core.xslt-processor"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
              class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
+     <parameter name="use-store" value="true"/>
      <parameter name="incremental-processing" value="false"/>
      <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
   </component>
@@ -390,7 +390,7 @@
   <component logger="core.xslt-processor"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
              class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
+     <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
   </component>
   +-->
@@ -417,13 +417,28 @@
          +-->
      <parameter name="maxobjects" value="100"/>
 
-     <!-- Turns swapping of the objects into persistent cache on and off. -->
-     <parameter name="use-persistent-cache" value="true"/>
   </transient-store>
+  
+  <!--+
+      | Store: generic store. The default implementation is an in-memory store backed by the
+      | persistent store (see below). This forms a two-stage cache composed of a fast in-memory MRU
+      | front-end and a persistent back-end storing less used objects.
+      +-->
+  <store logger="core.store">
+
+     <!--+
+         | Indicates how many objects will be hold in the cache.
+         |
+         | When the number of maxobjects has been reached. The last object
+         | in the cache will be thrown out.
+         +-->
+     <parameter name="maxobjects" value="100"/>
+
+  </store>
 
   <!--+
       | Persistent Store: holds objects that have to survive shutdown.
-      | WARNING: FilesystemStore is broken. Cocoon uses DefaultStore based
+      | WARNING: FilesystemStore is broken. Cocoon uses DefaultPersistentStore based
       | on the Avalon Excalibur JispStore instead.
       |
       | Common configuration parameters:
@@ -439,8 +454,7 @@
       |  indexfile: Name of the index file to use. Defaults to cocoon.idx
       |  order: FIXME: put description here.
       +-->
-  <persistent-store class="org.apache.cocoon.components.store.impl.DefaultStore"
-                    logger="core.store.persistent">
+  <persistent-store logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
     <parameter name="order" value="2701"/>
   </persistent-store>
