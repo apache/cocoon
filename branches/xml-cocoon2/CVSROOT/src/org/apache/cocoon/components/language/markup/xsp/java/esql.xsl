@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.2 2000-10-26 21:01:46 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.3 2000-10-26 21:03:40 balld Exp $-->
 <!--
 
  ============================================================================
@@ -111,7 +111,6 @@
 			<xsp:include>java.text.DecimalFormat</xsp:include>
 		</xsp:structure>
 		<xsp:logic>
-		 static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
                  class EsqlSession {
                   Connection connection=null;
                   boolean close_connection = true;
