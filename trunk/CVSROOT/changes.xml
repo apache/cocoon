@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.50 2000-04-04 13:40:21 stefano Exp $
+  $Id: changes.xml,v 1.51 2000-04-08 00:36:15 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Ovidiu Predescu" due-to-email="ovidiu@cup.hp.com">
+   Fixed a number of NPE when using Cocoon from the command line.
+  </action>
+  <action dev="RR" type="fix" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+   Fixed xsp:expr [XSPPage.xspExpr()] to ensure that node values are created by the same document instance.
+  </action>
   <action dev="SM" type="fix" due-to="Andrew Sheehan" due-to-email="AJSheehan@doe.mass.edu">
    Fixed problem with Sun ProjectX compilation that failed on some platforms.
   </action>
