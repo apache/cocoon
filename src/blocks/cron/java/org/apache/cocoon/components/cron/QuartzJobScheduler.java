@@ -69,7 +69,14 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.quartz.*;
+import org.quartz.CronTrigger;
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+import org.quartz.Trigger;
 
 import org.quartz.impl.DirectSchedulerFactory;
 
@@ -84,7 +91,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.5 2003/09/05 10:21:28 giacomo Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.6 2003/09/18 08:54:18 giacomo Exp $
  *
  * @since 2.1.1
  */
@@ -135,6 +142,9 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
     /** The group name */
     static final String DEFAULT_QUARTZ_JOB_GROUP = "Cocoon";
+
+    /** The scheduler name */
+    static final String DEFAULT_QUARTZ_SCHEDULER_NAME = "Cocoon";
 
     /** The PooledExecutor instance */
     private PooledExecutor m_executor;
@@ -251,11 +261,14 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void configure(final Configuration config)
     throws ConfigurationException {
-        final ThreadPool pool = createThreadPool(config.getChild("thread-pool"));
-
         try {
-            DirectSchedulerFactory.getInstance().createScheduler(pool, new RAMJobStore());
-            m_scheduler = DirectSchedulerFactory.getInstance().getScheduler();
+            // If cocoon reloads (or is it the container that reload us?) 
+            // we cannot create the same scheduler again
+            final String runID = new Date().toString().replace(' ', '_');
+            final ThreadPool pool = createThreadPool(config.getChild("thread-pool"));
+            DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,
+                                                                 new RAMJobStore());
+            m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
         } catch (final SchedulerException se) {
             throw new ConfigurationException("cannot create a quartz scheduler", se);
         }
@@ -280,9 +293,12 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             }
 
             m_scheduler.shutdown(m_shutdownGraceful);
+            m_scheduler = null;
         } catch (final SchedulerException se) {
             getLogger().error("failure during scheduler shutdown", se);
         }
+
+        m_executor = null;
     }
 
     /* (non-Javadoc)
@@ -677,7 +693,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.5 2003/09/05 10:21:28 giacomo Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.6 2003/09/18 08:54:18 giacomo Exp $
      */
     private static class ThreadPool
     extends AbstractLogEnabled
