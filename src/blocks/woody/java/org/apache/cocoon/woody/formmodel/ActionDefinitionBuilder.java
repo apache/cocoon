@@ -63,7 +63,7 @@ public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         ActionDefinition actionDefinition = createDefinition();
         setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+        setDisplayData(widgetElement, actionDefinition);
 
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
         actionDefinition.setActionCommand(actionCommand);

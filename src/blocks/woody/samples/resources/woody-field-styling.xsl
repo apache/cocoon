@@ -58,7 +58,7 @@
     Generic wi:field : produce an <input>
   -->
   <xsl:template match="wi:field">
-    <input name="{@id}" value="{wi:value}" title="{wi:help}">
+    <input name="{@id}" value="{wi:value}" title="{wi:hint}">
       <xsl:if test="wi:styling">
         <xsl:copy-of select="wi:styling/@*"/>
       </xsl:if>
@@ -94,7 +94,7 @@
     <xsl:choose>
       <!-- radio buttons -->
       <xsl:when test="$liststyle='radio'">
-        <span title="{wi:help}">
+        <span title="{wi:hint}">
         <xsl:variable name="vertical" select="string(wi:styling/@list-orientation) != 'horizontal'"/>
         <xsl:variable name="id" select="@id"/>
         <xsl:for-each select="wi:selection-list/wi:item">
@@ -113,7 +113,7 @@
       </xsl:when>
       <!-- dropdown or listbox -->
       <xsl:otherwise>
-        <select title="{wi:help}" name="{@id}">
+        <select title="{wi:hint}" name="{@id}">
           <xsl:if test="wi:styling/@submit-on-change='true'">
             <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
           </xsl:if>
@@ -147,7 +147,7 @@
     wi:field with @type 'textarea'
   -->
   <xsl:template match="wi:field[wi:styling[@type='textarea']]">
-    <textarea name="{@id}" title="{wi:help}">
+    <textarea name="{@id}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
@@ -196,7 +196,7 @@
     wi:booleanfield : produce a checkbox
   -->
   <xsl:template match="wi:booleanfield">
-    <input type="checkbox" value="true" name="{@id}" title="{wi:help}">
+    <input type="checkbox" value="true" name="{@id}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
@@ -211,7 +211,7 @@
     wi:action
   -->
   <xsl:template match="wi:action">
-    <input type="submit" name="{@id}" title="{wi:help}">
+    <input type="submit" name="{@id}" title="{wi:hint}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
     </input>
   </xsl:template>
@@ -238,7 +238,7 @@
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
     <xsl:variable name="liststyle" select="wi:styling/@list-type"/>
 
-    <span title="{wi:help}">
+    <span title="{wi:hint}">
       <xsl:choose>
         <!-- checkbox -->
         <xsl:when test="$liststyle = 'checkbox'">
@@ -365,7 +365,7 @@
   </xsl:template>
 
   <xsl:template match="wi:aggregatefield">
-    <input name="{@id}" value="{wi:value}" title="{wi:help}">
+    <input name="{@id}" value="{wi:value}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>

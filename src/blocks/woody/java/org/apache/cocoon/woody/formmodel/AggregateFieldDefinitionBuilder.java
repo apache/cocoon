@@ -68,7 +68,7 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         AggregateFieldDefinition definition = new AggregateFieldDefinition();
         setId(widgetElement, definition);
-        setLabel(widgetElement, definition);
+        setDisplayData(widgetElement, definition);
 
         // make childfields
         Element childrenElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "children", true);

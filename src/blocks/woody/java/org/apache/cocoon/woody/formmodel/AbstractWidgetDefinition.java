@@ -50,16 +50,21 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
+import org.apache.cocoon.woody.Constants;
 
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private String id;
-    private Object label;
+//    private Object label;
+    private Map displayData;
 
     public String getId() {
         return id;
@@ -69,20 +74,53 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         this.id = id;
     }
 
-    /**
-     * Sets the label for this widget. The label must be a SAX fragment generated
-     * with Cocoon's XMLByteStreamCompiler. This approach allows to have
-     * mixed content in labels.
-     */
-    public void setLabel(Object label) {
-        this.label = label;
+    public void generateLabel(ContentHandler contentHandler) throws SAXException {
+        generateDisplayData("label", contentHandler);
     }
 
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        if (label != null) {
+    /**
+     * Sets the various display data for this widget. This includes the label, hint and help.
+     * They're all SAX fragments generated with Cocoon's XMLByteStreamCompiler. This approach
+     * allows to have mixed content in these data.
+     * 
+     * @param displayData an association of {name, sax fragment}
+     */
+    public void setDisplayData(Map displayData) {
+        this.displayData = displayData;
+    }
+    
+    public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
+        Object data = this.displayData.get(name);
+        if (data != null) {
             XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
             interpreter.setContentHandler(contentHandler);
-            interpreter.deserialize(label);
+            interpreter.deserialize(data);
+            
+        } else if (!this.displayData.containsKey(name)) {
+            throw new IllegalArgumentException("Unknown display data name '" + name + "'");
         }
+    }
+    
+    public void generateDisplayData(ContentHandler contentHandler) throws SAXException {
+        XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
+        
+        // Output all non-null display data
+        Iterator iter = this.displayData.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            if (entry.getValue() != null) {
+                String name = (String)entry.getKey();
+                
+                // Enclose the data into a "wi:{name}" element
+                contentHandler.startElement(Constants.WI_NS, name, Constants.WI_PREFIX_COLON + name, Constants.EMPTY_ATTRS);
+
+                interpreter.setContentHandler(contentHandler);
+                interpreter.deserialize(entry.getValue());
+                interpreter.recycle();
+                
+                contentHandler.endElement(Constants.WI_NS, name, Constants.WI_PREFIX_COLON + name);
+            }
+        }
+        
     }
 }

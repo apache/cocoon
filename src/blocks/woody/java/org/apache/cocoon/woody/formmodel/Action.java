@@ -118,9 +118,8 @@ public class Action extends AbstractWidget {
         AttributesImpl buttonAttrs = new AttributesImpl();
         buttonAttrs.addCDATAAttribute("id", getFullyQualifiedId());
         contentHandler.startElement(Constants.WI_NS, ACTION_EL, Constants.WI_PREFIX_COLON + ACTION_EL, buttonAttrs);
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
         contentHandler.endElement(Constants.WI_NS, ACTION_EL, Constants.WI_PREFIX_COLON + ACTION_EL);
     }
 

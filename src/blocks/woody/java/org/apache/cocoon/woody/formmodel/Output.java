@@ -53,10 +53,8 @@ public class Output extends AbstractWidget {
             contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
         }
 
-        // the label
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
 
         contentHandler.endElement(Constants.WI_NS, OUTPUT_EL, Constants.WI_PREFIX_COLON + OUTPUT_EL);
     }

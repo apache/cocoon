@@ -20,7 +20,7 @@ public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBui
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
         definition.setDatatype(datatype);
 
-        setLabel(widgetElement, definition);
+        setDisplayData(widgetElement, definition);
 
         return definition;
     }
