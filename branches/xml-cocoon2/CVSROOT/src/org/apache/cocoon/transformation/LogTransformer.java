@@ -10,7 +10,6 @@ package org.apache.cocoon.transformation;
 import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.AbstractXMLProducer;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -45,7 +44,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:40 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:16:16 $
  *
  */
 public class LogTransformer extends AbstractTransformer {

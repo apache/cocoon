@@ -15,12 +15,9 @@ import java.io.PrintWriter;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
-
 import org.apache.fop.messaging.MessageListener;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.messaging.MessageEvent;
-
-import org.apache.cocoon.xml.XMLConsumerBridge;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -31,10 +28,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-25 14:57:23 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:15:37 $
  *
  */
-public class FOPSerializer extends XMLConsumerBridge implements Serializer, MessageListener {
+public class FOPSerializer extends AbstractSerializer implements MessageListener {
 
     /**
      * The FOP driver 

@@ -17,21 +17,26 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 
 import java.net.MalformedURLException;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Main;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 public class LinkSamplingEnvironment extends AbstractEnvironment {
 
-    private LineLister links;
+    private ByteArrayOutputStream stream;
     
-    public LinkSamplingEnvironment(String uri) 
-    throws MalformedURLException {
-        super(uri, Cocoon.LINK_VIEW, "");
-        this.links = new LineLister();
+    public LinkSamplingEnvironment(String uri, File context) 
+    throws MalformedURLException, IOException {
+        super(uri, Cocoon.LINK_VIEW, context);
+        this.stream = new ByteArrayOutputStream();
     }
 
     /** 
@@ -39,8 +44,8 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
      */ 
     public void setContentType(String contentType) {
         if (!Cocoon.LINK_CONTENT_TYPE.equals(contentType)) {
-            throw new RuntimeException("The link MIME type doesn't match."
-                + " Make sure you used the appropriate 'link' serialier");
+            // fixme (SM) this static method sucks!!
+            Main.warning("The link MIMEtype doesn't match. A probable error occurred into the pipeline");
         }
     }
  
@@ -48,7 +53,7 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
      * Get the OutputStream 
      */ 
     public OutputStream getOutputStream() throws IOException {
-        return this.links;
+        return this.stream;
     }
 
     /**
@@ -61,42 +66,24 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
     /** 
      * Indicates if other links are present.
      */ 
-    public Collection getLinks() {
-        return this.links.list();
-    }
-    
-    /**
-     * This class parses the output stream and generates a list
-     * out of the lines received.
-     */
-    class LineLister extends ByteArrayOutputStream {
+    public Collection getLinks() throws IOException {
 
-        private boolean linkable = false;
-        
-        private List links = new ArrayList();
-        
-        public void write(int c) {
-            if (!linkable && (c == '+')) {
-                linkable = true;
-                return;
+        // FIXME (SM) I'm sure there is a much faster and less memory consuming
+        // way of doing this, but I'm lazy and I don't care at this point.
+        // Anyway the parsing is very easy:
+        // + http://host/to-be-processed
+        // - http://host/not-to-be-processed
+        // with +/- at char(0), space at char(1), url starting at char(2)
+         
+        ArrayList list = new ArrayList();
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(stream.toByteArray())));
+        while (true) {
+            String line = buffer.readLine();
+            if (line == null) break;
+            if (line.charAt(0) == '+') {
+                list.add(line.substring(2));
             }
-            if (linkable && (c == ' ')) {
-                return;
-            }
-            if (c == '\n') {
-                if (linkable) links.add(this.toString());
-                reset();
-            }
-            super.write(c);
         }
-        
-        public Collection list() {
-            return links;
-        }
-        
-        public void reset() {
-            super.reset();
-            linkable = false;
-        }
+        return list;
     }
 }

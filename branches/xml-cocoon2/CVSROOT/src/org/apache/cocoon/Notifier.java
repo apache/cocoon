@@ -32,7 +32,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-22 20:19:03 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-27 16:14:50 $
  */
  
 public class Notifier {
@@ -44,55 +44,35 @@ public class Notifier {
 
         StringBuffer sb = new StringBuffer();
 
-        String contentType = req.getContentType();
+        // FIXME (SM) how can we send the error with the proper content type?
+        
+        res.setContentType("text/html");
+        sb.append("<html><head><title>" + n.getTitle() + "</title>");
+        sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
+        sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
+        sb.append("B{color : white;background-color : #0086b2;} ");
+        sb.append("HR{color : #0086b2;} ");
+        sb.append("--></STYLE> ");
+        sb.append("</head><body>");
+        sb.append("<h1>Cocoon 2 - " + n.getTitle() + "</h1>");
+        sb.append("<HR size=\"1\" noshade>");
+        sb.append("<p><b>type</b> " + n.getType() + "</p>");
+        sb.append("<p><b>message</b> <u>" + n.getMessage() + "</u></p>");
+        sb.append("<p><b>description</b> <u>" + n.getDescription() + "</u></p>");
+        sb.append("<p><b>sender</b> " + n.getSender() + "</p>");
+        sb.append("<p><b>source</b> " + n.getSource() + "</p>");
 
-        if ("text/html".equals(contentType)) {
-            res.setContentType("text/html");
-            sb.append("<html><head><title>" + n.getTitle() + "</title>");
-            sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
-            sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
-            sb.append("B{color : white;background-color : #0086b2;} ");
-            sb.append("HR{color : #0086b2;} ");
-            sb.append("--></STYLE> ");
-            sb.append("</head><body>");
-            sb.append("<h1>Cocoon 2 - " + n.getTitle() + "</h1>");
-            sb.append("<HR size=\"1\" noshade>");
-            sb.append("<p><b>type</b> " + n.getType() + "</p>");
-            sb.append("<p><b>message</b> <u>" + n.getMessage() + "</u></p>");
-            sb.append("<p><b>description</b> <u>" + n.getDescription() + "</u></p>");
-            sb.append("<p><b>sender</b> " + n.getSender() + "</p>");
-            sb.append("<p><b>source</b> " + n.getSource() + "</p>");
+        HashMap extraDescriptions = n.getExtraDescriptions();
+        Iterator keyIter = extraDescriptions.keySet().iterator();
 
-            HashMap extraDescriptions = n.getExtraDescriptions();
-            Iterator keyIter = extraDescriptions.keySet().iterator();
+        while (keyIter.hasNext()) {
+            String key = (String) keyIter.next();
 
-            while (keyIter.hasNext()) {
-                String key = (String) keyIter.next();
-
-                sb.append("<p><b>" + key + "</b><pre>" + extraDescriptions.get(key) + "</pre></p>");
-            }
-
-            sb.append("<HR size=\"1\" noshade>");
-            sb.append("</body></html>");
-        } else {
-            res.setContentType("text/xml");
-            sb.append("<notify type=\"" + n.getType() + "\" sender=\"" + n.getSender() + "\">");
-            sb.append("<title>" + n.getTitle() + "</title>");
-            sb.append("<source>" + n.getSource() + "</source>");
-            sb.append("<message>" + n.getMessage() + "</message>");
-            sb.append("<description>" + n.getDescription() + "</description>");
-
-            HashMap extraDescriptions = n.getExtraDescriptions();
-            Iterator keyIter = extraDescriptions.keySet().iterator();
-
-            while (keyIter.hasNext()) {
-                String key = (String) keyIter.next();
-
-                sb.append("<extra description=\"" + key + "\">" + extraDescriptions.get(key) + "</extra>");
-            }
-
-            sb.append("</notify>");
+            sb.append("<p><b>" + key + "</b><pre>" + extraDescriptions.get(key) + "</pre></p>");
         }
+
+        sb.append("<HR size=\"1\" noshade>");
+        sb.append("</body></html>");
 
         res.getOutputStream().print(sb.toString());
     }

@@ -19,10 +19,10 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-25 14:58:15 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-27 16:15:46 $
  */
 
-public class TextSerializer extends AbstractSerializer {
+public class TextSerializer extends AbstractTextSerializer {
 
     private SerializerFactory factory;
     

@@ -14,16 +14,17 @@ import java.io.IOException;
 
 import org.apache.cocoon.Cocoon;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.xml.xlink.XLinkConsumerBridge;
+import org.apache.cocoon.xml.xlink.XLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:58:16 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-27 16:15:49 $
  */
 
-public class XLinkSerializer extends XLinkConsumerBridge implements Serializer {
+public class XLinkSerializer extends XLinkPipe implements Serializer {
 
     private PrintStream out;
     
@@ -42,14 +43,12 @@ public class XLinkSerializer extends XLinkConsumerBridge implements Serializer {
         return Cocoon.LINK_CONTENT_TYPE;
     }
     
-    // XLinkHandler implementation
-    
-    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw) 
+    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr) 
     throws SAXException {
         encode(href, role, out);
     }
-    
-    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw)
+
+    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr)
     throws SAXException {
         encode(href, role, out);
     }

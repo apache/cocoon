@@ -24,8 +24,8 @@ import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.dom.DocumentHandlerAdapter;
-import org.apache.cocoon.xml.dom.DocumentHandlerWrapper;
+import org.apache.cocoon.xml.DocumentHandlerAdapter;
+import org.apache.cocoon.xml.DocumentHandlerWrapper;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.store.Store;
 
@@ -65,7 +65,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  * 
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:26:52 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-27 16:16:22 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {

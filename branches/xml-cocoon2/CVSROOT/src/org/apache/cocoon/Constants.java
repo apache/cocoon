@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-22 20:27:23 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-27 16:14:43 $
  */
 
 public interface Constants {
@@ -24,10 +24,11 @@ public interface Constants {
     public static final String SHOWTIME_PARAM = "cocoon-showtime";
     public static final String VIEW_PARAM     = "cocoon-view";
 
-    public static final String TEMPDIR_PROPERTY  = "org.apache.cocoon.properties.tempdir";
-    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
-    public static final String DEFAULT_DEST_DIR  = "./site";
-    public static final String DEFAULT_WORK_DIR  = "./work";
+    public static final String TEMPDIR_PROPERTY    = "org.apache.cocoon.properties.tempdir";
+    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
+    public static final String DEFAULT_DEST_DIR    = "./site";
+    public static final String DEFAULT_WORK_DIR    = "./work";
+    public static final String DEFAULT_CONF_FILE   = "cocoon.xconf";
 
     public static final String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
     public static final String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";

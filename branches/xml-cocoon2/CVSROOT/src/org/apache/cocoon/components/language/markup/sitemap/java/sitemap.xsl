@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.36 $ $Date: 2000-09-10 11:36:15 $
+ * @version CVS $Revision: 1.1.2.37 $ $Date: 2000-09-27 16:15:00 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -132,7 +132,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
-        private List <xsl:value-of select="$matcher-name"/> (String pattern, Map objectModel) {
+        private List <xsl:value-of select="$matcher-name"/> (String pattern, Environment environment) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -156,7 +156,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:variable>
         <xsl:if test="not(preceding::map:when[@test = $this-test])">
           <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string(@test),string($selector-name),$config)"/>
-          private boolean <xsl:value-of select="$selector-name"/> (String pattern, Map objectModel) {
+          private boolean <xsl:value-of select="$selector-name"/> (String pattern, Environment environment) {
             <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string(@test),string($selector-name),$config)"/>
           }
         </xsl:if>
@@ -363,7 +363,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", objectModel)) != null) {
+    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment)) != null) {
       listOfLists.add (list);
       <xsl:apply-templates/>
       listOfLists.remove (list);
@@ -409,7 +409,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:if test="position() > 1">
         else
       </xsl:if>
-      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", objectModel)) {
+      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", environment)) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>

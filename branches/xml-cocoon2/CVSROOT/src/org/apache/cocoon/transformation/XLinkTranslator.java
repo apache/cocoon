@@ -22,14 +22,14 @@ import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.xlink.XLinkConsumerBridge;
+import org.apache.cocoon.xml.xlink.XLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-25 14:51:56 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-27 16:16:19 $
  */
 
-public class XLinkTranslator extends XLinkConsumerBridge implements Transformer {
+public class XLinkTranslator extends XLinkPipe implements Transformer {
 
     private Map links;
     

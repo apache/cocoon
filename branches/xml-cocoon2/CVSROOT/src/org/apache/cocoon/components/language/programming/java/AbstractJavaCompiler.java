@@ -17,7 +17,7 @@ import org.apache.cocoon.components.language.programming.*;
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:41:46 $
+ * @version $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:15:06 $
  * @since 2.0
  */
 public abstract class AbstractJavaCompiler implements LanguageCompiler {
@@ -25,23 +25,28 @@ public abstract class AbstractJavaCompiler implements LanguageCompiler {
    * The source program filename
    */
   protected String    file;
+  
   /**
    * The name of the directory containing the source program file
    */
   protected String    srcDir;
+  
   /**
    * The name of the directory to contain the resulting object program file
    */
   protected String    destDir;
+  
   /**
    * The classpath to be used for compilation
    */
   protected String    classpath;
+  
   /**
    * The encoding of the source program or <code>null</code> to use the
    * platform's default encoding
    */
   protected String    encoding = null;
+  
   /**
    * The input stream to output compilation errors
    */

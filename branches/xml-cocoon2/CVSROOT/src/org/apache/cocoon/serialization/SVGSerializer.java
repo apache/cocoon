@@ -1,10 +1,11 @@
-/***************************************************************************** * 
-Copyright (C) 1999 The Apache Software Foundation.   All rights reserved. * * ---
----------------------------------------------------------------------- * * This 
-software is published under the terms of the Apache Software License * * version 
-1.1,  a copy of wich has been included  with this distribution in * * the 
-LICENSE file.                                                         * 
-*****************************************************************************/ 
+/*****************************************************************************
+ * Copyright (C) 1999 The Apache Software Foundation.   All rights reserved. *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1,  a copy of wich has been included  with this distribution in *
+ * the LICENSE file.                                                         * 
+ *****************************************************************************/ 
+ 
 package org.apache.cocoon.serialization;
 
 import org.apache.cocoon.*;

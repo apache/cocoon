@@ -23,8 +23,8 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.dom.DocumentHandlerAdapter;
-import org.apache.cocoon.xml.dom.DocumentHandlerWrapper;
+import org.apache.cocoon.xml.DocumentHandlerAdapter;
+import org.apache.cocoon.xml.DocumentHandlerWrapper;
 
 import org.apache.xalan.xslt.StylesheetRoot;
 import org.apache.xalan.xslt.XSLTInputSource;
@@ -41,11 +41,11 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-05 17:26:52 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-27 16:16:24 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
-    
+
     /** The store service instance */
     private Store store = null;
 
@@ -61,7 +61,7 @@ implements Transformer, Composer {
     }
 
     /**
-     * Set the <code>EntityResolver</code>, the <code>Map</code> with 
+     * Set the <code>EntityResolver</code>, the <code>Map</code> with
      * the object model, the source and sitemap
      * <code>Parameters</code> used to process the request.
      */
@@ -69,13 +69,10 @@ implements Transformer, Composer {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest)objectModel.get("request");
-        if (request == null) {
-            throw new ProcessingException ("Missing request object in obejctModel");
-        }
-        
+        HttpServletRequest request = (HttpServletRequest) objectModel.get("request");
+
         // Check the stylesheet uri
-        String xsluri = src; 
+        String xsluri = src;
         if (xsluri == null) {
             throw new ProcessingException("Stylesheet URI can't be null");
         }
@@ -89,14 +86,16 @@ implements Transformer, Composer {
         // Create the processor and set it as this documenthandler
         this.processor = XSLTProcessorFactory.getProcessor();
         this.processor.setStylesheet(stylesheet);
-		Enumeration enum = request.getParameterNames();
-		while (enum.hasMoreElements()) {
-			String name = (String) enum.nextElement();
-			if (isValidXSLTParameterName(name)) {
-				String value = request.getParameter(name);
-				processor.setStylesheetParam(name, this.processor.createXString(value));
-			}
-		}
+        if (request != null) {
+            Enumeration parameters = request.getParameterNames();
+            while (parameters.hasMoreElements()) {
+                String name = (String) parameters.nextElement();
+                if (isValidXSLTParameterName(name)) {
+                    String value = request.getParameter(name);
+                    processor.setStylesheetParam(name, this.processor.createXString(value));
+                }
+            }
+        }
 
         this.setDocumentHandler(this.processor);
     }
@@ -134,26 +133,26 @@ implements Transformer, Composer {
     public void setLexicalHandler(LexicalHandler lexical) {
     }
 
-    // FIXME (SM): this method may be a hotspot for requests with many 
-    //             parameters we should try to optimize it further 
-	static boolean isValidXSLTParameterName(String name) {
-		StringCharacterIterator iter = new StringCharacterIterator(name);
-		char c = iter.first();
-		if (!(Character.isLetter(c) || c == '_')) {
-			return false;
-		} else {
-			c = iter.next();
-		}
-		while (c != iter.DONE) {
-			if (!(Character.isLetterOrDigit(c) ||
-				c == '-' ||
-				c == '_' ||
-				c == '.')) {
-				return false;
-			} else {
-				c = iter.next();
-			}
-		}
-		return true;
-	}
+    // FIXME (SM): this method may be a hotspot for requests with many
+    //             parameters we should try to optimize it further
+    static boolean isValidXSLTParameterName(String name) {
+        StringCharacterIterator iter = new StringCharacterIterator(name);
+        char c = iter.first();
+        if (!(Character.isLetter(c) || c == '_')) {
+            return false;
+        } else {
+            c = iter.next();
+        }
+        while (c != iter.DONE) {
+            if (!(Character.isLetterOrDigit(c) ||
+                c == '-' ||
+                c == '_' ||
+                c == '.')) {
+                return false;
+            } else {
+                c = iter.next();
+            }
+        }
+        return true;
+    }
 }

@@ -1,11 +1,11 @@
 /*****************************************************************************
- * Copyright (C) The Apache Software Foundation. All rights reserved.      *
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
- * the LICENSE file.                                      *
+ * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.components.language.programming.java;
 
 import java.io.*;
@@ -14,98 +14,158 @@ import org.apache.cocoon.components.language.programming.*;
 
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
+ * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:41:46 $
+ * @version $Revision: 1.1.2.5 $ $Date: 2000-09-27 16:15:14 $
  * @since 2.0
  */
 
 public class Jikes extends AbstractJavaCompiler {
-  /**
-  * Compile a source file yielding a loadable class file.
-  *
-  * @param filename The object program base file name
-  * @param baseDirectory The directory containing the object program file
-  * @param encoding The encoding expected in the source file or
-  * <code>null</code> if it is the platform's default encoding
-  * @exception LanguageException If an error occurs during compilation
-  */
-   public boolean compile() throws IOException {
-      List args = new ArrayList();
-      // command line name
-      args.add("jikes");
-      // indicate Emacs output mode must be used
-      args.add("+D");
 
-      Process p = Runtime.getRuntime().exec(toStringArray(fillArguments(args)));
+    static final int OUTPUT_BUFFER_SIZE = 1024;
+    static final int BUFFER_SIZE = 512;
 
-      errors = p.getInputStream();
-      
-      try {
-        p.waitFor();
-        return (p.exitValue() == 0);
-      } catch(InterruptedException somethingHappened) {
-        return false;
-      }
-   }
-   
-  /**
-   * Parse the compiler error stream to produce a list of
-   * <code>CompilerError</code>s
-   *
-   * @param errors The error stream
-   * @return The list of compiler error messages
-   * @exception IOException If an error occurs during message collection
-   */
-   protected List parseStream(BufferedReader input) throws IOException {
-      List errors = null;
-      String line = null;
-      StringBuffer buffer = new StringBuffer();
+    class StreamPumper extends Thread {
 
-      while (true) {
-        // cleanup the buffer
-        buffer.delete(0, buffer.length());
+        private BufferedInputStream stream;
+        private boolean endOfStream = false;
+        private boolean stopSignal  = false;
+        private int SLEEP_TIME = 5;
+        private OutputStream out;
 
-        // first line is not space-starting        
-        if (line == null) line = input.readLine();
-        if (line == null) return errors;
-        buffer.append(line);
-
-        // all other space-starting lines are one error
-        while (true) {        
-           line = input.readLine();
-           if ((line == null) || (line.charAt(0) != ' ')) break;
-           buffer.append(line);
-           buffer.append('\n');
+        public StreamPumper(BufferedInputStream is, OutputStream out) {
+            this.stream = is;
+            this.out = out;
         }
-        
-        // if error is found create the vector
-        if (errors == null) errors = new ArrayList();
-        
-        // add the error bean
-        errors.add(parseError(buffer.toString()));
-      }
-   }
-   
-  /**
-   * Parse an individual compiler error message
-   *
-   * @param error The error text
-   * @return A mssaged <code>CompilerError</code>
-   */
-   private CompilerError parseError(String error) {
-      StringTokenizer tokens = new StringTokenizer(error, ":");
-      String file = tokens.nextToken();
-      int startline = Integer.parseInt(tokens.nextToken());
-      int startcolumn = Integer.parseInt(tokens.nextToken());
-      int endline = Integer.parseInt(tokens.nextToken());
-      int endcolumn = Integer.parseInt(tokens.nextToken());
-      String type = tokens.nextToken().trim().toLowerCase();
-      String message = tokens.nextToken().trim();
-      
-      return new CompilerError(file, type.equals("error"), startline, startcolumn, endline, endcolumn, message);
-   }
-   
-   public String toString() {
-      return "IBM Jikes Compiler";
-   }
+
+        public void pumpStream() throws IOException {
+            byte[] buf = new byte[BUFFER_SIZE];
+            if (!endOfStream) {
+                int bytesRead = stream.read(buf, 0, BUFFER_SIZE);
+
+                if (bytesRead > 0) {
+                    out.write(buf, 0, bytesRead);
+                } else if (bytesRead == -1) {
+                    endOfStream = true;
+                }
+            }
+        }
+
+        public void run() {
+            try {
+                while (!endOfStream) {
+                    pumpStream();
+                    sleep(SLEEP_TIME);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    /**
+     * Execute the compiler
+     */
+    public boolean compile() throws IOException {
+
+        List args = new ArrayList();
+        // command line name
+        args.add("jikes");
+        // indicate Emacs output mode must be used
+        args.add("+E");
+        // avoid warnings
+        args.add("--nowarn");
+
+        int exitValue;
+        ByteArrayOutputStream tmpErr = new ByteArrayOutputStream(OUTPUT_BUFFER_SIZE);
+
+        try {
+            Process p = Runtime.getRuntime().exec(toStringArray(fillArguments(args)));
+
+            BufferedInputStream compilerErr = new BufferedInputStream(p.getErrorStream());
+
+            StreamPumper errPumper = new StreamPumper(compilerErr, tmpErr);
+
+            errPumper.start();
+
+            p.waitFor();
+            exitValue = p.exitValue();
+
+            // Wait until the complete error stream has been read
+            errPumper.join();
+            compilerErr.close();
+
+            p.destroy();
+
+            tmpErr.close();
+            this.errors = new ByteArrayInputStream(tmpErr.toByteArray());
+
+        } catch (InterruptedException somethingHappened) {
+            return false;
+        }
+
+        // Jikes returns 0 even when there are some types of errors.
+        // Check if any error output as well
+        return ((exitValue == 0) && (tmpErr.size() > 0));
+    }
+
+    /**
+     * Parse the compiler error stream to produce a list of
+     * <code>CompilerError</code>s
+     *
+     * @param errors The error stream
+     * @return The list of compiler error messages
+     * @exception IOException If an error occurs during message collection
+     */
+    protected List parseStream(BufferedReader input) throws IOException {
+        List errors = null;
+        String line = null;
+        StringBuffer buffer = new StringBuffer();
+
+        while (true) {
+            // cleanup the buffer
+            buffer.delete(0, buffer.length());
+
+            // first line is not space-starting
+            if (line == null) line = input.readLine();
+            if (line == null) return errors;
+            buffer.append(line);
+
+            // all other space-starting lines are one error
+            while (true) {
+                line = input.readLine();
+                if ((line == null) || (line.charAt(0) != ' ')) break;
+                buffer.append(line);
+                buffer.append('\n');
+            }
+
+            // if error is found create the vector
+            if (errors == null) errors = new ArrayList();
+
+            // add the error bean
+            errors.add(parseError(buffer.toString()));
+        }
+    }
+
+    /**
+     * Parse an individual compiler error message
+     *
+     * @param error The error text
+     * @return A mssaged <code>CompilerError</code>
+     */
+    private CompilerError parseError(String error) {
+        StringTokenizer tokens = new StringTokenizer(error, ":");
+        String file = tokens.nextToken();
+        int startline = Integer.parseInt(tokens.nextToken());
+        int startcolumn = Integer.parseInt(tokens.nextToken());
+        int endline = Integer.parseInt(tokens.nextToken());
+        int endcolumn = Integer.parseInt(tokens.nextToken());
+        String type = tokens.nextToken().trim().toLowerCase();
+        String message = tokens.nextToken().trim();
+
+        return new CompilerError(file, type.equals("error"), startline, startcolumn, endline, endcolumn, message);
+    }
+
+    public String toString() {
+        return "IBM Jikes Compiler";
+    }
 }

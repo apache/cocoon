@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
@@ -32,16 +33,16 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-09-22 22:17:58 $
+ * @version CVS $Revision: 1.1.4.8 $ $Date: 2000-09-27 16:14:47 $
  */
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String destDir  = Cocoon.DEFAULT_DEST_DIR;
-        String confFile = Cocoon.DEFAULT_CONF_FILE;
-        String workDir  = Cocoon.DEFAULT_WORK_DIR;
+        String destDir = Cocoon.DEFAULT_DEST_DIR;
+        String contextDir = Cocoon.DEFAULT_CONTEXT_DIR;
+        String workDir = Cocoon.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
         
         for (int i = 0; i < args.length; i++) {
@@ -49,38 +50,33 @@ public class Main {
 
             if (arg.equals("-h") || arg.equals("--help")) {
                 printUsage();
-                return;
             } else if (arg.equals("-v") || arg.equals("--version")) {
                 printVersion();
-                return;
-            } else if (arg.equals("-d") || arg.equals("--destdir")) {
+            } else if (arg.equals("-d") || arg.equals("--destDir")) {
                 try {
                     destDir = args[i + 1];
                     i++;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You must specify a destination dir when " +
-                        "using the -d/--destdir argument");
-                    return;
+                    error("Careful, you must specify a destination dir when " +
+                        "using the -d/--destDir argument");
                 }
-            } else if (arg.equals("-w") || arg.equals("--workdir")) {
+            } else if (arg.equals("-w") || arg.equals("--workDir")) {
                 try {
                     workDir = args[i + 1];
                     i++;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You must specify a destination dir when " +
-                        "using the -w/--workdir argument");
-                    return;
+                    error("Careful, you must specify a destination dir when " +
+                        "using the -w/--workDir argument");
                 }
-            } else if (arg.equals("-c") || arg.equals("--conf")) {
+            } else if (arg.equals("-c") || arg.equals("--contextDir")) {
                 try {
-                    confFile = args[i + 1];
+                    contextDir = args[i + 1];
                     i++;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You must specify a configuration file when " +
-                        "using the -c/--conf argument");
-                    return;
+                    error("Careful, you must specify a configuration file when " +
+                        "using the -c/--contextDir argument");
                 }
-            } else if (arg.equals("-l") || arg.equals("--logfile")) {
+            } else if (arg.equals("-l") || arg.equals("--logFile")) {
                 try {
                     String logFile = args[i + 1];
                     i++;
@@ -88,44 +84,49 @@ public class Main {
                     System.setOut(out);
                     System.setErr(out);
                 } catch (IOException e) {
-                    System.out.println("Cannot write on the specified log file. " +
-                        "Make sure the path exists and you have write permissions.");
-                    return;
+                    error("Cannot write on the specified log file. " +
+                        "Please, make sure the path exists and you have write permissions.");
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You must specify a log file when " +
-                        "using the -l/--logfile argument");
-                    return;
+                    error("Careful, you must specify a log file when " +
+                        "using the -l/--logFile argument");
                 }
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
-                System.out.println("[fatal error] Unknown argument: " + arg + "\n");
-                printUsage();
-                return;
+                error("Sorry, cannot recognize the argument: " + arg + "\n");
             } else {
-                // if it's no other arg, it must be the target
+                // if it's no other arg, it must be the starting URI
                 targets.add(arg);
             }
 
         }
 
+        if (targets.size() == 0) {
+            error("Please, specify at least one starting URI.");
+        }
+        
         try {
             File dest = getDir(destDir, "destination");
             File work = getDir(workDir, "working");
-            File conf = getConfigurationFile(confFile);
-            File root = conf.getParentFile();
-            Main main = new Main(new Cocoon(conf, null, work.toString()), conf, dest);
-            System.out.println("[main] Starting...");
+            File context = getDir(contextDir, "context");
+            File conf = getConfigurationFile(context);
+            Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
+            log("Warming up...");
+            log("Note: Cocoon is compiling the sitemaps, this might take a while...");
+            main.warmup();
+            log("Starting processing...");
             main.process(targets);
-            System.out.println("[main] Done.");
+            log("Done");
         } catch (Exception e) {
-            System.out.println("[fatal error] Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
-            printUsage();
+            error("Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
+            e.printStackTrace(System.err);
         }
     }
 
-    /**
-     * Prints the usage of how to use this class to System.out
-     */
+    private static void printVersion() {
+        System.out.println(Cocoon.VERSION);
+        System.exit(0);
+    }
+
     private static void printUsage() {
         String lSep = System.getProperty("line.separator");
         StringBuffer msg = new StringBuffer();
@@ -137,39 +138,36 @@ public class Main {
         msg.append("Options: " + lSep);
         msg.append("  -h/--help              print this message and exit" + lSep);
         msg.append("  -v/--version           print the version information and exit" + lSep);
-        msg.append("  -l/--logfile <file>    use given file for log" + lSep);
-        msg.append("  -c/--conf    <file>    use given file as configurations" + lSep);
-        msg.append("  -d/--destdir <dir>     use given dir as destination" + lSep + lSep);
-        msg.append("  -w/--workdir <dir>     use given dir as working directory" + lSep + lSep);
-        msg.append("Note: if the configuration file is not specified, it will default to" + lSep);
-        msg.append("'" + Cocoon.DEFAULT_CONF_FILE + "' in the current working directory, then in the user directory" + lSep);
-        msg.append("and finally in the '/usr/local/etc/' directory before giving up." + lSep);
+        msg.append("  -l/--logFile <file>    use given file for log" + lSep);
+        msg.append("  -c/--contextDir <file> use given dir as context" + lSep);
+        msg.append("  -d/--destDir <dir>     use given dir as destination" + lSep);
+        msg.append("  -w/--workDir <dir>     use given dir as working directory" + lSep + lSep);
+        msg.append("Note: the context directory defaults to '" + Cocoon.DEFAULT_CONTEXT_DIR + "'" + lSep);
         System.out.println(msg.toString());
+        System.exit(1);
+    }
+
+    public static void log(String msg) {
+        System.out.println("[log] " + msg);
+    }
+
+    public static void warning(String msg) {
+        System.out.println("[warning] " + msg);
+    }
+
+    public static void error(String msg) {
+        System.err.println("[error] " + msg);
+        System.exit(1);
     }
     
-    private static void printVersion() {
-        System.out.println(Cocoon.VERSION);
-    }
+    private static File getConfigurationFile(File dir) throws Exception {
 
-    private static File getConfigurationFile(String file) throws Exception {
-
-        File f;
-
-        // look for the indicated file
-        if (file != null) {
-            f = new File(file);
-            if (f.canRead()) return f;
-        }
-
-        // look in the current working directory
-        f = new File(Cocoon.DEFAULT_CONF_FILE);
+        File f = new File(dir, Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
-
-        // then in the user directory
+        
         f = new File(System.getProperty("user.dir") + File.separator + Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
-        // finally in the /usr/local/etc/ directory (for Unix systems).
         f = new File("/usr/local/etc/" + Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
@@ -196,20 +194,27 @@ public class Main {
 
         return d;
     }
-
+    
     // -----------------------------------------------------------------------
     
     private Cocoon cocoon;
     private File destDir;
-    private File root;
+    private File context;
 
     /**
      * Creates the Main class
      */
-    public Main(Cocoon cocoon, File root, File destDir) {
+    public Main(Cocoon cocoon, File context, File destDir) {
         this.cocoon = cocoon;
-        this.root = root;
+        this.context = context;
         this.destDir = destDir;
+    }
+
+    /**
+     * Warms up the engine by accessing the root.
+     */
+    public void warmup() throws Exception {
+        cocoon.process(new LinkSamplingEnvironment("/", context));
     }
 
     /**
@@ -219,8 +224,7 @@ public class Main {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
             String uri = (String) i.next();
-            System.out.println("[main] starting from: " + uri);
-            this.processURI(uri);
+            this.processURI(uri, "");
         }
     }
 
@@ -242,60 +246,66 @@ public class Main {
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
-    public File processURI(String uri) throws Exception {
-        System.out.println("[main] processing: " + uri);
-        
+    public File processURI(String uri, String level) throws Exception {
         Collection links = getLinks(uri);
         Map translatedLinks = new HashMap(links.size());
         Iterator i = links.iterator();
         while (i.hasNext()) {
             String link = (String) i.next();
-            translatedLinks.put(link, processURI(link));
+            translatedLinks.put(link, processURI(link, "  " + level));
         }
         
         File outputFile = getFile(uri);
-        FileOutputStream output = new FileOutputStream(getFile(uri));
+        String outputName = outputFile.getPath();
+        FileOutputStream output = new FileOutputStream(outputFile);
         String type = getPage(uri, translatedLinks, output);
         output.close();
+
+        String ext = getExtension(uri);
+        String defaultExt = getDefaultExtension(type);
         
-        if (!matchesExtension(uri, type)) {
-            outputFile.renameTo(getFile(uri, type));
+        if (!ext.equals(defaultExt)) {
+            File newFile = getFile(uri + "." + defaultExt);
+            outputFile.renameTo(newFile);
+            outputName = newFile.getPath();
         }
+
+        log(level + uri + " [" + type + "] --> " + outputName);
         
         return outputFile;
     }        
     
     Collection getLinks(String uri) throws Exception {
-        LinkSamplingEnvironment env = new LinkSamplingEnvironment(uri);
+        LinkSamplingEnvironment env = new LinkSamplingEnvironment(uri, context);
         cocoon.process(env);
         return env.getLinks();
     }
 
     String getPage(String uri, Map links, OutputStream stream) throws Exception {
-        FileSavingEnvironment env = new FileSavingEnvironment(uri, root, links, stream);
+        FileSavingEnvironment env = new FileSavingEnvironment(uri, context, links, stream);
         cocoon.process(env);
         return env.getContentType();
     }
     
-    File getFile(String uri) {
-        return new File(destDir, uri);
+    File getFile(String file) {
+        File f = new File(destDir, file);
+        File parent = f.getParentFile();
+        if (parent != null) parent.mkdirs();
+        return f;
     }
     
-    File getFile(String uri, String type) {
-        return new File(destDir, uri + File.separator + getExtension(type));
-    }
-    
-    boolean matchesExtension(String uri, String type) {
-        int dotindex = uri.lastIndexOf('.');
-        int slashindex = uri.indexOf('/', dotindex);
-        if ((dotindex != -1) && (slashindex == -1)) {
-            String ext = uri.substring(dotindex);
-            return type.equals(getExtension(type));
+    String getExtension(String file) {
+        int lastDot = file.lastIndexOf('.');
+        if (lastDot > -1) file = file.substring(lastDot + 1);
+        int lastSlash = file.lastIndexOf('/');
+        if (lastSlash > -1) {
+            return file.substring(lastSlash + 1);
+        } else {
+            return file;
         }
-        return false;
     }
-    
-    String getExtension(String type) {
+
+    String getDefaultExtension(String type) {
         if ("text/html".equals(type)) {
             return "html";
         } else if ("text/xml".equals(type)) {
@@ -305,6 +315,8 @@ public class Main {
         } else if ("text/vnd.wap.wml".equals(type)) {
             return "wml";
         } else if ("image/jpg".equals(type)) {
+            return "jpg";
+        } else if ("image/jpeg".equals(type)) {
             return "jpg";
         } else if ("image/png".equals(type)) {
             return "png";
