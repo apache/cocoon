@@ -354,7 +354,8 @@
 
   <!--+
       | Persistent Store: holds objects that have to survive shutdown.
-      | WARNING: FilesystemStore is broken. Cocoon uses JispFilesystemStore instead.
+      | WARNING: FilesystemStore is broken. Cocoon uses DefaultStore based
+      | on the Avalon Excalibur JispStore instead.
       |
       | Common configuration parameters:
       |  use-cache-directory: Indicates that cache directory specified in
@@ -364,12 +365,12 @@
       |  directory: Specifies directory to use. Absolute or relative to the
       |             work directory.
       |
-      | JispFilesystemStore configuration parameters:
+      | DefaultStore configuration parameters:
       |  datafile: Name of the store file to use. Defaults to cocoon.dat
       |  indexfile: Name of the index file to use. Defaults to cocoon.idx
       |  order: FIXME: put description here.
       +-->
-  <persistent-store class="org.apache.cocoon.components.store.JispFilesystemStore"
+  <persistent-store class="org.apache.cocoon.components.store.impl.DefaultStore"
                     logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
     <parameter name="order" value="2701"/>
