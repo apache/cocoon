@@ -1166,6 +1166,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+<!--
   <project name="cocoon-block-jcr" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -1184,6 +1185,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
 
   </project>
+-->
 
   <!--
     ********************************************
