@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.29 2003/04/01 21:57:58 stefano Exp $
+  CVS $Id: gump.xml,v 1.30 2003/04/01 22:00:09 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -96,7 +96,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="castor" version="supplied"/>
-    <depend project="commons-jexel" version="supplied"/>
+    <depend project="commons-jexl" version="supplied"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
