@@ -10,75 +10,96 @@ package org.apache.cocoon.components.parser;
 import java.io.IOException;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.dom.DOMFactory;
-import org.apache.xerces.dom.DocumentImpl;
-import org.apache.xerces.dom.DocumentTypeImpl;
-import org.apache.xerces.parsers.SAXParser;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.w3c.dom.Document;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 /**
+ * An XMLParser that is only dependant on JAXP 1.1 compliant parsers.
+ * If only we can get rid of the need for the Document...
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-01-08 14:31:02 $
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-07 17:35:19 $
  */
-public class XercesParser extends AbstractXMLProducer
-implements Parser, ErrorHandler, DOMFactory, Poolable {
+public class JaxpParser extends AbstractXMLProducer
+implements Parser, ErrorHandler, ThreadSafe {
 
-    final SAXParser parser;
+    final SAXParserFactory factory = SAXParserFactory.newInstance();
+    final DocumentBuilderFactory docfactory = DocumentBuilderFactory.newInstance();
 
-    public XercesParser ()
-    throws SAXException {
-        this.parser = new SAXParser();
-
-    this.parser.setFeature("http://xml.org/sax/features/validation",false);
-    this.parser.setFeature("http://xml.org/sax/features/namespaces",true);
-	this.parser.setFeature("http://xml.org/sax/features/namespace-prefixes",
-                          true);
+    public JaxpParser ()
+    throws SAXException, ParserConfigurationException {
+        this.factory.setNamespaceAware(true);
+        this.factory.setValidating(false);
+        this.docfactory.setNamespaceAware(true);
+        this.docfactory.setValidating(false);
     }
 
     public void parse(InputSource in)
     throws SAXException, IOException {
-      this.parser.setProperty("http://xml.org/sax/properties/lexical-handler",
-                              super.lexicalHandler);
-        this.parser.setErrorHandler(this);
-        this.parser.setContentHandler(super.contentHandler);
-        this.parser.parse(in);
+        SAXParser parser = null;
+
+        try {
+            parser = this.factory.newSAXParser();
+        } catch (Exception e) {
+            log.error("Cannot produce a valid parser", e);
+            throw new SAXException("Could not get valid parser" + e.getMessage());
+        }
+
+        XMLReader reader = parser.getXMLReader();
+
+        reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+        reader.setProperty("http://xml.org/sax/properties/lexical-handler",
+                           super.lexicalHandler);
+
+        reader.setErrorHandler(this);
+        reader.setContentHandler(super.contentHandler);
+        reader.parse(in);
     }
 
     /**
      * Create a new Document object.
      */
     public Document newDocument() {
-        return(newDocument(null,null,null));
+        return this.newDocument(null, null, null);
     }
 
     /**
      * Create a new Document object with a specified DOCTYPE.
      */
     public Document newDocument(String name) {
-        return(newDocument(name,null,null));
+        return this.newDocument(name, null, null);
     }
 
     /**
      * Create a new Document object with a specified DOCTYPE, public ID and
      * system ID.
      */
-    public Document newDocument(String name, String pub, String sys) {
-        DocumentImpl doc=new DocumentImpl();
-        if ((pub!=null)||(sys!=null)) {
-            DocumentTypeImpl dtd=new DocumentTypeImpl(doc,name,pub,sys);
-            doc.appendChild(dtd);
-        } else if (name!=null) {
-            DocumentTypeImpl dtd=new DocumentTypeImpl(doc,name);
-            doc.appendChild(dtd);
+    public Document newDocument(String name, String publicId, String systemId) {
+        DocumentBuilder builder = null;
+
+        try {
+            builder = this.docfactory.newDocumentBuilder();
+        } catch (ParserConfigurationException pce) {
+            log.error("Could not build DocumentBuilder", pce);
+            return null;
         }
-        return(doc);
+
+        return builder.getDOMImplementation()
+               .createDocument(null, name,
+                   builder.getDOMImplementation()
+                   .createDocumentType(name, publicId, systemId)
+        );
+
     }
 
     /**
