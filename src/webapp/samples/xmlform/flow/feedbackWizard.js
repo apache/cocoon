@@ -99,6 +99,6 @@ function feedbackWizard(xform) {
     xform.sendView("confirm", "flow/confirm.xml");
     print("handling confirm");
 
-    xform.finish("end", "flow/end.xml");
+    xform.finish("flow/end.xml");
     print("done");
 }
