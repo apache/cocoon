@@ -26,7 +26,8 @@
       <xsl:apply-templates/>
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
-      <link href="swan/resources/css/swan.css" type="text/css" rel="stylesheet"/>
+      <link href="swan/resources/css/swan_sections.css" type="text/css" rel="stylesheet"/>
+      <script src="swan/resources/js/swan_textareas.js" type="text/javascript"></script>
     </head>
   </xsl:template>
 
