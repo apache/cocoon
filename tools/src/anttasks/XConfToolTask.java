@@ -227,9 +227,8 @@ public final class XConfToolTask extends MatchingTask {
         String extension = filename.lastIndexOf(".")>0?filename.substring(filename.lastIndexOf(".")+1):"";
         String basename = basename(filename);
 
-        if (!elem.getTagName().equals(extension)) {
-            log("Skipping non xconf-tool file: "+filename);
-            return false;
+	if (!elem.getTagName().equals(extension)) {
+            throw new BuildException("Not a valid xpatch file: "+filename);
         }
 
         String replacePropertiesStr = elem.getAttribute("replace-properties");
