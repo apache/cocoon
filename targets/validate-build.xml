@@ -143,8 +143,7 @@ Blocks sitemaps are deliberately excluded.
     </jing>
   </target>
 
-<!-- FIXME: Temporarily renamed this target because it is clashing with Forrest's -->
-  <target name="cocoon-validate-stylesheets" depends="init-tasks"
+  <target name="validate-stylesheets" depends="init-tasks"
           description="Standalone target to validate all stylesheets">
     <echo message="Validating all XSLT stylesheets using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
