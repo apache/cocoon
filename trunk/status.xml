@@ -181,6 +181,11 @@
   <changes>
 
  <release version="@version@" date="@date@"> 
+  <action dev="DC" type="fix" fixes-bug="14327">
+    Encoding-related change to the JSP engine: the response charset is now
+    retrieved from the Content-Type, and if not found ISO-8859-1 is used as
+    default (previously UTF-8 was the default).
+  </action>
   <action dev="CZ" type="fix" fixes-bug="11533">
     The deprecated source implementations are now wrapped by proxies.
     Modified patch from Jens Lorenz (jens.lorenz@interface-business.de)
