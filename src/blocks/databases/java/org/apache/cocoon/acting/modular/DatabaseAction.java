@@ -99,9 +99,9 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
     // constants
     // ========================================================================
 
-    static final Integer MODE_AUTOINCR = new Integer( 0 );
-    static final Integer MODE_OTHERS = new Integer( 1 );
-    static final Integer MODE_OUTPUT = new Integer( 2 );
+    static final Integer MODE_AUTOINCR = new Integer(0);
+    static final Integer MODE_OTHERS = new Integer(1);
+    static final Integer MODE_OUTPUT = new Integer(2);
 
     static final String ATTRIBUTE_KEY = "org.apache.cocoon.action.modular.DatabaseAction.outputModeName";
 
@@ -142,7 +142,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         Configuration columnConf = null;
     }
 
-
     /**
      * Structure that takes all processed data for a table depending
      * on current default modes
@@ -173,7 +172,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
             }
         }
     }
-
 
     /**
      * Structure that takes up both current mode types for database
@@ -216,8 +214,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
 		}
     }
 
-
-
     // set up default modes
     // <input/>
     // <output/>
@@ -231,8 +227,8 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
             this.defaultModeNames.put(MODE_OTHERS,   this.settings.get("input",  inputHint));
             this.defaultModeNames.put(MODE_OUTPUT,   this.settings.get("output", outputHint));
             this.defaultModeNames.put(MODE_AUTOINCR, this.settings.get("autoincrement", databaseHint));
-            this.pathSeparator = (String) this.settings.get("path-separator", this.pathSeparator);
-            String tmp = (String) this.settings.get("first-row",null);
+            this.pathSeparator = (String)this.settings.get("path-separator", this.pathSeparator);
+            String tmp = (String)this.settings.get("first-row",null);
             if (tmp != null) { 
                 try {
                         this.firstRow = Integer.parseInt(tmp);
@@ -258,14 +254,12 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
-
     /**
      *  dispose
      */
     public void dispose() {
         this.manager.release(dbselector);
     }
-
 
     // ========================================================================
     // protected utility methods
@@ -295,7 +289,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         if ("ascii".equals(type)) return true;
         if ("binary".equals(type)) return true;
         if ("image".equals(type)) return true;
-
         return false;
     }
 
@@ -309,14 +302,17 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         OutputModule output = null;
         try {
             outputSelector = (ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
-            if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
+            if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)) {
                 output = (OutputModule) outputSelector.select(outputMode);
             }
-            output.setAttribute( null, objectModel, key, value );
+            if (output != null) {
+                output.setAttribute(null, objectModel, key, value);
+            } else if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not select output mode " + outputMode);
+            }
         } catch (Exception e) {
                 if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("Could not select output mode "
-                                     + outputMode + ":" + e.getMessage());
+                    getLogger().warn("Could not select output mode " + outputMode + ":" + e.getMessage());
                 }
         } finally {
             if (outputSelector != null) {
@@ -326,8 +322,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
             }
          }
     }
-
-
 
     /**
      * Inserts a row or a set of rows into the given table based on the
@@ -378,11 +372,11 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
             }
 
             for ( int rowIndex = 0; rowIndex < setLength; rowIndex++ ) {
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug( "====> row no. " + rowIndex );
+                }
                 rows += processRow( objectModel, conn, statement, (String) modeTypes.get(MODE_OUTPUT), table, queryData, columnValues, rowIndex, results );
             }
-
         } finally {
             try {
                 if (statement != null) {
@@ -392,7 +386,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         }
         return rows;
     }
-
 
     /**
      * Choose a mode configuration based on its name.
@@ -419,10 +412,8 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                 break;
             }
         }
-
         return modeConfig;
     }
-
 
     /**
      * compose name for output a long the lines of "table.column"
@@ -431,7 +422,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
 
         return getOutputName( tableConf, columnConf, -1 );
     }
-
 
     /**
      * compose name for output a long the lines of "table.column[row]" or
@@ -458,15 +448,12 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
             {
                 return ( columnConf.getAttribute("name",null)
                          + ( rowIndex == -1 ? "" : "[" + rowIndex + "]" ) );
-            }
-        else
-            {
+        } else {
                 return ( tableConf.getAttribute("alias", tableConf.getAttribute("name", null) )
                          + this.pathSeparator + columnConf.getAttribute("name",null)
                          + ( rowIndex == -1 ? "" : "[" + rowIndex + "]" ) );
             }
     }
-
 
     /*
      * Read all values for a column from an InputModule
@@ -477,10 +464,10 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
      * a set.
      *
      */
-    protected Object[] getColumnValue( Configuration tableConf, Column column, Map objectModel )
+    protected Object[] getColumnValue(Configuration tableConf, Column column, Map objectModel)
         throws ConfigurationException, ServiceException {
 
-        if ( column.isAutoIncrement ) {
+        if (column.isAutoIncrement) {
             return new Object[1];
         } else {
             Object[] values;
@@ -496,35 +483,36 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                 }
 
                 if (column.isSet) {
-                    if (getLogger().isDebugEnabled())
-                        getLogger().debug( "Trying to set column " + cname +" from "+column.mode+" using getAttributeValues method");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug( "Trying to set column " + cname + " from " + column.mode + " using getAttributeValues method");
+                    }
                     values = input.getAttributeValues( cname, column.modeConf, objectModel );
                 } else {
-                    if (getLogger().isDebugEnabled())
-                        getLogger().debug( "Trying to set column " + cname +" from "+column.mode+" using getAttribute method");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug( "Trying to set column " + cname + " from " + column.mode + " using getAttribute method");
+                    }
                     values = new Object[1];
                     values[0] = input.getAttribute( cname, column.modeConf, objectModel );
                 }
 
-                if ( values != null ) {
+                if (values != null) {
                     for ( int i = 0; i < values.length; i++ ) {
-                        if (getLogger().isDebugEnabled())
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug( "Setting column " + cname + " [" + i + "] " + values[i] );
+                        }
                     }
                 }
-
             } finally {
                 if (inputSelector != null) {
-                    if (input != null)
+                    if (input != null) {
                         inputSelector.release(input);
+                    }
                     this.manager.release(inputSelector);
                 }
             }
-
             return values;
         }
     }
-
 
     /**
      * Setup parsed attribute configuration object
@@ -534,33 +522,34 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         throws ConfigurationException {
 
         String setMode = null;
-        int offset = ( isKey ? 0: set.noOfKeys);
+        int offset = (isKey ? 0: set.noOfKeys);
 
-        for ( int i = offset; i < conf.length + offset; i++ ) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("i="+i);
+        for (int i = offset; i < conf.length + offset; i++) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("i=" + i);
+            }
             set.columns[i].columnConf =  conf[ i - offset ];
             set.columns[i].isSet = false;
             set.columns[i].isKey = isKey;
             set.columns[i].isAutoIncrement = false;
-            if ( isKey & this.honourAutoIncrement() ) 
+            if (isKey & this.honourAutoIncrement()) { 
                 set.columns[i].isAutoIncrement = set.columns[i].columnConf.getAttributeAsBoolean("autoincrement",false);
-            
-            set.columns[i].modeConf = getMode( set.columns[i].columnConf,
-                                               selectMode( set.columns[i].isAutoIncrement, modeTypes ) );
-            set.columns[i].mode = ( set.columns[i].modeConf != null ?
-                                    set.columns[i].modeConf.getAttribute( "name", selectMode( isKey, defaultModeNames ) ) :
-                                    selectMode( isKey, defaultModeNames ) );
+            }
+            set.columns[i].modeConf = getMode(set.columns[i].columnConf,
+                                               selectMode(set.columns[i].isAutoIncrement, modeTypes));
+            set.columns[i].mode = (set.columns[i].modeConf != null ?
+                                   set.columns[i].modeConf.getAttribute("name", selectMode(isKey, defaultModeNames)) :
+                                   selectMode(isKey, defaultModeNames));
             // Determine set mode for a whole column ...
             setMode = set.columns[i].columnConf.getAttribute("set", null);  // master vs slave vs null
-            if ( setMode == null && set.columns[i].modeConf != null ) {
+            if (setMode == null && set.columns[i].modeConf != null) {
                 // ... or for each mode individually
                 setMode = set.columns[i].modeConf.getAttribute("set", null);
             }
-            if ( setMode != null ) {
+            if (setMode != null) {
                 set.columns[i].isSet = true;
                 set.isSet = true;
-                if ( setMode.equals("master") ) {
+                if (setMode.equals("master")) {
                     set.setMaster = i;
                 }
             }
@@ -576,22 +565,23 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                          Configuration table, Configuration column, int rowIndex, Object value ) {
 
         String param = this.getOutputName( table, column, rowIndex );
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug( "Setting column " + param + " to " + value );
+        }
         this.setOutputAttribute(objectModel, outputMode, param, value);
-        if (results != null)
+        if (results != null) {
             results.put( param, String.valueOf( value ) );
+        }
     }
 
     /**
      * set a column in a statement using the appropriate JDBC setXXX method.
      *
      */
-    protected void setColumn ( PreparedStatement statement, int position, Configuration entry, Object value ) throws Exception {
-
-        JDBCTypeConversions.setColumn(statement, position, value, (Integer) JDBCTypeConversions.typeConstants.get(entry.getAttribute("type")));
+    protected void setColumn (PreparedStatement statement, int position, Configuration entry, Object value) throws Exception {
+        JDBCTypeConversions.setColumn(statement, position, value,
+                (Integer)JDBCTypeConversions.typeConstants.get(entry.getAttribute("type")));
     }
-
 
     /**
      * set a column in a statement using the appropriate JDBC setXXX
@@ -600,27 +590,27 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
      * setOutput.
      *
      */
-    protected void setColumn ( Map objectModel, String outputMode, Map results,
+    protected void setColumn (Map objectModel, String outputMode, Map results,
                                Configuration table, Configuration column, int rowIndex, 
-                               Object value, PreparedStatement statement, int position ) throws Exception {
+                               Object value, PreparedStatement statement, int position) throws Exception {
 
-        if (results!=null) this.setOutput( objectModel, outputMode, results, table, column, rowIndex, value );
+        if (results != null) {
+            this.setOutput(objectModel, outputMode, results, table, column, rowIndex, value);
+        }
         this.setColumn( statement, position, column, value );
     }
-
 
     // ========================================================================
     // main method
     // ========================================================================
-
 
     /**
      * Add a record to the database.  This action assumes that
      * the file referenced by the "descriptor" parameter conforms
      * to the AbstractDatabaseAction specifications.
      */
-    public Map act( Redirector redirector, SourceResolver resolver, Map objectModel,
-                    String source, Parameters param ) throws Exception {
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel,
+                    String source, Parameters param) throws Exception {
 
         DataSourceComponent datasource = null;
         Connection conn = null;
@@ -635,9 +625,9 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         // set request attribute
         String outputMode = param.getParameter("output", (String) defaultModeNames.get(MODE_OUTPUT));
 
-        if (this.settings.containsKey("reloadable"))
+        if (this.settings.containsKey("reloadable")) {
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
-
+        }
         // read local parameter settings
         try {
             Configuration conf =
@@ -672,8 +662,8 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                 modeTypes.put( MODE_AUTOINCR, "autoincr" );
                 modeTypes.put( MODE_OTHERS, "others" );
                 modeTypes.put( MODE_OUTPUT, outputMode );
-                for (int i=0; i<tables.length; i++) {
-                    rows += processTable( tables[i], conn, objectModel, results, modeTypes );
+                for (int i = 0; i < tables.length; i++) {
+                    rows += processTable(tables[i], conn, objectModel, results, modeTypes);
                 }
             } else {
                 // new set based behaviour
@@ -696,7 +686,7 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
 
                 // find tables contained in tableset
                 int j = 0;
-                for (j=0; j<tablesets.length; j++) {
+                for (j = 0; j < tablesets.length; j++) {
                     setname = tablesets[j].getAttribute ("name", "");
                     if (tablesetname.trim().equals (setname.trim ())) {
                         found = true;
@@ -709,7 +699,7 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
 
                 Configuration[] set = tablesets[j].getChildren("table");
 
-                for (int i=0; i<set.length; i++) {
+                for (int i = 0; i < set.length; i++) {
                     // look for alternative mode types
                     modeTypes = new HashMap(6);
                     modeTypes.put( MODE_AUTOINCR, set[i].getAttribute( "autoincr-mode", "autoincr" ) );
@@ -725,8 +715,9 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                 }
             }
 
-            if (conn.getAutoCommit()==false)
+            if (conn.getAutoCommit() == false) {
                 conn.commit();
+            }
 
             // obtain output mode module and rollback output
             ServiceSelector outputSelector = null;
@@ -736,20 +727,23 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                 if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
                     output = (OutputModule) outputSelector.select(outputMode);
                 }
-                output.commit(null, objectModel);
-            } catch (Exception e) {
+                if (output != null) {
+                    output.commit(null, objectModel);
+                } else if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Could not select output mode " + outputMode);
+                }
+            } catch (ServiceException e) {
                 if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("Could not select output mode "
-                                     + outputMode + ":" + e.getMessage());
+                    getLogger().warn("Could not select output mode " + outputMode + ":" + e.getMessage());
                 }
             } finally {
                 if (outputSelector != null) {
-                    if (output != null)
+                    if (output != null) {
                         outputSelector.release(output);
+                    }
                     this.manager.release(outputSelector);
                 }
             }
-
         } catch (Exception e) {
             failed = true;
             if ( conn != null ) {
@@ -769,20 +763,23 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
                         if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
                             output = (OutputModule) outputSelector.select(outputMode);
                         }
-                        output.rollback( null, objectModel, e);
-                    } catch (Exception e2) {
+                        if (output != null) {
+                            output.rollback( null, objectModel, e);
+                        } else if (getLogger().isWarnEnabled()) {
+                            getLogger().warn("Could not select output mode " + outputMode);
+                        }
+                    } catch (ServiceException e2) {
                         if (getLogger().isWarnEnabled()) {
-                            getLogger().warn("Could not select output mode "
-                                       + outputMode + ":" + e2.getMessage());
+                            getLogger().warn("Could not select output mode " + outputMode + ":" + e2.getMessage());
                         }
                     } finally {
                         if (outputSelector != null) {
-                            if (output != null)
+                            if (output != null) {
                                 outputSelector.release(output);
+                            }
                             this.manager.release(outputSelector);
                         }
                     }
-
                 } catch (SQLException se) {
                     if (getLogger().isDebugEnabled())
                         getLogger().debug("There was an error rolling back the transaction", se);
@@ -826,12 +823,9 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
         return results; // (results == null? results : Collections.unmodifiableMap(results));
     }
 
-
-
     // ========================================================================
     // abstract methods
     // ========================================================================
-
 
     /**
      * set all necessary ?s and execute the query
@@ -853,7 +847,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
      */
     protected abstract String selectMode( boolean isAutoIncrement, Map modes );
 
-
     /**
      * determine whether autoincrement columns should be honoured by
      * this operation. This is usually snsible only for INSERTs.
@@ -862,7 +855,6 @@ public abstract class DatabaseAction extends AbstractComplementaryConfigurableAc
      * implement other operations e.g. delete
      */
     protected abstract boolean honourAutoIncrement();
-
 
     /**
      * Fetch all values for all columns that are needed to do the
