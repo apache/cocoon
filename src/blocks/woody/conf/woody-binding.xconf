@@ -15,6 +15,7 @@
       <binding name="insert-node" src="org.apache.cocoon.woody.binding.InsertNodeJXPathBindingBuilder"/>
       <binding name="delete-node" src="org.apache.cocoon.woody.binding.DeleteNodeJXPathBindingBuilder"/>
       <binding name="insert-bean" src="org.apache.cocoon.woody.binding.InsertBeanJXPathBindingBuilder"/>
+      <binding name="unique-field" src="org.apache.cocoon.woody.binding.UniqueFieldJXPathBindingBuilder"/>
       <binding name="javascript" src="org.apache.cocoon.woody.binding.JavaScriptJXPathBindingBuilder"/>
       <binding name="case" src="org.apache.cocoon.woody.binding.CaseJXPathBindingBuilder"/>
       <binding name="class" src="org.apache.cocoon.woody.binding.ClassJXPathBindingBuilder"/>
