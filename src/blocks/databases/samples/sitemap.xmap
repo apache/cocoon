@@ -49,6 +49,10 @@
    <map:match pattern="">
      <map:redirect-to uri="samples"/>
    </map:match>
+
+   <map:match pattern="welcome">
+     <map:redirect-to uri="samples"/>
+   </map:match>
    
    <map:match pattern="samples">
     <map:generate src="samples.xml"/>
