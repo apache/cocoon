@@ -59,6 +59,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.xpointer.XPointer;
@@ -86,7 +87,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.3 2003/05/20 20:49:57 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.4 2003/05/23 13:06:33 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -391,7 +392,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                     try {
                         if (suffix.length() > 0) {
                             XPointer xpointer;
-                            xpointer = XPointerFrameworkParser.parse(suffix);
+                            xpointer = XPointerFrameworkParser.parse(NetUtils.decodePath(suffix));
                             XPointerContext context = new XPointerContext(suffix, url, subPipe, getLogger(), manager);
                             xpointer.process(context);
                         } else {
