@@ -70,7 +70,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.5 2003/11/11 21:57:18 sylvain Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.6 2004/01/14 15:10:53 coliver Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
     protected List parameters;
@@ -149,11 +149,6 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         // the function call, so we invoke it here.
         if (continuation != null && continuation.length() > 0) {
             interpreter.handleContinuation(continuation, params, env);
-            if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call continuation> did not send a response, at " + getLocation());
-            }
-            
-            // Success
             return true;
         }
 
@@ -164,11 +159,6 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
 
         if (name != null && name.length() > 0) {
             interpreter.callFunction(name, params, env);
-            if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call function='" + name + "'> did not send a response, at " + getLocation());
-            }
-            
-            // Success
             return true;
         }
         
