@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.4 $ $Date: 2004/05/01 18:06:12 $
+ * @version CVS $Revision: 1.5 $ $Date: 2004/05/03 09:00:28 $
  */
 public final class DocumentCache {
 
@@ -79,12 +79,16 @@ public final class DocumentCache {
         final String fileName = file.toURL().toExternalForm();
         Document document = (Document)fileCache.get(fileName);
         if ( document != null ) {
-            task.log("Using file from cache: " + fileName, Project.MSG_DEBUG);
+            if ( task != null ) {
+                task.log("Using file from cache: " + fileName, Project.MSG_DEBUG);
+            }
             fileCache.remove(fileName);
         } else {
             try {
                 // load xml
-                task.log("Reading: " + fileName, Project.MSG_DEBUG);
+                if ( task != null ) {
+                    task.log("Reading: " + fileName, Project.MSG_DEBUG);
+                }
                 document = builder.parse(fileName);
             } catch (IOException e) {
                 throw new BuildException("IOException: "+e);
