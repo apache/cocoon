@@ -16,9 +16,7 @@
 package org.apache.cocoon.webservices.system;
 
 import java.util.Properties;
-
 import org.apache.commons.lang.SystemUtils;
-import org.apache.excalibur.util.SystemUtil;
 
 /**
  * Class which provides JVM system related SOAP services.
@@ -44,25 +42,6 @@ public class System {
      */
     public String getArchitecture() {
         return SystemUtils.OS_ARCH;
-    }
-
-    /**
-     * <code>getCPUInfo</code> returns host CPU information.
-     * @deprecated This will be removed in Cocoon 2.2
-     * @return host CPU information
-     */
-    public String getCPUInfo() {
-        return SystemUtil.cpuInfo();
-    }
-
-    /**
-     * <code>getNumProcessors</code> returns the number of processors in
-     * this machine.
-     * @deprecated This will be removed in Cocoon 2.2
-     * @return number of processors
-     */
-    public int getNumProcessors() {
-        return SystemUtil.numProcessors();
     }
 
     /**
