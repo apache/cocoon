@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.8 2003/07/02 09:31:00 cziegeler Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.9 2003/09/03 10:50:48 bruno Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -118,6 +118,12 @@
 
 <xsl:template name="returns2br">
   <xsl:param name="string"/>
+  <xsl:value-of select="$string"/>
+  <!--
+    Disabled this template since it can cause a StackOverflowError on longer
+    stacktraces, and doesn't seem to be needed anyhow.
+  -->
+  <!--
   <xsl:variable name="return" select="'&#xa;'"/>
   <xsl:choose>
     <xsl:when test="contains($string,$return)">
@@ -131,6 +137,7 @@
       <xsl:value-of select="$string"/>
     </xsl:otherwise>
   </xsl:choose>
+  -->
 </xsl:template>
 
 </xsl:stylesheet>
