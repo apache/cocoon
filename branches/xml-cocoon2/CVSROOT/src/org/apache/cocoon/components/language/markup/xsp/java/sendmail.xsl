@@ -62,6 +62,105 @@
  version="1.0"
 >
 
+<xsl:param name="XSP-ENVIRONMENT"/>
+<xsl:param name="XSP-VERSION"/>
+<xsl:param name="filename"/>
+<xsl:param name="language"/>
+
+<xsl:variable name="cocoon1-environment">Cocoon 1</xsl:variable>
+<xsl:variable name="cocoon2-environment">Cocoon 2</xsl:variable>
+
+<xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
+<xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
+
+<xsl:variable name="environment">
+  <xsl:choose>
+    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon1-environment)">
+      <xsl:text>cocoon1</xsl:text>
+    </xsl:when>
+    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon2-environment)">
+      <xsl:text>cocoon2</xsl:text>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>cocoon2</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
+
+<xsl:variable name="xsp-namespace-uri">
+  <xsl:choose>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsl:value-of select="$cocoon1-xsp-namespace-uri"/>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsl:value-of select="$cocoon2-xsp-namespace-uri"/>
+    </xsl:when>
+  </xsl:choose>
+</xsl:variable>
+
+<xsl:template name="get-nested-content">
+  <xsl:param name="content"/>
+  <xsl:choose>
+    <xsl:when test="$content/*">
+      <xsl:apply-templates select="$content/*"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$content"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template name="get-nested-string">
+  <xsl:param name="content"/>
+  <xsl:choose>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsl:choose>
+        <xsl:when test="$content/*">
+          ""
+          <xsl:for-each select="$content/node()">
+            <xsl:choose>
+              <xsl:when test="name(.)">
+                + <xsl:apply-templates select="."/>
+              </xsl:when>
+              <xsl:otherwise>
+                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          "<xsl:value-of select="normalize-space($content)"/>"
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsl:choose>
+        <xsl:when test="$content/*">
+          ""
+          <xsl:for-each select="$content/node()">
+            <xsl:choose>
+              <xsl:when test="name(.)">
+                <xsl:choose>
+                  <xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
+                    + "<xsl:value-of select="."/>"
+                  </xsl:when>
+                  <xsl:otherwise>
+                    + <xsl:apply-templates select="."/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+              <xsl:otherwise>
+                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template match="xsp:page">
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
@@ -121,28 +220,6 @@
   <xsl:copy>
     <xsl:apply-templates select="@*|node()"/>
   </xsl:copy>
-</xsl:template>
-
-<xsl:template name="get-nested-string">
-  <xsl:param name="content"/>
-  <xsl:choose>
-    <xsl:when test="$content/*">
-      ""
-      <xsl:for-each select="$content/node()">
-        <xsl:choose>
-          <xsl:when test="name(.)"> 
-            + <xsl:apply-templates select="."/>
-          </xsl:when>
-          <xsl:otherwise>
-            + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
-    </xsl:when>
-    <xsl:otherwise>
-      "<xsl:value-of select="normalize-space($content)"/>"
-    </xsl:otherwise>
-  </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>
