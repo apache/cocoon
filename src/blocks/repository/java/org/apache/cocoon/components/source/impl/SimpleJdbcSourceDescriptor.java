@@ -66,8 +66,7 @@ import org.apache.excalibur.source.SourceValidity;
  *  sources that are described by this SourceDescriptor will NOT be cacheable.
  * </p>
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $ID$
+ * @version $Id: SimpleJdbcSourceDescriptor.java,v 1.8 2004/03/27 22:01:22 unico Exp $
  */
 public class SimpleJdbcSourceDescriptor
 extends AbstractConfigurableSourceDescriptor
@@ -242,8 +241,7 @@ implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSaf
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
         }
     }
@@ -279,8 +277,7 @@ implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSaf
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
         }
     }
@@ -310,8 +307,7 @@ implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSaf
                 if (connection != null) {
                     try {
                         connection.close();
-                    } catch (SQLException e) {
-                    }
+                    } catch (SQLException e) {}
                 }
             }
         }
