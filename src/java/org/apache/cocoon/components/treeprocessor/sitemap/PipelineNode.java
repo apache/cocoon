@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -37,7 +36,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.13 2004/03/10 23:37:31 unico Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.14 2004/03/11 01:31:59 joerg Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
