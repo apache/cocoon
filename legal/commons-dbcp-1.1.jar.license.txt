@@ -1,7 +1,7 @@
 /*
- * $Source: /home/cvs/cocoon-2.1/src/blocks/ojb/lib/Attic/commons-dbcp-1.1.jar.license,v $
- * $Revision: 1.2 $
- * $Date: 2004/03/01 17:44:28 $
+ * $Source: /home/cvs/cocoon-2.1/legal/Attic/commons-dbcp-1.1.jar.license.txt,v $
+ * $Revision: 1.1 $
+ * $Date: 2004/03/04 08:08:51 $
  *
  * ====================================================================
  *
