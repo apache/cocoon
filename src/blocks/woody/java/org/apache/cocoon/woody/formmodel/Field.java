@@ -74,35 +74,33 @@ import java.util.Locale;
  * that the value for the Field can be selected from a list, rather than being
  * entered in a textbox. The validation of the field is delegated to its associated
  * Datatype.
- * 
+ *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.24 2004/02/19 22:13:27 joerg Exp $
+ * @version CVS $Id: Field.java,v 1.25 2004/02/29 05:28:48 vgritsenko Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
-    private SelectionList selectionList;
-    private FieldDefinition fieldDefinition;
-    
-    private String enteredValue = null;
-    private Object value = null;
+    protected SelectionList selectionList;
+
+    protected String enteredValue;
+    protected Object value;
     private Object oldValue;
 
     // At startup, we don't need to parse (both enteredValue and value are null),
     // but need to validate (error if field is required)
-    private boolean needsParse = true;
-    private boolean needsValidate = true;
-    private boolean isValidating = false;
-    private ValidationError validationError;
+    protected boolean needsParse = true;
+    protected boolean needsValidate = true;
+    private boolean isValidating;
+    protected ValidationError validationError;
 
 
     public Field(FieldDefinition fieldDefinition) {
-        this.fieldDefinition = fieldDefinition;
-        super.setDefinition(fieldDefinition);
+        setDefinition(fieldDefinition);
         setLocation(fieldDefinition.getLocation());
     }
 
-    public FieldDefinition getFieldDefinition() {
-        return this.fieldDefinition;
+    public final FieldDefinition getFieldDefinition() {
+        return (FieldDefinition)super.definition;
     }
 
     public String getId() {
@@ -136,7 +134,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 }
             } else {
                 this.needsParse = false;
-                this.needsValidate = true;                
+                this.needsValidate = true;
             }
         }
 
@@ -155,7 +153,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                     if (this.value != null) {
                         this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
                     } else {        // No value : is it required ?
-                        if (this.fieldDefinition.isRequired()) {
+                        if (getFieldDefinition().isRequired()) {
                             this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
                         }
                     }
@@ -200,6 +198,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     public void readFromRequest(FormContext formContext) {
         String newEnteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
+        readFromRequest(newEnteredValue);
+    }
+
+    protected void readFromRequest(String newEnteredValue) {
         // whitespace & empty field handling
         if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
@@ -208,9 +210,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 newEnteredValue = null;
             }
         }
+
         // TODO: This cause validation to occur too early.
         getValue();
         this.oldValue = value;
+
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
@@ -222,7 +226,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             value = null;
             needsParse = true;
         }
-        
+
         // Always revalidate, as validation may depend on the value of other fields
         this.needsValidate = true;
     }
@@ -240,11 +244,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public ValidationError getValidationError() {
         return validationError;
     }
-    
+
     /**
      * Set a validation error on this field. This allows fields to be externally marked as invalid by
      * application logic.
-     * 
+     *
      * @param error the validation error
      */
     public void setValidationError(ValidationError error) {
@@ -252,8 +256,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public boolean isRequired() {
-        return fieldDefinition.isRequired();
+        return getFieldDefinition().isRequired();
     }
+
 
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
@@ -262,7 +267,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        fieldAttrs.addCDATAAttribute("required", String.valueOf(fieldDefinition.isRequired()));
+        fieldAttrs.addCDATAAttribute("required", String.valueOf(isRequired()));
         contentHandler.startElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL, fieldAttrs);
 
         if (enteredValue != null || value != null) {
@@ -276,19 +281,22 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
         }
+
         // validation message element: only present if the value is not valid
         if (validationError != null) {
             contentHandler.startElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL);
         }
+
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
-        // the selection list, if any
+
+        // generate selection list, if any
         if (selectionList != null) {
             selectionList.generateSaxFragment(contentHandler, locale);
-        } else if (fieldDefinition.getSelectionList() != null) {
-            fieldDefinition.getSelectionList().generateSaxFragment(contentHandler, locale);
+        } else if (getFieldDefinition().getSelectionList() != null) {
+            getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
         }
         contentHandler.endElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL);
     }
@@ -309,20 +317,20 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
         this.selectionList = selectionList;
     }
-    
+
     /**
      * Read this field's selection list from an external source.
-     * All Cocoon-supported protocols can be used. 
-     * The format of the XML produced by the source should be the 
+     * All Cocoon-supported protocols can be used.
+     * The format of the XML produced by the source should be the
      * same as in case of inline specification of the selection list,
      * thus the root element should be a <code>wd:selection-list</code>
      * element.
-     * @param uri The URI of the source. 
+     * @param uri The URI of the source.
      */
     public void setSelectionList(String uri) {
-        setSelectionList(this.fieldDefinition.buildSelectionList(uri));
+        setSelectionList(getFieldDefinition().buildSelectionList(uri));
     }
-    
+
     /**
      * Set this field's selection list using values from an in-memory
      * object. The <code>object</code> parameter should point to a collection
@@ -333,21 +341,21 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * of every <code>wd:item</code> in the list.
      * <p>Access to the values of the above mentioned properties is done
      * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
-     * @param model The collection used as a model for the selection list. 
+     * @param model The collection used as a model for the selection list.
      * @param valuePath An XPath expression referring to the attribute used
-     * to populate the values of the list's items. 
+     * to populate the values of the list's items.
      * @param labelPath An XPath expression referring to the attribute used
      * to populate the labels of the list's items.
      */
     public void setSelectionList(Object model, String valuePath, String labelPath) {
-        setSelectionList(this.fieldDefinition.buildSelectionListFromModel(model, valuePath, labelPath));
+        setSelectionList(getFieldDefinition().buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
     public Datatype getDatatype() {
-        return fieldDefinition.getDatatype();
+        return getFieldDefinition().getDatatype();
     }
-    
+
     public void broadcastEvent(WidgetEvent event) {
-        this.fieldDefinition.fireValueChangedEvent((ValueChangedEvent)event);
+        getFieldDefinition().fireValueChangedEvent((ValueChangedEvent)event);
     }
 }
