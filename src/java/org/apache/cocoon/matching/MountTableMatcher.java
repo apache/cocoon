@@ -107,13 +107,13 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.4 2003/12/22 13:48:46 joerg Exp $
+ * @version CVS $Id: MountTableMatcher.java,v 1.5 2004/02/10 14:45:15 sylvain Exp $
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
     private ServiceManager manager;
     private SourceResolver resolver;
-    private Map mountTables = new HashMap();
+    private Map mountTables = Collections.synchronizedMap(new HashMap());
     private boolean ignoreMissingTables = false;
 
     public void service(ServiceManager manager) throws ServiceException {
