@@ -50,15 +50,8 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
@@ -76,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * CVS $Id: EffectPipe.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: EffectPipe.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public class EffectPipe extends AbstractXMLPipe {

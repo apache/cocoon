@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.*;
-
 /**
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
  */

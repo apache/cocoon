@@ -51,13 +51,10 @@
 package org.apache.cocoon.woody.formmodel;
 
 
-import java.util.Iterator;
-
-import org.apache.cocoon.woody.datatype.Datatype;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Union} widget.
  *
- * CVS $Id: UnionDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: UnionDefinition.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public class UnionDefinition extends AbstractContainerDefinition {
