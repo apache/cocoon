@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.2 2000-03-20 21:22:01 stefano Exp $
+  $Id: changes.xml,v 1.9.2.3 2000-03-28 22:15:30 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" due-to="Sebastien Sahuc" due-to-email="ssahuc@imediation.com"> 
+   Fixed order of filters that was backwards.
+  </action>
+  <action dev="SM" type="add" due-to="Giacomo Pati" due-to-email="Giacomo.Pati@pwr.ch">
+   Fixed typo in DirectoryGenerator.
+  </action>
   <action dev="SM" type="add">
    Distribution cleanup, early documentation.
   </action>
