@@ -8,7 +8,7 @@
       <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
     </map:transformers>
     <map:generators default="file">
-        <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
+        <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.VelocityGenerator"/>
         <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
       <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="sitemap.generator.jxforms"/>
     </map:generators>
