@@ -41,7 +41,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-22 17:10:20 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-28 17:40:25 $
  */
 public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -266,7 +266,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
                 ComponentFactory cf = new ComponentFactory(componentClass, (Configuration)configurations.get(role), this, this.context);
                 cf.setLogger(this.log);
 
-                pool = new ComponentPool(cf, new ComponentPoolController());
+                pool = new ComponentPool(cf);
                 pool.setLogger(this.log);
                 pool.init();
             } catch (Exception e) {

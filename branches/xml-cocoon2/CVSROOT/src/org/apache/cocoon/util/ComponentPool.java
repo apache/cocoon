@@ -10,7 +10,7 @@ package org.apache.cocoon.util;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Loggable;
-import org.apache.avalon.util.pool.AbstractPool;
+import org.apache.avalon.util.pool.ThreadSafePool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.PoolController;
 import org.apache.cocoon.ComponentFactory;
@@ -23,68 +23,30 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  */
-public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable {
+public class ComponentPool extends ThreadSafePool implements ThreadSafe, Loggable {
 
     public final static int DEFAULT_POOL_SIZE = 8;
 
     private Logger log;
 
-    public ComponentPool(final ObjectFactory factory,
-                         final PoolController controller) throws Exception {
-        super(factory, controller, DEFAULT_POOL_SIZE/2, DEFAULT_POOL_SIZE);
+    public ComponentPool(final ObjectFactory factory) throws Exception {
+        super(factory, DEFAULT_POOL_SIZE/2, DEFAULT_POOL_SIZE);
     }
 
     public ComponentPool(final ObjectFactory factory,
-                         final PoolController controller,
                          final int initial) throws Exception {
-        super(factory, controller, initial, initial);
+        super(factory, initial, initial);
     }
 
     public ComponentPool(final ObjectFactory factory,
-                         final PoolController controller,
                          final int initial,
                          final int maximum) throws Exception {
-        super(factory, controller, initial, maximum);
+        super(factory, initial, maximum);
     }
 
     public void setLogger(Logger log) {
         if (this.log == null) {
             this.log = log;
-        }
-    }
-
-    /**
-     * Retrieve an object from pool.
-     *
-     * @return an object from Pool
-     */
-    public synchronized final Poolable get() throws Exception {
-        synchronized(this) {
-            Poolable component = super.get();
-            log.debug(
-                (new StringBuffer("ComponentPool retrieved "))
-                .append(component.getClass().getName())
-                .append(" (").append(component.toString()).append(")")
-                .toString()
-            );
-            return component;
-        }
-    }
-
-    /**
-     * Place an object in pool.
-     *
-     * @param poolable the object to be placed in pool
-     */
-    public synchronized final void put(final Poolable poolable) {
-        synchronized(this) {
-            super.put(poolable);
-            log.debug(
-                (new StringBuffer("ComponentPool returned "))
-                .append(poolable.getClass().getName())
-                .append(" (").append(poolable.toString()).append(")")
-                .toString()
-            );
         }
     }
 }
