@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -72,7 +70,6 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.*;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -87,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.4 2003/05/23 13:06:33 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.5 2003/06/07 21:17:36 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -107,8 +104,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
     public void setup(SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
         this.resolver = resolver;
-        this.xIncludePipe = new XIncludePipe(null);
+        this.xIncludePipe = new XIncludePipe();
         this.xIncludePipe.enableLogging(getLogger());
+        this.xIncludePipe.init(null);
         super.setConsumer(xIncludePipe);
     }
 
@@ -142,7 +140,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
      */
     private class XIncludePipe extends AbstractXMLPipe {
         /** Helper class to keep track of xml:base attributes */
-        private XMLBaseSupport xmlBaseSupport = new XMLBaseSupport();
+        private XMLBaseSupport xmlBaseSupport;
         /** Element nesting level when inside an xi:include element. */
         private int xIncludeLevel = 0;
         /** Should the content of the fallback element be inserted when it is encountered? */
@@ -163,8 +161,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         private String href;
         private XIncludePipe parent;
 
-        public XIncludePipe(String uri) {
+        public void init(String uri) {
             this.href = uri;
+            this.xmlBaseSupport = new XMLBaseSupport(resolver, getLogger());
         }
 
         public void setParent(XIncludePipe parent) {
@@ -219,6 +218,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         public void endElement(String uri, String name, String raw) throws SAXException {
             if (xIncludeLevel > 0 && fallbackLevel < 1) {
                 xIncludeLevel--;
+                if (xIncludeLevel == 0)
+                    xmlBaseSupport.endElement(uri, name, raw);
                 if (xIncludeLevel == 0 && useFallback) {
                     // an error was encountered but a fallback element was not found: throw the error now
                     useFallback = false;
@@ -351,16 +352,26 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
             }
 
             Source url = null;
-            String suffix;
+            String suffix = "";
             try {
-                int index = href.indexOf('#');
-                if (index < 0) {
-                    url = resolver.resolveURI(xmlBaseSupport.makeAbsolute(href));
-                    suffix = "";
-                } else {
-                    url = resolver.resolveURI(xmlBaseSupport.makeAbsolute(href.substring(0, index)));
-                    suffix = href.substring(index+1);
+                int fragmentIdentifierPos = href.indexOf('#');
+                if (fragmentIdentifierPos != -1) {
+                    suffix = href.substring(fragmentIdentifierPos + 1);
+                    href = href.substring(0, fragmentIdentifierPos);
                 }
+
+                // an empty href is a reference to the current document -- this can be different than the current base
+                if (href.equals("")) {
+                    if (this.href == null)
+                        throw new SAXException("XIncludeTransformer: encountered empty href (= href pointing to the current document) but the location of the current document is unkown.");
+                    int fragmentIdentifierPos2 = this.href.indexOf('#');
+                    if (fragmentIdentifierPos2 != -1)
+                        href = this.href.substring(0, fragmentIdentifierPos2);
+                    else
+                        href = this.href;
+                }
+
+                url = resolver.resolveURI(xmlBaseSupport.makeAbsolute(href));
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("URL: " + url.getURI() + "\nSuffix: " + suffix);
                 }
@@ -383,8 +394,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                         reader.close();
                     }
                 } else if (parse.equals("xml")) {
-                    XIncludePipe subPipe = new XIncludePipe(canonicURI);
+                    XIncludePipe subPipe = new XIncludePipe();
                     subPipe.enableLogging(getLogger());
+                    subPipe.init(canonicURI);
                     subPipe.setConsumer(xmlConsumer);
                     subPipe.setParent(this);
 
@@ -396,22 +408,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                             XPointerContext context = new XPointerContext(suffix, url, subPipe, getLogger(), manager);
                             xpointer.process(context);
                         } else {
-                            SAXParser parser = null;
-                            try {
-                                parser = (SAXParser)manager.lookup(SAXParser.ROLE);
-                                IncludeXMLConsumer xinclude_handler = new IncludeXMLConsumer(subPipe);
-                                InputSource input = SourceUtil.getInputSource(url);
-                                parser.parse(input, xinclude_handler);
-                            } finally {
-                                manager.release((Component)parser);
-                            }
+                            SourceUtil.toSAX(url, new IncludeXMLConsumer(subPipe));
                         }
                         // restore locator on the consumer
                         if (locator != null)
                             xmlConsumer.setDocumentLocator(locator);
                     } catch (ResourceNotFoundException e) {
                         useFallback = true;
-                        fallBackException = e;
+                        fallBackException = new CascadingException("Resouce not found: " + url.getURI());
                         getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } catch (ParseException e) {
                         // this exception is thrown in case of an invalid xpointer expression
@@ -433,9 +437,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                         useFallback = true;
                         fallBackException = e;
                         getLogger().error("Error processing an xInclude, will try to use fallback.", e);
-                    } catch(ComponentException e) {
-                        getLogger().error("Error in processXIncludeElement", e);
-                        throw new SAXException(e);
                     }
                 }
             } catch (SourceException se) {
