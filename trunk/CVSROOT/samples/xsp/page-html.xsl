@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
- 
+
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
    <html>
@@ -30,16 +30,16 @@
       </tr>
      </table>
     </center>
-    
+
     <p align="center">
      <font size="-1">
       Copyright &#169; @year@ <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
       All rights reserved.
      </font>
     </p>
-       
+
     </body>
-   </html>  
+   </html>
   </xsl:template>
 
   <xsl:template match="title|author">
@@ -67,7 +67,7 @@
       <td width="100%">
        <table border="0" width="100%" cellpadding="4">
         <tr>
-         <th bgcolor="#e0e0e0" colspan="2" align="right"><xsl:value-of select="@title"/></th>             
+         <th bgcolor="#e0e0e0" colspan="2" align="right"><xsl:value-of select="@title"/></th>
         </tr>
         <xsl:apply-templates/>
        </table>
@@ -116,5 +116,5 @@
     </td>
    </tr>
   </xsl:template>
- 
+
 </xsl:stylesheet>

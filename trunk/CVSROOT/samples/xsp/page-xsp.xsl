@@ -3,31 +3,31 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
-  
+
     <xsl:processing-instruction name="cocoon-process">type="xsp"</xsl:processing-instruction>
 
     <xsl:processing-instruction name="cocoon-process">type="xslt"</xsl:processing-instruction>
     <xsl:processing-instruction name="xml-stylesheet">href="page-html.xsl" type="text/xsl"</xsl:processing-instruction>
 
     <xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core">
- 
+
     <xsp:logic>
-      static private int counter = 0; 
-      
-      private synchronized int count() { 
-        return counter++; 
+      static private int counter = 0;
+
+      private synchronized int count() {
+        return counter++;
       }
-      
+
       private String normalize(String string) {
         if (string == null) return "";
         else return string;
       }
-    </xsp:logic>  
-  
+    </xsp:logic>
+
     <xsl:copy>
      <xsl:apply-templates/>
     </xsl:copy>
-   
+
    </xsp:page>
 
   </xsl:template>
@@ -35,7 +35,7 @@
   <xsl:template match="title|author|link">
    <xsl:copy-of select="."/>
   </xsl:template>
-  
+
   <xsl:template match="p">
    <xsl:copy>
     <xsl:apply-templates/>
@@ -66,12 +66,12 @@
 
   <xsl:template match="request-headers">
        <xsp:logic><![CDATA[
-         Enumeration e = request.getHeaderNames(); 
+         Enumeration e = request.getHeaderNames();
          if ((e != null) && (e.hasMoreElements())) { ]]>
             <p>Here are the request headers...</p>
             <list title="Request Headers">
                 <xsp:logic><![CDATA[
-                  while (e.hasMoreElements()) {  
+                  while (e.hasMoreElements()) {
                     String k = (String) e.nextElement(); ]]>
                     <element>
                         <xsp:attribute name="name">
@@ -85,18 +85,18 @@
           }
         </xsp:logic>
   </xsl:template>
- 
+
   <xsl:template match="servlet-parameters">
    <xsp:logic><![CDATA[
-          e = request.getParameterNames(); 
+          e = request.getParameterNames();
           if ((e != null) && (e.hasMoreElements())) { ]]>
             <p>and here the servlet parameters that were passed along
             with the request...</p>
             <list title="Servlet Parameters">
                 <xsp:logic><![CDATA[
-                  while (e.hasMoreElements()) { 
+                  while (e.hasMoreElements()) {
                     String k = (String) e.nextElement();
-                    String val = request.getParameter(k); 
+                    String val = request.getParameter(k);
                     String vals[] = request.getParameterValues(k); ]]>
                     <element>
                         <xsp:attribute name="name">
@@ -113,8 +113,8 @@
                   }
                 </xsp:logic>
             </list>
-          } 
-        </xsp:logic>      
+          }
+        </xsp:logic>
   </xsl:template>
- 
+
 </xsl:stylesheet>
