@@ -1,7 +1,7 @@
 <!-- === Test targets =========================================================== -->
 
   <!-- Runs all tests -->
-  <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
+  <target name="test" depends="junit-tests, block-tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
   <target name="junit-tests" depends="compile-tests">
@@ -25,9 +25,13 @@
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
-
-    <!-- adjust anteater.home property and uncomment to enable Anteater functional tests
     <property name="anteater.home" value="D:\downloads\anteater-0.9.16"/>
+    <echo>+--------------------| W A R N I N G |----------------------+ </echo>
+    <echo>   The value of the anteater.home property is:                </echo>
+    <echo>   ${anteater.home}                                           </echo>
+    <echo>   Please make sure the anteater.home property points to      </echo>
+    <echo>   your local Anteater installation                           </echo>
+    <echo>+-----------------------------------------------------------+ </echo>
     <java classname="org.apache.tools.ant.Main" fork="true">
       <classpath>
         <fileset dir="${anteater.home}">
@@ -43,7 +47,6 @@
       <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
       <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
     </java>
-    -->
   </target>
 
   <!-- Block tests -->
