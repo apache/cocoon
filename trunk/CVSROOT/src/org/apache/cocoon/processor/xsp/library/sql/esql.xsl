@@ -114,8 +114,6 @@
                   int max_rows;
                   int skip_rows;
                  }
-                 Stack _esql_sessions = new Stack();
-                 EsqlSession _esql_session = null;
 		</xsp:logic>
                 <xsl:apply-templates select=".//esql:execute-query" mode="generate-method"/>
 		<xsl:apply-templates/>
@@ -125,6 +123,10 @@
 <xsl:template match="xsp:page/*">
  <xsl:copy>
   <xsl:apply-templates select="@*"/>
+  <xsp:logic>
+   Stack _esql_sessions = new Stack();
+   EsqlSession _esql_session = null;
+  </xsp:logic>
   <xsl:apply-templates/>
  </xsl:copy>
 </xsl:template>
@@ -136,7 +138,7 @@
 </xsl:template>
 
 <xsl:template match="esql:execute-query">
- <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session);</xsp:logic>
+ <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_esql_sessions,_esql_session);</xsp:logic>
 </xsl:template>
 
 <xsl:template match="esql:execute-query" mode="generate-method">
@@ -188,7 +190,9 @@
 	 Node xspParentNode,
 	 Node xspCurrentNode,
 	 Stack xspNodeStack,
-	 HttpSession session) throws Exception {
+	 HttpSession session,
+	 Stack _esql_sessions,
+	 EsqlSession _esql_session) throws Exception {
 		if (_esql_session != null) {
 		 _esql_sessions.push(_esql_session);
 		}
