@@ -116,7 +116,7 @@
   <map:reader name="databasereader" 
     src="org.apache.cocoon.reading.DatabaseReader"
     logger="sitemap.reader.databasereader" 
-    pool-max="32" pool-min="1" pool-grow="4"/>
+    pool-max="32"/>
     <!-- optional reader configuration -->
     ...
   </map:readers>

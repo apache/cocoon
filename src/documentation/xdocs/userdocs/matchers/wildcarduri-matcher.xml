@@ -113,7 +113,7 @@
   <map:matcher name="template" 
     src="org.apache.cocoon.matching.WildcardURIMatcher"
     logger="sitemap.matcher.template" 
-    pool-max="32" pool-min="1" pool-grow="4"/>
+    pool-max="32"/>
   </map:matcher>
 ...
 ]]></source>

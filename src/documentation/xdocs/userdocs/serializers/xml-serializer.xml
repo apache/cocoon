@@ -51,7 +51,7 @@
     src="org.apache.cocoon.serialization.XMLSerializer"
     mime-type="text/xml"  
     logger="sitemap.serializer.xml" 
-    pool-grow="4" pool-max="32" pool-min="4">
+    pool-max="32">
     <!-- serializer configurations -->
 ...    
   </map:serializer>

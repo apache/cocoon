@@ -21,7 +21,6 @@
   <!ATTLIST language
     name CDATA #REQUIRED
     class CDATA #REQUIRED
-    pool-min CDATA #IMPLIED
     pool-max CDATA #IMPLIED
   >
   <!ELEMENT namespace EMPTY>
@@ -63,7 +62,7 @@
        pool-max is set to 1, meaning that only one builder is recycled.
     -->
   <language name="sitemap" class="org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage"
-		pool-min="1" pool-max="1">
+		pool-max="1">
   
     <!-- Namespace for this language -->
     <namespace uri="http://apache.org/cocoon/sitemap/1.0"/>

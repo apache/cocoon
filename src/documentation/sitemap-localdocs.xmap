@@ -20,7 +20,7 @@
     | Ant 'docs' target is invoked, it will be renamed to sitemap.xmap in a temporary
     | context.  The sitemap.xmap file here is an override of Forrest's.
     |
-    | CVS $Id: sitemap-localdocs.xmap,v 1.4 2004/03/06 02:25:50 antonio Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -60,7 +60,7 @@
 
   <map:pipes default="caching">
      <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
-                   logger="core.processing-pipeline" pool-max="32" pool-min="8" pool-grow="4"/>
+                   logger="core.processing-pipeline" pool-max="32"/>
   </map:pipes>
 
  </map:components>
