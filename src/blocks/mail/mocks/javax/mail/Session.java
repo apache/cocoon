@@ -20,33 +20,76 @@ import java.util.Properties;
 /**
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
- * 
- * @version CVS $Id: Session.java,v 1.5 2004/03/06 02:25:46 antonio Exp $
+ *
+ * @version CVS $Id$
  */
 
 public class Session {
-    
+
+    public static Session getInstance(Properties props) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public static Session getInstance(Properties props, Authenticator auth) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
     public static Session getDefaultInstance(Properties props) {
         throw new NoSuchMethodError("This is a mock object");
     }
-    
+
     public static Session getDefaultInstance(Properties props, Authenticator auth) {
         throw new NoSuchMethodError("This is a mock object");
     }
-    
-    public Store getStore(URLName name) {
-        throw new NoSuchMethodError("This is a mock object");
-    }
-    
-    public Store getStore(String protocol) {
-        throw new NoSuchMethodError("This is a mock object");
+
+    public void setDebug(boolean flag) {
     }
 
     public Provider[] getProviders() {
         throw new NoSuchMethodError("This is a mock object");
     }
 
+    public Provider getProvider(String protocol) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Store getStore() {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Store getStore(String protocol) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Store getStore(URLName name) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Store getStore(Provider provider) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Folder getFolder(URLName name) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Transport getTransport() {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
     public Transport getTransport(String name) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Transport getTransport(URLName name) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Transport getTransport(Provider provider) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public Transport getTransport(Address addr) {
         throw new NoSuchMethodError("This is a mock object");
     }
 }
