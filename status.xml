@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.202 2003/11/27 03:44:20 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.203 2003/11/28 01:23:09 joerg Exp $:-->
 
 <status>
  <developers>
@@ -182,6 +182,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix">
+     Resurrected the XMLDB samples including XIndice 1.1b1 in Cocoon.
+   </action>
    <action dev="VG" type="remove">
      I18n transformer does not support old configuration syntax anymore
      (parameters catalogue-name, catalogue-location). Use &lt;catalogues/&gt;
@@ -192,27 +195,30 @@
      attributes.
    </action>
    <action dev="AG" type="update">
-     Update libs Xerces to 2.6.0 and xml-apis.jar
+     Update libs Xerces to 2.6.0 and xml-apis.jar.
    </action>
    <action dev="SW" type="add">
-     The "cocoon" object in flowscript has a new setup(object) method that honors the various Avalon lifecycle
-     interfaces implemented by an object. This allows Java classes instanciated by a flowscript to access e.g.
-     request, response and components without requiring a dependency on the "FOM_Cocoon" class.
+     The "cocoon" object in flowscript has a new setup(object) method that
+     honors the various Avalon lifecycle interfaces implemented by an object.
+     This allows Java classes instanciated by a flowscript to access e.g.
+     request, response and components without requiring a dependency on the
+     "FOM_Cocoon" class.
    </action>
    <action dev="SW" type="add">
      Woody: new double-list styling for MultivalueField.
    </action>
    <action dev="SW" type="add">
-     New MountTableMatcher to define "mount tables" that allow external directories
-     to be mounted in a sitemap without requiring to modify the sitemap. It's use has
-     been included in the samples sitemap, thus allowing mounts that surivive a "build clean webapp".
+     New MountTableMatcher to define "mount tables" that allow external
+     directories to be mounted in a sitemap without requiring to modify the
+     sitemap. It's use has been included in the samples sitemap, thus allowing
+     mounts that surivive a "build clean webapp".
    </action>
    <action dev="SW" type="add">
      Woody: added rendering of &lt;wd:help&gt; popup panel on a "?" icon.
    </action>
    <action dev="SW" type="add">
-     Woody: new upload widget. This required some modification on multipart.Part objects
-     that can now survice the end of processing of the current request.
+     Woody: new upload widget. This required some modification on multipart.Part
+     objects that can now survice the end of processing of the current request.
    </action>
    <action dev="DC" type="update" context="core">
      Updated Entity Resolver from pre-release to official
