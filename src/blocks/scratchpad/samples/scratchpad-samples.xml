@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.12 2004/04/05 12:25:36 antonio Exp $ -->
+<!-- CVS: $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Scratchpad Samples">
 
@@ -80,6 +80,17 @@
         Use again the ZIP source getting a zipped file as OpenOffice files are ZIP archives
     </sample>
   </group>  
+  
+  <group name="WebServices with Flowscript">
+    <sample name="Random quote webservice" href="flow-webservices/randomQuoteWebService">
+      Remote service returns an xsd string that is mapped to a Javascript string.<br/>
+      (use: http://www.boyzoid.com/comp/randomQuote.cfc?wsdl)
+    </sample>
+    <sample name="Morgage rate" href="flow-webservices/mortgageIndexWebService">
+        Remote service returns an xsd complex type that is mapped to a Javascript object.<br/>
+        (use: http://www.webservicex.net/MortgageIndex.asmx?WSDL)
+    </sample>
+  </group>     
 
   <group name="XModule Source">
     <sample name="Create"
