@@ -63,7 +63,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActNodeBuilder.java,v 1.2 2003/07/29 14:29:10 stephan Exp $
+ * @version CVS $Id: ActNodeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
  */
 
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
@@ -73,10 +73,24 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
     private String      actSetName;
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
+        
+        boolean inActionSet = this.treeBuilder.getAttribute(ActionSetNodeBuilder.IN_ACTION_SET) != null;
 
         // Is it an action-set call ?
         this.actSetName = config.getAttribute("set", null);
         if (actSetName == null) {
+            
+            if (inActionSet) {
+                // Check that children are only parameters or actions
+                Configuration children[] = config.getChildren();
+                for (int i = 0; i < children.length; i++) {
+                    String name = children[i].getName();
+                    if (!"act".equals(name) && !"parameter".equals(name)) {
+                        throw new ConfigurationException("An action set can only contain actions and not '" 
+                            + name + "' at " + children[i].getLocation());
+                    }
+                }
+            }
 
             String name = config.getAttribute("name", null);
             String source = config.getAttribute("src", null);
@@ -85,7 +99,8 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
             ActTypeNode actTypeNode = new ActTypeNode(
                 type,
                 VariableResolverFactory.getResolver(source, this.manager),
-                name
+                name,
+                inActionSet
             );
             this.treeBuilder.setupNode(actTypeNode, config);
 
@@ -94,6 +109,10 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
             return actTypeNode;
 
         } else {
+
+            if (inActionSet) {
+                throw new ConfigurationException("Cannot call an action set from an action set at " + config.getLocation());
+            }
 
             // Action set call
             if (config.getAttribute("src", null) != null) {

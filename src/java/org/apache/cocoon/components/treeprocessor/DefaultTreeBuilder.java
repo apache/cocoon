@@ -88,11 +88,13 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.2 2003/07/28 12:55:45 cziegeler Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
   Recomposable, Configurable, Contextualizable, LogKitManageable, RoleManageable, Recyclable, Disposable {
+
+    protected Map attributes = new HashMap();
 
     /**
      * The tree processor that we're building.
@@ -194,6 +196,14 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         this.namespace = config.getChild("namespace").getAttribute("uri", "");
 
         this.parameterElement = config.getChild("parameter").getAttribute("element", "parameter");
+    }
+
+    public void setAttribute(String name, Object value) {
+        this.attributes.put(name, value);
+    }
+    
+    public Object getAttribute(String name) {
+        return this.attributes.get(name);
     }
 
     /**

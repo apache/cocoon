@@ -50,71 +50,41 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.NamedProcessingNode;
+import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNode.java,v 1.1 2003/03/09 00:09:20 pier Exp $
+ * @version CVS $Id: ActionSetNode.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
  */
 
 public class ActionSetNode extends SimpleSelectorProcessingNode
-  implements Disposable, NamedProcessingNode, Composable {
+  implements NamedProcessingNode {
+      
+    public static final String CALLER_PARAMETERS = ActionSetNode.class.getName() + "/CallerParameters";
+    public static final String ACTION_RESULTS = ActionSetNode.class.getName() + "/ActionResults";
 
-    /** The action types */
-    private String[] types;
+    /** The action nodes */
+    private ProcessingNode[] nodes;
 
     /** The 'action' attribute for each action */
     private String[] actionNames;
 
-    /** The actions that are ThreadSafe, to avoid lookups */
-    private Action[] threadSafeActions;
-
-    /** The src for each action */
-    private VariableResolver[] sources;
-
-    /** The parameters for each action */
-    private Map[] parameters;
-
-    /** The component manager */
-    protected ComponentManager manager;
-
     public ActionSetNode(
-      String name, String[] types, String[] actionNames,
-      VariableResolver[] sources, Map[] parameters) {
+      String name, ProcessingNode[] nodes, String[] actionNames) {
         super(name);
-        this.types = types;
+        this.nodes = nodes;
         this.actionNames = actionNames;
-        this.sources = sources;
-        this.parameters = parameters;
-    }
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        setSelector((ComponentSelector)manager.lookup(Action.ROLE + "Selector"));
-
-        // Get all actions that are thread safe
-        this.threadSafeActions = new Action[types.length];
-
-        for (int i = 0; i < this.types.length; i++) {
-            this.threadSafeActions[i] = (Action)this.getThreadSafeComponent(this.types[i]);
-        }
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
@@ -139,44 +109,30 @@ public class ActionSetNode extends SimpleSelectorProcessingNode
 
         String cocoonAction = env.getAction();
 
+        // Store the parameters from the caller into the environment so that they can be merged with
+        // each action's parameters.
+        
+
         Map result = null;
 
         // Call each action that either has no cocoonAction, or whose cocoonAction equals
         // the one from the environment.
+        env.setAttribute(CALLER_PARAMETERS, params);
 
-        for (int i = 0; i < types.length; i++) {
+        for (int i = 0; i < nodes.length; i++) {
 
-            Map actionResult;
-            Action action;
 
             String actionName = actionNames[i];
-            String source = sources[i].resolve(context, objectModel);
             if (actionName == null || actionName.equals(cocoonAction)) {
-
-                Parameters actionParams = VariableResolver.buildParameters(parameters[i], context, objectModel);
-                if (actionParams == Parameters.EMPTY_PARAMETERS) {
-                    actionParams = params;
-                } else {
-                    actionParams.merge(params);
-                }
-
-                // If action is ThreadSafe, avoid select() and try/catch block (faster !)
-                if ((action = this.threadSafeActions[i]) != null) {
-
-                    actionResult = action.act(
-                        redirector, resolver, objectModel, source, actionParams);
-
-                } else {
-
-                    action = (Action)this.selector.select(this.types[i]);
-                    try {
-                        actionResult = action.act(
-                            redirector, resolver, objectModel, source, actionParams);
-                    } finally {
-                        this.selector.release(action);
-                    }
-                }
-
+                
+                this.nodes[i].invoke(env, context);
+                
+                // Get action results. They're passed back through the environment since action-sets
+                // "violate" the tree hierarchy (the returned Map is visible outside of the node)
+                Map actionResult = (Map)env.getAttribute(ACTION_RESULTS);
+                // Don't forget to clear it
+                env.removeAttribute(ACTION_RESULTS);
+                
                 if (actionResult != null) {
                     // Merge the result in the global result, creating it if necessary.
                     if (result == null) {
@@ -185,20 +141,11 @@ public class ActionSetNode extends SimpleSelectorProcessingNode
                         result.putAll(actionResult);
                     }
                 }
+                
             } // if (actionName...
         } // for (int i...
 
         return result;
-    }
-
-    public void dispose() {
-
-        // Dispose ThreadSafe actions
-        for (int i = 0; i < this.threadSafeActions.length; i++) {
-            this.selector.release(this.threadSafeActions[i]);
-        }
-        
-        this.manager.release(this.selector);        
     }
 
     /**

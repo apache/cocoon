@@ -82,7 +82,8 @@
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-dept.xsp"/>
-  <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
+  <map:transform src="apache.xsl"/>
+  <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
   <map:serialize/>
 </map:match>
 
@@ -94,14 +95,20 @@
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-empl.xsp"/>
-  <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
+  <map:transform src="apache.xsl"/>
+  <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
   <map:serialize/>
 </map:match>
 
   <map:match pattern="**.html">
     <map:generate src="docs/{1}.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
+  <map:transform src="apache.xsl"/>
+    <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
     <map:serialize/>
+  </map:match>
+  
+  <map:match pattern="images/**">
+    <map:read src="context://docs/{0}"/>
   </map:match>
 
   </map:pipeline>
