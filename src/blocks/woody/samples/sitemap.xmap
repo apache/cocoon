@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+ <map:components>
+
+  <map:generators default="file">   
+    <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator"/>
+  </map:generators>
+
+  <map:transformers default="xslt">    
+    <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer"/>
+    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <catalogues default="other">
+        <catalogue id="other" name="OtherMessages" location="messages"/>
+        <catalogue id="woody" name="WoodyMessages" location="messages"/>
+      </catalogues>
+      <cache-at-startup>true</cache-at-startup>
+    </map:transformer>
+    <!-- be sure Xalan is used instead of XSLTC -->
+    <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.TraxTransformer">
+      <use-request-parameters>false</use-request-parameters>
+      <use-session-parameters>false</use-session-parameters>
+      <use-cookie-parameters>false</use-cookie-parameters>
+      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+    </map:transformer>
+  </map:transformers>
+
+  <map:readers default="resource">  
+  </map:readers>
+
+  <map:serializers default="html">     
+  </map:serializers>
+
+  <map:matchers default="wildcard">
+  </map:matchers>
+
+  <map:selectors default="browser">
+    <map:selector name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
+  </map:selectors>
+
+  <map:actions>
+    <map:action name="woody-make-form" src="org.apache.cocoon.woody.acting.MakeFormAction"/>
+    <map:action name="init-form1" src="org.apache.cocoon.woody.samples.InitForm1Action"/>
+    <map:action name="woody-handle-form-submit" src="org.apache.cocoon.woody.acting.HandleFormSubmitAction"/>
+  </map:actions>
+
+  <map:pipes default="caching">
+  </map:pipes>
+
+ </map:components>
+
+<!-- =========================== Views =================================== -->
+
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view name="pretty-content" from-label="data">
+    <map:transform src="context://stylesheets/system/xml2html.xsl"/>
+    <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+  
+ </map:views>
+
+ <map:pipelines>
+   <map:pipeline>
+
+     <map:match pattern="">
+       <map:read src="welcome.html"/>
+     </map:match>
+
+     <!--
+        | "Form1" example, demonstrates all kinds of features
+        -->
+     <map:match pattern="form1">
+       <!-- Here we use the HTTP method, GET or POST, to make distinction between
+       the initial form display and a form submit. In both cases the same publishing
+       pipeline will be used, which is below the selector. -->
+       <map:select type="request-method">
+         <map:when test="GET">
+           <!-- Here we use an action especially created for the "form1" example
+           which will initialise the form with some data. -->
+           <map:act type="init-form1">
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
+             <map:parameter name="attribute-name" value="form1"/>
+           </map:act>
+         </map:when>
+         <map:when test="POST">
+           <map:act type="woody-handle-form-submit">
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
+             <map:parameter name="attribute-name" value="form1"/>
+
+             <!-- the content of this action is only executed in case validation
+                  succeeded, thus if the form handling is completed -->
+             <map:generate type="serverpages" src="forms/form1_success.xsp"/>
+             <map:serialize/>
+           </map:act>
+         </map:when>
+         <map:otherwise>
+           <!-- todo: do something here -->
+         </map:otherwise>
+       </map:select>
+
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/form1_template.xml"/>
+       <map:transform type="woody">
+         <map:parameter name="attribute-name" value="form1"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+
+     <!--
+        | Registration form example (used in the documentation)
+        -->
+     <map:match pattern="registration">
+       <map:select type="request-method">
+         <map:when test="GET">
+           <map:act type="woody-make-form">
+             <map:parameter name="form-definition" value="forms/registration.xml"/>
+             <map:parameter name="attribute-name" value="registrationform"/>
+           </map:act>
+         </map:when>
+         <map:otherwise>
+           <map:act type="woody-handle-form-submit">
+             <map:parameter name="form-definition" value="forms/registration.xml"/>
+             <map:parameter name="attribute-name" value="registrationform"/>
+
+             <map:generate type="serverpages" src="forms/registration_success.xsp"/>
+             <map:serialize/>
+           </map:act>
+         </map:otherwise>
+       </map:select>
+
+       <map:generate src="forms/registration_template.xml"/>
+       <map:transform type="woody">
+         <map:parameter name="attribute-name" value="registrationform"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+   </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>
