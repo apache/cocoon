@@ -8,6 +8,13 @@
   </xsl:copy>
 </xsl:template>
 
+<xsl:template match="comment()">
+  <!-- circumvent a Xalan bug while handling empty comments -->
+  <xsl:if test="normalize-space()">
+    <xsl:copy/>
+  </xsl:if>
+</xsl:template>
+
 <xsl:template match="fb:repeater">
   <xsl:copy>
     <xsl:apply-templates select="@*[not(starts-with(name(), 'unique-'))]"/>
