@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.168 2003/10/03 13:41:00 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.169 2003/10/06 16:07:33 gianugo Exp $:-->
 
 <status>
  <developers>
@@ -191,7 +191,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
- 
+   <action dev="GR" type="add" fixes-bug="14845" due-to="Micheal Homeijer" due-to-email="m.homeijer@devote.nl">
+     Patch to XMLDBTransformer to generate a key on create if it is not provided
+   </action>
    <action dev="SW" type="add">
      New JavaScriptBinding for Woody, which allows writing specific binding strategies
      with two JavaScript snippets (one for load, one for save).
