@@ -21,6 +21,7 @@
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
+  <person name="Jörg Heinicke" email="joerg@apache.org" id="JH"/>
   <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
   <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
@@ -180,6 +181,9 @@
   <changes>
 
  <release version="@version@" date="@date@"> 
+  <action dev="JH" type="add" fixes-bug="13559" due-to="Robert E. Parrott" due-to-email="parrott@fas.harvard.edu">
+    Getter for jxcontext_ property added for subclassing reasons.
+  </action>
   <action dev="CZ" type="fix" fixes-bug="17623" due-to="Alex Romayev" due-to-email="alex@romayev.com">
     Fixing incorrect caching behaviour when internal pipelines are used.
   </action>
