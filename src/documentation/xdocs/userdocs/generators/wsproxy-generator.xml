@@ -168,7 +168,7 @@
         this component which we shall focus on for the reminder of the text. To follow the rest of
         the article, it will be useful (but not essential) to have a basic knowledge of Cocoon 2.
       </p>
-      <p>Combined with the <link href="../../howto/xmlform-wizard/howto-xmlform-wizard.html">XMLForm</link>
+      <p>Combined with the XMLForm (which is not part of Cocoon anymore)
         component of Cocoon 2 and XSLT, the Web Service Proxy component allows vendors to share
         interactive content with little effort. The Web Service Proxy takes advantage of the fact
         that a Cocoon web application produces XML content, which is later translated into multiple

@@ -17,7 +17,7 @@
 <!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.9 2004/05/17 08:08:40 cziegeler Exp $
+  $Id: changes-doc.xml,v 1.10 2004/05/17 08:40:02 cziegeler Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>
@@ -113,8 +113,7 @@
       Provided &quot;gateway links&quot; to additional site documentation.
     </action>
     <action dev="IAI" type="add" due-to="Heidi Brannan" due-to-email="heidi@wkwyw.net">
-      Added Heidi Brannan's new
-      <link href="../howto/xmlform-wizard/howto-xmlform-wizard.html">XMLForm's How-To</link>.
+      Added Heidi Brannan's new XMLForm's How-To.
     </action>
     <action dev="DC" type="add">
       Added new draft <link href="../howto/howto-patch.html">How to Prepare a Patch</link>.
