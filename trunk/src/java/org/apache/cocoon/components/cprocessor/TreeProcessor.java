@@ -77,8 +77,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
+import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -531,8 +533,24 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         return result;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+     */
     public EnvironmentHelper getEnvironmentHelper() {
         return m_environmentHelper;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
+     */
+    public void releasePipeline(ProcessingPipeline pipeline) {
+        // TODO
+        try {
+            CocoonComponentManager.removeFromAutomaticRelease(pipeline);
+        } catch (ProcessingException pe) {
+            // ignore this
+            getLogger().error("Unabled to release processing component.", pe);
+        }
     }
 
     /**

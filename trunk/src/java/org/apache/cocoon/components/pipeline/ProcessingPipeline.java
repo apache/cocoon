@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.5 2003/11/05 21:29:08 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.6 2004/01/08 11:13:07 cziegeler Exp $
  */
 public interface ProcessingPipeline {
 
@@ -96,14 +96,6 @@ public interface ProcessingPipeline {
      * Setup this component
      */
     void setup(Parameters params);
-
-    /**
-     * Release this component
-     * If you get an instance not by a component manager but for example
-     * by a processor, you have to release this component by calling
-     * this method and NOT by using a component manager!
-     */
-    void release();
 
     /**
      * Set the generator that will be used as the initial step in the pipeline.

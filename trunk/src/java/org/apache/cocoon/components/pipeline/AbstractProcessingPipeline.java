@@ -69,7 +69,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -89,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.23 2004/01/07 15:57:30 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.24 2004/01/08 11:13:07 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -192,21 +191,6 @@ public abstract class AbstractProcessingPipeline
         }
         this.outputBufferSize = params.getParameterAsInteger("outputBufferSize",
                                                               this.configuredOutputBufferSize);
-    }
-
-    /**
-     * Release this component
-     * If you get an instance not by a component manager but for example
-     * by a processor, you have to release this component by calling
-     * this method and NOT by using a component manager!
-     */
-    public void release() {
-        try {
-            CocoonComponentManager.removeFromAutomaticRelease(this);
-        } catch (ProcessingException pe) {
-            // ignore this
-            getLogger().error("Unabled to release processing component.", pe);
-        }
     }
 
     /**

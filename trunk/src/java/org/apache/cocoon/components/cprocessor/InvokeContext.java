@@ -62,6 +62,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 
 /**
@@ -77,7 +78,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.2 2004/01/05 08:16:00 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.3 2004/01/08 11:13:07 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -173,10 +174,8 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
                                                    this, this.processingPipelineObjectModel)
             );
             if (this.isBuildingPipelineOnly) {
-// TODO: where does this go, RequestLifecycleHelper?
-//                CocoonComponentManager.addComponentForAutomaticRelease(this.pipelineSelector,
-//                                                                       this.processingPipeline,
-//                                                                       this.pipelinesManager);
+                CocoonComponentManager.addComponentForAutomaticRelease(this.pipelinesManager,
+                                                                       this.processingPipeline);
             }
         }
         return this.processingPipeline;
