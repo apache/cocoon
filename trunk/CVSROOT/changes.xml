@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.81 2000-06-07 19:40:40 balld Exp $
+  $Id: changes.xml,v 1.82 2000-06-07 19:45:47 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix" due-to="Peter Seiderer" due-to-email="Peter.Seiderer@ciselant.de">
+   Added connection cache to sql processor
+  </action>
   <action dev="DB" type="fix" due-to="Jeremy Quinn" due-to-email="jeremy@media.demon.co.uk">
    Disabled "created by cocoon" comment for HTTP HEAD requests.
   </action>

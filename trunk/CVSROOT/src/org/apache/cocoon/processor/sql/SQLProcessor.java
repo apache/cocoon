@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.12 $ $Date: 2000-05-12 17:27:45 $
+ * @version $Revision: 1.13 $ $Date: 2000-06-07 19:45:50 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -98,6 +98,8 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
      */
     public Document process(Document document, Dictionary parameters) throws Exception {
         HttpServletRequest request = (HttpServletRequest)parameters.get("request");
+        Hashtable connections = new Hashtable();
+        Connection conn = null;
         try {
             ConnectionDefs cdefs = new ConnectionDefs(document);
             NodeList query_nodes = document.getElementsByTagName("query");
@@ -136,12 +138,27 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                         }
                     }
                 }
-                Connection conn = cdefs.getConnection(query_props.getProperty("connection"));
+
+                String conn_name = query_props.getProperty("connection");
+                if (connections.containsKey(conn_name)) {
+                    conn = (Connection) connections.get(conn_name);
+                } else {     
+                    conn = (Connection) cdefs.getConnection(conn_name);
+                    connections.put(conn_name, conn);
+                }
+                
                 processQuery(document,parameters,query_element,query_props,conn);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Enumeration conn_list = connections.elements();
+        while(conn_list.hasMoreElements()) {
+            Connection c = (Connection) conn_list.nextElement();
+            c.close();
+        }
+        connections.clear();
 
         return document;
     }
@@ -302,9 +319,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
 			if (!auto_commit) {
             	conn.rollback();
 			}
-        } finally {
-          conn.close();
-        }
+        } 
     }
 
     /**
