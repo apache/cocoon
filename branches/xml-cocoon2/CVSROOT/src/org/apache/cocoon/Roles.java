@@ -5,14 +5,14 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon;
 
 /**
  * Created this interface to specify the Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-15 04:22:06 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-06 15:23:36 $
  */
 
 public interface Roles {
@@ -28,6 +28,6 @@ public interface Roles {
     String CLASS_LOADER         = "org.apache.cocoon.components.classloader.ClassLoaderManager";
     String POOL_CONTROLLER      = "org.apache.avalon.util.pool.PoolController";
     String IMAGE_ENCODER        = "org.apache.cocoon.components.image.ImageEncoderSelector";
-    String DB_CONNECTION        = "org.apache.cocoon.components.datasource.DataSourceComponentSelector";
+    String DB_CONNECTION        = "org.apache.avalon.util.datasource.DataSourceComponentSelector";
 
 }

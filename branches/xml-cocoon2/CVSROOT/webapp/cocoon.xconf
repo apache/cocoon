@@ -65,7 +65,7 @@
   </program-generator>
 
   <datasources>
-    <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
+    <component-instance name="personnel" class="org.apache.avalon.util.datasource.JdbcDataSource">
       <pool-controller min="5" max="10"/>
       <dburl>jdbc:postgresql://localhost/test</dburl>
       <user>test</user>

@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -33,9 +34,10 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-30 17:25:21 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-06 15:23:38 $
  */
 class RepositoryClassLoader extends URLClassLoader implements Loggable {
+
   /**
    * The logger
    */
@@ -67,6 +69,7 @@ class RepositoryClassLoader extends URLClassLoader implements Loggable {
       this.log = logger;
     }
   }
+
 
   /**
    * Create a class loader from a list of directories

@@ -10,6 +10,7 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.Poolable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 
@@ -27,7 +28,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-05 16:23:10 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-06 15:23:40 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
     /**

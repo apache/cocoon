@@ -24,7 +24,7 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.datasource.DataSourceComponent;
+import org.apache.avalon.util.datasource.DataSourceComponent;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
@@ -33,7 +33,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-13 16:28:49 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-06 15:23:37 $
  */
 public class DelEmployeeAction extends ComposerAction {
 

@@ -26,7 +26,7 @@ import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.datasource.DataSourceComponent;
+import org.apache.avalon.util.datasource.DataSourceComponent;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.util.ClassUtils;
@@ -47,7 +47,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-22 21:56:51 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-06 15:23:41 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer implements Composer, Loggable {
