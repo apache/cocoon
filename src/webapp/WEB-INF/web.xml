@@ -238,7 +238,7 @@
       String as a parameter. That String will be equal to the text after the
       '/'.
 
-      Cocoon honors the LogEnabled and Initializable interfaces for this class,
+      Cocoon honors the LogEnabled, Initializable and Disposable interfaces for this class,
       if it implements them.
 
       If you uncomment the following lines the parent CM is set to the Parent CM sample, which will look up
