@@ -59,7 +59,7 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
      * @return an object from Pool
      */
     public synchronized final Poolable get() throws Exception {
-        synchronized(m_pool) {
+        synchronized(this) {
             Poolable component = super.get();
             log.debug(
                 (new StringBuffer("ComponentPool retrieved "))
@@ -77,7 +77,7 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
      * @param poolable the object to be placed in pool
      */
     public synchronized final void put(final Poolable poolable) {
-        synchronized(m_pool) {
+        synchronized(this) {
             super.put(poolable);
             log.debug(
                 (new StringBuffer("ComponentPool returned "))
