@@ -37,6 +37,11 @@
                  logger="sitemap.action.sendmail"
                  src="org.apache.cocoon.acting.SendmailAction"/>
   </map:actions>
+  
+  <map:transformers default="xslt">
+    <map:transformer logger="sitemap.transformer.simpleform" name="simpleform" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.SimpleFormTransformer"/>
+  </map:transformers>
+
  </map:components>
 
  <map:resources>
