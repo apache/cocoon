@@ -10,6 +10,7 @@
     <map:generators default="file">
         <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
         <map:generator label="content,data" logger="sitemap.generator.jxpath" name="jxpath" src="org.apache.cocoon.generation.JXPathTemplate"/>
+        <map:generator label="content,data" logger="sitemap.generator.jexl" name="jexl" src="org.apache.cocoon.generation.JexlTemplate"/>
     </map:generators>
     <map:flow-interpreters default="JavaScript"/>
     <map:serializers default="html"/>
@@ -106,14 +107,21 @@
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
      </map:match>
+     <map:match pattern="view/Cart.jxpath">
+        <map:generate src="view/jxpath/Cart.xml" type="jxpath" />
+        <map:serialize type="html"/>
+     </map:match>
      <map:match pattern="view/*.jxpath">
         <map:generate src="view/jxpath/{1}.xml" type="jxpath" />
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
      </map:match>
+     <map:match pattern="view/Cart.jexl">
+        <map:generate src="view/jexl/Cart.xml" type="jexl" />
+        <map:serialize type="html"/>
+     </map:match>
      <map:match pattern="view/*.jexl">
-        <map:generate src="view/jexl/{1}.xml" type="file" />
-        <map:transform type="jexl" />
+        <map:generate src="view/jexl/{1}.xml" type="jexl" />
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
      </map:match>
