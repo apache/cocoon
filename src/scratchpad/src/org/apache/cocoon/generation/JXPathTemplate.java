@@ -778,11 +778,14 @@ public class JXPathTemplate extends AbstractGenerator {
     }
 
     class StartImport extends Event {
-        StartImport(Locator location, String name) {
+        StartImport(Locator location, AttributeEvent uri, 
+                    CompiledExpression select) {
             super(location);
-            this.uri = name;
+            this.uri = uri;
+            this.select = select;
         }
-        final String uri;
+        final AttributeEvent uri;
+        final CompiledExpression select;
         EndImport endImport;
     }
 
@@ -1017,12 +1020,36 @@ public class JXPathTemplate extends AbstractGenerator {
                         new StartIf(locator, expr);
                     newEvent = startIf;
                 } else if (localName.equals(IMPORT)) {
-                    String uri = attrs.getValue("uri");
+                    // <import uri="{root}/foo/bar.xml" select="{.}"/>
+                    // Allow expression substituion in "uri" attribute
+                    AttributeEvent uri = null;
+                    StartElement startElement = 
+                        new StartElement(locator, namespaceURI,
+                                         localName, raw, attrs);
+                    Iterator iter = startElement.attributeEvents.iterator();
+                    while (iter.hasNext()) {
+                        AttributeEvent e = (AttributeEvent)iter.next();
+                        if (e.localName.equals("uri")) {
+                            uri = e;
+                            break;
+                        }
+                    }
                     if (uri == null) {
                         throw new SAXParseException("import: \"uri\" is required", locator, null);
                     }
+                    // If "select" is present then its value will be used
+                    // as the context object in the imported template
+                    String select = attrs.getValue("select");
+                    CompiledExpression expr = null;
+                    if (select != null) {
+                        try {
+                            expr = JXPathContext.compile(getExpr(select));
+                        } catch (Exception e) {
+                            throw new SAXParseException("value-of: \"select\": " + e.getMessage(), locator, null);
+                        }
+                    }
                     StartImport startImport = 
-                        new StartImport(locator, uri);
+                        new StartImport(locator, uri, expr);
                     newEvent = startImport;
                 } else if (localName.equals(TEMPLATE)) {
                     StartTemplate startTemplate =
@@ -1371,13 +1398,17 @@ public class JXPathTemplate extends AbstractGenerator {
                                             startPrefixMapping.uri);
             } else if (ev instanceof Comment) {
                 TextEvent text = (TextEvent)ev;
+                final StringBuffer buf = new StringBuffer();
                 characters(context, text, new CharHandler() {
                         public void characters(char[] ch, int offset,
                                                int len) 
                             throws SAXException {
-                            consumer.comment(ch, offset, len);
+                            buf.append(ch, offset, len);
                         }
                     });
+                char[] chars = new char[buf.length()];
+                buf.getChars(0, chars.length, chars, 0);
+                consumer.comment(chars, 0, chars.length);
              } else if (ev instanceof EndCDATA) {
                 consumer.endCDATA();
             } else if (ev instanceof EndDTD) {
@@ -1411,8 +1442,41 @@ public class JXPathTemplate extends AbstractGenerator {
             } else if (ev instanceof StartTemplate) {
                 // no action
             } else if (ev instanceof StartImport) {
+                String uri;
                 StartImport startImport = (StartImport)ev;
-                String uri = startImport.uri;
+                AttributeEvent e = startImport.uri;
+                if (e instanceof CopyAttribute) {
+                    CopyAttribute copy = (CopyAttribute)e;
+                    uri = copy.value;
+                } else {
+                    StringBuffer buf = new StringBuffer();
+                    SubstituteAttribute substAttr = (SubstituteAttribute)e;
+                    Iterator i = substAttr.substitutions.iterator();
+                    while (i.hasNext()) {
+                        Subst subst = (Subst)i.next();
+                        if (subst instanceof Literal) {
+                            Literal lit = (Literal)subst;
+                            buf.append(lit.value);
+                        } else if (subst instanceof Expression) {
+                            Expression expr = (Expression)subst;
+                            Object val;
+                            try {
+                                val = 
+                                    expr.compiledExpression.getValue(context);
+                            } catch (JXPathException exc) {
+                                throw new SAXParseException(exc.getMessage(),
+                                                            ev.location,
+                                                            exc);
+                            }
+                            if (val == null) {
+                                val = "";
+                            }
+                            buf.append(val.toString());
+                        }
+                    }
+                    uri = buf.toString();
+                    
+                }
                 Source input;
                 try {
                     input = resolver.resolveURI(uri);
@@ -1446,7 +1510,19 @@ public class JXPathTemplate extends AbstractGenerator {
                         cache.put(input.getURI(), doc);
                     }
                 }
-                execute(context, doc.next, null);
+                JXPathContext select = context;
+                if (startImport.select != null) {
+                    try {
+                        Object obj = startImport.select.getValue(context);
+                        select = jxpathContextFactory.newContext(null, obj);
+                        select.setVariables(variables);
+                    } catch (JXPathException exc) {
+                        throw new SAXParseException(exc.getMessage(),
+                                                    ev.location,
+                                                    exc);
+                    }
+                }
+                execute(select, doc.next, null);
                 ev = startImport.endImport.next;
                 continue;
             }
