@@ -85,7 +85,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.3 2003/08/04 03:20:54 joerg Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.4 2003/08/12 01:41:33 vgritsenko Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -239,7 +239,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                   String markupLanguageName,
                                   String programmingLanguageName,
                                   SourceResolver resolver)
-        throws Exception {
+            throws Exception {
 
         final String id = source.getURI();
 
@@ -275,7 +275,9 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             if (programInstance == null && this.preload) {
                 // Preloading: Load program if its source/[object file] is available
                 try {
-                    program = programmingLanguage.preload(normalizedName, this.workDir, markupLanguage.getEncoding());
+                    program = programmingLanguage.preload(normalizedName,
+                                                          this.workDir,
+                                                          markupLanguage.getEncoding());
 
                     this.cache.addGenerator(newManager, normalizedName, program);
                     programInstance = (CompiledComponent) this.cache.select(normalizedName);
@@ -284,8 +286,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                         getLogger().debug("Successfully preloaded serverpage [" + id + "]");
                     }
                 } catch (Exception e) {
-                    if (getLogger().isErrorEnabled()) {
-                        getLogger().error("The serverpage [" + id + "] could not be preloaded");
+                    if (getLogger().isInfoEnabled()) {
+                        getLogger().info("The serverpage [" + id
+                                         + "] could not be preloaded, will be re-created ("
+                                         + e + ")");
                     }
                 }
             }
