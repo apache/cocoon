@@ -37,16 +37,18 @@ public class CustomJXPathBinding extends JXPathBindingBase {
     /**
      * The actual custom provided binding
      */
-    private final Binding wrappedBinding;
+    private final AbstractCustomBinding wrappedBinding;
     
     /**
      * Constructs CustomJXPathBinding
+     * 
      * @param commonAtts common configuration attributes {@link JXPathBindingBuilderBase.CommonAttributes}
      * @param widgetId id of the widget to bind to
      * @param xpath jxpath expression to narrow down the context to before calling the wrapped Binding
      * @param wrappedBinding the actual custom written Binding implementation of {@link Binding}
      */
-    public CustomJXPathBinding(CommonAttributes commonAtts, String widgetId, String xpath, Binding wrappedBinding) {
+    public CustomJXPathBinding(CommonAttributes commonAtts, String widgetId, 
+                               String xpath, AbstractCustomBinding wrappedBinding) {
         super(commonAtts);
         this.widgetId = widgetId;
         this.xpath = xpath;
@@ -56,29 +58,31 @@ public class CustomJXPathBinding extends JXPathBindingBase {
     /**
      * Delegates the actual loading operation to the provided Custom Binding Class
      * after narrowing down on the selected widget (@id) and context (@path)
-     * @param frmModel
-     * @param jxpc
-     * @throws BindingException
+     * 
+     * @param frmModel the narrowed widget-scope from the parent binding
+     * @param jxpc the narrowed jxpath context from the parent binding 
+     * @throws BindingException when the wrapped CustomBinding fails
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget selectedWidget = selectWidget(frmModel);
-        Object contextValue = jxpc.getValue(this.xpath);
+        JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
-        this.wrappedBinding.loadFormFromModel(selectedWidget, contextValue);
+        this.wrappedBinding.doLoad(selectedWidget, context);
     }    
 
     /**
      * Delegates the actual saving operation to the provided Custom Binding Class
      * after narrowing down on the selected widget (@id) and context (@path)
-     * @param frmModel
-     * @param jxpc
-     * @throws BindingException
+     * 
+     * @param frmModel the narrowed widget-scope from the parent binding
+     * @param jxpc the narrowed jxpath context from the parent binding 
+     * @throws BindingException when the wrapped CustomBinding fails
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget selectedWidget = selectWidget(frmModel);
-        Object contextValue = jxpc.getValue(this.xpath);
+        JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
-        this.wrappedBinding.saveFormToModel(selectedWidget, contextValue);
+        this.wrappedBinding.doSave(selectedWidget, context);
     }
     
     

@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:context&gt;
  * </code></pre>
  *
- * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.2 2004/04/05 11:38:54 mpo Exp $
+ * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.3 2004/04/06 08:51:24 mpo Exp $
  */
 public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
     private static final Class[] DOMELEMENT_METHODARGS;
@@ -70,7 +70,8 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
         Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = 
+                JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path", ".");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
@@ -82,9 +83,12 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 bindingInstance = clazz.newInstance();
                 
             } else {
-                String builderClassName = DomHelper.getAttribute(bindingElm, "builderclass");
-                String factoryMethodName = DomHelper.getAttribute(bindingElm, "factorymethod");                
-                Element configNode = DomHelper.getChildElement(bindingElm, BindingManager.NAMESPACE, "config");
+                String builderClassName = 
+                    DomHelper.getAttribute(bindingElm, "builderclass");
+                String factoryMethodName = 
+                    DomHelper.getAttribute(bindingElm, "factorymethod");                
+                Element configNode = 
+                    DomHelper.getChildElement(bindingElm, BindingManager.NAMESPACE, "config");
                 
                 Class builderClass = Class.forName(builderClassName);
                 Method factoryMethod = null; 
@@ -106,7 +110,8 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 bindingInstance = factoryMethod.invoke(null, args);
             }
 
-            CustomJXPathBinding customBinding = new CustomJXPathBinding(commonAtts, widgetId, xpath, (Binding)bindingInstance);
+            CustomJXPathBinding customBinding = 
+                new CustomJXPathBinding(commonAtts, widgetId, xpath, (AbstractCustomBinding)bindingInstance);
             return customBinding;
         } catch (BindingException e) {
             throw e;
