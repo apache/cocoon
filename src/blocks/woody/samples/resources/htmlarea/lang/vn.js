@@ -1,21 +1,6 @@
-/*
-* Copyright 1999-2004 The Apache Software Foundation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
 // I18N constants : Vietnamese
 // LANG: "en", ENCODING: UTF-8
-// Author: Nguyễn Đình Nam, <hncryptologist@yahoo.com>
+// Author: Nguyễn �?ình Nam, <hncryptologist@yahoo.com>
 
 HTMLArea.I18N = {
 
@@ -24,7 +9,7 @@ HTMLArea.I18N = {
 	lang: "vn",
 
 	tooltips: {
-		bold:           "Đậm",
+		bold:           "�?ậm",
 		italic:         "Nghiêng",
 		underline:      "Gạch Chân",
 		strikethrough:  "Gạch Xóa",
@@ -33,22 +18,22 @@ HTMLArea.I18N = {
 		justifyleft:    "Căn Trái",
 		justifycenter:  "Căn Giữa",
 		justifyright:   "Căn Phải",
-		justifyfull:    "Căn Đều",
+		justifyfull:    "Căn �?�?u",
 		orderedlist:    "Danh Sách Có Thứ Tự",
 		unorderedlist:  "Danh Sách Phi Thứ Tự",
 		outdent:        "Lùi Ra Ngoài",
 		indent:         "Thụt Vào Trong",
 		forecolor:      "Màu Chữ",
-		backcolor:      "Màu Nền",
+		backcolor:      "Màu N�?n",
 		horizontalrule: "Dòng Kẻ Ngang",
 		createlink:     "Tạo Liên Kết",
 		insertimage:    "Chèn Ảnh",
 		inserttable:    "Chèn Bảng",
-		htmlmode:       "Chế Độ Mã HTML",
+		htmlmode:       "Chế �?ộ Mã HTML",
 		popupeditor:    "Phóng To Ô Soạn Thảo",
 		about:          "Tự Giới Thiệu",
-		showhelp:       "Giúp Đỡ",
-		textindicator:  "Định Dạng Hiện Thời",
+		showhelp:       "Giúp �?ỡ",
+		textindicator:  "�?ịnh Dạng Hiện Th�?i",
 		undo:           "Undo",
 		redo:           "Redo",
 		cut:            "Cắt",
@@ -60,7 +45,7 @@ HTMLArea.I18N = {
 		"cancel":       "Hủy"
 	},
 	msg: {
-		"Path":         "Đường Dẫn",
+		"Path":         "�?ư�?ng Dẫn",
 		"TEXT_MODE":    "Bạn đang ở chế độ text.  Sử dụng nút [<>] để chuyển lại chế độ WYSIWIG."
 	}
 };
