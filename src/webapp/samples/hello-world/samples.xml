@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.1 2003/03/27 14:10:25 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.2 2003/03/30 12:48:57 ghoward Exp $ -->
 
 <samples>
 
@@ -21,7 +21,7 @@
     in WAP-enabled agents (such as PDA or cell phones).
    </sample>
    <sample name="SVG" href="hello.svg">
-    Given the power of XSTL and the fact that many presentation languages are
+    Given the power of XSLT and the fact that many presentation languages are
     based on the XML syntax, it is possible to generate even vector graphics
     from your content. Here is an example that renders to 
     SVG (Scalable Vector Graphics). (you need an SVG plugin, or an SVG-capable
