@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.361 2004/06/09 11:59:23 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.362 2004/06/10 01:24:21 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -787,7 +787,7 @@
      Do not double decode URI in CocoonServlet
    </action>
    <action dev="JH" type="fix">
-     Resurrected the XMLDB samples including XIndice 1.1b1 in Cocoon.
+     Resurrected the XMLDB samples including Xindice 1.1b1 in Cocoon.
    </action>
    <action dev="VG" type="remove">
      I18n transformer does not support old configuration syntax anymore
