@@ -115,4 +115,42 @@
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/overview.html</value>
       </attribute>
    </coplet-data>
+
+   <!-- The portal introduction coplet -->
+   <coplet-data id="Portal-Intro" name="standard">
+      <title>Introduction</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-intro.html</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Portal-Right" name="standard">
+      <title>Right</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-right.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Portal-Left" name="standard">
+      <title>Left</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-left.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Portal-Bottom" name="standard">
+      <title>Bottom</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-bottom.html</value>
+      </attribute>
+   </coplet-data>
+
+
 </coplets>
