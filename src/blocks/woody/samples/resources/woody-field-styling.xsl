@@ -50,14 +50,6 @@
      <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
   
-  <!--xsl:template match="body">
-    <body>
-      <xsl:copy-of select="@*"/>
-      <xsl:attribute name="onload">woody_init(); <xsl:value-of select="@onload"/></xsl:attribute>
-      <xsl:apply-templates/>
-    </body>
-  </xsl:template-->
-
   <!--
     Generic wi:field : produce an <input>
   -->
@@ -366,59 +358,59 @@
 
     <span  class="woody-doubleList" title="{wi:hint}">
       <table>
-      <tr>
+        <tr>
           <td>
-      <!-- select for the unselected values -->
-      <select id="{@id}.unselected" name="{@id}.unselected" size="{$size}" multiple="multiple">
-        <xsl:for-each select="wi:selection-list/wi:item">
-          <xsl:variable name="value" select="@value"/>
-          <xsl:if test="not($values[. = $value])">
-            <option value="{$value}">
-              <xsl:copy-of select="wi:label/node()"/>
-            </option>
-          </xsl:if>
-        </xsl:for-each>
-      </select>
-</td>
+            <!-- select for the unselected values -->
+            <select ondblclick="opt{generate-id()}.transferRight()" id="{@id}.unselected" name="{@id}.unselected" size="{$size}" multiple="multiple">
+              <xsl:for-each select="wi:selection-list/wi:item">
+                <xsl:variable name="value" select="@value"/>
+                <xsl:if test="not($values[. = $value])">
+                  <option value="{$value}">
+                    <xsl:copy-of select="wi:label/node()"/>
+                  </option>
+                </xsl:if>
+              </xsl:for-each>
+            </select>
+          </td>
           <td align="center" valign="middle">
-          <!-- command buttons -->
-      		<!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
-      		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&gt;" onclick="opt{generate-id()}.transferRight()"/>
-      		<xsl:text>&#160;</xsl:text>
-      		<br/>
-      		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.transferAllRight()"/>
-      		<xsl:text>&#160;</xsl:text>
-      		<br/>
-      		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&lt;" onclick="opt{generate-id()}.transferLeft()"/>
-      		<xsl:text>&#160;</xsl:text>
-      		<br/>
-      		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.transferAllLeft()"/>
-      		<xsl:text>&#160;</xsl:text>
-      		<br/>
+            <!-- command buttons -->
+            <!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
+            <xsl:text>&#160;</xsl:text>
+            <input type="button" value="&gt;" onclick="opt{generate-id()}.transferRight()"/>
+            <xsl:text>&#160;</xsl:text>
+            <br/>
+            <xsl:text>&#160;</xsl:text>
+            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.transferAllRight()"/>
+            <xsl:text>&#160;</xsl:text>
+            <br/>
+            <xsl:text>&#160;</xsl:text>
+            <input type="button" value="&lt;" onclick="opt{generate-id()}.transferLeft()"/>
+            <xsl:text>&#160;</xsl:text>
+            <br/>
+            <xsl:text>&#160;</xsl:text>
+            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.transferAllLeft()"/>
+            <xsl:text>&#160;</xsl:text>
+            <br/>
             <xsl:apply-templates select="." mode="common"/>
           </td>
           <td>
-      <!-- select for the selected values -->
-      <select id="{@id}" name="{@id}" size="{$size}" multiple="multiple">
-        <xsl:for-each select="wi:selection-list/wi:item">
-          <xsl:variable name="value" select="@value"/>
-          <xsl:if test="$values[. = $value]">
-            <option value="{$value}">
-              <xsl:copy-of select="wi:label/node()"/>
-            </option>
-          </xsl:if>
-        </xsl:for-each>
-      </select>
-</td>
-      </tr>
-    </table>
-    <script language="JavaScript">
-      var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
-    </script>
+            <!-- select for the selected values -->
+            <select ondblclick="opt{generate-id()}.transferLeft()" id="{@id}" name="{@id}" size="{$size}" multiple="multiple">
+              <xsl:for-each select="wi:selection-list/wi:item">
+                <xsl:variable name="value" select="@value"/>
+                <xsl:if test="$values[. = $value]">
+                  <option value="{$value}">
+                    <xsl:copy-of select="wi:label/node()"/>
+                  </option>
+                </xsl:if>
+              </xsl:for-each>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <script language="JavaScript">
+        var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
+      </script>
     </span>
     
   </xsl:template>
