@@ -59,7 +59,7 @@
      </global-variables>
    </map:component-configurations>
    
-   <map:pipeline internal-only="true" type="noncaching">
+   <map:pipeline internal-only="false" type="noncaching">
      <map:match pattern="screens/*/**">
        <map:call function="screen_{1}">
          <map:parameter name="path" value="{2}" />
@@ -169,22 +169,21 @@
      
      <!-- ============= users ==================== -->
      <map:match pattern="users">
-      <map:aggregate element="document" label="content">
-        <map:part src="cocoon:/screens/users/"/>
-        <map:part src="cocoon:/screens/groups/" />
-        <map:part src="cocoon:/screens/roles/" />
-      </map:aggregate>
-      <map:transform src="styles/users2html.xsl">
-       <map:parameter name="base" value="{request:contextPath}{global:base}"/>
-       <map:parameter name="userspath" value="{slide-config:/userspath}" />
-       <map:parameter name="rolespath" value="{slide-config:/rolespath}" />
-       <map:parameter name="groupspath" value="{slide-config:/groupspath}" />
-      </map:transform>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize type="html"/>
+       <map:aggregate element="document" label="content">
+         <map:part src="cocoon:/screens/users/"/>
+         <map:part src="cocoon:/screens/roles/" />
+       </map:aggregate>
+       <map:transform src="styles/users2html.xsl">
+         <map:parameter name="base" value="{request:contextPath}{global:base}"/>
+         <map:parameter name="userspath" value="{slide-config:/userspath}" />
+         <map:parameter name="rolespath" value="{slide-config:/rolespath}" />
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+       </map:transform>
+       <map:serialize type="html"/>
      </map:match>
+     
    </map:pipeline>
    
    <map:pipeline type="noncaching">
