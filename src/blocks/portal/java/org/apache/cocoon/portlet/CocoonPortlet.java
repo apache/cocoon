@@ -289,15 +289,18 @@ public class CocoonPortlet extends GenericPortlet {
             }
         }
 
-        String value;
-
-        // FIXME (VG): We shouldn't have to specify these. Need to override
-        // jaxp implementation of weblogic before initializing logger.
-        // This piece of code is also required in the Cocoon class.
-        value = System.getProperty("javax.xml.parsers.SAXParserFactory");
-        if (value != null && value.startsWith("weblogic")) {
-            System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
-            System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+        try {
+            // FIXME (VG): We shouldn't have to specify these. Need to override
+            // jaxp implementation of weblogic before initializing logger.
+            // This piece of code is also required in the Cocoon class.
+            String value = System.getProperty("javax.xml.parsers.SAXParserFactory");
+            if (value != null && value.startsWith("weblogic")) {
+                System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
+                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+            }
+        } catch (SecurityException e) {
+            // Ignore security exception
+            System.out.println("CocoonPortlet: Could not check system properties, got: " + e);
         }
 
         this.portletContext = conf.getPortletContext();
@@ -333,13 +336,10 @@ public class CocoonPortlet extends GenericPortlet {
         this.workDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
-        // Init logger
-        initLogger();
-
         String path = this.portletContextPath;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("getRealPath for /: " + path);
-        }
+        // these two variables are just for debugging. We can't log at this point
+        // as the logger isn't initialized yet.
+        String debugPathOne = null, debugPathTwo = null;
         if (path == null) {
             // Try to figure out the path of the root from that of WEB-INF
             try {
@@ -347,13 +347,9 @@ public class CocoonPortlet extends GenericPortlet {
             } catch (MalformedURLException me) {
                 throw new PortletException("Unable to get resource 'WEB-INF'.", me);
             }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("getResource for /WEB-INF: " + path);
-            }
+            debugPathOne = path;
             path = path.substring(0, path.length() - "WEB-INF".length());
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Path for Root: " + path);
-            }
+            debugPathTwo = path;
         }
 
         try {
@@ -370,6 +366,22 @@ public class CocoonPortlet extends GenericPortlet {
                 this.portletContextURL = new File(path).toURL().toExternalForm();
             } catch (MalformedURLException ignored) {
                 throw new PortletException("Unable to determine portlet context URL.", me);
+            }
+        }
+        try {
+            this.appContext.put("context-root", new URL(this.portletContextURL));
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
+
+        // Init logger
+        initLogger();
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("getRealPath for /: " + this.portletContextPath);
+            if (this.portletContextPath == null) {
+                getLogger().debug("getResource for /WEB-INF: " + debugPathOne);
+                getLogger().debug("Path for Root: " + debugPathTwo);
             }
         }
 
@@ -471,7 +483,7 @@ public class CocoonPortlet extends GenericPortlet {
         // get allow reload parameter, default is true
         this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
-        value = conf.getInitParameter("show-time");
+        String value = conf.getInitParameter("show-time");
         this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
