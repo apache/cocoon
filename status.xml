@@ -479,7 +479,7 @@
      Add a deprecation logger that gives hint about used deprecated stuff.
    </action>
    <action dev="AG" type="update">
-     Updated commons-transaction to 1.0.1.
+     Updated commons-transaction to 1.0.1, castor to 0.9.6.
    </action>
    <action dev="SW" type="update">
     Remove restrictions on the flowscript object model (FOM): the objects available through the
