@@ -17,7 +17,8 @@ import org.w3c.dom.Document;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 10:20:48 $
+ * @since Cocoon 2.0
  */
 public interface DocumentFactory extends Configurable {
     /** 
@@ -29,4 +30,10 @@ public interface DocumentFactory extends Configurable {
      * Create a new Document object with a specified DOCTYPE.
      */
     public Document newDocument(String name);
+
+    /** 
+     * Create a new Document object with a specified DOCTYPE, public ID and 
+     * system ID.
+     */
+    public Document newDocument(String name, String publicId, String systemId);
 }
