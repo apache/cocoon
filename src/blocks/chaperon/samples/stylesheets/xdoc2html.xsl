@@ -16,7 +16,17 @@
  </xsl:template>
 
  <xsl:template match="section">
-  <h3><xsl:value-of select="title"/></h3>
+  <xsl:choose> <!-- stupid test for the hirachy deep -->
+   <xsl:when test="../../../section">
+    <h5><xsl:value-of select="title"/></h5>
+   </xsl:when>
+   <xsl:when test="../../section">
+    <h4><xsl:value-of select="title"/></h4>
+   </xsl:when>
+   <xsl:when test="../section">
+    <h3><xsl:value-of select="title"/></h3>
+   </xsl:when>
+  </xsl:choose>
   <p>
    <xsl:apply-templates select="*[name()!='title']"/>
   </p>
