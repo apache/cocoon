@@ -180,10 +180,12 @@
 
   <changes>
 
- <release version="@version@" date="@date@"> 
+ <release version="@version@" date="@date@">
+  <action dev="JH" type="add" fixes-bug="20477" due-to="Arje Cahn" due-to-email="arje@hippo.nl">
+   Added cHTML/iMode "Hello World!" sample (provided by Arje Cahn)
+  </action>
   <action dev="BRD" type="update">
-    Upgraded Xalan (includes XSLTC) from a CVS snapshot (20030506) to version
-    2.5.1.
+    Upgraded Xalan (includes XSLTC) from a CVS snapshot (20030506) to version 2.5.1.
   </action>
   <action dev="SW" type="update">
     Updated ParanoidCocoonServlet, which is now an easy solution to the
