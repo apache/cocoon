@@ -23,10 +23,11 @@
       <classpath refid="classpath"/>
       <classpath refid="scratchpad.classpath"/>
       <classpath>
-        <pathelement path="${build.dest}" />
-        <pathelement path="${build.scratchpad.dest}" />
+        <pathelement location="${build.dest}" />
+        <pathelement location="${build.scratchpad.dest}" />
         <!-- FIXME Resolver tests depend on deprecated stuff -->
-        <pathelement path="${build.deprecated}" />
+        <pathelement location="${build.deprecated}" />
+        <pathelement location="${tools.lib}" />
       </classpath>
     </javac>
 
@@ -36,8 +37,9 @@
         <pathelement location="${build.dest}" />
         <pathelement location="${build.scratchpad.dest}" />
         <!-- FIXME Resolver tests depend on deprecated stuff -->
-        <pathelement path="${build.deprecated}" />
+        <pathelement location="${build.deprecated}" />
         <pathelement path="${java.class.path}" />
+        <pathelement location="${tools.lib}" />
       </classpath>
       <classpath refid="classpath"/>
       <classpath refid="scratchpad.classpath"/>
@@ -71,7 +73,7 @@
   </target>
 
   <!-- Block tests -->
-  <target name="block-tests" depends="compile,prepare-blocks">
+  <target name="block-tests" depends="compile-core,prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
