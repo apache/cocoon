@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.9 2003/03/18 15:44:47 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.10 2003/03/19 09:40:42 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -201,15 +201,8 @@ public class DOMStreamer implements XMLProducer {
      * used is described in
      * <a href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20021022/namespaces-algorithms.html#normalizeDocumentAlgo">an appendix of the DOM Level 3 spec</a>.
      *
-     * <p>Additionally, this class does not support serializing DOM Level 1 trees. In
-     * other words, the localName property of elements and attributes should always have
-     * a value.
-     *
      * <p>This class will NOT check the correctness of namespaces, e.g. it will not
      * check that the "xml" prefix is not misused etc.
-     *
-     * <p>This class has of course more overhead then the normal DOM-streamer, so only
-     * use it in cases where it's needed.
      *
      * @author Bruno Dumon (bruno at outerthought dot org)
      * @author Xalan team
