@@ -307,6 +307,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="fix">
+     Flow preserves global variables on sitemap reload.
+   </action>
    <action dev="AG" type="remove">
      Remove jisp from distribution.
    </action>
