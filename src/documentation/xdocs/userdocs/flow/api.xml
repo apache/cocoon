@@ -332,8 +332,7 @@
     </s3>
     <s3 title="Properties">
     <p>
-    
-    [name] -> maps to the parameter with that name. For example <code>request.blah</code> is equivalent to <code>request.getParameter("blah")</code>
+    <code>Request</code> properties map to request parameters, i.e. <code>request.blah</code> is equivalent to <code>request.getParameter("blah")</code>.
     </p> 
     </s3>
     </s2>
@@ -453,10 +452,7 @@
     </s3>
     <s3 title="Properties">
     <p>
-      [name] -> maps to the attribute indicates with the name</p>
-
-      <p>For example session.blah is equivalent to session.getAttribute("blah") 
-    </p>
+      <code>Session</code> properties map to session attributes, i.e. <code>session.blah</code> is equivalent to <code>session.getAttribute("blah")</code>.</p>
     </s3>
     </s2>
     <s2 title="Context Object"><anchor id="context"/>
@@ -488,9 +484,7 @@
     </s3>
     <s3 title="Properties">
     <p>
-      [name] -> maps to the attribute indicates with the name</p>
-
-      <p>For example context.blah is equivalent to context.getAttribute("blah") 
+      <code>Context</code> properties map to context attributes, i.e. <code>context.blah</code> is equivalent to <code>context.getAttribute("blah")</code>. 
     </p>
     </s3>
     </s2>
