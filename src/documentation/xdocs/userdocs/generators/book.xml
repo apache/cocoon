@@ -32,7 +32,6 @@
     <menu-item label="LinkStatus Generator" href="linkstatus-generator.html"/>
     <menu-item label="Notifying Generator" href="error-generator.html"/>
     <menu-item label="Request Generator" href="request-generator.html"/>
-    <menu-item label="Server Pages Generator" href="serverpages-generator.html"/>
     <menu-item label="Status Generator" href="status-generator.html"/>
     <menu-item label="Stream Generator" href="stream-generator.html"/>
     <menu-item label="XPath Directory Generator" href="xpathdirectory-generator.html"/>
@@ -45,6 +44,7 @@
     <menu-item label="Profile Generator" href="profile-generator.html"/>
     <menu-item label="Script Generator" href="script-generator.html"/>
     <menu-item label="Search Generator" href="search-generator.html"/>
+    <menu-item label="Server Pages Generator" href="serverpages-generator.html"/>
     <menu-item label="Velocity Generator" href="velocity-generator.html"/>
     <menu-item label="Web Service Proxy Generator" href="wsproxy-generator.html"/>
     <menu-item label="XML:DB Collection Generator" href="xmldbcollection-generator.html"/>
