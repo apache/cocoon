@@ -245,7 +245,7 @@
          <copy filtering="on" todir="{string('${build.webapp}')}/samples/{$block-name}">
             <fileset dir="{string('${blocks}')}/{$block-name}/samples"/>
          </copy>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xsamples" configuration="{string('${build.webapp}')}/samples/samples.xml"/>
+         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xsamples" configuration="{string('${build.webapp}')}/samples/block-samples.xml"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="samplesxpipe" configuration="{string('${build.webapp}')}/samples/sitemap.xmap"/>
       </target>
    </xsl:template>
