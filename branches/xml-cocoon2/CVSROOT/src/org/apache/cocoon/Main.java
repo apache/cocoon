@@ -50,7 +50,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.26 $ $Date: 2001-03-12 05:55:18 $
+ * @version CVS $Revision: 1.1.4.27 $ $Date: 2001-03-19 17:08:32 $
  */
 
 public class Main {
@@ -216,6 +216,7 @@ public class Main {
             Main main = new Main(c, context, dest);
             main.warmup();
             main.process(targets, xspOnly);
+            c.dispose();
             log.info("Done");
         } catch (Exception e) {
             log.fatalError("Exception caught ", e);

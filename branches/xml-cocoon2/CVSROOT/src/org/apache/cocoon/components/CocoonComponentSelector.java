@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentSelector;
@@ -24,23 +26,20 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.DefaultConfiguration;
+import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.ThreadSafe;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.Roles;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
-
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-16 21:19:26 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-19 17:08:38 $
  */
-public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
-
-    protected Logger log;
+public class CocoonComponentSelector extends AbstractLoggable implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Disposable {
 
     /** The application context for components
      */
@@ -50,15 +49,19 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
      */
     private ComponentManager manager;
 
-    /** Static component handlers.
+    /** Dynamic component handlers mapping.
      */
     private Map componentMapping;
 
+    /** Static configuraiton object.
+     */
     private Configuration conf = null;
 
     /** Static component handlers.
      */
     private Map componentHandlers;
+
+    private boolean disposed = false;
 
     /** Construct a new default component manager.
      */
@@ -68,34 +71,63 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
         componentMapping = Collections.synchronizedMap(new HashMap());
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
+    /** Provide the application Context.
+     */
     public void contextualize(Context context) {
         if (this.context == null) {
             this.context = context;
         }
     }
 
+    /** Compose the ComponentSelector so that we know what the parent ComponentManager is.
+     */
     public void compose(ComponentManager manager) throws ComponentManagerException {
         if (this.manager == null) {
             this.manager = manager;
         }
     }
 
-    /** Return an instance of a component.
+    /**
+     * Properly dispose of all the ComponentHandlers.
+     */
+    public synchronized void dispose() {
+        this.disposed = true;
+
+        Iterator keys = this.componentHandlers.keySet().iterator();
+        List keyList = new ArrayList();
+
+        while (keys.hasNext()) {
+            Object key = keys.next();
+            CocoonComponentHandler handler = (CocoonComponentHandler)
+                this.componentHandlers.get(key);
+
+            handler.dispose();
+            keyList.add(key);
+        }
+
+        keys = keyList.iterator();
+
+        while (keys.hasNext()) {
+            this.componentHandlers.remove(keys.next());
+        }
+
+        keyList.clear();
+    }
+
+    /**
+     * Return an instance of a component based on a hint.  The Composer has already selected the
+     * role, so the only part left it to make sure the Component is handled.
      */
     public Component select( Object hint )
     throws ComponentManagerException {
+
+        if (disposed) throw new IllegalStateException("You cannot select a Component from a disposed ComponentSelector");
 
         CocoonComponentHandler handler = null;
         Component component = null;
 
         if ( hint == null ) {
-            log.error(this.conf.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
+            getLogger().error(this.conf.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
             throw new ComponentManagerException("Attempted to retrieve component with null hint.");
         }
 
@@ -119,9 +151,12 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
         return component;
     }
 
+    /**
+     * Default Configuration handler for ComponentSelector.
+     */
     public void configure(Configuration conf) throws ConfigurationException {
         this.conf = conf;
-        log.debug("CocoonComponentSelector setting up with root element: " + conf.getName());
+        getLogger().debug("CocoonComponentSelector setting up with root element: " + conf.getName());
         Configuration[] instances = conf.getChildren("component-instance");
 
         for (int i = 0; i < instances.length; i++) {
@@ -131,12 +166,15 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
             try {
                 this.addComponent(hint, ClassUtils.loadClass(className), instances[i]);
             } catch (Exception e) {
-                log.error("CocoonComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
+                getLogger().error("CocoonComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
                 throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
             }
         }
     }
 
+    /**
+     * Release the Component to the propper ComponentHandler.
+     */
     public void release(Component component) {
         if (component == null) return;
         CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
@@ -154,12 +192,12 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
     throws ComponentManagerException {
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this.manager, this.context);
-            handler.setLogger(this.log);
+            handler.setLogger(getLogger());
             handler.init();
             this.componentHandlers.put(hint, handler);
-            this.log.debug("Adding " + component.getName() + " for " + hint.toString());
+            getLogger().debug("Adding " + component.getName() + " for " + hint.toString());
         } catch (Exception e) {
-            this.log.error("Could not set up Component for hint: " + hint, e);
+            getLogger().error("Could not set up Component for hint: " + hint, e);
             throw new ComponentManagerException ("Could not set up Component for hint: " + hint, e);
         }
     }
@@ -171,12 +209,12 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
     public void addComponentInstance(String hint, Object instance) {
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
-            handler.setLogger(this.log);
+            handler.setLogger(getLogger());
             handler.init();
             this.componentHandlers.put(hint, handler);
-            this.log.debug("Adding " + instance.getClass().getName() + " for " + hint.toString());
+            getLogger().debug("Adding " + instance.getClass().getName() + " for " + hint.toString());
         } catch (Exception e) {
-            this.log.error("Could not set up Component for hint: " + hint, e);
+            getLogger().error("Could not set up Component for hint: " + hint, e);
         }
     }
 }

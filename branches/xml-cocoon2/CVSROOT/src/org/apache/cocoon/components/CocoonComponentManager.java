@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
@@ -23,22 +25,19 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.DefaultConfiguration;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
+import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.Roles;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
-
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-16 21:50:29 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 17:08:37 $
  */
-public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
-
-    protected Logger log;
+public class CocoonComponentManager extends AbstractLoggable implements ComponentManager, Configurable, Contextualizable, Disposable {
 
     /** The application context for components
      */
@@ -52,6 +51,9 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
      */
     private Map componentHandlers;
 
+    /** Is the Manager disposed or not? */
+    private boolean disposed = false;
+
     /** Construct a new default component manager.
      */
     public CocoonComponentManager() {
@@ -60,35 +62,62 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         componentMapping = Collections.synchronizedMap(new HashMap());
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
+    /** Set up the Component's Context.
+     */
     public void contextualize(Context context) {
         if (this.context == null) {
             this.context = context;
         }
     }
 
-    /** Return an instance of a component.
+    /** Properly dispose of the Child handlers.
+     */
+    public synchronized void dispose() {
+        this.disposed = true;
+
+        Iterator keys = this.componentHandlers.keySet().iterator();
+        List keyList = new ArrayList();
+
+        while (keys.hasNext()) {
+            Object key = keys.next();
+            CocoonComponentHandler handler = (CocoonComponentHandler)
+                this.componentHandlers.get(key);
+
+            handler.dispose();
+            keyList.add(key);
+        }
+
+        keys = keyList.iterator();
+
+        while (keys.hasNext()) {
+            this.componentHandlers.remove(keys.next());
+        }
+
+        keyList.clear();
+    }
+
+    /**
+     * Return an instance of a component based on a Role.  The Role is usually the Interface's
+     * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
+     * case, the Role's FQN is appended with "Selector", and we return a ComponentSelector.
      */
     public Component lookup( String role )
     throws ComponentManagerException {
+
+        if (disposed) throw new IllegalStateException("You cannot lookup components on a disposed ComponentManager");
 
         CocoonComponentHandler handler = null;
         Component component = null;
 
         if ( role == null ) {
-            log.error("CocoonComponentManager Attempted to retrieve component with null role.");
+            getLogger().error("CocoonComponentManager Attempted to retrieve component with null role.");
             throw new ComponentManagerException("Attempted to retrieve component with null role.");
         }
 
         handler = (CocoonComponentHandler) this.componentHandlers.get(role);
         // Retrieve the instance of the requested component
         if ( handler == null ) {
-            this.log.debug("Could not find ComponentHandler, attempting to create one for role: " + role);
+            getLogger().debug("Could not find ComponentHandler, attempting to create one for role: " + role);
             Class componentClass = null;
             Configuration config = new DefaultConfiguration("", "-");
 
@@ -96,10 +125,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
                 componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
 
                 handler = new CocoonComponentHandler(componentClass, config, this, this.context);
-                handler.setLogger(this.log);
+                handler.setLogger(getLogger());
                 handler.init();
             } catch (Exception e) {
-                log.error("CocoonComponentManager Could not find component for role: " + role, e);
+                getLogger().error("CocoonComponentManager Could not find component for role: " + role, e);
                 throw new ComponentManagerException("Could not find component for role: " + role, e);
             }
 
@@ -124,6 +153,9 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         return component;
     }
 
+    /**
+     * Configure the ComponentManager.
+     */
     public void configure(Configuration conf) throws ConfigurationException {
         // Set components
 
@@ -142,10 +174,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
             }
 
             try {
-                log.debug("Adding component (" + role + " = " + className + ")");
+                getLogger().debug("Adding component (" + role + " = " + className + ")");
                 this.addComponent(role,ClassUtils.loadClass(className),e[i]);
             } catch ( Exception ex ) {
-                log.error("Could not load class " + className, ex);
+                getLogger().error("Could not load class " + className, ex);
                 throw new ConfigurationException("Could not get class " + className
                     + " for role " + role, ex);
             }
@@ -164,10 +196,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
                 }
 
                 try {
-                    log.debug("Adding component (" + role + " = " + className + ")");
+                    getLogger().debug("Adding component (" + role + " = " + className + ")");
                     this.addComponent(role, ClassUtils.loadClass(className), co);
                 } catch ( Exception ex ) {
-                    log.error("Could not load class " + className, ex);
+                    getLogger().error("Could not load class " + className, ex);
                     throw new ConfigurationException("Could not get class " + className
                         + " for role " + role, ex);
                 }
@@ -175,6 +207,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         }
     }
 
+    /**
+     * Release a Component.  This implementation makes sure it has a handle on the propper
+     * ComponentHandler, and let's the ComponentHandler take care of the actual work.
+     */
     public void release(Component component) {
         if (component == null) return;
         CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
@@ -192,7 +228,7 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
     throws ComponentManagerException {
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this, this.context);
-            handler.setLogger(this.log);
+            handler.setLogger(getLogger());
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {
             throw new ComponentManagerException ("Could not set up Component for role: " + role, e);
@@ -206,10 +242,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
     public void addComponentInstance(String role, Object instance) {
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
-            handler.setLogger(this.log);
+            handler.setLogger(getLogger());
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {
-            this.log.warn("Could not set up Component for role: " + role, e);
+            getLogger().warn("Could not set up Component for role: " + role, e);
         }
     }
 }

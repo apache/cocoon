@@ -23,16 +23,14 @@ import org.apache.avalon.Initializable;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Stoppable;
 import org.apache.avalon.Startable;
-
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-16 19:54:01 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-19 17:08:38 $
  */
-public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
-    private Logger log;
+public class ComponentFactory extends AbstractLoggable implements ObjectFactory, ThreadSafe {
 
     /** The class which this <code>ComponentFactory</code>
      * should create.
@@ -63,16 +61,10 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
         this.context = context;
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
     public Object newInstance() throws Exception {
         Object comp = componentClass.newInstance();
 
-        log.debug("ComponentFactory creating new instance of "
+        getLogger().debug("ComponentFactory creating new instance of "
             + componentClass.getName() + "."
         );
 
@@ -81,7 +73,7 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
         }
 
         if ( comp instanceof Loggable) {
-            ((Loggable)comp).setLogger(this.log);
+            ((Loggable)comp).setLogger(getLogger());
         }
 
         if ( comp instanceof Composer) {
@@ -108,6 +100,10 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     }
 
     public final void decommission(Object comp) throws Exception {
+        getLogger().debug("ComponentFactory decommissioning instance of "
+            + componentClass.getName() + "."
+        );
+
         if ( comp instanceof Stoppable ) {
             ((Stoppable)comp).stop();
         }

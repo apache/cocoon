@@ -19,6 +19,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
@@ -47,17 +48,11 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.65 $ $Date: 2001-03-16 21:50:21 $
+ * @version CVS $Revision: 1.4.2.66 $ $Date: 2001-03-19 17:08:31 $
  */
-public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
+public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
     private Context context;
-
-    /** The table of role-class */
-    private HashMap components = new HashMap();
-
-    /** The table of role-configuration */
-    private HashMap configurations = new HashMap();
 
     /** The configuration file */
     private URL configurationFile;
@@ -79,6 +74,9 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
 
     /** The component manager. */
     private CocoonComponentManager componentManager;
+
+    /** flag for disposed or not */
+    private boolean disposed = false;
 
     /** Create a new <code>Cocoon</code> instance. */
     public Cocoon() throws ConfigurationException {
@@ -205,11 +203,18 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         System.setProperties(systemProps);
     }
 
+    public synchronized void dispose() {
+        this.disposed = true;
+
+        this.componentManager.dispose();
+    }
+
     /**
      * Process the given <code>Environment</code> to produce the output.
      */
     public boolean process(Environment environment)
     throws Exception {
+        if (disposed) throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true);
     }
 

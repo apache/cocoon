@@ -11,13 +11,12 @@ import java.util.Vector;
 
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ThreadSafe;
-import org.apache.avalon.Loggable;
+//import org.apache.avalon.Loggable;
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.Recyclable;
 import org.apache.cocoon.components.ComponentFactory;
-
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 
 /**
  * This is a implementation of <code>Pool</code> for SitemapComponents
@@ -25,13 +24,11 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  */
-public class ComponentPool implements Pool, ThreadSafe, Loggable {
+public class ComponentPool extends AbstractLoggable implements Pool, ThreadSafe {
 
     public final static int DEFAULT_POOL_SIZE = 8;
 
     public final static int DEFAULT_WAIT_TIME = (5*100);
-
-    private Logger log;
 
     /** The resources that are currently free */
     protected Vector availableResources;
@@ -84,12 +81,6 @@ public class ComponentPool implements Pool, ThreadSafe, Loggable {
             availableResources.addElement(m_factory.newInstance());
     }
 
-    public void setLogger(Logger log) {
-        if (this.log == null) {
-            this.log = log;
-        }
-    }
-
     /** Allocates a resource when the pool is empty. By default, this method
      *	returns null, indicating that the requesting thread must wait. This
      *	allows a thread pool to expand when necessary, allowing for spikes in
@@ -100,7 +91,7 @@ public class ComponentPool implements Pool, ThreadSafe, Loggable {
         throws Exception
     {
         Poolable poolable = (Poolable)m_factory.newInstance();
-        log.debug("Component Pool - creating Overflow Resource:"
+        getLogger().debug("Component Pool - creating Overflow Resource:"
                         + " Resource=" + poolable
                         + " Available=" + availableResources.size()
                         + " Used=" + usedResources.size() );

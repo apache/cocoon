@@ -14,22 +14,37 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Context;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Stoppable;
 import org.apache.log.Logger;
 
-class CocoonComponentHandler implements Initializable, Disposable, Loggable {
+class CocoonComponentHandler extends AbstractLoggable implements Initializable, Disposable {
+    /** Indicates that the Handler is holding a <code>ThreadSafe</code> Component */
     final static int THREADSAFE  = 0;
+
+    /** Indicates that the Handler is holding a <code>Poolable</code> Component */
     final static int POOLABLE = 1;
+
+    /** Indicates that the Handler is holding a <code>SingleThreaded</code> Component */
     final static int SINGLETHREADED = 2;
 
-    private Logger log = null;
+    /** The instance of the ComponentFactory that creates and disposes of the Component */
     private ComponentFactory factory;
+
+    /** The pool of components for <code>Poolable</code> Components */
     private ComponentPool pool;
+
+    /** The instance of the Component for <code>ThreadSafe</code> Components */
     private Component instance;
+
+    /** The type of the Component: THREADSAFE, POOLABLE, or SINGLETHREADED */
     private final int type;
+
+    /** State management boolean stating whether the Handler is initialized or not */
     private boolean initialized = false;
+
+    /** State management boolean stating whether the Handler is disposed or not */
     private boolean disposed = false;
 
     /**
@@ -69,13 +84,15 @@ class CocoonComponentHandler implements Initializable, Disposable, Loggable {
      * Sets the logger that the ComponentHandler will use.
      */
     public void setLogger(Logger log) {
-        this.factory.setLogger(log);
+        if (this.factory != null) {
+            this.factory.setLogger(log);
+        }
 
         if (this.pool != null) {
             this.pool.setLogger(log);
         }
 
-        this.log = log;
+        super.setLogger(log);
     }
 
     /**
@@ -91,14 +108,14 @@ class CocoonComponentHandler implements Initializable, Disposable, Loggable {
                         this.instance = (Component)this.factory.newInstance();
                     }
                 } catch (Exception e) {
-                    this.log.error("Cannot use component: " + this.factory.getCreatedClass().getName(), e);
+                    getLogger().error("Cannot use component: " + this.factory.getCreatedClass().getName(), e);
                 }
                 break;
             case CocoonComponentHandler.POOLABLE:
                 try {
                     this.pool.init();
                 } catch (Exception e) {
-                    this.log.error("Cannot use component: " + this.factory.getCreatedClass().getName(), e);
+                    getLogger().error("Cannot use component: " + this.factory.getCreatedClass().getName(), e);
                 }
                 break;
             default:
@@ -160,7 +177,7 @@ class CocoonComponentHandler implements Initializable, Disposable, Loggable {
                 try {
                     this.factory.decommission(comp);
                 } catch (Exception e) {
-                    this.log.warn("Error decommissioning component: " + this.factory.getCreatedClass().getName(), e);
+                    getLogger().warn("Error decommissioning component: " + this.factory.getCreatedClass().getName(), e);
                 }
                 break;
         }
@@ -206,7 +223,7 @@ class CocoonComponentHandler implements Initializable, Disposable, Loggable {
 
             this.factory = null;
         } catch (Exception e) {
-            this.log.warn("Error decommissioning component: " + this.factory.getCreatedClass().getName(), e);
+            getLogger().warn("Error decommissioning component: " + this.factory.getCreatedClass().getName(), e);
         }
     }
 }
