@@ -74,7 +74,7 @@ import java.util.TreeSet;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionAttributeModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $
+ * @version CVS $Id: SessionAttributeModule.java,v 1.3 2003/11/18 17:10:40 vgritsenko Exp $
  */
 public class SessionAttributeModule extends AbstractInputModule implements ThreadSafe {
 
@@ -160,7 +160,4 @@ public class SessionAttributeModule extends AbstractInputModule implements Threa
         }
 
     }
-
-
-
 }
