@@ -156,7 +156,7 @@
 
   <map:component-configurations>
     <global-variables>
-      <home>http://127.0.0.1:8888/samples/linotype</home>
+      <home>/samples/linotype</home>
       <count>3</count>
     </global-variables>
   </map:component-configurations>
@@ -178,7 +178,7 @@
     <map:match pattern="news">
      <map:generate src="cocoon:/news.xml"/>
      <map:transform src="stylesheets/news2html-homepage.xslt">
-       <map:parameter name="home" value="{global:home}"/>
+       <map:parameter name="home" value="{request:contextPath}{global:home}"/>
        <map:parameter name="count" value="3"/>
      </map:transform>
      <map:serialize/>
@@ -204,7 +204,7 @@
     <map:match pattern="edit/news/*/">
      <map:generate src="cocoon:/news/{1}.xml"/>
      <map:transform src="stylesheets/news2edit.xslt">
-      <map:parameter name="home" value="{global:home}"/>
+      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
      </map:transform>
      <map:transform type="jx"/>
      <map:serialize/>
@@ -213,7 +213,7 @@
     <map:match pattern="edit/news/*/content">
      <map:generate src="cocoon:/news/{1}.xml"/>
      <map:transform src="stylesheets/news2html-content.xslt">
-      <map:parameter name="home" value="{global:home}"/>
+      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -233,7 +233,7 @@
    <map:match pattern="screen/news">
      <map:generate src="cocoon:/news.xml"/>
      <map:transform src="stylesheets/news2html-private.xslt">
-      <map:parameter name="home" value="{global:home}"/>
+      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -264,7 +264,7 @@
     <map:match pattern="history">
      <map:generate src="cocoon:/news.xml"/>
      <map:transform src="stylesheets/news2html-history.xslt">
-      <map:parameter name="home" value="{global:home}"/>
+      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -328,7 +328,7 @@
     <map:match pattern="news/*/">
       <map:generate src="repository/news/{1}/document.xml"/>
       <map:transform src="stylesheets/news2html-single.xslt">
-       <map:parameter name="home" value="{global:home}"/>
+       <map:parameter name="home" value="{request:contextPath}{global:home}"/>
       </map:transform>
       <map:serialize/>
     </map:match>
@@ -356,7 +356,7 @@
         <map:generate type="notifying"/>
         <map:transform src="stylesheets/system/error2html-debug.xslt">
          <map:parameter name="uri" value="{request:requestURI}"/>
-         <map:parameter name="home" value="{global:home}"/>
+         <map:parameter name="home" value="{request:contextPath}{global:home}"/>
         </map:transform>
       </map:otherwise>
     </map:select>
