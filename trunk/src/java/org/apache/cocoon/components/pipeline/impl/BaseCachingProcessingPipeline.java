@@ -66,7 +66,11 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.3 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.4 2004/01/28 17:23:22 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProcessingPipeline
+ * @x-avalon.lifestyle type=pooled
  */
 public abstract class BaseCachingProcessingPipeline
     extends AbstractProcessingPipeline

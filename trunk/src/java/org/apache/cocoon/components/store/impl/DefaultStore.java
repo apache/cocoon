@@ -76,12 +76,12 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.8 2003/12/26 18:43:39 unico Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.9 2004/01/28 17:24:22 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Store"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="persistent-store"
+ * @avalon.service type=Store
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=persistent-store
  */
 public class DefaultStore extends AbstractJispFilesystemStore
     implements Store,

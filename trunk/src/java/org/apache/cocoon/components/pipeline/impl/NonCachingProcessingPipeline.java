@@ -57,12 +57,11 @@ import org.apache.cocoon.components.pipeline.ProcessingPipeline;
  * Thi is the implementation of the non caching processing pipeline
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NonCachingProcessingPipeline.java,v 1.2 2003/12/27 15:11:57 unico Exp $
+ * @version CVS $Id: NonCachingProcessingPipeline.java,v 1.3 2004/01/28 17:23:22 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingPipeline
  * @x-avalon.lifestyle type=pooled
- * @x-avalon.info name=noncaching-pipeline
  */
 public class NonCachingProcessingPipeline
        extends AbstractProcessingPipeline implements ProcessingPipeline {

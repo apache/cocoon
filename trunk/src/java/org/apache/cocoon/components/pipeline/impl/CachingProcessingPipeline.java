@@ -55,6 +55,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
@@ -72,10 +73,14 @@ import java.util.Iterator;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.4 2003/10/27 08:09:36 cziegeler Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.5 2004/01/28 17:23:22 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProcessingPipeline
+ * @x-avalon.lifestyle type=pooled
  */
 public class CachingProcessingPipeline
-    extends AbstractCachingProcessingPipeline {
+    extends AbstractCachingProcessingPipeline implements ProcessingPipeline {
 
     /**
     * Cache longest cacheable key

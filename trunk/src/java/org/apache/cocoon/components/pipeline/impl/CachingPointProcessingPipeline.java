@@ -59,6 +59,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
@@ -78,10 +79,14 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.6 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.7 2004/01/28 17:23:22 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProcessingPipeline
+ * @x-avalon.lifestyle type=pooled
  */
 public class CachingPointProcessingPipeline
-    extends AbstractCachingProcessingPipeline implements Configurable {
+    extends AbstractCachingProcessingPipeline implements Configurable, ProcessingPipeline {
 
     protected ArrayList isCachePoint = new ArrayList();
     protected ArrayList xmlSerializerArray = new ArrayList();
