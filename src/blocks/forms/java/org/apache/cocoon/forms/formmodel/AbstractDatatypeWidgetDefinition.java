@@ -29,7 +29,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  * 
- * @version $Id: AbstractDatatypeWidgetDefinition.java,v 1.3 2004/06/29 13:06:04 sylvain Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
@@ -50,7 +50,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     }
 
     public void setSelectionList(SelectionList selectionList) {
-        if (selectionList.getDatatype() != getDatatype())
+        if (selectionList != null && selectionList.getDatatype() != getDatatype())
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         this.selectionList = selectionList;
     }

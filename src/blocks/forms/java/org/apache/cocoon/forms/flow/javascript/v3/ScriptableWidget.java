@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.4 2004/05/08 11:27:54 bruno Exp $
+ * @version $Id$
  * 
  */
 public class ScriptableWidget extends ScriptableObject implements ValueChangedListener, ActionListener, WidgetValidator {
@@ -724,6 +724,12 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
                 }
             }
         }
+    }
+    
+    public void jsFunction_removeSelectionList() {
+    	if (delegate instanceof SelectableWidget) {
+    		((SelectableWidget)delegate).removeSelectionList();
+    	}
     }
 
     static final Object[] WIDGET_CLASS_MAP = {
