@@ -28,10 +28,10 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * be a way to remove this, that will be a happy day for XML and for Cocoon too.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 22:53:14 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-01 00:16:45 $
  */
 
-public abstract class ExtendedXLinkPipe extends AbstractXMLPipe {
+public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
     public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
 
