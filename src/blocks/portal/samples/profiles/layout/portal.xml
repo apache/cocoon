@@ -142,16 +142,25 @@
         </composite-layout>
     </named-item>
     <named-item name="JSR-168">
-        <composite-layout name="column">  
+        <composite-layout name="row">
             <item>
                 <coplet-layout name="coplet">
-  	   	        <coplet-instance-data>Portlet-1</coplet-instance-data>
+  	   	            <coplet-instance-data>TestPortlet-1</coplet-instance-data>
                 </coplet-layout>
             </item>
             <item>
-                <coplet-layout name="coplet">
-  	   	        <coplet-instance-data>Portlet-2</coplet-instance-data>
-                </coplet-layout>
+                <composite-layout name="column">  
+                    <item>
+                        <coplet-layout name="coplet">
+  	   	                    <coplet-instance-data>Portlet-1</coplet-instance-data>
+                        </coplet-layout>
+                    </item>
+                    <item>
+                        <coplet-layout name="coplet">
+  	       	                <coplet-instance-data>Portlet-2</coplet-instance-data>
+                        </coplet-layout>
+                    </item>
+                </composite-layout>
             </item>
         </composite-layout>
     </named-item>

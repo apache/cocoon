@@ -47,6 +47,7 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.context.Context;
@@ -55,6 +56,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.impl.PortletPortalManager;
@@ -63,6 +65,7 @@ import org.apache.cocoon.portal.pluto.om.PortletEntityListImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
+import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
@@ -82,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: PortletAdapter.java,v 1.3 2004/01/27 08:05:34 cziegeler Exp $
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -131,30 +134,38 @@ public class PortletAdapter
         
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         PortletEntity portletEntity = ((PortletEntityListImpl)pae.getPortletEntityList()).add(pae, portletEntityId, coplet, registry);
-       
-        // create the window
-        PortletWindow portletWindow = new PortletWindowImpl(portletEntityId);                
-        ((PortletWindowCtrl)portletWindow).setId(coplet.getId());
-        ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
-        PortletWindowList windowList = portletEntity.getPortletWindowList();        
-        ((PortletWindowListCtrl)windowList).add(portletWindow);    
-        coplet.setAttribute("window", portletWindow);
         
-        // load the portlet
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
-        final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
-        final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-        PortletPortalManager.copletInstanceData.set(coplet);
-        try {
-            this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
-                                              res);
-        } catch (Exception e) {
-            this.getLogger().error("Error loading portlet " + portletEntityId, e);
-            // remove portlet entity
-            coplet.removeAttribute("window");
-            ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
-        } finally {
-            PortletPortalManager.copletInstanceData.set(null);
+        if ( portletEntity.getPortletDefinition() != null ) {
+            // create the window
+            PortletWindow portletWindow = new PortletWindowImpl(portletEntityId);                
+            ((PortletWindowCtrl)portletWindow).setId(coplet.getId());
+            ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
+            PortletWindowList windowList = portletEntity.getPortletWindowList();        
+            ((PortletWindowListCtrl)windowList).add(portletWindow);    
+            coplet.setAttribute("window", portletWindow);
+            
+            // load the portlet
+            final Map objectModel = ContextHelper.getObjectModel(this.context);
+            ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
+            if ( req == null ) {
+                final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+                objectModel.put("portlet-response",  new ServletResponseImpl(res));
+                req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
+                objectModel.put("portlet-request",  req);                
+            }
+            final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
+            PortletPortalManager.copletInstanceData.set(coplet);
+            try {
+                this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
+                                                  res);
+            } catch (Exception e) {
+                this.getLogger().error("Error loading portlet " + portletEntityId, e);
+                // remove portlet entity
+                coplet.removeAttribute("window");
+                ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
+            } finally {
+                PortletPortalManager.copletInstanceData.set(null);
+            }
         }
     }
 

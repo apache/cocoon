@@ -70,6 +70,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.portal.pluto.factory.ControllerFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.ObjectIDFactoryImpl;
+import org.apache.cocoon.portal.pluto.factory.PortletInvokerFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.PortletPreferencesFactoryImpl;
 import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.pluto.factory.Factory;
@@ -84,7 +85,6 @@ import org.apache.pluto.factory.impl.PortletURLFactoryImpl;
 import org.apache.pluto.factory.impl.RenderRequestFactoryImpl;
 import org.apache.pluto.factory.impl.RenderResponseFactoryImpl;
 import org.apache.pluto.invoker.PortletInvoker;
-import org.apache.pluto.invoker.impl.PortletInvokerFactoryImpl;
 import org.apache.pluto.om.ControllerFactory;
 import org.apache.pluto.services.factory.FactoryManagerService;
 import org.apache.pluto.util.NamespaceMapper;
@@ -100,7 +100,7 @@ import org.apache.pluto.util.impl.NamespaceMapperFactoryImpl;
  * @see Factory
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.3 2004/01/27 08:05:35 cziegeler Exp $
  */
 public class FactoryManagerServiceImpl 
 implements FactoryManagerService, Initializable, Contextualizable, Disposable {
