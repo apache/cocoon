@@ -22,9 +22,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeJavaPackage;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 
 /**
@@ -129,6 +134,30 @@ public class TemplateObjectModelHelper {
             fillContext(contextObject, map);
         }
         
+        Object javaPkg = FOM_JavaScriptFlowHelper.getJavaPackage(objectModel);
+        Object pkgs = FOM_JavaScriptFlowHelper.getPackages(objectModel);
+        
+        if ( javaPkg != null && pkgs != null ) {
+            map.put( "Packages", javaPkg );
+            map.put( "java", pkgs );
+        } else { 
+            Context cx = Context.enter();
+            try {
+                //FIXME: we surely need to share the scope as this operation is time consuming
+                Scriptable scope = cx.initStandardObjects();
+
+                final String JAVA_PACKAGE = "JavaPackage";
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                Scriptable newPackages = new NativeJavaPackage( "", cl );
+                newPackages.setParentScope( scope );
+                newPackages.setPrototype( ScriptableObject.getClassPrototype(   scope,
+                                                                                JAVA_PACKAGE ) );
+                map.put( "Packages", newPackages );
+                map.put( "java", ScriptableObject.getProperty( scope, "java" ) );
+            } finally {
+                Context.exit();
+            }
+        }
         return map;
     }
 
