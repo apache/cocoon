@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 2000-05-01 19:42:48 $
+ * @version $Revision: 1.6 $ $Date: 2000-05-16 18:36:10 $
  */
 
 public class XSPSQLLibrary {
@@ -243,15 +243,8 @@ public class XSPSQLLibrary {
 
     public static String getCountQuery(String query) {
         String lowercase_query = query.toLowerCase();
-        int select_index = lowercase_query.indexOf("select ");
         int from_index = lowercase_query.indexOf(" from ");
-        if (select_index < 0 || from_index < 0) return null;
-        String columns = query.substring(select_index+7,from_index);
-        int comma_index = columns.indexOf(',');
-        String column;
-        if (comma_index < 0) column = columns;
-        else column = columns.substring(0,comma_index);
-        return "SELECT count("+column+") FROM "+ query.substring(from_index+6);
+		return "SELECT count(*) FROM "+query.substring(from_index+6);
     }
 
 	public static Element createElement(Document document, String namespace, String name) {
