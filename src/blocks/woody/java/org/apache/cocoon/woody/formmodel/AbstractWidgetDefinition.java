@@ -55,13 +55,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.validation.ValidationError;
 import org.apache.cocoon.woody.validation.WidgetValidator;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
