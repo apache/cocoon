@@ -216,4 +216,18 @@
 		    </named-item>
 		</composite-layout>
     </named-item>
+    <named-item name="Coplets">
+        <composite-layout name="column">
+            <item>
+			    <coplet-layout name="coplet">
+		            <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+		        </coplet-layout>
+            </item>
+            <item>
+			    <coplet-layout name="coplet">
+		            <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+		        </coplet-layout>
+            </item>
+        </composite-layout>
+    </named-item>
 </composite-layout>
