@@ -62,7 +62,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.16 $ $Date: 2004/03/08 07:57:06 $
+ * @version CVS $Revision: 1.17 $ $Date: 2004/03/10 13:33:03 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -228,10 +228,9 @@ public final class XConfToolTask extends MatchingTask {
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
         if (nodes.getLength() !=1 ) {
-            log("Error in: "+file);
-            throw new IOException("XPath (" + xpath +
-                                  ") returned not one node, but "+
-                                  nodes.getLength() + " nodes");
+  					log("Error in: "+file+" , returned not one node, but "+
+	              nodes.getLength() + " nodes");
+						return false;
         }
         Node root = nodes.item(0);
 
