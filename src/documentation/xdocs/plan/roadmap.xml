@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  $Id: roadmap.xml 30942 2004-07-29 20:16:54Z vgritsenko $
+  $Id$
 -->
 
 <document>
@@ -33,7 +33,7 @@
  <s1 title="Timeframe">
   <p>This is the current time frame for the next releases:</p>
   <ul>
-   <li>Not schedulded yet: 2.1.7 (maintenance release)</li>
+   <li>March 21 2005: 2.1.7 (maintenance release)</li>
    <li>Not schedulded yet: 2.2M1 (Milestone 1)</li>
   </ul>
  </s1>
