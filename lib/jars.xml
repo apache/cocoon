@@ -487,14 +487,6 @@
     <homepage>http://jakarta.apache.org/lucene/</homepage>
   </file>
 
-  <file id="pizzacompiler">
-    <title>Pizza Java Compiler</title>
-    <description>Java Compiler</description>
-    <used-by>XSP</used-by>
-    <lib>optional/pizza-1.1.jar</lib>
-    <homepage>http://pizzacompiler.sourceforge.net/</homepage>
-  </file>
-
   <file id="log4j">
     <title>Log4j</title>
     <description>Logging for java</description>
