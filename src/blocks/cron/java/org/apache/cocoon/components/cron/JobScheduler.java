@@ -27,7 +27,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This component schedules jobs.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobScheduler.java,v 1.6 2004/03/05 13:01:49 bdelacretaz Exp $
+ * @version CVS $Id: JobScheduler.java,v 1.7 2004/03/08 13:43:42 unico Exp $
  *
  * @since 2.1.1
  */
@@ -111,6 +111,22 @@ public interface JobScheduler {
      * @param objects A Map with additional object to setup CronJob
      */
     void addPeriodicJob(String name, String jobrole, long period, boolean canRunConcurrently, Parameters params,
+                        Map objects)
+    throws CascadingException;
+    
+    /**
+     * Schedule a periodic job. The job is started the first time when the period has passed.  Note that if a job with
+     * the same name has already beed added it is overwritten.
+     *
+     * @param name the name of the job
+     * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
+     *        specific class (i.e. org.quartz.Job)
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     * @param params Additional Parameters to setup CronJob
+     * @param objects A Map with additional object to setup CronJob
+     */
+    void addPeriodicJob(String name, Object job, long period, boolean canRunConcurrently, Parameters params,
                         Map objects)
     throws CascadingException;
 
