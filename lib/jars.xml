@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.121 2003/11/07 13:07:06 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.122 2003/11/09 18:36:01 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -49,7 +49,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-component-20031107.jar</lib>
+    <lib>core/excalibur-component-1.2-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
@@ -61,7 +61,18 @@
       event based programming.
     </description>
     <used-by>Cocoon Flow</used-by>
-    <lib>core/excalibur-event-20030904.jar</lib>
+    <lib>core/excalibur-event-api-1.0.4-dev.jar</lib>
+    <homepage>http://avalon.apache.org/excalibur/</homepage>
+  </file>
+  <file>
+    <title>Avalon Excalibur Event</title>
+    <description>
+      This is the Excalibur Event package which includes event queues,
+      asynchronous command processing, and the interfaces to support
+      event based programming.
+    </description>
+    <used-by>Cocoon Flow</used-by>
+    <lib>core/excalibur-event-impl-1.0.4-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
@@ -171,7 +182,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-sourceresolve-20030715.jar</lib>
+    <lib>core/excalibur-sourceresolve-1.0.2-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
@@ -182,7 +193,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-store-20030825.jar</lib>
+    <lib>core/excalibur-store-1.0-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
@@ -193,7 +204,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-xmlutil-20031021.jar</lib>
+    <lib>core/excalibur-xmlutil-1.0-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
