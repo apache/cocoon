@@ -112,7 +112,7 @@
 
   <xsl:template match="subtitle">
    <h3>
-    <xsl:text>[</xsl:text>
+    <xsl:text> [</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>]</xsl:text>
    </h3>

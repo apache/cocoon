@@ -19,15 +19,16 @@
         <next href="?section=1"/>
        </navigation>
        <layout>
-        <h1><a href="?section=1"><xsl:value-of select="title"/></a></h1>
-        <h3>
+        <title><a href="?section=1"><xsl:value-of select="title"/></a></title>
+        <subtitle>
          <xsl:for-each select="authors/person">
-          <xsl:value-of select="name"/> (<xsl:value-of select="email"/>)
-         </xsl:for-each>
-        </h3>
-        <p class="quote">
-         <xsl:value-of select="overview"/>
-        </p>
+          <xsl:value-of select="name"/>
+           <xsl:text> (</xsl:text>
+           <xsl:value-of select="email"/>
+           <xsl:text>)</xsl:text>
+          </xsl:for-each>
+        </subtitle>
+        <quote><xsl:value-of select="overview"/></quote>
        </layout>
      </xsl:if>
 
