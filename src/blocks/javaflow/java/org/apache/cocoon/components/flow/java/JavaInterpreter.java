@@ -39,7 +39,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.4 2004/04/04 06:35:08 antonio Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.5 2004/04/04 06:40:33 antonio Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -113,9 +113,9 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
     }
 
     /**
-     * Calls a JavaScript function, passing <code>params</code> as its
+     * Calls a Java function, passing <code>params</code> as its
      * arguments. In addition to this, it makes available the parameters
-     * through the <code>cocoon.parameters</code> JavaScript array
+     * through the <code>cocoon.parameters</code> Java array
      * (indexed by the parameter names).
      *
      * @param function a <code>String</code> value
