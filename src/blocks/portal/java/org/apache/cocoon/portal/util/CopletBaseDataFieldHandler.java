@@ -58,46 +58,41 @@ import org.apache.cocoon.portal.coplet.CopletBaseData;
 import org.apache.cocoon.portal.profile.impl.CopletBaseDataManager;
 import org.exolab.castor.mapping.FieldHandler;
 
-
 /**
  * Field handler for CopletBaseData instances.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataFieldHandler.java,v 1.2 2003/06/13 14:20:10 cziegeler Exp $
  */
-public class CopletBaseDataFieldHandler 
-implements FieldHandler {
+public class CopletBaseDataFieldHandler implements FieldHandler {
 
-	public void checkValidity(Object object)
-	{
-	}
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		Map map = ((CopletBaseDataManager)object).getCopletBaseData();
-		Vector result = new Vector(map.size());
-		
-		Iterator iterator = map.values().iterator();
-		while (iterator.hasNext())
-			result.addElement(iterator.next());
-		
-		return result;
-	}
+    public Object getValue(Object object) {
+        Map map = ((CopletBaseDataManager) object).getCopletBaseData();
+        Vector result = new Vector(map.size());
 
-	public Object newInstance(Object parent)
-	{
-		return new CopletBaseData();
-	}
+        Iterator iterator = map.values().iterator();
+        while (iterator.hasNext())
+            result.addElement(iterator.next());
 
-	public void resetValue(Object object)
-	{
-		((CopletBaseDataManager)object).getCopletBaseData().clear();
-	}
+        return result;
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		CopletBaseData data = (CopletBaseData)value;
-		((CopletBaseDataManager)object).getCopletBaseData().put(data.getId(), data);
-	}
+    public Object newInstance(Object parent) {
+        return new CopletBaseData();
+    }
+
+    public void resetValue(Object object) {
+        ((CopletBaseDataManager) object).getCopletBaseData().clear();
+    }
+
+    public void setValue(Object object, Object value) {
+        CopletBaseData data = (CopletBaseData) value;
+        ((CopletBaseDataManager) object).getCopletBaseData().put(
+            data.getId(),
+            data);
+    }
 }

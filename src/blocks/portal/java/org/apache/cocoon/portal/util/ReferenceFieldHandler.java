@@ -60,38 +60,36 @@ import org.exolab.castor.mapping.FieldHandler;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: ReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: ReferenceFieldHandler.java,v 1.2 2003/06/13 14:20:10 cziegeler Exp $
  */
-public abstract class ReferenceFieldHandler
-implements FieldHandler
-{
-	/**
-	 * Used to pass resolvable objects to the field handler.
-	 */
-	private static ThreadLocal threadLocalMap = new InheritableThreadLocal();
-	
-	/**
-	 * Gets the map used to pass resolvable objects to the field handler.
-	 */
-	public static Map getObjectMap() {
-		Map map = (Map)threadLocalMap.get();
+public abstract class ReferenceFieldHandler implements FieldHandler {
+    /**
+     * Used to pass resolvable objects to the field handler.
+     */
+    private static ThreadLocal threadLocalMap = new InheritableThreadLocal();
 
-		if (map == null) {
-			map = new HashMap();
-			threadLocalMap.set(map);
-		}
+    /**
+     * Gets the map used to pass resolvable objects to the field handler.
+     */
+    public static Map getObjectMap() {
+        Map map = (Map) threadLocalMap.get();
 
-		return map;
-	}
+        if (map == null) {
+            map = new HashMap();
+            threadLocalMap.set(map);
+        }
 
-	/**
-	 * Sets the map used to pass resolvable objects to the field handler.
-	 */
-	public static void setObjectMap(Map objectMap) {
-		if (objectMap == null) {
-			threadLocalMap.set(new HashMap());
-		} else {
-			threadLocalMap.set(objectMap);
-		}
-	}
+        return map;
+    }
+
+    /**
+     * Sets the map used to pass resolvable objects to the field handler.
+     */
+    public static void setObjectMap(Map objectMap) {
+        if (objectMap == null) {
+            threadLocalMap.set(new HashMap());
+        } else {
+            threadLocalMap.set(objectMap);
+        }
+    }
 }

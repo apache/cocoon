@@ -57,7 +57,7 @@ package org.apache.cocoon.portal.util;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: DeltaApplicableReferencesAdjustable.java,v 1.1 2003/05/22 15:19:44 cziegeler Exp $
+ * @version CVS $Id: DeltaApplicableReferencesAdjustable.java,v 1.2 2003/06/13 14:20:10 cziegeler Exp $
  */
 public interface DeltaApplicableReferencesAdjustable 
 extends DeltaApplicable {
@@ -66,5 +66,5 @@ extends DeltaApplicable {
      * if no delta has been applied to them.
 	 * @throws ClassCastException If the object is not of the expected type.
 	 */
-	public void adjustReferences(Object object);
+	void adjustReferences(Object object);
 }

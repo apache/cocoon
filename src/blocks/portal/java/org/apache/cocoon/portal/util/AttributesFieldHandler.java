@@ -67,48 +67,44 @@ import org.exolab.castor.mapping.MapItem;
  * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.2 2003/06/13 14:15:04 cziegeler Exp $
+ * @version CVS $Id: AttributesFieldHandler.java,v 1.3 2003/06/13 14:20:10 cziegeler Exp $
  */
-public class AttributesFieldHandler
-implements FieldHandler
-{
-	public void checkValidity(Object object) {
-	}
+public class AttributesFieldHandler implements FieldHandler {
+
+    public void checkValidity(Object object) {
+    }
 
     protected Map getAttributes(Object object) {
         if (object instanceof CopletData) {
-            return ((CopletData)object).getAttributes();
+            return ((CopletData) object).getAttributes();
         } else {
-            return ((CopletInstanceData)object).getAttributes();
+            return ((CopletInstanceData) object).getAttributes();
         }
     }
-    
-	public Object getValue(Object object) {
-		HashMap map = new HashMap();
-		Iterator iterator = this.getAttributes( object ).entrySet().iterator();
-		Map.Entry entry;
-		Object key;
-		while (iterator.hasNext()) {
-			entry = (Map.Entry)iterator.next();
-			key = entry.getKey();
-			map.put(key, new MapItem(key, entry.getValue()));
-		}
-		return map;
-	}
 
-	public Object newInstance(Object parent)
-	{
-		return new MapItem();
-	}
+    public Object getValue(Object object) {
+        HashMap map = new HashMap();
+        Iterator iterator = this.getAttributes(object).entrySet().iterator();
+        Map.Entry entry;
+        Object key;
+        while (iterator.hasNext()) {
+            entry = (Map.Entry) iterator.next();
+            key = entry.getKey();
+            map.put(key, new MapItem(key, entry.getValue()));
+        }
+        return map;
+    }
 
-	public void resetValue(Object object)
-	{
-		this.getAttributes( object ).clear();
-	}
+    public Object newInstance(Object parent) {
+        return new MapItem();
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		MapItem item = (MapItem)value;
-        this.getAttributes( object ).put((String)item.getKey(), item.getValue());
-	}
+    public void resetValue(Object object) {
+        this.getAttributes(object).clear();
+    }
+
+    public void setValue(Object object, Object value) {
+        MapItem item = (MapItem) value;
+        this.getAttributes(object).put((String) item.getKey(), item.getValue());
+    }
 }

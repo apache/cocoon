@@ -62,48 +62,44 @@ import org.exolab.castor.mapping.FieldHandler;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AspectDataFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: AspectDataFieldHandler.java,v 1.2 2003/06/13 14:20:10 cziegeler Exp $
  */
-public class AspectDataFieldHandler
-implements FieldHandler
-{
-	public void checkValidity(Object object)
-	{
-	}
+public class AspectDataFieldHandler implements FieldHandler {
+    
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		HashMap map = new HashMap();
-		Iterator iterator;
+    public Object getValue(Object object) {
+        HashMap map = new HashMap();
+        Iterator iterator;
 
-		Map data = ((Aspectalizable) object).getPersistentAspectData();
-		if (data == null)
-			return map;
+        Map data = ((Aspectalizable) object).getPersistentAspectData();
+        if (data == null)
+            return map;
 
-		iterator = data.entrySet().iterator();
-		Map.Entry entry;
-		Object key;
-		while (iterator.hasNext()) {
-			entry = (Map.Entry)iterator.next();
-			key = entry.getKey();
-			map.put(key, new MapItem(key, entry.getValue()));
-		}
-		return map;
-	}
+        iterator = data.entrySet().iterator();
+        Map.Entry entry;
+        Object key;
+        while (iterator.hasNext()) {
+            entry = (Map.Entry) iterator.next();
+            key = entry.getKey();
+            map.put(key, new MapItem(key, entry.getValue()));
+        }
+        return map;
+    }
 
-	public Object newInstance(Object parent)
-	{
-		return new MapItem();
-	}
+    public Object newInstance(Object parent) {
+        return new MapItem();
+    }
 
-	public void resetValue(Object object)
-	{
-		// impossible
-	}
+    public void resetValue(Object object) {
+        // impossible
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		MapItem item = (MapItem)value;
-		((Aspectalizable)object).addPersistentAspectData((String)item.getKey(), item.getValue());
-	}
+    public void setValue(Object object, Object value) {
+        MapItem item = (MapItem) value;
+        ((Aspectalizable) object).addPersistentAspectData(
+            (String) item.getKey(),
+            item.getValue());
+    }
 }

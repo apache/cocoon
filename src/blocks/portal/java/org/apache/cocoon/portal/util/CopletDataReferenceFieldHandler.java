@@ -58,40 +58,35 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.2 2003/06/13 14:20:09 cziegeler Exp $
  */
-public class CopletDataReferenceFieldHandler 
-extends ReferenceFieldHandler {
+public class CopletDataReferenceFieldHandler extends ReferenceFieldHandler {
 
-	public void checkValidity(Object object)
-	{
-	}
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		CopletData copletData = ((CopletInstanceData)object).getCopletData();
-		if (copletData != null) {
-			return copletData.getId();
-		} else {
-			return null;
-		}
-	}
+    public Object getValue(Object object) {
+        CopletData copletData = ((CopletInstanceData) object).getCopletData();
+        if (copletData != null) {
+            return copletData.getId();
+        } else {
+            return null;
+        }
+    }
 
-	public Object newInstance(Object parent)
-	{
-		return new CopletData();
-	}
+    public Object newInstance(Object parent) {
+        return new CopletData();
+    }
 
-	public void resetValue(Object object)
-	{
-		((CopletInstanceData)object).setCopletData(null);
-	}
+    public void resetValue(Object object) {
+        ((CopletInstanceData) object).setCopletData(null);
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		CopletData copletData = (CopletData)getObjectMap().get(value);
-		if (copletData == null)
-			throw new IllegalArgumentException("Referenced Coplet Data "+value+" does not exist.");
-		((CopletInstanceData)object).setCopletData(copletData);
-	}
+    public void setValue(Object object, Object value) {
+        CopletData copletData = (CopletData) getObjectMap().get(value);
+        if (copletData == null)
+            throw new IllegalArgumentException(
+                "Referenced Coplet Data " + value + " does not exist.");
+        ((CopletInstanceData) object).setCopletData(copletData);
+    }
 }
