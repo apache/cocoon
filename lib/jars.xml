@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.78 2003/08/18 10:10:22 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.79 2003/08/23 01:58:58 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
     |
-    | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
-    | Date: May 23, 2002
     +-->
 
 <jars>
@@ -594,7 +592,7 @@
       convert those to XML files.
     </description>
     <used-by>Chaperon block</used-by>
-    <lib>chaperon/lib/chaperon-20030407.jar</lib>
+    <lib>chaperon/lib/chaperon-2.1.jar</lib>
     <homepage>http://chaperon.sourceforge.net</homepage>
   </file>
 
@@ -690,7 +688,7 @@
     <lib>webdav/lib/slide-webdavlib-20030711.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
-
+<!-- seems to be unused -->
   <file>
     <title>JDOM</title>
     <description>JDOM</description>
