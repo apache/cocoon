@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.6 2001-01-10 23:42:31 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.7 2001-01-10 23:44:32 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,8 @@ import javax.servlet.http.HttpServletResponse;
  * This class wraps around FOP to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2001-01-10 23:42:31 $
+ * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
+ * @version $Revision: 1.7 $ $Date: 2001-01-10 23:44:32 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
