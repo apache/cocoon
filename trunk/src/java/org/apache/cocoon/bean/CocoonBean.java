@@ -326,7 +326,7 @@ public class CocoonBean
     private LifecycleExtensionManager getLifecycleExtensionManager()
     {
         LifecycleExtensionManager manager = new LifecycleExtensionManager();
-        manager.addAccessorExtension(new SitemapConfigurableAccessor());
+        manager.addCreatorExtension(new SitemapConfigurableAccessor());
 
         return manager;
     }

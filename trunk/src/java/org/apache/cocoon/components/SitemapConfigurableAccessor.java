@@ -50,8 +50,11 @@
 */
 package org.apache.cocoon.components;
 
+import org.apache.avalon.fortress.ContainerManagerConstants;
+import org.apache.avalon.fortress.MetaInfoManager;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.lifecycle.Accessor;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.lifecycle.Creator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,31 +65,44 @@ import java.util.Map;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public class SitemapConfigurableAccessor implements Accessor
-{
-    /** The {@link SitemapConfigurationHolder}s */
+public class SitemapConfigurableAccessor 
+implements Creator {
+
+    /** 
+     * The {@link SitemapConfigurationHolder}s 
+     */
     private Map m_sitemapConfigurationHolders = new HashMap( 15 );
 
-    public void access( Object object, Context context ) throws Exception
-    {
-        if ( object instanceof SitemapConfigurable )
-        {
-            String role = (String) context.get( "component.name" );
-            // FIXME: how can we prevent that this is called over and over again?
-            SitemapConfigurationHolder holder;
-
-            holder = (SitemapConfigurationHolder) m_sitemapConfigurationHolders.get( role );
-            if ( null == holder )
-            {
-                // create new holder
-                holder = new DefaultSitemapConfigurationHolder( role );
-                m_sitemapConfigurationHolders.put( role, holder );
+    /* (non-Javadoc)
+     * @see org.apache.avalon.lifecycle.Creator#create(java.lang.Object, org.apache.avalon.framework.context.Context)
+     */
+    public void create(Object object, Context context) 
+    throws Exception {
+        if ( object instanceof SitemapConfigurable ) {
+            ServiceManager manager = (ServiceManager) context.get(ContainerManagerConstants.SERVICE_MANAGER);
+            MetaInfoManager metaInfoManager = (MetaInfoManager)manager.lookup(MetaInfoManager.ROLE);
+            try {
+                String role = metaInfoManager.getMetaInfoForClassname(object.getClass().getName()).getConfigurationName();
+                SitemapConfigurationHolder holder;
+                
+                holder = (SitemapConfigurationHolder) m_sitemapConfigurationHolders.get( role );
+                if ( null == holder ) {
+                    // create new holder
+                    holder = new DefaultSitemapConfigurationHolder( role );
+                    m_sitemapConfigurationHolders.put( role, holder );
+                }
+                
+                ( (SitemapConfigurable) object ).configure( holder );
+            } finally {
+                manager.release(metaInfoManager);
             }
-
-            ( (SitemapConfigurable) object ).configure( holder );
         }
     }
 
-    public void release( Object object, Context context )
-    {}
+    /* (non-Javadoc)
+     * @see org.apache.avalon.lifecycle.Creator#destroy(java.lang.Object, org.apache.avalon.framework.context.Context)
+     */
+    public void destroy(Object object, Context context) {
+    }
+
 }

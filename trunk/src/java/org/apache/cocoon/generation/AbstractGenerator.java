@@ -66,20 +66,20 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.5 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.6 2004/01/07 13:21:23 cziegeler Exp $
  */
 public abstract class AbstractGenerator
     extends AbstractXMLProducer
     implements Generator {
 
     /** The current <code>SourceResolver</code>. */
-    protected SourceResolver resolver=null;
+    protected SourceResolver resolver;
     /** The current <code>Map</code> objectModel. */
-    protected Map objectModel=null;
+    protected Map objectModel;
     /** The current <code>Parameters</code>. */
-    protected Parameters parameters=null;
+    protected Parameters parameters;
     /** The source URI associated with the request or <b>null</b>. */
-    protected String source=null;
+    protected String source;
 
     /**
      * Set the <code>SourceResolver</code>, object model <code>Map</code>,
