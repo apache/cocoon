@@ -8,6 +8,7 @@
                                      by
 
                      Stefano Mazzocchi <stefano@apache.org>
+                     
 
 Installing the build tools
 ==========================
@@ -81,15 +82,14 @@ NOTE: the "site" target is only useful for site mantainers.
     <tstamp/>
     <property name="Name"    value="Cocoon"/>
     <property name="name"    value="cocoon"/>
-    <property name="version" value="2.0a1"/>
+    <property name="version" value="2.0a2"/>
     <property name="year"    value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
 
-    <property name="build.compiler" value="classic"/>
-    <property name="debug"          value="on"/>
-    <property name="optimize"       value="on"/>
-    <property name="deprecation"    value="off"/>
+    <property name="debug"       value="on"/>
+    <property name="optimize"    value="on"/>
+    <property name="deprecation" value="off"/>
 
     <property name="src.dir"     value="./src"/>
     <property name="lib.dir"     value="./lib"/>
