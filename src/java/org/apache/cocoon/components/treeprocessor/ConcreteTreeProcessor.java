@@ -16,8 +16,6 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
@@ -37,7 +34,6 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
@@ -151,52 +147,23 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         this.sitemapComponentConfigurations = null;
     }
 
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
-     */
-    public Map getComponentConfigurations() {
-        // do we have the sitemap configurations prepared for this processor?
-        if ( null == this.sitemapComponentConfigurations ) {
-
-            synchronized (this) {
-
-                if ( this.sitemapComponentConfigurations == null ) {
-                    // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null
-                                                     ? null
-                                                     : this.componentConfigurations.getChildren());
-
-                    if ( null != childs ) {
-
-                        if ( null == this.wrappingProcessor.parent ) {
-                            this.sitemapComponentConfigurations = new HashMap(12);
-                        } else {
-                            // copy all configurations from parent
-                            this.sitemapComponentConfigurations = new HashMap(
-                            			this.wrappingProcessor.parent.getComponentConfigurations());
-                        }
-
-                        // and now check for new configurations
-                        for(int m = 0; m < childs.length; m++) {
-
-                            final String r = this.wrappingProcessor.rootRoleManager.getRoleForName(childs[m].getName());
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
-                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
-                        }
-                    } else {
-                        // we don't have configurations
-                        if ( null == this.wrappingProcessor.parent ) {
-                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
-                        } else {
-                            // use configuration from parent
-                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations();
-                        }
-                    }
-                }
+    public Configuration[] getComponentConfigurations() {
+        if ( this.componentConfigurations == null ) {
+            if ( this.wrappingProcessor.parent != null ) {
+                return this.wrappingProcessor.parent.getComponentConfigurations();
             }
+            return null;
+        } else {
+            if ( this.wrappingProcessor.parent == null ) {
+                return new Configuration[] { this.componentConfigurations };
+            }
+            final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();            
+            final Configuration[] newArray = new Configuration[parentArray.length+1];
+            System.arraycopy(parentArray, 0, newArray, 1, parentArray.length);
+            newArray[0] = this.componentConfigurations;
+            return newArray;
         }
-        return this.sitemapComponentConfigurations;    }
+    }
 
     /**
      * Mark this processor as needing to be disposed. Actual call to {@link #dispose()} will occur when
