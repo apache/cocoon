@@ -82,6 +82,7 @@
     <depend project="jing"/>
     <depend project="pizza"/>
     <depend project="junit"/>
+    <depend project="easymock"/>
     <depend project="eclipse-jtd"/>
     <depend project="concurrent"/>
 
