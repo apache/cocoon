@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,7 +65,7 @@ implements Source, XMLizable {
 
     /** The system id used for caching */
     private String systemIdForCaching;
-    
+
     /** The current ServiceManager */
     private final ServiceManager manager;
 
@@ -92,15 +92,15 @@ implements Source, XMLizable {
 
     /** Is start processing on the environment called? */
     private boolean processed;
-    
+
     /** The used protocol */
     private final String protocol;
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
-    
+
     private String mimeType;
-    
+
     /**
      * Construct a new object
      */
@@ -129,7 +129,7 @@ implements Source, XMLizable {
 
         // create environment...
         final EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info, logger);
-        
+
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
 
@@ -139,9 +139,9 @@ implements Source, XMLizable {
         } else {
             this.environment.getObjectModel().remove(ObjectModelHelper.PARENT_CONTEXT);
         }
-        
+
         this.systemId = info.systemId;
-        
+
         // initialize
         this.init();
     }
@@ -191,11 +191,11 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
-            EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor, 
+            EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
                                             this.manager,
                                             this.environment);
             try {
-                
+
                 this.pipelineDescription.processingPipeline.process(this.environment);
             } finally {
                 EnvironmentHelper.leaveProcessor();
@@ -221,13 +221,13 @@ implements Source, XMLizable {
     }
 
     /**
-     * 
+     *
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
         return true;
     }
-    
+
     /**
      *  Get the Validity object. This can either wrap the last modification
      *  date or the expires information or...
@@ -281,7 +281,7 @@ implements Source, XMLizable {
                     this.sourceValidity = this.pipelineDescription.processingPipeline.getValidityForEventPipeline();
                     final String eventPipelineKey = this.pipelineDescription.processingPipeline.getKeyForEventPipeline();
                     this.mimeType = this.environment.getContentType();
-                    
+
                     if (eventPipelineKey != null) {
                         StringBuffer buffer = new StringBuffer(this.systemId);
                         if (this.systemId.indexOf('?') == -1) {
@@ -293,7 +293,7 @@ implements Source, XMLizable {
                         buffer.append(eventPipelineKey);
                         this.systemIdForCaching = buffer.toString();
                     } else {
-                        this.systemIdForCaching = this.systemId; 
+                        this.systemIdForCaching = this.systemId;
                     }
                 } finally {
                     EnvironmentHelper.leaveProcessor();
@@ -350,7 +350,7 @@ implements Source, XMLizable {
                                                  this.environment);
                 try {
                     this.pipelineDescription.processingPipeline.process(this.environment,
-                                 EnvironmentHelper.createEnvironmentAwareConsumer(consumer)); 
+                                 EnvironmentHelper.createEnvironmentAwareConsumer(consumer));
                 } finally {
                     EnvironmentHelper.leaveProcessor();
                 }
@@ -374,17 +374,20 @@ implements Source, XMLizable {
             this.pipelineDescription.release();
             this.pipelineDescription = null;
         }
-        if ( this.processed ) {
+
+        if (this.processed) {
             this.processed = false;
             this.environment.finishingProcessing();
         }
-        this.sourceValidity = null;
+
         if (this.redirectSource != null) {
             this.sourceResolver.release(this.redirectSource);
+            this.redirectSource = null;
         }
-        this.environment.reset();
-        this.redirectSource = null;
+        this.sourceValidity = null;
         this.redirectValidity = null;
+
+        this.environment.reset();
         this.exception = null;
         this.needsRefresh = true;
     }
