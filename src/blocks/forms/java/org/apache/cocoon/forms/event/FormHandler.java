@@ -27,7 +27,7 @@ package org.apache.cocoon.forms.event;
  * you want the event handler to have access to objects it would not be able to get access
  * to if they were part of the form definition.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface FormHandler {
 

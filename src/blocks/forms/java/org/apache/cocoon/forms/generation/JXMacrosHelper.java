@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  * Helper class for the implementation of the CForms template language with JXTemplate macros.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class JXMacrosHelper {
 
@@ -201,7 +201,7 @@ public class JXMacrosHelper {
      * A SAX pipe that buffers the <code>endElement()</code> event of the root element.
      * This is needed by the generator version of the Woody transformer (see woody-jxmacros.xml).
      *
-     * @version CVS $Id$
+     * @version $Id$
      */
     private static class RootBufferingPipe extends AbstractXMLPipe {
         private int depth = 0;

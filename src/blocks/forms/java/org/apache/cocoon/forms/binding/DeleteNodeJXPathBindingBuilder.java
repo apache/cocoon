@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * &lt;fb:delete-node /&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DeleteNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

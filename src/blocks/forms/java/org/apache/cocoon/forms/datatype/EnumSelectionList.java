@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * <code>nullable="false"</code> attribute to the
  * <code>fd:selection-list</code> element.</p>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";

@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * Adapter for {@link org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValueCountValidatorBuilder extends ValueCountValidationRuleBuilder implements WidgetValidatorBuilder {
 

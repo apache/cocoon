@@ -21,7 +21,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * Event raised when a field value changes.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValueChangedEvent extends WidgetEvent {
     

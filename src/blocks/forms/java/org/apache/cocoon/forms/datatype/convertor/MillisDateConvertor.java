@@ -25,7 +25,7 @@ import java.util.Date;
  * A Convertor for Date objects which uses the number of milliseconds since
  * January 1, 1970, 00:00:00 GMT as string representation.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MillisDateConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

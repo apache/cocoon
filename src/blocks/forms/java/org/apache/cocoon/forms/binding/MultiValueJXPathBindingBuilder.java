@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

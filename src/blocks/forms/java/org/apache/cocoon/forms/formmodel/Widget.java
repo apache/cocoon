@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface Widget {
 

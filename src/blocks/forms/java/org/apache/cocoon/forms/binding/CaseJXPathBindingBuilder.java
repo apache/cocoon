@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:case&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CaseJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * <p>Implementations may implement Avalon's Serviceable interface to gain access
  * to other components.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface WidgetDefinitionBuilder {
 

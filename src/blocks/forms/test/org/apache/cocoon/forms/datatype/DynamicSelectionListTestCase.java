@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for CForms's DynamicSelectionList datatype.
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DynamicSelectionListTestCase extends ContainerTestCase {
 

@@ -27,7 +27,7 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  * {@link org.apache.cocoon.forms.validation.WidgetValidator}.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValidationRuleValidator implements WidgetValidator {
     

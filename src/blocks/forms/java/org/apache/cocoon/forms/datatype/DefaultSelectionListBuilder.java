@@ -43,7 +43,7 @@ import java.util.Locale;
  * that XML is interpreted, it also needs to change over there and vice
  * versa.</p>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
 
