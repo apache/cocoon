@@ -52,7 +52,6 @@ package org.apache.cocoon.caching;
 
 import java.io.Serializable;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 
 /**
@@ -63,7 +62,7 @@ import org.apache.cocoon.ProcessingException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.5 2003/10/25 17:46:39 unico Exp $
+ * @version CVS $Id: Cache.java,v 1.6 2003/10/25 21:46:17 ghoward Exp $
  */
 public interface Cache {
 
