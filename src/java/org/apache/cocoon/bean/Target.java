@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.7 2003/09/19 09:09:43 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.8 2003/10/17 14:22:15 upayavira Exp $
  */
 public class Target {
     // Defult type is append
@@ -147,6 +147,7 @@ public class Target {
         target.setParentURI(this.sourceURI);
         target.setConfirmExtension(this.confirmExtension);
         target.setFollowLinks(this.followLinks);
+        target.setDefaultFilename(this.defaultFilename);
         target.setLogger(this.logger);
         return target;
     }
