@@ -120,6 +120,20 @@
     <td><link href="mailto:MHussey@Saba.com">Michael Hussey</link></td>
     <td>1.8</td>
    </tr>
+   <tr>
+    <td>29 Nov 2000</td>
+    <td>fp:write node creation</td>
+    <td>fp:write doesn't create new nodes as it should. This patch fixes that.</td>
+    <td><link href="mailto:dave@starnix.com">David Arnold</link></td>
+    <td>1.8?</td>
+   </tr>
+   <tr>
+    <td>9 Jan 2001</td>
+    <td>Custom entity resolver</td>
+    <td>The Parser interface doesn't currently have a way of specifying an EntityResolver</td>
+    <td><link href="mailto:robmv@promca.com">Robert Marcano</link></td>
+    <td>1.8</td>
+   </tr>
   </table>
 
   <p>See also additional list of patches to be added in <connect href="todo.xml">To Do</connect>.
