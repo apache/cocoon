@@ -156,8 +156,8 @@ public class Notifier {
                 while (keyIter.hasNext()) {
                     String key = (String) keyIter.next();
 
-                    sb.append("<p><b>" + key + "</b> "
-                              + extraDescriptions.get(key) + "</p>");
+                    sb.append("<p><b>" + key + "</b> <pre> "
+                              + extraDescriptions.get(key) + "</pre></p>");
                 }
 
                 sb.append("<HR size=\"1\" noshade>");
