@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="UV" type="add">
+    CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
+   </action>
    <action dev="CZ" type="update">
     Create proxies for pooled components. Pooled components can now be used in the same
     way as thread safe components, the client code does not need to know if they are pooled anymore.
