@@ -80,7 +80,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.3 2003/03/20 15:04:16 stephan Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.4 2003/05/02 13:10:23 bdelacretaz Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
             extends AbstractProcessingPipeline
@@ -234,7 +234,7 @@ public abstract class AbstractCachingProcessingPipeline
         } else {
 
             if (this.getLogger().isDebugEnabled() && this.toCacheKey != null) {
-                this.getLogger().debug("Caching content for further requests of '" + environment.getURI() + "' using key " + this.toCacheKey);
+                this.getLogger().debug("processXMLPipeline: caching content for further requests of '" + environment.getURI() + "' using key " + this.toCacheKey);
             }
             try {
                 OutputStream os = null;
@@ -559,21 +559,29 @@ public abstract class AbstractCachingProcessingPipeline
                     if ( !isValid ) {
                         responseIsValid = false;
                         // update validity
-                        if (validity == null)
+                        if (validity == null) {
                             responseIsUsable = false;
-                    } else {                        
+                            if (this.getLogger().isDebugEnabled()) {
+                                this.getLogger().debug("validatePipeline: responseIsUsable is false, valid==" + valid + " at index " + i);
+                            }
+                        } else {
+                            if (this.getLogger().isDebugEnabled()) {
+                                this.getLogger().debug("validatePipeline: responseIsValid is false due to " + validity);
+                            }
+                        }
+                    } else {
                         i++;
                     }
                 }
                 if ( responseIsValid ) {
                     if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
+                        this.getLogger().debug("validatePipeline: using valid cached content for '" + environment.getURI() + "'.");
                     }
                     // we are valid, ok that's it
                     this.cachedResponse = response.getResponse();
                 } else {
                     if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
+                        this.getLogger().debug("validatePipeline: cached content is invalid for '" + environment.getURI() + "'.");
                     }
                     // we are not valid!
 
@@ -747,7 +755,7 @@ public abstract class AbstractCachingProcessingPipeline
 
                     if (valid) {
                         if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
+                            this.getLogger().debug("processReader: using valid cached content for '" + environment.getURI() + "'.");
                         }
                         byte[] response = cachedObject.getResponse();
                         if (response.length > 0) {
@@ -758,7 +766,7 @@ public abstract class AbstractCachingProcessingPipeline
                         }
                     } else {
                         if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
+                            this.getLogger().debug("processReader: cached content is invalid for '" + environment.getURI() + "'.");
                         }
                         // remove invalid cached object
                         this.cache.remove(pcKey);
@@ -770,7 +778,7 @@ public abstract class AbstractCachingProcessingPipeline
 
                 if ( pcKey != null ) {
                     if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("Caching content for further requests of '" + environment.getURI() + "'.");
+                        this.getLogger().debug("processReader: caching content for further requests of '" + environment.getURI() + "'.");
                     }
                     if (readerValidity == null) {
                         if (isCacheableProcessingComponent) {
@@ -862,28 +870,45 @@ public abstract class AbstractCachingProcessingPipeline
      */
     SourceValidity getValidityForInternalPipeline(int index) {
         final SourceValidity validity;
+
+        // if debugging try to tell why something is not cacheable
+        final boolean debug = this.getLogger().isDebugEnabled();
+        String msg = null;
+        if(debug) msg = "getValidityForInternalPipeline(" + index + "): ";
+
         if (index == 0) {
             // test generator
             if (this.generatorIsCacheableProcessingComponent) {
                 validity = ((CacheableProcessingComponent)super.generator).getValidity();
+                if(debug) msg += "generator: using getValidity";
             } else {
                 validity = CacheValidityToSourceValidity.createValidity(((Cacheable)super.generator).generateValidity());
+                if(debug) msg += "generator: using generateValidity";
             }
         } else if (index <= firstNotCacheableTransformerIndex) {
             // test transformer
             final Transformer trans = (Transformer)super.transformers.get(index-1);
             if (this.transformerIsCacheableProcessingComponent[index-1]) {
                 validity = ((CacheableProcessingComponent)trans).getValidity();
+                if(debug) msg += "transformer: using getValidity";
             } else {
                 validity = CacheValidityToSourceValidity.createValidity(((Cacheable)trans).generateValidity());
+                if(debug) msg += "transformer: using generateValidity";
             }
         } else {
             // test serializer
             if (this.serializerIsCacheableProcessingComponent) {
                 validity = ((CacheableProcessingComponent)super.serializer).getValidity();
+                if(debug) msg += "serializer: using getValidity";
             } else {
                 validity = CacheValidityToSourceValidity.createValidity(((Cacheable)super.serializer).generateValidity());
+                if(debug) msg += "serializer: using generateValidity";
             }
+        }
+
+        if(debug) {
+            msg += ", validity==" + validity;
+            this.getLogger().debug(msg);
         }
         return validity;
     }
