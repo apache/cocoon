@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -50,7 +50,7 @@ import org.mozilla.javascript.*;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyHandler.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: ScriptablePropertyHandler.java,v 1.4 2003/05/01 09:32:34 coliver Exp $
  */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 
