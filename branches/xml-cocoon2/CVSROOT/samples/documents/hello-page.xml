@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE page [
+ <!ELEMENT page (title?, content)>
+ <!ELEMENT title (#PCDATA)>
+ <!ELEMENT content (paragraph+)>
+ <!ELEMENT paragraph (#PCDATA)>
+]>
+
+<page>
+ <title>Hello</title>
+ <content>
+  <paragraph>This is my first Cocoon2 page!</paragraph>
+ </content>
+</page>
