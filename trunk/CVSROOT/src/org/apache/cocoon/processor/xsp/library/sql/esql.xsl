@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.91 2001-08-16 14:06:53 cziegeler Exp $-->
+<!-- $Id: esql.xsl,v 1.92 2001-09-06 20:53:07 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -258,7 +258,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
               super.compose(manager);
               if (_esql_selector == null) {
                 try {
-                  _esql_selector = (ComponentSelector) manager.lookup(org.apache.cocoon.Roles.DB_CONNECTION);
+                  _esql_selector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
                 } catch (ComponentException cme) {
                   getLogger().error("Could not look up the datasource component", cme);
                 }
