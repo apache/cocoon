@@ -1,4 +1,4 @@
-/*-- $Id: Monitor.java,v 1.7 2000-03-13 21:26:17 ricardo Exp $ --
+/*-- $Id: Monitor.java,v 1.8 2000-04-14 17:12:57 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,59 +58,68 @@ import java.util.*;
  * This class watches over the changes of indicated resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-03-13 21:26:17 $
+ * @version $Revision: 1.8 $ $Date: 2000-04-14 17:12:57 $
  */
 
-public class Monitor {
+public class Monitor extends Hashtable {
 
-    private Hashtable table;
-
-    class Container {
+    /**
+     * This inner class wraps a resource with its timestamp.
+     */
+    class ResourceWrapper {
         public Object resource;
         public long timestamp;
 
-        public Container(Object resource, long timestamp) {
+        public ResourceWrapper(Object resource) {
             this.resource = resource;
-            this.timestamp = timestamp;
+            stamp();
+        }
+        
+        public void stamp() {
+            this.timestamp = timestamp(this.resource);
         }
     }
 
-    class MultiContainer {
-        private Vector v = new Vector();
+    /**
+     * This inner class contains all the resource associated to a given key
+     */
+    class ResourceContainer extends Vector {
 
-        public MultiContainer(Object o1, Object o2) {
-            this.add(o1);
-            this.add(o2);
+        public ResourceContainer(Object resource) {
+            super(1);
+            this.addResource(resource);
         }
 
-        public void add(Object o) {
-            if (!this.v.contains(o)) this.v.addElement(o);
-        }
-
-        public Enumeration elements() {
-            return this.v.elements();
+        public void addResource(Object resource) {
+            Enumeration e = elements();
+            while (e.hasMoreElements()) {
+                ResourceWrapper r = (ResourceWrapper) e.nextElement();
+                if (r.resource.toString().equals(resource.toString())) {
+                    r.stamp();
+                    return;
+                }
+            }
+            addElement(new ResourceWrapper(resource));
         }
     }
 
+    /**
+     * Create this class with the given starting capacity.
+     */
     public Monitor(int capacity) {
-        this.table = new Hashtable(capacity);
+        super(capacity);
     }
-
+    
     /**
      * Tells the monitor to watch the given resource, timestamps it
      * and associate it to the given key.
      */
     public void watch(Object key, Object resource) {
-        Object o = table.get(key);
+        Object o = get(key);
         if (o == null) {
-            this.table.put(key, new Container(resource, timestamp(resource)));
+            put(key, new ResourceContainer(resource));
         } else {
-            Container c = new Container(resource, timestamp(resource));
-            if (o instanceof MultiContainer) {
-                ((MultiContainer) o).add(c);
-            } else {
-                this.table.put(key, new MultiContainer(o, c));
-            }
+            ((ResourceContainer) o).addResource(resource);
         }
     }
 
@@ -131,19 +140,14 @@ public class Monitor {
      * handler ourselves (which I don't care to do at this point).
      */
     public boolean hasChanged(Object context) {
-        Object o = this.table.get(context);
+        Object o = get(context);
         if (o != null) {
-            if (o instanceof Container) {
-                Container c = (Container) o;
-                return c.timestamp != timestamp(c.resource);
-            } else {
-                Enumeration e = ((MultiContainer) o).elements();
-                while (e.hasMoreElements()) {
-                    Container c = (Container) e.nextElement();
-                    if (c.timestamp != timestamp(c.resource)) return true;
-                }
-                return false;
+            Enumeration e = ((ResourceContainer) o).elements();
+            while (e.hasMoreElements()) {
+                ResourceWrapper rw = (ResourceWrapper) e.nextElement();
+                if (rw.timestamp != timestamp(rw.resource)) return true;
             }
+            return false;
         } else {
             return true;
         }
@@ -153,14 +157,14 @@ public class Monitor {
      * Invalidates the given context.
      */
     public void invalidate(Object context) {
-        if (context != null) this.table.remove(context);
+        if (context != null) remove(context);
     }
 
     /**
      * Create a timestamp indicating the last modified time
      * of the given resource.
      */
-    public long timestamp(Object resource) {
+    public static long timestamp(Object resource) {
         long timestamp;
         if (resource instanceof File) {
             timestamp = ((File) resource).lastModified();
