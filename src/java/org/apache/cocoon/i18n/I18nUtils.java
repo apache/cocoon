@@ -187,7 +187,7 @@ public class I18nUtils {
 
         // 7. Blank
         if (useBlankLocale) {
-            locale = new Locale("");
+            locale = new Locale("", "");
             if (test == null || test.test("blank", locale)) {
                 return locale;
             }

@@ -289,7 +289,7 @@ public class LocaleMatcher extends AbstractLogEnabled
         }
 
         // Test "language" locale (or empty - if language is "")
-        testLocale = new Locale(locale.getLanguage());
+        testLocale = new Locale(locale.getLanguage(), "");
         if (isValidResource(pattern, locale, testLocale, map)) {
             return true;
         }
