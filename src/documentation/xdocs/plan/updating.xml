@@ -122,6 +122,7 @@
         <li><em>org.apache.cocoon.components.url.ResourceURLFactory</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.url.URLFactory</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.url.URLFactoryImpl</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.xml.XMLizable</em> - Excalibur SourceResolver</li>
       </ul>
     </s2>
     <s2 title="XML Parsing">
