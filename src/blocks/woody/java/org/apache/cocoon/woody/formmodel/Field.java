@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.15 2003/11/03 23:16:12 ugo Exp $
+ * @version CVS $Id: Field.java,v 1.16 2003/11/06 21:33:28 vgritsenko Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -92,6 +92,7 @@ public class Field extends AbstractWidget {
 
     private ValidationError validationError;
 
+
     public Field(FieldDefinition fieldDefinition) {
         this.definition = fieldDefinition;
     }
@@ -107,18 +108,18 @@ public class Field extends AbstractWidget {
     public Object getValue() {
         // Parse the value
         if (this.needsParse) {
-            
+
             // Clear value, it will be recomputed
             this.value = null;
             if (this.enteredValue == null) {
                 this.value = null;
                 this.needsParse = false;
                 this.needsValidate = true;
-                
+
             } else {
                 // Parse the value
                 this.value = definition.getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
-            
+
                 if (this.value == null) {
                     // Conversion failed
                     this.validationError = new ValidationError(
@@ -126,7 +127,7 @@ public class Field extends AbstractWidget {
                         new String[] {"datatype." + definition.getDatatype().getDescriptiveName()},
                         new boolean[] { true }
                     );
-                    
+
                     // No need for further validation (and need to keep the above error)
                     this.needsValidate = false;
                 } else {
@@ -139,8 +140,9 @@ public class Field extends AbstractWidget {
 
         // if getValue() is called on this field while we're validating, then it's because a validation
         // rule called getValue(), so then we just return the parsed (but not validated) value to avoid an endless loop
-        if (isValidating)
+        if (isValidating) {
             return value;
+        }
 
         // Validate the value
         if (this.needsValidate) {
@@ -164,32 +166,37 @@ public class Field extends AbstractWidget {
                 isValidating = false;
             }
         }
-        
+
         return this.validationError == null ? this.value : null;
     }
 
     public void setValue(Object newValue) {
-        if (newValue != null && !definition.getDatatype().getTypeClass().isAssignableFrom(newValue.getClass()))
+        if (newValue != null && !definition.getDatatype().getTypeClass().isAssignableFrom(newValue.getClass())) {
             throw new RuntimeException("Incorrect value type for \"" + getFullyQualifiedId() +
-               "\" (expected " + definition.getDatatype().getTypeClass() + ", got " + newValue.getClass() + ".");
+                                       "\" (expected " + definition.getDatatype().getTypeClass() +
+                                       ", got " + newValue.getClass() + ".");
+        }
 
         Object oldValue = this.value;
-        
+
         boolean changed = ! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue);
-        
+
         // Do something only if value is different or null
         // (null allows to reset validation error)
         if (changed || newValue == null) {
-        
             this.value = newValue;
-    
+
             this.needsParse = false;
             this.validationError = null;
             // Force validation, even if set by the application
             this.needsValidate = true;
 
-            this.enteredValue = definition.getDatatype().convertToString(newValue, getForm().getLocale());
-    
+            if (newValue == null) {
+                this.enteredValue = null;
+            } else {
+                this.enteredValue = definition.getDatatype().convertToString(newValue, getForm().getLocale());
+            }
+
             if (changed) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
