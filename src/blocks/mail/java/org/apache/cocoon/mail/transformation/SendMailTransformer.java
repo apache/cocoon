@@ -170,7 +170,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.11 2004/05/26 01:46:53 joerg Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.12 2004/07/22 15:03:31 cziegeler Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -220,6 +220,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
      * communication parameters, which will be used to send mails
      */
     protected Vector               toAddresses;
+    protected Vector               defaultToAddresses;
     protected Vector               attachments;
     protected StringBuffer         subject;
     protected StringBuffer         body;
@@ -244,7 +245,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
      */
     public void setup(SourceResolver resolver, Map objectModel, String src,
                       Parameters par)
-               throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.mailHost    = par.getParameter(PARAM_SMTPHOST, "");
         this.fromAddress = par.getParameter(PARAM_FROM, "");
@@ -258,20 +259,19 @@ public class SendMailTransformer extends AbstractSAXTransformer
                                    fromAddress);
         }
 
-        String s = par.getParameter(PARAM_TO, "");
-        this.toAddresses = new Vector();
         this.attachments = new Vector();
-        this.appendToAddress(s, ";");
-
-	try {
-	    this.subject = new StringBuffer(par.getParameter(PARAM_SUBJECT));
-	} catch (ParameterException pe) {
-	    this.getLogger().debug("Parameter <subject> not set."); 
-	} try {
-	    this.body    = new StringBuffer(par.getParameter(PARAM_BODY));
-	} catch (ParameterException pe) {
-	    this.getLogger().debug("Parameter <body> not set."); 
-	}				    
+        this.defaultToAddresses = new Vector();
+        appendToAddress(this.defaultToAddresses, par.getParameter(PARAM_TO, ""));
+        
+    	try {
+    	    this.subject = new StringBuffer(par.getParameter(PARAM_SUBJECT));
+    	} catch (ParameterException pe) {
+    	    this.getLogger().debug("Parameter <subject> not set."); 
+    	} try {
+    	    this.body    = new StringBuffer(par.getParameter(PARAM_BODY));
+    	} catch (ParameterException pe) {
+    	    this.getLogger().debug("Parameter <body> not set."); 
+    	}				    
 
         this.defaultNamespaceURI = NAMESPACE;
     }
@@ -296,7 +296,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
 
         if (name.equals(ELEMENT_SENDMAIL) == true) {
             // Clean from possible previous usage
-            this.toAddresses.clear();
+            this.toAddresses = new Vector(this.defaultToAddresses);
             this.attachments.clear();
         } else if (name.equals(ELEMENT_SMTPHOST) == true) {
             this.startTextRecording();
@@ -407,12 +407,11 @@ public class SendMailTransformer extends AbstractSAXTransformer
         }
     }
 
-    private void appendToAddress(String s, String delim) {
-        StringTokenizer t = null;
-        t = new StringTokenizer(s.trim(), delim);
+    private static void appendToAddress(Vector addresses, String s) {
+        StringTokenizer t = new StringTokenizer(s.trim(), ";");
 
         while (t.hasMoreElements()) {
-            this.toAddresses.add(t.nextToken());
+            addresses.add(t.nextToken());
         }
     }
 
@@ -466,7 +465,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
 
             trans.close();
             super.sendEndElementEventNS(ELEMENT_RESULT);
-	    this.ignoreHooksCount--;
+	        this.ignoreHooksCount--;
         } catch (Exception sE) {
             this.getLogger().error("sendMail-Error", sE);
             this.sendExceptionElement(sE);
@@ -474,7 +473,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
     }
 
     /**
-     * <a href="http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html">Java Mail API</a>
+     * @link http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html
      * @throws Exception
      */
     private void sendMail(Vector newAddresses, Transport trans)
@@ -674,6 +673,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
 
 	public void recycle() { 
         this.toAddresses = null;
+        this.defaultToAddresses = null;
 	    this.attachments = null;
 	    this.subject = null;
 	    this.body = null;
@@ -689,11 +689,11 @@ public class SendMailTransformer extends AbstractSAXTransformer
 	}
 	
     class AttachmentDescriptor {
-        String       strAttrName     = null;
-        String       strAttrMimeType = null;
-        String       strAttrSrc      = null;
-        String       strAttrFile     = null;
-        StringBuffer strBufContent   = null;
+        String       strAttrName;
+        String       strAttrMimeType;
+        String       strAttrSrc;
+        String       strAttrFile;
+        StringBuffer strBufContent;
 
         protected AttachmentDescriptor(String newAttrName,
                                        String newAttrMimeType,
@@ -705,7 +705,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
         }
 
         protected void setContent(StringBuffer newContent) {
-            strBufContent = newContent;
+            this.strBufContent = newContent;
         }
 
         protected AttachmentDescriptor copy() {
@@ -732,8 +732,8 @@ public class SendMailTransformer extends AbstractSAXTransformer
     }
 
     class AddressHandler {
-        private InternetAddress address        = null;
-        private String          sendMailResult = null;
+        private InternetAddress address;
+        private String          sendMailResult;
 
         protected AddressHandler(InternetAddress newAddress) {
             this.address = newAddress;

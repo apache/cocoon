@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.400 2004/07/15 12:49:48 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.401 2004/07/22 15:03:30 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -204,6 +204,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+     Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
+   </action>
    <action dev="SW" type="update">
      Move the sitemap engine to Serviceable (in replacement of Composable) and remove
      SitemapComponentSelector and OutputComponentSelector that were no more needed.
