@@ -55,12 +55,12 @@ package org.apache.cocoon.webapps.session;
  * It provides simple support for developing multi-channel applications
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: MediaManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: MediaManager.java,v 1.2 2004/01/27 15:36:25 cziegeler Exp $
 */
 public interface MediaManager {
 
     /** The Avalon Role */
-    public static final String ROLE = MediaManager.class.getName();
+    String ROLE = MediaManager.class.getName();
 
     /**
      * Test if the media of the current request is the given value

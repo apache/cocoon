@@ -50,50 +50,51 @@
 */
 package org.apache.cocoon.webapps.session.components;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.RequestLifecycleComponent;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.MediaManager;
-import org.xml.sax.SAXException;
 
 /**
  * This is the default implementation for the media manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultMediaManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: DefaultMediaManager.java,v 1.2 2004/01/27 15:36:25 cziegeler Exp $
 */
 public final class DefaultMediaManager
 extends AbstractLogEnabled
-implements MediaManager, Configurable, RequestLifecycleComponent, Recyclable, Component {
+implements MediaManager, Configurable, ThreadSafe, Contextualizable, Component {
 
     /** The media Types */
-    private PreparedMediaType[] allMediaTypes;
+    protected PreparedMediaType[] allMediaTypes;
     
     /** The default media type (usually this is html) */
-    private String      defaultMediaType;
+    protected String      defaultMediaType;
     
     /** All media type names */
-    private String[]    mediaTypeNames;
+    protected String[]    mediaTypeNames;
 
-    /** tThe current media type */
-    private String mediaType;
-
-    /** The current request */
-    private Request request;
+    /** The Context */
+    protected Context context;
     
-    /**
-     * Configurable interface.
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration myConfiguration)
     throws ConfigurationException {
@@ -141,37 +142,15 @@ implements MediaManager, Configurable, RequestLifecycleComponent, Recyclable, Co
     }
 
     /**
-     * Get the current media type
-     */
-    public void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException {
-        this.request = ObjectModelHelper.getRequest( objectModel );
-        // get the media of the current request
-        String useragent = this.request.getHeader("User-Agent");
-        PreparedMediaType media = null;
-        if (useragent != null) {
-            int i, l;
-            i = 0;
-            l = this.allMediaTypes.length;
-            while (i < l && media == null) {
-                if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
-                    i++;
-                } else {
-                    media = this.allMediaTypes[i];
-                }
-            }
-        }
-        this.mediaType = (media == null ? this.defaultMediaType : media.name);
-    }
-
-    /**
      * Test if the media of the current request is the given value
      */
     public boolean testMedia(String value) {
         // synchronized
         boolean result = false;
 
-        String useragent = this.request.getHeader("User-Agent");
+        Request request = ContextHelper.getRequest(this.context);
+        
+        String useragent = request.getHeader("User-Agent");
         PreparedMediaType theMedia = null;
         int i, l;
         i = 0;
@@ -192,29 +171,38 @@ implements MediaManager, Configurable, RequestLifecycleComponent, Recyclable, Co
         return result;
     }
 
-    /**
-     * Get all media type names
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.MediaManager#getMediaTypes()
      */
     public String[] getMediaTypes() {
         // synchronized
         return this.mediaTypeNames;
     }
 
-    /**
-     * Return the current media type
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.MediaManager#getMediaType()
      */
     public String getMediaType() {
         // synchronized
-        return this.mediaType;
+        Request request = ContextHelper.getRequest( this.context );
+        // get the media of the current request
+        String useragent = request.getHeader("User-Agent");
+        PreparedMediaType media = null;
+        if (useragent != null) {
+            int i, l;
+            i = 0;
+            l = this.allMediaTypes.length;
+            while (i < l && media == null) {
+                if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
+                    i++;
+                } else {
+                    media = this.allMediaTypes[i];
+                }
+            }
+        }
+        return (media == null ? this.defaultMediaType : media.name);
     }
 
-    /**
-     * Recyclable
-     */
-    public void recycle() {
-        this.request = null;
-        this.mediaType = null;
-    }
 }
 
 
