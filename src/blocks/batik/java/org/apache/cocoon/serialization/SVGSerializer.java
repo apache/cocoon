@@ -84,7 +84,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.13 2004/02/08 18:33:58 sylvain Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.14 2004/02/16 21:27:17 joerg Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -295,7 +295,8 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
      * <p>Batik's PNGTranscoder closes the output stream, therefore we
      * cannot pass the output stream directly to Batik and have to
      * instruct pipeline to buffer it. If we do not buffer, we would get
-     * an exception when {@link org.apache.cocoon.Cocoon#process}
+     * an exception when
+     * {@link org.apache.cocoon.Cocoon#process(org.apache.cocoon.environment.Environment)}
      * tries to close the stream.
      */
     public boolean shouldSetContentLength() {
