@@ -209,6 +209,22 @@
      WEB-INF/ directory.
     </p>
    </s2>
+   <s2 title="Caching">
+    <p>Although the basic caching mechanism is still the same (each sitemap component
+       in the pipeline is queried), the interface for a component have been
+       improved as well.</p>
+    <p>The old interface <em>Cacheable</em> is deprecated in favour of the new
+      <em>CacheableProcessingComponent</em> interface. The basic behaviour of this
+      interface has been preserved, however the method names and the signatures
+      have changed a little bit.
+      </p>
+    <p>Some other interfaces, like the validity of the cached information has
+      moved to the source packacke in Avalon Excalibur.</p>
+    <p>The old interfaces are still support but deprecated, so it's advisable to
+      update your components. However, you can support both interfaces at the
+      same time, making your component runable in old and new Cocoon installations
+      at the same time.</p>
+   </s2>
    <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
