@@ -50,6 +50,10 @@
 		<field name="attributes" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AttributesFieldHandler">
 			<bind-xml name="attribute"/>
 		</field>
+
+    <field name="title" type="java.lang.String" get-method="getInstanceTitle">
+      <bind-xml name="title"/>
+    </field>
 	</class>
 
 	<class name="org.exolab.castor.mapping.MapItem">
