@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.64 2001-01-26 23:28:01 greenrd Exp $
+  $Id: todo.xml,v 1.65 2001-01-27 14:41:47 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -31,6 +31,9 @@
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
   </action>
+  <action context="code" bugid="74">
+   Better support for not applying stylesheets for e.g. IE5.5.
+  </action>
   <action context="design">
    Need better exception-handling architecture - converting exceptions to strings
    in taglibs may not be best solution.
@@ -46,6 +49,9 @@
  <actions priority="medium">
   <action context="code" assigned-to="DB">
    Add StoredProcedure support to esql.
+  </action>
+  <action context="code" bugid="73">
+   Browsers object not available from Manager??
   </action>
   <action context="build" bugid="5" assigned-to="RDG">
    Work out how to integrate inline XSP docs (such as inline esql docs)
