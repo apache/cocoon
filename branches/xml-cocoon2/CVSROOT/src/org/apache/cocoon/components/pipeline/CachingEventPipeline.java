@@ -51,7 +51,7 @@ import org.xml.sax.EntityResolver;
  * The CachingEventPipeline
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 10:06:39 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 14:15:26 $
  */
 public class CachingEventPipeline extends AbstractEventPipeline {
 
@@ -139,7 +139,7 @@ public class CachingEventPipeline extends AbstractEventPipeline {
                         } else {
                             testTrans = false;
                         }
-                        transformerIndex++;
+                        if (testTrans == true) transformerIndex++;
                     }
 
                     // now we have the key to get the cached object
@@ -196,7 +196,7 @@ public class CachingEventPipeline extends AbstractEventPipeline {
             }
 
             if (this.producer == null) {
-                // the content was not cached/or invalid
+                // the content was not cached/or is invalid
                 this.producer = this.generator;
                 this.connectPipeline(environment,
                                      this.transformers,
