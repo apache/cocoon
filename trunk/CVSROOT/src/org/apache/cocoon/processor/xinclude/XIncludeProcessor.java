@@ -101,7 +101,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.15 $ $Date: 2000-09-14 18:48:12 $ $Author: balld $
+ * @version CVS $Revision: 1.16 $ $Date: 2000-10-04 17:02:59 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -347,7 +347,9 @@ class XIncludeProcessorWorker {
 				}
 				result = document.createTextNode(sb.toString());
 			}
-		} else if (xinclude.parse.equals("xml")) {
+		} else if (xinclude.parse.equals("cdata")) {
+			/** i'm not sure what to do here **/
+		} else {
 			InputSource input;
 			/*if (content instanceof Reader) {
 				input = new InputSource((Reader)content);
