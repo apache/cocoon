@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.308 2004/04/25 12:12:08 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.309 2004/04/29 01:00:43 crossley Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="DC" type="fix" due-to="Ralph Goers" fixes-bug="27878">
+     XMLResourceBundleFactory was stopping when it encountered the first
+     bundle name that does not have a locale, missing those that might be
+     in one of the other locations.
+   </action>
    <action dev="SW" type="fix">
      Moved storage of all flow-related data (viewData, continuation, request, etc) from request
      attributes to object model entries. This allows a view called by sendPage() to also use
