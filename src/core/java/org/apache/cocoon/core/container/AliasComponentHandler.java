@@ -43,7 +43,9 @@ public class AliasComponentHandler extends AbstractComponentHandler {
         this.aliasedHandler.put(component);
     }
     
-    protected void doInitialize() {}
+    protected void doInitialize() {
+        // nothing to do here
+    }
     
     public boolean isSingleton() {
         return this.aliasedHandler.isSingleton();

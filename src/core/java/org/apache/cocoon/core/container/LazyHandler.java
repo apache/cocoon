@@ -35,7 +35,11 @@ public class LazyHandler implements ComponentHandler {
     private ComponentHandler getDelegate() throws Exception {
         if (this.delegate == null) {
 //            System.err.println("######## " + System.identityHashCode(compEnv.serviceManager) + " creating handler for " + this.role);
-            this.delegate = AbstractComponentHandler.getComponentHandler(role, className, config, compEnv);
+            ServiceInfo info = new ServiceInfo();
+            info.setConfiguration(config);
+            info.setServiceClassName(className);
+
+            this.delegate = AbstractComponentHandler.getComponentHandler(role, compEnv, info);
             this.delegate.initialize();
         }
         
@@ -78,9 +82,8 @@ public class LazyHandler implements ComponentHandler {
         // We can always be disposed if handler was never used
         if (this.delegate == null) {
             return true;
-        } else {
-            return getDelegateRE().canBeDisposed();
-        }
+        } 
+        return getDelegateRE().canBeDisposed();
     }
 
     /* (non-Javadoc)
@@ -109,8 +112,7 @@ public class LazyHandler implements ComponentHandler {
             info.setServiceClassName(className);
             info.setConfiguration(config);
             return info;
-        } else {
-            return this.delegate.getInfo();
-        }
+        } 
+        return this.delegate.getInfo();
     }
 }

@@ -577,13 +577,15 @@ public class CoreServiceManager
                                                     final String className,
                                                     final Configuration configuration)
     throws Exception {
+        ServiceInfo info = new ServiceInfo();
+        info.setConfiguration(configuration);
+        info.setServiceClassName(className);
         
         if (!lazyMode || configuration.getAttributeAsBoolean("preload", false) || role.endsWith("Selector")) {
             return AbstractComponentHandler.getComponentHandler(
-                    role, className, configuration, this.componentEnv);
-        } else {
-            return new LazyHandler(role, className, configuration, this.componentEnv);
+                    role, this.componentEnv, info);
         }
+        return new LazyHandler(role, className, configuration, this.componentEnv);
     }
 
     private void parseConfiguration(final Configuration configuration, String contextURI, Set loadedURIs) 
