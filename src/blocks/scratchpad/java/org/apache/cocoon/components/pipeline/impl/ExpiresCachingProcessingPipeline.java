@@ -21,6 +21,8 @@ import java.net.SocketException;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
@@ -40,11 +42,13 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * This pipeline implementation caches the complete content for a defined
  * period of time (expires). 
  * 
- * <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline"/>
+ * <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
+ *   <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
+ * </map:pipe>
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.3 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.4 2004/03/07 18:44:14 cziegeler Exp $
  */
 public class ExpiresCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -62,11 +66,21 @@ public class ExpiresCachingProcessingPipeline
     protected SimpleCacheKey cacheKey;
     
     /** The expires information */
-    protected long           cacheExpires;
+    protected long cacheExpires;
+    
+    /** Default value for expiration */
+    protected long defaultCacheExpires = 3600; // 1 hour
     
     /** The cached response */
     protected CachedResponse cachedResponse;
     
+    public void parameterize(Parameters params)
+    throws ParameterException {
+        super.parameterize(params);
+        
+        this.defaultCacheExpires = params.getParameterAsLong("cache-expires", this.defaultCacheExpires);
+    }
+
     /**
      * Process the given <code>Environment</code>, producing the output.
      */
@@ -211,7 +225,7 @@ public class ExpiresCachingProcessingPipeline
         }
         String expiresValue = (String)objectModel.get(CACHE_EXPIRES_KEY);
         if ( expiresValue == null ) {
-            this.cacheExpires = this.parameters.getParameterAsLong("cache-expires", 0);
+            this.cacheExpires = this.parameters.getParameterAsLong("cache-expires", this.defaultCacheExpires);
         } else {
             this.cacheExpires = Long.valueOf(expiresValue).longValue();
             objectModel.remove(CACHE_EXPIRES_KEY);            
