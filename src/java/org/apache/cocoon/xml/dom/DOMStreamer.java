@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.2 2003/03/09 20:38:30 sylvain Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.3 2003/03/10 11:12:46 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -163,7 +163,7 @@ public class DOMStreamer implements XMLProducer {
 
         defaultDOMStreamer.setLexicalHandler(handler);
         namespaceNormalizingDOMStreamer.setLexicalHandler(handler);
-    } 
+    }
 
     /**
      * Start the production of SAX events.
@@ -284,7 +284,7 @@ public class DOMStreamer implements XMLProducer {
 
                 pos = nextNode;
             }
-            
+
             if (isDoc) {
             	contentHandler.endDocument();
             }
@@ -404,7 +404,8 @@ public class DOMStreamer implements XMLProducer {
                                     else {
                                         if (attr.getPrefix() != null && declaredUri == null) {
                                             // prefix is not null and is not yet declared: declare it
-                                            currentElementInfo.put(prefix, attr.getNamespaceURI());
+                                            attrPrefix = attr.getPrefix();
+                                            currentElementInfo.put(attrPrefix, attr.getNamespaceURI());
                                         } else {
                                             // attribute has no prefix (which is not allowed for namespaced attributes) or
                                             // the prefix is already bound to something else: generate a new prefix
@@ -545,9 +546,6 @@ public class DOMStreamer implements XMLProducer {
              * an existing one.
              */
             public void put(String prefix, String namespaceURI) {
-            	// FIXME (SW): it appears that prefix can be null (reported by Michael Wechner)
-            	if (prefix == null) return;
-            	
                 if (namespaceDeclarations == null)
                     namespaceDeclarations = new HashMap();
                 namespaceDeclarations.put(prefix, namespaceURI);
