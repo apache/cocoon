@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.4 2003/07/30 02:24:43 joerg Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.5 2003/09/05 07:10:54 cziegeler Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Composable, Disposable, Recyclable {
@@ -160,8 +160,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      * Release all resources.
      */
     public void dispose() {
-        this.manager.release(serializer);
-        this.serializer = null;
         this.manager = null;
     }
 
@@ -169,8 +167,11 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      * Recycle this component
      */
     public void recycle() {
-        this.manager.release(serializer);
-        this.serializer = null;
+        if ( this.manager != null ) {
+            this.manager.release(serializer);
+            this.serializer = null;
+        }
+        super.recycle();        
     }
 
     /**
