@@ -96,7 +96,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.6 2004/01/05 17:15:16 unico Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.7 2004/02/09 01:54:10 ghoward Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
@@ -159,7 +159,19 @@ public class JMSConnectionImpl extends AbstractLogEnabled
             this.available = true;
         } catch (NamingException e) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
+            	String rootCause = e.getRootCause().getClass().getName();
+            	String message = e.getRootCause().getMessage();
+            	if (rootCause.equals("java.lang.ClassNotFoundException")) {
+            		String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" +            			"- For the jms block to work you must install and start a JMS server and " +            			"place the client jar in WEB-INF/lib.";
+            			if (message.indexOf("exolab") > 0 ) {
+            				info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
+            			}
+					System.err.println(info);
+					getLogger().warn(info,e);
+            	} else {
+					System.out.println(message);
+					getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
+            	}
             }
         } catch (JMSException e) {
             if (getLogger().isWarnEnabled()) {
@@ -222,7 +234,12 @@ public class JMSConnectionImpl extends AbstractLogEnabled
      * @throws NamingException
      */
     public TopicPublisher getPublisher() throws JMSException, NamingException {
-        return this.getSession().createPublisher(this.topic);
+        TopicSession session = this.getSession();
+        if (session != null) {
+			return session.createPublisher(this.topic);
+        } else {
+        	return null;
+        }
     }
 
     /**
