@@ -36,6 +36,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.Locator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -161,6 +162,17 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         classes = new HashMap();
     }
 
+    protected String getLocation() {
+        String location = null;
+        if (locator != null) {
+            location = " (" + locator.getSystemId() + ":"
+            + locator.getLineNumber() + ":" + locator.getColumnNumber() + ")";
+        } else {
+            location = "unknown";
+        }
+        return location;
+    }
+
     protected String getWidgetId(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
         if (widgetId == null || widgetId.equals("")) {
@@ -241,6 +253,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_SET_DOCUMENT_LOCATOR:
+                out.copy();
                 return this;
             case EVENT_START_PREFIX_MAPPING:
                 if(Constants.TEMPLATE_NS.equals(input.uri)) {
@@ -258,7 +271,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         return formHandler;
                     } else {
                         throwSAXException("CForms template \"" + input.loc +
-                                "\" not permitted outside \"form-template\"");
+                                "\" not permitted outside \"form-template\" (" + getLocation() + ")");
                     }
                 } else {
                     // Pass through all others.
