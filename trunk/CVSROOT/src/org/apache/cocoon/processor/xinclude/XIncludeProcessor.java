@@ -101,7 +101,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.12 $ $Date: 2000-07-24 04:13:26 $ $Author: balld $
+ * @version CVS $Revision: 1.13 $ $Date: 2000-08-03 17:57:27 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -212,6 +212,7 @@ class XIncludeProcessorWorker {
 
 	void process() throws Exception {
 		Element element = document.getDocumentElement();
+		element.appendChild(document.createComment("Processed by XInclude"));
 		scan(element,null);
 		Enumeration e = xinclude_elements.elements();
 		while (e.hasMoreElements()) {
