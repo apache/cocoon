@@ -102,7 +102,7 @@ import java.util.Map;
  * &lt;/dir:directory&gt;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.1 2003/03/09 00:10:11 pier Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.1 2003/05/26 15:10:52 gianugo Exp $
  */
 public class XPathDirectoryGenerator extends DirectoryGenerator {
 
