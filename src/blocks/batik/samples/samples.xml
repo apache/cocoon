@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+
+  <group name="Henry V">
+    <sample name="Henry V in SVG" href="henryV.svg">
+  	  Henry V as it is in SVG (SVG browser, plugin, viewer needed).
+    </sample>
+    <sample name="Henry V in JPEG" href="henryV.jpeg">
+      Henry V rasterized with Batik to JPEG.
+    </sample>
+    <sample name="Henry V in PNG" href="henryV.png">
+      Henry V rasterized with Batik to PNG.
+    </sample>
+  </group>
+
+  <group name="Resources">
+    <sample name="Batik web site" href="http://xml.apache.org/batik">
+      Links and reference information, SVG browser
+    </sample>
+    <sample name="Adobe SVG Viewer" href="http://www.adobe.com/svg/viewer/install/main.html">
+      SVG browser plugin
+    </sample>
+  </group>
+
+</samples>
+
