@@ -31,9 +31,15 @@ import org.apache.ojb.broker.query.*;
 
 public class PersistenceFlow extends AbstractFormFlow {
 
-    public void doInsertEmployee() throws BindingException {
+    private transient PersistenceBroker broker = null;
 
-        PersistenceBroker broker = getPersistenceBroker();
+    public PersistenceFlow() {
+        PBFactory factory = (PBFactory)getComponent(PBFactory.ROLE);
+        broker = factory.defaultPersistenceBroker();
+        releaseComponent(factory);
+    }
+
+    public void doInsertEmployee() throws BindingException {
 
         // Create a empty Bean
         Employee employee = new Employee();
@@ -64,8 +70,6 @@ public class PersistenceFlow extends AbstractFormFlow {
         else
             throw new IllegalStateException("No parameter 'id'");
 
-        PersistenceBroker broker = getPersistenceBroker();
-        
         // Create a empty Bean
         Employee employee = new Employee();
         // Fill some initial data to the bean
@@ -99,8 +103,6 @@ public class PersistenceFlow extends AbstractFormFlow {
         else
             throw new IllegalStateException("No parameter 'id'");
 
-        PersistenceBroker broker = getPersistenceBroker();
-
         // Create a empty Bean
         Employee employee = new Employee();
         // Fill some initial data to the bean
@@ -115,8 +117,6 @@ public class PersistenceFlow extends AbstractFormFlow {
 
     public void doShowEmployee() {
 
-        PersistenceBroker broker = getPersistenceBroker();
-
         // Query all objects
         ArrayList results = new ArrayList();
         QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
@@ -127,10 +127,6 @@ public class PersistenceFlow extends AbstractFormFlow {
         Collections.sort(results, new EmployeeComparator());
         // Send response to the user
         sendPage("page/employee-result", new VarMap().add("employee", results));
-    }
-
-    public PersistenceBroker getPersistenceBroker() {
-        return ((PBFactory)getComponent(PBFactory.ROLE)).defaultPersistenceBroker();
     }
 
     public class EmployeeComparator implements Comparator, Continuable {

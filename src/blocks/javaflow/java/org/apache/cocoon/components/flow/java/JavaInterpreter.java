@@ -29,7 +29,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.2 2004/03/30 11:10:53 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.3 2004/03/31 10:20:00 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -135,14 +135,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         Continuable flow = (Continuable) userScopes.get(method.getDeclaringClass());
 
-        if (flow == null) {
-            if (getLogger().isDebugEnabled()) 
-                getLogger().debug("create new instance of \""+method.getDeclaringClass()+"\"");
-
-            flow = (Continuable) method.getDeclaringClass().newInstance();
-            userScopes.put(method.getDeclaringClass(), flow);
-        }
-
         ContinuationContext context = new ContinuationContext();
         context.setObject(flow);
         context.setMethod(method);
@@ -159,6 +151,13 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         continuation.registerThread();
         try {
+            if (flow == null) {
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("create new instance of \""+method.getDeclaringClass()+"\"");
+
+                flow = (Continuable) method.getDeclaringClass().newInstance();
+                context.setObject(flow);
+            }
 
             method.invoke(flow, new Object[0]);
 
