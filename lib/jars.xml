@@ -24,7 +24,7 @@
     +-->
 
 <jars>
-  <file>
+  <file id="util.concurrent">
     <title>Doug Lea's Concurrent Utilities</title>
     <description>
       The concurrency management primitives that will be the 
@@ -35,7 +35,7 @@
     <homepage>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-datasource">
     <title>Excalibur DataSource</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -46,7 +46,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="commons-cli">
     <title>Jakarta Commons CLI</title>
     <description>
       Part of jakarta-commons, it's a package that
@@ -57,7 +57,7 @@
     <homepage>http://jakarta.apache.org/commons/cli/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-i18n">
     <title>Excalibur I18n</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -68,7 +68,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-instrument">
     <title>Excalibur Instrument</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -79,7 +79,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-io">
     <title>Excalibur IO</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -90,7 +90,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-logger">
     <title>Excalibur Logger</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -101,7 +101,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-naming">
     <title>Excalibur Naming</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -112,7 +112,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-pool">
     <title>Excalibur Pool</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -123,7 +123,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-sourceresolve">
     <title>Excalibur SourceResolve</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -134,7 +134,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-store">
     <title>Excalibur Store</title>
     <description>
       Part of avalon, it is a set of classes and patterns that
@@ -145,7 +145,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="excalibur-xmlutil">
     <title>Excalibur XMLUtil</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -156,7 +156,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="avalon-framework-api">
     <title>Avalon Framework</title>
     <description>
       Part of avalon, it is a set of classes and patterns that
@@ -164,10 +164,10 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/avalon-framework-api-4.1.5.jar</lib>
-    <homepage>http://avalon.apache.org/framework/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
-  <file>
+  <file id="avalon-framework-impl">
     <title>Avalon Framework - Implementation</title>
     <description>
       Part of avalon, it is a set of classes and patterns that
@@ -175,10 +175,10 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/avalon-framework-impl-4.1.5.jar</lib>
-    <homepage>http://avalon.apache.org/framework/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
-  <file>
+  <file id="commons-collections">
     <title>Jakarta Commons Collections</title>
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
@@ -186,7 +186,7 @@
     <homepage>http://jakarta.apache.org/commons/collections/</homepage>
   </file>
 
-  <file>
+  <file id="jakarta-regexp">
     <title>Jakarta Regexp</title>
     <description>
       Regexp is a Java Regular Expression package that was graciously
@@ -197,7 +197,7 @@
     <homepage>http://jakarta.apache.org/regexp/</homepage>
   </file>
 
-  <file>
+  <file id="avalon-logkit">
     <title>Avalon Logkit</title>
     <description>
       avalon-logkit is a logging toolkit designed for secure
@@ -205,10 +205,10 @@
     </description>
     <used-by>Cocoon logging</used-by>
     <lib>core/logkit-1.2.2.jar</lib>
-    <homepage>http://avalon.apache.org/logkit/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
-  <file>
+  <file id="xalan">
     <title>The XSLT processor</title>
     <description>
       Xalan is an XSLT processor that fully supports the W3C specs.
@@ -220,7 +220,7 @@
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 
-  <file>
+  <file id="xercesImpl">
     <title>The XML parser</title>
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
@@ -229,7 +229,7 @@
     <homepage>http://xml.apache.org/xerces2-j/</homepage>
   </file>
 
-  <file>
+  <file id="xml-apis">
     <title>The XML APIs</title>
     <description>
       JAXP, DOM and SAX interfaces. 
@@ -241,7 +241,7 @@
     <homepage>http://xml.apache.org/commons/</homepage>
   </file>
 
-  <file>
+  <file id="batik-all">
     <title>Batik</title>
     <description>
       Batik is a Java based toolkit for applications which handle images in
@@ -252,7 +252,7 @@
     <homepage>http://xml.apache.org/batik/</homepage>
   </file>
 
-  <file>
+  <file id="bsf">
     <title>BSF scripting framework</title>
     <description>
       The Bean Scripting Framework (BSF) is an architecture for
@@ -267,7 +267,7 @@
     <homepage>http://jakarta.apache.org/bsf/</homepage>
   </file>
 
-  <file>
+  <file id="groovy">
     <title>Groovy language engine</title>
     <description>
       Groovy is a new agile dynamic language for the JVM combining lots of great
@@ -279,7 +279,7 @@
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
-  <file>
+  <file id="asm">
     <title>ASM</title>
     <description>
       ASM is a Java bytecode manipulation framework. It can be used to
@@ -292,7 +292,7 @@
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
-  <file>
+  <file id="asm-util">
     <title>ASM Util</title>
     <description>
       Part of ASM (a Java bytecode manipulation framework). Provides some ASM
@@ -303,7 +303,7 @@
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
-  <file>
+  <file id="deli">
     <title>Device capabilities</title>
     <description>
       Open Source Delivery Context Java Library supporting CC/PP and UAProf.
@@ -318,7 +318,7 @@
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
-  <file>
+  <file id="commons-httpclient">
     <title>Jakarta Commons HttpClient</title>
     <description>
       Although the java.net package provides basic support for accessing
@@ -333,7 +333,7 @@
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
 
-  <file>
+  <file id="commons-logging">
     <title>Jakarta Commons Logging</title>
     <description>
      The Logging package is an ultra-thin bridge between different logging libraries.
@@ -343,7 +343,7 @@
     <homepage>http://jakarta.apache.org/commons/logging/</homepage>
   </file>
 
-  <file>
+  <file id="itext">
     <title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
@@ -351,7 +351,7 @@
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
-  <file>
+  <file id="fop">
     <title>XML FO processor</title>
     <description>
       FOP is a Java application that reads a formatting object tree conforming to
@@ -362,7 +362,7 @@
     <homepage>http://xml.apache.org/fop/</homepage>
   </file>
 
-  <file>
+  <file id="jfor">
     <title>XSL-FO to RTF converter</title>
     <description>
       jfor is a Java application that reads XSL-FO documents
@@ -374,7 +374,7 @@
     <homepage>http://www.jfor.org</homepage>
   </file>
 
-  <file>
+  <file id="hsqldb">
     <title>Simple SQL database</title>
     <description>
       hsqldb is a relational database engine written in Java, with a JDBC
@@ -386,7 +386,7 @@
     <homepage>http://hsqldb.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="poi">
     <title>Create proprietary file formats</title>
     <description>
       The POI project consists of APIs for manipulating various file formats
@@ -397,7 +397,7 @@
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 
-  <file>
+  <file id="jena">
     <title>Jena RDF framework</title>
     <description>Jena is a java API for manipulating RDF models.</description>
     <used-by>DELI (deli block)</used-by>
@@ -405,7 +405,7 @@
     <homepage>http://jena.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="icu4j">
     <title>ICU4J International Components for Unicode framework</title>
     <description>The International Components for Unicode (ICU) library 
     provides robust and full-featured Unicode services on a wide variety 
@@ -415,7 +415,7 @@
     <homepage>http://oss.software.ibm.com/icu4j/</homepage>
   </file>
 
-  <file>
+  <file id="jcs">
     <title>JCS</title>
     <description>Java Caching System</description>
     <used-by>JCS Store</used-by>
@@ -423,7 +423,7 @@
     <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
   </file>
 
-  <file>
+  <file id="ehcache">
     <title>EHCache</title>
     <description>Easy Hibernate Cache</description>
     <used-by>EHCache Store</used-by>
@@ -431,7 +431,7 @@
     <homepage>http://ehcache.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="jtidy">
     <title>Transform HTML to XML</title>
     <description>Tidy is a HTML syntax checker and pretty printer.</description>
     <used-by>HTML generator (html block), RSSTransformer (Portal block)</used-by>
@@ -439,7 +439,7 @@
     <homepage>http://jtidy.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="nekodtd">
     <title>CyberNeko DTD Converter</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>Forms block</used-by>
@@ -447,7 +447,7 @@
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
-  <file>
+  <file id="nekohtml">
     <title>CyberNeko</title>
     <description>NekoDTD is a configuration that parses Document Type Definition (DTD) files and converts the information into an XML document.</description>
     <used-by>NekoHTML generator (html block), Forms block</used-by>
@@ -455,7 +455,7 @@
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>  
   
-  <file>
+  <file id="daisy-htmlcleane">
     <title>Daisy HTMLCleaner</title>
     <description>
       NekoHTML, but then performs further filtering, conversion and restructuring 
@@ -466,7 +466,7 @@
     <homepage>http://daisy.cocoondev.org/</homepage>
   </file>  
 
-  <file>
+  <file id="daisy-util">
     <title>Daisy Utils</title>
     <description>
       Java Utility classes of Daisy
@@ -476,7 +476,7 @@
     <homepage>http://daisy.cocoondev.org/</homepage>
   </file>    
 
-  <file>
+  <file id="lucene">
     <title>Lucene (Search engine)</title>
     <description>
       jakarta-lucene is a search engine toolkit designed for indexing and
@@ -487,7 +487,7 @@
     <homepage>http://jakarta.apache.org/lucene/</homepage>
   </file>
 
-  <file>
+  <file id="pizzacompiler">
     <title>Pizza Java Compiler</title>
     <description>Java Compiler</description>
     <used-by>XSP</used-by>
@@ -495,7 +495,7 @@
     <homepage>http://pizzacompiler.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="log4j">
     <title>Log4j</title>
     <description>Logging for java</description>
     <used-by>Core and DELI (deli block)</used-by>
@@ -503,7 +503,7 @@
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 
-  <file>
+  <file id="xml-commons">
     <title>XML Catalog Entity Resolver</title>
     <description>
       Maps URIs to other URIs using the mechanisms defined by
@@ -515,7 +515,7 @@
     <homepage>http://xml.apache.org/commons/</homepage>
   </file>
 
-  <file>
+  <file id="servlet-api">
     <title>Servlet API</title>
     <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
@@ -523,7 +523,7 @@
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
-  <file>
+  <file id="velocity">
     <title>Velocity engine</title>
     <description>Velocity is a general purpose template engine written in Java.</description>
     <used-by>Velocity Generator (velocity block)</used-by>
@@ -531,7 +531,7 @@
     <homepage>http://jakarta.apache.org/velocity/</homepage>
   </file>
 
-  <file>
+  <file id="xmldb-api">
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
@@ -539,7 +539,7 @@
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
-  <file>
+  <file id="xmldb-common">
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
@@ -547,7 +547,7 @@
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
-  <file>
+  <file id="xmldb-xupdate">
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
@@ -555,7 +555,7 @@
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
-  <file>
+  <file id="xindice">
     <title>XML Xindice</title>
     <description>Native XML Database by Apache XML project</description>
     <used-by>xmldb block</used-by>
@@ -563,7 +563,7 @@
     <homepage>http://xml.apache.org/xindice/</homepage>
   </file>
 
-  <file>
+  <file id="xmlrpc">
     <title>XML-RPC</title>
     <description>
       Java implementation of XML-RPC, a popular protocol that uses XML over
@@ -574,7 +574,7 @@
     <homepage>http://ws.apache.org/xmlrpc/</homepage>
   </file>
 
-  <file>
+  <file id="commons-jxpath">
     <title>Jakarta Commons JXPath</title>
     <description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
     <used-by>Flow, JXPath logicsheet</used-by>
@@ -582,7 +582,7 @@
     <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
   </file>
 
-  <file>
+  <file id="commons-jexl">
     <title>Jakarta Commons Jexl</title>
     <description>JSTL Expression Language</description>
     <used-by>JXTemplateGenerator</used-by>
@@ -590,7 +590,7 @@
     <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
   </file>
 
-  <file>
+  <file id="eclipse-jdtcore">
     <title>Eclipse Java Development Tools Core</title>
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
@@ -598,7 +598,7 @@
     <homepage>http://www.eclipse.org/jdt</homepage>
   </file>
 
-  <file>
+  <file id="rhino">
     <title>JavaScript engine</title>
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
@@ -606,31 +606,15 @@
     <homepage>http://www.mozilla.org/rhino</homepage>
   </file>
   
-  <file>
+  <file id="xmlbeans">
     <title>Apache XMLBeans</title>
     <description>XMLBeans is an XML-Java binding tool.</description>
     <used-by>Rhino</used-by>
     <lib>core/xmlbeans-1.0.3.jar</lib>
     <homepage>http://xmlbeans.apache.org/</homepage>
   </file>
-  
-  <file>
-    <title>JavacAPI</title>
-    <description>Embedded Java Compiler API</description>
-    <used-by>Control flow</used-by>
-    <lib>core/javacApi-0.9.jar</lib>
-    <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
-  </file>
 
-  <file>
-    <title>JavacAPI Eclipse Implementation</title>
-    <description>Embedded Java Compiler API implemented with Eclipse JDT Core</description>
-    <used-by>Control flow</used-by>
-    <lib>core/javacImpl-0.9.jar</lib>
-    <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
-  </file>
-
-  <file>
+  <file id="chaperon">
     <title>Chaperon Text Parser</title>
     <description>
       The chaperon project is parser which could parse text files, and convert
@@ -641,7 +625,7 @@
     <homepage>http://chaperon.sourceforge.net</homepage>
   </file>
 
-  <file>
+  <file id="castor-xml">
     <title>Castor</title>
     <description>
       Data binding framework for Java, including Java-to-XML
@@ -653,7 +637,7 @@
   </file>
 
   <!-- Currently only used by the build
-  <file>
+  <file id="">
     <title>Jing</title>
     <description>RELAX NG validator</description>
     <used-by>build</used-by>
@@ -662,7 +646,7 @@
   </file>
   -->
 
-  <file>
+  <file id="cocoon-serializers-charsets">
     <title>Cocoon Serializers Block Encodings</title>
     <description>
       A large list of character sets used for XML/HTML serialization.
@@ -672,7 +656,7 @@
     <homepage>http://cocoon.apache.org/</homepage>
   </file>
 
-  <file>
+  <file id="slide-kernel">
     <title>Slide kernel</title>
     <description>The Jakarta Slide kernel API.</description>
     <used-by>Slide block</used-by>
@@ -680,7 +664,7 @@
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
-  <file>
+  <file id="slide-stores">
     <title>Slide stores</title>
     <description>The Jakarta Slide stores implementation.</description>
     <used-by>Slide block</used-by>
@@ -688,7 +672,7 @@
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
-  <file>
+  <file id="slide-webdavservlet">
     <title>Slide WebDAV Servlet</title>
     <description>The Jakarta Slide WebDAV servlet.</description>
     <used-by>Slide block</used-by>
@@ -696,7 +680,7 @@
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
-  <file>
+  <file id="jakarta-slide-webdavlib">
     <title>Slide WebDAV Client library</title>
     <description>The Jakarta Slide WebDAV client library.</description>
     <used-by>WebDAV block</used-by>
@@ -704,7 +688,7 @@
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
-  <file>
+  <file id="commons-transaction">
     <title>Jakarta Commons Transaction</title>
     <description>Utility classes commonly used in transactional Java programming</description>
     <used-by>WebDAV block</used-by>
@@ -712,7 +696,7 @@
     <homepage>http://jakarta.apache.org/commons/transaction/</homepage>
   </file>
 
-  <file>
+  <file id="commons-codec">
     <title>Jakarta Commons Codec</title>
     <description>Implementations of common encoders and decoders</description>
     <used-by>WebDAV block</used-by>
@@ -720,7 +704,7 @@
     <homepage>http://jakarta.apache.org/commons/codec/</homepage>
   </file>
 
-  <file>
+  <file id="jdom">
     <title>JDOM</title>
     <description>JDOM</description>
     <used-by>Slide block</used-by>
@@ -728,7 +712,7 @@
     <homepage>http://www.jdom.org/</homepage>
   </file>
 
-  <file>
+  <file id="geronimo-spec-jta">
     <title>JTA spec</title>
     <description>
       J2EE Java Transaction API.
@@ -739,7 +723,7 @@
     <homepage>http://java.sun.com/products/jta/</homepage>
   </file>
 
-  <file>
+  <file id="wsdl4j">
     <title>WSDL</title>
     <description>
       The Web Services Description Language for Java Toolkit (WSDL4J) allows
@@ -751,7 +735,7 @@
     <homepage>http://www-124.ibm.com/developerworks/projects/wsdl4j/</homepage>
   </file>
 
-  <file>
+  <file id="axis-saaj">
     <title>SOAP with Attachments API for Java (SAAJ)</title>
     <description>
       SAAJ enables developers to produce and consume messages conforming to the
@@ -762,7 +746,7 @@
     <homepage>http://java.sun.com/xml/saaj/</homepage>
   </file>
 
-  <file>
+  <file id="commons-discovery">
     <title>Commons Discovery</title>
     <description>
       The Discovery Component is about discovering, or finding, implementations
@@ -774,7 +758,7 @@
     <homepage>http://jakarta.apache.org/commons/discovery/</homepage>
   </file>
 
-  <file>
+  <file id="axis-jaxrpc">
     <title>Java API for XML-based RPC (JAX-RPC)</title>
     <description>The JAX-RPC enables Java technology developers to build Web
       applications and Web services incorporating XML based RPC functionality
@@ -787,7 +771,7 @@
     <homepage>http://java.sun.com/xml/jaxrpc/</homepage>
   </file>
 
-  <file>
+  <file id="axis">
     <title>Apache Axis</title>
     <description>
       Apache Axis is an implementation of the SOAP ("Simple Object Access
@@ -798,7 +782,7 @@
     <homepage>http://ws.apache.org/axis/</homepage>
   </file>
 
-  <file>
+  <file id="commons-lang">
     <title>Jakarta Commons lang</title>
     <description>
       Part of jakarta-commons, it's a package that provides extended services
@@ -809,7 +793,7 @@
     <homepage>http://jakarta.apache.org/commons/lang/</homepage>
   </file>
 
-  <file>
+  <file id="xreporter-expression">
     <title>xReporter expression language interpreter</title>
     <description>
       An expression language interpreter.
@@ -819,7 +803,7 @@
     <homepage>http://xreporter.cocoondev.org</homepage>
   </file>
 
-  <file>
+  <file id="jakarta-oro">
     <title>ORO</title>
     <description>Perl5 compatible regular expression engine</description>
     <used-by>Cocoon Forms block</used-by>
@@ -827,7 +811,7 @@
     <homepage>http://jakarta.apache.org/oro</homepage>
   </file>
 
-  <file>
+  <file id="joost">
     <title>Joost</title>
     <description>Streaming Transformation for XML (STX) library</description>
     <used-by>STX block</used-by>
@@ -835,7 +819,7 @@
     <homepage>http://joost.sourceforge.net/</homepage>
   </file>
 
-  <file>
+  <file id="qdox">
     <title>QDox - Quick JavaDoc Scanner</title>
     <description>
       QDox is a high speed, small footprint parser for extracting class/interface/method
@@ -846,7 +830,7 @@
     <homepage>http://qdox.codehaus.org/</homepage>
    </file>
 
-   <file>
+   <file id="quartz">
     <title>Quartz</title>
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
@@ -854,7 +838,7 @@
     <homepage>http://sourceforge.net/projects/quartz/</homepage>
    </file>
 
-   <file>
+   <file id="apache-garbage">
     <title>Garbage</title>
     <description>Garbage</description>
     <used-by>Scratchpad block</used-by>
@@ -862,7 +846,7 @@
     <homepage>http://cocoon.apache.org/</homepage>
    </file>
 
-  <file>
+  <file id="commons-betwixt">
     <title>Jakarta Commons Betwixt</title>
     <description>
        The Betwixt library provides an XML introspection mechanism for
@@ -876,7 +860,7 @@
     <homepage>http://jakarta.apache.org/commons/betwixt/</homepage>
   </file>
 
-  <file>
+  <file id="commons-beanutils-core">
     <title>Jakarta Commons Beantuils</title>
     <description>
       The Java language provides Reflection and Introspection APIs 
@@ -889,7 +873,7 @@
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
-  <file>
+  <file id="commons-digester">
     <title>Jakarta Commons Digester</title>
     <description>
        Allow configure an XML -> Java object mapping module, which triggers
@@ -902,8 +886,8 @@
     <homepage>http://jakarta.apache.org/commons/digester/</homepage>
   </file>  
 
-  <!-- OJB interface (6-Aug-2003) -->
-  <file>
+  <!-- OJB  -->
+  <file id="antlr">
     <title>Antlr - ANother Tool for Language Recognition</title>
     <description>
       language tool that provides a framework for constructing recognizers, compilers, and
@@ -914,7 +898,7 @@
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
-  <file>
+  <file id="commons-dbcp">
     <title>Jakarta Commons DBCP</title>
     <description>
        Database Connection Pool API
@@ -924,7 +908,7 @@
     <homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
   </file>
 
-  <file>
+  <file id="commons-pool">
     <title>Jakarta Commons Pool</title>
     <description>
        defines a handful of pooling interfaces and some base classes that
@@ -935,7 +919,7 @@
     <homepage>http://jakarta.apache.org/commons/pool/</homepage>
   </file>
 
-  <file>
+  <file id="db-ojb">
     <title>Apache ObJectRelationalBridge</title>
     <description>
         OJB is an Object/Relational mapping tool that allows transparent persistence
@@ -948,7 +932,7 @@
   <!-- OJB block end (6-Aug-2003) -->
 
   <!-- JMS block begin -->
-  <file>
+  <file id="geronimo-spec-jms">
     <title>JMS Spec</title>
     <description>
       J2EE Java Message Service Specification.  This implentation
@@ -961,7 +945,7 @@
     <homepage>http://incubator.apache.org/projects/geronimo/index.html</homepage>
   </file>
   <!--
-  <file>
+  <file id="openjms-exolabcore-">
     <title>OpenJMS</title>
     <description>OpenJMS core libraries. OpenJMS is a OpenSource JMS, Java Messaging
     Service, implementation.</description>
@@ -969,7 +953,7 @@
     <lib>optional/exolabcore-0.3.6.jar</lib>
     <homepage>http://openjms.sf.net</homepage>
   </file>
-  <file>
+  <file id="openjms-client">
     <title>OpenJMS</title>
     <description>OpenJMS client libraries. OpenJMS is a OpenSource JMS, Java Messaging
     Service, implementation.</description>
@@ -977,7 +961,7 @@
     <lib>optional/openjms-client-0.7.6-rc2.jar</lib>
     <homepage>http://openjms.sf.net</homepage>
   </file>
-  <file>
+  <file id="jms-api">
     <title>Sun JMS API</title>
     <description>Sun's Java Messaging Service APIs. From the website:
        Enterprise messaging provides a reliable,
@@ -993,7 +977,7 @@
     <lib>optional/jms-1.0.2a.jar</lib>
     <homepage>http://java.sun.com/jms</homepage>
   </file>
-  <file>
+  <file id="jndi-api">
     <title>Sun JNDI</title>
     <description>Sun's Java Naming and Directory Interface. From the website:
        The Java Naming and Directory Interface (JNDI) is a standard extension to
@@ -1010,7 +994,7 @@
   -->
   <!-- JMS block end -->
 
-  <file>
+  <file id="portlet-api">
     <title>JSR-168 Portlet Spec</title>
     <description>
       JSR-168 Portlet Specification. This implentation developed by the
@@ -1021,7 +1005,7 @@
     <lib>optional/portlet-api-1.0.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
-  <file>
+  <file id="pluto">
     <title>JSR-168 Container Implementation</title>
     <description>
       JSR-168 Portlet Specification. This implentation developed by the
@@ -1033,7 +1017,7 @@
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
   
-  <file>
+  <file id="jakarta-bcel">
     <title>Jakarta BCEL</title>
     <description>
       The Byte Code Engineering Library is intended to give users a convenient
@@ -1044,7 +1028,7 @@
     <homepage>http://jakarta.apache.org/bcel/</homepage>
   </file>
 
-  <file>
+  <file id="myfaces">
     <title>MyFaces</title>
     <description>
       MyFaces is an open source implementation of the JSR-127 JavaServer Faces
@@ -1055,7 +1039,7 @@
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
-  <file>
+  <file id="myfaces-jsf-api">
     <title>MyFaces</title>
     <description>
       MyFaces is an open source implementation of the JSR-127 JavaServer Faces
@@ -1066,7 +1050,7 @@
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
-  <file>
+  <file id="commons-el">
     <title>Jakarta Commons EL</title>
     <description>
       EL is the JSP 2.0 Expression Language Interpreter from Apache.
@@ -1076,7 +1060,7 @@
     <homepage>http://jakarta.apache.org/commons/el/</homepage>
   </file>
 
-  <file>
+  <file id="jsp-api">
     <title>Apache Tomcat JSP API</title>
     <description>
       JSP API classes from Apache Tomcat
@@ -1086,7 +1070,7 @@
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
-  <file>
+  <file id="commons-jci">
     <title>Java Compilation Interface API</title>
     <description>
       API for compiling java
@@ -1096,7 +1080,7 @@
     <homepage></homepage>
   </file>
 
-  <file>
+  <file id="commons-javaflow">
     <title>Javaflow API</title>
     <description>
       API java continuations
@@ -1106,8 +1090,8 @@
     <homepage></homepage>
   </file>
 
-  <file>
-    <title>Jakarta Commons io</title>
+  <file id="commons-io">
+    <title>Jakarta Commons IO</title>
     <description>
     </description>
     <used-by>jci</used-by>

@@ -77,8 +77,6 @@
     <depend project="commons-lang"/>
     <depend project="logging-log4j"/>
 
-    <depend project="cocoon-javac"/>
-    <depend project="cocoon-javacImpl"/>
     <depend project="rhino"/>
     <depend project="ehcache"/>
     <depend project="jing"/>
@@ -1399,16 +1397,6 @@
     </description>
     <home nested="lib/optional"/>
     <jar name="joost-20040330.jar"/>
-  </project>
-
-  <project name="cocoon-javac">
-    <package>org.tempuri.javac</package>
-    <jar name="lib/core/javacApi-0.9.jar" id="api"/>
-  </project>
-
-  <project name="cocoon-javacImpl">
-    <package>org.tempuri.javacImpl</package>
-    <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
   </project>
 
   <project name="jsf">
