@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.151 2003/09/24 20:49:50 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.152 2003/09/24 20:54:14 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -197,6 +197,9 @@
      <br/>
      New &lt;wd:repeater-action> widget to automatically handle rows addition and
      deletion on repeaters (a very common need).
+     <br/>
+     New &lt;wd:submit> widget to distinguish between actions (act on the form and
+     redisplay it) and submits that terminate the form.
      <br/>
      Ability to trigger form submit on any widget value change (including inputs,
      popups, etc) to trigger server-side event handlers through client-side interaction.
