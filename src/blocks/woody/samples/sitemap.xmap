@@ -322,7 +322,7 @@
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="file" value="forms/carselector_template.xsp"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:transform src="resources/woody-samples-styling.xsl"/>
@@ -335,7 +335,7 @@
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="file" value="forms/carselector_success.xsp"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:serialize/>
@@ -369,7 +369,7 @@
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="file" value="forms/countryselector_template.xsp"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:transform src="resources/woody-samples-styling.xsl"/>
@@ -382,7 +382,7 @@
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="file" value="forms/countryselector_success.xsp"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:serialize/>
