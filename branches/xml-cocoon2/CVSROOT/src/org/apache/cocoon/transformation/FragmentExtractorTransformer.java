@@ -7,9 +7,13 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMFactory;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.generation.FragmentExtractorGenerator;
 import org.apache.cocoon.ProcessingException;
@@ -41,9 +45,10 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-13 16:02:26 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-17 15:33:29 $
  */
-public class FragmentExtractorTransformer extends AbstractTransformer implements Composer, Disposable {
+public class FragmentExtractorTransformer extends AbstractTransformer 
+    implements Composer, Disposable, Cacheable {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
     private static String EXTRACT_ELEMENT="svg";
 
@@ -77,6 +82,26 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         extractLevel = 0;
         imageID = 0;
         prefixMap = new HashMap();
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        return 1;
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        return new NOPCacheValidity();
     }
 
     /**

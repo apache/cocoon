@@ -7,12 +7,16 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.HashUtil;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
@@ -37,9 +41,10 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-19 21:20:33 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-17 15:33:08 $
  */
-public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
+public class FragmentExtractorGenerator extends AbstractGenerator 
+        implements Poolable, Cacheable {
 
     /** The fragment store. */
     private static Map fragmentStore = new HashMap();
@@ -64,12 +69,26 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
         String view = env.getView();
         if(view != null && view.equals(Constants.LINK_VIEW))
             cleanupStore = false;
+    }
 
-        synchronized (FragmentExtractorGenerator.fragmentStore) {
-            if ( FragmentExtractorGenerator.fragmentStore.get(source) == null ) {
-                throw new ResourceNotFoundException("Could not find fragment " + source + ".");
-            }
-        }
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        return HashUtil.hash(source);
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        return new NOPCacheValidity();
     }
 
     public void generate() throws SAXException {
@@ -78,6 +97,10 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
 
         synchronized (FragmentExtractorGenerator.fragmentStore) {
             Document doc = (Document) FragmentExtractorGenerator.fragmentStore.get(source);
+
+            if(doc == null)
+                throw new SAXException("Could not find fragment " + source + ".");
+
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
             streamer.stream(doc);

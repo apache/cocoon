@@ -14,6 +14,10 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
+
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -22,9 +26,9 @@ import javax.xml.transform.sax.SAXTransformerFactory;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-05 15:03:26 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-17 15:33:18 $
  */
-public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
+public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
@@ -83,6 +87,30 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
         if (! version.getLocation().equals("-")) {
             format.put(OutputKeys.VERSION,version.getValue());
         }
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     * This method must be invoked before the generateValidity() method.
+     *
+     * @return The generated key or <code>0</code> if the component
+     *              is currently not cacheable.
+     */
+    public long generateKey() {
+        return 1;
+    }
+
+    /**
+     * Generate the validity object.
+     * Before this method can be invoked the generateKey() method
+     * must be invoked.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        return new NOPCacheValidity();
     }
 
     /**

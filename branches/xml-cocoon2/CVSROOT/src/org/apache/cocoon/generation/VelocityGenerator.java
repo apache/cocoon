@@ -28,7 +28,7 @@ import org.apache.velocity.VelocityContext;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 12:30:34 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-17 15:33:12 $
  */
 public class VelocityGenerator extends ServletGenerator implements Poolable {
 
@@ -77,19 +77,15 @@ public class VelocityGenerator extends ServletGenerator implements Poolable {
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(xmlInput);
         } catch (IOException e){
-            e.printStackTrace();
             getLogger().warn("VelocityGenerator.generate()", e);
             throw new ResourceNotFoundException("Could not get Resource for VelocityGenerator", e);
         } catch (SAXException e){
-            e.printStackTrace();
             getLogger().error("VelocityGenerator.generate()", e);
             throw(e);
         } catch (org.apache.avalon.ComponentManagerException e){
-            e.printStackTrace();
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()",e);
         } catch (Exception e){
-            e.printStackTrace();
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()",e);
         } finally {

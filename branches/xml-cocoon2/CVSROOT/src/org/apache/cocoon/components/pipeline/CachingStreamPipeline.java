@@ -43,7 +43,7 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:33:14 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 15:33:02 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -98,10 +98,10 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                 this.connectPipeline();
 
                 // test if serializer and event pipeline are cacheable
-                long serializerKey;
-                PipelineCacheKey eventPipelineKey;
-                CacheValidity serializerValidity;
-                Map eventPipelineValidity;
+                long serializerKey = 0;
+                PipelineCacheKey eventPipelineKey = null;
+                CacheValidity serializerValidity = null;
+                Map eventPipelineValidity = null;
                 if (this.serializer instanceof Cacheable
                     && this.eventPipeline instanceof CacheableEventPipeline
                     && (serializerKey = ((Cacheable)this.serializer).generateKey()) != 0
@@ -141,20 +141,20 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                         } else {
 
                             getLogger().debug("Cached content is invalid.");
+
                             // remove invalid cached object
                             this.streamCache.remove(pcKey);
                             cachedObject = null;
                         }
                     }
                     if (cachedObject == null) {
-
                         getLogger().debug("Caching content for further requests.");
                         outputStream = new CachingOutputStream(outputStream);
                     }
                 }
 
-
                 if (usedCache == false) {
+
                     // set the output stream
                     this.serializer.setOutputStream(outputStream);
 
@@ -186,7 +186,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
         getLogger().debug("Recycling of CachingStreamPipeline");
 
         super.recycle();
-        this.serializerRole = null;
+        //this.serializerRole = null;
     }
 }
 

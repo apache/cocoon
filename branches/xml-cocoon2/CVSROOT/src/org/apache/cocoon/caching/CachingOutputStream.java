@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * TeeOutputStream.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:32:52 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 15:32:56 $
  */
 
 public final class CachingOutputStream
@@ -36,6 +36,11 @@ extends OutputStream {
     }
 
     public void write(int b) throws IOException {
+        this.receiver.write(b);
+        this.baOutputStream.write(b);
+    }
+
+    public void write( byte b[] ) throws IOException {
         this.receiver.write(b);
         this.baOutputStream.write(b);
     }
