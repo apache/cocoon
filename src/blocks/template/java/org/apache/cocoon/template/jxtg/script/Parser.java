@@ -17,7 +17,6 @@ package org.apache.cocoon.template.jxtg.script;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;

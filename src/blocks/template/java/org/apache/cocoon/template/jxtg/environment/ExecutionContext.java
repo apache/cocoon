@@ -17,7 +17,6 @@ package org.apache.cocoon.template.jxtg.environment;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Variables;
@@ -27,18 +26,13 @@ public class ExecutionContext {
     private JXPathContext jxpathContext;
     private Variables variables;
     private Map definitions;
-    private Map cache;
-    private ServiceManager manager;
 
-    public ExecutionContext(MyJexlContext jexlContext, JXPathContext jxpathContext,
-                            Variables variables, Map definitions, Map cache,
-                            ServiceManager manager) {
+    public ExecutionContext(MyJexlContext jexlContext,
+            JXPathContext jxpathContext, Variables variables, Map definitions) {
         this.jexlContext = jexlContext;
         this.jxpathContext = jxpathContext;
         this.variables = variables;
         this.definitions = definitions;
-        this.cache = cache;
-        this.manager = manager;
     }
 
     public MyJexlContext getJexlContext() {
@@ -57,18 +51,9 @@ public class ExecutionContext {
         return this.definitions;
     }
 
-    public Map getCache() {
-        return this.cache;
-    }
-
-    public ServiceManager getServiceManager() {
-        return this.manager;
-    }
-
     public ExecutionContext getChildContext(MyJexlContext jexlContext,
-                                            JXPathContext jxpathContext) {
-        return new ExecutionContext(jexlContext, jxpathContext,
-                                    this.variables, this.definitions, this.cache,
-                                    this.manager);
+            JXPathContext jxpathContext) {
+        return new ExecutionContext(jexlContext, jxpathContext, this.variables,
+                this.definitions);
     }
 }
