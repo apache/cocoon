@@ -22,10 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
@@ -43,20 +40,16 @@ import org.apache.cocoon.util.NullOutputStream;
  * for pipeline calls which are not externally triggered.
  * 
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: BackgroundEnvironment.java,v 1.6 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: BackgroundEnvironment.java,v 1.7 2004/06/04 11:08:08 cziegeler Exp $
  *
  * @since 2.1.4
  */
 public class BackgroundEnvironment extends AbstractEnvironment {
 	
-	private ComponentManager manager;
-	
-	public BackgroundEnvironment(Logger logger, Context ctx, ServiceManager manager) {
+	public BackgroundEnvironment(Logger logger, Context ctx) {
 		super("", null, null);
 		
 		this.enableLogging(logger);
-		
-		this.manager = new WrapperComponentManager(manager);
 		
 		this.outputStream = new NullOutputStream();    
      
@@ -76,12 +69,7 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 		this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, ctx);
 	}
 	
-	/** Needed by CocoonComponentManager.enterEnvironment */
-	public ComponentManager getManager() {
-		return this.manager;
-	}
-	
-	/** Needed by CocoonComponentManager.enterEnvironment */
+	/** Needed by EnvironmentHelper.enterEnvironment */
 	public Processor getProcessor() {
 		return NullProcessor.INSTANCE;
 	}
@@ -91,13 +79,16 @@ public class BackgroundEnvironment extends AbstractEnvironment {
      * @param view
      * @param context
      * @param stream
-     * @param log
+     * @param logger
      */
-    public BackgroundEnvironment(String uri, String view, File context, OutputStream stream, Logger log) 
-    {
+    public BackgroundEnvironment(String uri, 
+                                 String view, 
+                                 File context, 
+                                 OutputStream stream,
+                                 Logger logger) {
             
         super(uri, view);
-        this.enableLogging(log);
+        this.enableLogging(logger);
         this.outputStream = stream;    
      
         // TODO Would special Background*-objects have advantages?
