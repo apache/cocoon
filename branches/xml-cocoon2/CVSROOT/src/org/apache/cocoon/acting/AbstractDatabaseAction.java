@@ -49,10 +49,97 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
 
 /**
- * Set up environment for configurable form handling data.
+ * Set up environment for configurable form handling data.  It is
+ * important to note that all DatabaseActions use a common configuration
+ * format.  This group of actions are unique in that they employ a
+ * terciary mapping.  There is the Form parameter, the database column,
+ * and the type.
+ *
+ * Each configuration file must use the same format in order to be
+ * affective.  The name of the root configuration element is irrelevant.
+ *
+ * <pre>
+ *   &lt;root&gt;
+ *     &lt;connection&gt;personnel&lt;connection&gt;
+ *     &lt;table&gt;
+ *       &lt;keys&gt;
+ *         &lt;key param="id" dbcol="id" type="int"/&gt;
+ *       &lt;/keys&gt;
+ *       &lt;values&gt;
+ *         &lt;value param="name" dbcol="name" type="string"/&gt;
+ *         &lt;value param="department" dbcol="department_id" type="int"/&gt;
+ *       &lt;/values&gt;
+ *     &lt;/table&gt;
+ *   &lt;/root&gt;
+ * </pre>
+ *
+ * The types recognized by this system are:
+ *
+ * <table>
+ *   <tr>
+ *     <th>Type</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>ascii</td>
+ *     <td>ASCII Input Stream, a CLOB input</td>
+ *   </tr>
+ *   <tr>
+ *     <td>big-decimal</td>
+ *     <td>a <code>java.math.BigDecimal</code> value</td>
+ *   </tr>
+ *   <tr>
+ *     <td>binary</td>
+ *     <td>Binary Input Stream, a BLOB input</td>
+ *   </tr>
+ *   <tr>
+ *     <td>byte</td>
+ *     <td>a Byte</td>
+ *   </tr>
+ *   <tr>
+ *     <td>string</td>
+ *     <td>a String</td>
+ *   </tr>
+ *   <tr>
+ *     <td>date</td>
+ *     <td>a Date</td>
+ *   </tr>
+ *   <tr>
+ *     <td>double</td>
+ *     <td>a Double</td>
+ *   </tr>
+ *   <tr>
+ *     <td>float</td>
+ *     <td>a Float</td>
+ *   </tr>
+ *   <tr>
+ *     <td>int</td>
+ *     <td>an Integer</td>
+ *   </tr>
+ *   <tr>
+ *     <td>long</td>
+ *     <td>a Long</td>
+ *   </tr>
+ *   <tr>
+ *     <td>short</td>
+ *     <td>a Short</td>
+ *   </tr>
+ *   <tr>
+ *     <td>time</td>
+ *     <td>a Time</td>
+ *   </tr>
+ *   <tr>
+ *     <td>time-stamp</td>
+ *     <td>a Timestamp</td>
+ *   </tr>
+ *   <tr>
+ *     <td>now</td>
+ *     <td>a Timestamp with the current day/time--the form value is ignored.</td>
+ *   </tr>
+ * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-26 20:48:59 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-26 21:46:45 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
