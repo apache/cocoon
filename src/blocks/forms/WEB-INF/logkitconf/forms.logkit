@@ -16,7 +16,7 @@
 -->
 <!--+
     |
-    | SVN $Id: cocoon-apples.xconf 125443 2005-01-17 20:39:52Z cziegeler $
+    | SVN $Id$
     +-->
 <logkit>
   <targets>
