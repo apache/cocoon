@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.238 2004/02/10 05:00:11 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.239 2004/02/10 15:15:34 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -206,11 +206,6 @@
    <action dev="UC" type="add">
    	 Woody block: added support for rich text editing using InteractiveTools' HTMLArea.
    </action>
-   <action dev="SW" type="update">
-     Batik block: a &lt;svg:image xlink:href="..."/> can now use any of the protocols handled
-     by Cocoon. This also indirectly benefits the FOP block  as XSL-FO documents can use images from
-     any source by embedding them in an SVG drawing.
-   </action>
    <action dev="CZ" type="update">
      ResourceReader: Is now configurable as well. All parameters can be defined during configuration
      of the reader. Fixed also a minor bug in the last-modified detection.
@@ -358,13 +353,6 @@
    </action>
    <action dev="AG" type="update">
      Update libs Xerces to 2.6.0 and xml-apis.jar.
-   </action>
-   <action dev="SW" type="add">
-     The "cocoon" object in flowscript has a new setup(object) method that
-     honors the various Avalon lifecycle interfaces implemented by an object.
-     This allows Java classes instanciated by a flowscript to access e.g.
-     request, response and components without requiring a dependency on the
-     "FOM_Cocoon" class.
    </action>
    <action dev="SW" type="add">
      Woody: new double-list styling for MultivalueField.
