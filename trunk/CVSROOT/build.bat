@@ -12,7 +12,10 @@ echo.
 echo Cocoon Build System
 echo -------------------
 
-if exist "%JAVA_HOME%\jre\lib\xml.jar" goto xmlerror
+if exist "%JAVA_HOME%\jre\lib\ext\xml.jar" goto xmlerror
+if exist "%JAVA_HOME%\jre\lib\ext\parser.jar" goto xmlerror
+if exist "%JAVA_HOME%\jre\lib\ext\jaxp.jar" goto xmlerror
+if exist "%JAVA_HOME%\jre\lib\ext\crimson.jar" goto xmlerror
 
 set ANT_HOME=.\lib
 
@@ -39,8 +42,8 @@ goto end
 
 :xmlerror
 
-echo "ERROR: Please delete %JAVA_HOME%\jre\lib\xml.jar, otherwise Cocoon will not"
-echo "compile!"
+echo "ERROR: Please delete any XML jars from %JAVA_HOME%\jre\lib\ext,"
+echo "otherwise Cocoon will not compile!"
 
 :end
 
