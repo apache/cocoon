@@ -104,6 +104,9 @@
     <filter token="released.version"    value="${released.version}"/>
     <filter token="loglevel"            value="${build.webapp.loglevel}"/>
 
+    <!-- Alias for the loglevel -->
+    <property name="loglevel" value="${build.webapp.loglevel}"/>
+    
     <!-- Set classpath -->
     <path id="classpath">
       <fileset dir="${lib.local}">
