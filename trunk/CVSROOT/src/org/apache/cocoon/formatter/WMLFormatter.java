@@ -1,4 +1,4 @@
-/*-- $Id: WMLFormatter.java,v 1.2 1999-12-03 23:51:17 stefano Exp $ -- 
+/*-- $Id: WMLFormatter.java,v 1.3 2000-01-03 01:46:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-12-03 23:51:17 $
+ * @version $Revision: 1.3 $ $Date: 2000-01-03 01:46:51 $
  */
 
 public class WMLFormatter extends AbstractFormatter implements Status {
@@ -79,6 +79,6 @@ public class WMLFormatter extends AbstractFormatter implements Status {
     }
     
     public String getStatus() {
-        return "Apache WML Formatter";
+        return "WML Formatter";
     }
 }

@@ -1,4 +1,4 @@
-/*-- $Id: TextFormatter.java,v 1.1 1999-11-30 16:30:04 stefano Exp $ -- 
+/*-- $Id: TextFormatter.java,v 1.2 2000-01-03 01:46:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-11-30 16:30:04 $
+ * @version $Revision: 1.2 $ $Date: 2000-01-03 01:46:51 $
  */
 
 public class TextFormatter extends AbstractFormatter implements Status {
@@ -77,6 +77,6 @@ public class TextFormatter extends AbstractFormatter implements Status {
     }
     
     public String getStatus() {
-        return "Apache Text Formatter";
+        return "Text Formatter";
     }
 }
