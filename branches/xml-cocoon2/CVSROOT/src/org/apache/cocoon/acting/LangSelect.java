@@ -9,6 +9,24 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.cocoon.acting.Action;
+
+import org.apache.avalon.Parameters;
+
+import org.xml.sax.EntityResolver;
+
 /**
  * LangSelect Action returns two character language code to sitemap.
  *
@@ -31,33 +49,11 @@ package org.apache.cocoon.acting;
  * Creation date: (3.11.2000 14:32:19)
  * @author: <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
  */
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.cocoon.acting.Action;
-
-import org.apache.avalon.Parameters;
-
-import org.xml.sax.EntityResolver;
-
-
-
-
 public class LangSelect extends java.lang.Object implements Action {
-    private final static String default_lang = "en";
-    
-    
-    
+    private final static String DEFAULT_LANG = "en";
+
+
+
     /**
      * Selects language if it is not set already in objectModel
      * Puts lang parameter to session and to objectModel
@@ -65,33 +61,33 @@ public class LangSelect extends java.lang.Object implements Action {
      */
     public Map act(EntityResolver resolver, Map objectModel, String source,
             Parameters par) throws Exception {
-        
+
         String lang;
-        
+
         if (objectModel.containsKey("lang")) {
             lang = (String)(objectModel.get("lang"));
         } else {
             lang = getLang(objectModel, par);
             objectModel.put("lang", lang);
         }
-        
-        HttpServletRequest req = 
+
+        HttpServletRequest req =
                 (HttpServletRequest)(objectModel.get("request"));
-        
+
         HttpSession session = req.getSession();
         if (session != null) {
             if (session.getAttribute("lang") == null) {
                 session.setAttribute("lang", lang);
             }
         }
-        
+
         Map m = new HashMap(1);
         m.put("lang", lang);
         return m;
     }
-    
-    
-    
+
+
+
     /**
      * Returns two character language code by checking environment in following order
      * 1. Http request has parameter lang
@@ -104,10 +100,10 @@ public class LangSelect extends java.lang.Object implements Action {
      * @param par org.apache.avalon.Parameters
      */
     public static String getLang(Map objectModel, Parameters par) {
-        
+
         List langs_avail = new ArrayList();
         List langs_user = new ArrayList();
-        
+
         Iterator params = par.getParameterNames();
         while (params.hasNext()) {
             String paramname = (String)(params.next());
@@ -115,15 +111,15 @@ public class LangSelect extends java.lang.Object implements Action {
                 langs_avail.add(par.getParameter(paramname, null));
             }
         }
-        String def_lang = par.getParameter("default_lang", default_lang);
-        
-        HttpServletRequest req = 
+        String def_lang = par.getParameter("default_lang", LangSelect.DEFAULT_LANG);
+
+        HttpServletRequest req =
                 (HttpServletRequest)(objectModel.get("request"));
-        
+
         String lang = null;
-        
+
         lang = req.getParameter("lang");
-        
+
         if (lang == null) {
             HttpSession session = req.getSession(false);
             if (session != null) {
@@ -132,9 +128,9 @@ public class LangSelect extends java.lang.Object implements Action {
                     lang = session_lang.toString();
                 }
             }
-            
+
         }
-        
+
         if (lang == null) {
             Cookie[] cookies = req.getCookies();
             if (cookies != null) {
@@ -146,18 +142,18 @@ public class LangSelect extends java.lang.Object implements Action {
                 }
             }
         }
-        
+
         if (lang == null) {
-            
+
             Enumeration locales = req.getLocales();
             while (locales.hasMoreElements()) {
                 Locale locale = (Locale)(locales.nextElement());
                 langs_user.add(locale.getLanguage());
             }
-            
+
             boolean match = false;
             int i = 0;
-            
+
             for ( ; i < langs_user.size() && !match; i++) {
                 for ( int j = 0; j < langs_avail.size(); j++) {
                     if (((String)(langs_user.get(i))).equals(

@@ -32,9 +32,12 @@ import org.xml.sax.EntityResolver;
 
 import org.apache.cocoon.Constants;
 /**
+ * A simple action that Adds an employee the Employee Table used in
+ * the demonstration SQL code.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-06 15:23:36 $
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-09 20:51:10 $
  */
 public class AddEmployeeAction extends ComposerAction {
 
@@ -50,7 +53,7 @@ public class AddEmployeeAction extends ComposerAction {
             ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
             this.datasource = (DataSourceComponent) selector.select(connElement.getValue());
         } catch (ComponentManagerException cme) {
-            log.error("Could not get the DataSourceComponent", cme);
+            getLogger().error("Could not get the DataSourceComponent", cme);
             throw new ConfigurationException("Could not get the DataSource Component", cme);
         }
     }
@@ -103,10 +106,10 @@ public class AddEmployeeAction extends ComposerAction {
             try {
                 conn.rollback();
             } catch (SQLException sse) {
-                log.error("Caught an exception trying to roll back transaction", sse);
+                getLogger().error("Caught an exception trying to roll back transaction", sse);
             }
 
-            log.error("There was a SQL error", se);
+            getLogger().error("There was a SQL error", se);
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -114,7 +117,7 @@ public class AddEmployeeAction extends ComposerAction {
                 if (rs.getStatement() != null) rs.getStatement().close();
                 conn.close();
             } catch (Exception e) {
-                log.error("We should never be in this clause", e);
+                getLogger().error("We should never be in this clause", e);
             }
         }
 

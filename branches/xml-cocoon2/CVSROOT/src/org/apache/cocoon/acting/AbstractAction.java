@@ -8,23 +8,16 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.Configurable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 import org.apache.log.Logger;
 
 /**
+ * AbstractAction gives you the infrastructure for easily deploying more
+ * Actions.  In order to get at the Logger, use getLogger().
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-22 21:56:33 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-09 20:51:10 $
  */
-public abstract class AbstractAction implements Action, Configurable, Loggable {
-
-    protected Logger log;
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
-}
+public abstract class AbstractAction extends AbstractLoggable
+implements Action, Configurable {}

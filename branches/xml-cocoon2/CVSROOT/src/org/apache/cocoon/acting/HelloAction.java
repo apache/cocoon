@@ -22,10 +22,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 import org.apache.cocoon.Constants;
+
 /**
+ * A simple Action that tracks if a <code>Session</code> object
+ * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-15 20:35:09 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-09 20:51:10 $
  */
 public class HelloAction extends ComposerAction {
 
@@ -43,32 +46,18 @@ public class HelloAction extends ComposerAction {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
         if (req != null) {
             HttpSession session = req.getSession (false);
-            ServletContext context = (ServletContext)objectModel.get(Constants.CONTEXT_OBJECT);
-            if (context != null) {
-                if (session != null) {
-                    if (session.isNew()) {
-                        super.log.debug("Session is new");
-                        context.log("Session is new");
-                    } else {
-                        super.log.debug("Session is new");
-                        context.log("Session is old");
-                    }
+
+            if (session != null) {
+                if (session.isNew()) {
+                    getLogger().debug("Session is new");
                 } else {
-                    super.log.debug("A session object was not created");
-                    context.log("A session object was not created");
+                    getLogger().debug("Session is old");
                 }
             } else {
-                if (session != null) {
-                    if (session.isNew()) {
-                        super.log.debug("Session is new");
-                    } else {
-                        super.log.debug("Session is old");
-                    }
-                } else {
-                    super.log.debug("A session object was not created");
-                }
+                getLogger().debug("A session object was not created");
             }
         }
+
         return null;
     }
 }

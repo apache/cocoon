@@ -59,7 +59,7 @@ import org.apache.cocoon.ResourceNotFoundException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-05 16:23:08 $ */
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-09 20:51:11 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -122,7 +122,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      *
      * @throws  SAXException
      *      if an error occurs while outputting the document
-     * @throws  IOException
+     * @throws  ProcessingException
      *      if the requsted URI isn't a directory on the local
      *      filesystem
      */
