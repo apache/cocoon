@@ -611,7 +611,7 @@
    <p>Change this to a really big number.</p>
 
    <p>If that doesn't work, try using the <code>normalize-space</code> function
-    or the <code>&lt;xsl:strip-space&gt;</code> element in
+    or the <code>&lt;xsl:normalize-space&gt;</code> element in
     your stylesheet at appropriate places to remove extraneous whitespace.</p>
   </answer>
  </faq>

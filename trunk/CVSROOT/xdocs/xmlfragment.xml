@@ -2,7 +2,7 @@
 
 <!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
 
-<document><header><title>ESQL Taglib</title>
+<document><header><title>XMLFragment Interface</title>
 <authors>
 <person name="Sylvain Wallez" email="sylvain.wallez@anyware-tech.com"/>
 <person name="Robin Green" email="greenrd@hotmail.com"/>
