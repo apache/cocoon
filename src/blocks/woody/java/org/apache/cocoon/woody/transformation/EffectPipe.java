@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * CVS $Id: EffectPipe.java,v 1.5 2004/01/05 16:59:39 vgritsenko Exp $
+ * CVS $Id: EffectPipe.java,v 1.6 2004/01/11 19:47:53 vgritsenko Exp $
  * @author Timothy Larson
  */
 public class EffectPipe extends AbstractXMLPipe {
@@ -180,7 +180,7 @@ public class EffectPipe extends AbstractXMLPipe {
 
     protected class NullHandler extends Handler {
         public Handler process() throws SAXException {
-            return this; 
+            return this;
         }
     }
 
@@ -204,39 +204,58 @@ public class EffectPipe extends AbstractXMLPipe {
 
         public Output() { elements = new LinkedList(); }
 
-        public void startPrefixMapping() throws SAXException { this.startPrefixMapping(prefix, uri); }
+        public void startPrefixMapping() throws SAXException {
+            super.startPrefixMapping(prefix, uri);
+        }
 
-        public void endPrefixMapping() throws SAXException { this.endPrefixMapping(prefix); }
+        public void endPrefixMapping() throws SAXException {
+            super.endPrefixMapping(prefix);
+        }
 
         public void element(String prefix, String uri, String loc, Attributes attrs) throws SAXException {
             element = new Element(uri, loc, prefix + ":" + loc, attrs);
         }
- 
-        public void element(String prefix, String uri, String loc) throws SAXException { element(prefix, uri, loc, null); }
- 
-        public void element(String loc, Attributes attrs) throws SAXException { element = new Element("", loc, loc, attrs); }
 
-        public void element(String loc) throws SAXException { element(loc, null); }
+        public void element(String prefix, String uri, String loc) throws SAXException {
+            element(prefix, uri, loc, null);
+        }
 
-        public void element() throws SAXException { element = new Element(input.uri, input.loc, input.raw, input.attrs); }
- 
+        public void element(String loc, Attributes attrs) throws SAXException {
+            element = new Element("", loc, loc, attrs);
+        }
+
+        public void element(String loc) throws SAXException {
+            element(loc, null);
+        }
+
+        public void element() throws SAXException {
+            element = new Element(input.uri, input.loc, input.raw, input.attrs);
+        }
+
         public void attribute(String prefix, String uri, String name, String value) throws SAXException {
             element.addAttribute(prefix, uri, name, value);
         }
 
-        public void attribute(String name, String value) throws SAXException { element.addAttribute(name, value); }
+        public void attribute(String name, String value) throws SAXException {
+            element.addAttribute(name, value);
+        }
 
         public void copyAttribute(String prefix, String uri, String name) throws SAXException {
             String value = null;
-            if (input.attrs != null && (value = input.attrs.getValue(uri, name)) != null)
+            if (input.attrs != null && (value = input.attrs.getValue(uri, name)) != null) {
                 attribute(prefix, uri, name, value);
-            else
+            } else {
                 throw new SAXException("Attribute \"" + name + "\" cannot be copied because it does not exist.");
+            }
         }
 
-        public void attributes(Attributes attrs) throws SAXException { element.addAttributes(attrs); }
+        public void attributes(Attributes attrs) throws SAXException {
+            element.addAttributes(attrs);
+        }
 
-        public void attributes() throws SAXException { attributes(input.attrs); }
+        public void attributes() throws SAXException {
+            attributes(input.attrs);
+        }
 
         public void startElement() throws SAXException {
             if (element.attrs == null) {
@@ -246,21 +265,21 @@ public class EffectPipe extends AbstractXMLPipe {
             elements.addFirst(element);
             element = null;
         }
- 
+
         public void endElement() throws SAXException {
             element = (Element)elements.removeFirst();
             super.endElement(element.uri, element.loc, element.raw);
             element = null;
         }
- 
+
         public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
             super.startElement(uri, loc, raw, attrs);
         }
- 
+
         public void endElement(String uri, String loc, String raw) throws SAXException {
             super.endElement(uri, loc, raw);
         }
- 
+
         public void copy() throws SAXException {
             switch(event) {
             case EVENT_SET_DOCUMENT_LOCATOR:   this.setDocumentLocator(locator); break;
@@ -283,16 +302,17 @@ public class EffectPipe extends AbstractXMLPipe {
             case EVENT_COMMENT:                this.comment(c, start, len); break;
             }
         }
- 
+
         protected void bufferInit() {
             if (saxBuffer != null) {
-                if (buffers == null)
+                if (buffers == null) {
                     buffers = new LinkedList();
+                }
                 buffers.addFirst(saxBuffer);
             }
             saxBuffer = new SaxBuffer();
         }
- 
+
         protected void bufferFini() {
             if (buffers != null && buffers.size() > 0) {
                 saxBuffer = (SaxBuffer)buffers.removeFirst();
@@ -304,7 +324,7 @@ public class EffectPipe extends AbstractXMLPipe {
         protected SaxBuffer getBuffer() {
             return saxBuffer;
         }
- 
+
         public void buffer() throws SAXException {
             switch(event) {
             case EVENT_SET_DOCUMENT_LOCATOR:   saxBuffer.setDocumentLocator(locator); break;
@@ -328,6 +348,7 @@ public class EffectPipe extends AbstractXMLPipe {
             }
         }
     }
+
 
     protected int event = 0;
 
@@ -407,7 +428,7 @@ public class EffectPipe extends AbstractXMLPipe {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        input = (Element)elements.removeFirst(); 
+        input = (Element)elements.removeFirst();
         //this.prefix = prefix;
         event = EVENT_END_PREFIX_MAPPING; handler = handler.process();
         input = null;
@@ -422,7 +443,7 @@ public class EffectPipe extends AbstractXMLPipe {
     }
 
     public void endElement(String uri, String loc, String raw) throws SAXException {
-        input = (Element)elements.removeFirst(); 
+        input = (Element)elements.removeFirst();
         event = EVENT_END_ELEMENT; handler.process();
         handler = (Handler)handlers.removeFirst();
         input = null;
