@@ -143,8 +143,11 @@ public class QuartzJobExecutor implements Job {
             EnvironmentHelper.leaveProcessor();
             env.finishingProcessing();
 
-            if (release && manager != null) {
-                manager.release(job);
+            if (manager != null) {
+                manager.release(processor);
+                if (release) {
+                    manager.release(job);
+                }
             }
             if (dispose) {
             	ContainerUtil.dispose(job);
