@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.18 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.19 2004/03/18 15:08:12 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -588,5 +588,12 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             this.sourceResolver = null;
         }
         this.initializedComponents = false;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+     */
+    public boolean isInternalRedirect() {
+        return false;
     }
 }

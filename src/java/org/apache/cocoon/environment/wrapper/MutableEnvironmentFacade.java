@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.6 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.7 2004/03/18 15:08:12 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -283,6 +283,13 @@ public class MutableEnvironmentFacade implements Environment {
      */
     public boolean isExternal() {
         return env.isExternal();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+     */
+    public boolean isInternalRedirect() {
+        return env.isInternalRedirect();
     }
 
     /* (non-Javadoc)
