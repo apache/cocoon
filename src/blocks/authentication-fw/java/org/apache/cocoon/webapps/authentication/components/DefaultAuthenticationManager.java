@@ -51,6 +51,8 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -58,6 +60,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.components.SitemapConfigurable;
@@ -88,7 +91,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.1 2003/03/20 15:27:05 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.2 2003/03/21 08:54:30 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractSessionComponent
@@ -572,7 +575,7 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
                                     String path)
     throws ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN loadApplicationXML application=" + appHandler.getName() + ", path="+path);
         }
         Object o = this.getSessionManager().getSession(true);
@@ -626,11 +629,33 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
 
         } // end synchronized
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END loadApplicationXML");
         }
     }
 
+    /**
+     * Check if application for path is loaded
+     */
+    private void checkLoaded(SessionContextImpl context,
+                               String             path,
+                               ApplicationHandler applicationHandler)
+    throws ProcessingException {
+        // synchronized as loadApplicationXML is synced
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("BEGIN checkLoaded path="+path);
+        }
+        if ( path.equals("/") || path.startsWith("/application") ) {
+            if (applicationHandler != null) {
+                this.loadApplicationXML(context, applicationHandler, "/");
+            }
+        }
+
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("END checkLoaded");
+        }
+    }
+    
     /**
      * Build parameters for loading and saving of application data
      */
@@ -640,7 +665,7 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
                                                 String             appName)
     throws ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN createParameters handler=" + myHandler +
                               ", path="+path+ ", application=" + appName);
         }
@@ -652,10 +677,63 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
                                                       this.manager);
         parameters = context.createParameters(parameters, myHandler, path, appName);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END createParameters parameters="+parameters);
         }
         return parameters;
+    }
+
+    /**
+     * Build parameters for loading and saving of application data
+     */
+    public SourceParameters createParameters(String handler, 
+                                              String applicationName,
+                                              String path)
+    throws ProcessingException {
+        // synchronized
+        if (handler == null) {
+            return new SourceParameters();
+        }
+        if (path == null) {
+            SessionContext context = this.getAuthenticationSessionContext(false);
+            SourceParameters pars = (SourceParameters)context.getAttribute("cachedparameters_" + handler);
+            if (pars == null) {
+                 pars = this.createParameters(null, handler, path, applicationName);
+                 context.setAttribute("cachedparameters_" + handler, pars);
+            }
+            return pars;
+        }
+        return this.createParameters(null, handler, path, applicationName);
+    }
+
+    /**
+     * Create a map for the actions
+     * The result is cached!
+     */
+    public Map createMap(String handler, String applicationName)
+    throws ProcessingException {
+        if (handler == null) {
+            // this is only a fallback
+            return Collections.EMPTY_MAP;
+        }
+        SessionContext context = this.getAuthenticationSessionContext(false);
+        Map map = (Map)context.getAttribute("cachedmap_" + handler);
+        if (map == null) {
+            map = new HashMap();
+            Parameters pars = this.createParameters(handler, applicationName, null).getFirstParameters();
+            String[] names = pars.getNames();
+            if (names != null) {
+                String key;
+                String value;
+                for(int i=0;i<names.length;i++) {
+                    key = names[i];
+                    value = pars.getParameter(key, null);
+                    if (value != null) map.put(key, value);
+                }
+            }
+            context.setAttribute("cachedmap_" + handler, map);
+        }
+        return map;
     }
 }
 

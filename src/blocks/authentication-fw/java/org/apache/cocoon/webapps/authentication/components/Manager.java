@@ -51,6 +51,7 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.excalibur.source.SourceParameters;
@@ -62,7 +63,7 @@ import org.w3c.dom.DocumentFragment;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.1 2003/03/20 15:27:05 cziegeler Exp $
+ * @version CVS $Id: Manager.java,v 1.2 2003/03/21 08:54:30 cziegeler Exp $
 */
 public interface Manager {
 
@@ -99,4 +100,20 @@ public interface Manager {
     DocumentFragment authenticate(String              loginHandlerName,
                                   SourceParameters    parameters)
     throws ProcessingException, IOException;
+
+    /**
+     * Build parameters for loading and saving of application data
+     */
+    SourceParameters createParameters(String handler, 
+                                      String applicationName,
+                                      String path)
+    throws ProcessingException;
+    
+    /**
+     * Create a map for the actions
+     * The result is cached!
+     */
+    Map createMap(String handler, String applicationName)
+    throws ProcessingException;
+    
 }
