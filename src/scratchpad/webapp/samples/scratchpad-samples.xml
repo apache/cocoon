@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.1 2003/03/09 00:10:29 pier Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.2 2003/03/15 22:53:10 stefano Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<samples>
 
+ <group name="Pet Store">
+    <sample name="Pet Store" href="petstore/">
+      The Cocoon flowscript version of the J2EE PetStore.
+    </sample>
+  </group>
+  
   <group name="Castor">
     <sample name="CastorTransformer" href="castor/">
       Show the usage of the Castor Transformer.
-    </sample>
-  </group>
-
-<!--  <group name="Charts">
-    <sample name="Wings Transformer" href="charts/">
-      Show the usage of the Krysalis Wings Chart Generator.
-    </sample>
-  </group>-->
-
-  <group name="Slash Edit">
-    <sample name="Source Writing Transformer" href="editor/">
-      Show the usage of the Source Writing Transformer by 
-      an Online editor Form.
     </sample>
   </group>
 
@@ -32,18 +25,6 @@
     </sample>
   </group>
   
-  <group name="SOAP Server">
-    <sample name="SOAP Server" href="soap-server/">
-      Axis based SOAP server.
-    </sample>
-  </group>
-  
-  <group name="SiteBuilder">
-    <sample name="SiteBuilder" href="sitebuilder/">
-      ???
-    </sample>
-  </group>
-
   <group name="ImageReader">
     <sample name="Image" href="imagereader/image-0">
       Image of original size
