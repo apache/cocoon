@@ -64,7 +64,8 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SerializeNode.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
+ * @version CVS $Id: SerializeNode.java,v 1.2 2003/03/18 15:23:28 nicolaken Exp $
  */
 
 public class SerializeNode extends PipelineEventComponentProcessingNode {
@@ -113,11 +114,15 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
                 }
             }
         }
-
         // Perform link translation if requested
         if (env.getObjectModel().containsKey(Constants.LINK_OBJECT)) {
             context.getProcessingPipeline().addTransformer(
                 "<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
+            );
+        }
+        if (env.getObjectModel().containsKey(Constants.LINK_COLLECTION_OBJECT)) {
+            context.getProcessingPipeline().addTransformer(
+                "<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
             );
         }
 
@@ -150,3 +155,5 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
         }
     }
 }
+
+

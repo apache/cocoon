@@ -48,50 +48,56 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.environment.commandline;
+package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.framework.logger.Logger;
-
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.util.Map;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
- * This environment is used to save the requested file to disk.
- *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: FileSavingEnvironment.java,v 1.2 2003/03/18 15:23:49 nicolaken Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.1 2003/03/18 15:23:49 nicolaken Exp $
  */
-public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
+public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
+    private List links;
 
-    public FileSavingEnvironment(String uri,
-                                 File context,
-                                 Map attributes,
-                                 Map parameters,
-                                 Map links,
-                                 List gatheredLinks,
-                                 CommandlineContext cliContext,
-                                 OutputStream stream,
-                                 Logger log)
-    throws MalformedURLException {
-        super(uri, null, context, stream, log);
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, new CommandLineRequest(this, null, uri, null, attributes, parameters));
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, cliContext);
-        if (links != null) {
-            this.objectModel.put(Constants.LINK_OBJECT, links);
-        }
-        if (gatheredLinks != null) {
-            this.objectModel.put(Constants.LINK_COLLECTION_OBJECT, gatheredLinks);
-        }
+
+    /**
+     * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
+     * the source and sitemap <code>Parameters</code> used to process the request.
+     */
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
+        SAXException, IOException {
+            this.links = (List)objectModel.get(Constants.LINK_COLLECTION_OBJECT);
+    }
+
+    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri,
+        String name, String raw, Attributes attr) throws SAXException {
+            this.addLink(href);
+            super.simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
+    }
+
+    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw,
+        Attributes attr) throws SAXException {
+            this.addLink(href);
+            super.startLocator(href, role, title, label, uri, name, raw, attr);
+    }
+    private void addLink(String href) {
+        if (href.length() == 0) return;
+        if (href.charAt(0) == '#') return;
+        if (href.indexOf("://") != -1) return;
+        if (href.startsWith("mailto:")) return;
+        if (href.startsWith("news:")) return;
+        if (href.startsWith("javascript:")) return;
+        this.links.add(href);
     }
 }
-
-
-

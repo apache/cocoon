@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- all links here are relative to the build context dir, that
+     in the build.xml file is set to ${build.context} -->
+<cocoon verbose="true"  
+        follow-links="true" 
+        precompile-only="false" 
+        confirm-extensions="true">
+
+   <broken-link-file>../brokenlinks.txt</broken-link-file>
+<!--<load-class>org.firebirdsql.jdbc.Driver</load-class>-->
+   <logging log-kit="./logkit.xconf" logger="cli" level="ERROR" />
+   <context-dir>.</context-dir>
+   <config-file>cocoon.xconf</config-file>
+   <dest-dir>../docs</dest-dir>
+   <work-dir>../temp/docs</work-dir>
+<!--<user-agent>xxx</user-agent>-->
+   <accept>*/*</accept>
+   <uri>favicon.ico</uri>
+<!--<uri-file></uri-file>-->
+   
+</cocoon>
+
