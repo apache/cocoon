@@ -22,6 +22,7 @@
     <subscriber-classes>
         <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
         <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaulCopletDataEventSubscriber"/>
     </subscriber-classes>
     <!-- add each component as a subscriber (the component should be thread safe): -->
     <subscriber-roles>
@@ -62,6 +63,12 @@
     <coplet-adapter name="portlet"
                     class="org.apache.cocoon.portal.coplet.adapter.impl.PortletAdapter" 
                     logger="portal"/>
+    <!-- This is an extension of the uri adapter -->
+    <coplet-adapter name="caching-uri"
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.CachingURICopletAdapter" logger="portal"/>
+    <!-- This is the application adapter -->
+    <coplet-adapter name="application"
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter" logger="portal"/>
  </component>
 
 
@@ -96,6 +103,8 @@
     <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
     <aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
     <aspect class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect" name="parameter"/>
+    <!-- This is the special basket renderer -->
+    <aspect class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect" name="basket"/>
  </component>
 
  <!-- Aspect Storage configuration -->
@@ -117,4 +126,8 @@
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" />
+ <!-- This is the basket manager -->
+ <component class="org.apache.cocoon.portal.coplets.basket.BasketManager" 
+            role="org.apache.cocoon.portal.coplets.basket.BasketManager"/>
+
 </xconf>

@@ -48,82 +48,49 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.event.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.cocoon.portal.factory.impl.AbstractProducible;
-
+import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.event.CopletDataEvent;
 
 /**
+ * This event changes the value of all instances of a coplet data
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.9 2004/02/12 09:33:30 cziegeler Exp $
+ * @version CVS $Id: ChangeCopletsJXPathEvent.java,v 1.1 2004/02/12 09:33:29 cziegeler Exp $
  */
-public final class CopletInstanceData 
-    extends AbstractProducible {
+public class ChangeCopletsJXPathEvent
+extends AbstractActionEvent 
+implements CopletDataEvent {
 
-	protected CopletData copletData;
-
-    protected Map attributes = new HashMap();
-
-    /** Temporary attributes are not persisted */
-    protected Map temporaryAttributes = new HashMap();
+    protected String path;
+    protected Object value;
     
-	/**
-	 * Constructor
-	 */
-	public CopletInstanceData() {
-	}
-
-	/**
-	 * @return CopletData
-	 */
-	public CopletData getCopletData() {
-		return copletData;
-	}
-
-	/**
-	 * Sets the copletData.
-	 * @param copletData The copletData to set
-	 */
-	public void setCopletData(CopletData copletData) {
-		this.copletData = copletData;
-	}
-
-    public Object getAttribute(String key) {
-        return this.attributes.get(key);
+    /**
+     * Constructor
+     * @param target The coplet data
+     * @param path   The path for the instance data
+     * @param value  The value to set
+     */
+    public ChangeCopletsJXPathEvent(CopletData target, String path, Object value) {
+        super( target );
+        this.path = path;
+        this.value = value;
     }
 
-    public void setAttribute(String key, Object value) {
-        this.attributes.put(key, value);
-    }
-    
-    public void removeAttribute(String key) {
-        this.attributes.remove(key);
-    }
-    
-    public Map getAttributes() {
-        return this.attributes;
+    /**
+     * @return Returns the path.
+     */
+    public String getPath() {
+        return this.path;
     }
 
-    public Object getTemporaryAttribute(String key) {
-        return this.temporaryAttributes.get(key);
+    /**
+     * @return Returns the value.
+     */
+    public Object getValue() {
+        return this.value;
     }
 
-    public void setTemporaryAttribute(String key, Object value) {
-        this.temporaryAttributes.put(key, value);
-    }
-    
-    public void removeTemporaryAttribute(String key) {
-        this.temporaryAttributes.remove(key);
-    }
-    
-    public Map getTemporaryAttributes() {
-        return this.temporaryAttributes;
-    }
 }

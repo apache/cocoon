@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -73,7 +76,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.6 2003/10/20 13:36:41 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.7 2004/02/12 09:33:30 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -184,15 +187,36 @@ public abstract class AbstractCopletAdapter
         
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void init(CopletInstanceData coplet) {
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void destroy(CopletInstanceData coplet) {
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void login(CopletInstanceData coplet) {
+        // copy temporary attributes from the coplet data
+        Iterator iter = coplet.getCopletData().getAttributes().entrySet().iterator();
+        while ( iter.hasNext() ) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            if ( entry.getKey().toString().startsWith("temporary:") ) {
+                coplet.setTemporaryAttribute(entry.getKey().toString().substring(10),
+                        entry.getValue());
+            }
+        }
     }
         
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void logout(CopletInstanceData coplet) {
     }
     

@@ -48,18 +48,18 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.event;
+
 
 /**
- * InvalidEventTypeException is thrown whenever the event type of a <tt>Subscriber</tt>
- * is not assignable from the root event type.
+ * This interface marks an event as an event for a coplet data (or
+ * for all coplet instance datas).
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author Mauro Talevi
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: InvalidEventTypeException.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: CopletDataEvent.java,v 1.1 2004/02/12 09:33:30 cziegeler Exp $
  */
-public class InvalidEventTypeException extends RuntimeException 
-{
+public interface CopletDataEvent 
+    extends ActionEvent {
+        
 }
