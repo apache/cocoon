@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.41 2000-03-16 13:40:58 stefano Exp $
+  $Id: changes.xml,v 1.42 2000-03-17 16:43:59 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" fixes-bug="45" due-to="jon@stimmel.net" due-to-email="jon@stimmel.net">
+   Fixed bug on XSPUtil.cloneNode choking on comments.
+  </action>
+  <action dev="SM" type="add">
+   Added logging capabilities to the framework.
+  </action>
   <action dev="RR" type="add">
    Added the ability to include taglibs with PIs.
   </action>
