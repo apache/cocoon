@@ -14,6 +14,15 @@
         </sample>
     </group>
 
+    <group name="XSP + FOP caching test">
+        <sample name="Generate PDF with pageKey=ONE" href="cache-test-ONE-a-250.pdf">
+            Needs the XSP block to generate input, see generated document for info.
+        </sample>
+        <sample name="Same with pageKey=TWO" href="cache-test-TWO-b-225.pdf">
+            Same with another pageKey to check that both are cached separately.
+        </sample>
+    </group>
+
     <group name="Resources">
         <sample name="FOP web site" href="http://xml.apache.org/fop">
             FOP reference information
