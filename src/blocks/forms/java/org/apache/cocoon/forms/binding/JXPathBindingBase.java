@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 

@@ -31,7 +31,7 @@ import org.apache.commons.jxpath.Pointer;
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
