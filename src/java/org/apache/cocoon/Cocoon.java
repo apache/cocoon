@@ -26,6 +26,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -79,6 +80,9 @@ public class Cocoon
 
     static Cocoon instance;
 
+    /** The root Cocoon logger */
+    private Logger rootLogger;
+
     /** The application context */
     private Context context;
 
@@ -91,11 +95,11 @@ public class Cocoon
     /** The parent service manager. */
     private ServiceManager parentServiceManager;
 
-    /** flag for disposed or not */
-    private boolean disposed = false;
+    /** Flag for disposed or not */
+    private boolean disposed;
 
-    /** active request count */
-    private volatile int activeRequestCount = 0;
+    /** Active request count */
+    private volatile int activeRequestCount;
 
     /** the Processor */
     private Processor processor;
@@ -124,6 +128,11 @@ public class Cocoon
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
         instance = this;
+    }
+
+    public void enableLogging(Logger logger) {
+        this.rootLogger = logger;
+        super.enableLogging(logger.getChildLogger("cocoon"));
     }
 
     /**
@@ -172,12 +181,9 @@ public class Cocoon
      */
     public void initialize() throws Exception {
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
-        ContainerUtil.enableLogging(this.serviceManager, getLogger().getChildLogger("manager"));
+        ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Initializing new Cocoon object.");
-        }
+        getLogger().debug("Initializing new Cocoon object.");
 
         // Log the System Properties.
         dumpSystemProperties();
@@ -193,7 +199,7 @@ public class Cocoon
 
         this.environmentHelper = new EnvironmentHelper(
                 (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
-        ContainerUtil.enableLogging(this.environmentHelper, getLogger());
+        ContainerUtil.enableLogging(this.environmentHelper, this.rootLogger);
         ContainerUtil.service(this.environmentHelper, this.serviceManager);
 
         this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
@@ -266,7 +272,7 @@ public class Cocoon
             }
 
             RoleManager urm = new RoleManager(drm);
-            ContainerUtil.enableLogging(urm, getLogger().getChildLogger("roles").getChildLogger("user"));
+            ContainerUtil.enableLogging(urm, this.rootLogger.getChildLogger("roles").getChildLogger("user"));
             ContainerUtil.configure(urm, roleConfig);
             roleConfig = null;
             drm = urm;
@@ -275,9 +281,7 @@ public class Cocoon
         this.serviceManager.setRoleManager(drm);
         this.serviceManager.setLoggerManager(this.loggerManager);
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Setting up components...");
-        }
+        getLogger().debug("Setting up components...");
         ContainerUtil.configure(this.serviceManager, conf);
     }
 
@@ -530,7 +534,7 @@ public class Cocoon
         try {
             if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
-                this.debug(environment, true);
+                debug(environment, true);
             }
 
             return this.processor.buildPipeline(environment);
