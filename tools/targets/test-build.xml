@@ -29,7 +29,7 @@
   </target>
 
   <!-- Runs JUnit tests -->
-  <target name="junit-tests" depends="compile-tests, junit-prepare">
+  <target name="junit-tests" depends="compile-tests, junit-prepare, blocks">
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
       <classpath>
         <path refid="test.classpath"/>
