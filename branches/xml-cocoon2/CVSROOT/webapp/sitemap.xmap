@@ -82,11 +82,11 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
-  <map:view name="content" generate-from="content">
+  <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="links" generate-from="content">
+  <map:view name="links" from-label="content">
    <map:serialize type="links"/>
   </map:view>
 

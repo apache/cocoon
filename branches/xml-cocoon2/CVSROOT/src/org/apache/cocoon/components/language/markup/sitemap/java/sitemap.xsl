@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.37 $ $Date: 2000-09-27 16:15:00 $
+ * @version CVS $Revision: 1.1.2.38 $ $Date: 2000-09-27 22:54:19 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -806,7 +806,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:if>
       </xsl:variable>
       <xsl:if test="$component-label">
-        <xsl:for-each select="/map:sitemap/map:views/map:view[@generate-from=$component-label]">
+        <xsl:for-each select="/map:sitemap/map:views/map:view[@from-label=$component-label]">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
             if(1==1)return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
           }
