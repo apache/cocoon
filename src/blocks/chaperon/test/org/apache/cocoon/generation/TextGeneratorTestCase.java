@@ -16,10 +16,6 @@
 
 package org.apache.cocoon.generation;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.HashMap;
-
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
@@ -27,13 +23,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGeneratorTestCase.java,v 1.5 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class TextGeneratorTestCase extends SitemapComponentTestCase {
-
-    public TextGeneratorTestCase(String name) {
-        super(name);
-    }
 
     public void testTextGenerator1() throws Exception {
         String src = "resource://org/apache/cocoon/generation/texttest-input1.txt";

@@ -58,17 +58,6 @@
   </file>
 
   <file>
-    <title>Avalon Excalibur Component</title>
-    <description>
-      Part of avalon, it is a set of classes and patterns that
-      support high level server development.
-    </description>
-    <used-by>Cocoon</used-by>
-    <lib>core/excalibur-component-1.2.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
-  </file>
-
-  <file>
     <title>Avalon Excalibur Event</title>
     <description>
       This is the Excalibur Event package which includes event queues,

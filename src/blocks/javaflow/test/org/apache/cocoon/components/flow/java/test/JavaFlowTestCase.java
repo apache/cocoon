@@ -26,14 +26,10 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaFlowTestCase.java,v 1.4 2004/06/26 18:29:30 stephan Exp $
+ * @version CVS $Id$
  */
 public class JavaFlowTestCase extends SitemapComponentTestCase {
 
-    public JavaFlowTestCase(String name) {
-        super(name);
-    }
-    
     public void testSimple() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
         String id = callFunction("java", source, "simpleTest", new HashMap());

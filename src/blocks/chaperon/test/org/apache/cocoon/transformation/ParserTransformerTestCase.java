@@ -16,8 +16,6 @@
 
 package org.apache.cocoon.transformation;
 
-import java.util.HashMap;
-
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
@@ -25,13 +23,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformerTestCase.java,v 1.6 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ParserTransformerTestCase extends SitemapComponentTestCase {
-
-    public ParserTransformerTestCase(String name) {
-        super(name);
-    }
 
     public void testParserTransformer1() throws Exception {
 
