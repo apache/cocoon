@@ -103,7 +103,7 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Initialization target                                               -->
   <!-- =================================================================== -->
-  <target name="init" description="Sets the build properties">
+  <target name="init">
     <tstamp/>
     <property name="fullname" value="Apache Cocoon"/>
     <property name="Name"     value="Cocoon"/>
@@ -193,27 +193,31 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare" depends="init" description="Prepares the build directory">
+  <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare" description="Copies and filters the source code into the build directory">
+  <target name="prepare-src" depends="prepare">
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
-    <copydir src="${src.dir}" dest="${build.src}" filtering="on"/>
+    <copy todir="${build.src}" filtering="on">
+      <fileset dir="${src.dir}"/>
+    </copy>    
   </target>
 
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare-src" description="* Compiles the source code">
-    <copydir src="${build.src}" dest="${build.dest}">
-      <include name="**/Manifest.mf"/>
-      <include name="**/*.xsl"/>
-    </copydir>
+  <target name="compile" depends="prepare-src" description="Compiles the source code">
+    <copy todir="${build.dest}">
+      <fileset dir="${build.src}">
+        <include name="**/Manifest.mf"/>
+        <include name="**/*.xsl"/>
+      </fileset>
+    </copy>
 
     <javac srcdir="${build.src}"
            destdir="${build.dest}"
@@ -240,50 +244,56 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Creates the jar file                                                -->
   <!-- =================================================================== -->
-  <target name="package" depends="compile" description="* Generates the jar package">
-    <jar jarfile="${build.dir}/${name}.jar"
-         basedir="${build.dest}"
-         manifest="${build.src}/Manifest.mf"
-         includes="org/**"/>
+  <target name="package" depends="compile" description="Generates the jar package">
+    <jar jarfile="${build.dir}/${name}.jar" manifest="${build.src}/Manifest.mf">
+      <fileset dir="${build.dest}" includes="org/**"/>
+    </jar>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prapares the webapp directories                                     -->
   <!-- =================================================================== -->
-  <target name="prepare-webapp" depends="prepare" description="Prepares the web application">
+  <target name="prepare-webapp" depends="prepare">
     <mkdir dir="${build.war}"/>
 
-    <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
-      <exclude name="**/*.gif"/>
-      <exclude name="**/*.jpg"/>
-      <exclude name="**/*.png"/>
-    </copydir>
+    <copy todir="${build.war}" filtering="on">
+      <fileset dir="${webapp.dir}">
+        <exclude name="**/*.gif"/>
+        <exclude name="**/*.jpg"/>
+        <exclude name="**/*.png"/>
+      </fileset>
+    </copy>
 
-    <copydir src="${webapp.dir}" dest="${build.war}" filtering="off">
-      <include name="**/*.gif"/>
-      <include name="**/*.jpg"/>
-      <include name="**/*.png"/>
-    </copydir>
+    <copy todir="${build.war}" filtering="off">
+      <fileset dir="${webapp.dir}">
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.png"/>
+      </fileset>
+    </copy>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the libraries for the war package                          -->
   <!-- =================================================================== -->
-  <target name="prepare-webapp-libs" depends="package" if="include.webapp.libs" description="Prepares the libraries for the war package">
-    <copydir src="${lib.dir}" dest="${build.war}/WEB-INF/lib">
-      <include name="*.jar"/>
-      <exclude name="ant*.jar"/>
-      <exclude name="stylebook*.jar"/>
-    </copydir>
+  <target name="prepare-webapp-libs" depends="package" if="include.webapp.libs">
+    <copy todir="${build.war}/WEB-INF/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="ant*.jar"/>
+        <exclude name="stylebook*.jar"/>
+      </fileset>
+    </copy>
+    
     <!-- NOTE: java.home is normally set by the JVM to the /jre directory -->
-    <copyfile src="${java.home}/../lib/tools.jar" dest="${build.war}/WEB-INF/lib/javac.jar"/>
-    <copyfile src="${build.dir}/${name}.jar" dest="${build.war}/WEB-INF/lib/${name}-${version}.jar"/>
+    <copy file="${java.home}/../lib/tools.jar" tofile="${build.war}/WEB-INF/lib/javac.jar"/>
+    <copy file="${build.dir}/${name}.jar" tofile="${build.war}/WEB-INF/lib/${name}-${version}.jar"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the war file                                                -->
   <!-- =================================================================== -->
-  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs" description="* Generates the war package">
+  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs" description="Generates the war package">
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 
@@ -291,22 +301,22 @@ by the main ones.
   <!-- Removes existing uncompressed webapp                                -->
   <!-- =================================================================== -->
   <target name="remove-webapp" if="remove.webapp" description="Removes existing uncompressed webapp">
-    <deltree dir="${install.war}/${name}"/>
+    <delete dir="${install.war}/${name}"/>
   </target>
   
   <!-- =================================================================== -->
   <!-- Installs Cocoon file                                                -->
   <!-- =================================================================== -->
-  <target name="install" depends="package, webapp, remove-webapp" if="install.war" description="* Installs the war package">
-    <copyfile src="${build.dir}/${name}.war" dest="${install.war}/${name}.war"/>
+  <target name="install" depends="package, webapp, remove-webapp" if="install.war" description="Installs the war package">
+    <copy file="${build.dir}/${name}.war" tofile="${install.war}/${name}.war"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
-  <target name="prepare-docs" depends="init" description="Prepares the documentation source files">
-    <copyfile src="changes.xml" dest="${docs.dir}/changes.xml" filtering="on"/>
-    <copyfile src="todo.xml"    dest="${docs.dir}/todo.xml"/>
+  <target name="prepare-docs" depends="init">
+    <copy file="changes.xml" tofile="${docs.dir}/changes.xml" filtering="on"/>
+    <copy file="todo.xml"    tofile="${docs.dir}/todo.xml"/>
 
     <replace file="${docs.dir}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
     <replace file="${docs.dir}/todo.xml"    token="./xdocs/dtd/" value="dtd/"/>
@@ -315,9 +325,9 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-  <target name="docs" depends="prepare-docs" description="* Generates the documentation">
+  <target name="docs" depends="prepare-docs" description="Generates the documentation">
     <mkdir dir="${build.docs}"/>
-    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
@@ -327,9 +337,9 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Generate printer-friendly HTML docs                                 -->
   <!-- =================================================================== -->
-  <target name="printer-docs" depends="prepare-docs" description="* Generates printer-friendly documentation">
+  <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
-    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
@@ -339,9 +349,9 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
-  <target name="site" depends="prepare-docs" description="* Generates the web site (for site maintainers only)">
+  <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
-    <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${docs.dir}/site-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
@@ -351,7 +361,7 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare-src" description="* Generates the API documentation">
+  <target name="javadocs" depends="prepare-src" description="Generates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
              sourcepath="${build.src}"
@@ -371,8 +381,7 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-<!--  <target name="dist" depends="package, webapp, docs, javadocs" description="* Prepares the distribution"> -->
-  <target name="dist" depends="package, webapp" description="* Prepares the distribution">
+  <target name="dist" depends="package, webapp, docs, javadocs" description="Prepares the distribution">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/src"/>
@@ -380,21 +389,45 @@ by the main ones.
     <mkdir dir="${dist.dir}/docs/api"/>
     <mkdir dir="${dist.dir}/webapp"/>
 
-    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/lib/${name}.jar"/>
+    <copy file="${build.dir}/${name}.jar" tofile="${dist.dir}/lib/${name}.jar"/>
 
-    <copydir src="${build.src}"      dest="${dist.dir}/src"/>
-    <copydir src="${build.war}"      dest="${dist.dir}/webapp"/>
-    <copydir src="${lib.dir}"        dest="${dist.dir}/lib"/>
+    <copy todir="${dist.dir}/src">
+      <fileset dir="${build.src}"/>
+    </copy>
+    <copy todir="${dist.dir}/webapp">
+      <fileset dir="${build.war}"/>
+    </copy>
+    <copy todir="${dist.dir}/lib">
+      <fileset dir="${lib.dir}"/>
+    </copy>
 
 <!--
-    <copydir src="${build.docs}"     dest="${dist.dir}/docs"/>
-    <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
-    <copydir src="${docs.dir}"       dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
-    <copydir src="${docs.dir}"       dest="${dist.dir}" includes="changes.xml, todo.xml"/>
-    <copydir src="${skins.dir}"      dest="${dist.dir}/skins"/>
+    <copy todir="${dist.dir}/docs">
+      <fileset dir="${build.docs}"/>
+    </copy>
+    <copy todir="${dist.dir}/docs/api">
+      <fileset dir="${build.javadocs}"/>
+    </copy>
+    <copy todir="${dist.dir}/xdocs">
+      <fileset dir="${docs.dir}">
+        <exclude name="book.xml, changes.xml, todo.xml"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}">
+      <fileset dir="${docs.dir}">
+        <include name="changes.xml, todo.xml"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/skins">
+      <fileset dir="${skins.dir}"/>
+    </copy>
 -->
 
-    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, INSTALL, WARNING, *.sh, *.bat" filtering="on"/>
+    <copy todir="${dist.dir}" filtering="on">
+     <fileset dir=".">
+      <include name="README, LICENSE, INSTALL, WARNING, *.sh, *.bat"/>
+     </fileset>
+    </copy>
 
     <chmod perm="+x" file="${dist.dir}/run.sh"/>
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
@@ -427,7 +460,7 @@ by the main ones.
     <delete file="${docs.dir}/changes.xml"/>
     <delete file="${docs.dir}/todo.xml"/>
     <delete file="${docs.dir}/book.xml"/>
-    <deltree dir="${build.dir}"/>
+    <delete dir="${build.dir}"/>
   </target>
 
   <target name="distclean" depends="clean" description="* Cleans everything to the original state">
@@ -435,7 +468,7 @@ by the main ones.
     <delete file="${dist.target}/${Name}-${version}.tar.gz"/>
     <delete file="${dist.target}/${Name}-${version}.tar"/>
     <delete file="${dist.target}/${Name}-${version}.zip"/>
-    <deltree dir="${dist.root}"/>
+    <delete dir="${dist.root}"/>
   </target>
 
 </project>
