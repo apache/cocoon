@@ -59,14 +59,19 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpUtils;
 import javax.xml.soap.SOAPException;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.axis.AxisFault;
+import org.apache.axis.Constants;
 import org.apache.axis.Message;
 import org.apache.axis.MessageContext;
 import org.apache.axis.soap.SOAPConstants;
@@ -79,6 +84,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
@@ -105,13 +111,24 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  *
- * @version CVS $Id: AxisRPCReader.java,v 1.2 2003/03/11 17:44:17 vgritsenko Exp $
+ * @version CVS $Id: AxisRPCReader.java,v 1.3 2003/06/18 11:18:35 giacomo Exp $
  */
 public class AxisRPCReader extends ComposerReader
-    implements Disposable
+    implements Configurable, Disposable
 {
     // soap server reference
     private SoapServer m_server;
+    
+    /** Are we in development stage ? */
+    private boolean m_isDevelompent = false;
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+	 */
+	public void configure(Configuration config) throws ConfigurationException
+	{
+        m_isDevelompent = config.getChild("development-stage").getValueAsBoolean(m_isDevelompent );
+	}
 
     /**
      * Compose this reader
@@ -229,7 +246,9 @@ public class AxisRPCReader extends ComposerReader
 
             // Set the request(incoming) message field in the context
             msgContext.setRequestMessage(requestMsg);
-
+            String url = HttpUtils.getRequestURL(req).toString();
+            msgContext.setProperty(MessageContext.TRANS_URL, url);
+            
             try
             {
                 //
@@ -266,34 +285,40 @@ public class AxisRPCReader extends ComposerReader
                 }
 
                 responseMsg = msgContext.getResponseMessage();
+                if (responseMsg == null) {
+                    //tell everyone that something is wrong
+                    throw new Exception("no response message");
+                }
             } 
-            catch (AxisFault e)
+            catch (AxisFault fault)
             {
                 if (getLogger().isErrorEnabled())
                 {
-                    getLogger().error("Axis Fault", e);
+                    getLogger().error("Axis Fault", fault);
                 }
 
-                // It's been suggested that a lack of SOAPAction
-                // should produce some other error code (in the 400s)...
-                int status = getHttpServletResponseStatus(e);
-                if (status == HttpServletResponse.SC_UNAUTHORIZED)
-                {
-                    res.setHeader("WWW-Authenticate","Basic realm=\"AXIS\"");
+                // log and sanitize
+                processAxisFault(fault);
+                configureResponseFromAxisFault(res, fault);
+                responseMsg = msgContext.getResponseMessage();
+                if (responseMsg == null) {
+                    responseMsg = new Message(fault);
                 }
-
-                res.setStatus(status);
-                responseMsg = new Message(e);
             }
             catch (Exception e)
             {
+                //other exceptions are internal trouble
+                responseMsg = msgContext.getResponseMessage();
+                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 if (getLogger().isErrorEnabled())
                 {
                     getLogger().error("Error during SOAP call", e);
                 }
-
-                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                responseMsg = new Message(AxisFault.makeFault(e));
+                if (responseMsg == null) {
+                    AxisFault fault = AxisFault.makeFault(e);
+                    processAxisFault(fault);
+                    responseMsg = new Message(fault);
+                }
             }
         }
         catch (AxisFault fault)
@@ -302,8 +327,12 @@ public class AxisRPCReader extends ComposerReader
             {
                 getLogger().error("Axis fault occured while perforing request", fault);
             }
-
-            responseMsg = new Message(fault);
+            processAxisFault(fault);
+            configureResponseFromAxisFault(res, fault);
+            responseMsg = msgContext.getResponseMessage();
+            if( responseMsg == null) {
+                responseMsg = new Message(fault);
+            }
         }
         catch (Exception e)
         {
@@ -325,6 +354,50 @@ public class AxisRPCReader extends ComposerReader
         {
             getLogger().debug("AxisRPCReader.generate() complete");
         }
+    }
+
+    /**
+     * routine called whenever an axis fault is caught; where they
+     * are logged and any other business. The method may modify the fault
+     * in the process
+     * @param fault what went wrong.
+     */
+    protected void processAxisFault(AxisFault fault) {
+        //log the fault
+        Element runtimeException = fault.lookupFaultDetail(
+                Constants.QNAME_FAULTDETAIL_RUNTIMEEXCEPTION);
+        if (runtimeException != null) {
+            getLogger().info("AxisFault:", fault);
+            //strip runtime details
+            fault.removeFaultDetail(Constants.QNAME_FAULTDETAIL_RUNTIMEEXCEPTION);
+        } else if (getLogger().isDebugEnabled()) {
+            getLogger().debug("AxisFault:", fault);
+        }
+        //dev systems only give fault dumps
+        if (m_isDevelompent) {
+            //strip out the stack trace
+            fault.removeFaultDetail(Constants.QNAME_FAULTDETAIL_STACKTRACE);
+        }
+    }
+
+    /**
+     * Configure the servlet response status code and maybe other headers
+     * from the fault info.
+     * @param response response to configure
+     * @param fault what went wrong
+     */
+    private void configureResponseFromAxisFault(HttpServletResponse response,
+                                                AxisFault fault) {
+        // then get the status code
+        // It's been suggested that a lack of SOAPAction
+        // should produce some other error code (in the 400s)...
+        int status = getHttpServletResponseStatus(fault);
+        if (status == HttpServletResponse.SC_UNAUTHORIZED) {
+            // unauth access results in authentication request
+            // TODO: less generic realm choice?
+          response.setHeader("WWW-Authenticate","Basic realm=\"AXIS\"");
+        }
+        response.setStatus(status);
     }
 
     /**
