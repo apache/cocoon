@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * Builds a &lt;map:pipeline&gt;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: PipelineNodeBuilder.java,v 1.5 2004/03/10 23:37:31 unico Exp $
+ * @version CVS $Id$
  */
 
 public class PipelineNodeBuilder
@@ -44,20 +44,21 @@ public class PipelineNodeBuilder
 
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        
+
         String type = this.treeBuilder.getTypeForStatement(config, ProcessingPipeline.ROLE + "Selector");
         PipelineNode node = new PipelineNode(type);
 
         this.treeBuilder.setupNode(node, config);
         node.setInternalOnly(config.getAttributeAsBoolean("internal-only", false));
-        
+        node.setInternalErrorHandler(config.getAttributeAsBoolean("internal-error-handling", false));
+
         // Main (with no "type" attribute) error handler : new in Cocoon 2.1, must have a generator
         ProcessingNode mainHandler = null;
-        
+
         // 404 & 500 error handlers as in Cocoon 2.0.x, have an implicit generator
         ProcessingNode error404Handler = null;
         ProcessingNode error500Handler = null;
-        
+
         Configuration[] childConfigs = config.getChildren();
         List children = new ArrayList();
         for (int i = 0; i < childConfigs.length; i++) {
@@ -82,7 +83,7 @@ public class PipelineNodeBuilder
 					            mainHandler = handler;
 					        }
 					    break;
-					    
+
 					    case 404:
 					        if (error404Handler != null) {
 					            throw new ConfigurationException("Duplicate <handle-errors type='404' at " + handler.getLocation());
@@ -93,7 +94,7 @@ public class PipelineNodeBuilder
 					            error404Handler = handler;
 					        }
 					    break;
-					    
+
 					    case 500:
 					    	if (error500Handler != null) {
                                 throw new ConfigurationException("Duplicate <handle-errors type='500' at " + handler.getLocation());
@@ -104,7 +105,7 @@ public class PipelineNodeBuilder
                                 error500Handler = handler;
                             }
 					    break;
-					    
+
 					    default:
 					    	throw new ConfigurationException("Unknown handle-errors type (" + type + ") at " + handler.getLocation());
 					}
