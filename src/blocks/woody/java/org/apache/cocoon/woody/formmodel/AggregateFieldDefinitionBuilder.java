@@ -71,8 +71,8 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         setDisplayData(widgetElement, definition);
 
         // make childfields
-        Element childrenElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "children", true);
-        Element[] fieldElements = DomHelper.getChildElements(childrenElement, Constants.WD_NS, "field");
+        Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "widgets", true);
+        Element[] fieldElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
             FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
             if (!String.class.isAssignableFrom(fieldDefinition.getDatatype().getTypeClass()))

@@ -59,13 +59,14 @@ import org.w3c.dom.Element;
  */
 public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
         RepeaterDefinition repeaterDefinition = new RepeaterDefinition();
-        setId(widgetElement, repeaterDefinition);
-        setDisplayData(widgetElement, repeaterDefinition);
+        setId(repeaterElement, repeaterDefinition);
+        setDisplayData(repeaterElement, repeaterDefinition);
 
-        // the children of the repeater element are widget configuration elements
-        Element[] widgetElements = DomHelper.getChildElements(widgetElement, Constants.WD_NS);
+        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
+        // All child elements of the widgets element are widgets
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
             repeaterDefinition.addWidget(widgetDefinition);
