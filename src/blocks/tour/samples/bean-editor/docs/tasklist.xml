@@ -78,7 +78,7 @@
         <p>
             We're not using continuations here (there's no <em>sendPageAndWait</em>),
             Flowscript serves only as a thin layer of glue
-            between our java objects and our JXTemplate view page.
+            between our Java objects and our JXTemplate view page.
         </p>
 
         <h2>JXTemplate page</h2>
@@ -98,12 +98,12 @@
             <ol>
                 <li>A request for <em>view/allTasks</em> comes in</li>
                 <li>
-                    The <em>query_allTasks()</em> Flowscript function is called and uses the java <em>DatabaseFacade</em>
-                    to retrieve a java List of <em>TaskBean</em> objects.
+                    The <em>query_allTasks()</em> Flowscript function is called and uses the Java <em>DatabaseFacade</em>
+                    to retrieve a Java List of <em>TaskBean</em> objects.
                 </li>
                 <li>
                     Flowscript uses the <em>cocoon.sendPage()</em> function to trigger the execution of a sitemap
-                    pipeline, passing to it some data as javascript variables.
+                    pipeline, passing to it some data as JavaScript variables.
                 </li>
                 <li>
                     The pipeline uses the JXTemplate generator to dynamically insert data in an XML template

@@ -20,7 +20,7 @@
     <content>
         <p>
             A question which often comes when starting with Cocoon
-            is <em>how to implement my business layer</em>.
+            is, <em>"How do I implement my business layer?"</em>
         </p>
         <p>
             The short answer: <em>it is up to you</em> ;-)
@@ -29,6 +29,12 @@
             More precisely, you could say that Cocoon leaves a lot
             of freedom regarding how to access databases and run
             business processes or apply business rules.
+        </p>
+        <p>
+            Similarly, people often ask about "best practices" with Cocoon --
+            that is, "What's the best way to implement X or Y?"  While we
+            generally don't have a set list of best practices, we can provide 
+            some simple guidance to help you along your way.
         </p>
         <p>
             Here's a brief discussion of possible options. Some are real
@@ -46,9 +52,9 @@
             and its design and future evolution will stay targeted to small glue modules.
         </p>
 
-        <h2>Independent java code</h2>
+        <h2>Independent Java code</h2>
         <p>
-            As we'll see in our example, it is very easy to access java
+            As we'll see in our example, it is very easy to access Java
             objects from Flowscript code.
             Such objects do not necessarily need to know about Cocoon or
             Avalon classes, which means that legacy code could be easily integrated,
@@ -64,7 +70,7 @@
             and Cocoon.
         </p>
 
-        <h2>Avalon-based java code</h2>
+        <h2>Avalon-based Java code</h2>
         <p>
             The next step would be to write first-class Cocoon components based on
             the Avalon framework, allowing your components to use all of the Avalon

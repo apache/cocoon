@@ -35,7 +35,7 @@
             working on a tiny mobile device for a minute.
         </p>
         <p>
-            We won't use Cocoon Forms here, but simply bind a javascript object
+            We won't use Cocoon Forms here, but simply bind a JavaScript object
             to our form manually.
         </p>
         <p>
@@ -51,7 +51,7 @@
         </p>
         <p>
             The only specific thing is the importing of the multi-page.js
-            flowscript, but this was already present for the previous
+            Flowscript, but this was already present for the previous
             example:
             <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/flow"/>
         </p>

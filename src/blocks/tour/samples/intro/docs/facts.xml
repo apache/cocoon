@@ -20,7 +20,7 @@
     <content>
         <h2>Architecture</h2>
         <p>
-            Cocoon is written in java and based on the
+            Cocoon is written in Java and based on the
             <a href="http://avalon.apache.org/">Apache Avalon</a> components framework.
         </p>
         <p>
