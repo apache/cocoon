@@ -153,7 +153,8 @@ Form.prototype.show = function(uri, validator, locale) {
         } else {
             this.submitId = undefined;
         }
-        if (finished && validator != undefined) {
+        // If either validation was successfull or there was an event, call the validator
+        if ((finished ||this.submitId != null) && validator != undefined) {
             finished = validator(this);
         }
         if (finished) {
