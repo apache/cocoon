@@ -25,7 +25,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.EventRegistry;
-import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.excalibur.source.SourceValidity;
@@ -36,7 +35,7 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.9 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class EventAwareCacheImpl extends CacheImpl implements Initializable,
                                                               EventAware {
@@ -95,7 +94,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * Un-register this key in the EventRegistry in addition to 
      * removing it from the Store
 	 */
-	public void remove(PipelineCacheKey key) {
+	public void remove(Serializable key) {
 		super.remove(key);
         m_eventRegistry.removeKey(key);
 	}
