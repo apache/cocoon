@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -74,7 +75,7 @@ import org.apache.pluto.services.title.DynamicTitleService;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.2 2004/02/02 10:03:18 reinhard Exp $
+ * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.3 2004/02/02 10:26:43 cziegeler Exp $
  */
 public class PortletContainerEnvironmentImpl 
 extends AbstractLogEnabled
@@ -164,7 +165,7 @@ implements PortletContainerEnvironment, Serviceable, Disposable, Initializable, 
                     service = (ContainerService)this.manager.lookup(key);
                     this.services.put(key, service);
                 } catch (ServiceException se) {
-                    throw new RuntimeException("Unable to lookup service " + key + ": " + se);
+                    throw new CascadingRuntimeException("Unable to lookup service " + key, se);
                 }
             }
         }
