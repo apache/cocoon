@@ -21,8 +21,8 @@
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
       <ft:widget-label id="data"/><br/>
       <ft:widget id="data">
-        <fi:styling type="htmlarea" style="width: 100%;" rows="20" />
-	  </ft:widget>      
+        <fi:styling type="htmlarea" style="width: 100%;" rows="20" cols="80"/>
+      </ft:widget>      
       <br/>
       <input type="submit"/>
     </ft:form-template>
