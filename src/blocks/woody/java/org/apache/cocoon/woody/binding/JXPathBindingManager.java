@@ -76,7 +76,7 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingManager.java,v 1.15 2004/02/02 21:29:54 tim Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.16 2004/02/03 12:22:08 joerg Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
@@ -136,7 +136,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     protected Binding getStoredBindingDefinition(Source source) {
-        return (Binding)getStoredDefinition(source, bindingKeyPrefix + source.getURI());
+        return getStoredDefinition(source, bindingKeyPrefix + source.getURI());
     }
 
     protected void storeBindingDefinition(Binding bindingDefinition, Source source) throws IOException {

@@ -69,7 +69,7 @@ import org.w3c.dom.NodeList;
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.4 2004/01/27 05:50:08 tim Exp $
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -103,7 +103,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.deleteIfEmpty = deleteIfEmpty;
     }
 
-    public void doLoad(Widget frmModel, JXPathContext jctx) {
+    public void doLoad(Widget frmModel, JXPathContext jctx) throws BindingException {
         // (There should be a general widget type checker for all the bindings to use,
         // coupled with a general informative exception class to throw if the widget is
         // of the wrong type or null.)

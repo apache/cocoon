@@ -61,7 +61,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * into specific {@link JXPathBindingBase} implementations that have nested
  * child-bindings.
  *
- * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.6 2004/01/11 20:51:15 vgritsenko Exp $
+ * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.7 2004/02/03 12:22:08 joerg Exp $
  */
 public class ComposedJXPathBindingBase extends JXPathBindingBase {
     private final JXPathBindingBase[] subBindings;
@@ -124,7 +124,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * Actively performs the binding from the ObjectModel to the Woody-form
      * by passing the task onto it's children.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (this.subBindings != null) {
             int size = this.subBindings.length;
             for (int i = 0; i < size; i++) {

@@ -69,7 +69,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.17 2004/01/27 20:58:52 vgritsenko Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.18 2004/02/03 12:22:08 joerg Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -137,7 +137,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * objectModelContext and Repeater to the repeated rows before handing
      * over to the actual binding-children.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
         repeater.removeRows();

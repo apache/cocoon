@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.10 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.11 2004/02/03 12:22:08 joerg Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -146,7 +146,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Performs the actual load binding regardless of the flag {@see #loadEnabled}.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void doLoad(Widget frmModel, JXPathContext jxpc);
+    public abstract void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException;
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
@@ -154,7 +154,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Executes the actual loading {@see #doLoad(Widget, JXPathContext)}
      * depending on the value of {@see #loadEnabled}
      */
-    public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         if (this.commonAtts.loadEnabled) {
@@ -168,7 +168,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
      */
-    public final void loadFormFromModel(Widget frmModel, Object objModel) {
+    public final void loadFormFromModel(Widget frmModel, Object objModel) throws BindingException {
         if (objModel == null) {
             throw new NullPointerException("null object passed to loadFormFromModel() method");
         }

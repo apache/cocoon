@@ -66,7 +66,7 @@ import org.apache.commons.jxpath.Pointer;
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.6 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.7 2004/02/03 12:22:08 joerg Exp $
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -88,7 +88,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.deleteIfEmpty = deleteIfEmpty;
     }
 
-    public void doLoad(Widget frmModel, JXPathContext jctx) {
+    public void doLoad(Widget frmModel, JXPathContext jctx) throws BindingException {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 

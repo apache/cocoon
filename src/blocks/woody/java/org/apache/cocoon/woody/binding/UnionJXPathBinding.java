@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: UnionJXPathBinding.java,v 1.4 2004/01/27 04:20:51 tim Exp $
+ * @version CVS $Id: UnionJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -90,7 +90,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget widget = frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         if (!(widget instanceof Union))
