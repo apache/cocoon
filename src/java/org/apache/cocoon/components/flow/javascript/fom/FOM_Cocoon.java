@@ -71,6 +71,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
@@ -84,7 +85,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.10 2003/08/26 09:05:52 mpo Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.11 2003/09/02 20:49:21 ugo Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -401,11 +402,29 @@ public class FOM_Cocoon extends ScriptableObject {
         
         public FOM_Cookie[] jsFunction_getCookies() {
             Cookie[] cookies = request.getCookies();
-            FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies.length];
-            for (int i = 0 ; i < cookies.length ; ++i) {
-                FOM_cookies[i] = new FOM_Cookie(cookies[i]);
+            FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies!=null ? cookies.length : 0];
+            for (int i = 0 ; i < FOM_cookies.length ; ++i) {
+                FOM_Cookie FOM_cookie = new FOM_Cookie(cookies[i]);
+                FOM_cookie.setParentScope(getParentScope());
+                FOM_cookie.setPrototype(getClassPrototype(this, FOM_cookie.getClassName()));
+                FOM_cookies[i] = FOM_cookie;
             }
             return FOM_cookies;
+        }
+        
+        public Scriptable jsGet_cookies() {
+            return Context.getCurrentContext().newArray(getParentScope(), jsFunction_getCookies());
+        }
+            
+        public FOM_Cookie jsFunction_getCookie(String name) {
+            Object     cookie  = request.getCookieMap().get(name);
+            FOM_Cookie fcookie = null;
+            if ( cookie!=null ) {
+                fcookie = new FOM_Cookie(cookie);
+                fcookie.setParentScope(getParentScope());
+                fcookie.setPrototype(getClassPrototype(this, fcookie.getClassName()));
+            }
+            return fcookie;
         }
         
         public String jsFunction_getHeader(String name) {
@@ -526,7 +545,7 @@ public class FOM_Cocoon extends ScriptableObject {
             FOM_Cookie result = 
                 new FOM_Cookie(response.createCookie(name, value));
             result.setParentScope(getParentScope());
-            result.setPrototype(getClassPrototype(this, "FOM_Cookie"));
+            result.setPrototype(getClassPrototype(this, result.getClassName()));
             return result;
         }
 
