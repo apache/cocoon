@@ -27,7 +27,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-14 20:21:08 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-14 21:13:24 $
  */
 public class GeneratorSelector extends DefaultComponentSelector implements Disposable {
     private ClassLoaderManager classManager;
@@ -35,7 +35,7 @@ public class GeneratorSelector extends DefaultComponentSelector implements Dispo
     /** The component manager */
     protected ComponentManager manager = null;
 
-    public void compose (ComponentManager manager) throws ComponentException {
+    public void compose (ComponentManager manager) throws ComponentManagerException {
         super.compose(manager);
         this.manager = manager;
 
