@@ -61,6 +61,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.ArrayList;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
@@ -102,7 +103,7 @@ import org.w3c.dom.NodeList;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.9 2003/09/25 17:28:38 joerg Exp $
+ *  @version $Id: WebDAVSource.java,v 1.10 2003/10/29 14:16:53 vgritsenko Exp $
 */
 public class WebDAVSource implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -164,39 +165,35 @@ public class WebDAVSource implements Source,
 
     /**
      * Static factory method to obtain a Source.
-     * 
-     * 
      */
-    
-    public static WebDAVSource newWebDAVSource(
-      String location,
-      String principal,
-      String password,
-      String protocol) throws SourceException {
-          // FIXME: wild hack needed for writing to a new resource.
-          // if a resource doesn't exist, an exception
-          // will be thrown, unless such resource isn't created with the
-          // WebdavResouce.NOACTION flag. However, such flag cannot be
-          // used by default, since it won't allow to discover the 
-          // properties of an exixting resource. So either we do this
-          // hack here or we fill properties on the fly when requested.
-          // This "solution" is scary, but the SWCL is pretty dumb.
-          try {
-            return new WebDAVSource(location, principal, password, protocol, false);  
-          }  catch (HttpException he) {
-             try { 
-                 return new WebDAVSource(location, principal, password, protocol, true);            
-             } catch (HttpException finalHe) {
-             	finalHe.printStackTrace(System.err);
-                throw new SourceException("Error creating the source: ", finalHe);   
-             } catch (IOException e) {
-				e.printStackTrace(System.err);
-                throw new SourceException("Error creating the source: ", e);                	
-             }    
-          } catch (IOException e) {
-                throw new SourceException("Error creating the source: ", e);   
-          }      
-      }      
+    public static WebDAVSource newWebDAVSource(String location,
+                                               String principal,
+                                               String password,
+                                               String protocol) throws SourceException {
+        // FIXME: wild hack needed for writing to a new resource.
+        // if a resource doesn't exist, an exception
+        // will be thrown, unless such resource isn't created with the
+        // WebdavResouce.NOACTION flag. However, such flag cannot be
+        // used by default, since it won't allow to discover the
+        // properties of an exixting resource. So either we do this
+        // hack here or we fill properties on the fly when requested.
+        // This "solution" is scary, but the SWCL is pretty dumb.
+        try {
+            return new WebDAVSource(location, principal, password, protocol, false);
+        }  catch (HttpException he) {
+            try {
+                return new WebDAVSource(location, principal, password, protocol, true);
+            } catch (HttpException finalHe) {
+                finalHe.printStackTrace(System.err);
+                throw new SourceException("Error creating the source: ", finalHe);
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+                throw new SourceException("Error creating the source: ", e);
+            }
+        } catch (IOException e) {
+            throw new SourceException("Error creating the source: ", e);
+        }
+    }
 
     /**
      * Constructor used by the Traversable methods to build children.
@@ -245,14 +242,13 @@ public class WebDAVSource implements Source,
      * Return the unique identifer for this source
      */
     public String getURI() {
-    	// Change http: to webdav:
+        // Change http: to webdav:
         //return "webdav:" + this.systemId.substring(5);
         //add Source credentials
         if (principal != null)
-			return "webdav://" + this.principal + ":" + this.password + "@" +  this.systemId.substring(7);
+            return "webdav://" + this.principal + ":" + this.password + "@" +  this.systemId.substring(7);
         else
-		return "webdav://"  +  this.systemId.substring(7);
-        
+            return "webdav://"  +  this.systemId.substring(7);
     }
     
     /**
@@ -603,7 +599,7 @@ public class WebDAVSource implements Source,
      * @see org.apache.excalibur.source.TraversableSource#getChildren()
      */
     public Collection getChildren() throws SourceException {
-        Vector children = new Vector();
+        ArrayList children = new ArrayList();
         try {
             WebdavResource[] resources = this.resource.listWebdavResources();
             for (int i = 0; i < resources.length; i++) {
@@ -611,11 +607,11 @@ public class WebDAVSource implements Source,
                 children.add(src);
             }
         } catch (HttpException e) {
-            e.printStackTrace();
-            throw new SourceException(e.getMessage());
+            // TODO: getLogger.debug()
+            throw new SourceException(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new SourceException(e.getMessage());
+            // TODO: getLogger.debug()
+            throw new SourceException(e.getMessage(), e);
         }
         return children;
     }
@@ -781,7 +777,6 @@ public class WebDAVSource implements Source,
     throws SourceException {
 
         try {
-
             Document doc = sourceproperty.getValue().getOwnerDocument();
             DocumentFragment frag = doc.createDocumentFragment();
             NodeList list = sourceproperty.getValue().getChildNodes();
@@ -802,5 +797,4 @@ public class WebDAVSource implements Source,
             throw new SourceException("Could not set property ", e);
         }
     }
-
 }
