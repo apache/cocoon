@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
 
-<!-- CVS $Id: sitemap.xmap,v 1.18 2004/02/22 19:12:01 unico Exp $ -->
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: sitemap.xmap,v 1.19 2004/03/10 10:05:07 cziegeler Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -124,7 +139,7 @@
     </map:transform>
     <map:serialize/>
    </map:match>
-   
+
    <map:match pattern="clearcache.html">
     <map:act type="clear-cache">
      <map:generate src="status" type="status"/>
@@ -144,7 +159,7 @@
      <map:serialize/>
     </map:act>
    </map:match>
-   
+
    <map:match pattern="request.html">
     <map:generate type="request"/>
     <map:transform src="context://stylesheets/system/xml2html.xslt"/>
@@ -152,21 +167,20 @@
    </map:match>
 
    <!-- ======================== Automount =============================== -->
+
    <map:match pattern="*/**">
      <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
    </map:match>
-   
+
   </map:pipeline>
 
   <map:pipeline internal-only="true">
    <map:match pattern="view-source">
     <!-- colourize files that are known to be XML -->
-    <!--
     <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
        <map:generate src="common/view-source.xsp" type="serverpages"/>
        <map:serialize/>
     </map:match>
-    -->
     <!-- all other files are just send as text -->
     <map:read mime-type="text/plain" src="../{request-param:filename}"/>
    </map:match>

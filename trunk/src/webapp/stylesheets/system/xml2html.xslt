@@ -1,4 +1,19 @@
 <?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 
 <!--+
     | XSLT REC Compliant Version of IE5 Default Stylesheet
@@ -8,13 +23,21 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.7 2004/03/06 13:42:47 joerg Exp $
+    | CVS $Id: xml2html.xslt,v 1.8 2004/03/10 10:05:06 cziegeler Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
    <xsl:template match="/">
       <HTML>
+         <xsl:call-template name="head"/>
+         <BODY>
+            <xsl:apply-templates/>
+         </BODY>
+      </HTML>
+   </xsl:template>
+
+   <xsl:template name="head">
          <HEAD>
             <STYLE>
               BODY  {background-color: white; color: black; font: monospace;}
@@ -31,21 +54,18 @@
                 DIV {border:0; padding:0; margin:0;}
             </STYLE>
             <SCRIPT><xsl:comment><![CDATA[
-
 function click(event) {
 
     var mark = event.target;
-
     while ((mark.className != "b") && (mark.nodeName != "BODY")) {
         mark = mark.parentNode
     }
-    
+
     var e = mark;
-    
     while ((e.className != "e") && (e.nodeName != "BODY")) {
         e = e.parentNode
     }
-    
+
     if (mark.childNodes[0].nodeValue == "+") {
         mark.childNodes[0].nodeValue = "-";
         for (var i = 2; i < e.childNodes.length; i++) {
@@ -68,14 +88,9 @@ function click(event) {
         }
     }
 }  
-  
 ]]></xsl:comment>
-         </SCRIPT>
+            </SCRIPT>
          </HEAD>
-         <BODY>
-            <xsl:apply-templates/>
-         </BODY>
-      </HTML>
    </xsl:template>
 
    <!-- match processing instructions -->
@@ -149,7 +164,7 @@ function click(event) {
         </xsl:if>
         <xsl:apply-templates select="@*"/>
         <SPAN class="m">
-           <xsl:text>/></xsl:text>
+           <xsl:text>/&gt;</xsl:text>
         </SPAN>
       </DIV>
    </xsl:template>

@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.26 2003/09/07 06:16:41 vgritsenko Exp $
+    | CVS $Id: samples.xml,v 1.27 2004/03/10 10:05:07 cziegeler Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -81,6 +96,9 @@
       lines of XML markup using SOAP XSP Logicsheet. See also axis block that
       integrates Axis into Cocoon. 
     </sample> 
+    <sample href="text-wrap/" name="Text wrap">
+      Addresses the problem of wrapping long lines of text in source elements.
+    </sample> 
   </group>
   
   <group name="Block Samples">
@@ -90,7 +108,13 @@
       provided by the currently installed blocks. 
     </sample>
   </group>
- 
+
+  <group name="Test Pages">
+    <sample name="Anteater tests" href="test/">
+      Pages used by the anteater-tests build target, for automated testing
+    </sample>
+  </group>
+
   <group name="System Tools And Pages">
     <sample name="Status Page" href="status.html">
       This page shows the current internal status of cocoon, along with
