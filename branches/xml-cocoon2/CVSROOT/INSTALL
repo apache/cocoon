@@ -100,9 +100,16 @@
   several megabytes of Java classes and it also includes the JDK javac compiler
   which must be present in the war file to allow page compilation without 
   classloading problems.
-  
 
-  4) I'm still stuck, what do I do?
+  
+  4) I get a java.lang.VerifyError when accessing http://localhost/cocoon/'.
+     What's wrong?
+
+  Make sure you have not got a Cocoon 1.x jar in your servlet container lib/
+  directory.
+
+
+  5) I'm still stuck, what do I do?
   
   Well, contact the Cocoon Users mail list (cocoon-users@xml.apache.org).
   Please, do not contact developers directly for help since the user list are
