@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: AbstractActor.java,v 1.2 1999-11-09 02:21:53 dirkx Exp $ -- 
+/*-- $Id: AbstractActor.java,v 1.3 1999-11-09 02:30:04 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,7 +55,7 @@ package org.apache.cocoon.framework;
  * the director reference for later use.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:53 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:04 $
  */
 
 public abstract class AbstractActor implements Actor {

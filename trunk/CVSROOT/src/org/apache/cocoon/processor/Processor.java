@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Processor.java,v 1.2 1999-11-09 02:22:31 dirkx Exp $ -- 
+/*-- $Id: Processor.java,v 1.3 1999-11-09 02:30:42 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
  * Cocoon as a DOM processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:31 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:42 $
  */
 
 public interface Processor extends Actor, Changeable {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: XSPFormatter.java,v 1.2 1999-11-09 02:21:32 dirkx Exp $ -- 
+/*-- $Id: XSPFormatter.java,v 1.3 1999-11-09 02:29:54 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.cocoon.framework.*;
  * The formatter for the eXtensible Server Pages format.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:32 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:54 $
  */
 public class XSPFormatter implements Formatter, Status {
 

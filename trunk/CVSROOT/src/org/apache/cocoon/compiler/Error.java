@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Error.java,v 1.2 1999-11-09 02:20:54 dirkx Exp $ -- 
+/*-- $Id: Error.java,v 1.3 1999-11-09 02:29:34 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,7 +53,7 @@ package org.apache.cocoon.compiler;
 /**
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:54 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:34 $
  */
 
 public class Error {

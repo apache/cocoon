@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: XSLPHTMLFormatter.java,v 1.2 1999-11-09 02:21:26 dirkx Exp $ -- 
+/*-- $Id: XSLPHTMLFormatter.java,v 1.3 1999-11-09 02:29:51 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:26 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:51 $
  */
 
 public class XSLPHTMLFormatter extends XSLPFormatter {

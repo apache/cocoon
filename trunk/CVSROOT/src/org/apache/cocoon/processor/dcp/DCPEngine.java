@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: DCPEngine.java,v 1.2 1999-11-09 02:22:33 dirkx Exp $ -- 
+/*-- $Id: DCPEngine.java,v 1.3 1999-11-09 02:30:44 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -169,7 +169,7 @@ import org.apache.cocoon.interpreter.*;
  * </ul>
  * 
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:33 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:44 $
  */
  
 public class DCPEngine {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Configurable.java,v 1.2 1999-11-09 02:21:55 dirkx Exp $ -- 
+/*-- $Id: Configurable.java,v 1.3 1999-11-09 02:30:07 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ package org.apache.cocoon.framework;
  * methods instead of relying on Reflection for configuration.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:55 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:07 $
  */
 
 public interface Configurable {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Cocoon.java,v 1.2 1999-11-09 02:20:37 dirkx Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.3 1999-11-09 02:29:04 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:37 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:04 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Store.java,v 1.2 1999-11-09 02:22:53 dirkx Exp $ -- 
+/*-- $Id: Store.java,v 1.3 1999-11-09 02:30:57 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
  * implement.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:53 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:57 $
  */
 
 public interface Store extends Actor {

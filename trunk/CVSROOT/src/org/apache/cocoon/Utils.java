@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Utils.java,v 1.2 1999-11-09 02:20:42 dirkx Exp $ -- 
+/*-- $Id: Utils.java,v 1.3 1999-11-09 02:29:19 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:42 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:19 $
  */
 
 public final class Utils {

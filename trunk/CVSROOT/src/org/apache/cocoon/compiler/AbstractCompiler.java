@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: AbstractCompiler.java,v 1.2 1999-11-09 02:20:53 dirkx Exp $ -- 
+/*-- $Id: AbstractCompiler.java,v 1.3 1999-11-09 02:29:32 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.apache.cocoon.framework.*;
 /**
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:53 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:32 $
  */
 
 public abstract class AbstractCompiler implements org.apache.cocoon.compiler.Compiler, Status {

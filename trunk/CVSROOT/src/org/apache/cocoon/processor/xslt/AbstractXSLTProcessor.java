@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: AbstractXSLTProcessor.java,v 1.2 1999-11-09 02:22:40 dirkx Exp $ -- 
+/*-- $Id: AbstractXSLTProcessor.java,v 1.3 1999-11-09 02:30:50 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * This class abstracts the XSL processor interface.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:40 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:50 $
  */
 
 public abstract class AbstractXSLTProcessor implements Actor, Processor, Status, Defaults {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Page.java,v 1.2 1999-11-09 02:21:58 dirkx Exp $ -- 
+/*-- $Id: Page.java,v 1.3 1999-11-09 02:30:14 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.w3c.dom.*;
  * The Page wrapper class.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:58 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:14 $
  */
 
 public class Page implements java.io.Serializable {

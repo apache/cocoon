@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Monitor.java,v 1.2 1999-11-09 02:21:57 dirkx Exp $ -- 
+/*-- $Id: Monitor.java,v 1.3 1999-11-09 02:30:14 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.util.*;
  * This class watches over the changes of indicated resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:57 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:14 $
  */
 
 public class Monitor {

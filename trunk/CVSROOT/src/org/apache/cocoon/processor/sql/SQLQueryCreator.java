@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: SQLQueryCreator.java,v 1.2 1999-11-09 02:22:36 dirkx Exp $ -- 
+/*-- $Id: SQLQueryCreator.java,v 1.3 1999-11-09 02:30:48 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.w3c.dom.*;
  * object keyed from "request".
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:36 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:48 $
  */
 
 public class SQLQueryCreator {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: DCPException.java,v 1.2 1999-11-09 02:22:33 dirkx Exp $ -- 
+/*-- $Id: DCPException.java,v 1.3 1999-11-09 02:30:45 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,7 +55,7 @@ package org.apache.cocoon.processor.dcp;
  * wrong during processing. 
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:33 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:45 $
  */
 
 public class DCPException extends Exception {

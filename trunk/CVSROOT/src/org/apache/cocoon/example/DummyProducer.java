@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: DummyProducer.java,v 1.2 1999-11-09 02:21:06 dirkx Exp $ -- 
+/*-- $Id: DummyProducer.java,v 1.3 1999-11-09 02:29:46 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.cocoon.framework.*;
  * Stupid producer to show how this functionality works.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:06 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:46 $
  */
 
 public class DummyProducer extends AbstractProducer implements Status {

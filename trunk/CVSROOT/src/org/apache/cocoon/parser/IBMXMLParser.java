@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: IBMXMLParser.java,v 1.2 1999-11-09 02:22:27 dirkx Exp $ -- 
+/*-- $Id: IBMXMLParser.java,v 1.3 1999-11-09 02:30:33 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  * This class implements an XML parser using the XML4J 2.0 parser.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:27 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:33 $
  */
 
 public class IBMXMLParser extends AbstractActor implements Parser, Status {

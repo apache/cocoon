@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Status.java,v 1.2 1999-11-09 02:21:59 dirkx Exp $ -- 
+/*-- $Id: Status.java,v 1.3 1999-11-09 02:30:16 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,7 +55,7 @@ package org.apache.cocoon.framework;
  * for their status at runtime.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:59 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:16 $
  */
 
 public interface Status {

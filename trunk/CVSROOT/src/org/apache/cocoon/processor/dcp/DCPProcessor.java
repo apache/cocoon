@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: DCPProcessor.java,v 1.2 1999-11-09 02:22:34 dirkx Exp $ -- 
+/*-- $Id: DCPProcessor.java,v 1.3 1999-11-09 02:30:45 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.interpreter.*;
  * value of user-supplied logic.
  * 
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:34 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:45 $
 */
 
 public class DCPProcessor extends AbstractActor implements Processor, Status {

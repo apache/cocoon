@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Router.java,v 1.2 1999-11-09 02:21:58 dirkx Exp $ -- 
+/*-- $Id: Router.java,v 1.3 1999-11-09 02:30:15 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import java.util.*;
  * pluggable instance depending on some "type reaction".
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:58 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:15 $
  */
 
 public abstract class Router extends AbstractActor implements Configurable, Status {

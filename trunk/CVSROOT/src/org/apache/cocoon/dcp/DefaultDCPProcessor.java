@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: DefaultDCPProcessor.java,v 1.2 1999-11-09 02:21:00 dirkx Exp $ -- 
+/*-- $Id: DefaultDCPProcessor.java,v 1.3 1999-11-09 02:29:42 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
  * The convenience class that all DCP objects should extend.
  *
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:00 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:42 $
  */
 
 public abstract class DefaultDCPProcessor implements Configurable {

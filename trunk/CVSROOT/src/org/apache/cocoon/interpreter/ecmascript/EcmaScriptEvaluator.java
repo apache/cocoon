@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: EcmaScriptEvaluator.java,v 1.2 1999-11-09 02:22:20 dirkx Exp $ -- 
+/*-- $Id: EcmaScriptEvaluator.java,v 1.3 1999-11-09 02:30:25 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import FESI.jslib.*;
 
 /**
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:20 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:25 $
  */
 
 public class EcmaScriptEvaluator {

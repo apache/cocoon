@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: OpenXMLXMLFormatter.java,v 1.2 1999-11-09 02:21:45 dirkx Exp $ -- 
+/*-- $Id: OpenXMLXMLFormatter.java,v 1.3 1999-11-09 02:30:02 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.apache.cocoon.formatter.*;
  * This class implements a DOM->XML formatter usign OpenXML publishing API.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:45 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:02 $
  */
 
 public class OpenXMLXMLFormatter extends OpenXMLFormatter {

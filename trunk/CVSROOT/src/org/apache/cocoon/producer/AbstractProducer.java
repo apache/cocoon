@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: AbstractProducer.java,v 1.2 1999-11-09 02:22:43 dirkx Exp $ -- 
+/*-- $Id: AbstractProducer.java,v 1.3 1999-11-09 02:30:53 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
  * seen as a transparent "mediator" between stream and DOM realms.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:43 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:53 $
  */
 
 public abstract class AbstractProducer extends AbstractActor implements Producer {

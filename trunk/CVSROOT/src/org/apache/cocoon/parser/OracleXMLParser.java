@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: OracleXMLParser.java,v 1.2 1999-11-09 02:22:27 dirkx Exp $ -- 
+/*-- $Id: OracleXMLParser.java,v 1.3 1999-11-09 02:30:34 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1

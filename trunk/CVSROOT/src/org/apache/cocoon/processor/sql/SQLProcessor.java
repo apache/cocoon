@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: SQLProcessor.java,v 1.2 1999-11-09 02:22:35 dirkx Exp $ -- 
+/*-- $Id: SQLProcessor.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:35 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: FOPFormatter.java,v 1.2 1999-11-09 02:21:34 dirkx Exp $ -- 
+/*-- $Id: FOPFormatter.java,v 1.3 1999-11-09 02:29:55 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import org.apache.cocoon.framework.*;
  * This class wraps around FOP classes to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:34 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:55 $
  */
 
 public class FOPFormatter implements Formatter, Status {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: NoCache.java,v 1.2 1999-11-09 02:20:51 dirkx Exp $ -- 
+/*-- $Id: NoCache.java,v 1.3 1999-11-09 02:29:30 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.apache.cocoon.framework.*;
  * A caching implementation that doesn't cache anything :).
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $Date: 1999/11/09 01:51:28 $
+ * @version $Revision: 1.3 $Date: 1999/11/09 02:20:51 $
  */
 public class NoCache extends AbstractActor implements Cache, Status {
 

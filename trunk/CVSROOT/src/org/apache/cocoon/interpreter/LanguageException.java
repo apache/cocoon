@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: LanguageException.java,v 1.2 1999-11-09 02:22:13 dirkx Exp $ -- 
+/*-- $Id: LanguageException.java,v 1.3 1999-11-09 02:30:23 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -52,7 +52,7 @@ package org.apache.cocoon.interpreter;
 
 /**
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:13 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:23 $
  */
 
 public class LanguageException extends Exception {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: NRGFormatter.java,v 1.2 1999-11-09 02:21:29 dirkx Exp $ -- 
+/*-- $Id: NRGFormatter.java,v 1.3 1999-11-09 02:29:53 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import com.sun.image.codec.jpeg.*;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:29 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:53 $
  */
 public class ImageFormatter implements Formatter, Configurable, Status {
 

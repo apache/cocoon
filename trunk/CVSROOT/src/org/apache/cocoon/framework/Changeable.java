@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Changeable.java,v 1.2 1999-11-09 02:21:54 dirkx Exp $ -- 
+/*-- $Id: Changeable.java,v 1.3 1999-11-09 02:30:06 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import javax.servlet.http.*;
  * cached respose.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:54 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:06 $
  */
 
 public interface Changeable {

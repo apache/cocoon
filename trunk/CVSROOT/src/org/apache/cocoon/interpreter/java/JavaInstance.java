@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: JavaInstance.java,v 1.2 1999-11-09 02:22:24 dirkx Exp $ -- 
+/*-- $Id: JavaInstance.java,v 1.3 1999-11-09 02:30:29 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.apache.cocoon.interpreter.*;
 
 /**
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:24 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:29 $
  */
 
 public class JavaInstance implements Instance {

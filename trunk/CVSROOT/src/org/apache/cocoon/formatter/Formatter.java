@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Formatter.java,v 1.2 1999-11-09 02:21:11 dirkx Exp $ -- 
+/*-- $Id: Formatter.java,v 1.3 1999-11-09 02:29:47 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.w3c.dom.*;
  * into streams.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:11 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:47 $
  */
 
 public interface Formatter {

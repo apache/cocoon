@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: InitializationException.java,v 1.2 1999-11-09 02:21:56 dirkx Exp $ -- 
+/*-- $Id: InitializationException.java,v 1.3 1999-11-09 02:30:13 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ package org.apache.cocoon.framework;
  * to be usable and the factory should behave accordingly.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:56 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:13 $
  */
 
 public class InitializationException extends InstantiationException {

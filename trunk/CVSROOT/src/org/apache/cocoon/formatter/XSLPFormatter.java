@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: XSLPFormatter.java,v 1.2 1999-11-09 02:21:15 dirkx Exp $ -- 
+/*-- $Id: XSLPFormatter.java,v 1.3 1999-11-09 02:29:49 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import org.apache.cocoon.framework.*;
  * This class implements an abstract formatter based on XSLP publishing classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:15 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:49 $
  */
 
 public abstract class XSLPFormatter implements Formatter, Configurable, Status {

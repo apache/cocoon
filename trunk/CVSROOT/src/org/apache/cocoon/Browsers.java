@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Browsers.java,v 1.2 1999-11-09 02:20:34 dirkx Exp $ -- 
+/*-- $Id: Browsers.java,v 1.3 1999-11-09 02:29:01 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
  * and those signature fragments used for mapping.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:34 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:01 $
  */
 
 public class Browsers extends Vector implements Configurable, Status {

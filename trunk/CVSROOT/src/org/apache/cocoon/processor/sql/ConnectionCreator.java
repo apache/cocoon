@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: ConnectionCreator.java,v 1.2 1999-11-09 02:22:35 dirkx Exp $ -- 
+/*-- $Id: ConnectionCreator.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import java.util.*;
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:35 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
  */
 
 public class ConnectionCreator {

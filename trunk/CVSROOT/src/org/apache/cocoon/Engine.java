@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Engine.java,v 1.2 1999-11-09 02:20:40 dirkx Exp $ -- 
+/*-- $Id: Engine.java,v 1.3 1999-11-09 02:29:11 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,7 +71,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:40 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:11 $
  */
 
 public class Engine implements Defaults {

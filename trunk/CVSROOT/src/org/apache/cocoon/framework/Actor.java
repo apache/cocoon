@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Actor.java,v 1.2 1999-11-09 02:21:53 dirkx Exp $ -- 
+/*-- $Id: Actor.java,v 1.3 1999-11-09 02:30:05 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ package org.apache.cocoon.framework;
  * in order to complete their jobs.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:53 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:05 $
  */
 
 public interface Actor {

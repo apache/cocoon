@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: ProcessorFactory.java,v 1.2 1999-11-09 02:22:31 dirkx Exp $ -- 
+/*-- $Id: ProcessorFactory.java,v 1.3 1999-11-09 02:30:42 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import org.apache.cocoon.framework.*;
  * associated to the produced document.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:31 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:42 $
  */
 
 public class ProcessorFactory extends Router implements Defaults {

@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Parser.java,v 1.2 1999-11-09 02:22:27 dirkx Exp $ -- 
+/*-- $Id: Parser.java,v 1.3 1999-11-09 02:30:35 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
  * parsing capabilites in order to be used by Cocoon.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:27 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:35 $
  */
 
 public interface Parser extends Actor {

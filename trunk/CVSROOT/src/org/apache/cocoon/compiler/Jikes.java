@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Jikes.java,v 1.2 1999-11-09 02:20:56 dirkx Exp $ -- 
+/*-- $Id: Jikes.java,v 1.3 1999-11-09 02:29:36 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:20:56 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:36 $
  */
 
 public class Jikes extends AbstractCompiler {

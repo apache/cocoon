@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: Manager.java,v 1.2 1999-11-09 02:21:56 dirkx Exp $ -- 
+/*-- $Id: Manager.java,v 1.3 1999-11-09 02:30:13 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import java.util.*;
  * This class is used to create and control software actors.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:21:56 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:13 $
  */
 
 public class Manager extends Hashtable implements Actor, Factory, Director {

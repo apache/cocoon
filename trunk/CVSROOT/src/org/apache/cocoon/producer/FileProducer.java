@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: FileProducer.java,v 1.2 1999-11-09 02:22:44 dirkx Exp $ -- 
+/*-- $Id: FileProducer.java,v 1.3 1999-11-09 02:30:54 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
  * of the servlet engine available.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:44 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:54 $
  */
 
 public class FileProducer extends AbstractProducer implements Status {

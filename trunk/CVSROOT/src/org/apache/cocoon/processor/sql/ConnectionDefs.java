@@ -1,4 +1,4 @@
-/*>$File$ -- $Id: ConnectionDefs.java,v 1.2 1999-11-09 02:22:35 dirkx Exp $ -- 
+/*-- $Id: ConnectionDefs.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.util.*;
  * Default connection values.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 1999-11-09 02:22:35 $
+ * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
  */
 
 public class ConnectionDefs {
