@@ -34,7 +34,6 @@ import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ModifiableProcessor;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.container.CocoonContainer;
 import org.apache.cocoon.components.container.ComponentContext;
