@@ -82,6 +82,9 @@ extends AbstractCopletTransformer {
     /** Create a link containing several events */
     public static final String LINKS_ELEM = "links";
     
+    /** Create a link containing several events */
+    public static final String PARAMETER_ELEM = "parameter";
+
     /** The content for the links element */
     public static final String CONTENT_ELEM = "content";
 
@@ -184,8 +187,24 @@ extends AbstractCopletTransformer {
                     this.output(href, format, newAttrs );
                 }
             }
+        } else if (name.equals(PARAMETER_ELEM)) {
+            if (this.insideLinks) {
+                String href = attr.getValue("href");
+                if ( href != null ) {
+                    final int pos = href.indexOf('?');
+                    if ( pos != -1 ) {
+                        href = href.substring(pos+1);
+                    }
+                    this.collectedEvents.add(new LinkService.ParameterDescription(href));
+                }
+            }
         } else if (name.equals(LINKS_ELEM) ) {
             this.insideLinks = true;
+            final AttributesImpl newAttrs = new AttributesImpl();
+            newAttrs.setAttributes(attr);
+            newAttrs.removeAttribute("format");
+            this.stack.push(newAttrs);
+            
             String format = attr.getValue("format");
             if ( format == null ) {
                 format = "html-link";
@@ -214,9 +233,23 @@ extends AbstractCopletTransformer {
             this.insideLinks = false;
             final String format = (String)this.stack.pop();
             final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+            String href = linkService.getLinkURI(this.collectedEvents);
             
-            final String href = linkService.getLinkURI(this.collectedEvents);
-            final AttributesImpl newAttrs = new AttributesImpl();
+            AttributesImpl newAttrs = (AttributesImpl)this.stack.pop();
+            // test for alternate base url
+            final String baseURL = newAttrs.getValue("base-url");
+            if ( baseURL != null ) {
+                newAttrs.removeAttribute("base-url");
+                int pos = href.indexOf('?') + 1;
+                final char separator;
+                if ( baseURL.indexOf('?') == -1 ) {
+                    separator = '?';
+                } else {
+                    separator = '&';
+                }
+                href = baseURL + separator + href.substring(pos);
+                
+            }
             this.output(href, format, newAttrs );
 
             this.collectedEvents.clear();
@@ -230,7 +263,7 @@ extends AbstractCopletTransformer {
             }
         } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
             this.content = this.endSAXRecording();
-        } else if (!name.equals(COPLET_ELEM)) {
+        } else if (!name.equals(COPLET_ELEM) && !name.equals(PARAMETER_ELEM)) {
             super.endTransformingElement(uri, name, raw);
         }  
     }
