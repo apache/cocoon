@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.10 2000-08-29 20:11:26 rossb Exp $
+  $Id: changes.xml,v 1.9.2.11 2000-09-05 21:31:20 giacomo Exp $
 -->
 
 <changes title="History of Changes">
@@ -12,13 +12,12 @@
  <devs>
   <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
-  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Berin Loritsch" email="bloritsch@infoplanning.com" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
-  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
  </devs>
 
  <release version="@version@" date="@date@">
