@@ -32,7 +32,7 @@ import org.mozilla.javascript.continuations.Continuation;
 
 /**
  *
- * @version CVS $Id: FOM_WebContinuation.java,v 1.9 2004/04/09 19:52:54 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class FOM_WebContinuation extends ScriptableObject {
 
@@ -223,5 +223,12 @@ public class FOM_WebContinuation extends ScriptableObject {
         pwk.setParentScope(getParentScope());
         pwk.setPrototype(getClassPrototype(getParentScope(), pwk.getClassName()));
         return pwk;
+    }
+
+    /**
+     * Return text representation of the WebContinuation.  
+     */
+    public String toString() {
+        return "WC" + wk.getId();
     }
 }
