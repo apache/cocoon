@@ -70,7 +70,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.22 2004/03/03 12:30:18 antonio Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.23 2004/03/03 19:47:35 joerg Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -78,11 +78,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final String repeaterPath;
     private final String rowPath;
     private final String rowPathForInsert;
-    //private final String uniqueRowId;
-    //private final String uniqueRowIdPath;
-    //private final Convertor uniqueRowIdConvertor;
-    //private final Locale uniqueRowIdConvertorLocale;
-    //private final ValueJXPathBinding uniqueFieldBinding;
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
     private final JXPathBindingBase deleteRowBinding;
@@ -118,13 +113,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowPathForInsert = rowPathForInsert;
-        //this.uniqueRowId = uniqueRowId;
-        //this.uniqueRowIdPath = uniqueRowPath;
-        /*this.uniqueFieldBinding = new ValueJXPathBinding(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT, uniqueRowId,
-                uniqueRowPath, null, convertor, convertorLocale);*/
-        //this.uniqueRowIdConvertor = convertor;
-        //this.uniqueRowIdConvertorLocale = convertorLocale;
         this.rowBinding = new ComposedJXPathBindingBase(
                 JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
                 childBindings);
@@ -139,9 +127,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         if (this.deleteRowBinding != null) {
             this.deleteRowBinding.setParent(this);
         }
-        /* New unique key management */
+        // New unique key management
         uniqueRowBinding = new ArrayList();
-        // Create a UniqueFieldJXPAthBining for the unique define in old-style
+        // Create a UniqueFieldJXPathBining for the unique define in old-style
         if (uniqueRowId != null && uniqueRowPath != null) {
             uniqueRowBinding.add(new UniqueFieldJXPathBinding(
                 JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
@@ -152,12 +140,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 uniqueRowBinding.add(uniqueBindings[i]);
             }
         }
-        /*this.uniqueRowBinding = new ComposedJXPathBindingBase(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
-                uniqueBindings);
-        if (this.uniqueRowBinding != null) {
-            this.uniqueRowBinding.setParent(this);
-        }*/
     }
 
     /**
@@ -193,7 +175,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             while (iter.hasNext()) {
                 ((UniqueFieldJXPathBinding)iter.next()).loadFormFromModel(thisRow, rowContext);
             }
-            //this.uniqueFieldBinding.loadFormFromModel(thisRow, rowContext);
             this.rowBinding.loadFormFromModel(thisRow, rowContext);
         }
         if (getLogger().isDebugEnabled())
@@ -225,18 +206,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
             // Get the key values
             List rowIdValues = getUniqueRowValues(thisRow);
-            /*Widget rowIdWidget = thisRow.getWidget(this.uniqueRowId);
-            Object rowIdValue = rowIdWidget.getValue();*/
 
-            if (!isNullAllListElements(rowIdValues)) {
-            // if (rowIdValue != null) {
-                //if rowIdValue != null --> iterate nodes to find match
+            if (isAnyListElementNotNull(rowIdValues)) {
+                // iterate nodes to find match
                 Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
                 boolean found = false;
                 while (rowPointers.hasNext()) {
                     Pointer jxp = (Pointer) rowPointers.next();
                     JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
-                    List matchIds = getMatchIdList(rowContext);
+                    List matchIds = getMatchIds(rowContext);
                     if (ListUtils.isEqualList(rowIdValues, matchIds)) {
                         // match! --> bind to children
                         this.rowBinding.saveFormToModel(thisRow, rowContext);
@@ -253,7 +231,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     updatedRowIds.add(rowIdValues);
                 }
             } else {
-                //if rowId == null --> remember to insert this one later
+                // if all rowIdValues == null --> this is a new row
                 rowsToInsert.add(thisRow);
             }
         }
@@ -263,9 +241,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer)rowPointers.next();
             JXPathContext rowContext = repeaterContext.getRelativeContext((Pointer)jxp.clone());
-            List matchIds = getMatchIdList(rowContext);
+            List matchIds = getMatchIds(rowContext);
             // check if matchPath was in list of updates, if not --> bind for delete
-            if (!isInUpdatedRowSet(updatedRowIds, matchIds)) {
+            if (!isListInSet(updatedRowIds, matchIds)) {
                 rowsToDelete.add(rowContext);
             }
         }
@@ -298,7 +276,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             if (this.insertRowBinding != null) {
                 Iterator rowIterator = rowsToInsert.iterator();
                 //register the factory!
-                //this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
                 while (rowIterator.hasNext()) {
                     Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow)rowIterator.next();
                     // Perform the insert row binding.
@@ -328,18 +305,45 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
     }
 
-    private boolean isInUpdatedRowSet(Set updatedRowIdsSet, List matchIds) {
-        Iterator iter = updatedRowIdsSet.iterator();
+    /**
+     * Tests if a List is already contained in a Set of Lists.
+     * @param set the Set of Lists.
+     * @param list the list that is tested if it is already in the Set.
+     * @return true if the Set contains the List, false otherwise.
+     */
+    private boolean isListInSet(Set set, List list) {
+        Iterator iter = set.iterator();
         while (iter.hasNext()) {
-            List updatedRowId = (List)iter.next();
-            if (ListUtils.isEqualList(updatedRowId, matchIds)) {
+            List listFromSet = (List)iter.next();
+            if (ListUtils.isEqualList(listFromSet, list)) {
                 return true;
             }
         }
         return false;
     }
-    private List getMatchIdList(JXPathContext rowContext) {
-        List matchIdList = new ArrayList();
+
+    /**
+     * Tests if any of the elements in a List is not null.
+     * @param list
+     * @return
+     */
+    private boolean isAnyListElementNotNull(List list) {
+        Iterator iter = list.iterator();
+        while (iter.hasNext()) {
+            if (iter.next() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param rowContext
+     * @return
+     */
+    private List getMatchIds(JXPathContext rowContext) {
+        List matchIds = new ArrayList();
         Iterator iter = this.uniqueRowBinding.iterator();
         while (iter.hasNext()) {
             UniqueFieldJXPathBinding key = (UniqueFieldJXPathBinding)iter.next();
@@ -355,42 +359,11 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     }
                 }
             }   
-            matchIdList.add(matchId);
+            matchIds.add(matchId);
         }
-        return matchIdList;
+        return matchIds;
     }
-    /*
-    private Object getMatchId(JXPathContext rowContext) {
-        Object matchId;
-        matchId = rowContext.getValue(this.uniqueRowIdPath);
-        if (matchId != null && this.uniqueRowIdConvertor != null) {
-            if (matchId instanceof String) {
-                matchId = this.uniqueRowIdConvertor.convertFromString(
-                        (String)matchId,
-                        this.uniqueRowIdConvertorLocale, null);
-            } else {
-                if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("Convertor ignored on backend-value " +
-                            "which isn't of type String.");
-                }
-            }
-        }
-        return matchId;
-    }
-*/
-    private boolean isNullAllListElements(List list) {
-        Iterator iter = list.iterator();
-        while (iter.hasNext()) {
-            if (iter.next() != null) {
-                return false;
-            }
-        }
-        if (list.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
     /**
      * Get the values of the unique-fields of the given row in the formModel 
      * @param thisRow
@@ -405,17 +378,16 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             Object rowIdValue = rowIdWidget.getValue();
             values.add(rowIdValue);
         }
-        return  values;
+        return values;
     }
 
     public String toString() {
         return "RepeaterJXPathBinding [widget=" + this.repeaterId +
-            ", xpath=" + this.repeaterPath + "]";
+               ", xpath=" + this.repeaterPath + "]";
     }
 
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
-        //this.uniqueFieldBinding.enableLogging(logger);
         if (this.deleteRowBinding != null) {
             this.deleteRowBinding.enableLogging(logger);
         }
