@@ -33,7 +33,7 @@ import org.apache.pluto.services.property.PropertyManagerService;
  *  
  * @author <a href="mailto:durdina@asset.sk">Michal Durdina</a>
  * 
- * @version CVS $Id: PropertyManagerServiceImpl.java,v 1.1 2004/03/15 10:14:39 cziegeler Exp $
+ * @version CVS $Id: PropertyManagerServiceImpl.java,v 1.2 2004/03/15 18:17:15 joerg Exp $
  */
 public class PropertyManagerServiceImpl implements PropertyManagerService {
 
@@ -74,7 +74,6 @@ public class PropertyManagerServiceImpl implements PropertyManagerService {
 	 *
 	 * @param window the portlet window of this property
 	 * @param request the servlet request
-	 * @param response the servlet response
 	 * 
 	 * @return		a <code>Map</code> containing
 	 *                  all properties. If there are no properties of
