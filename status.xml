@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.343 2004/05/27 13:30:59 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.344 2004/06/01 17:16:28 tcurdt Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="TC" type="add">
+     Added support for indentation to the new XML Serializer.
+   </action>
    <action dev="CZ" type="update">
      Remove deprecated methods from SimpleCharStream, Notifier, AbstractComplementaryConfigurableAction,
      StringUtils. Remove deprecated parser constant from Constants and remove
