@@ -16,6 +16,7 @@
 
 package org.apache.cocoon.bean.query;
 
+import java.io.IOException;
 import java.util.List;
 import org.apache.cocoon.components.search.LuceneCocoonSearcher;
 import org.apache.cocoon.ProcessingException;
@@ -27,7 +28,7 @@ import org.apache.cocoon.ProcessingException;
  *   The idea is to abstract the process of searching into a Bean to be manipulated by CForms.
  * </p>
  *
- * @version CVS $Id: SimpleLuceneQuery.java,v 1.1 2004/06/21 10:00:20 jeremy Exp $
+ * @version CVS $Id: SimpleLuceneQuery.java,v 1.2 2004/06/24 11:31:17 cziegeler Exp $
  */
 public interface SimpleLuceneQuery {
 
@@ -61,6 +62,6 @@ public interface SimpleLuceneQuery {
      * @exception  ProcessingException thrown by the searcher
      * @exception  IOException thrown when the searcher's directory cannot be found
      */
-    public List search (LuceneCocoonSearcher searcher)  throws java.io.IOException, ProcessingException;
+    public List search (LuceneCocoonSearcher searcher)  throws IOException, ProcessingException;
 
 }
