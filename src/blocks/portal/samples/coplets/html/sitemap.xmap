@@ -15,42 +15,41 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:pipelines>
+    <map:pipeline type="noncaching">	
+      
+      <map:match pattern="app-coplet">
+        <map:generate src="envelope.xml"/>
+        <map:transform type="portal-proxy">
+          <map:parameter name="envelope-tag" value="envelope"/>
+        </map:transform>
+        <map:transform type="htmlroot">
+          <map:parameter name="add-mode" value="false"/>
+        </map:transform>
+        <map:transform type="portal-html-linktoeventlink"/>
+        <map:serialize type="xml"/>
+      </map:match>
 
-<map:pipelines>
-    
-    <map:pipeline>	
-        <map:match pattern="app-coplet">
-            <map:generate src="envelope.xml"/>
-            <map:transform type="portal-proxy">
-              <map:parameter name="envelope-tag" value="envelope"/>
-            </map:transform>
-            <map:transform type="htmlroot">
-              <map:parameter name="add-mode" value="false"/>
-            </map:transform>
-            <map:transform type="portal-html-linktoeventlink"/>
-            <map:serialize type="xml"/>
-        </map:match>
-
-        <map:match pattern="application">
-            <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
-            <map:transform type="htmlroot">
-              <map:parameter name="add-mode" value="false"/>
-            </map:transform>
-            <map:transform type="portal-html-eventlink">
-                <map:parameter name="attribute-name" value="application-uri"/>
-            </map:transform>
-            <map:serialize type="xml"/>
-        </map:match>
+      <map:match pattern="application">
+        <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
+        <map:transform type="htmlroot">
+          <map:parameter name="add-mode" value="false"/>
+        </map:transform>
+        <map:transform type="portal-html-eventlink">
+          <map:parameter name="attribute-name" value="application-uri"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
 <!--
-        <map:match pattern="live.html">
-            <map:generate type="html" src="{request-param:feed}"/>
-            <map:transform type="htmlroot">
-              <map:parameter name="add-mode" value="false"/>
-            </map:transform>
-            <map:serialize type="xml"/>
-        </map:match>
+      <map:match pattern="live.html">
+        <map:generate type="html" src="{request-param:feed}"/>
+        <map:transform type="htmlroot">
+          <map:parameter name="add-mode" value="false"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
 -->
     </map:pipeline>
 
-</map:pipelines>
+  </map:pipelines>
 </map:sitemap>
