@@ -96,17 +96,6 @@ function form2bean(form) {
     contact.setFirstName("Herman");
     bean.addContact(contact);
     
-	var contact1 = new Packages.org.apache.cocoon.woody.samples.Contact();
-	// Add another contact
-	contact1.setId("2");
-    contact1.setFirstName("Bruno");
-    bean.addContact(contact1);
-    // Add another contact
-   	var contact2 = new Packages.org.apache.cocoon.woody.samples.Contact();
-	contact2.setId("3");
-    contact2.setFirstName("Sylvain");
-    bean.addContact(contact2);
-
     form.load(bean);
     form.showForm("form2-display-pipeline");
     form.save(bean);
