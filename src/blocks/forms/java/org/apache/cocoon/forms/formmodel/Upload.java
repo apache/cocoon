@@ -61,8 +61,9 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public void setValue(Object object) {
         if ((object == null) || (object instanceof Part)) {
             this.part = (Part)object;
+        } else {
+            throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
         }
-        throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
     }
 
     public void readFromRequest(FormContext formContext) {
