@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.components.cron;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.environment.Context;
 
 import org.quartz.impl.jdbcjobstore.DriverDelegate;
 import org.quartz.impl.jdbcjobstore.JobStoreCMT;

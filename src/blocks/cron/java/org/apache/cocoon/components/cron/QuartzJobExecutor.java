@@ -17,12 +17,15 @@ package org.apache.cocoon.components.cron;
 
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
+
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
@@ -72,8 +75,13 @@ public class QuartzJobExecutor implements Job {
 
         Context appContext = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
         ServiceManager manager = (ServiceManager)data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
-        org.apache.cocoon.environment.Context envContext =
-                (org.apache.cocoon.environment.Context)data.get(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
+        org.apache.cocoon.environment.Context envContext;
+        try {
+        	envContext = (org.apache.cocoon.environment.Context) appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        }
+        catch (ContextException e) {
+        	throw new JobExecutionException(e);
+        }
 
         BackgroundEnvironment env = new BackgroundEnvironment(logger, envContext);
 
