@@ -10,6 +10,7 @@ package org.apache.cocoon;
 
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.util.pool.Pool;
 
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ComponentManager;
@@ -20,9 +21,11 @@ import org.apache.avalon.ThreadSafe;
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
+import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
+
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-22 21:56:32 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-16 18:11:37 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;
@@ -39,6 +42,14 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     /** The component manager for this component.
      */
     private ComponentManager manager;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+         if (this.pool == null) {
+             this.pool = pool;
+         }
+    }
 
     /** Construct a new component factory for the specified component.
      * @param componentClass the class to instantiate (must have a default constructor).
@@ -74,6 +85,10 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
 
         if ( comp instanceof Composer) {
             ((Composer)comp).compose(this.manager);
+        }
+
+        if ( comp instanceof AbstractCompiledComponent) {
+            ((AbstractCompiledComponent) comp).setPool(this.pool);
         }
 
         return comp;

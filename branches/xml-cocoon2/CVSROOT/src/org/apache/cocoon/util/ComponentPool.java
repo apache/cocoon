@@ -13,6 +13,7 @@ import org.apache.avalon.Loggable;
 import org.apache.avalon.util.pool.AbstractPool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.PoolController;
+import org.apache.cocoon.ComponentFactory;
 
 import org.apache.log.Logger;
 
@@ -31,12 +32,18 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller) throws Exception {
         super(factory, controller, DEFAULT_POOL_SIZE/2, DEFAULT_POOL_SIZE);
+        if (factory instanceof ComponentFactory) {
+            ((ComponentFactory) factory).setPool(this);
+        }
     }
 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller,
                          final int initial) throws Exception {
         super(factory, controller, initial, initial);
+        if (factory instanceof ComponentFactory) {
+            ((ComponentFactory) factory).setPool(this);
+        }
     }
 
     public ComponentPool(final ObjectFactory factory,
@@ -44,6 +51,9 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
                          final int initial,
                          final int maximum) throws Exception {
         super(factory, controller, initial, maximum);
+        if (factory instanceof ComponentFactory) {
+            ((ComponentFactory) factory).setPool(this);
+        }
     }
 
     public void setLogger(Logger log) {
@@ -61,9 +71,10 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
         synchronized(m_pool) {
             Poolable component = super.get();
             log.debug(
-                "ComponentPool retrieved "
-                + component.getClass().getName()
-                + " (" + component.toString() + ")"
+                (new StringBuffer("ComponentPool retrieved "))
+                .append(component.getClass().getName())
+                .append(" (").append(component.toString()).append(")")
+                .toString()
             );
             return component;
         }
@@ -78,9 +89,10 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
         synchronized(m_pool) {
             super.put(poolable);
             log.debug(
-                "ComponentPool returned "
-                + poolable.getClass().getName()
-                + " (" + poolable.toString() + ")"
+                (new StringBuffer("ComponentPool returned "))
+                .append(poolable.getClass().getName())
+                .append(" (").append(poolable.toString()).append(")")
+                .toString()
             );
         }
     }

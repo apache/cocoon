@@ -28,13 +28,11 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
+import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ComponentHolderFactory;
 import org.apache.cocoon.sitemap.SitemapComponentManager;
 import org.apache.cocoon.util.ClassUtils;
-
-import org.apache.avalon.AbstractLoggable;
-//import org.apache.log.Logger;
 
 import org.xml.sax.SAXException;
 
@@ -42,9 +40,9 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-14 11:39:10 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-16 18:11:53 $
  */
-public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
+public abstract class AbstractSitemap extends AbstractCompiledComponent implements Sitemap {
 
     private static final int BYTE_ARRAY_SIZE = 1024;
 
