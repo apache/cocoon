@@ -51,7 +51,7 @@ import org.apache.cocoon.util.ImageUtils;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: OraAddAction.java,v 1.3 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: OraAddAction.java,v 1.4 2004/03/30 05:50:48 antonio Exp $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -359,11 +359,9 @@ public class OraAddAction extends DatabaseAddAction {
                 for (int i = 0; i < values.length; i++) {
                     if (this.isLargeObject(values[i].getAttribute("type"))) {
                         numLobs++;
-
                         if (numLobs > 1) {
                             queryBuffer.append(", ");
                         }
-
                         queryBuffer.append(values[i].getAttribute("dbcol"));
                     }
                 }
@@ -381,25 +379,13 @@ public class OraAddAction extends DatabaseAddAction {
                 // Process the WHERE clause
                 if (keys.length > 0) {
                     queryBuffer.append(" WHERE ");
-
                     // Add the keys to the query
-                    for (int i = 0; i < keys.length; i++) {
-                        if (i > 0) {
-                            queryBuffer.append(" AND ");
-                        }
-
-                        queryBuffer.append(keys[i].getAttribute("dbcol"));
-                        queryBuffer.append(" = ?");
-                    }
+                    queryBuffer.append(buildList(keys, " AND "));
                 }
-
                 query = queryBuffer.toString().trim();
                 OraAddAction.selectLOBStatements.put(conf, query);
             }
         }
-
-        if ("".equals(query)) return null;
-
-        return query;
+        return ("".equals(query)) ? null : query;
     }
 }

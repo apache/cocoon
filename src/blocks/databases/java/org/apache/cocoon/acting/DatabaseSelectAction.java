@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +42,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DatabaseSelectAction.java,v 1.2 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseSelectAction.java,v 1.3 2004/03/30 05:50:48 antonio Exp $
  */
 public class DatabaseSelectAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -80,60 +81,55 @@ public class DatabaseSelectAction extends AbstractDatabaseAction implements Thre
             for (int i = 0; i < keys.length; i++) {
                 final String parameter = keys[i].getAttribute("param");
                 Object value = request.getParameter(parameter);
-                if (value == null || "".equals(value)) {
+                if (StringUtils.isEmpty((String)value)) {
                     if (statement == null) {
                         final String query = this.getSelectQuery(conf);
                         datasource = this.getDataSource(conf);
                         conn = datasource.getConnection();
-
                         statement = conn.prepareStatement(query);
                         currentIndex = 1;
                         for (int j = 0; j < keys.length; j++, currentIndex++) {
                             this.setColumn(statement, currentIndex, request, keys[j]);
                         }
-
                         rset = statement.executeQuery();
                         result = rset.next();
                     }
-
-                    if (result)
+                    if (result) {
                         value = this.getColumn(rset, request, keys[i]);
+                    }
                 }
-
-                if (value != null)
+                if (value != null) {
                     request.setAttribute(parameter, value.toString());
+                }
             }
 
             for (int i = 0; i < values.length; i++) {
                 final String parameter = values[i].getAttribute("param");
                 Object value = request.getParameter(parameter);
-                if (value == null || "".equals(value)) {
+                if (StringUtils.isEmpty((String)value)) {
                     if (statement == null) {
                         final String query = this.getSelectQuery(conf);
                         datasource = this.getDataSource(conf);
                         conn = datasource.getConnection();
-
                         statement = conn.prepareStatement(query);
                         currentIndex = 1;
                         for (int j = 0; j < keys.length; j++, currentIndex++) {
                             this.setColumn(statement, currentIndex, request, keys[j]);
                         }
-
                         rset = statement.executeQuery();
                         result = rset.next();
                     }
-
-                    if (result)
+                    if (result) {
                         value = this.getColumn(rset, request, values[i]);
+                    }
                 }
-
-                if (value != null)
+                if (value != null) {
                     request.setAttribute(parameter, value.toString());
+                }
             }
-
-            if(statement != null)
+            if(statement != null) {
                 statement.close();
-
+            }
             return EMPTY_MAP;
         } catch (Exception e) {
             throw new ProcessingException("Could not prepare statement :position = " + currentIndex, e);
@@ -145,8 +141,9 @@ public class DatabaseSelectAction extends AbstractDatabaseAction implements Thre
                     getLogger().warn("There was an error closing the datasource", sqe);
                 }
             }
-
-            if (datasource != null) this.dbselector.release(datasource);
+            if (datasource != null) {
+                this.dbselector.release(datasource);
+            }
         }
 
         // Result is empty map or exception. No null.
@@ -161,7 +158,7 @@ public class DatabaseSelectAction extends AbstractDatabaseAction implements Thre
         String query = null;
 
         synchronized (DatabaseSelectAction.selectStatements) {
-            query = (String) DatabaseSelectAction.selectStatements.get(conf);
+            query = (String)DatabaseSelectAction.selectStatements.get(conf);
 
             if (query == null) {
                 Configuration table = conf.getChild("table");
@@ -169,39 +166,18 @@ public class DatabaseSelectAction extends AbstractDatabaseAction implements Thre
                 Configuration[] values = table.getChild("values").getChildren("value");
 
                 StringBuffer queryBuffer = new StringBuffer("SELECT ");
-                int index = 0;
-                for (int i = 0; i < keys.length; i++, index++) {
-                    if (index > 0) {
-                        queryBuffer.append(", ");
-                    }
-                    queryBuffer.append(keys[i].getAttribute("dbcol"));
-                }
-                for (int i = 0; i < values.length; i++,index++) {
-                    if (index > 0) {
-                        queryBuffer.append(", ");
-                    }
-                    queryBuffer.append(values[i].getAttribute("dbcol"));
-                }
-
+                queryBuffer.append(buildList(keys, 0));
+                queryBuffer.append(buildList(values, keys.length));
                 queryBuffer.append(" FROM ");
                 queryBuffer.append(table.getAttribute("name"));
 
                 queryBuffer.append(" WHERE ");
-                for (int i = 0; i < keys.length; i++) {
-                    if (i > 0) {
-                        queryBuffer.append(" AND ");
-                    }
-
-                    queryBuffer.append(keys[i].getAttribute("dbcol"));
-                    queryBuffer.append(" = ?");
-                }
-
+                queryBuffer.append(buildList(keys, " AND "));
                 query = queryBuffer.toString();
 
                 DatabaseSelectAction.selectStatements.put(conf, query);
             }
         }
-
         return query;
     }
 }

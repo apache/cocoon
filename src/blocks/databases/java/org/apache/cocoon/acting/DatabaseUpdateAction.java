@@ -38,7 +38,7 @@ import java.util.Map;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseUpdateAction.java,v 1.2 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseUpdateAction.java,v 1.3 2004/03/30 05:50:48 antonio Exp $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction implements ThreadSafe {
     private static final Map updateStatements = new HashMap();
@@ -134,33 +134,14 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction implements Thre
                 StringBuffer queryBuffer = new StringBuffer("UPDATE ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" SET ");
-
-                for (int i = 0; i < values.length; i++) {
-                    if (i > 0) {
-                         queryBuffer.append(", ");
-                    }
-
-                    queryBuffer.append(values[i].getAttribute("dbcol"));
-                    queryBuffer.append(" = ?");
-                }
-
+                queryBuffer.append(buildList(values, ", "));
                 queryBuffer.append(" WHERE ");
-
-                for (int i = 0; i < keys.length; i++) {
-                    if (i > 0) {
-                        queryBuffer.append(" AND ");
-                    }
-
-                    queryBuffer.append(keys[i].getAttribute("dbcol"));
-                    queryBuffer.append(" = ?");
-                }
-
+                queryBuffer.append(buildList(keys, " AND "));
                 query = queryBuffer.toString();
 
                 DatabaseUpdateAction.updateStatements.put(conf, query);
             }
         }
-
         return query;
     }
 }

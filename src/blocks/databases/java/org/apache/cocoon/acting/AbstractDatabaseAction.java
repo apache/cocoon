@@ -40,6 +40,7 @@ import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -168,7 +169,7 @@ import org.apache.cocoon.util.ImageUtils;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: AbstractDatabaseAction.java,v 1.4 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: AbstractDatabaseAction.java,v 1.5 2004/03/30 05:50:48 antonio Exp $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();
@@ -693,4 +694,41 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
       return request.getAttribute("org.apache.cocoon.acting.AbstractDatabaseAction:"+key);
     }
 
+    /**
+     * Build a separed list with the Values of a Configuration Array  
+     * @param values - build the list from
+     * @param separator - Put a separator between the values of the list
+     * @return - an StringBuffer with the builded List
+     * @throws ConfigurationException
+     */
+    protected StringBuffer buildList(Configuration[] values, String separator) throws ConfigurationException {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) {
+                buffer.append(separator);
+            }
+            buffer.append(values[i].getAttribute("dbcol"));
+            buffer.append(" = ?");
+        }
+        return buffer;
+    }
+
+    /**
+     * Build a separed list with the Values of a Configuration Array  
+     * @param values - build the list from
+     * @param begin - Initial index
+     * @return - an StringBuffer with the builded List
+     * @throws ConfigurationException
+     */
+    protected StringBuffer buildList(Configuration[] values, int begin) throws ConfigurationException {
+        StringBuffer buffer = new StringBuffer();
+        int length = values.length;
+        for (int i = 0; i < length; i++) {
+            if (begin > 0) {
+                buffer.append(", ");
+            }
+            buffer.append(values[i].getAttribute("dbcol"));
+        }
+        return buffer;
+    }
 }

@@ -38,6 +38,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Adds record in a database. The action can update one or more tables,
@@ -48,7 +49,7 @@ import org.apache.cocoon.environment.SourceResolver;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.3 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseAddAction.java,v 1.4 2004/03/30 05:50:48 antonio Exp $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadSafe {
     protected static final Map addStatements = new HashMap();
@@ -147,24 +148,20 @@ public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadS
            * to be inserting n rows, where 0 <= n
            */
           String prefix = wildcardParam.substring(0,wildcardIndex);
-          String suffix;
-          if (wildcardParam.length() >= wildcardIndex+1) {
-            suffix = wildcardParam.substring(wildcardIndex+1);
-          } else {
-            suffix = "";
-          }
+          String suffix = StringUtils.substring(wildcardParam, wildcardIndex + 1);
           Enumeration names = request.getParameterNames();
           SortedSet matchset = new TreeSet();
+          int prefixLength = prefix.length();
+          int length = prefixLength + suffix.length();
           while (names.hasMoreElements()) {
             String name = (String)names.nextElement();
             if (name.startsWith(prefix) && name.endsWith(suffix)) {
-              String wildcard = name.substring(prefix.length());
-              wildcard = wildcard.substring(0,wildcard.length()-suffix.length());
+              String wildcard = StringUtils.mid(name, prefixLength, name.length() - length);
               matchset.add(wildcard);
             }
           }
-          Iterator iterator = matchset.iterator();
           int rowIndex = 1;
+          Iterator iterator = matchset.iterator();
           while (iterator.hasNext()) {
             String wildcard = (String)iterator.next();
             currentIndex = 1;
@@ -239,34 +236,32 @@ public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadS
       String keyname = new StringBuffer("key:").append(table.getAttribute("name"))
                            .append(':').append(key.getAttribute("dbcol")).toString();
       if ("manual".equals(mode)) {
-        /** Set the key value using SELECT MAX(keyname)+1 **/
+        // Set the key value using SELECT MAX(keyname)+1
         String selectQuery = this.getSelectQuery(key);
         PreparedStatement select_statement = conn.prepareStatement(selectQuery);
         ResultSet set = select_statement.executeQuery();
         set.next();
         int value = set.getInt("maxid") + 1;
         statement.setInt(currentIndex, value);
-        getLogger().debug("Manually setting key to "+value);
+        getLogger().debug("Manually setting key to " + value);
         setRequestAttribute(request,keyname,new Integer(value));
         results.put(key.getAttribute("dbcol"),String.valueOf(value));
         set.close();
         select_statement.close();
-        return 1;
       } else if ("form".equals(mode)) {
-        /** Set the key value from the request **/
+        // Set the key value from the request
         getLogger().debug("Setting key from form");
         this.setColumn(statement, currentIndex, request, key, param);
-        return 1;
       } else if ("request-attribute".equals(mode)) {
         Integer value = (Integer)getRequestAttribute(request,key.getAttribute("request-attribute-name"));
         getLogger().debug("Setting key from request attribute "+value);
         statement.setInt(currentIndex,value.intValue());
-        return 1;
       } else {
         getLogger().debug("Automatically setting key");
-        /** The database automatically creates a key value **/
+        // The database automatically creates a key value
         return 0;
       }
+      return 1;
     }
 
     /**
@@ -309,52 +304,32 @@ public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadS
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" (");
 
-                int numKeys = 0;
+                int numParams = 0;
 
                 for (int i = 0; i < keys.length; i++) {
                     String mode = keys[i].getAttribute("mode", "automatic");
                     if ("manual".equals(mode) || "form".equals(mode) || "request-attribute".equals(mode)) {
-                        if (i > 0) {
+                        if (numParams > 0) {
                             queryBuffer.append(", ");
                         }
-
                         queryBuffer.append(keys[i].getAttribute("dbcol"));
                         this.setSelectQuery(table.getAttribute("name"), keys[i]);
-                        numKeys++;
+                        numParams++;
                     }
                 }
-
-                int numValues = 0;
-
-                for (int i = 0; i < values.length; i++) {
-                    if ((numKeys + numValues) > 0) {
-                        queryBuffer.append(", ");
-                    }
-
-                    queryBuffer.append(values[i].getAttribute("dbcol"));
-                    numValues++;
-                }
-
+                queryBuffer.append(buildList(values, numParams));
+                numParams += values.length;
                 queryBuffer.append(") VALUES (");
-
-                int numParams = numValues + numKeys;
-
-                for (int i = 0; i < numParams; i++) {
-                    if (i > 0) {
-                        queryBuffer.append(", ");
-                    }
-
+                if (numParams > 0) {
                     queryBuffer.append("?");
+                    queryBuffer.append(StringUtils.repeat(", ?", numParams - 1));
                 }
-
                 queryBuffer.append(")");
-
                 query = queryBuffer.toString();
 
                 DatabaseAddAction.addStatements.put(table, query);
             }
         }
-
         return query;
     }
 
