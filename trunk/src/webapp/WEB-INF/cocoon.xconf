@@ -234,6 +234,12 @@
     logger="core.modules.logger">
     <file src="resource://org/apache/cocoon/cocoon.properties" />
   </properties-file-input>
+  <global-input 
+    id="global" 
+    logger="core.modules.input" 
+  />
+  <global-variables id="global-variables"/>
+
   
 <!-- TODO: entries below are still 2.1 configuration -->
 

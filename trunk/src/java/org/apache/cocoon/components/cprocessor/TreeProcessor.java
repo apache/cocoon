@@ -51,6 +51,8 @@
 package org.apache.cocoon.components.cprocessor;
 
 import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.transform.sax.SAXResult;
@@ -76,6 +78,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -147,6 +150,12 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     /* The root node of the processing tree */
     private ProcessingNode m_rootNode;
     
+    /** The component configurations from the sitemap (if any) */
+    protected Configuration componentConfigurations;
+    
+    /** The different sitemap component configurations */
+    protected Map sitemapComponentConfigurations;
+
     // ---------------------------------------------------- lifecycle
     
     public TreeProcessor() {
@@ -230,6 +239,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         disposeContainer();
         ContainerUtil.dispose(m_environmentHelper);
@@ -248,8 +260,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
     }
     
-    // ---------------------------------------------------- Processor implementation
-    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
+     */
     public boolean process(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext();
         context.enableLogging(getLogger());
@@ -350,8 +363,14 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         m_container = null;
     }
     
-    private Configuration buildConfiguration(Source source) throws Exception {
-        
+    /**
+     * Build the configuration from the sitemap
+     * @param source The sitemap
+     * @return The configuration
+     * @throws Exception Any exception
+     */
+    private Configuration buildConfiguration(Source source) 
+    throws Exception {        
         SAXParser parser = null;
         XSLTProcessor xsltProcessor = null;
         try {
@@ -381,15 +400,15 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
                 this.getLogger().debug("Configuration from sitemap: " + this.m_source.getURI());
                 this.getLogger().debug(XMLUtils.serializeNodeToXML(domBuilder.getDocument()));
             }
-            return configHandler.getConfiguration();
-        }
-        finally {
-            if (parser != null) {
-                m_manager.release(parser);
-            }
-            if (xsltProcessor != null) {
-                m_manager.release(xsltProcessor);
-            }
+            Configuration config = configHandler.getConfiguration();
+            
+            this.componentConfigurations = config.getChild("pipelines-node")
+                                             .getChild("component-configurations")
+                                             .getChild("global-variables");
+            return config;
+        } finally {
+            m_manager.release(parser);
+            m_manager.release(xsltProcessor);
         }
     }
     
@@ -443,9 +462,59 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
     }
 
+    /**
+     * Set the sitemap component configurations
+     */
+    protected void setComponentConfigurations(Configuration componentConfigurations) {
+        this.componentConfigurations = componentConfigurations;
+        this.sitemapComponentConfigurations = null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getComponentConfigurations()
+     */
     public Map getComponentConfigurations() {
-        // TODO: implement
-        return null;
+        // do we have the sitemap configurations prepared for this processor?
+        if ( null == this.sitemapComponentConfigurations ) {
+            
+            synchronized (this) {
+
+                if ( this.sitemapComponentConfigurations == null ) {
+                    // do we have configurations?
+                    final Configuration[] childs = (this.componentConfigurations == null 
+                            ? null 
+                            : this.componentConfigurations.getChildren());
+                    
+                    if ( null != childs ) {
+                        
+                        if ( null == this.m_parent ) {
+                            this.sitemapComponentConfigurations = new HashMap(12);
+                        } else {
+                            // copy all configurations from parent
+                            this.sitemapComponentConfigurations = new HashMap(this.m_parent.getComponentConfigurations()); 
+                        }
+                        
+                        // and now check for new configurations
+                        for(int m = 0; m < childs.length; m++) {
+                            //FIXME - get the role
+                            final String r = null;
+                            //final String r = this.roleManager.getRoleForName(childs[m].getName());
+                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
+                                    (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
+                        }
+                    } else {
+                        // we don't have configurations
+                        if ( null == this.m_parent ) {
+                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
+                        } else {
+                            // use configuration from parent
+                            this.sitemapComponentConfigurations = this.m_parent.getComponentConfigurations(); 
+                        }
+                    }
+                }
+            }
+        }
+        return this.sitemapComponentConfigurations;
     }
     
     public String getContext() {
