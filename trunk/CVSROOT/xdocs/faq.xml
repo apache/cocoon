@@ -291,7 +291,7 @@
     do this will depend on what servlet engine you are using - consult
     its documentation.</p>
   </answer>
- </question>
+ </faq>
 
  <faq id="noclasspath">
   <question>I used xsp:include to import my classes, but it comes up
