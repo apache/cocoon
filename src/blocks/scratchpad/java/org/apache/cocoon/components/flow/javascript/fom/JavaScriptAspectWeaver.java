@@ -50,7 +50,9 @@
 package org.apache.cocoon.components.flow.javascript.fom;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -112,7 +114,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.4 2003/09/12 14:46:58 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.5 2003/09/12 18:26:54 reinhard Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -123,7 +125,10 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     Environment environement = null;
     
     /** If debugging is true, the intercepted script is writen to filesystem */
-    boolean debug = false;
+    boolean copyResultScript = false;
+
+    /** Base script <code>org.apache.excalibur.source.Source</code>*/
+    Source source = null; 
     
     /** The javascript repsented in <code>JSToken</code>*/
     JSTokenList baseScriptTokenList = null; 
@@ -140,6 +145,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * scanned the code is added to <code>interceptorGroups</code>
      */
     public void setBaseScript( Source source ) throws IOException {
+        
+        this.source = source;
         
         // create tokens for javascript code
         this.baseScriptTokenList = JSParser.parse( 
@@ -159,18 +166,17 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * Get the intercepted base script (all interceptions found in 
      * cocoon.apply(..) are added to the script.
      */
-    public Reader getInterceptedScriptAsReader() {
+    public Reader getInterceptedScriptAsReader() throws Exception {
         
         // comment out all cocoon.apply(..) parts
         this.baseScriptTokenList.commentScriptsApplied();
        
-        // add interception events
-        // add events to make parsing easier
+        // add interception events to make parsing easier
         this.baseScriptTokenList.addInterceptionEvents( this.stopExecutionFunctions );        
        
         // replace return statements with variable defintions and put
         // it to the end of the function
-        this.baseScriptTokenList.replaceReturn();
+        this.baseScriptTokenList.replaceReturnStatements();
 
         // add the interceptions
         this.baseScriptTokenList.addInterceptions( this.interceptorGroups );
@@ -181,9 +187,11 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         // logging
         this.getLogger().info( "\n\n" + this.baseScriptTokenList.toString() + "\n" );
         
-        // create a file at filesystem
-        // TODO tbd   
-        
+        // create a file to make debugging easier
+        if( copyResultScript ) {
+            this.baseScriptTokenList.writeToFile( this.source );            
+        }
+
         // return the intercepted script        
         return this.baseScriptTokenList.getScriptAsReader();       
     }
@@ -216,6 +224,14 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      */
     public void setEnvironment( Environment env ) {
         this.environement = env;
+    }
+
+    /**
+     * Should the JavaScriptAspectWeaver write the result script
+     * into separate file in the same directory as the basescript?
+     */
+    public void setCopyResultScript( boolean copy ) {
+        this.copyResultScript = copy;
     }
     
     /** 
@@ -638,6 +654,24 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         }
         
         /**
+         * @param string
+         */
+        public void writeToFile( Source source ) throws Exception {
+            if( source.getScheme().equals( "file" ) ) {
+                String filename = source.getURI().substring("file:/".length() ) + 
+                    AO_FOM_JavaScriptInterpreter.INTERCEPTION_POSTFIX;
+                FileOutputStream fos = new FileOutputStream( filename );
+                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                char completeChar[] = this.getScriptAsCharArray();
+                for( int i = 0; i < completeChar.length; i++ ) {
+                    bs.write( completeChar[i] );
+                }
+                fos.write( bs.toByteArray() );
+                fos.close();
+             }            
+        }
+
+        /**
          * Add all tokens in the correct order 
          * 
          * @param interceptionsList - sorted list of all available interceptions
@@ -937,7 +971,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * Replace all occurencies of return (except those which
          * are in separte code blocks)
          */
-        private void replaceReturn() {
+        private void replaceReturnStatements() {
             ListIterator li = this.listIterator();
             int countOpenBrackets = 0;
             boolean inFunction = false;
@@ -1108,7 +1142,11 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * return the tokens as Reader
          */
-        public Reader getScriptAsReader() {
+        public Reader getScriptAsReader() {       
+            return (Reader) new CharArrayReader( getScriptAsCharArray() );    
+        }
+
+        public char[] getScriptAsCharArray() {
             ListIterator li = this.listIterator();
             char charComplete[] = new char[0];
             while( li.hasNext() ) {
@@ -1119,8 +1157,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                 System.arraycopy( theChar, 0, copy, charComplete.length, theChar.length );      
                 charComplete = copy;
             }           
-            return (Reader) new CharArrayReader(charComplete);    
-        }
+            return charComplete;    
+        }        
         
         public String toString() {
             StringBuffer sb = new StringBuffer();
