@@ -21,12 +21,16 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import org.apache.butterfly.components.pipeline.ConnectionResetException;
 import org.apache.butterfly.components.pipeline.InvalidPipelineException;
 import org.apache.butterfly.components.pipeline.PipelineProcessingException;
 import org.apache.butterfly.components.pipeline.ProcessingPipeline;
 import org.apache.butterfly.environment.Environment;
+import org.apache.butterfly.environment.ObjectModelHelper;
+import org.apache.butterfly.environment.Response;
 import org.apache.butterfly.generation.Generator;
 import org.apache.butterfly.reading.Reader;
 import org.apache.butterfly.serialization.Serializer;
@@ -39,8 +43,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of the non-caching pipeline.
- * 
- * TODO: change InvalidPipelineExceptions with PipelineExceptions
  * 
  * @version CVS $Id$
  */
@@ -65,15 +67,39 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
      * or a custom xmlconsumer for the cocoon: protocol etc.
      */
     protected XMLConsumer lastConsumer;
+
+    /** Expires value */
+    protected long expires;
     
     /** Output Buffer Size */
     protected int  outputBufferSize;
-    
+
     /**
      * Build a new pipeline.
      */
     public NonCachingProcessingPipeline() {
         transformers = new ArrayList();
+    }
+    
+    /**
+     * @param expires The expires to set.
+     */
+    public void setExpires(String expires) {
+        if (expires != null) {
+            // FIXME: use a BeanPropertyEditor?
+            this.expires = parseExpires(expires);
+        }
+    }
+    
+    public long getExpires() {
+        return expires;
+    }
+
+    /**
+     * @param outputBufferSize The outputBufferSize to set.
+     */
+    public void setOutputBufferSize(int outputBufferSize) {
+        this.outputBufferSize = outputBufferSize;
     }
 
     /* (non-Javadoc)
@@ -109,12 +135,11 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         return this.generator;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#informBranchPoint()
+    /**
+     * Informs pipeline we have come across a branch point
+     * Default Behaviour is do nothing
      */
-    public void informBranchPoint() {
-        // TODO Auto-generated method stub
-    }
+    public void informBranchPoint() {}
 
     /* (non-Javadoc)
      * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#addTransformer(javax.xml.transform.Transformer)
@@ -172,24 +197,22 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         } else {
             preparePipeline(environment);
         }
-        if ( this.reader != null ) {
+        if (this.reader != null) {
             preparePipeline(environment);   
             reader.setObjectModel(environment.getObjectModel());
         }
         
         // See if we need to set an "Expires:" header
-        /*
         if (this.expires != 0) {
             Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
             res.setDateHeader("Expires", System.currentTimeMillis() + expires);
             res.setHeader("Cache-Control", "max-age=" + expires/1000 + ", public");
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Setting a new Expires object for this resource");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Setting a new Expires object for this resource");
             }
             environment.getObjectModel().put(ObjectModelHelper.EXPIRES_OBJECT,
                                              new Long(expires + System.currentTimeMillis()));
         }
-        */
         
         if (this.reader != null) {
             if (checkIfModified(environment, this.reader.getLastModified())) {
@@ -202,12 +225,14 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#prepareInternal()
+    /**
+     * Prepare an internal processing
+     * @param environment          The current environment.
+     * @throws ProcessingException
      */
     public void prepareInternal(Environment environment) {
-        // TODO Auto-generated method stub
-
+        this.lastConsumer = null;
+        this.preparePipeline(environment);
     }
 
     /**
@@ -319,11 +344,13 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         connect(environment, prev, this.lastConsumer);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#getValidityForEventPipeline()
+    /**
+     * Return valid validity objects for the event pipeline
+     * If the "event pipeline" (= the complete pipeline without the
+     * serializer) is cacheable and valid, return all validity objects.
+     * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -331,14 +358,13 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
      * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
      */
     public String getKeyForEventPipeline() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     protected boolean checkIfModified(Environment environment,
                                         long lastModified) {
         // has the read resource been modified?
-        if(!environment.isResponseModified(lastModified)) {
+        if(! environment.isResponseModified(lastModified)) {
             // environment supports this, so we are finished
             environment.setResponseIsNotModified();
             return true;
@@ -348,7 +374,6 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
 
     /**
      * Process the pipeline using a reader.
-     * @throws ProcessingException if
      */
     protected boolean processReader(Environment environment) {
         try {
@@ -374,6 +399,78 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
             throw new PipelineProcessingException("Error executing reader pipeline.",e);
         }
         return true;
+    }
+
+    /**
+     * Parse the expires parameter
+     */
+    private long parseExpires(String expire) {
+        StringTokenizer tokens = new StringTokenizer(expire);
+
+        // get <base>
+        String current = tokens.nextToken();
+        if (current.equals("modification")) {
+            logger.warn("the \"modification\" keyword is not yet" +
+                             " implemented. Assuming \"now\" as the base attribute");
+            current = "now";
+        }
+
+        if (! current.equals("now") && ! current.equals("access")) {
+            logger.error("bad <base> attribute, Expires header will not be set");
+            return -1;
+        }
+
+        long number = 0;
+        long modifier = 0;
+        long expires = 0;
+
+        while (tokens.hasMoreTokens()) {
+            current = tokens.nextToken();
+
+            // get rid of the optional <plus> keyword
+            if (current.equals("plus")) {
+                current = tokens.nextToken();
+            }
+
+            // We're expecting a sequence of <number> and <modification> here
+            // get <number> first
+            try {
+                number = Long.parseLong(current);
+            } catch (NumberFormatException nfe) {
+                logger.error("state violation: a number was expected here");
+                return -1;
+            }
+
+            // now get <modifier>
+            try {
+                current = tokens.nextToken();
+            } catch (NoSuchElementException nsee) {
+                logger.error("State violation: expecting a modifier" +
+                                  " but no one found: Expires header will not be set");
+            }
+            if (current.equals("years")) {
+                modifier = 365L * 24L * 60L * 60L * 1000L;
+            } else if (current.equals("months")) {
+                modifier = 30L * 24L * 60L * 60L * 1000L;
+            } else if (current.equals("weeks")) {
+                modifier = 7L * 24L * 60L * 60L * 1000L;
+            } else if (current.equals("days")) {
+                modifier = 24L * 60L * 60L * 1000L;
+            } else if (current.equals("hours")) {
+                modifier = 60L * 60L * 1000L;
+            } else if (current.equals("minutes")) {
+                modifier = 60L * 1000L;
+            } else if (current.equals("seconds")) {
+                modifier = 1000L;
+            } else {
+                logger.error("Bad modifier (" + current +
+                                  "): ignoring expires configuration");
+                return -1;
+            }
+            expires += number * modifier;
+        }
+
+        return expires;
     }
 
 }

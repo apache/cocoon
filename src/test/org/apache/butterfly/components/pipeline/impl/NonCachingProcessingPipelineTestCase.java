@@ -403,4 +403,11 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
                         XMLUnit.buildControlDocument(new InputSource("testdata/traxtest-result.xml")),
                         builder.getDocument()).similar());
     }
+    
+    public void testSetExpires() {
+        NonCachingProcessingPipeline pipeline = 
+            new NonCachingProcessingPipeline();
+        pipeline.setExpires("now");
+        assertEquals("Value for 'now' is wrong.", 0L, pipeline.getExpires());
+    }
 }
