@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.apache.xerces.dom.TreeWalkerImpl;
 
@@ -23,7 +23,7 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-20 13:50:20 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 04:38:55 $
  */
 
 public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {

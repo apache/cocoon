@@ -10,9 +10,9 @@ package org.apache.cocoon.serialization;
 
 import java.util.Properties;
 
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.OutputKeys;
@@ -22,7 +22,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-20 21:06:45 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-12 04:39:00 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 

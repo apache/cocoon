@@ -25,11 +25,11 @@ import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.DefaultConfiguration;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.configuration.DefaultConfiguration;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.RoleUtils;
@@ -42,7 +42,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-03 23:35:23 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-12 04:38:26 $
  */
 public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -184,12 +184,11 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
     public void configure(Configuration conf) throws ConfigurationException {
         // Set components
 
-        Iterator e = conf.getChildren("component");
-        while (e.hasNext()) {
-            Configuration co = (Configuration) e.next();
-            String type = co.getAttribute("type", "");
-            String role = co.getAttribute("role", "");
-            String className = co.getAttribute("class", "");
+        Configuration[] e = conf.getChildren("component");
+        for (int i = 0; i < e.length; i++) {
+            String type = e[i].getAttribute("type", "");
+            String role = e[i].getAttribute("role", "");
+            String className = e[i].getAttribute("class", "");
 
             if (! "".equals(type)) {
                 role = RoleUtils.lookup(type);
@@ -201,7 +200,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
 
             try {
                 log.debug("Adding component (" + role + " = " + className + ")");
-                this.addComponent(role,ClassUtils.loadClass(className),co);
+                this.addComponent(role,ClassUtils.loadClass(className),e[i]);
             } catch ( Exception ex ) {
                 log.error("Could not load class " + className, ex);
                 throw new ConfigurationException("Could not get class " + className
@@ -209,14 +208,15 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
             }
         }
 
-        e = RoleUtils.shorthandNames();
-        while (e.hasNext()) {
-            Configuration co = conf.getChild((String) e.next());
-            if (! co.getLocation().equals("-")) {
+        Iterator r = RoleUtils.shorthandNames();
+        while (r.hasNext()) {
+            Configuration co = conf.getChild((String) r.next(), false);
+
+            if (co != null) {
                 String role = RoleUtils.lookup(co.getName());
                 String className = co.getAttribute("class", "");
 
-                if (className.equals("")) {
+                if ("".equals(className)) {
                     className = RoleUtils.defaultClass(role);
                 }
 

@@ -11,9 +11,9 @@ package org.apache.cocoon;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.Pool;
 
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Configurable;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Contextualizable;
@@ -29,7 +29,7 @@ import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-01 19:29:02 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-12 04:38:26 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;

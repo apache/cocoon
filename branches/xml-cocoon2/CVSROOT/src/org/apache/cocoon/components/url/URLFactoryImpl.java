@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.AbstractLoggable;
@@ -29,7 +29,7 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.5 2001-02-19 16:58:52 prussell Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.6 2001-03-12 04:38:50 bloritsch Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
@@ -102,20 +102,18 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
         try {
             getLogger().debug("Getting the URLFactories");
             factories = new HashMap();
-            Iterator iter = conf.getChildren("protocol");
-            Configuration config = null;
+            Configuration[] configs = conf.getChildren("protocol");
             URLFactory urlFactory = null;
             String protocol = null;
-            while (iter.hasNext()) {
-                config = (Configuration)iter.next();
-                protocol = config.getAttribute("name");
-                getLogger().debug("\tfor protocol: " + protocol + " " + config.getAttribute("class"));
-                urlFactory = (URLFactory) ClassUtils.newInstance(config.getAttribute("class"));
-                if (urlFactory instanceof Loggable) {
-                    ((Loggable) urlFactory).setLogger(getLogger());
-                }
+            for (int i = 0; i < configs.length; i++) {
+                protocol = configs[i].getAttribute("name");
+                getLogger().debug("\tfor protocol: " + protocol + " " + configs[i].getAttribute("class"));
+                urlFactory = (URLFactory) ClassUtils.newInstance(configs[i].getAttribute("class"));
                 if (urlFactory instanceof Contextualizable) {
                     ((Contextualizable) urlFactory).contextualize (this.context);
+                }
+                if (urlFactory instanceof Loggable) {
+                    ((Loggable) urlFactory).setLogger(getLogger());
                 }
                 factories.put(protocol, urlFactory);
             }

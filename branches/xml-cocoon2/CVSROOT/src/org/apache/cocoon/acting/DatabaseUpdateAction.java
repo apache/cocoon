@@ -23,9 +23,9 @@ import org.xml.sax.EntityResolver;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Roles;
@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-09 16:10:27 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 04:38:32 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -68,20 +68,16 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
             PreparedStatement statement = conn.prepareStatement(query);
 
-            Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
-            Iterator values = conf.getChild("table").getChild("values").getChildren("value");
+            Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
+            Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
             currentIndex = 1;
 
-            for (int i = currentIndex; values.hasNext(); i++) {
-                Configuration itemConf = (Configuration) values.next();
-                this.setColumn(statement, i, request, itemConf);
-                currentIndex = i;
+            for (int i = 0; i < values.length; i++, currentIndex++) {
+                this.setColumn(statement, currentIndex, request, values[i]);
             }
 
-            for (int i = currentIndex + 1; keys.hasNext(); i++) {
-                Configuration itemConf = (Configuration) keys.next();
-                this.setColumn(statement, i, request, itemConf);
-                currentIndex = i;
+            for (int i = 0; i < keys.length; i++, currentIndex++) {
+                this.setColumn(statement, currentIndex, request, keys[i]);
             }
 
             statement.execute();
@@ -121,37 +117,30 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
             if (query == null) {
                 Configuration table = conf.getChild("table");
-                Iterator keys = table.getChild("keys").getChildren("key");
-                Iterator values = table.getChild("values").getChildren("value");
+                Configuration[] keys = table.getChild("keys").getChildren("key");
+                Configuration[] values = table.getChild("values").getChildren("value");
 
                 StringBuffer queryBuffer = new StringBuffer("UPDATE ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" SET ");
 
-                boolean firstIteration = true;
-
-                while (values.hasNext()) {
-                    if (firstIteration) {
-                        firstIteration = false;
-                    } else {
-                        queryBuffer.append(", ");
+                for (int i = 0; i < values.length; i++) {
+                    if (i > 0) {
+                         queryBuffer.append(", ");
                     }
 
-                    queryBuffer.append(((Configuration) values.next()).getAttribute("dbcol"));
+                    queryBuffer.append(values[i].getAttribute("dbcol"));
                     queryBuffer.append(" = ?");
                 }
 
                 queryBuffer.append(" WHERE ");
-                firstIteration = true;
 
-                while (keys.hasNext()) {
-                    if (firstIteration) {
-                        firstIteration = false;
-                    } else {
+                for (int i = 0; i < keys.length; i++) {
+                    if (i > 0) {
                         queryBuffer.append(" AND ");
                     }
 
-                    queryBuffer.append(((Configuration) keys.next()).getAttribute("dbcol"));
+                    queryBuffer.append(keys[i].getAttribute("dbcol"));
                     queryBuffer.append(" = ?");
                 }
 

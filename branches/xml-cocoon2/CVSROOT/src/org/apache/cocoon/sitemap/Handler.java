@@ -26,8 +26,8 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Roles;
 
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Contextualizable;
@@ -41,7 +41,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-22 19:08:10 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-12 04:39:06 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;

@@ -23,9 +23,9 @@ import org.xml.sax.EntityResolver;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Roles;
@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-09 17:00:08 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-12 04:38:31 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -70,14 +70,13 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
             PreparedStatement statement = conn.prepareStatement(query);
 
-            Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
-            Iterator values = conf.getChild("table").getChild("values").getChildren("value");
+            Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
+            Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
             currentIndex = 1;
 
-            while (keys.hasNext()) {
-                Configuration key = (Configuration) keys.next();
-                if ("manual".equals(key.getAttribute("mode", "automatic"))) {
-                    String selectQuery = this.getSelectQuery(key);
+            for (int i = 0; i < keys.length; i++, currentIndex++) {
+                if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
+                    String selectQuery = this.getSelectQuery(keys[i]);
 
                     ResultSet set = conn.createStatement().executeQuery(selectQuery);
                     set.next();
@@ -87,14 +86,11 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
                     set.close();
                     set.getStatement().close();
-                    currentIndex++;
                 }
             }
 
-            for (int i = currentIndex; values.hasNext(); i++) {
-                Configuration itemConf = (Configuration) values.next();
-                this.setColumn(statement, i, request, itemConf);
-                currentIndex = i;
+            for (int i = 0; i < values.length; i++, currentIndex++) {
+                this.setColumn(statement, currentIndex, request, values[i]);
             }
 
             statement.execute();
@@ -138,41 +134,35 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
             if (query == null) {
                 Configuration table = conf.getChild("table");
-                Iterator values = table.getChild("values").getChildren("value");
-                Iterator keys = table.getChild("keys").getChildren("key");
+                Configuration[] values = table.getChild("values").getChildren("value");
+                Configuration[] keys = table.getChild("keys").getChildren("key");
 
                 StringBuffer queryBuffer = new StringBuffer("INSERT INTO ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" (");
 
-                boolean firstIteration = true;
                 int numKeys = 0;
 
-                while (keys.hasNext()) {
-                    Configuration key = (Configuration) keys.next();
-                    if ("manual".equals(key.getAttribute("mode", "automatic"))) {
-                        if (firstIteration) {
-                            firstIteration = false;
-                        } else {
+                for (int i = 0; i < keys.length; i++) {
+                    if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
+                        if (i > 0) {
                             queryBuffer.append(", ");
                         }
 
-                        queryBuffer.append(key.getAttribute("dbcol"));
-                        this.setSelectQuery(table.getAttribute("name"), key);
+                        queryBuffer.append(keys[i].getAttribute("dbcol"));
+                        this.setSelectQuery(table.getAttribute("name"), keys[i]);
                         numKeys++;
                     }
                 }
 
                 int numValues = 0;
 
-                while (values.hasNext()) {
-                    if (firstIteration) {
-                        firstIteration = false;
-                    } else {
+                for (int i = 0; i < values.length; i++) {
+                    if (i > 0) {
                         queryBuffer.append(", ");
                     }
 
-                    queryBuffer.append(((Configuration) values.next()).getAttribute("dbcol"));
+                    queryBuffer.append(values[i].getAttribute("dbcol"));
                     numValues++;
                 }
 

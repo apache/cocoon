@@ -13,7 +13,7 @@ import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
@@ -27,7 +27,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-23 15:08:10 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:38:56 $
  */
 
 public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {

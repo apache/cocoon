@@ -19,8 +19,8 @@ import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Context;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
 
@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-20 12:47:43 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:39:07 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 

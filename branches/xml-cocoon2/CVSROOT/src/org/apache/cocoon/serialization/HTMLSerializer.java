@@ -11,7 +11,7 @@ package org.apache.cocoon.serialization;
 import java.io.OutputStream;
 
 import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Poolable;
 
 import javax.xml.transform.sax.TransformerHandler;
@@ -20,7 +20,7 @@ import javax.xml.transform.OutputKeys;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-09 11:41:31 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 04:39:01 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements Poolable {

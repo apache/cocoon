@@ -22,10 +22,10 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Modifiable;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.SAXConfigurationHandler;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.SAXConfigurationHandler;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Initializable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.store.FilesystemStore;
@@ -49,7 +49,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.60 $ $Date: 2001-02-26 17:41:48 $
+ * @version CVS $Revision: 1.4.2.61 $ $Date: 2001-03-12 04:38:25 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */

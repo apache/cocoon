@@ -21,8 +21,8 @@ import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Context;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.AbstractLoggable;
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-22 17:10:51 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-12 04:39:06 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;

@@ -23,9 +23,9 @@ import org.xml.sax.EntityResolver;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Roles;
@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-09 16:10:27 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-12 04:38:32 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
@@ -71,11 +71,10 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
 
             PreparedStatement statement = conn.prepareStatement(query);
 
-            Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
+            Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
 
-            for (currentIndex = 1; keys.hasNext(); currentIndex++) {
-                Configuration itemConf = (Configuration) keys.next();
-                this.setColumn(statement, currentIndex, request, itemConf);
+            for (int i = 0; i < keys.length; i++) {
+                this.setColumn(statement, i + 1, request, keys[i]);
             }
 
             statement.execute();
@@ -115,22 +114,18 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
 
             if (query == null) {
                 Configuration table = conf.getChild("table");
-                Iterator keys = table.getChild("keys").getChildren("key");
+                Configuration[] keys = table.getChild("keys").getChildren("key");
 
                 StringBuffer queryBuffer = new StringBuffer("DELETE FROM ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" WHERE ");
 
-                boolean firstIteration = true;
-
-                while (keys.hasNext()) {
-                    if (firstIteration) {
-                        firstIteration = false;
-                    } else {
+                for (int i = 0; i < keys.length; i++) {
+                    if (i > 0) {
                         queryBuffer.append(" AND ");
                     }
 
-                    queryBuffer.append(((Configuration) keys.next()).getAttribute("dbcol"));
+                    queryBuffer.append((keys[i]).getAttribute("dbcol"));
                     queryBuffer.append(" = ?");
                 }
 

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.net.URL;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationBuilder;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.SAXConfigurationHandler;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationBuilder;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.configuration.SAXConfigurationHandler;
 
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.Roles;
@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-06 21:17:24 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 04:38:31 $
  */
 public abstract class AbstractComplimentaryConfigurableAction extends ComposerAction {
     private static Map configurations = new HashMap();

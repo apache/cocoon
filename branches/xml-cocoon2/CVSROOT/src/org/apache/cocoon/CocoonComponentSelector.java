@@ -22,17 +22,14 @@ import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.Recyclable;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.SingleThreaded;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
-import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
@@ -44,7 +41,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-03 23:35:22 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-12 04:38:25 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
@@ -201,15 +198,14 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
 
     public void configure(Configuration conf) throws ConfigurationException {
         log.debug("CocoonComponentSelector setting up with root element: " + conf.getName());
-        Iterator instances = conf.getChildren("component-instance");
+        Configuration[] instances = conf.getChildren("component-instance");
 
-        while (instances.hasNext()) {
-            Configuration current = (Configuration) instances.next();
-            Object hint = current.getAttribute("name");
-            String className = (String) current.getAttribute("class");
+        for (int i = 0; i < instances.length; i++) {
+            Object hint = instances[i].getAttribute("name");
+            String className = (String) instances[i].getAttribute("class");
 
             try {
-                this.addComponent(hint, ClassUtils.loadClass(className), current);
+                this.addComponent(hint, ClassUtils.loadClass(className), instances[i]);
             } catch (Exception e) {
                 log.error("CocoonComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
                 throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);

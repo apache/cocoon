@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.avalon.Configuration;
-import org.apache.avalon.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-03 16:04:58 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-03-12 04:39:07 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;

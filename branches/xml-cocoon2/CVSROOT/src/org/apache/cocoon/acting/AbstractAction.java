@@ -7,9 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.AbstractLoggable;
 
 import org.apache.log.Logger;
@@ -19,7 +19,7 @@ import org.apache.log.Logger;
  * Actions.  In order to get at the Logger, use getLogger().
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-09 22:16:54 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-12 04:38:30 $
  */
 public abstract class AbstractAction extends AbstractLoggable
 implements Action, Configurable {

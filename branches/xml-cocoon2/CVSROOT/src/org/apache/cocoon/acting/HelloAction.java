@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Parameters;
 
 import org.xml.sax.SAXException;
@@ -28,7 +28,7 @@ import org.apache.cocoon.Constants;
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-09 22:16:54 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:38:32 $
  */
 public class HelloAction extends ComposerAction {
 

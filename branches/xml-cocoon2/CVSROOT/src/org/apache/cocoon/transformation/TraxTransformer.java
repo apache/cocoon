@@ -20,11 +20,11 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
 import org.apache.avalon.Parameters;
@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-23 14:01:27 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:39:14 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {

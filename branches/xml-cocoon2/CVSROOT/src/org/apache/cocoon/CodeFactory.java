@@ -8,7 +8,7 @@
 
 package org.apache.cocoon;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-20 13:50:16 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-12 04:38:26 $
  */
 
 public interface CodeFactory {

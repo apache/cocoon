@@ -10,7 +10,7 @@ package org.apache.cocoon.matching;
 
 import org.apache.cocoon.CodeFactory;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
@@ -24,7 +24,7 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-02-20 13:50:22 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-03-12 04:38:56 $
  */
 
 public class WildcardURIMatcherFactory implements CodeFactory, Loggable {

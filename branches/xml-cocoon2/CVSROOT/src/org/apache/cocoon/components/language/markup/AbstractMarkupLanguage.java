@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.Iterator;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
@@ -32,9 +31,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Configurable;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.AbstractLoggable;
 
@@ -48,7 +47,7 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-22 19:07:48 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-12 04:38:40 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -101,12 +100,11 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
     public void configure(Configuration conf) throws ConfigurationException {
         try {
             // Set up each target-language
-            Iterator l = conf.getChildren("target-language");
-            while (l.hasNext()) {
-                Configuration lc = (Configuration)l.next();
+            Configuration[] l = conf.getChildren("target-language");
+            for (int i = 0; i < l.length; i++) {
                 LanguageDescriptor language = new LanguageDescriptor();
-                language.setName(lc.getAttribute("name"));
-                Parameters lcp = Parameters.fromConfiguration(lc);
+                language.setName(l[i].getAttribute("name"));
+                Parameters lcp = Parameters.fromConfiguration(l[i]);
 
                 // Create & Store the core logicsheet
                 CachedURL entry = createLogicsheet(lcp, false);
@@ -118,10 +116,9 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                 language.setLogicsheet(logicsheetName);
 
                 // Set up each built-in logicsheet
-                Iterator n = lc.getChildren("builtin-logicsheet");
-                while (n.hasNext()) {
-                    Configuration nc = (Configuration)n.next();
-                    Parameters ncp = Parameters.fromConfiguration(nc);
+                Configuration[] n = l[i].getChildren("builtin-logicsheet");
+                for (int j = 0; j < n.length; j++) {
+                    Parameters ncp = Parameters.fromConfiguration(n[j]);
 
                     // Create & Store the named logicsheets
                     CachedURL namedEntry = createLogicsheet(ncp, true);

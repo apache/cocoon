@@ -13,7 +13,7 @@ import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
@@ -26,7 +26,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-20 13:50:22 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 04:38:56 $
  */
 
 public class RegexpURIMatcherFactory implements CodeFactory, Loggable {

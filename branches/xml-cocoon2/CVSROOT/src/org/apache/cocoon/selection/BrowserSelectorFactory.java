@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.TreeWalker;
@@ -26,7 +26,7 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-20 13:50:26 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-12 04:38:59 $
 */
 
 

@@ -11,8 +11,8 @@ package org.apache.cocoon.util;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.util.pool.PoolController;
 
@@ -23,7 +23,7 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-20 20:34:22 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 04:39:17 $
  */
 public class ComponentPoolController implements PoolController, ThreadSafe, Component {
 

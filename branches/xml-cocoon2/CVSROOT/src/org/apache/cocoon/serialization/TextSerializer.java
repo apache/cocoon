@@ -14,13 +14,13 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.OutputKeys;
 
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-09 11:41:33 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-12 04:39:01 $
  */
 
 public class TextSerializer extends AbstractTextSerializer implements Poolable {

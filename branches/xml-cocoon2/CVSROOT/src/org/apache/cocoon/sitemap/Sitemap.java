@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.Configurable;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Contextualizable;
 
@@ -18,7 +18,7 @@ import org.apache.cocoon.Processor;
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.14 $ $Date: 2001-02-19 21:57:51 $
+ * @version CVS $Revision: 1.1.4.15 $ $Date: 2001-03-12 04:39:08 $
  */
 public interface Sitemap extends CompiledComponent, Configurable, Contextualizable, Processor {
     int GENERATOR = 1;
