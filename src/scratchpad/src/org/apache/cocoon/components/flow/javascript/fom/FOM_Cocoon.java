@@ -85,7 +85,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.10 2003/07/06 23:27:24 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.11 2003/07/07 06:24:06 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -224,14 +224,9 @@ public class FOM_Cocoon extends ScriptableObject {
      * TODO: Do we want to restrict the access of sitemap components? (RP)
      * TODO: Do we want to raise an error or return null? (RP)
      */  
-    public Object jsFunction_getComponent( String id ) { 
-        Object o = null;
-        try {
-            o = this.componentManager.lookup( id );
-        } catch (ComponentException e) {
-            o = null; 
-        }
-        return o;
+    public Object jsFunction_getComponent(String id) 
+	throws Exception { 
+	return componentManager.lookup(id);
     }
     
     /**
