@@ -53,87 +53,87 @@
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="dburl">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:dburl"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="username">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:username"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="password">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:password"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="doc-element">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:doc-element"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="row-element">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:row-element"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="tag-case">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:tag-case"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="null-indicator">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:null-indicator"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="id-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:id-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="id-attribute-column">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:id-attribute-column"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="max-rows">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:max-rows"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="skip-rows">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:skip-rows"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="count-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:count-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="query-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:query-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="skip-rows-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:skip-rows-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="max-rows-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:max-rows-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="update-rows-attribute">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:update-rows-attribute"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="namespace">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:namespace"/>
 		</xsl:call-template>
 	</xsl:variable>
@@ -166,6 +166,7 @@
 			Class my_class = Class.forName(classname);
 			Object format;
 			if (parameters.length == 0) {
+				//FIXME: we should try newInstance on the base class here probably
 				format = my_class.newInstance();
 			} else {
 				Class class_ary[] = new Class[parameters.length];
