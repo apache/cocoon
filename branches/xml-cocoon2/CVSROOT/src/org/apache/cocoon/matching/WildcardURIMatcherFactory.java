@@ -18,17 +18,21 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-21 17:36:55 $ 
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-31 12:20:16 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
 
     /** The int representing '*' in the pattern <code>int []</code>. */
-    protected static final int MATCH_FILE = -1;
+    protected static final int MATCH_FILE	= -1;
     /** The int representing '**' in the pattern <code>int []</code>. */
-    protected static final int MATCH_PATH = -2;
+    protected static final int MATCH_PATH	= -2;
+    /** The int representing begin in the pattern <code>int []</code>. */
+    protected static final int MATCH_BEGIN	= -4;
+    /** The int representing end in pattern <code>int []</code>. */
+    protected static final int MATCH_THEEND	= -5;
     /** The int value that terminates the pattern <code>int []</code>. */
-    protected static final int MATCH_END = -3;
+    protected static final int MATCH_END	= -3;
 
     /** The <code>int []</code> identifying the pattern to match. */
     protected int[] sourcePattern = null;
@@ -119,12 +123,15 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
     throws NullPointerException {
         
         // Prepare the arrays
-        int expr[] = new int[data.length() + 1];
+        int expr[] = new int[data.length() + 2];
         char buff[] = data.toCharArray();
         
         // Prepare variables for the translation loop
         int y = 0;
         boolean slash = false;
+
+        // Must start from beginning
+        expr[y++] = MATCH_BEGIN;
         
         if (buff[0]=='\\') {
             slash = true;
@@ -160,8 +167,8 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
             }
         }
         
-        // Declare the end of the array and return it
-        expr[y] = MATCH_END;
+        // Must match end at the end
+        expr[y] = MATCH_THEEND;
         return expr;
     }        
 }
