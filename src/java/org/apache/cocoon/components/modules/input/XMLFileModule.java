@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +60,7 @@ import java.util.Map;
     </define>
 
  </grammar>
- 
+
  * This module provides an Input Module interface to any XML document, by using
  * XPath expressions as attribute keys.
  * The XML can be obtained from any Cocoon <code>Source</code> (e.g.,
@@ -75,7 +75,7 @@ import java.util.Map;
  * src="protocol:path/to/file.xml" reloadable="true"
  * cacheable="true"/&gt;</code> optionally overriding defaults for
  * caching and or reloading.</p>
- * 
+ *
  * <p>In addition, xpath expressions are cached for higher performance.
  * Thus, if an expression has been evaluated for a file, the result
  * is cached and will be reused, the expression is not evaluated
@@ -84,7 +84,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.16 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.17 2004/06/16 14:57:54 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -114,7 +114,6 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
 
     /**
      * Takes care of (re-)loading and caching of sources.
-     *
      */
     protected class DocumentHelper {
 
@@ -208,19 +207,18 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         this.resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
     }
 
-
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
-	public void dispose() {
-		super.dispose();
-        if ( this.manager != null ) {
-            this.manager.release( this.resolver );
+    /* (non-Javadoc)
+    * @see org.apache.avalon.framework.activity.Disposable#dispose()
+    */
+    public void dispose() {
+        super.dispose();
+        if (this.manager != null) {
+            this.manager.release(this.resolver);
             this.manager = null;
             this.resolver = null;
         }
-	}
-    
+    }
+
     /**
      * Static (cocoon.xconf) configuration.
      * Configuration is expected to be of the form:
@@ -272,7 +270,6 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     }
 
 
-
     /**
      * Get the DOM object that JXPath will operate on when evaluating
      * attributes.  This DOM is loaded from a Source, specified in the
@@ -296,15 +293,15 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         Configuration fileConf = null;  // the nested <file>, if any
 
         if (modeConf != null && modeConf.getChildren().length > 0) {
-        	fileConf = modeConf.getChild("file", false);
-        	if (fileConf == null) {
-        		if (this.getLogger().isDebugEnabled()) {
-        			this.getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
-        		}
-        		
-        	} else {
-        		hasDynamicConf = true;
-        	}
+            fileConf = modeConf.getChild("file", false);
+            if (fileConf == null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
+                }
+
+            } else {
+                hasDynamicConf = true;
+            }
         }
 
         if (hasDynamicConf) {
@@ -358,8 +355,8 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         Object result = this.getAttribute(name, modeConf, objectModel, true);
         return (result != null ? (Object[]) result : null);
     }
-    
-    
+
+
     public Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues) throws ConfigurationException {
 
         Object contextObj = getContextObject(modeConf, objectModel);
@@ -433,5 +430,4 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         }
         return cache;
     }
-
 }

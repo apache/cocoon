@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,43 +32,42 @@ import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Input module for accessing properties in a properties file.
- * 
+ *
  * <p>
  *  The properties file can only be configured statically and
  *  is resolved via the SourceResolver system.
  * </p>
- * 
+ *
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
-public class PropertiesFileModule extends AbstractJXPathModule 
+public class PropertiesFileModule extends AbstractJXPathModule
 implements InputModule, Serviceable, Configurable, ThreadSafe {
-    
+
     private ServiceManager m_manager;
-    
     private SourceResolver m_resolver;
-    
     private Properties m_properties;
-    
-    
+
+
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
         m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
     }
-    
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
-	public void dispose() {		
-		super.dispose();
-        if ( this.m_manager != null ) {
-            this.m_manager.release( this.m_resolver );
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        super.dispose();
+        if (this.m_manager != null) {
+            this.m_manager.release(this.m_resolver);
             this.m_manager = null;
             this.m_resolver = null;
         }
-	}
+    }
+
     /**
      * Configure the location of the properties file:
      * <p>
@@ -80,7 +79,7 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
         String file = configuration.getChild("file").getAttribute("src");
         load(file);
     }
-    
+
     private void load(String file) throws ConfigurationException {
         Source source = null;
         InputStream stream = null;
@@ -89,28 +88,24 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
             stream = source.getInputStream();
             m_properties = new Properties();
             m_properties.load(stream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationException("Cannot load properties file " + file);
-        }
-        finally {
+        } finally {
             if (source != null) {
                 m_resolver.release(source);
             }
             if (stream != null) {
                 try {
                     stream.close();
-                }
-                catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
     }
-    
+
     protected Object getContextObject(Configuration modeConf, Map objectModel)
-        throws ConfigurationException {
-        
+    throws ConfigurationException {
+
         return m_properties;
     }
-
 }
