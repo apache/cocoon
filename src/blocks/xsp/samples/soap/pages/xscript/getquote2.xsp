@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -18,7 +18,7 @@
 <!--
   Author: Ovidiu Predescu "ovidiu@cup.hp.com"
   Date: October 9, 2001
-  CVS $Id: getquote2.xsp,v 1.1 2004/03/10 14:26:29 stephan Exp $
+  CVS $Id: getquote2.xsp,v 1.2 2004/04/05 12:25:33 antonio Exp $
  -->
 
 <xsp:page language="java"

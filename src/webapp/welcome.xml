@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -19,7 +19,7 @@
     | This is a very simple XML page done just to show how a simple 
     | cocoon pipeline works.
     |
-    | CVS $Id: welcome.xml,v 1.4 2004/03/06 02:25:58 antonio Exp $
+    | CVS $Id: welcome.xml,v 1.5 2004/04/05 12:25:35 antonio Exp $
     +-->
 
 <welcome>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -16,8 +16,8 @@
 -->
 
 <!-- 
-     Author: Michael Gerzabek, michael.gerzabek@at.efp.cc, EFP Consulting Österreich
-     @version CVS $Id: pics2view.xsl,v 1.4 2004/03/06 02:25:56 antonio Exp $
+     Author: Michael Gerzabek, michael.gerzabek@at.efp.cc, EFP Consulting ï¿½sterreich
+     @version CVS $Id: pics2view.xsl,v 1.5 2004/04/05 12:25:32 antonio Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rfc="http://efp.cc/Web3-Rfc/1.0">

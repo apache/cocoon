@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -18,7 +18,7 @@
 <!--+
     | XMLDB Samples
     |
-    | CVS $Id: samples.xml,v 1.7 2004/04/03 08:17:43 crossley Exp $
+    | CVS $Id: samples.xml,v 1.8 2004/04/05 12:25:36 antonio Exp $
     +-->
 
 <samples name="XMLDB Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">

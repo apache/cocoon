@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: logicsheet-util.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $-->
+<!-- $Id: logicsheet-util.xsl,v 1.3 2004/04/05 12:25:31 antonio Exp $-->
 <!--
  * A collection of utility templates to help logicsheet writers, and ensure
  * a consistent behaviour of logicsheets using them.
@@ -28,7 +28,7 @@
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:22 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/04/05 12:25:31 $
 -->
 
 <xsl:stylesheet version="1.0"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -16,7 +16,7 @@
 -->
 
 <!--
-  Version <![CDATA[ $Id: site2html.xsl,v 1.2 2004/03/06 02:26:00 antonio Exp $ ]]>
+  Version <![CDATA[ $Id: site2html.xsl,v 1.3 2004/04/05 12:25:32 antonio Exp $ ]]>
   
   Transformation of an aggregated site document to html
 -->

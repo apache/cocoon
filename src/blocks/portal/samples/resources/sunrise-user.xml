@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: sunrise-user.xml,v 1.3 2004/03/06 02:26:05 antonio Exp $ 
+<!-- $Id: sunrise-user.xml,v 1.4 2004/04/05 12:25:36 antonio Exp $ 
  Description: All portal users
 
 -->

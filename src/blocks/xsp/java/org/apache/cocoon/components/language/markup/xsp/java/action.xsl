@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -19,7 +19,7 @@
  * Logicsheet for XSP executed in actions using ServerPagesAction.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:21 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/04/05 12:25:31 $
 -->
 
 <xsl:stylesheet version="1.0"

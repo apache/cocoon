@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><!-- -*- xsl -*- -->
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,12 +15,12 @@
   limitations under the License.
 -->
 
-<!-- $Id: form-validator.xsl,v 1.3 2004/03/17 11:28:22 crossley Exp $ -->
+<!-- $Id: form-validator.xsl,v 1.4 2004/04/05 12:25:31 antonio Exp $ -->
 <!--
  * XSP Form-Validator logicsheet for the Java language
  *
  * @author <a href="mailto:haul@apache.org>Christian Haul</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/03/17 11:28:22 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/04/05 12:25:31 $
 -->
 
 <xsl:stylesheet

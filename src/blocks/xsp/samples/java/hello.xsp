@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: hello.xsp,v 1.1 2004/03/10 12:58:08 stephan Exp $ -->
+<!-- CVS $Id: hello.xsp,v 1.2 2004/04/05 12:25:30 antonio Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp">

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -19,7 +19,7 @@
 Binding for example CForms form model GUI.
 
 @author: Tim Larson
-@version CVS $Id: form_model_gui_binding.xml,v 1.5 2004/03/09 13:53:50 reinhard Exp $
+@version CVS $Id: form_model_gui_binding.xml,v 1.6 2004/04/05 12:25:33 antonio Exp $
 -->
 
 <wb:context
