@@ -34,6 +34,7 @@ import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.map.StaticBucketMap;
@@ -58,6 +59,8 @@ implements Configurable {
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
+    protected PortalUser portalUser = new StaticPortalUser();
+    
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(String, String)
      */
@@ -372,4 +375,35 @@ implements Configurable {
     public void storeProfile(Layout rootLayout, String layoutKey) {
         throw new RuntimeException("The static profile manager does not support the storeProfile() method.");
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getUser()
+     */
+    public PortalUser getUser() {
+        return this.portalUser;
+    }
+    
+    protected static final class StaticPortalUser implements PortalUser {
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#getGroup()
+         */
+        public String getGroup() {
+            return null;
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#getUserName()
+         */
+        public String getUserName() {
+            return "static";
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
+         */
+        public boolean isUserInRole(String role) {
+            return false;
+        }
+}
 }
