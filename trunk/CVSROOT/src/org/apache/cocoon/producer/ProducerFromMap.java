@@ -60,10 +60,11 @@ import org.apache.cocoon.framework.*;
 import org.apache.cocoon.parser.*;
 import org.w3c.dom.*;
 import gnu.regexp.*;
+import org.xml.sax.InputSource;
 
 /**
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-08 07:45:50 $
+ * @version $Revision: 1.2 $ $Date: 1999-12-10 22:36:45 $
  */
 
 public class ProducerFromMap extends ProducerFromFile {
@@ -87,7 +88,7 @@ public class ProducerFromMap extends ProducerFromFile {
 		}
 		if (sitemap_file == null) return super.getDocument(request);
 		Parser parser = (Parser)director.getActor("parser");
-		Document sitemap = parser.parse(new InputStreamReader(new FileInputStream(sitemap_file)),sitemap_path);
+		Document sitemap = parser.parse(new InputSource(new FileReader(sitemap_file)));
 		String relative_url = path.substring(sitemap_path.length());
 		Element document_element = sitemap.getDocumentElement();
 		NodeList children = document_element.getChildNodes();
@@ -121,7 +122,7 @@ public class ProducerFromMap extends ProducerFromFile {
 			File file = new File(filename);
 			if (!file.isAbsolute()) 
 				file = new File(path,filename);
-			Document document = parser.parse(new InputStreamReader(new FileInputStream(file)),"");
+			Document document = parser.parse(new InputSource(new FileReader(file)));
 			if (mount.equals("")) results = document;
 			else {
 				Element mount_element = results.createElement(mount);
