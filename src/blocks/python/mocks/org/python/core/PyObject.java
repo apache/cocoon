@@ -47,31 +47,14 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.python.util;
-
-import java.util.Properties;
-
-import org.python.core.PyObject;
+package org.python.core;
 
 /**
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: PythonInterpreter.java,v 1.2 2003/09/07 06:05:06 vgritsenko Exp $
+ * @version CVS $Id: PyObject.java,v 1.1 2003/09/07 06:05:05 vgritsenko Exp $
  */
-public class PythonInterpreter {
+public class PyObject {
 
-    public static void initialize(Properties preProperties,
-                                  Properties postProperties,
-                                  String[] argv) {
-        throw new NoSuchMethodError("This is a mock object");
-    }
-
-    public void set(String string, Object obj) {
-        throw new NoSuchMethodError("This is a mock object");
-    }
-
-    public void exec(PyObject code) {
-        throw new NoSuchMethodError("This is a mock object");
-    }
 }

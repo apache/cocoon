@@ -55,15 +55,13 @@ import java.io.InputStream;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: Py.java,v 1.1 2003/03/09 00:06:04 pier Exp $
+ * @version CVS $Id: Py.java,v 1.2 2003/09/07 06:05:05 vgritsenko Exp $
  */
 public class Py {
 
-	public static PyCode compile_flags(
-		InputStream fileInputStream,
-		String string,
-		String string1,
-		Object object)
+    public static PyCode compile(InputStream fileInputStream,
+                                 String string,
+                                 String string1)
     {
         throw new NoSuchMethodError("This is a mock object");
     }

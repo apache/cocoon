@@ -77,7 +77,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * written in Python language
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PythonGenerator.java,v 1.2 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: PythonGenerator.java,v 1.3 2003/09/07 06:05:05 vgritsenko Exp $
  */
 public class PythonGenerator extends XSPGenerator
         implements Configurable, Initializable {
@@ -141,11 +141,9 @@ public class PythonGenerator extends XSPGenerator
                 getLogger().debug("Compiling script " + file);
             }
             
-            this.code = Py.compile_flags(
-                    new FileInputStream(this.file),
-                    this.file.toString(),
-                    "exec",
-                    null);
+            this.code = Py.compile(new FileInputStream(this.file),
+                                   this.file.toString(),
+                                   "exec");
         } catch (Exception e) {
             this.compileError = e;
         }

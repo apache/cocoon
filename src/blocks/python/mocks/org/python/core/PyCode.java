@@ -53,8 +53,8 @@ package org.python.core;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: PyCode.java,v 1.1 2003/03/09 00:06:04 pier Exp $
+ * @version CVS $Id: PyCode.java,v 1.2 2003/09/07 06:05:05 vgritsenko Exp $
  */
-public class PyCode {
+public class PyCode extends PyObject {
 
 }
