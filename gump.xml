@@ -53,14 +53,16 @@
     <depend project="avalon-framework-impl"/>
     <depend project="excalibur-legacy" id="compatibility"/>
     <depend project="excalibur-instrument-api"/>
-    <depend project="excalibur-instrument-manager"/>
+    <depend project="excalibur-instrument-mgr-api"/>
+    <depend project="excalibur-instrument-mgr-impl"/>
     <depend project="excalibur-sourceresolve"/>
     <depend project="excalibur-xmlutil"/>
     <depend project="excalibur-store"/>
     <depend project="excalibur-pool"/>
     <depend project="excalibur-component"/>
     <depend project="excalibur-logger"/>
-    <depend project="excalibur-event"/>
+    <depend project="excalibur-event-api"/>
+    <depend project="excalibur-event-impl"/>
     <depend project="excalibur-legacy" id="i18n"/>
     <depend project="excalibur-testcase"/>
 
