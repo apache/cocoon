@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 
 /**
  * A base class for <code>Redirector</code>s that handle forward redirects, i.e. internal
@@ -28,7 +29,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * Concrete subclasses have to define the <code>cocoonRedirect()</code> method.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.13 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -91,6 +92,8 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
         // FIXME : how to handle global redirect to cocoon: ?
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
+        } else if (env instanceof MutableEnvironmentFacade ) {
+            ((MutableEnvironmentFacade)env).getDelegate().globalRedirect(sessionMode, url);
         } else if (env instanceof EnvironmentWrapper) {
             ((EnvironmentWrapper)env).globalRedirect(sessionMode,url);
         } else {
