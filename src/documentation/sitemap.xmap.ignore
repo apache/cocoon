@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.2 2003/03/19 15:47:45 stefano Exp $ -->
+<!-- $Id: sitemap.xmap.ignore,v 1.1 2003/03/21 13:56:07 stephan Exp $ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components ================================ -->
