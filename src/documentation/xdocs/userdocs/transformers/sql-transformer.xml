@@ -107,6 +107,7 @@ To invoke the SQLTransformer you have to add following to the sitemap:
       <map:transform type="sql">
         <map:parameter name="use-connection" value="personnel"/>
         <map:parameter name="show-nr-of-rows" value="true"/> 
+        <map:parameter name="clob-encoding" value="UTF-8"/> 
       </map:transform>
      ]]>
     </source>
@@ -124,6 +125,10 @@ not with stored procedures. If a stored procedure returns a resultset and you
 want to know how many rows it contains, you have to count the  number of rows in 
 another transformer or your stored procedure has to return it also (last 
 solution is the best one)
+</p>
+<p>
+The "clob-encoding" parameter defines what encoding should be used in 
+getting content from CLOB columns.
 </p>
 <p>
 The output XML will look as follows:
