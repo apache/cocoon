@@ -149,7 +149,7 @@
   <wd:field id="altbirthdate" required="true">
     <wd:label>Select a date on which you'd rather had been born:</wd:label>
     <wd:datatype base="date">
-      <!-- We don't specify a convertor here, defaults will be used. -->
+      <wd:convertor variant="date" style="full"/>
 
       <wd:selection-list>
         <!-- The convertor element here is used to specify how the values
