@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -119,7 +119,9 @@
       | expiring continuations. Currently only the "periodic" type is
       | supported.
       +-->
-  <continuations-manager logger="flow.manager" time-to-live="3600000">
+  <continuations-manager logger="flow.manager" time-to-live="3600000" 
+                         session-bound-continuations="false" 
+                         continuation-sharing-bug-compatible="false">
     <expirations-check type="periodic">
       <offset>180000</offset>
       <period>180000</period>

@@ -386,4 +386,9 @@ public class WebContinuation extends AbstractLogEnabled
     public boolean interpreterMatches( String interpreterId ) {
         return StringUtils.equals( this.interpreterId, interpreterId );
     }
+
+    public void detachFromParent() {
+        if (getParentContinuation() != null)
+            getParentContinuation().getChildren().remove(this);
+    }
 }
