@@ -239,7 +239,7 @@
       <p>Another serious issue is the presence of the Xalan and Xerces
        package in the JDK 1.4. For general information on this please read the
        <link href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</link> and our own
-       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=EndorsedLibsProblem">EndorsedLibsProblem</link>
+       <link href="http://wiki.apache.org/cocoon/EndorsedLibsProblem">EndorsedLibsProblem</link>
        wiki page.
       </p>
       <p>

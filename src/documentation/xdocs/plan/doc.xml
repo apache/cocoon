@@ -62,7 +62,7 @@ Cocoon has two promising and complementary wiki efforts underway.
 </p>
   <ul>
   <li>
-<link href="http://wiki.cocoondev.org/">Cocoon Wiki</link> focuses on content development for the Cocoon project. It is designed to facilitate document development and collaboration from all levels of Cocoon users. Documents include FAQs, snippets, how-tos, tutorials, RTs (random thoughts), dreams, surveys, and more. The preliminary focus of this the wiki is to serve as a documentation "breeding ground," where docs can "grow" until mature enough to become official cvs docs. However, it already represents a lively and valid document resource in its own right.
+<link href="http://wiki.apache.org/cocoon/">Cocoon Wiki</link> focuses on content development for the Cocoon project. It is designed to facilitate document development and collaboration from all levels of Cocoon users. Documents include FAQs, snippets, how-tos, tutorials, RTs (random thoughts), dreams, surveys, and more. The preliminary focus of this the wiki is to serve as a documentation "breeding ground," where docs can "grow" until mature enough to become official cvs docs. However, it already represents a lively and valid document resource in its own right.
   </li>
   <li>
 <link href="http://www.anyware-tech.com/wikiland/">Wikiland</link> is an ongoing development effort to build a Cocoon-based wiki architecture. Wikiland features a Cocoon dictionary as the pretext to use, test and develop the wiki. The project is seeking Cocoon-oriented developers to further its development. For more information, see the <link href="http://rossel.free.fr/" >Wikiland home page.</link>
