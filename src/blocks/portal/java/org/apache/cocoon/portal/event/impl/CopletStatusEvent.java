@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletStatusEvent.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: CopletStatusEvent.java,v 1.2 2003/05/20 14:32:37 cziegeler Exp $
  */
 public abstract class CopletStatusEvent 
     implements Event, ComparableEvent {
@@ -77,7 +77,7 @@ public abstract class CopletStatusEvent
     
     public boolean equalsEvent(ComparableEvent event) {
         if (event instanceof CopletStatusEvent) {
-            return ((CopletStatusEvent)event).getCopletInstanceData().getCopletId().equals( this.coplet.getCopletId() );
+            return ((CopletStatusEvent)event).getCopletInstanceData().getId().equals( this.coplet.getId() );
         }
         return false;
     }

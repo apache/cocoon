@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.2 2003/05/08 11:54:00 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.3 2003/05/20 14:32:37 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractLogEnabled
@@ -107,7 +107,7 @@ public class URICopletAdapter
 				portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 				HashMap par = new HashMap();
 				par.put(Constants.PORTAL_NAME_KEY, portalService.getPortalName());
-				par.put(Constants.COPLET_ID_KEY, coplet.getCopletId());
+				par.put(Constants.COPLET_ID_KEY, coplet.getId());
             
 				copletSource = this.resolver.resolveURI(uri, null, par);
 			} else {

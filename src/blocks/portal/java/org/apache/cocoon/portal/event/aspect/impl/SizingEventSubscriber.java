@@ -64,7 +64,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingEventSubscriber.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: SizingEventSubscriber.java,v 1.2 2003/05/20 14:32:37 cziegeler Exp $
  */
 public final class SizingEventSubscriber implements Subscriber {
 
@@ -99,7 +99,7 @@ public final class SizingEventSubscriber implements Subscriber {
             profileManager = (ProfileManager) this.componentManager.lookup(ProfileManager.ROLE);
             target = new SizingStatus();
             profileManager.setAspectStatus(ProfileManager.SESSION_STATUS, 
-                                           statusEvent.getCopletInstanceData().getCopletId(), 
+                                           statusEvent.getCopletInstanceData().getId(), 
                                            target);
         } catch (ComponentException ce) {
             // ignore

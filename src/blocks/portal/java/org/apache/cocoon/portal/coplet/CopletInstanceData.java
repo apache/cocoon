@@ -58,7 +58,7 @@ import org.exolab.castor.mapping.MapItem;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.2 2003/05/19 09:14:06 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.3 2003/05/20 14:32:36 cziegeler Exp $
  */
 public final class CopletInstanceData
 //	extending MapItem used for Castor map workaround 
@@ -85,7 +85,7 @@ extends MapItem {
 	 * Returns the copletId.
 	 * @return String
 	 */
-	public String getCopletId() {
+	public String getId() {
 		return copletId;
 	}
 
@@ -93,7 +93,7 @@ extends MapItem {
 	 * Sets the copletId.
 	 * @param copletId The copletId to set
 	 */
-	public void setCopletId(String copletId) {
+	public void setId(String copletId) {
 		this.copletId = copletId;
 
 		// used for Castor map workaround
