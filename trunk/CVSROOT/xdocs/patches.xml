@@ -84,7 +84,8 @@
    </tr>
    <tr>
     <td>28 Oct 2000</td>
-    <td>resource URL: handling</td>
+    <td><link href="http://mailman.real-time.com/pipermail/cocoon-devel/2000-October/003029.html">
+     resource URL: handling</link></td>
     <td>Allows resource: URLs to be used everywhere, e.g. can read from JARs in XSLT.
      NOTE: This particular approach was discouraged in an earlier cocoon-dev discussion because of
      possible security manager problems.
@@ -94,14 +95,16 @@
    </tr>
    <tr>
     <td>29 Oct 2000</td>
-    <td>Browser database capabilities</td>
+    <td><link href="http://mailman.real-time.com/pipermail/cocoon-devel/2000-October/003041.html">
+     Browser capabilities and database</link></td>
     <td>Extensive changes to user agent recognition and a capabilities map.</td>
     <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
     <td>1.?</td>
    </tr>
    <tr>
     <td>31 Oct 2000</td>
-    <td>User Agent support in cmd line</td>
+    <td><link href="http://mailman.real-time.com/pipermail/cocoon-devel/2000-October/003141.html">
+     Command line patches</link></td>
     <td>Support for specifying user agent in the command line and outputting to stdout.</td>
     <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
     <td>1.?</td>
