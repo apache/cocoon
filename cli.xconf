@@ -32,9 +32,10 @@
     |        greater flexibility. If you require a stable and
     |        consistent method for accessing the CLI, it is recommended 
     |        that you use the command line parameters to configure 
-    |        the CLI.</note>
+    |        the CLI. See documentation at:
+    |        /userdocs/offline/index.html and Wiki:CommandLine
     |
-    | CVS: $Id: cli.xconf,v 1.10 2003/11/10 08:10:55 crossley Exp $
+    | CVS: $Id: cli.xconf,v 1.11 2003/11/13 06:24:13 crossley Exp $
     +-->
     
 <cocoon verbose="true"  
