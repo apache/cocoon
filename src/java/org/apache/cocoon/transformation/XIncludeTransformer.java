@@ -79,12 +79,12 @@ import java.util.Map;
 
 /**
  * Implementation of an XInclude transformer. It supports xml:base attributes,
- * xpointer fragment identifiers (see the xpointer package to see what exactly is supported),
- * fallback elements, and does xinclude processing on the included content and on the content
- * of fallback elements (with loop inclusion detection).
+ * XPointer fragment identifiers (see the xpointer package to see what exactly is
+ * supported), fallback elements, and does xinclude processing on the included content
+ * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.13 2004/02/08 11:30:38 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.14 2004/02/13 14:36:43 vgritsenko Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
