@@ -86,7 +86,7 @@ public abstract class AbstractDatatype implements Datatype {
 
     public void setSelectionList(SelectionList selectionList) {
         if (selectionList.getDatatype() != this)
-            throw new RuntimeException("Error in AbstractDatatype.setSelectionList: tried to assign a StaticSelectionList that is not associated with this datatype.");
+            throw new RuntimeException("Error in AbstractDatatype.setSelectionList: tried to assign a SelectionList that is not associated with this datatype.");
         this.selectionList = selectionList;
     }
 
