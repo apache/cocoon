@@ -12,6 +12,18 @@
 <map:pipelines>
   <map:pipeline>
 
+   <map:match pattern="">
+     <map:redirect-to uri="samples"/>
+   </map:match>
+   
+   <map:match pattern="samples">
+    <map:generate src="samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
    <map:match pattern="deli.html">
      <map:generate src="context://samples/deli/samples.xml"/>
      <map:transform src="context://samples/deli/deli_test.xsl" type="xslt"/>
