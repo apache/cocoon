@@ -42,7 +42,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-04-17 00:14:39 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-05-11 03:28:28 $ $Author: balld $
  */
 public class XIncludeFilter extends AbstractFilter implements Composer {
 
@@ -221,8 +221,8 @@ public class XIncludeFilter extends AbstractFilter implements Composer {
 			} else {
 				throw new SAXException("Unknown object type: "+object);
 			}
-			if (suffix.startsWith("xptr(") && suffix.endsWith(")")) {
-				String xpath = suffix.substring(6,suffix.length()-1);
+			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
+				String xpath = suffix.substring(9,suffix.length()-1);
 				if (debug) { System.err.println("XPath is "+xpath); }
 				DOMBuilder builder = new DOMBuilder(parser);
 				parser.setContentHandler(builder);
