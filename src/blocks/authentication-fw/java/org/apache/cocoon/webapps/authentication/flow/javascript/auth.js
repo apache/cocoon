@@ -49,8 +49,12 @@
 */
 
 /**
-
-       WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
+ * Flow/Javascript wrapper to Cocoon authentication framework.
+ *
+ * WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
+ *
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
+ * @version CVS $Id: auth.js,v 1.5 2003/09/21 12:01:17 upayavira Exp $
 */
 
 function auth_checkAuthentication(handler, application) {
