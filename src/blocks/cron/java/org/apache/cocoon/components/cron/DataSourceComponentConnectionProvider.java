@@ -22,6 +22,7 @@ import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.quartz.utils.ConnectionProvider;
 
 /**
@@ -31,12 +32,14 @@ import org.quartz.utils.ConnectionProvider;
 public class DataSourceComponentConnectionProvider implements ConnectionProvider {
 
     private ServiceManager m_manager;
+    private ServiceSelector m_datasources;
     private DataSourceComponent m_ds;
 
     public DataSourceComponentConnectionProvider(String dsName, ServiceManager manager) throws ConfigurationException {
         m_manager = manager;
         try {
-            m_ds = (DataSourceComponent) m_manager.lookup(DataSourceComponent.ROLE + "/" + dsName);            
+            m_datasources = (ServiceSelector) m_manager.lookup(DataSourceComponent.ROLE + "Selector");
+            m_ds = (DataSourceComponent) m_datasources.select(dsName);            
         }
         catch (ServiceException e) {
             throw new ConfigurationException("No datasource available by that name: " + dsName);
@@ -55,9 +58,13 @@ public class DataSourceComponentConnectionProvider implements ConnectionProvider
      */
     public void shutdown() throws SQLException {
         if (m_ds != null) {
-            m_manager.release(m_ds);
+            m_datasources.release(m_ds);
+        }
+        if (m_datasources != null) {
+            m_manager.release(m_datasources);
         }
         m_ds = null;
+        m_datasources = null;
         m_manager = null;
     }
 
