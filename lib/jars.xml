@@ -275,7 +275,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/groovy-1.0-beta-7.jar</lib>
+    <lib>optional/groovy-1.0-beta-8.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
@@ -288,7 +288,7 @@
 	  before they are loaded into the Java Virtual Machine.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/asm-1.4.3.jar</lib>
+    <lib>optional/asm-1.5.2.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
@@ -299,7 +299,7 @@
       class visitors that can be useful for programming and debugging purposes.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/asm-util-1.4.3.jar</lib>
+    <lib>optional/asm-util-1.5.2.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
