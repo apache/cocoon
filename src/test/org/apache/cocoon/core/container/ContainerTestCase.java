@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright 2002-2004 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
- * You may obtain a copy of the License at 
- * 
+ * You may obtain a copy of the License at
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed  under the  License is distributed on an "AS IS" BASIS,
  * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
  * implied.
- * 
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -58,7 +58,7 @@ import org.apache.avalon.framework.service.WrapperServiceManager;
  * <p>
  *   The following test case configuration can be used as a basis for new tests.
  *   Detailed explanations of the configuration elements can be found after
- *   the example. 
+ *   the example.
  * </p>
  * <pre>
  *   &lt;testcase&gt;
@@ -104,11 +104,11 @@ import org.apache.avalon.framework.service.WrapperServiceManager;
  *
  * <dt>roles</dt>
  * <dd>Roles configuration for the components configured in the
- *  <code>components</code> element.  
+ *  <code>components</code> element.
  * </dd>
  *
  * <dt>components</dt>
- * <dd>Used to configure any Components used by the test cases.  
+ * <dd>Used to configure any Components used by the test cases.
  * </dd>
  *
  * </dl>
@@ -116,10 +116,10 @@ import org.apache.avalon.framework.service.WrapperServiceManager;
  * @version $Id: $
  */
 public class ContainerTestCase extends TestCase {
-    
+
     /** The default logger */
-    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG);
-    
+    private Logger logger;
+
     /** The service manager to use */
     private ServiceManager manager;
 
@@ -132,15 +132,19 @@ public class ContainerTestCase extends TestCase {
     protected ServiceManager getManager() {
         return this.manager;
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        this.prepare();
+
+        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
+        this.logger = new ConsoleLogger(Integer.parseInt(level));
+
+        prepare();
     }
-    
+
     /**
      * Initializes the ComponentLocator
      *
@@ -152,11 +156,11 @@ public class ContainerTestCase extends TestCase {
         final String resourceName = getClass().getName().replace( '.', '/' ) + ".xtest";
         URL resource = getClass().getClassLoader().getResource( resourceName );
 
-        if( resource != null ) {
-            getLogger().debug( "Loading resource " + resourceName );
-            prepare( resource.openStream() );
+        if (resource != null) {
+            getLogger().debug("Loading resource " + resourceName);
+            prepare(resource.openStream());
         } else {
-            getLogger().debug( "Resource not found " + resourceName );
+            getLogger().debug("Resource not found " + resourceName);
         }
     }
 
@@ -171,27 +175,27 @@ public class ContainerTestCase extends TestCase {
      * the mentioned initialize method is also the place to set a different logging priority
      * to the member variable m_logPriority.
      */
-    protected final void prepare( final InputStream testconf )
+    protected final void prepare(final InputStream testconf)
     throws Exception {
-        if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug( "ContainerTestCase.initialize" );
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("ContainerTestCase.initialize");
         }
 
         final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        final Configuration conf = builder.build( testconf );
+        final Configuration conf = builder.build(testconf);
 
-        Context context = this.setupContext( conf.getChild( "context" ) );
+        Context context = this.setupContext(conf.getChild("context"));
 
-        setupManagers( conf.getChild( "components" ),
-                       conf.getChild( "roles" ),
-                       context );
+        setupManagers(conf.getChild("components"),
+                      conf.getChild("roles"),
+                      context);
     }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        this.done();
+        done();
         super.tearDown();
     }
 
@@ -199,7 +203,7 @@ public class ContainerTestCase extends TestCase {
      * Disposes the <code>ComponentLocator</code>
      */
     final private void done() {
-        if( manager != null ) {
+        if (manager != null) {
             ContainerUtil.dispose(manager);
             manager = null;
         }
@@ -216,24 +220,24 @@ public class ContainerTestCase extends TestCase {
     throws Exception {
         final DefaultContext context = new DefaultContext();
         final Configuration[] confs = conf.getChildren( "entry" );
-        for( int i = 0; i < confs.length; i++ ) {
-            final String key = confs[ i ].getAttribute( "name" );
-            final String value = confs[ i ].getAttribute( "value", null );
-            if( value == null ) {
-                String clazz = confs[ i ].getAttribute( "class" );
-                Object obj = getClass().getClassLoader().loadClass( clazz ).newInstance();
-                context.put( key, obj );
-                if( getLogger().isInfoEnabled() ) {
-                    getLogger().info( "ContainerTestCase: added an instance of class " + clazz + " to context entry " + key );
+        for (int i = 0; i < confs.length; i++) {
+            final String key = confs[i].getAttribute("name");
+            final String value = confs[i].getAttribute("value", null);
+            if (value == null) {
+                String clazz = confs[i].getAttribute("class");
+                Object obj = getClass().getClassLoader().loadClass(clazz).newInstance();
+                context.put(key, obj);
+                if (getLogger().isInfoEnabled()) {
+                    getLogger().info("ContainerTestCase: added an instance of class " + clazz + " to context entry " + key);
                 }
             } else {
-                context.put( key, value );
-                if( getLogger().isInfoEnabled() ) {
-                    getLogger().info( "ContainerTestCase: added value \"" + value + "\" to context entry " + key );
+                context.put(key, value);
+                if (getLogger().isInfoEnabled()) {
+                    getLogger().info("ContainerTestCase: added value \"" + value + "\" to context entry " + key);
                 }
             }
         }
-        addContext( context );
+        addContext(context);
         return context ;
     }
 
@@ -241,42 +245,41 @@ public class ContainerTestCase extends TestCase {
      * This method may be overwritten by subclasses to put additional objects
      * into the context programmatically.
      */
-    protected void addContext( DefaultContext context ) {
+    protected void addContext(DefaultContext context) {
     }
 
-    final private void setupManagers( final Configuration confCM,
-                                      final Configuration confRM,
-                                      final Context context )
+    final private void setupManagers(final Configuration confCM,
+                                     final Configuration confRM,
+                                     final Context context)
     throws Exception {
         // Setup the RoleManager
         DefaultRoleManager roleManager = new DefaultRoleManager();
-        roleManager.enableLogging( this.getLogger() );
-        roleManager.configure( confRM );
+        roleManager.enableLogging(getLogger());
+        roleManager.configure(confRM);
 
         // Set up the ComponentLocator
         ExcaliburComponentManager ecManager = new ExcaliburComponentManager();
-        ecManager.enableLogging( this.getLogger() );
-        ecManager.contextualize( context );
-        ecManager.setRoleManager( roleManager );
-        ecManager.setLoggerManager( new DefaultLoggerManager(this.logger));
-        ecManager.configure( confCM );
+        ecManager.enableLogging(getLogger());
+        ecManager.contextualize(context);
+        ecManager.setRoleManager(roleManager);
+        ecManager.setLoggerManager(new DefaultLoggerManager(getLogger()));
+        ecManager.configure(confCM);
         ecManager.initialize();
         this.manager = new WrapperServiceManager(ecManager);
     }
 
-    protected final Object lookup( final String key )
+    protected final Object lookup(final String key)
     throws ServiceException {
-        return manager.lookup( key );
+        return manager.lookup(key);
     }
 
-    protected final void release( final Object object ) {
-        manager.release( object );
+    protected final void release(final Object object) {
+        manager.release(object);
     }
-    
+
     protected static class DefaultLoggerManager implements LoggerManager {
-        
         private Logger logger;
-        
+
         public DefaultLoggerManager(Logger logger) {
             this.logger = logger;
         }
