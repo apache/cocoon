@@ -72,7 +72,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * 
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SelectNode.java,v 1.2 2004/01/26 15:44:59 unico Exp $
+ * @version CVS $Id: SelectNode.java,v 1.3 2004/01/31 16:57:52 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -116,8 +116,7 @@ public class SelectNode extends AbstractParentProcessingNode implements Initiali
         m_whenNodes = (ProcessingNode[][]) nodes.toArray(new ProcessingNode[tests.size()][0]);
         
         // <otherwise> clause
-        nodes = getChildNodesList(config.getChild("otherwise"));
-        m_otherwiseNodes = (ProcessingNode[]) nodes.toArray(new ProcessingNode[nodes.size()]);
+        m_otherwiseNodes = getChildNodes(config.getChild("otherwise"));
     }
     
     public void initialize() throws Exception {
