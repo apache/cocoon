@@ -25,11 +25,11 @@
   </group>
 
   <group name="Taglib Samples">
-    <sample name="Parent" href="parent.xhtml">
-      ParentResolving and Iteration. Uses LocaleTag in combination with MonthTag
-    </sample>
     <sample name="Variables" href="variable-p.xhtml">
       XPath-Resolving and Variables. Uses OutTag.
+    </sample>
+    <sample name="Parent" href="parent.xhtml">
+      ParentResolving and Iteration. Uses LocaleTag in combination with MonthTag
     </sample>
   </group>
 </samples>
