@@ -141,8 +141,7 @@ public class DefaultLinkService
             if (!comparableEvent || !current.equalsEvent((ComparableEvent) event)) {
                 if (hasParams) {
                     buffer.append('&');
-                }
-                else {
+                } else {
                     buffer.append('?');
                 }
                 buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
@@ -208,8 +207,7 @@ public class DefaultLinkService
             if (!found) {
                 if (hasParams) {
                     buffer.append('&');
-                }
-                else {
+                } else {
                     buffer.append('?');
                 }
                 buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
@@ -223,12 +221,10 @@ public class DefaultLinkService
             final Object current = iter.next();
             if (current instanceof Event) {
                 hasParams = this.addEvent(buffer, (Event) current, hasParams);
-            }
-            else if (current instanceof ParameterDescription) {
+            } else if ( current instanceof ParameterDescription ) {
                 if (hasParams) {
                     buffer.append('&');
-                }
-                else {
+                } else {
                     buffer.append('?');
                     hasParams = true;
                 }

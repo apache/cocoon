@@ -108,17 +108,4 @@ public abstract class AbstractProfileManager
         // overwrite in subclass
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#copyProfile(java.lang.String)
-     */
-    public Layout copyProfile(String layoutKey) {
-        throw new RuntimeException("Copy profile is not implemented.");
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#storeProfile(org.apache.cocoon.portal.layout.Layout, java.lang.String)
-     */
-    public void storeProfile(Layout rootLayout, String layoutKey) {
-        throw new RuntimeException("Store profile is not implemented.");
-    }
 }

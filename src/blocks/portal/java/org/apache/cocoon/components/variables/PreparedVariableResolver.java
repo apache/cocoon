@@ -58,6 +58,7 @@ public class PreparedVariableResolver
     
     public PreparedVariableResolver(String expr, ServiceManager manager, Context context) 
     throws PatternException {
+        
         super(null);
         this.expression = expr;
         this.manager = manager;

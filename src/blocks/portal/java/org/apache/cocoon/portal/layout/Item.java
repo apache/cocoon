@@ -43,7 +43,9 @@ public class Item extends AbstractParameters {
 	 */
 	public final void setLayout(Layout layout) {
 		this.layout = layout;
+		if(layout != null) {
 		layout.setParent(this);
+	}
 	}
     
     public final CompositeLayout getParent() {
@@ -71,6 +73,7 @@ public class Item extends AbstractParameters {
             Item clone = (Item)this.clone();
             if ( this.layout != null ) {
                 clone.layout = this.layout.copy();
+                clone.layout.setParent(clone);
             }
             clone.parentLayout = parent;
             return clone;
