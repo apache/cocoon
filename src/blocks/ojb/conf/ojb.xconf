@@ -2,5 +2,7 @@
 
 <xconf xpath="/cocoon" unless="ojb-jdo">
   <!-- Persistent Manager Factory for JDO -->
+  <!-- uncomment in order to set the logger to a category other than core.startup
   <ojb-jdo class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl" logger="core.ojb-jdo"/>
+  -->
 </xconf>
