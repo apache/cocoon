@@ -22,7 +22,7 @@
 
     @author bdelacretaz@apache.org
 
-    $Id: samples-mime-types.xml,v 1.5 2004/03/06 02:26:14 antonio Exp $
+    $Id: samples-mime-types.xml,v 1.6 2004/04/08 15:24:54 gcasper Exp $
  -->
 
 <project name="batik-samples-mime-types" default="batik-samples-mime-types">
@@ -33,7 +33,7 @@
 
     <target name="batik-samples-mime-types">
         <property name="helloWorldBaseUrl" value="${anteater.env.cocoon}/samples/hello-world"/>
-        <property name="batikBaseUrl" value="${anteater.env.cocoon}/samples/batik"/>
+        <property name="batikBaseUrl" value="${anteater.env.cocoon}/samples/blocks/batik"/>
 
         <httpRequest href="${helloWorldBaseUrl}/hello.svg">
             <match>
