@@ -64,10 +64,10 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id: WebContinuation.java,v 1.5 2003/08/26 09:05:15 mpo Exp $
+ * @version CVS $Id: WebContinuation.java,v 1.6 2004/01/21 14:31:25 vgritsenko Exp $
  */
 public class WebContinuation extends AbstractLogEnabled
-        implements Comparable {
+                             implements Comparable {
 
     /**
      * The continuation this object represents.
@@ -119,13 +119,13 @@ public class WebContinuation extends AbstractLogEnabled
      * is bigger than <code>lastAccessTime + timeToLive</code>.
      */
     protected int timeToLive;
-    
+
     /**
      * Holds the <code>ContinuationsDisposer</code> to call when this continuation
      * gets invalidated.
      */
     protected ContinuationsDisposer disposer;
-    
+
 
     /**
      * Create a <code>WebContinuation</code> object. Saves the object in
@@ -142,7 +142,7 @@ public class WebContinuation extends AbstractLogEnabled
     WebContinuation(String id,
                     Object continuation,
                     WebContinuation parentContinuation,
-                    int timeToLive, 
+                    int timeToLive,
                     ContinuationsDisposer disposer) {
         this.id = id;
         this.continuation = continuation;
@@ -181,10 +181,11 @@ public class WebContinuation extends AbstractLogEnabled
         if (level <= 0) {
             updateLastAccessTime();
             return this;
-        } else if (parentContinuation == null)
+        } else if (parentContinuation == null) {
             return this;
-        else
+        } else {
             return parentContinuation.getContinuation(level - 1);
+        }
     }
 
     /**
@@ -259,9 +260,9 @@ public class WebContinuation extends AbstractLogEnabled
     /**
      * Obtains the <code>ContinuationsDisposer</code> to call when this continuation
      * is invalidated.
-     * 
+     *
      * @return a <code>ContinuationsDisposer</code> instance or null if there are
-     * no specific clean-up actions required. 
+     * no specific clean-up actions required.
      */
     ContinuationsDisposer getDisposer() {
         return this.disposer;
@@ -283,8 +284,9 @@ public class WebContinuation extends AbstractLogEnabled
      * @return a <code>boolean</code> value
      */
     public boolean equals(Object another) {
-        if (another instanceof WebContinuation)
+        if (another instanceof WebContinuation) {
             return id.equals(((WebContinuation) another).id);
+        }
         return false;
     }
 
