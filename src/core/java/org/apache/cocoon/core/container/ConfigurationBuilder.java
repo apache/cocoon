@@ -16,6 +16,7 @@
 package org.apache.cocoon.core.container;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Iterator;
@@ -111,6 +112,52 @@ public class ConfigurationBuilder
         } catch( final Exception se ) {
             throw new Error( "Unable to setup SAX parser" + se );
         }
+    }
+
+    /**
+     * Build a configuration object using an InputStream.
+     * @param inputStream an <code>InputStream</code> value
+     * @return a <code>Configuration</code> object
+     * @throws SAXException if a parsing error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs
+     */
+    public Configuration build( final InputStream inputStream )
+    throws SAXException, IOException, ConfigurationException {
+        return this.build( new InputSource( inputStream ) );
+    }
+
+    /**
+     * Build a configuration object using an InputStream;
+     * supplying a systemId to make messages about all
+     * kinds of errors more meaningfull.
+     * @param inputStream an <code>InputStream</code> value
+     * @param systemId the systemId to set on the intermediate sax
+     *         inputSource
+     * @return a <code>Configuration</code> object
+     * @throws SAXException if a parsing error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs
+     */
+    public Configuration build( final InputStream inputStream, 
+                                final String systemId )
+    throws SAXException, IOException, ConfigurationException {
+        final InputSource inputSource = new InputSource( inputStream );
+        inputSource.setSystemId( systemId );
+        return this.build( inputSource );
+    }
+
+    /**
+     * Build a configuration object using an URI
+     * @param uri a <code>String</code> value
+     * @return a <code>Configuration</code> object
+     * @throws SAXException if a parsing error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs
+     */
+    public Configuration build( final String uri )
+    throws SAXException, IOException, ConfigurationException {
+        return this.build( new InputSource( uri ) );
     }
 
     /**
@@ -219,7 +266,7 @@ public class ConfigurationBuilder
             String finishedValue;
             if( this.preserveSpace.get( depth ) ) {
                 finishedValue = accumulatedValue;
-            } else if( 0 == accumulatedValue.length() ) {
+            } else if( accumulatedValue.length() == 0 ) {
                 finishedValue = null;
             } else {
                 finishedValue = accumulatedValue.trim();
@@ -234,7 +281,7 @@ public class ConfigurationBuilder
             }
         }
 
-        if( 0 == depth ) {
+        if( depth == 0 ) {
             this.configuration = finishedConfiguration;
         }
         this.namespaceSupport.popContext();
@@ -355,15 +402,13 @@ public class ConfigurationBuilder
      * @return a <code>String</code> value
      */
     private String getLocationString() {
-        if( null == this.locator ) {
+        if( this.locator == null ) {
             return "Unknown";
-        } else {
-            final int columnNumber = this.locator.getColumnNumber();
-            return
-            this.locator.getSystemId() + ":"
-                + this.locator.getLineNumber()
-                + ( columnNumber >= 0 ? ( ":" + columnNumber ) : "" );
-        }
+        } 
+        final int columnNumber = this.locator.getColumnNumber();
+        return this.locator.getSystemId() + ":"
+            + this.locator.getLineNumber()
+            + ( columnNumber >= 0 ? ( ":" + columnNumber ) : "" );
     }
     
     /* (non-Javadoc)

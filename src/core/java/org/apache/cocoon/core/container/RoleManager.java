@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.ServiceInfo;
 
@@ -271,7 +270,7 @@ implements Configurable {
         if (!hasLoaded(resource)) {
             loadedURLs.add(resource);
 
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            ConfigurationBuilder builder = new ConfigurationBuilder();
             Configuration config = builder.build(resource);
             configure(config);
         }

@@ -28,7 +28,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
@@ -554,10 +553,9 @@ implements ServiceManager, Configurable {
             while(handler == null && current.parentManager != null) {
                 if (!(current.parentManager instanceof CoreServiceManager)) {
                     throw new ServiceException(newRole, "Cannot alias to components not managed by CoreServiceManager");
-                } else {
-                    current = (CoreServiceManager)current.parentManager;
-                    handler = (ComponentHandler)current.componentHandlers.get(existingRole);
                 }
+                current = (CoreServiceManager)current.parentManager;
+                handler = (ComponentHandler)current.componentHandlers.get(existingRole);
             }
         }
         
@@ -689,7 +687,7 @@ implements ServiceManager, Configurable {
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
-                    DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+                    ConfigurationBuilder builder = new ConfigurationBuilder();
                     includeConfig = builder.build(src.getInputStream(), uri);
                 } catch (ConfigurationException ce) {
                     throw ce;
