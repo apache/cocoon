@@ -424,7 +424,7 @@
         <exclude name="**/samples/**/*.java"/>
       </javac>
 
-      <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar">
+      <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar" index="true">
         <fileset dir="{string('${build.blocks}')}/{$block-name}/dest">
           <include name="org/**"/>
           <include name="META-INF/**"/>
