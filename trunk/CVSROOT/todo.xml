@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.46 2000-11-11 13:46:39 greenrd Exp $
+  $Id: todo.xml,v 1.47 2000-11-14 18:42:36 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,9 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Fix FOP >0.13 compatibility problem, if feasible.
+  </action>
   <action context="code">
    Track down cause of OutOfMemoryError.
   </action>
@@ -84,6 +87,10 @@
 
  <actions priority="low">
   <action context="code">
+   Taglib (not part of esql) to dynamically specify connection parameters
+   (with or without connection pooling).
+  </action>
+  <action context="code">
    Add hooks for user-defined error-handling (better than just handle.errors.internally
    flag in cocoon.properties).
   </action>
@@ -112,6 +119,9 @@
    offers only "trivial" overhead reduction, even on large sites.
   </action>
   <action context="code">
+   Selection based on domain name not just user agent.
+  </action>
+  <action context="code">
    Better error reporting for typos in stylesheet URIs.
   </action>
  </actions>
@@ -138,6 +148,9 @@
    (see infozone, turbine, etc. for examples;
     O'Reilly is NOT open source) - but first fix
    tomcat+apache+cocoon upload bug.
+  </action>
+  <action context="code">
+   Semi-portable (to C2) XSP redirect semantics (topic for xsp-dev list).
   </action>
  </actions>
 
