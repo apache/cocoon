@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.194 2003/11/14 13:02:09 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.195 2003/11/14 13:04:06 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -107,12 +107,6 @@
       <link href="plan/release.html">release plan</link>
     </action>
 
-    <action context="code" assigned-to="open">
-      Use (only) released versions of excalibur 
-      (source, store, xmlutil). This requires a release of those
-      components in excalibur.
-    </action>
-
     <action context="build" assigned-to="open">
       Complete (means put all allowed constructs and combinations)
       the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
@@ -141,11 +135,6 @@
 
     <action context="code" assigned-to="open">
       Finish moving the scratchpad stuff in main trunk.
-    </action>
-
-    <action context="code" assigned-to="open">
-      The testcase for the entity resolver should be moved to the Excalibur XMLUtil, 
-      since there is the default resolver.
     </action>
 
     <action context="code" assigned-to="SMS">
