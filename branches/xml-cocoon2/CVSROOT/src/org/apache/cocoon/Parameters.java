@@ -16,7 +16,7 @@ import org.apache.arch.config.ConfigurationException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 07:11:35 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:12:27 $
  */
 public class Parameters {
     private Hashtable parameters=null;
@@ -36,7 +36,7 @@ public class Parameters {
      *
      * @return The previous value of the parameter or <b>null</b>.
      */
-    private String setParameter(String name, String value) {
+    public String setParameter(String name, String value) {
         if (name==null) return(null);
         if (value==null) return((String)this.parameters.remove(name));
         return((String)this.parameters.put(name,value));
