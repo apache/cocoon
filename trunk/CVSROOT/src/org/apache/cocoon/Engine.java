@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.32 2000-06-22 19:08:28 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.33 2000-08-17 22:34:13 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,6 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
  */
+ 
 package org.apache.cocoon;
 
 import java.io.*;
@@ -73,11 +74,13 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.32 $ $Date: 2000-06-22 19:08:28 $
+ * @version $Revision: 1.33 $ $Date: 2000-08-17 22:34:13 $
  */
 
 public class Engine implements Defaults {
 
+    private Block blocker = new Block();
+    
     private static Hashtable engineInstances = new Hashtable(1, 0.90f);
 
     Configurations configurations;
@@ -261,129 +264,164 @@ public class Engine implements Defaults {
         }
 
         Page page = null;
+        
+        boolean lock = false;
+        
+        String encodedRequest = Utils.encode( request );
+        
+        try {
+            if ( CACHE ) {
+                // ask if the cache contains the page requested and if it's
+                // a valid instance (no changeable points have changed)
+                page = cache.getPage(request);
 
-        // ask if the cache contains the page requested and if it's
-        // a valid instance (no changeable points have changed)
-        if (CACHE) page = cache.getPage(request);
-
-        // the page was not found in the cache or the cache was
-        // disabled, we need to process it
-        if (page == null) {
-
-            if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
-
-            // continue until the page is done.
-            for (int i = 0; i < LOOPS; i++) {
-                // catch if any OutOfMemoryError is thrown
-                try {
-                    // create the Page wrapper
-                    page = new Page();
-
-                    // get the document producer
-                    Producer producer = producers.getProducer(request);
-
-                    // set the producer as a page changeable point
-                    page.setChangeable(producer);
-
-                    // pass the produced stream to the parser
-                    Document document = producer.getDocument(request);
-
-                    if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
-
-                    // pass needed parameters to the processor pipeline
-                    Hashtable environment = new Hashtable();
-                    environment.put("path", producer.getPath(request));
-                    environment.put("browser", browsers.map(agent));
-                    environment.put("request", request);
-                    environment.put("response", response);
-                    if (servletContext != null) environment.put("context", servletContext);
-
-                    // process the document through the document processors
-                    while (true) {
-                        Processor processor = processors.getProcessor(document);
-                        if (processor == null) break;
-                        document = processor.process(document, environment);
-                        page.setChangeable(processor);
-                        if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
+                // if the page isn't in cache block any furhter access to this page
+                // until it get's put into cache
+                if ( page == null ) {
+                    
+                    // lock this page while we build it and put it in cache
+                    lock = this.blocker.lock( encodedRequest );
+                    
+                    if ( ! lock ) {
+                        // we were blocked so by another thread processing this page
+                        // so maybe it's in cache now
+                        page = cache.getPage(request);
                     }
-
-                    // get the right formatter for the page
-                    Formatter formatter = formatters.getFormatter(document);
-
-                    // FIXME: I know it sucks to encapsulate a nice stream into
-                    // a long String to push it into the cache. In the future,
-                    // we'll find a smarter way to do it.
-
-                    // format the page
-                    StringWriter writer = new StringWriter();
-                    formatter.format(document, writer, environment);
-
-                    if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
-
-                    // fill the page bean with content
-                    page.setContent(writer.toString());
-
-                    // set content type together with encoding if appropriate
-                    String encoding = formatter.getEncoding();
-                    if (encoding != null) {
-                        page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
-                    } else {
-                        page.setContentType(formatter.getMIMEType());
-                    }                    
-
-                    // page is done without memory errors so exit the loop
-                    break;
-                } catch (OutOfMemoryError e) {
-                    if (LOG) logger.log(this, "Triggered OutOfMemory", Logger.WARNING);
-                    // force the cache to free some of its content.
-                    cache.flush();
-                    // reset the page to signal the error
-                    page = null;
                 }
             }
-        }
-
-        if (page == null) {
-            if (LOG) logger.log(this, "System is out of memory", Logger.EMERGENCY);
-            throw new Exception("FATAL ERROR: the system ran out of memory when"
-                + " processing the request. Increase your JVM memory.");
-        }
-
-        if (DEBUG) {
-            // send the debug message and restore the streams
-            Frontend.print(response, "Debugging " + request.getRequestURI(), debugStream.toString());
-            System.setOut(System.out);
-            System.setErr(System.err);
-        } else {
-            // set the response content type
-            response.setContentType(page.getContentType());
-
-            // get the output writer
-            PrintWriter out = response.getWriter();
-
-            // send the page
-            out.println(page.getContent());
-
-            // if verbose mode is on the the output type allows it
-			         // and the HTTP request isn't a HEAD
-            // print some processing info as a comment
-            if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
-                time = System.currentTimeMillis() - time;
-                out.println("<!-- This page was served "
-                    + (page.isCached() ? "from cache " : "")
-                    + "in " + time + " milliseconds by "
-                    + Cocoon.version() + " -->");
-                //out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");
+  
+            // the page was not found in the cache or the cache was
+            // disabled, we need to process it
+            
+            
+            if (page == null) {
+                
+                synchronized( this ) {
+    
+                    if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
+        
+                    // continue until the page is done.
+                    for (int i = 0; i < LOOPS; i++) {
+                        // catch if any OutOfMemoryError is thrown
+                        try {
+                            // create the Page wrapper
+                            page = new Page();
+        
+                            // get the document producer
+                            Producer producer = producers.getProducer(request);
+        
+                            // set the producer as a page changeable point
+                            page.setChangeable(producer);
+        
+                            // pass the produced stream to the parser
+                            Document document = producer.getDocument(request);
+        
+                            if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
+        
+                            // pass needed parameters to the processor pipeline
+                            Hashtable environment = new Hashtable();
+                            environment.put("path", producer.getPath(request));
+                            environment.put("browser", browsers.map(agent));
+                            environment.put("request", request);
+                            environment.put("response", response);
+                            if (servletContext != null) environment.put("context", servletContext);
+        
+                            // process the document through the document processors
+                            while (true) {
+                                Processor processor = processors.getProcessor(document);
+                                if (processor == null) break;
+                                document = processor.process(document, environment);
+                                page.setChangeable(processor);
+                                if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
+                            }
+        
+                            // get the right formatter for the page
+                            Formatter formatter = formatters.getFormatter(document);
+        
+                            // FIXME: I know it sucks to encapsulate a nice stream into
+                            // a long String to push it into the cache. In the future,
+                            // we'll find a smarter way to do it.
+        
+                            // format the page
+                            StringWriter writer = new StringWriter();
+                            formatter.format(document, writer, environment);
+        
+                            if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
+        
+                            // fill the page bean with content
+                            page.setContent(writer.toString());
+        
+                            // set content type together with encoding if appropriate
+                            String encoding = formatter.getEncoding();
+                            if (encoding != null) {
+                                page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
+                            } else {
+                                page.setContentType(formatter.getMIMEType());
+                            }                    
+        
+                            // page is done without memory errors so exit the loop
+                            break;
+                        } catch (OutOfMemoryError e) {
+                            if (LOG) logger.log(this, "Triggered OutOfMemory", Logger.WARNING);
+                            // force the cache to free some of its content.
+                            cache.flush();
+                            // reset the page to signal the error
+                            page = null;
+                        }
+                    }
+                }
             }
-
-            // send all content so that client doesn't wait while caching.
-            out.flush();
+    
+            if (page == null) {
+                if (LOG) logger.log(this, "System is out of memory", Logger.EMERGENCY);
+                throw new Exception("FATAL ERROR: the system ran out of memory when"
+                    + " processing the request. Increase your JVM memory.");
+            }
+    
+            if (DEBUG) {
+                // send the debug message and restore the streams
+                Frontend.print(response, "Debugging " + request.getRequestURI(), debugStream.toString());
+                System.setOut(System.out);
+                System.setErr(System.err);
+            } else {
+                // set the response content type
+                response.setContentType(page.getContentType());
+    
+                // get the output writer
+                PrintWriter out = response.getWriter();
+    
+                // send the page
+                out.println(page.getContent());
+    
+                // if verbose mode is on the the output type allows it
+                         // and the HTTP request isn't a HEAD
+                // print some processing info as a comment
+                if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
+                    time = System.currentTimeMillis() - time;
+                    out.println("<!-- This page was served "
+                        + (page.isCached() ? "from cache " : "")
+                        + "in " + time + " milliseconds by "
+                        + Cocoon.version() + " -->");
+                    //out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");
+                }
+    
+                // send all content so that client doesn't wait while caching.
+                out.flush();
+            }
+    
+            if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
+    
+            // cache the created page.
+            cache.setPage(page, request);
+        
+        } finally {
+            // if there is a lock make sure it is released,
+            // otherwise this page could never be served
+            if ( lock ) {
+                this.blocker.unlock( encodedRequest );
+            }
         }
-
-        if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
-
-        // cache the created page.
-        cache.setPage(page, request);
+        
     }
 
     /**
@@ -418,4 +456,84 @@ public class Engine implements Defaults {
         }
         return table;
     }
-}
+    
+    /**
+     * LAF: August 2, 2000
+     *
+     * Problem: For large pages that require huge amounts of time and CPU usage
+     * if the page is not in cache and multiple requests are made for that page
+     * all requests will attempt to build the page thereby puting undue stress on
+     * the system.
+     *
+     * Solution: If caching is on block requests to build a page if another request
+     * is currently building that same page, i.e. subsequent requests wait until the
+     * page gets put into cache.  Also, if the first attempt to build the page fails
+     * to put the page in cache allow the next queued request to build the page.
+     * See PersistantCache and PersistantStore for further enhancments to large pages.
+     */
+    private class Block
+    {
+        // holds the locked objects
+        private Hashtable blocks = new Hashtable();
+    
+        
+        
+        /**
+         * Checks if a key is being blocked, and if so blocks this request until notified.
+         * If the key is not locked then it becomes locked, so any subsequent calls will block.
+         *
+         * @param key - The object to be locked.
+         * @return boolean - ture = a lock was obtained, false = the caller was blocked.
+         */
+        public boolean lock( Object key )
+        {
+            boolean locked = false;
+            
+            if ( ! this.blocks.containsKey(key) ) {
+                // flag the key as locked
+                System.err.println( "Locking: " + key );
+                this.blocks.put( key, key );
+                locked = true;
+                
+            } else {
+                // block the call
+                System.err.println( "Blocking: " + key );
+
+                try {
+                    // synchronization is required to be an owner of this objects monitor
+                    synchronized( this ) {
+                        // wait until the block is released by the blocking thread
+                        while( this.blocks.containsKey(key) ) {
+                            wait();
+                        }
+                    }
+                } catch( InterruptedException ie ) {
+                    System.err.println( "Wait for '" + key + "' was interrupted" );
+                }
+            }
+            
+            System.err.println( "Total locks for all pages: " + this.blocks.size() );
+            return locked;
+            
+        } // lock(Object)
+        
+        
+        /**
+         * @param key - The object who's lock is to be removed, all waiting threads are notified.
+         */
+        public void unlock( Object key )
+        {
+            // notify all waiting threads if there was a lock on this key
+            if ( this.blocks.remove(key) != null ) {
+                System.err.println( "Releasing lock on: " + key );
+
+                // synchronization is required to be an owner of this objects monitor
+                synchronized( this ) {
+                    notifyAll();
+                }
+            }
+        } // unlock(Object)
+        
+    } // inner class Block
+
+} // class Engine
