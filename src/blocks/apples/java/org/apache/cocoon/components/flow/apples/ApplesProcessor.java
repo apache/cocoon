@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
 public class ApplesProcessor extends AbstractInterpreter implements Serviceable, ContinuationsDisposer {
 
     //TODO make this a configuration setting
-    public static final int TIMETOLIVE = 1800; // 30 minutes
+    public static final int TIMETOLIVE = 1800000; // 30 minutes
 
 
     private ServiceManager serviceManager;
