@@ -104,7 +104,7 @@
         </p>
         <p>
             Here's the page definition for our number-guessing form.
-            JXTemplate codes like <em>${continuation.id}</em>, will by replaced
+            JXTemplate codes like <em>${cocoon.continuation.id}</em>, will by replaced
             by values provided in the Flowscript <em>sendPageAndWait</em> function call.
         </p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/number-guess/guess.xml/page"/>
