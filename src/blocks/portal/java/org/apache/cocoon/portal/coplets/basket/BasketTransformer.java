@@ -60,7 +60,7 @@ extends AbstractSAXTransformer {
      * Constructor
      */
     public BasketTransformer() {
-        super.defaultNamespaceURI = NAMESPACE_URI;
+        this.defaultNamespaceURI = NAMESPACE_URI;
     }
 
     /* (non-Javadoc)
@@ -112,9 +112,11 @@ extends AbstractSAXTransformer {
             } finally {
                 this.manager.release(service);
             }
+
         } else if ( UPLOAD_ITEM_ELEMENT.equals(name) ) {
             this.uploadElements.add(attr.getValue("name"));
             this.startElement("", "input", "input", attr);
+
         } else if ( UPLOAD_FORM_ELEMENT.equals(name) ) {
             AttributesImpl ai = new AttributesImpl(attr);
             PortalService service = null;
@@ -135,9 +137,9 @@ extends AbstractSAXTransformer {
             if ( parameters != null && parameters.length() > 0 ) {
                 // create hidden input fields
                 RequestParameters pars = new RequestParameters(parameters);
-                Enumeration enum = pars.getParameterNames();
-                while ( enum.hasMoreElements() ) {
-                    String pName = (String)enum.nextElement();
+                Enumeration enumeration = pars.getParameterNames();
+                while ( enumeration.hasMoreElements() ) {
+                    String pName = (String)enumeration.nextElement();
                     String pValue = pars.getParameter(pName);
                     AttributesImpl hiddenAttrs = new AttributesImpl();
                     hiddenAttrs.addCDATAAttribute("type", "hidden");
@@ -147,6 +149,7 @@ extends AbstractSAXTransformer {
                     this.endElement("", "input", "input");
                 }
             }
+
         }
     }
 

@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.12 2004/07/13 14:30:11 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -242,12 +242,12 @@ public class ProxyTransformer
             StringBuffer query = new StringBuffer();
 
             boolean firstparameter = true;
-            Enumeration enum = request.getParameterNames();
+            Enumeration enumeration = request.getParameterNames();
 
             boolean post = ("POST".equals(request.getMethod()));
 
-            while (enum.hasMoreElements()) {
-                String paramName = (String) enum.nextElement();
+            while (enumeration.hasMoreElements()) {
+                String paramName = (String) enumeration.nextElement();
 
                 if (!paramName.startsWith("cocoon-portal-")) {
                     String[] paramValues =

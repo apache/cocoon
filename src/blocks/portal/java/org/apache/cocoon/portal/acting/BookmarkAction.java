@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * </bookmarks>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BookmarkAction.java,v 1.5 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public class BookmarkAction
 extends ServiceableAction
@@ -190,9 +190,9 @@ implements ThreadSafe, Parameterizable {
                     }
                 }
             }
-            Enumeration enum = request.getParameterNames();
-            while (enum.hasMoreElements()) {
-                String name = (String)enum.nextElement();
+            Enumeration enumeration = request.getParameterNames();
+            while (enumeration.hasMoreElements()) {
+                String name = (String)enumeration.nextElement();
                 String value = request.getParameter(name);
                 
                 Mapping m = (Mapping) this.eventMap.get(name);

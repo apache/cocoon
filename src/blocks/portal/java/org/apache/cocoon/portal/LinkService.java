@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LinkService.java,v 1.6 2004/06/07 09:53:34 cziegeler Exp $
+ * @version CVS $Id$
  */
 public interface LinkService extends Component {
 
@@ -33,6 +33,12 @@ public interface LinkService extends Component {
     
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
     
+    static class ParameterDescription {
+        public final String parameters;
+        public ParameterDescription(String parameters) {
+            this.parameters = parameters;
+        }
+    }
     /**
      * Get the uri for this coplet containing the additional event
      * @param event The event to add (null is also allowed for convenience)
@@ -41,8 +47,8 @@ public interface LinkService extends Component {
     String getLinkURI(Event event);
 
     /**
-     * Get the uri for this coplet containing the additional events
-     * @param events The events to add
+     * Get the uri for this coplet containing the additional events.
+     * @param events The events to add: These can either be {@link Event}s or {@link #ParameterDescription}s.
      * @return A URI
      */
     String getLinkURI(List events);
