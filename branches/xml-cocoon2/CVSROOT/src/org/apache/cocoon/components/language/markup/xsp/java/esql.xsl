@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.46 2001-02-19 19:18:36 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.47 2001-02-20 05:10:21 balld Exp $-->
 <!--
 
  ============================================================================
@@ -321,9 +321,13 @@
       </xsl:choose>
       try {
         if ("false".equals(String.valueOf(<xsl:copy-of select="$autocommit"/>))) {
-          _esql_connection.connection.setAutoCommit(false);
+          if (_esql_connection.connection.getAutoCommit()) {
+            _esql_connection.connection.setAutoCommit(false);
+          }
         } else {
-          _esql_connection.connection.setAutoCommit(true);
+          if (!_esql_connection.connection.getAutoCommit()) {
+            _esql_connection.connection.setAutoCommit(true);
+          }
         }
       } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
         throw new RuntimeException("Error setting connection autocommit");
