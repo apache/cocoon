@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.11 2000-01-31 21:53:12 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.12 2000-02-03 08:09:14 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-01-31 21:53:12 $
+ * @version $Revision: 1.12 $ $Date: 2000-02-03 08:09:14 $
  */
 
 public class Engine implements Defaults {
@@ -311,7 +311,15 @@ public class Engine implements Defaults {
             response.setContentType(page.getContentType());
 
             // get the output writer
-            PrintWriter out = response.getWriter();
+            PrintWriter out = null;
+			try {
+				out = response.getWriter();
+			} catch (IllegalStateException e) {
+				// we don't want to write to this or cache this document since
+				// presumably it is not complete so lets return
+				// from this call to handle()
+				return;
+			}
 
             // send the page
             out.println(page.getContent());
