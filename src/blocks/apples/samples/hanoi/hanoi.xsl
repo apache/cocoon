@@ -17,9 +17,9 @@
       <table border="0">
         <!-- fixing col-widths row -->
         <tr>
-		  <xsl:call-template name="fix-cells" >
-		    <xsl:with-param name="remaining" select="$cols-total" />
-		  </xsl:call-template>
+      <xsl:call-template name="fix-cells" >
+        <xsl:with-param name="remaining" select="$cols-total" />
+      </xsl:call-template>
         </tr>
         <!-- /fixing col-widths row -->
         
@@ -49,26 +49,26 @@
         <tr>
           <td colspan="{$cols-total}"><hr width="70%"/></td>
         </tr>        
-		<!-- /moving-disc-row -->
-		
-		<!-- stack-header-row -->
-	    <tr>
-	      <xsl:choose>
-	        <xsl:when test="$on-the-move" >
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=0">Drop It!</a></center></td>
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=1">Drop It!</a></center></td>
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=2">Drop It!</a></center></td>
-	        </xsl:when>
-	        <xsl:otherwise>
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=0">Lift It!</a></center></td>
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=1">Lift It!</a></center></td>
-		      <td colspan="{$cols-per-stack}"><center><a href="?stack=2">Lift It!</a></center></td>
-	        </xsl:otherwise>
-	      </xsl:choose>
-	    </tr>
-		<!-- /stack-header-row -->
-	
-		
+    <!-- /moving-disc-row -->
+    
+    <!-- stack-header-row -->
+      <tr>
+        <xsl:choose>
+          <xsl:when test="$on-the-move" >
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=0">Drop It!</a></center></td>
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=1">Drop It!</a></center></td>
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=2">Drop It!</a></center></td>
+          </xsl:when>
+          <xsl:otherwise>
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=0">Lift It!</a></center></td>
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=1">Lift It!</a></center></td>
+          <td colspan="{$cols-per-stack}"><center><a href="?stack=2">Lift It!</a></center></td>
+          </xsl:otherwise>
+        </xsl:choose>
+      </tr>
+    <!-- /stack-header-row -->
+  
+    
         <!-- stack-rows -->
         <xsl:call-template name="remaining-stack-rows">
           <xsl:with-param name="remaining" select="$height"/>
@@ -113,7 +113,7 @@
     <xsl:param name="cols-per-stack"/>
     <xsl:param name="stacks"/>
 
-	<tr height="5px" bgcolor="#ffffff">	
+  <tr height="5px" bgcolor="#ffffff">  
       <xsl:for-each select="$stacks/hn:stack">
         <xsl:variable name="stack-ndx" select="position()"/>
 
@@ -135,7 +135,7 @@
     
     <xsl:variable name="size" select="$disc/@size" />
 
-	<xsl:choose>
+  <xsl:choose>
       <xsl:when test="$size &gt; 0" >
         <xsl:choose>
           <xsl:when test="($max_size - $size) &gt; 0" >
@@ -152,12 +152,12 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-	  <xsl:otherwise>
-	    <td colspan="{$max_size}" bgcolor="#ffffff"/>
-	    <td                       bgcolor="#000000"/>
-	    <td colspan="{$max_size}" bgcolor="#ffffff"/>
-	  </xsl:otherwise>
-	</xsl:choose>    
+    <xsl:otherwise>
+      <td colspan="{$max_size}" bgcolor="#ffffff"/>
+      <td                       bgcolor="#000000"/>
+      <td colspan="{$max_size}" bgcolor="#ffffff"/>
+    </xsl:otherwise>
+  </xsl:choose>    
 
   </xsl:template>
 
@@ -165,7 +165,7 @@
   <xsl:template name="fix-cells">
     <xsl:param name="remaining"/>
 
-	<td width="5px" />
+  <td width="5px" />
 
     <xsl:if test="$remaining &gt; 1">
       <xsl:call-template name="fix-cells">

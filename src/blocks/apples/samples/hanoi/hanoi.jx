@@ -19,15 +19,14 @@
       <hn:stacks>
         <jx:forEach var="stack" items="${stacks}">
           <hn:stack>
-	        <jx:forEach var="disc" items="${stack}">
-	          <hn:disc size="${disc}" />
-	        </jx:forEach>
+          <jx:forEach var="disc" items="${stack}">
+            <hn:disc size="${disc}" />
+          </jx:forEach>
           </hn:stack>
-		</jx:forEach>	        
+    </jx:forEach>
       </hn:stacks>   
     </hn:hanoi>    
         
   </content>
 
 </page>
-  
