@@ -62,21 +62,40 @@
      </p>
      <source>
       <![CDATA[
-<component name="org.apache.cocoon.components.datasource.DataSourceComponentSelector"
+<component name="org.apache.avalon.util.datasource.DataSourceComponentSelector"
            class="org.apache.cocoon.CocoonComponentSelector">
 
-  <component-instance name="MyConnectionName" class="org.apache.cocoon.components.datasource.JdbcDataSource">
+  <component-instance name="MyConnectionName" class="org.apache.avalon.util.datasource.JdbcDataSource">
     <pool-controller min="5" max="10"/>
     <dburl>jdbc:oracle:thin:@localhost:1521:mydatabase</dburl>
     <user>mylogin</user>
     <password>myPassword</password>
   </component-instance>
 
-  <component-instance name="MyJ2eeConnection" class="org.apache.cocoon.components.datasource.J2eeDataSource">
+  <component-instance name="MyJ2eeConnection" class="org.apache.avalon.util.datasource.J2eeDataSource">
     <dbname>cocoonDB</dbname>
   </component-instance>
 </component>
       ]]>
+     </source>
+     <p>
+       The following alternative snippet makes things even easier for you.
+     </p>
+     <source>
+     <![CDATA[
+<datasources>
+  <component-instance name="MyConnectionName" class="org.apache.avalon.util.datasource.JdbcDataSource">
+    <pool-controller min="5" max="10"/>
+    <dburl>jdbc:oracle:thin:@localhost:1521:mydatabase</dburl>
+    <user>mylogin</user>
+    <password>myPassword</password>
+  </component-instance>
+
+  <component-instance name="MyJ2eeConnection" class="org.apache.avalon.util.datasource.J2eeDataSource">
+    <dbname>cocoonDB</dbname>
+  </component-instance>
+</datasources>
+     ]]>
      </source>
      <s3 title="The JDBC Connection Properties">
       <p>
