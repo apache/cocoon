@@ -26,6 +26,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
@@ -39,15 +42,20 @@ import org.w3c.dom.Element;
  * Currently the list of datatype and validationrule builders is hardcoded, but this will
  * become externally configurable in the future.
  * 
- * @version $Id: DefaultDatatypeManager.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id: DefaultDatatypeManager.java,v 1.2 2004/04/15 18:09:03 bruno Exp $
  *
  */
 public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Serviceable,
-        Configurable, Initializable, Disposable {
+        Configurable, Initializable, Disposable, Contextualizable {
     private SimpleServiceSelector typeBuilderSelector;
     private SimpleServiceSelector validationRuleBuilderSelector;
     private ServiceManager serviceManager;
     private Configuration configuration;
+    private Context context;
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
     public void configure(Configuration configuration) throws ConfigurationException {
         this.configuration = configuration;
@@ -59,10 +67,12 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
 
     public void initialize() throws Exception {
         typeBuilderSelector = new SimpleServiceSelector("datatype", DatatypeBuilder.class);
+        typeBuilderSelector.contextualize(context);
         typeBuilderSelector.service(serviceManager);
         typeBuilderSelector.configure(configuration.getChild("datatypes"));
 
         validationRuleBuilderSelector = new SimpleServiceSelector("validation-rule", ValidationRuleBuilder.class);
+        validationRuleBuilderSelector.contextualize(context);
         validationRuleBuilderSelector.service(serviceManager);
         validationRuleBuilderSelector.configure(configuration.getChild("validation-rules"));
 

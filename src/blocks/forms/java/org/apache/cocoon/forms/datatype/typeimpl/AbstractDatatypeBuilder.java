@@ -21,6 +21,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.DatatypeBuilder;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
@@ -34,20 +37,31 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version $Id: AbstractDatatypeBuilder.java,v 1.3 2004/04/15 18:09:03 bruno Exp $
  */
-public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable {
+public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable, Contextualizable {
     protected ServiceManager serviceManager;
     private SimpleServiceSelector convertorBuilders;
     private String defaultConvertorHint;
     private Convertor plainConvertor;
+    private Context context;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
     }
 
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
     public void configure(Configuration configuration) throws ConfigurationException {
         convertorBuilders = new SimpleServiceSelector("convertor", ConvertorBuilder.class);
+        try {
+            convertorBuilders.contextualize(context);
+            convertorBuilders.service(serviceManager);
+        } catch (Exception e) {
+            throw new ConfigurationException("Error setting up convertor builder selector.", e);
+        }
         Configuration convertorsConf = configuration.getChild("convertors");
         convertorBuilders.configure(convertorsConf);
         defaultConvertorHint = convertorsConf.getAttribute("default");
