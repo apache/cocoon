@@ -86,7 +86,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.19 2003/10/21 13:37:42 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.20 2003/11/07 14:15:53 vgritsenko Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -482,9 +482,17 @@ implements SourceResolver
     public void dispose() {
         if ( null != this.sourceResolver ) {
             super.release( this.sourceResolver );
-            this.sourceResolver = null;
+            // We cannot null out sourceResolver here yet as some other not
+            // disposed yet components might still have unreleased sources,
+            // and they will call {@link #release(Source)} during their
+            // dispose().
         }
+        
         super.dispose();
+        
+        // All components now are released so sourceResolver should be not
+        // needed anymore.
+        this.sourceResolver = null;
     }
 
     /**
