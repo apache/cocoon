@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.48 2001-01-23 18:37:27 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.49 2001-01-23 18:41:05 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.48 $ $Date: 2001-01-23 18:37:27 $
+ * @version $Revision: 1.49 $ $Date: 2001-01-23 18:41:05 $
  */
 
 public class Engine implements Defaults {
@@ -358,6 +358,7 @@ public class Engine implements Defaults {
                         if (PROFILE) profiler.startEvent (requestMarker, producer.getClass ());
                         Document document = producer.getDocument(request);
                         if (PROFILE) profiler.finishEvent (requestMarker, producer.getClass ());
+                        if ((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
 
                         if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
 
@@ -381,9 +382,9 @@ public class Engine implements Defaults {
                             String processDesc = processor.getClass ().getName () + "-" + processNum;
                             if (PROFILE) profiler.startEvent (requestMarker, processDesc);
                             document = processor.process(document, environment);
-                            if ((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
                             page.setChangeable(processor);
                             if (PROFILE) profiler.finishEvent (requestMarker, processDesc);
+                            if ((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
                             if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
                         }
 
