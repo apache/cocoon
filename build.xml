@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.17 2003/03/17 13:23:57 stefano Exp $:
+       CVS $Id: build.xml,v 1.18 2003/03/17 23:12:54 vgritsenko Exp $:
 
 ============================================================================ -->
 
@@ -870,6 +870,8 @@
       <classpath>
         <pathelement path="${build.dest}" />
         <pathelement path="${build.scratchpad.dest}" />
+        <!-- FIXME Resolver tests depend on deprecated stuff -->
+        <pathelement path="${build.deprecated}" />
       </classpath>
     </javac>
     <junit printsummary="yes" haltonfailure="yes" fork="yes">
@@ -877,6 +879,8 @@
         <pathelement location="${build.test}" />
         <pathelement location="${build.dest}" />
         <pathelement location="${build.scratchpad.dest}" />
+        <!-- FIXME Resolver tests depend on deprecated stuff -->
+        <pathelement path="${build.deprecated}" />
         <pathelement path="${java.class.path}" />
       </classpath>
       <classpath refid="classpath"/>
