@@ -86,7 +86,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @since 2.1
- * @version CVS $Id: XPathExceptionSelector.java,v 1.2 2003/05/04 20:24:47 cziegeler Exp $
+ * @version CVS $Id: XPathExceptionSelector.java,v 1.3 2003/05/07 12:06:42 vgritsenko Exp $
  */
 
 public class XPathExceptionSelector extends ExceptionSelector implements Configurable {
@@ -121,7 +121,7 @@ public class XPathExceptionSelector extends ExceptionSelector implements Configu
     /**
      * Compute the exception type, given the configuration and the exception stored in the object model.
      * 
-     * @see ObjectModelHelper#getThrowable()
+     * @see org.apache.cocoon.environment.ObjectModelHelper#getThrowable(java.util.Map)
      */
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
         
