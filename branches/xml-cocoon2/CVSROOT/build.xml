@@ -116,7 +116,7 @@ by the main ones.
     <property name="debug"          value="on"/>
     <property name="optimize"       value="on"/>
     <property name="deprecation"    value="off"/>
-    <property name="build.compiler" value="classic"/>
+    <property name="build.compiler" value="jikes"/>
     <property name="target.vm"      value="1.2"/>
 
     <property name="src.dir"      value="./src"/>
@@ -352,7 +352,9 @@ by the main ones.
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
   <target name="prepare-docs" depends="init">
-    <copydir src="${docs.dir}/images" dest="${build.docs}/images"/>
+    <copy todir="${build.docs}/images">
+      <fileset dir="${docs.dir}/images"/>
+    </copy>
     <copy file="changes.xml" tofile="${docs.dir}/changes.xml" filtering="on"/>
     <copy file="todo.xml"    tofile="${docs.dir}/todo.xml"/>
 
@@ -465,7 +467,7 @@ by the main ones.
       <include name="LICENSE"/>
       <include name="INSTALL"/>
       <include name="WARNING"/>
-      <include name="*.sh"/>
+      <include name="*.bat"/>
       <include name="*.sh"/>
      </fileset>
     </copy>
@@ -501,7 +503,7 @@ by the main ones.
   </target>
 
   <target name="distclean" depends="clean" description="* Cleans everything to the original state">
-    <deltree dir="${build.root}"/>
+    <delete dir="${build.root}"/>
     <delete file="${dist.target}/${Name}-${version}.tar.gz"/>
     <delete file="${dist.target}/${Name}-${version}.tar"/>
     <delete file="${dist.target}/${Name}-${version}.zip"/>
