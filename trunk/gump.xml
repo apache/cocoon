@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.47 2003/04/22 11:40:05 stefano Exp $
+  CVS $Id: gump.xml,v 1.48 2003/04/22 12:06:37 bruno Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -740,6 +740,25 @@
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
 
+  <project name="cocoon-block-woody" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="woody"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xreporter-cocoon" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/woody-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -838,6 +857,15 @@
     </description>
     <home nested="src/blocks/swf/lib"/>
     <jar name="spark.jar"/>
+  </project>
+
+  <project name="xreporter-expression">
+    <url href="http://xreporter.cocoondev.org"/>
+    <description>
+      An expression language interpreter.
+    </description>
+    <home nested="src/blocks/woody/lib"/>
+    <jar name="xreporter-expression-20030418.jar.jar"/>
   </project>
   
 </module>
