@@ -109,15 +109,15 @@
   <map:pipeline>
 
     <!-- images -->
-	<map:match pattern="*.gif">
+	<map:match pattern="images/*.gif">
 		<map:read mime-type="image/gif" src="{global:skin}images/{1}.gif"/>
 	</map:match>
-	<map:match pattern="*.jpg">
+	<map:match pattern="images/*.jpg">
     	<map:read mime-type="image/jpg" src="{global:skin}images/{1}.jpg"/>
    	</map:match>
     
 	<!-- Cascading Stylesheets -->
-	<map:match pattern="*.css">
+	<map:match pattern="css/*.css">
     	<map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
    	</map:match>
 
