@@ -107,11 +107,42 @@ public abstract class AbstractValidationRule implements ValidationRule {
         } catch (CannotYetResolveWarning w) {
             return w;
         } catch (ExpressionException e) {
-            return new ValidationError("Error evaluating \"" + exprName + "\" expression on \"" + ruleName + "\" validation rule", false);
+            return new ValidationError("Error evaluating \"" + exprName + "\" expression on \"" +
+                                       ruleName + "\" validation rule", false);
         }
-        if (!(expressionResult instanceof BigDecimal))
-            return new ValidationError("Got non-numeric result from \"" + exprName + "\" expression on \"" + ruleName + "\" validation rule", false);
+        
+        if (!(expressionResult instanceof BigDecimal)) {
+            return new ValidationError("Got non-numeric result from \"" + exprName + "\" expression on \"" +
+                                       ruleName + "\" validation rule", false);
+        }
+
         return expressionResult;
     }
 
+    /**
+     * Helper method for evaluating expressions whose result is comparable.
+     *
+     * @param exprName a name for the expression that's descriptive for the user, e.g. the name of the attribute in which it was defined
+     * @param ruleName a descriptive name for the validation rule, usually the rule's element name
+     * @return either a ValidationError (because expression evaluation failed) or a CannotYetResolveWarning
+     * (because another, required field referenced in the expression has not yet a value), or a BigDecimal.
+     */
+    protected Object evaluateComparable(Expression expression, ExpressionContext expressionContext, String exprName, String ruleName) {
+        Object expressionResult;
+        try {
+            expressionResult = expression.evaluate(expressionContext);
+        } catch (CannotYetResolveWarning w) {
+            return w;
+        } catch (ExpressionException e) {
+            return new ValidationError("Error evaluating \"" + exprName + "\" expression on \"" +
+                                       ruleName + "\" validation rule", false);
+        }
+        
+        if (!(expressionResult instanceof Comparable)) {
+            return new ValidationError("Got non-comparable result from \"" + exprName + "\" expression on \"" +
+                                       ruleName + "\" validation rule", false);
+        }
+
+        return expressionResult;
+    }
 }

@@ -50,14 +50,14 @@
 */
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
+import java.math.BigDecimal;
+
+import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
 import org.apache.cocoon.woody.util.I18nMessage;
-import org.apache.cocoon.woody.Constants;
-import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
-
-import java.math.BigDecimal;
+import org.outerj.expression.ExpressionContext;
 
 /**
  * Checks numeric ranges. Works for Integer, Long and BigDecimal values.
@@ -87,57 +87,67 @@ public class RangeValidationRule extends AbstractValidationRule {
     }
 
     public ValidationError validate(Object value, ExpressionContext expressionContext) {
-        BigDecimal decimal = null;
-        if (value instanceof Integer)
+        Comparable decimal;
+        if (value instanceof Integer) {
             decimal = new BigDecimal(((Integer) value).intValue());
-		else if (value instanceof Long)
-			decimal = new BigDecimal(((Long) value).longValue()); 
-        else
-            decimal = (BigDecimal) value;
+        } else if (value instanceof Long) {
+            decimal = new BigDecimal(((Long) value).longValue()); 
+        } else {
+            decimal = (Comparable) value;
+        }
 
-        if (minExpr != null && maxExpr != null) {
-            Object result = evaluateNumeric(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
-            if (result instanceof ValidationError)
+        Comparable min = null; 
+        if (minExpr != null) {
+            Object result = evaluateComparable(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
+            if (result instanceof ValidationError) {
                 return (ValidationError) result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
-            BigDecimal min = (BigDecimal) result;
-
-            result = evaluateNumeric(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
-            if (result instanceof ValidationError)
+            }
+            min = (Comparable) result;
+        }
+        
+        Comparable max = null;
+        if (maxExpr != null) {
+            Object result = evaluateComparable(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
+            if (result instanceof ValidationError) {
                 return (ValidationError) result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
-            BigDecimal max = (BigDecimal) result;
+            }
+            max = (Comparable) result;
+        }
+        
+        if (min != null && max != null) {
+            if (decimal.compareTo(min) < 0 || decimal.compareTo(max) > 0) {
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.range",
+                                                                                 new String[]{min.toString(), max.toString()},
+                                                                                 Constants.I18N_CATALOGUE));
+            }
 
-            if (decimal.compareTo(min) < 0 || decimal.compareTo(max) > 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.range", new String[]{min.toString(), max.toString()}, Constants.I18N_CATALOGUE));
             return null;
-        } else if (minExpr != null) {
-            Object result = evaluateNumeric(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
-            if (result instanceof ValidationError)
-                return (ValidationError) result;
-            else if (result instanceof CannotYetResolveWarning)
-                return null;
-            BigDecimal min = (BigDecimal) result;
-            if (decimal.compareTo(min) < 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.min", new String[]{min.toString()}, Constants.I18N_CATALOGUE));
+        } else if (min != null) {
+            if (decimal.compareTo(min) < 0) {
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.min",
+                                                                                 new String[]{min.toString()},
+                                                                                 Constants.I18N_CATALOGUE));
+            }
+
             return null;
-        } else if (maxExpr != null) {
-            Object result = evaluateNumeric(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
-            if (result instanceof ValidationError)
-                return (ValidationError) result;
-            else if (result instanceof CannotYetResolveWarning)
-                return null;
-            BigDecimal max = (BigDecimal) result;
-            if (decimal.compareTo(max) > 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.max", new String[]{max.toString()}, Constants.I18N_CATALOGUE));
+        } else if (max != null) {
+            if (decimal.compareTo(max) > 0) {
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.max",
+                                                                                 new String[]{max.toString()},
+                                                                                 Constants.I18N_CATALOGUE));
+            }
+
             return null;
         }
+
         return null;
     }
 
     public boolean supportsType(Class clazz, boolean arrayType) {
-        return (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(BigDecimal.class)) && !arrayType;
+        return Comparable.class.isAssignableFrom(clazz) && !arrayType;
     }
 }
