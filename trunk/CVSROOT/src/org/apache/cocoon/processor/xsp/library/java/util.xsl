@@ -88,6 +88,33 @@
     } </xsp:logic>
   </xsl:template>
 
+  <!-- Include file contents as text -->
+  <xsl:template match="util:get-file-contents">
+  <!-- Retrieve "filename" parameter as either attribute or element -->
+    <xsl:variable name="filename">
+      <xsl:choose>
+        <!-- As attribute (String constant) -->
+        <xsl:when test="@filename">"<xsl:value-of select="@filename"/>"</xsl:when>
+        <!-- As nested (presumably dynamic) element -->
+        <xsl:when test="util:filename">
+          <!-- Recursively evaluate nested expression -->
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="util:filename"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsp:expr>
+      XSPUtil.getFileContents(
+	XSPUtil.relativeFilename(
+          String.valueOf(<xsl:copy-of select="$filename"/>),
+	  request
+	)
+      )
+    </xsp:expr>
+  </xsl:template>
+
   <xsl:template match="util:counter">
     <xsl:choose>
       <xsl:when test="@scope = 'session'">
