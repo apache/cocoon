@@ -80,7 +80,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.4 2003/10/07 16:08:33 vgritsenko Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.5 2003/11/05 21:29:08 cziegeler Exp $
  */
 
 public class InvokeContext implements Recomposable, Disposable, LogEnabled {
@@ -163,7 +163,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
         this.currentManager = manager;
 
         if (this.processingPipeline != null) {
-            this.processingPipeline.recompose(manager);
+            this.processingPipeline.reservice(manager);
         }
     }
 
@@ -189,7 +189,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
 
             this.pipelineSelector = (ComponentSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
             this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
-            this.processingPipeline.recompose( this.pipelinesManager );
+            this.processingPipeline.reservice( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)

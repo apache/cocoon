@@ -50,8 +50,9 @@
 */
 package org.apache.cocoon.components.pipeline;
 
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
@@ -78,13 +79,19 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.4 2003/10/27 08:09:36 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.5 2003/11/05 21:29:08 cziegeler Exp $
  */
-public interface ProcessingPipeline
-       extends   Recomposable {
+public interface ProcessingPipeline {
 
     String ROLE = ProcessingPipeline.class.getName();
 
+    /**
+     * Set the correct manager for the sitemap this pipeline
+     * is used in
+     */
+    void reservice(ServiceManager manager)
+    throws ServiceException;
+    
     /**
      * Setup this component
      */

@@ -22,9 +22,9 @@
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Jakarta", "Avalon", "Excalibur" and "Apache Software Foundation"
-    must not be used to endorse or promote products derived from this  software
-    without  prior written permission. For written permission, please contact
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
+    used to  endorse or promote  products derived from  this software without
+    prior written permission. For written permission, please contact
     apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
@@ -43,8 +43,9 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation. For more  information on the
- Apache Software Foundation, please see <http://www.apache.org/>.
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
 */
 package org.apache.cocoon.components;
@@ -57,6 +58,8 @@ import java.util.Map;
 
 import org.apache.avalon.fortress.impl.handler.ComponentHandler;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentContext;
@@ -65,100 +68,110 @@ import org.apache.cocoon.environment.EnvironmentHelper;
 /**
  * RequestLifecycleHelper Encapsulates all the static processing that is needed
  * for handling RequestLifecycle components.
- *
+ * 
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
 class RequestLifecycleHelper {
 
     static final String KEY = RequestLifecycleHelper.class.getName();
-    
+
     static EnvironmentDescription getEnvironmentDescription() {
-        final EnvironmentContext context = EnvironmentHelper.getCurrentContext();
-        EnvironmentDescription desc = (EnvironmentDescription) context.getAttribute(KEY);
-        if ( desc == null ) {
+        final EnvironmentContext context =
+            EnvironmentHelper.getCurrentContext();
+        EnvironmentDescription desc =
+            (EnvironmentDescription) context.getAttribute(KEY);
+        if (desc == null) {
             desc = new EnvironmentDescription(context.getEnvironment());
             context.addAttribute(KEY, desc);
         }
         return desc;
     }
-    
+
     /**
-     * Add an automatically released component
-     */
-    static void addComponentForAutomaticRelease(final ComponentHandler manager,
-                                                       final Object        component)
+	 * Add an automatically released component
+	 */
+    static void addComponentForAutomaticRelease(final ServiceManager manager,
+                                               final Object component)
     throws ProcessingException {
         EnvironmentDescription desc = getEnvironmentDescription();
-        if ( null != desc ) {
+        if (null != desc) {
             desc.addToAutoRelease(manager, component);
         }
     }
 
     /**
-     * Remove from automatically released components
+     * Add an automatically released component
      */
-    public static void removeFromAutomaticRelease(final Object component)
+    static void addComponentForAutomaticRelease(final ServiceSelector selector,
+                                               final Object component,
+                                                final ServiceManager manager)
     throws ProcessingException {
         EnvironmentDescription desc = getEnvironmentDescription();
-        if ( null != desc ) {
+        if (null != desc) {
+            desc.addToAutoRelease(manager, component);
+        }
+    }
+
+    /**
+	 * Remove from automatically released components
+	 */
+    public static void removeFromAutomaticRelease(final Object component)
+        throws ProcessingException {
+        EnvironmentDescription desc = getEnvironmentDescription();
+        if (null != desc) {
             desc.removeFromAutoRelease(component);
         }
     }
 }
 
-final class EnvironmentDescription
-implements Disposable
-{
+final class EnvironmentDescription implements Disposable {
     Environment environment;
     Map objectModel;
     Map requestLifecycleComponents;
-    List autoreleaseComponents = new ArrayList( 4 );
+    List autoreleaseComponents = new ArrayList(4);
 
     /**
-     * Constructor
-     */
-    EnvironmentDescription( Environment env )
-    {
+	 * Constructor
+	 */
+    EnvironmentDescription(Environment env) {
         this.environment = env;
         this.objectModel = env.getObjectModel();
     }
 
-    Map getGlobalRequestLifcecycleComponents()
-    {
-        Map m = (Map) environment.getAttribute( GlobalRequestLifecycleComponent.class.getName() );
-        if ( m == null )
-        {
+    Map getGlobalRequestLifcecycleComponents() {
+        Map m =
+            (Map) environment.getAttribute(
+                GlobalRequestLifecycleComponent.class.getName());
+        if (m == null) {
             m = new HashMap();
-            environment.setAttribute( GlobalRequestLifecycleComponent.class.getName(), m );
+            environment.setAttribute(
+                GlobalRequestLifecycleComponent.class.getName(),
+                m);
         }
         return m;
     }
 
     /**
-     * Release all components of this environment
-     * All RequestLifecycleComponents and autoreleaseComponents are
-     * released.
-     */
-    public void dispose()
-    {
-        if ( this.requestLifecycleComponents != null )
-        {
-            final Iterator iter = this.requestLifecycleComponents.values().iterator();
-            while ( iter.hasNext() )
-            {
+	 * Release all components of this environment All
+	 * RequestLifecycleComponents and autoreleaseComponents are released.
+	 */
+    public void dispose() {
+        if (this.requestLifecycleComponents != null) {
+            final Iterator iter =
+                this.requestLifecycleComponents.values().iterator();
+            while (iter.hasNext()) {
                 final Object[] o = (Object[]) iter.next();
                 final Object component = o[0];
-                ((ComponentHandler)o[1]).put(component);
+                ((ComponentHandler) o[1]).put(component);
             }
             this.requestLifecycleComponents.clear();
         }
 
-        for ( int i = 0; i < autoreleaseComponents.size(); i++ )
-        {
-            final Object[] o = (Object[]) autoreleaseComponents.get( i );
+        for (int i = 0; i < autoreleaseComponents.size(); i++) {
+            final Object[] o = (Object[]) autoreleaseComponents.get(i);
             final Object component = o[0];
-            final ComponentHandler handler = (ComponentHandler)o[1];
+            final ComponentHandler handler = (ComponentHandler) o[1];
             handler.put(component);
         }
         this.autoreleaseComponents.clear();
@@ -166,76 +179,69 @@ implements Disposable
         this.objectModel = null;
     }
 
-
     /**
-     * Add a RequestLifecycleComponent to the environment
-     */
-    void addRequestLifecycleComponent( final String role,
-                                       final Object co,
-                                       final ComponentHandler manager )
-    {
-        if ( this.requestLifecycleComponents == null )
-        {
+	 * Add a RequestLifecycleComponent to the environment
+	 */
+    void addRequestLifecycleComponent(
+        final String role,
+        final Object co,
+        final ComponentHandler manager) {
+        if (this.requestLifecycleComponents == null) {
             this.requestLifecycleComponents = new HashMap();
         }
-        this.requestLifecycleComponents.put( role, new Object[]{co, manager} );
+        this.requestLifecycleComponents.put(role, new Object[] { co, manager });
     }
 
     /**
-     * Add a GlobalRequestLifecycleComponent to the environment
-     */
-    void addGlobalRequestLifecycleComponent( final String role,
-                                             final Object co,
-                                             final ComponentHandler manager )
-    {
-        this.getGlobalRequestLifcecycleComponents().put( role, new Object[]{co, manager} );
+	 * Add a GlobalRequestLifecycleComponent to the environment
+	 */
+    void addGlobalRequestLifecycleComponent(
+        final String role,
+        final Object co,
+        final ComponentHandler manager) {
+        this.getGlobalRequestLifcecycleComponents().put(
+            role,
+            new Object[] { co, manager });
     }
 
     /**
-     * Do we already have a request lifecycle component
-     */
-    boolean containsRequestLifecycleComponent( final String role )
-    {
-        if ( this.requestLifecycleComponents == null )
-        {
+	 * Do we already have a request lifecycle component
+	 */
+    boolean containsRequestLifecycleComponent(final String role) {
+        if (this.requestLifecycleComponents == null) {
             return false;
         }
-        return this.requestLifecycleComponents.containsKey( role );
+        return this.requestLifecycleComponents.containsKey(role);
     }
 
     /**
-     * Do we already have a global request lifecycle component
-     */
-    boolean containsGlobalRequestLifecycleComponent( final String role )
-    {
-        return this.getGlobalRequestLifcecycleComponents().containsKey( role );
+	 * Do we already have a global request lifecycle component
+	 */
+    boolean containsGlobalRequestLifecycleComponent(final String role) {
+        return this.getGlobalRequestLifcecycleComponents().containsKey(role);
     }
 
     /**
-     * Search a RequestLifecycleComponent
-     */
-    Object getRequestLifecycleComponent( final String role )
-    {
-        if ( this.requestLifecycleComponents == null )
-        {
+	 * Search a RequestLifecycleComponent
+	 */
+    Object getRequestLifecycleComponent(final String role) {
+        if (this.requestLifecycleComponents == null) {
             return null;
         }
-        final Object[] o = (Object[]) this.requestLifecycleComponents.get( role );
-        if ( null != o )
-        {
+        final Object[] o = (Object[]) this.requestLifecycleComponents.get(role);
+        if (null != o) {
             return o[0];
         }
         return null;
     }
 
     /**
-     * Search a GlobalRequestLifecycleComponent
-     */
-    Object getGlobalRequestLifecycleComponent( final String role )
-    {
-        final Object[] o = (Object[]) this.getGlobalRequestLifcecycleComponents().get( role );
-        if ( null != o )
-        {
+	 * Search a GlobalRequestLifecycleComponent
+	 */
+    Object getGlobalRequestLifecycleComponent(final String role) {
+        final Object[] o =
+            (Object[]) this.getGlobalRequestLifcecycleComponents().get(role);
+        if (null != o) {
             return o[0];
         }
         return null;
@@ -244,38 +250,46 @@ implements Disposable
     /**
      * Add an automatically released component
      */
-    void addToAutoRelease( final ComponentHandler manager,
-                           final Object component )
-    {
-        this.autoreleaseComponents.add( new Object[]{component, manager} );
+    void addToAutoRelease(final ServiceSelector selector,
+                          final Object          component,
+                          final ServiceManager  manager) {
+        this.autoreleaseComponents.add(new Object[] {component, selector, manager});
     }
 
     /**
-     * Remove from automatically released components
-     */
-    void removeFromAutoRelease( final Object component )
-            throws ProcessingException
-    {
+	 * Add an automatically released component
+	 */
+    void addToAutoRelease(final ServiceManager manager,
+                          final Object component) {
+        this.autoreleaseComponents.add(new Object[] { component, manager });
+    }
+
+    /**
+	 * Remove from automatically released components
+	 */
+    void removeFromAutoRelease(final Object component)
+    throws ProcessingException {
         int i = 0;
         boolean found = false;
-        while ( i < this.autoreleaseComponents.size() && !found )
-        {
-            final Object[] o = (Object[]) this.autoreleaseComponents.get( i );
-            if ( o[0] == component )
-            {
+        while (i < this.autoreleaseComponents.size() && !found) {
+            final Object[] o = (Object[]) this.autoreleaseComponents.get(i);
+            if (o[0] == component) {
                 found = true;
-                final ComponentHandler handler = (ComponentHandler)o[1];
-                handler.put(component);
-                this.autoreleaseComponents.remove( i );
-            }
-            else
-            {
+                if (o[1] instanceof ServiceManager) {
+                    ((ServiceManager)o[1]).release( component );
+                } else {
+                    ((ServiceSelector)o[1]).release( component );
+                    if (o[2] != null) {
+                        ((ServiceManager)o[2]).release( o[1] );
+                    }
+                }
+                this.autoreleaseComponents.remove(i);
+            } else {
                 i++;
             }
         }
-        if ( !found )
-        {
-            throw new ProcessingException( "Unable to remove component from automatic release: component not found." );
+        if (!found) {
+            throw new ProcessingException("Unable to remove component from automatic release: component not found.");
         }
     }
 }

@@ -53,6 +53,8 @@ package org.apache.cocoon.components;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.EnvironmentHelper;
 
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.28 2003/10/30 12:38:26 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.29 2003/11/05 21:29:08 cziegeler Exp $
  */
 public final class CocoonComponentManager
 implements ServiceManager
@@ -165,6 +167,32 @@ implements ServiceManager
         return EnvironmentHelper.getSitemapServiceManager();
     }
     
+    /**
+     * Add an automatically released component
+     */
+    public static void addComponentForAutomaticRelease(final ServiceSelector selector,
+                                                       final Object          component,
+                                                       final ServiceManager  manager)
+    throws ProcessingException {
+        RequestLifecycleHelper.addComponentForAutomaticRelease(selector, component, manager);
+    }
+
+    /**
+     * Add an automatically released component
+     */
+    public static void addComponentForAutomaticRelease(final ServiceManager manager,
+                                                       final Object         component)
+    throws ProcessingException {
+        RequestLifecycleHelper.addComponentForAutomaticRelease(manager, component);
+    }
+
+    /**
+     * Remove from automatically released components
+     */
+    public static void removeFromAutomaticRelease(final Object component)
+    throws ProcessingException {
+        RequestLifecycleHelper.removeFromAutomaticRelease(component);
+    }
 }
 
 

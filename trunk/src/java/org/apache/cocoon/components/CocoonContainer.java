@@ -22,9 +22,9 @@
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Jakarta", "Avalon", "Excalibur" and "Apache Software Foundation"
-    must not be used to endorse or promote products derived from this  software
-    without  prior written permission. For written permission, please contact
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
+    used to  endorse or promote  products derived from  this software without
+    prior written permission. For written permission, please contact
     apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
@@ -43,8 +43,9 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation. For more  information on the
- Apache Software Foundation, please see <http://www.apache.org/>.
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
 */
 package org.apache.cocoon.components;

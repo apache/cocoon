@@ -58,8 +58,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -92,7 +90,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.14 2003/10/31 11:22:17 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.15 2003/11/05 21:29:08 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -168,10 +166,10 @@ public abstract class AbstractProcessingPipeline
     }
 
     /**
-     * Recomposable Interface
+     * Reserviceable Interface
      */
-    public void recompose (ComponentManager manager)
-    throws ComponentException {
+    public void reservice (ServiceManager manager)
+    throws ServiceException {
         this.newManager = manager;
     }
 
