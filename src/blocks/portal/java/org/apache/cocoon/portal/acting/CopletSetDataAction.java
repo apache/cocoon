@@ -32,11 +32,14 @@ import org.apache.commons.jxpath.JXPathContext;
  * Using this action, you can set values in a coplet
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CopletSetDataAction.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: CopletSetDataAction.java,v 1.3 2004/03/15 18:18:19 cziegeler Exp $
  */
 public class CopletSetDataAction 
 extends ServiceableAction {
 
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+	 */
 	public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) 
     throws Exception {
         PortalService portalService = null;
