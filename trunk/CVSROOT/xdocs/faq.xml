@@ -201,6 +201,18 @@
   </answer>
  </faq>
 
+ <faq id="faq-xsp64k">
+  <question>Why do I get an error about "code of a method longer than 65536 bytes"?</question>
+  <answer>
+   <p>This is due to a fundamental limitation in the Java specifications, which means
+    that XSP pages (which turn XML into Java code) cannot be very large. We suggest that you
+    put all your data for your page (not logic, just data), into a database, and extract it
+    from the database using the esql taglib. There are a number of free Java databases out there
+    on the web.
+   </p>
+  </answer>
+ </faq>
+
  <faq id="faq-nocompile">
   <question>When I change my XSP pages, it doesn't seem
    to recompile. What gives?</question>
