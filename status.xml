@@ -206,8 +206,15 @@
    <action dev="AG" type="update">
      Updated Apache Ant to 1.6.2.
    </action>
-    <action dev="CZ" type="fix">
+   <action dev="CZ" type="fix">
      Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
+   </action>
+   <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
+     Added support for stripping root elements in the CIncludeTransformer.
+   </action>
+   <action dev="VG" type="add">
+     Portal block: Added ManagedCocoonPortlet, to be used together with
+     CocoonServlet or CocoonPortlet.
    </action>
    <action dev="VG" type="update">
      Portal: CocoonPortlet has new configuration parameter,
@@ -226,7 +233,7 @@
      Portal: Fix problem with bookmarks and CachingURICoplet
    </action>
  </release>
-<release version="2.1.5.1" date="July 9 2004">
+ <release version="2.1.5.1" date="July 9 2004">
    <action dev="CZ" type="update">
      The store/caching system now uses JCS instead of Jisp.
    </action>
