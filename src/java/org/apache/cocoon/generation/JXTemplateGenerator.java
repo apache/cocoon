@@ -357,7 +357,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.32 2004/01/27 21:04:43 vgritsenko Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.33 2004/01/28 06:44:26 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -2849,7 +2849,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         cocoon.put("context",
                    FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
-        cocoon.put("continuation", kont);
+        cocoon.put("continuation", 
+                   FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel));
         cocoon.put("parameters", Parameters.toProperties(parameters));
         this.variables = new MyVariables(cocoon, contextObject, kont, request,
                                          session, app, parameters);
