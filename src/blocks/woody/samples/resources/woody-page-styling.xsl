@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
       +-->
@@ -159,7 +157,7 @@
     Group items layout : default is no layout
   -->
   <xsl:template match="wi:group" mode="group-layout">
-    <xsl:apply-templates select="wi:items/node()"/>
+    <xsl:apply-templates select="wi:items/*"/>
   </xsl:template>
 
   <!--
@@ -178,8 +176,14 @@
   -->
   <xsl:template match="wi:*" mode="group-column-content">
     <tr>
-      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+      <td><xsl:apply-templates select="." mode="label"/></td>
     </tr>
+    <tr>
+      <td><xsl:apply-templates select="."/></td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="wi:action" mode="group-column-content">
     <tr>
       <td><xsl:apply-templates select="."/></td>
     </tr>
@@ -200,8 +204,8 @@
     Default columns layout : label left and input right
   -->
   <xsl:template match="wi:*" mode="group-columns-content">
-    <tr valign="baseline">
-      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+    <tr>
+      <td><xsl:apply-templates select="." mode="label"/></td>
       <td><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
@@ -223,14 +227,13 @@
     Default row layout : label left and input right
   -->
   <xsl:template match="wi:*" mode="group-row-content">
-    <td valign="top">
-      <label for="{@id}" title="{wi:hint}">
-        <xsl:copy-of select="wi:label/node()"/>
-      </label>
-    </td>
+    <td><xsl:apply-templates select="." mode="label"/></td>
     <td><xsl:apply-templates select="."/></td>
   </xsl:template>
 
+  <xsl:template match="wi:action" mode="group-row-content">
+    <td><xsl:apply-templates select="."/></td>
+  </xsl:template>
   <!--
     Rows group items layout
   -->
@@ -251,11 +254,11 @@
     Default rows layout : label above and input below
   -->
   <xsl:template match="wi:*" mode="group-rows-labels">
-    <td valign="top">
-      <label for="{@id}" title="{wi:hint}">
-        <xsl:copy-of select="wi:label/node()"/>
-      </label>
-    </td>
+    <td><xsl:apply-templates select="." mode="label"/></td>
+  </xsl:template>
+
+  <xsl:template match="wi:action" mode="group-rows-labels">
+    <td>&#160;</td>
   </xsl:template>
 
   <xsl:template match="wi:*" mode="group-rows-content">
@@ -267,9 +270,7 @@
     <tr>
       <td colspan="2">
         <xsl:apply-templates select="."/>
-        <label for="{@id}">
-          <xsl:copy-of select="wi:label/node()"/>
-        </label>
+        <xsl:apply-templates select="." mode="label"/>
       </td>
     </tr>
   </xsl:template>
@@ -291,14 +292,10 @@
   <!-- double-list multivaluefield : lists under the label -->
   <xsl:template match="wi:multivaluefield[wi:styling/@list-type='double-listbox']"
                 mode="group-columns-content">
-    <tr align="center">
-      <td colspan="2">
-        <label for="{@id}">
-          <xsl:copy-of select="wi:label/node()"/>
-        </label>
-      </td>
+    <tr>
+      <td colspan="2"><xsl:apply-templates select="." mode="label"/></td>
     </tr>
-    <tr align="center">
+    <tr>
       <td colspan="2"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
@@ -308,6 +305,12 @@
     <tr>
       <td colspan="2"><xsl:apply-templates select="."/></td>
     </tr>
+  </xsl:template>
+
+  <xsl:template match="wi:*" mode="label">
+    <label for="{@id}" title="{wi:hint}">
+      <xsl:copy-of select="wi:label/node()"/>
+    </label>
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">

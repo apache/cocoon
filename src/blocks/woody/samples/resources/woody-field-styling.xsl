@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
       +-->
@@ -13,9 +11,9 @@
   <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="woody-field">
-    <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$resources-uri}/woody-lib.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
+    <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
+    <script src="{$resources-uri}/woody-lib.js" type="text/javascript"/>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody.css"/>
   </xsl:template>
 
@@ -105,7 +103,7 @@
     <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
       <xsl:apply-templates select="node()"/>
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <script type="text/javascript">
       var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
     </script>
     <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
@@ -412,23 +410,23 @@
         <tr>
           <xsl:choose>
             <xsl:when test="self::wi:repeater">
-              <td valign="top" colspan="2">
+              <td colspan="2">
                 <xsl:apply-templates select="."/>
               </td>
             </xsl:when>
             <xsl:when test="self::wi:booleanfield">
               <td>&#160;</td>
-              <td valign="top">
+              <td>
                 <xsl:apply-templates select="."/>
                 <xsl:text> </xsl:text>
                 <xsl:copy-of select="wi:label"/>
               </td>
             </xsl:when>
             <xsl:otherwise>
-              <td valign="top">
+              <td>
                 <xsl:copy-of select="wi:label"/>
               </td>
-              <td valign="top">
+              <td>
                 <xsl:apply-templates select="."/>
               </td>
             </xsl:otherwise>
