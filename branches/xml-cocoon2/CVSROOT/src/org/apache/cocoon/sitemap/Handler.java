@@ -43,7 +43,7 @@ import org.apache.avalon.logger.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-23 14:45:54 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;
@@ -133,6 +133,12 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
+
+            /* HACK for reducing class loader problems.                                     */
+            /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
+            try {
+                regeneration.setContextClassLoader(this.getClass().getClassLoader());
+            } catch (Exception e){}
             this.environment = environment;
             regeneration.start();
         }
@@ -144,6 +150,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
+        throwEventualException();
     }
 
     public boolean process (Environment environment)
@@ -216,7 +223,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     }
 
     public void throwEventualException() throws Exception {
-        if (this.exception != null) throw this.exception;
+        if (this.exception != null) throw new ProcessingException("Exception in Handler",this.exception);
     }
 
     public Exception getException() {
