@@ -73,11 +73,11 @@ import org.mozilla.javascript.ScriptableObject;
  *  FormValidatingAction
  * </p>
  *
- * NOTE: This class is NOT thread safe
+ * <b>NOTE: This class is NOT thread safe</b>
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com 
- * @version CVS $Id: Form.java,v 1.2 2003/03/16 17:49:14 vgritsenko Exp $
+ * @version CVS $Id: Form.java,v 1.3 2003/03/18 01:01:26 vgritsenko Exp $
  */
 public class Form {
 
@@ -284,7 +284,7 @@ public class Form {
          * @return a Set of XPath strings pointing to 
          * each nodeset satisfying the nodeset selector
          *
-     * <p>
+         * <p>
          * TODO: the Collection return type should be replaced with a Set.
          * LinkedHashSet implementation should be used. All resolved 
          * nodes are unique in the resulting set, therefore Set is more appropriate.
@@ -347,12 +347,12 @@ public class Form {
         /**
          * Populates an HTML Form POST into the XMLForm model (JavaBean or DOM node).
          *
-     * <p>
+         * <p>
          * Expects that all request parameter names are XPath expressions
          * to attributes of the model.
          * For each request parameter, finds and assigns its value to the
          * JavaBean property corresponding to the parameter's name
-     * </p>
+         * </p>
          *
          * TODO: provide a more sophisticated examples with checkboxes, multi choice,
          * radio button, text area, file upload, etc.
