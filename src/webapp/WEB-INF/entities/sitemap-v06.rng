@@ -85,6 +85,7 @@ CHANGE HISTORY:
 20030730 V0.6 Added new htmlGenerator contents <catalogues> (NKB)
 20040123 V0.6 Added <parameter>* to <generator> (NKB)
 20040414 V0.6 Added <parameter>* to <pipe> (DC)
+20040414 V0.6 Allow anyElement for <global-variables> (DC)
 
 ====================================================================
 -->
@@ -764,7 +765,7 @@ CHANGE HISTORY:
       <optional><ref name="textSerializer.contents"/></optional>
       <optional><ref name="svg2jpegSerializer.contents"/></optional>
       <optional><ref name="set-content-length"/></optional>
-      <optional><ref name="buffer-size"/></optional>
+      <optional><ref name="buffer-size"/></optional> <!-- deprecated -->
       <optional><ref name="user-config"/></optional>
       <zeroOrMore>
         <choice>
@@ -1594,11 +1595,12 @@ CHANGE HISTORY:
     <ref name="universal.attr"/>
   </define>
 
-<!-- CPA: global-variables needs contents TODO -->
   <define name="global-variables">
     <element name="global-variables">
       <ref name="global-variables.attlist"/>
-      <text/> <!-- CPA: can't find anywhere in source -->
+      <zeroOrMore>
+        <ref name="anyElement"/>
+      </zeroOrMore>
     </element>
   </define>
   <define name="global-variables.attlist" combine="interleave">
