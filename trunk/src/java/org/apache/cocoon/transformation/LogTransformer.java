@@ -90,7 +90,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Id: LogTransformer.java,v 1.3 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: LogTransformer.java,v 1.4 2003/10/24 12:50:08 vgritsenko Exp $
  *
  */
 public class LogTransformer
@@ -227,11 +227,11 @@ public class LogTransformer
     /**
      * Receive notification of the end of an element.
      */
-    public void endElement(String uri, String loc, String qname)
+    public void endElement(String uri, String loc, String raw)
     throws SAXException {
-        this.log ("endElement", "uri="+uri+",local="+loc+",qname="+qname);
+        this.log ("endElement", "uri="+uri+",local="+loc+",raw="+raw);
         if (super.contentHandler!=null) {
-            super.contentHandler.endElement(uri,loc,qname);
+            super.contentHandler.endElement(uri,loc,raw);
         }
     }
 
