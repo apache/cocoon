@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import org.apache.excalibur.instrument.manager.interfaces.InstrumentSampleDescri
  * allows you to access sample information from the InstrumentManager.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: InstrumentationServiceImpl.java,v 1.2 2004/03/05 13:01:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class InstrumentationServiceImpl extends AbstractLogEnabled
     implements InstrumentationService {
@@ -39,9 +39,9 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
     private static final String[] EMPTY_STRING_ARRAY = {};
 
     // instrument manager reference
-	private DefaultInstrumentManager m_iManager;
+    private DefaultInstrumentManager m_iManager;
 
-	/**
+    /**
      * Sets the {@link InstrumentManager} for this service object.
      *
      * @param iManager an {@link InstrumentManager} instance
@@ -64,7 +64,7 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
                 "InstrumentationService only supports DefaultInstrumentManager"
             );
         }
-	}
+    }
 
     /**
      * Obtain an array of samples from a specified sample name.
@@ -136,7 +136,7 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
 
         for (int i = 0; i < descriptors.length; ++i) {
 
-            // list all instruments 
+            // list all instruments
             InstrumentDescriptor[] insts =
                 descriptors[i].getInstrumentDescriptors();
 
