@@ -78,7 +78,7 @@ import org.apache.excalibur.source.SourceValidity;
  * modifying the main sitemap. This is especially usefull for prototypes and demos where installing
  * a separate instance of Cocoon is overkill.
  * <p>
- * The mount table is an xml file which as a format similar to the <code>map:mount</code> syntax:
+ * The mount table is an xml file which has a format similar to the <code>map:mount</code> syntax:
  * <pre>
  *   &lt;mount-table&gt;
  *     &lt;mount uri-prefix="foo" src="file://path/to/foo/directory/"/&gt;
@@ -107,7 +107,7 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.1 2003/11/13 18:09:43 sylvain Exp $
+ * @version CVS $Id: MountTableMatcher.java,v 1.2 2003/11/14 07:08:01 giacomo Exp $
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
