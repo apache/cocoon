@@ -456,7 +456,7 @@ can be used like any other tag:</p><source>
   &lt;/jx:forEach&gt;
 &lt;/jx:macro&gt;
 </source>
-<p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p>
+<p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used.</p><p>Assuming you had this code in your flowscript:</p>
    <source>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];
    sendPage(uri, {greatlakes: greatlakes});</source>
 <p>and a template like this:</p><source>
@@ -475,6 +475,44 @@ can be used like any other tag:</p><source>
   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
 </source>
+</s2>
+<s2 title="evalBody"> 
+<p>Within the body of a macro the <code>evalBody</code> tag treats the content of the macro tag invocation as a <em>JX</em>Template and executes it. For example, the below macro uses this facility to implement the <link href="http://java.sun.com/products/jsp/jstl/">JSTL</link> <code>forTokens</code> tag:
+</p>
+<source>
+<![CDATA[
+<jx:macro name="forTokens">
+  <jx:parameter name="var"/>
+  <jx:parameter name="items"/>
+  <jx:parameter name="delims"/>
+  <jx:forEach var="${var}" 
+         items="${java.util.StringTokenizer(items, delims)}">
+    <jx:evalBody/>
+  </jx:forEach>
+</jx:macro>
+]]> </source>
+<p>
+The tag produced by this macro can be used like this:
+</p>
+<source>
+<![CDATA[
+<forTokens var="letter" items="a,b,c,d,e,f,g" delims=",">
+  letter = ${letter} <br/>
+</forTokens>
+]]> </source>
+<p>
+which would create the following output:
+</p>
+<source>
+<![CDATA[
+  letter = a  <br/>  
+  letter = b  <br/>  
+  letter = c  <br/>  
+  letter = d  <br/>  
+  letter = e  <br/>  
+  letter = f  <br/>  
+  letter = g  <br/>  
+]]> </source>
 </s2>
 </s1>
 </body>
