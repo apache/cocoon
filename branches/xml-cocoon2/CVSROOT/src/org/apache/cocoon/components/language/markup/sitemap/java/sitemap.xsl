@@ -78,7 +78,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.72 $ $Date: 2000-12-15 20:35:11 $
+     * @version CVS $Revision: 1.1.2.73 $ $Date: 2000-12-30 21:33:08 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -269,6 +269,41 @@
         }
       </xsl:for-each>
 
+      <!-- generate methods for every map:action-set element -->
+      <xsl:for-each select="/map:sitemap/map:action-sets/map:action-set">
+        /**
+         * This is the method to process the "<xsl:value-of select="@name"/>" action-set of the requested resource
+         * @param cocoon_action A &lt;code&gt;String&lt;/code&gt; holding the requested action
+         * @param listOfMaps A &lt;code&gt;List&lt;/code&gt; of Maps holding replacement values for src attributes
+         * @param environment The &lt;code&gt;Environment&lt;/code&gt; requesting a resource
+         * @param objectModel The &lt;code&gt;Map&lt;/code&gt; containing the environments model objects
+         * @return Wether the request has been processed or not
+         * @exception Exception If an error occurs during request evaluation and production
+         */
+        private Map action_set_<xsl:value-of select="translate(@name, '- ', '__')"/> (String cocoon_action, List listOfMaps, Environment environment, Map objectModel, String src, Parameters param)
+        throws Exception {
+          Map map;
+          Map allMap = new HashMap();
+          Parameters nparam;
+          <xsl:for-each select="map:act">
+            map = null;
+            <xsl:choose>
+              <xsl:when test="@action">
+                if ("<xsl:value-of select="@action"/>".equals(cocoon_action)) {
+                  <xsl:apply-templates select="." mode="set"/>
+                  if (map != null) allMap.putAll (map);
+                }
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="." mode="set"/>
+                if (map != null) allMap.putAll (map);
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+          return allMap;
+        }
+      </xsl:for-each>
+
       /**
        * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
        */
@@ -286,6 +321,7 @@
         Parameters param;
         Map objectModel = environment.getObjectModel();
         String cocoon_view = environment.getView();
+        String cocoon_action = environment.getAction();
 
         <!-- process the pipelines -->
         <!-- for each pipeline element generate a try/catch block -->
@@ -398,7 +434,7 @@
       log.debug("Matched <xsl:value-of select="$matcher-name"/>");
       listOfMaps.add (map);
       <xsl:apply-templates/>
-      listOfMaps.remove (map);
+      listOfMaps.remove (listOfMaps.size()-1);
     }
   </xsl:template> <!-- match="map:match" -->
 
@@ -484,14 +520,14 @@
     </xsl:for-each>
   </xsl:template> <!-- match="map:select" -->
 
-  <!-- processing of an act element -->
-  <xsl:template match="map:act">
+  <!-- processing of an act element having a type attribute -->
+  <xsl:template match="map:act[@type]">
 
     <!-- get the type of action used -->
     <xsl:variable name="action-type">
       <xsl:call-template name="get-parameter">
         <xsl:with-param name="parname">type</xsl:with-param>
-        <xsl:with-param name="default"><xsl:value-of select="/map:sitemap/map:components/map:actions/@default"/></xsl:with-param>
+        <xsl:with-param name="default" value=""/>
       </xsl:call-template>
     </xsl:variable>
 
@@ -530,19 +566,139 @@
 
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
-      <xsl:when test="./*">
+      <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
         if ((map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
-         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>"); 
+         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
           listOfMaps.add (map);
           <xsl:apply-templates/>
-          listOfMaps.remove(map);
+          listOfMaps.remove(listOfMaps.size()-1);
         }
       </xsl:when>
       <xsl:otherwise>
         map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template> <!-- match="map:act" -->
+  </xsl:template> <!-- match="map:act[@type]" -->
+
+  <!-- processing of an act element having a type attribute -->
+  <xsl:template match="map:act[@type]" mode="set">
+
+    <!-- get the type of action used -->
+    <xsl:variable name="action-type">
+      <xsl:call-template name="get-parameter">
+        <xsl:with-param name="parname">type</xsl:with-param>
+        <xsl:with-param name="default" value=""/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- get the source parameter for the Action -->
+    <xsl:variable name="action-source">
+      <xsl:call-template name="get-parameter-as-string">
+        <xsl:with-param name="parname">src</xsl:with-param>
+        <xsl:with-param name="default">src</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- gets the string how the action is to be invoced in java code -->
+    <xsl:variable name="action-name">
+      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).get()).act
+    </xsl:variable>
+
+    <!-- test if we have to define parameters for this action -->
+    <xsl:if test="count(parameter)>0">
+      nparam = new Parameters ();
+    </xsl:if>
+
+    <!-- generate the value used for the parameter argument in the invocation of the act method of this action -->
+    <xsl:variable name="component-param">
+      <xsl:choose>
+        <xsl:when test="count(parameter)>0">
+          nparam
+        </xsl:when>
+        <xsl:otherwise>
+          param
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- collect the parameters -->
+    <xsl:apply-templates select="parameter"/>
+
+    <!-- generate the invocation of the act method of the action component -->
+    <xsl:choose>
+      <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
+        if ((map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
+         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
+          listOfMaps.add (map);
+          <xsl:apply-templates/>
+          listOfMaps.remove(listOfMaps.size()-1);
+        }
+      </xsl:when>
+      <xsl:otherwise>
+        map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!-- match="map:act[@type]" mode="set" -->
+
+  <!-- processing of an act element having a set attribute -->
+  <xsl:template match="map:act[@set]">
+
+    <!-- get the type of action used -->
+    <xsl:variable name="action-set">
+      <xsl:call-template name="get-parameter">
+        <xsl:with-param name="parname">set</xsl:with-param>
+        <xsl:with-param name="default" value=""/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- get the source parameter for the Action -->
+    <xsl:variable name="action-source">
+      <xsl:call-template name="get-parameter-as-string">
+        <xsl:with-param name="parname">src</xsl:with-param>
+        <xsl:with-param name="default">null</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- gets the string how the action is to be invoced in java code -->
+    <xsl:variable name="action-name">
+      action_set_<xsl:value-of select="$action-set"/>
+    </xsl:variable>
+
+    <!-- test if we have to define parameters for this action -->
+    <xsl:if test="count(parameter)>0">
+      param = new Parameters ();
+    </xsl:if>
+
+    <!-- generate the value used for the parameter argument in the invocation of the act method of this action -->
+    <xsl:variable name="component-param">
+      <xsl:choose>
+        <xsl:when test="count(parameter)>0">
+          param
+        </xsl:when>
+        <xsl:otherwise>
+          emptyParam
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- collect the parameters -->
+    <xsl:apply-templates select="parameter"/>
+
+    <!-- generate the invocation of the act method of the action component -->
+    <xsl:choose>
+      <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
+        if ((map = <xsl:value-of select="$action-name"/> (cocoon_action, listOfMaps, environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
+         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
+          listOfMaps.add (map);
+          <xsl:apply-templates/>
+          listOfMaps.remove(listOfMaps.size()-1);
+        }
+      </xsl:when>
+      <xsl:otherwise>
+        map = <xsl:value-of select="$action-name"/> (cocoon_action, listOfMaps, environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!-- match="map:act[@set]" -->
 
   <!-- generate the code to invoke a generator -->
   <xsl:template match="map:generate">
@@ -667,7 +823,7 @@
   </xsl:template> <!-- match="map:label" -->
 
   <!-- collect parameter definitions -->
-  <xsl:template match="map:pipeline//parameter">
+  <xsl:template match="map:pipeline//parameter | map:action-set//parameter">
     param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfMaps, "<xsl:value-of select="@value"/>"));
   </xsl:template>
 

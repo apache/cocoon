@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-06 19:19:51 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-30 21:33:12 $
  */
 
 public interface Constants {
@@ -24,6 +24,7 @@ public interface Constants {
     String RELOAD_PARAM   = "cocoon-reload";
     String SHOWTIME_PARAM = "cocoon-showtime";
     String VIEW_PARAM     = "cocoon-view";
+    String ACTION_PARAM   = "cocoon-action";
 
     String TEMPDIR_PROPERTY    = "org.apache.cocoon.properties.tempdir";
     String DEFAULT_CONTEXT_DIR = "./webapp";

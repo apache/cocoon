@@ -41,6 +41,9 @@ public abstract class AbstractEnvironment implements Environment {
     /** The View requested */
     protected String view = null;
 
+    /** The Action requested */
+    protected String action = null;
+
      /** The Context path */
     protected URL context = null;
 
@@ -52,7 +55,15 @@ public abstract class AbstractEnvironment implements Environment {
      */
     public AbstractEnvironment(String uri, String view, String context)
     throws MalformedURLException {
-        this(uri, view, new File(context));
+        this(uri, view, new File(context), null);
+    }
+
+    /**
+     * Constructs the abstract enviornment
+     */
+    public AbstractEnvironment(String uri, String view, String context, String action)
+    throws MalformedURLException {
+        this(uri, view, new File(context), action);
     }
 
     /**
@@ -60,9 +71,18 @@ public abstract class AbstractEnvironment implements Environment {
      */
     public AbstractEnvironment(String uri, String view, File context)
     throws MalformedURLException {
+        this(uri, view, context, null);
+    }
+
+    /**
+     * Constructs the abstract enviornment
+     */
+    public AbstractEnvironment(String uri, String view, File context, String action)
+    throws MalformedURLException {
         this.uri = uri;
         this.view = view;
         this.context = context.toURL();
+        this.action = action;
         this.objectModel = new HashMap();
     }
 
@@ -71,7 +91,7 @@ public abstract class AbstractEnvironment implements Environment {
     /**
      * Returns the uri in progress. The prefix is stripped off
      */
-    public String getUri() {
+    public String getURI() {
         return this.uri;
     }
 
@@ -90,6 +110,10 @@ public abstract class AbstractEnvironment implements Environment {
                 this.context = f.toURL();
             }
         } else {
+            log.error("The current URI ("
+                + uri + ") doesn't start with given prefix ("
+                + prefix + ")"
+            );
             throw new RuntimeException("The current URI ("
                 + uri + ") doesn't start with given prefix ("
                 + prefix + ")"
@@ -109,6 +133,13 @@ public abstract class AbstractEnvironment implements Environment {
      */
     public String getView() {
         return this.view;
+    }
+
+    /**
+     * Returns the request action
+     */
+    public String getAction() {
+        return this.action;
     }
 
     // Response methods

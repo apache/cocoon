@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-11 16:06:47 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-30 21:33:10 $
  */
 
 public interface Environment extends EntityResolver {
@@ -28,12 +28,17 @@ public interface Environment extends EntityResolver {
     /**
      * Get the URI to process
      */
-    String getUri();
+    String getURI();
 
     /**
      * Get the view to process
      */
     String getView();
+
+    /**
+     * Get the action to process
+     */
+    String getAction();
 
     /**
      * Change the context from uriprefix to context
