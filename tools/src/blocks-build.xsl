@@ -142,6 +142,7 @@
       <target name="{$block-name}-prepare">
          <mkdir dir="{string('${build.blocks}')}/{$block-name}/dest"/>
 
+         <mkdir dir="{string('${build.blocks}')}/{$block-name}/conf"/>
          <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/conf">
             <fileset dir="{string('${blocks}')}/{$block-name}/conf">
                <include name="**/*.x*" />
