@@ -23,8 +23,8 @@
     </group>
 
     <group name="Simple Velocity examples">
-        <sample name="Hello, world!" href="hello.pdf">
-            The well-known hello.xml document rendered using Velocity.
+        <sample name="Hello, world!" href="hello.vm">
+            A hello world document rendered using Velocity.
         </sample>
     </group>
 
