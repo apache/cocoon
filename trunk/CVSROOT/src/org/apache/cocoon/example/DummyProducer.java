@@ -1,4 +1,4 @@
-/*-- $Id: DummyProducer.java,v 1.4 2000-02-13 18:29:19 stefano Exp $ -- 
+/*-- $Id: DummyProducer.java,v 1.5 2000-04-13 10:43:17 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,13 +60,13 @@ import org.apache.cocoon.framework.*;
  * Stupid producer to show how this functionality works.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:19 $
+ * @version $Revision: 1.5 $ $Date: 2000-04-13 10:43:17 $
  */
 
 public class DummyProducer extends AbstractProducer implements Status {
     
     String dummy = "<?xml version=\"1.0\"?>" 
-        + "<?cocoon:format type=\"text/html\"?>"
+        + "<?cocoon-format type=\"text/html\"?>"
         + "<html><body>"
         + "<h1 align=\"center\">"
             + "Hello from a dummy page"

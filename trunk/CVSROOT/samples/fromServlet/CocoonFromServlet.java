@@ -67,7 +67,7 @@ public class CocoonFromServlet extends HttpServlet {
             
         // Build an XML Document
         String document = "<?xml version=\"1.0\"?>" 
-            + "<?cocoon:format type=\"text/html\"?>"
+            + "<?cocoon-format type=\"text/html\"?>"
             + "<html><body>"
             + "<h1 align=\"center\">"
                 + "Hello from a servlet using Cocoon processing."
