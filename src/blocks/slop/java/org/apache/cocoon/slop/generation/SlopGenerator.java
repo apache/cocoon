@@ -75,7 +75,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * General code structure lifted from the Chaperon TextGenerator - thanks Stephan!
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SlopGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
+ * @version CVS $Id: SlopGenerator.java,v 1.4 2003/10/14 11:53:18 bdelacretaz Exp $
  */
 
 public class SlopGenerator extends ServiceableGenerator
@@ -84,6 +84,8 @@ public class SlopGenerator extends ServiceableGenerator
     private Source inputSource = null;
     private String encoding = null;
     private SlopParser parser = null;
+    private boolean preserveSpace = false;
+    private String validTagnameChars = null;
 
     /**
      * Recycle this component.
@@ -95,7 +97,9 @@ public class SlopGenerator extends ServiceableGenerator
         }
         inputSource = null;
         encoding = null;
+        preserveSpace = false;
         parser = null;
+        validTagnameChars = null;
 
         super.recycle();
     }
@@ -118,8 +122,14 @@ public class SlopGenerator extends ServiceableGenerator
         super.setup(resolver, objectmodel, src, parameters);
         try {
             encoding = parameters.getParameter("encoding", null);
+            preserveSpace = parameters.getParameterAsBoolean("preserve-space",false);
+            validTagnameChars = parameters.getParameter("valid-tagname-chars",null);
             inputSource = resolver.resolveURI(src);
-            parser = new SimpleSlopParser();
+
+            final SimpleSlopParser ssp = new SimpleSlopParser();
+            parser = ssp;
+            ssp.setPreserveWhitespace(preserveSpace);
+            ssp.setValidTagnameChars(validTagnameChars);
         } catch (SourceException se) {
             throw new ProcessingException("Error during resolving of '" + src + "'.", se);
         }
