@@ -60,7 +60,8 @@ import org.outerj.expression.ExpressionException;
  * new functions can be registered in one place.
  */
 public interface ExpressionManager {
-    public static final String ROLE = "org.apache.cocoon.woody.expression.ExpressionManager";
-
-    public Expression parse(String expression) throws ParseException, ExpressionException;
+    
+    String ROLE = ExpressionManager.class.getName();
+    
+    Expression parse(String expression) throws ParseException, ExpressionException;
 }

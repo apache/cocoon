@@ -62,6 +62,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
@@ -78,18 +79,27 @@ import java.io.IOException;
 /**
  * Component implementing the {@link FormManager} role.
  */
-public class DefaultFormManager extends AbstractLogEnabled implements FormManager, ThreadSafe, Composable, Disposable, Configurable {
-    private ComponentManager componentManager;
-    private Map widgetDefinitionBuilders = new HashMap();
-    private FormDefinitionBuilder formDefinitionBuilder;
-    private boolean initialized = false;
-    private Store store;
+public class DefaultFormManager 
+  extends AbstractLogEnabled 
+  implements FormManager, ThreadSafe, Composable, Disposable, Configurable, Component {
+      
+    protected ComponentManager manager;
+    protected Map widgetDefinitionBuilders = new HashMap();
+    protected FormDefinitionBuilder formDefinitionBuilder;
+    protected boolean initialized = false;
+    protected Store store;
 
+    /**
+     * Composable
+     */
     public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+        this.manager = componentManager;
         this.store = (Store)componentManager.lookup(Store.TRANSIENT_STORE);
     }
 
+    /**
+     * Configurable
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         // get available widgets from configuration
         Configuration[] widgetConfs = configuration.getChild("widgets").getChildren("widget");
@@ -124,7 +134,7 @@ public class DefaultFormManager extends AbstractLogEnabled implements FormManage
         if (initialized)
             return;
 
-        LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, null);
+        LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, manager, null, null, null);
 
         Iterator widgetDefinitionBuilderIt = widgetDefinitionBuilders.values().iterator();
         while (widgetDefinitionBuilderIt.hasNext()) {
@@ -171,7 +181,7 @@ public class DefaultFormManager extends AbstractLogEnabled implements FormManage
         return formDefinition;
     }
 
-    private FormDefinition getStoredFormDefinition(Source source) {
+    protected FormDefinition getStoredFormDefinition(Source source) {
         String key = "WoodyForm:" + source.getURI();
         SourceValidity newValidity = source.getValidity();
 
@@ -202,7 +212,7 @@ public class DefaultFormManager extends AbstractLogEnabled implements FormManage
         return (FormDefinition)formDefinitionAndValidity[0];
     }
 
-    private void storeFormDefinition(FormDefinition formDefinition, Source source) throws IOException {
+    protected void storeFormDefinition(FormDefinition formDefinition, Source source) throws IOException {
         String key = "WoodyForm:" + source.getURI();
         SourceValidity validity = source.getValidity();
         if (validity != null) {
@@ -221,7 +231,14 @@ public class DefaultFormManager extends AbstractLogEnabled implements FormManage
         return builder.buildWidgetDefinition(widgetDefinition);
     }
 
+    /**
+     * Disposable
+     */
     public void dispose() {
-        componentManager.release(store);
+        if ( this.manager != null ) {
+            this.manager.release(this.store);
+            this.manager = null;
+            this.store = null;
+        }
     }
 }

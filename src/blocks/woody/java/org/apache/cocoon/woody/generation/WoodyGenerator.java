@@ -77,7 +77,8 @@ import java.util.Locale;
  * name should be provided to this generator as a sitemap parameter called "attribute-name".
  */
 public class WoodyGenerator extends AbstractGenerator {
-    private Form form;
+    
+    protected Form form;
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {

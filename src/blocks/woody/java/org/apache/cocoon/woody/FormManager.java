@@ -60,9 +60,9 @@ import org.w3c.dom.Element;
  */
 public interface FormManager {
     
-    public static final String ROLE = FormManager.class.getName();
+    String ROLE = FormManager.class.getName();
 
-    public Form createForm(Source source) throws Exception;
+    Form createForm(Source source) throws Exception;
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception;
+    WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception;
 }

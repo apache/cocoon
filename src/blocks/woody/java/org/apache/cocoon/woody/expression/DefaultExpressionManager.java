@@ -54,6 +54,7 @@ import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionException;
 import org.outerj.expression.ParseException;
 import org.outerj.expression.FormulaParser;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
@@ -62,9 +63,12 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * <p>In the future, this component should become configurable so that new, user-defined
  * functions can be registered.
  */
-public class DefaultExpressionManager implements ExpressionManager, ThreadSafe {
-    public Expression parse(String expressionString) throws ParseException, ExpressionException
-    {
+public class DefaultExpressionManager 
+    implements ExpressionManager, Component, ThreadSafe {
+        
+    public Expression parse(String expressionString) 
+    throws ParseException, ExpressionException {
+        
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString)); //, functionFactory);
         parser.sum();
 

@@ -64,6 +64,7 @@ import java.util.*;
  * a form description file.
  */
 public class Form extends AbstractWidget {
+    
     private List widgets;
     private Map widgetsById;
     private FormDefinition definition;
