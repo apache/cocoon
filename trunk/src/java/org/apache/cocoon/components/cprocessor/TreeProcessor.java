@@ -497,7 +497,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
                             //FIXME - get the role
-                            final String r = null;
+                            final String r = childs[m].getName();
                             //final String r = this.roleManager.getRoleForName(childs[m].getName());
                             this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
                                     (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
