@@ -9,15 +9,15 @@
   <!-- Check the reloading of the sitemap -->
   <target name="sitemapReload">
     <property name="test-dir" value="samples/flow/test"/>
-    <property name="url" value="${cocoon}/${test-dir}/showString"/>
+    <property name="url" value="${anteater.env.cocoon}/${test-dir}/showString"/>
 
     <!--+
         | Copy the sitemap from its source directory to the destination
         | area, and replace the parameter value with 'abc' 
         +-->
 
-    <copy file="${src-webapp-dir}/${test-dir}/sitemap.xmap"
-	  tofile="${deploy-dir}/${test-dir}/sitemap.xmap"
+    <copy file="${anteater.env.src-webapp-dir}/${test-dir}/sitemap.xmap"
+	  tofile="${anteater.env.deploy-dir}/${test-dir}/sitemap.xmap"
 	  overwrite="yes">
       <filterset>
 	    <filter token="PARAMETER" value="abc"/>
@@ -37,8 +37,8 @@
         | area, and replace the parameter value with '123' 
         +-->
 
-    <copy file="${src-webapp-dir}/${test-dir}/sitemap.xmap"
-	  tofile="${deploy-dir}/${test-dir}/sitemap.xmap"
+    <copy file="${anteater.env.src-webapp-dir}/${test-dir}/sitemap.xmap"
+	  tofile="${anteater.env.deploy-dir}/${test-dir}/sitemap.xmap"
 	  overwrite="yes">
       <filterset>
 	   <filter token="PARAMETER" value="123"/>

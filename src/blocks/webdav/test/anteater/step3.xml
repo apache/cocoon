@@ -7,10 +7,12 @@
   </group>
 
   <target name="webdav-step3">
-    <property name="samples" value="${cocoon}/samples/webdav"/>
+    <property name="step3.samples" value="${anteater.env.cocoon}/samples/webdav"/>
+
+    <echo>samples=${samples}</echo>
 
     <!-- testing basic TraversableGenerator functionality -->
-    <httpRequest href="${samples}/step1/repo/"
+    <httpRequest href="${step3.samples}/step1/repo/"
                  useTidy="false"
                  description="Test the 'step1' sample">
       <namespace prefix="collection" uri="http://apache.org/cocoon/collection/1.0"/>
@@ -20,7 +22,7 @@
     </httpRequest>
 
     <!-- check contents of contentB.xml -->
-    <httpRequest href="${samples}/step3/repo/dir2/contentB.xml"
+    <httpRequest href="${step3.samples}/step3/repo/dir2/contentB.xml"
                  description="Test the 'step3' sample">
       <match>
         <xpath select="/html/body/form/p/input[@name='title']/@value" pattern="Content B"/>
@@ -31,7 +33,7 @@
     </httpRequest>
 
     <!-- change contents of contentB.xml -->
-    <httpRequest href="${cocoon}${action}"
+    <httpRequest href="${anteater.env.cocoon}${action}"
                  useTidy="false"
                  description="Test the 'step3' sample">
       <parameter name="title" value="Title B"/>
@@ -43,7 +45,7 @@
     </httpRequest>
 
     <!-- check changes -->
-    <httpRequest href="${samples}/step3/repo/dir2/contentB.xml"
+    <httpRequest href="${step3.samples}/step3/repo/dir2/contentB.xml"
                  description="Test the 'step3' sample">
       <match>
         <xpath select="/html/body/form/p/input[@name='title']/@value" pattern="Title B"/>
@@ -53,7 +55,7 @@
     </httpRequest>
 
     <!-- undo changes -->
-    <httpRequest href="${cocoon}${action}"
+    <httpRequest href="${anteater.env.cocoon}${action}"
                  useTidy="false"
                  description="Test the 'step3' sample">
       <parameter name="title" value="Content B"/>
@@ -65,7 +67,7 @@
     </httpRequest>
 
     <!-- check success of undo -->
-    <httpRequest href="${samples}/step3/repo/dir2/contentB.xml"
+    <httpRequest href="${step3.samples}/step3/repo/dir2/contentB.xml"
                  description="Test the 'step3' sample">
       <match>
         <xpath select="/html/body/form/p/input[@name='title']/@value" pattern="Content B"/>
