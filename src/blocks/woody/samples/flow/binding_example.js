@@ -114,8 +114,6 @@ function form2bean(form, documentURI, bindingURI) {
 
     binding.saveFormToModel(form.form, bean);
 
-    print(bean.toString());
-
     cocoon.sendPage("form2bean-success-pipeline", { "form2bean": bean });
     form.finish();
 }
