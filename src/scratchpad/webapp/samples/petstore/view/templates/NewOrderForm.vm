@@ -54,9 +54,9 @@ Country: </TD><TD><input type="text" size="15" name="billCountry" value="$order.
 </TD></TR>
 
 </TABLE>
-<P>
-<input type="image" src="images/button_submit.gif"/>
-</P>
+<P><center>
+  <input type="image" src="images/button_submit.gif"/>
+</center></P>
 </form>
 
 #parse ("view/templates/IncludeBottom.vm")
