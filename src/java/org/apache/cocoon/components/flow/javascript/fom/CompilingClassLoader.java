@@ -72,7 +72,7 @@ import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;
 
 /*
  * CompilingClassLoader
- * CVS $Id: CompilingClassLoader.java,v 1.6 2004/01/28 17:48:59 coliver Exp $
+ * CVS $Id: CompilingClassLoader.java,v 1.7 2004/02/02 20:02:35 coliver Exp $
  */
 public class CompilingClassLoader extends ClassLoader {
 
@@ -210,6 +210,9 @@ public class CompilingClassLoader extends ClassLoader {
             if (src == null) return null;
             try {
                 InputStream is = src.getInputStream();
+                if (is == null) {
+                    return null;
+                }
                 byte[] buf = new byte[8192];
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 int count;
