@@ -80,7 +80,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.4 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.5 2003/10/22 18:08:10 bloritsch Exp $
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
@@ -106,7 +106,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
 
     /** The component manager */
     protected ServiceManager manager;
-    
+
     /** This object holds the part parts :) */
     protected final class Part {
         public String uri;
@@ -290,8 +290,8 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     /**
      * Recycle the producer by removing references
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.rootElement = null;
         for(int i=0; i<this.parts.size();i++) {
             final Part current = (Part)this.parts.get(i);
@@ -396,7 +396,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
             this.contentHandler.endElement(namespaceURI, localName, raw);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
