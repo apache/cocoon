@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -25,10 +23,10 @@ import java.util.List;
  * (Java-based) compiled languages
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LanguageCompiler.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  * @since 2.0
  */
-public interface LanguageCompiler extends Component {
+public interface LanguageCompiler {
 
     /**
      * Set the name of the file containing the source program

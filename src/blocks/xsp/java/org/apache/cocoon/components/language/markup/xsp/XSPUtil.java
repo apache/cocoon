@@ -16,8 +16,7 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -52,7 +51,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.2 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class XSPUtil {
 
@@ -250,13 +249,13 @@ public class XSPUtil {
         }
     }
 
-    public static void includeString(String string, ComponentManager manager, ContentHandler contentHandler)
+    public static void includeString(String string, ServiceManager manager, ContentHandler contentHandler)
             throws RuntimeException {
         XSPUtil.includeInputSource(new InputSource(new StringReader(String.valueOf(string))), manager,
                                    contentHandler);
     }
 
-    public static void includeFile(String name, ComponentManager manager, ContentHandler contentHandler, Map objectModel)
+    public static void includeFile(String name, ServiceManager manager, ContentHandler contentHandler, Map objectModel)
             throws RuntimeException {
         try {
             XSPUtil.includeInputSource(new InputSource(new FileReader(XSPUtil.relativeFilename(name, objectModel))),
@@ -266,7 +265,7 @@ public class XSPUtil {
         }
     }
 
-    public static void includeInputSource(InputSource source, ComponentManager manager, ContentHandler contentHandler)
+    public static void includeInputSource(InputSource source, ServiceManager manager, ContentHandler contentHandler)
             throws RuntimeException {
         SAXParser parser = null;
         try {
@@ -277,7 +276,7 @@ public class XSPUtil {
             throw new CascadingRuntimeException("Could not include page", e);
         } finally {
             if (parser != null) {
-                manager.release((Component)parser);
+                manager.release(parser);
             }
         }
     }

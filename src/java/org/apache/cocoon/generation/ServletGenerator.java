@@ -16,10 +16,10 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Context;
@@ -39,22 +39,25 @@ import java.util.Map;
  * @version CVS $Id$
  */
 public abstract class ServletGenerator extends AbstractGenerator
-implements Composable, Disposable {
+implements Serviceable, Disposable {
 
     protected Request request;
     protected Response response;
     protected Context context;
 
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         this.manager = null;
     }

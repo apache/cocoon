@@ -15,21 +15,18 @@
  */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
-
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.core.container.AbstractComponentHandler;
 
 /**
  * This interface states the functionality of a program.
  * For compilable languages this is the wrapper for a Java Class object.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Program.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  */
 public interface Program {
 
@@ -41,10 +38,8 @@ public interface Program {
     /**
      * Get ComponentHandler which holds instances of this program.
      */
-    ComponentHandler getHandler(ComponentManager manager,
-                                Context context,
-                                RoleManager roles,
-                                LogkitLoggerManager logKitManager) throws Exception;
+    AbstractComponentHandler getHandler(ServiceManager manager,
+                                Context context) throws Exception;
 
     /**
      * Create new instance of the program.

@@ -15,16 +15,13 @@
  */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.Modifiable;
 
 /**
- * This interface is the common base of all Compiled Components.  This
- * includes Sitemaps and XSP Pages
+ * This interface is the common base of all XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: CompiledComponent.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
-public interface CompiledComponent extends Component, Composable, Modifiable {
+public interface CompiledComponent extends Modifiable {
 }

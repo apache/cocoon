@@ -17,10 +17,8 @@
 package org.apache.cocoon.core.container;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -29,9 +27,6 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.SitemapConfigurable;
-import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.components.container.DefaultSitemapConfigurationHolder;
 
 /**
  * Default service manager for Cocoon's components.
@@ -43,19 +38,12 @@ extends AbstractServiceManager
 implements ServiceManager, Configurable {
     
     /** The parent ServiceManager */
-    private final ServiceManager parentManager;
+    protected ServiceManager parentManager;
 
     /** added component handlers before initialization to maintain
      *  the order of initialization
      */
     private final List newComponentHandlers = new ArrayList();
-
-    /** The {@link SitemapConfigurationHolder}s */
-    private Map sitemapConfigurationHolders = new HashMap(15);
-
-    /** Temporary list of parent-aware components.  Will be null for most of
-     * our lifecycle. */
-    private ArrayList parentAwareComponents = new ArrayList();
 
     /** Create the ServiceManager with a Classloader and parent ServiceManager */
     public CocoonServiceManager( final ServiceManager parent, 
@@ -168,6 +156,8 @@ implements ServiceManager, Configurable {
             try {
                 handler.initialize();
                 component = handler.get();
+                
+                this.initialize( role, component );
             } catch( final ServiceException ce ) {
                 // Rethrow instead of wrapping a ComponentException with another one
                 throw ce;
@@ -196,27 +186,18 @@ implements ServiceManager, Configurable {
         //  problem.  Checking to see if the put has already been done would be slower.
         this.componentMapping.put( component, handler );
 
-        if ( null != component && component instanceof SitemapConfigurable) {
-
-            // FIXME: how can we prevent that this is called over and over again?
-            SitemapConfigurationHolder holder;
-
-            holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
-            if ( null == holder ) {
-                // create new holder
-                holder = new DefaultSitemapConfigurationHolder( role, this.roleManager );
-                this.sitemapConfigurationHolders.put( role, holder );
-            }
-
-            try {
-                ((SitemapConfigurable)component).configure(holder);
-            } catch (ConfigurationException ce) {
-                throw new ServiceException(role, "Exception during setup of SitemapConfigurable.", ce);
-            }
-        }
         return component;
     }
 
+    /**
+     * Initialize the component
+     * @throws ServiceException
+     */
+    protected void initialize(String role, Object component) 
+    throws ServiceException {
+        // we do nothing here, can be used in subclasses
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
      */
@@ -330,8 +311,7 @@ implements ServiceManager, Configurable {
     throws Exception {
         super.initialize();
 
-        for( int i = 0; i < this.newComponentHandlers.size(); i++ )
-        {
+        for( int i = 0; i < this.newComponentHandlers.size(); i++ ) {
             final AbstractComponentHandler handler =
                 (AbstractComponentHandler)this.newComponentHandlers.get( i );
             try {
@@ -371,28 +351,6 @@ implements ServiceManager, Configurable {
             }
         }
         this.newComponentHandlers.clear();
-
-        if (parentAwareComponents == null) {
-            throw new ServiceException(null, "CocoonServiceManager already initialized");
-        }
-        // Set parents for parentAware components
-        Iterator iter = parentAwareComponents.iterator();
-        while (iter.hasNext()) {
-            String role = (String)iter.next();
-            if ( parentManager != null && parentManager.hasService( role ) ) {
-                // lookup new component
-                Object component = null;
-                try {
-                    component = this.lookup( role );
-                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
-                } catch (ServiceException ignore) {
-                    // we don't set the parent then
-                } finally {
-                    this.release( component );
-                }
-            }
-        }
-        parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
 
     /* (non-Javadoc)
@@ -472,11 +430,6 @@ implements ServiceManager, Configurable {
             throw se;
         } catch( final Exception e ) {
             throw new ServiceException( role.toString(), "Could not set up component handler.", e );
-        }
-        // Note that at this point, we're not initialized and cannot do
-        // lookups, so defer parental introductions to initialize().
-        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
-            this.parentAwareComponents.add(role);
         }
     }
 
