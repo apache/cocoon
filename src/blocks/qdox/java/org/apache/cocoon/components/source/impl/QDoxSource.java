@@ -60,7 +60,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Id: QDoxSource.java,v 1.8 2004/04/03 00:46:33 antonio Exp $ $Date: 2004/04/03 00:46:33 $
+ * @version CVS $Id: QDoxSource.java,v 1.9 2004/04/29 11:26:42 cziegeler Exp $ $Date: 2004/04/29 11:26:42 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -584,7 +584,7 @@ public final class QDoxSource
                     break;
 
                 case INNERCLASS_INHERITANCE :
-                    result = superClass.getClasses().length > 0;
+                    result = superClass.getInnerClasses().length > 0;
                     break;
 
                 case FIELD_INHERITANCE :
@@ -680,7 +680,7 @@ public final class QDoxSource
      */
     private JavaClass getJavadocInnerClass(JavaClass jClass, String className) {
         if (jClass != null) {
-            JavaClass[] classes = jClass.getClasses();
+            JavaClass[] classes = jClass.getInnerClasses();
 
             for (int i=0; i<classes.length; i++) {
                 if (classes[i].getName().equals(className)) {
@@ -872,7 +872,7 @@ public final class QDoxSource
      * @param detailed
      */
     private void outputInnerClasses(ContentHandler handler, JavaClass jClass, boolean detailed) throws SAXException {
-        JavaClass[] innerClasses = jClass.getClasses();
+        JavaClass[] innerClasses = jClass.getInnerClasses();
         if (innerClasses.length > 0 || hasInheritance(jClass, INNERCLASS_INHERITANCE)) {
             if (detailed) {
                 saxStartElement(handler, INNERCLASSES_ELEMENT);
