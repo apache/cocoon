@@ -37,9 +37,9 @@
   <menu label="Community">
     <menu-item label="Cocoon Bylaws" href="bylaws-addendum.html"/>
     <menu-item label="Hall of Fame" href="who.html"/>
-    <menu-item label="Contributing" href="contrib.html"/>
-    <menu-item label="Mail Lists" href="mail-lists.html"/>
-    <menu-item label="Mail Archives" href="mail-archives.html"/> 
+    <menu-item label="Contributing" href="http://cocoon.apache.org/community/contrib.html"/>
+    <menu-item label="Mail Lists" href="http://cocoon.apache.org/community/mail-lists.html"/>
+    <menu-item label="Mail Archives" href="http://cocoon.apache.org/community/mail-archives.html"/> 
   </menu>
 
   <menu label="Project">
@@ -49,9 +49,9 @@
   </menu>
 
   <menu label="Links">
-    <menu-item label="Cocoon Links" href="link/index.html"/>  
-    <menu-item label="Live Sites" href="link/livesites.html"/>
-    <menu-item label="Cocoon Hosting" href="link/hosting.html"/>
+    <menu-item label="Cocoon Links" href="http://cocoon.apache.org/link/index.html"/>  
+    <menu-item label="Live Sites" href="http://cocoon.apache.org/link/livesites.html"/>
+    <menu-item label="Cocoon Hosting" href="http://cocoon.apache.org/link/hosting.html"/>
   </menu>
 
   <menu label="Other Releases">
