@@ -51,6 +51,7 @@
 package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
@@ -134,6 +135,14 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
     }
 
     /**
+     * Allows the innerclass Assistant to get access to the logger. JDK 1.3 gives a
+     * NoSuchMethod error if getLogger() is called directly.
+     */
+    private Logger getTheLogger() {
+        return getLogger();
+    }
+
+    /**
      * Assistant Inner class discloses enough features to the created 
      * childBindings to recursively 
      * 
@@ -157,8 +166,8 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
-            if (getLogger().isDebugEnabled())
-                JXPathBindingManager.this.getLogger().debug("build binding for config elm " + bindingType);
+            if (JXPathBindingManager.this.getTheLogger().isDebugEnabled())
+                JXPathBindingManager.this.getTheLogger().debug("build binding for config elm " + bindingType);
             JXpathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
