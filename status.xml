@@ -202,8 +202,8 @@
 
   <changes>
  <release version="@version@" date="@date@">
-  <action dev="NN" type="add">
-    Dummy
+  <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
+    I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
   </action>
   <action dev="LG" type="fix">
     Fix: Continuation can only be invoked for the interpreter it was originally created for.
