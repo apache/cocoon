@@ -94,7 +94,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
                 Boolean addParams = (Boolean)this.getConfiguration(coplet, "appendParameters");
                 if ( addParams != null && addParams.booleanValue() ) {
                     final StringBuffer uri = new StringBuffer(event.getLink());
-                    boolean hasParams = (uri.indexOf("?") != -1);
+                    boolean hasParams = (uri.toString().indexOf("?") != -1);
                     
                     // append parameters - if any
                     final Map objectModel = ContextHelper.getObjectModel(this.context);
