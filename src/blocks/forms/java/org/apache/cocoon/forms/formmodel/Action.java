@@ -28,7 +28,7 @@ import org.apache.cocoon.forms.event.*;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.10 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id$
  */
 public class Action extends AbstractWidget implements ActionListenerEnabled {
     private final ActionDefinition definition;
@@ -36,6 +36,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     private ActionListener listener;
 
     public Action(ActionDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -44,6 +45,9 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
     
     public void readFromRequest(final FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+        
         Form form = getForm();
         
         // Set the submit widget if we can determine it from the request

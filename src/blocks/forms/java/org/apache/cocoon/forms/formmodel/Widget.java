@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.15 2004/05/11 12:55:53 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public interface Widget {
     
@@ -88,7 +88,34 @@ public interface Widget {
      * of the widget.
      */
     public Form getForm();
-
+    
+    /**
+     * Get the widget's own state. Note that this state is <em>not</em> the one actually considered
+     * for handling requests and producing output. For these matters, the combined state is used.
+     * 
+     * @see #getCombinedState()
+     * @return the widget's own state
+     */
+    public WidgetState getState();
+    
+    /**
+     * Set the widget's own state. This may change its combined state, and those of its
+     * children, if any.
+     * 
+     * @param state the new wiget state
+     */
+    public void setState(WidgetState state);
+    
+    /**
+     * Get the widget's combined state, which is the strictest of its own state and parent state.
+     * This combined state is the one that will be used by the widget to know if request
+     * parameters should be considered and if some output must be produced.
+     * 
+     * @see WidgetState#strictest(WidgetState, WidgetState)
+     * @return the combined state
+     */
+    public WidgetState getCombinedState();
+    
     /**
      * @return the id prefixed with the namespace, this name should be unique
      * accross all widgets on the form.

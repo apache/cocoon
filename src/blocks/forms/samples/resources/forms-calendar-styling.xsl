@@ -69,11 +69,19 @@
     </input>
     
     <!-- calendar popup -->
-    <a href="#" name="{$id}" id="{$id}"
-       onClick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
-      <!-- TODO: i18n key for @alt -->
-      <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
-    </a>
+    <xsl:choose>
+      <xsl:when test="@state = 'disabled'">
+        <!-- TODO: i18n key for @alt -->
+        <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <a href="#" name="{$id}" id="{$id}"
+           onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
+          <!-- TODO: i18n key for @alt -->
+          <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
+        </a>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <!-- common stuff -->
     <xsl:apply-templates select="." mode="common"/>

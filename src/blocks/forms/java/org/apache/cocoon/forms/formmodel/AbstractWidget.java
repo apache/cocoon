@@ -45,6 +45,11 @@ public abstract class AbstractWidget implements Widget {
     private Widget parent;
     
     /**
+     * The widget's own state
+     */
+    private WidgetState state = WidgetState.ACTIVE;
+    
+    /**
      * Lazy loaded reference to the top-level form.
      */
     private Form form;
@@ -58,7 +63,10 @@ public abstract class AbstractWidget implements Widget {
      * Storage for the widget allocated attributes
      */
     private Map attributes;
- 
+    
+    protected AbstractWidget(AbstractWidgetDefinition definition) {
+        this.state = definition.getState();
+    }
     
     /**
      * Gets the id of this widget.
@@ -92,7 +100,8 @@ public abstract class AbstractWidget implements Widget {
     /** 
      * @return The parent-widget of this widget.
      */
-    public Widget getParent() {
+    // This method is final in order for other methods in this class to use this.parent
+    public final Widget getParent() {
         return parent;
     }
 
@@ -121,6 +130,25 @@ public abstract class AbstractWidget implements Widget {
             }
         }
         return this.form;
+    }
+
+    public WidgetState getState() {
+        return this.state;
+    }
+    
+    public void setState(WidgetState state) {
+        if (state == null) {
+            throw new IllegalArgumentException("A widget state cannot be set to null");
+        }
+        this.state = state;
+    }
+    
+    public WidgetState getCombinedState() {
+        if (parent == null) {
+            return this.state;
+        } else {
+            return WidgetState.strictest(this.state, parent.getCombinedState());
+        }
     }
 
     public String getRequestParameterName() {
@@ -231,8 +259,13 @@ public abstract class AbstractWidget implements Widget {
         }
     }
     
-    
     public boolean validate() {
+        
+        // Consider widget valid if it doesn't accept user inputs
+        if (!getCombinedState().isAcceptingInputs()) {            
+            return true;
+        }
+        
         // Test validators from the widget definition
         if (!getDefinition().validate(this)) {
             // Failed
@@ -270,7 +303,9 @@ public abstract class AbstractWidget implements Widget {
      * @throws SAXException
      */
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        getDefinition().generateDisplayData("label", contentHandler);
+        if (getCombinedState().isDisplayingValues()) {
+            getDefinition().generateDisplayData("label", contentHandler);
+        }
     }
 
     
@@ -285,7 +320,7 @@ public abstract class AbstractWidget implements Widget {
      * @param locale in which context potential content needs to be put.
      * @throws SAXException
      */
-    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+    protected void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // Do nothing
     }
 
@@ -295,7 +330,7 @@ public abstract class AbstractWidget implements Widget {
      * 
      * @return the main elementname for this widget's sax-fragment. 
      */
-    public abstract String getXMLElementName();
+    protected abstract String getXMLElementName();
 
     /** 
      * The XML attributes used in {@link #generateSaxFragment(ContentHandler, Locale)}
@@ -311,12 +346,18 @@ public abstract class AbstractWidget implements Widget {
      * 
      * @return the attributes for the main element for this widget's sax-fragment.
      */
-    public AttributesImpl getXMLElementAttributes() {
+    protected AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = new AttributesImpl();
         // top-level widget-containers like forms will have their id set to ""
         // for those the @id should not be included.
         if (getId().length() != 0) {
         	attrs.addCDATAAttribute("id", getRequestParameterName());
+        }
+        
+        // Add the "state" attribute is different from active (the default state)
+        WidgetState state = getCombinedState();
+        if (state != WidgetState.ACTIVE) {
+            attrs.addCDATAAttribute("state", getCombinedState().getName());
         }
         return attrs;
     }
@@ -333,7 +374,7 @@ public abstract class AbstractWidget implements Widget {
      * 
      * @see WidgetDefinition#generateDisplayData(ContentHandler) 
      */
-    public void generateDisplayData(ContentHandler contentHandler) throws SAXException {
+    protected void generateDisplayData(ContentHandler contentHandler) throws SAXException {
         getDefinition().generateDisplayData(contentHandler);
     }
 
@@ -360,15 +401,18 @@ public abstract class AbstractWidget implements Widget {
      */
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale)    
     throws SAXException {
-        String element = this.getXMLElementName();       
-        AttributesImpl attrs = getXMLElementAttributes();
-        contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
-
-        generateDisplayData(contentHandler);
-        
-        generateItemSaxFragment(contentHandler, locale);
-        
-        contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
+        if (getCombinedState().isDisplayingValues()) {
+    
+            String element = this.getXMLElementName();       
+            AttributesImpl attrs = getXMLElementAttributes();
+            contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
+    
+            generateDisplayData(contentHandler);
+            
+            generateItemSaxFragment(contentHandler, locale);
+            
+            contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
+        }
     }
 
 	public Object getAttribute(String name) {

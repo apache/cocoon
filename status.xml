@@ -199,6 +199,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+     CForms: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
+     state. Updated the stylesheets accordingly to use HTML's disabled inputs.
+   </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
      BetwixtTransformer: removed deprecation warning with latest betwixt
    </action>

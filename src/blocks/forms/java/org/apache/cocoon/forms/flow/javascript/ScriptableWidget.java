@@ -22,6 +22,7 @@ import org.apache.cocoon.forms.formmodel.MultiValueField;
 import org.apache.cocoon.forms.formmodel.Output;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.forms.formmodel.WidgetState;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
@@ -30,7 +31,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.5 2004/05/07 22:04:20 joerg Exp $
+ * @version $Id$
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -275,6 +276,27 @@ public class ScriptableWidget extends ScriptableObject {
 
     public String jsGet_id() {
         return delegate.getId();
+    }
+
+    public WidgetState jsGet_state() {
+        return delegate.getState();
+    }
+    
+    public void jsSet_state(Object stateObj) {
+        Object obj = unwrap(stateObj);
+        WidgetState state = null;
+        
+        if (obj instanceof String) {
+            state = WidgetState.stateForName((String)obj);
+        } else if (obj instanceof WidgetState) {
+            state = (WidgetState)obj;
+        }
+        
+        if (state == null) {
+            throw new IllegalArgumentException("Invalid value for widgetState " + stateObj);
+        }
+        
+        delegate.setState(state);
     }
 
     public Scriptable jsGet_parent() {

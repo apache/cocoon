@@ -37,6 +37,7 @@ public class Union extends AbstractContainerWidget {
     private final UnionDefinition definition;
 
     public Union(UnionDefinition definition) {
+        super(definition);
         this.definition = definition;
         // TODO: Remove after moving logic to Field.
         //item.enteredValue = (String)definition.getDefaultValue();
@@ -74,6 +75,9 @@ public class Union extends AbstractContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+
         // Ensure the case widget has read its value
         caseWidget.readFromRequest(formContext);
         
@@ -101,6 +105,9 @@ public class Union extends AbstractContainerWidget {
 
     // TODO: Simplify this logic.
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         Widget widget;
         boolean valid = true;
         // Read current case from request

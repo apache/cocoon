@@ -37,7 +37,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     /** 
      * Constructs AbstractContainerWidget
      */
-    public AbstractContainerWidget() {
+    public AbstractContainerWidget(AbstractWidgetDefinition definition) {
+        super(definition);
         widgets = new WidgetList();
     }
 
@@ -70,7 +71,9 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *                    of the contained widgets.
      */
     public void readFromRequest(FormContext formContext) {
-        widgets.readFromRequest(formContext);
+        if (getCombinedState().isAcceptingInputs()) {
+            widgets.readFromRequest(formContext);
+        }
     }
 
     /**
@@ -85,6 +88,9 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+        
         // Validate children first, then always validate self. Return combined result.
         final boolean valid = widgets.validate();
         return super.validate() && valid;
@@ -100,6 +106,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * @throws SAXException
      */
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        widgets.generateSaxFragment(contentHandler, locale);
+        if (getCombinedState().isDisplayingValues()) {
+            widgets.generateSaxFragment(contentHandler, locale);
+        }
     }
 }

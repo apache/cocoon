@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.9 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id$
  */
 public class Output extends AbstractWidget implements DataWidget {
     
@@ -47,6 +47,7 @@ public class Output extends AbstractWidget implements DataWidget {
     }
 
     protected Output(OutputDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -73,7 +74,7 @@ public class Output extends AbstractWidget implements DataWidget {
         return OUTPUT_EL;
     }
 
-    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+    protected void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // the value
         if (value != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);

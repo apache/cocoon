@@ -53,6 +53,7 @@ public class Form extends AbstractContainerWidget {
     private CursorableLinkedList events;
 
     public Form(FormDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 

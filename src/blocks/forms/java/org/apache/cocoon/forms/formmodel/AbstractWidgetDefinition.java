@@ -46,6 +46,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private Map attributes;
     private Map displayData;
     private List validators;
+    private WidgetState state = WidgetState.ACTIVE;
 
     protected CreateListener createListener;
 
@@ -74,7 +75,15 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public WidgetDefinition getParent() {
         return this.parent;
     }
+    
+    public WidgetState getState() {
+        return this.state;
+    }
 
+    public void setState(WidgetState state) {
+        this.state = state;
+    }
+    
     protected void setLocation(String location) {
         this.location = location;
     }

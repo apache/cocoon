@@ -112,6 +112,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
 
     public Field(FieldDefinition fieldDefinition) {
+        super(fieldDefinition);
         this.fieldDefinition = fieldDefinition;
     }
 
@@ -170,6 +171,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
         // FIXME: Should we consider only non-null values, which allows to
         // split a form across several screens?
@@ -205,6 +209,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
         }

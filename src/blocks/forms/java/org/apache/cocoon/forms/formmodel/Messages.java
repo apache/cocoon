@@ -34,7 +34,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.8 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id$
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
@@ -44,6 +44,7 @@ public class Messages extends AbstractWidget {
     private static final String MESSAGE_EL = "message";
 
     protected Messages(MessagesDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -52,11 +53,16 @@ public class Messages extends AbstractWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        messages.clear();
+        if (getCombinedState().isAcceptingInputs()) {
+            messages.clear();
+        }
     }
 
     public boolean validate() {
-        return messages.size() == 0;
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+        else
+            return messages.size() == 0;
     }
 
     /**

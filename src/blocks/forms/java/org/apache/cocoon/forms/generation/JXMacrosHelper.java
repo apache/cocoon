@@ -59,7 +59,7 @@ public class JXMacrosHelper {
         this.cocoonConsumer = consumer;
     }
 
-    public void startForm(Map attributes) throws SAXException {
+    public void startForm(Form form, Map attributes) throws SAXException {
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
         Iterator iter = attributes.entrySet().iterator();
@@ -187,6 +187,10 @@ public class JXMacrosHelper {
     public boolean isSelectedCase(Widget unionWidget, String caseValue) {
         String value = (String)unionWidget.getValue();
         return caseValue.equals(value != null ? value : "");
+    }
+    
+    public boolean isVisible(Widget widget) {
+        return widget.getCombinedState().isDisplayingValues();
     }
 
     /**

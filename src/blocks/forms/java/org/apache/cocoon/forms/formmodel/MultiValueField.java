@@ -58,6 +58,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     private ValidationError validationError;
 
     public MultiValueField(MultiValueFieldDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -66,6 +67,9 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+        
         enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
         validationError = null;
         values = null;
@@ -99,6 +103,9 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (values != null)
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else

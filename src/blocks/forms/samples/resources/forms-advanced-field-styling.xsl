@@ -123,19 +123,35 @@
             <!-- command buttons -->
             <!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;" onclick="opt{generate-id()}.forms_transferRight()"/>
+            <input type="button" value="&gt;" onclick="opt{generate-id()}.forms_transferRight()">
+              <xsl:if test="@state='disabled'">
+                <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.forms_transferAllRight()"/>
+            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.forms_transferAllRight()">
+              <xsl:if test="@state='disabled'">
+                <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;" onclick="opt{generate-id()}.forms_transferLeft()"/>
+            <input type="button" value="&lt;" onclick="opt{generate-id()}.forms_transferLeft()">
+              <xsl:if test="@state='disabled'">
+                <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.forms_transferAllLeft()"/>
+            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.forms_transferAllLeft()">
+              <xsl:if test="@state='disabled'">
+                <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:apply-templates select="." mode="common"/>
