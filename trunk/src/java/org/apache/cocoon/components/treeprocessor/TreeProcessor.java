@@ -58,8 +58,6 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.logger.LogKitManageable;
-import org.apache.avalon.excalibur.logger.LogKitManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -92,7 +90,7 @@ import org.apache.excalibur.source.Source;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.13 2003/08/31 20:33:19 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.14 2003/09/10 17:42:04 proyal Exp $
  */
 
 public class TreeProcessor
@@ -101,7 +99,6 @@ public class TreeProcessor
                Processor,
                Composable,
                Configurable,
-               LogKitManageable,
                RoleManageable,
                Contextualizable,
                Disposable {
@@ -119,9 +116,6 @@ public class TreeProcessor
 
     /** The component manager */
     protected ComponentManager manager;
-
-    /** The logkit manager to get Loggers */
-    protected LogKitManager logKit;
 
     /** The role manager */
     protected RoleManager roleManager;
@@ -187,7 +181,6 @@ public class TreeProcessor
         this.enableLogging(parent.getLogger());
         this.context = parent.context;
         this.roleManager = parent.roleManager;
-        this.logKit = parent.logKit;
         this.builderSelector = parent.builderSelector;
         this.checkReload = parent.checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
@@ -224,10 +217,6 @@ public class TreeProcessor
 
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
-    }
-
-    public void setLogKitManager(LogKitManager logKit) {
-        this.logKit = logKit;
     }
 
     public void setRoleManager(RoleManager rm) {
@@ -287,7 +276,6 @@ public class TreeProcessor
                 this.context,
                 this.manager,
                 this.roleManager,
-                this.logKit,
                 builtin
             );
         } catch(ConfigurationException ce) {
@@ -302,7 +290,7 @@ public class TreeProcessor
      * @return If the processing is successfull <code>true</code> is returned.
      *         If not match is found in the sitemap <code>false</code>
      *         is returned.
-     * @throws ResourceNotFoundException If a sitemap component tries
+     * @throws org.apache.cocoon.ResourceNotFoundException If a sitemap component tries
      *                                   to access a resource which can not
      *                                   be found, e.g. the generator
      *         ConnectionResetException  If the connection was reset
