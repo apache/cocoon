@@ -50,6 +50,11 @@
 */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Map;
+
+import org.apache.cocoon.portal.factory.impl.AbstractProducible;
+import org.apache.commons.collections.SequencedHashMap;
+
 
 
 /**
@@ -57,11 +62,11 @@ package org.apache.cocoon.portal.layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.7 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.8 2003/05/22 06:55:15 cziegeler Exp $
  */
 public abstract class AbstractLayout 
-    extends AbstractParameters 
-    implements Layout {
+    extends AbstractProducible 
+    implements Layout, Parameters {
     
     protected String rendererName;
     
@@ -69,6 +74,15 @@ public abstract class AbstractLayout
     
     protected boolean _static;
     
+    protected Map parameters = new SequencedHashMap();
+     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.Parameters#getParameters()
+     */
+    public final Map getParameters() {
+        return parameters;
+    }
+
     /**
      * @see org.apache.cocoon.portal.layout.Layout#getRendererName()
      */
