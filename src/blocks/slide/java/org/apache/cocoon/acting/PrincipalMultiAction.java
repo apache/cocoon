@@ -71,7 +71,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * Multiple actions for to add, to removing and to modify principals or principal groups.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalMultiAction.java,v 1.2 2003/11/15 13:26:00 joerg Exp $
+ * @version CVS $Id: PrincipalMultiAction.java,v 1.3 2003/11/15 13:31:18 joerg Exp $
  */ 
 public class PrincipalMultiAction extends AbstractMultiAction implements ThreadSafe {
 
@@ -127,9 +127,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.addPrincipal(caller, principal);
  
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -177,9 +175,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.removePrincipal(caller, principal);
 
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -227,9 +223,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.addPrincipalGroup(caller, principalgroup);
 
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -277,9 +271,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.removePrincipalGroup(caller, principalgroup);
 
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -331,9 +323,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.addMember(caller, principalgroup, principal);
 
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -385,9 +375,7 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
             principalprovider.removeMember(caller, principalgroup, principal);
 
         } catch (ServiceException se) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", se);
-            throw new ProcessingException("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for service.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
