@@ -36,6 +36,8 @@ import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 
+import java.util.List;
+
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
@@ -78,6 +80,23 @@ public class FullScreenCopletEventAspect
                     FullScreenCopletEvent fsce = (FullScreenCopletEvent)e;
                     if ( fsce.getLayout() != null) {
                         service.getComponentManager().getLinkService().addEventToLink( e );
+                    }
+                }
+            }
+        } else {
+            List list = (List) request.getAttribute("org.apache.cocoon.portal." + requestParameterName);
+            if (list != null)
+            {
+                FullScreenCopletEvent[] events =
+                    (FullScreenCopletEvent[]) list.toArray(new FullScreenCopletEvent[0]);
+                final Publisher publisher = context.getEventPublisher();
+                for (int i = 0; i < events.length; i++)
+                {
+                    FullScreenCopletEvent e = events[i];
+                    publisher.publish(e);
+                    if (e.getLayout() != null)
+                    {
+                        service.getComponentManager().getLinkService().addEventToLink(e);
                     }
                 }
             }

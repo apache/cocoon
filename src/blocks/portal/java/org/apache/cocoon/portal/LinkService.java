@@ -31,7 +31,9 @@ public interface LinkService {
     String ROLE = LinkService.class.getName();
     
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
-    
+    String DEFAULT_CONVERTABLE_EVENT_PARAMETER_NAME = "javax.portlet.events";
+
+
     static class ParameterDescription {
         public final String parameters;
         public ParameterDescription(String parameters) {
@@ -46,12 +48,31 @@ public interface LinkService {
     String getLinkURI(Event event);
 
     /**
+     * Get the uri for this coplet containing the additional event and using a secure
+     * protocol if requested.
+     *
+     * @param event The event to add (null is also allowed for convenience)
+     * @param secure true if a secure protocol is required, false otherwise.
+     * @return A URI
+     */
+    String getLinkURI(Event event, Boolean secure);
+
+    /**
      * Get the uri for this coplet containing the additional events.
-     * @param events The events to add: These can either be {@link Event}s or {@link #ParameterDescription}s.
+     * @param events The events to add: These can either be {@link Event}s or {@link ParameterDescription}s.
      * @return A URI
      */
     String getLinkURI(List events);
-    
+
+    /**
+     * Get a uri for this coplet containing the additional events. Use a secure
+     * protocol if requested.
+     * @param events The events to add: These can either be {@link Event}s or {@link ParameterDescription}s.
+     * @param secure true if a secure protocol is required, false otherwise.
+     * @return A URI
+     */
+    String getLinkURI(List events, Boolean secure);
+
     /**
      * Add this event to the list of events contained in the uri
      * @param event Event to add
@@ -85,4 +106,11 @@ public interface LinkService {
      * @return A URI
      */
     String getRefreshLinkURI();
+
+    /**
+     * Determine whether the current url is using a secure protocol
+     * @return true if the current url is using a secure protocol
+     */
+    boolean isSecure();
+
 }

@@ -52,4 +52,9 @@ public interface EventConverter {
      * This notifies the converter that an event processing phase ends
      */
     void finish();
+
+    /**
+     * Returns true if events are not to be returned as request parameters
+     */
+    boolean isMarshallEvents();
 }

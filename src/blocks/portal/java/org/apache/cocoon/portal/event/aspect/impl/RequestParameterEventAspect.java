@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.StringTokenizer;
+import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -34,7 +35,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RequestParameterEventAspect.java,v 1.4 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestParameterEventAspect
 	extends AbstractLogEnabled
@@ -49,6 +50,17 @@ public class RequestParameterEventAspect
                 final Event e = context.getEventConverter().decode(current);
                 if ( null != e) {
                     publisher.publish(e);
+                }
+            }
+        } else {
+            List list = (List) request.getAttribute("org.apache.cocoon.portal." + parameterName);
+            if (list != null)
+            {
+                Event[] events = (Event[]) list.toArray(new Event[0]);
+                final Publisher publisher = context.getEventPublisher();
+                for (int i = 0; i < events.length; i++)
+                {
+                    publisher.publish(events[i]);
                 }
             }
         }

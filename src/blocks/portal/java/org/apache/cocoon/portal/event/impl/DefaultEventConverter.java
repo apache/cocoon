@@ -33,7 +33,7 @@ import org.apache.cocoon.portal.event.EventConverter;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventConverter.java,v 1.4 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultEventConverter
     extends AbstractLogEnabled
@@ -133,5 +133,12 @@ public class DefaultEventConverter
         } finally {
             this.manager.release(service);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventConverter#isMarshallEvents()
+     */
+    public boolean isMarshallEvents() {
+        return false;
     }
 }

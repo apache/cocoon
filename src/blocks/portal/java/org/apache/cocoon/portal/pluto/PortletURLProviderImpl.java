@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
@@ -32,6 +33,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
@@ -47,10 +49,7 @@ import org.apache.pluto.services.information.PortletURLProvider;
  * @version CVS $Id$
  */
 public class PortletURLProviderImpl 
-       implements PortletURLProvider, CopletInstanceEvent {
-
-    /** The service manager */
-    protected final ServiceManager manager;
+       implements PortletURLProvider, CopletInstanceEvent, ConvertableEvent {
     
     /** The portlet window (target) */
     protected final PortletWindow portletWindow;
@@ -65,7 +64,7 @@ public class PortletURLProviderImpl
     protected boolean action;
     
     /** Secure link? */
-    protected boolean secure;
+    protected Boolean secure = null;
     
     /** Clear parameters */
     protected boolean clearParameters;
@@ -75,21 +74,51 @@ public class PortletURLProviderImpl
     
     /** The generated url */
     protected String generatedURL;
-    
+    private LinkService linkService;
+    private static final String DEFAULT_PORTLET_URL_REQUEST_PARAM = "url";
+
     /**
      * Constructor
      */
     public PortletURLProviderImpl(PortletWindow portletWindow,
                                   ServiceManager manager) {
-        this.manager = manager;
         this.portletWindow = portletWindow;
+        PortalService service = null;
+        try {
+            service = (PortalService) manager.lookup(PortalService.ROLE);
+            this.linkService = service.getComponentManager().getLinkService();
+        } catch (ServiceException se) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", se);
+        } finally {
+            manager.release(service);
+        }
+    }
+
+    /**
+     * Constructor for factory
+     * @param service
+     * @param eventData
+     */
+    PortletURLProviderImpl(PortalService service, String eventData) {
+        this.linkService = service.getComponentManager().getLinkService();
+        PortletURLConverter urlConverter = new PortletURLConverter(eventData);
+        String copletId = urlConverter.getPortletId();
+        CopletInstanceData cid = service.getComponentManager().getProfileManager()
+            .getCopletInstanceData(copletId);
+        this.portletWindow = (PortletWindow)cid.getTemporaryAttribute("window");
+        this.mode = urlConverter.getMode();
+        this.state = urlConverter.getState();
+        this.action = urlConverter.isAction();
+        this.parameters = urlConverter.getParameters();
+        this.clearParameters = false;
+        this.secure = null;
     }
 
     /**
      * Copy constructor
      */
     private PortletURLProviderImpl(PortletURLProviderImpl original) {
-        this.manager = original.manager;
+        this.linkService = original.linkService;
         this.portletWindow = original.portletWindow;
         this.mode = original.mode;
         this.state = original.state;
@@ -156,7 +185,7 @@ public class PortletURLProviderImpl
      * @see org.apache.pluto.services.information.PortletURLProvider#setSecure()
      */
     public void setSecure() {
-        this.secure = true;
+        this.secure =  new Boolean(true);
     }
 
     /* (non-Javadoc)
@@ -211,23 +240,16 @@ public class PortletURLProviderImpl
                     }
                 }
             }
-            PortalService service = null;
-            try {
-                service = (PortalService) this.manager.lookup(PortalService.ROLE);
-                LinkService linkService = service.getComponentManager().getLinkService();
-                
-                //TODO - secure
-                List l = new ArrayList();
-                if ( sizingEvent != null ) {
-                    l.add(sizingEvent);
-                }
-                l.add(this);
-                this.generatedURL = linkService.getLinkURI(l);
-                
-            } catch (ServiceException se) {
-                throw new CascadingRuntimeException("Unable to lookup portal service.", se);
-            } finally {
-                this.manager.release(service);
+
+            List l = new ArrayList();
+            if ( sizingEvent != null ) {
+                l.add(sizingEvent);
+            }
+            l.add(this);
+            if (secure == null) {
+                this.generatedURL = this.linkService.getLinkURI(l);
+            } else {
+                this.generatedURL = this.linkService.getLinkURI(l, secure);
             }
         }
         return this.generatedURL;
@@ -238,6 +260,57 @@ public class PortletURLProviderImpl
      */
     public Object getTarget() {        
         return ((PortletEntityImpl)this.portletWindow.getPortletEntity()).getCopletInstanceData();
+    }
+
+    /**
+     * Return the URL as a String
+     *
+     * @return The URL as a String
+     */
+    public String asString() {
+
+        final PortletWindowImpl impl = (PortletWindowImpl) this.portletWindow;
+        final CopletLayout cl = impl.getLayout();
+        if (cl == null) {
+            return "";
+        }
+        final CopletInstanceData cid = cl.getCopletInstanceData();
+        PortletURLConverter urlConverter = new PortletURLConverter(cid);
+
+        if (this.mode != null) {
+            urlConverter.setMode(this.mode);
+        }
+
+        if (this.state != null) {
+            urlConverter.setState(this.state);
+        }
+
+        if (this.action) {
+            urlConverter.setAction();
+        }
+
+        if (this.parameters != null) {
+            Iterator entries = this.parameters.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry entry = (Map.Entry)entries.next();
+                String name = (String) entry.getKey();
+                Object value = entry.getValue();
+                String[] values = value instanceof String ?
+                    new String[]{(String) value} : (String[]) value;
+                urlConverter.setParam(name, values);
+            }
+        }
+
+        return urlConverter.toString();
+    }
+
+    /**
+     * The request parameter to be used for this event (if events are not hidden)
+     *
+     * @return The request parameter name for this event.
+     */
+    public String getRequestParameterName() {
+        return DEFAULT_PORTLET_URL_REQUEST_PARAM;
     }
 
 }
