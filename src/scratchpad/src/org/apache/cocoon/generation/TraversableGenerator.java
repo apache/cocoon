@@ -105,9 +105,9 @@ import java.util.Comparator;
  *        collection's immediate contents will be returned.
  *   <dt> <i>sort</i> (optional)
  *   <dd> Sort order in which the nodes are returned. Possible values are
- *        name, size, time, directory. directory is the same as name,
- *        except that the directory entries are listed first. System order is
- *        default. (TODO: Does "directory" still make sense?)
+ *        name, size, time, collection. collection is the same as name,
+ *        except that the collection entries are listed first. System order is
+ *        default.
  *   <dt> <i>reverse</i> (optional)
  *   <dd> Reverse the order of the sort
  *   <dt> <i>dateFormat</i> (optional)
@@ -126,7 +126,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/07/10 19:56:45 joerg Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.5 2003/07/10 20:05:37 joerg Exp $
  */
 public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
@@ -172,9 +172,8 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     /**
      * The sort parameter determines by which attribute the content of one
      * collection should be sorted. Possible values are "name", "size", "time"
-     * and "directory", where "directory" is the same as "name", except that
-     * directory entries are listed first.
-     * (TODO: Does "directory" still make sense?)
+     * and "collection", where "collection" is the same as "name", except that
+     * collection entries are listed first.
      */
     protected String sort;
     /** The reverse parameter reverses the sort order. <code>false</code> is default. */
@@ -427,8 +426,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
                             return new Long(((TraversableSource) o1).getLastModified()).compareTo(new Long(((TraversableSource) o2).getLastModified()));
                         }
                     });
-                } else if (sort.equals("directory")) {
-                    //TODO: Does "directory" still make sense?
+                } else if (sort.equals("collection")) {
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
                             TraversableSource ts1 = (TraversableSource) o1;
