@@ -15,7 +15,7 @@
 */
 cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
-// CVS $Id: form_model_gui.js,v 1.4 2004/03/09 13:54:00 reinhard Exp $
+// CVS $Id: form_model_gui.js,v 1.5 2004/05/11 22:25:31 joerg Exp $
 // Author: Timothy Larson
 
 function form_model_gui(form) {

@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Woody.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody-lib.js,v 1.5 2004/03/09 13:54:02 reinhard Exp $
+ * @version CVS $Id: woody-lib.js,v 1.6 2004/05/11 22:22:32 joerg Exp $
  */
 
 // Handlers that are to be called in the document's "onload" event

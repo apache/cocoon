@@ -10,7 +10,7 @@
 // Version 3.0 developed by Mihai Bazon for InteractiveTools.
 //   http://dynarch.com/mishoo
 //
-// $Id: table-operations.js,v 1.5 2004/03/18 07:00:22 crossley Exp $
+// $Id: table-operations.js,v 1.6 2004/05/11 22:24:38 joerg Exp $
 
 // Object that will encapsulate all the table operations provided by
 // HTMLArea-3.0 (except "insert table" which is included in the main file)
