@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.74 2001-03-26 20:29:15 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.75 2001-03-26 21:34:53 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -478,13 +478,13 @@
                 </xsl:otherwise>
               </xsl:choose>
             } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-              throw new RuntimeException("Error setting parameter on statement: "+_esql_query.query);
+              throw new RuntimeException("Error setting parameter on statement: "+_esql_query.query+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
             }
           </xsl:for-each>
           try {
             _esql_query.results = _esql_query.prepared_statement.execute();
           } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            throw new RuntimeException("Error executed prepared statement: "+_esql_query.query);
+            throw new RuntimeException("Error executed prepared statement: "+_esql_query.query+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           }
         </xsl:when>
         <!-- this is a normal query -->
