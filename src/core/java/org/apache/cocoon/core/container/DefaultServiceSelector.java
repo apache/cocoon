@@ -192,7 +192,8 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
         private final String role;
         private final RoleManager roleManager;
         
-        public Factory(ComponentEnvironment env, RoleManager manager, ServiceInfo info, String role) {
+        public Factory(ComponentEnvironment env, RoleManager manager, ServiceInfo info, String role) 
+        throws Exception {
             super(env, info);
             this.role = role;
             this.roleManager = manager;

@@ -458,7 +458,8 @@ implements ServiceSelector, Serviceable, Configurable {
         
         private final RoleManager roleManager;
         
-        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info) {
+        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info) 
+        throws Exception {
             super(env, info);
             this.roleManager = roleManager;
         }
