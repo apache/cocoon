@@ -104,7 +104,7 @@ public class HttpResponse implements HttpServletResponse {
 
     /**
      * @deprecated	As of version 2.1, use
-     *			encodeRedirectURL(String url) instead
+     *              encodeRedirectURL(String url) instead
      */
     public String encodeRedirectUrl(String url) {
         return this.res.encodeRedirectUrl(url);

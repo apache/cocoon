@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.39 $ $Date: 2000-12-18 15:01:15 $
+ * @version CVS $Revision: 1.1.4.40 $ $Date: 2000-12-18 16:55:22 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -303,7 +303,7 @@ public class CocoonServlet extends HttpServlet {
 
             if (prefix == null) prefix = "";
 
-            res.sendRedirect(prefix + "/");
+            res.sendRedirect(res.encodeRedirectURL(prefix + "/"));
             return;
         }
 

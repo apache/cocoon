@@ -66,7 +66,7 @@ public class HttpEnvironment extends AbstractEnvironment {
      */
     public void redirect(String newURL) throws IOException {
         String qs = request.getQueryString();
-        String redirect = newURL;
+        String redirect = this.response.encodeRedirectURL(newURL);
 
         if (qs != null)
             redirect = redirect + "?" + qs;

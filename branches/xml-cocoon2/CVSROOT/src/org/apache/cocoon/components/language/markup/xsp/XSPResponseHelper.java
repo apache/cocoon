@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:05 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-18 16:55:14 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -64,7 +64,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
    */
   public static void sendRedirect(HttpServletResponse response, String location) {
     try {
-      response.sendRedirect(location);
+      response.sendRedirect(response.encodeRedirectURL(location));
     }
     catch (IOException e) {LogKit.getLoggerFor("cocoon").warn("XSPResponseHelper.sendRedirect", e);}
   }

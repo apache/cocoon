@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-13 18:15:56 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-18 16:55:17 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -48,6 +48,7 @@
     import org.apache.cocoon.*;
     import org.apache.cocoon.generation.*;
     import org.apache.cocoon.components.parser.*;
+    import org.apache.cocoon.util.*;
 
     import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
     import org.apache.cocoon.components.language.markup.xsp.XSPRequestHelper;
