@@ -70,7 +70,6 @@ public class WebDAVUtil {
      * @param content  the content to initialize the resource with.
      * @throws HttpException
      * @throws IOException
-     * @return Success
      */
     static public void createResource(final String uri, final String content)
     throws HttpException, IOException {
