@@ -1,4 +1,4 @@
-  <!-- Samples Targets ======================================================= -->
+<!-- === Samples Targets ======================================================= -->
 
   <target name="samples" depends="prepare, init-xpatch" unless="unless.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>

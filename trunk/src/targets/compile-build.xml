@@ -1,4 +1,4 @@
-  <!-- Compilation Targets =================================================== -->
+<!-- === Compilation Targets =================================================== -->
 
   <!-- compiles everything -->
   <target name="compile" depends="compile-core, compile-scratchpad, compile-deprecated"/>
@@ -100,7 +100,7 @@
            classpathref="classpath"/>
   </target>
 
-<!-- Package Targets ======================================================= -->
+<!-- === Package Targets ======================================================= -->
 
   <!-- packages everything -->
   <target name="package" depends="package-core, package-scratchpad, package-deprecated"/>
@@ -126,7 +126,7 @@
     </jar>
   </target>
 
-<!-- Block Targets ========================================================= -->
+<!-- === Block Targets ========================================================= -->
 
   <!-- prepares the blocks build -->
   <target name="prepare-blocks" depends="init">

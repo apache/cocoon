@@ -1,7 +1,10 @@
-  <!-- Validation targets ==================================================== -->
+<!-- === Validation targets ==================================================== -->
+
+  <!-- Validate all config and documentaion files -->
+  <target name="validate" depends="validate-jars, validate-config, validate-xdocs"/>
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
-  <target name="check-jars" depends="init">
+  <target name="validate-jars" depends="init">
     <path id="all.jars">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
@@ -30,6 +33,11 @@
            style="${tools}/src/check-jars.xsl">
       <param name="current-files" expression="../../${build.temp}/current-jars.xml"/>
     </xslt>
+  </target>
+
+  <target name="init-jing" depends="init">
+    <!-- Jing is used in various targets for XML validation with RELAX NG -->
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
   </target>
 
   <!-- Validate configuration files. -->

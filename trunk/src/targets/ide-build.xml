@@ -1,4 +1,4 @@
-  <!-- IDE targets =========================================================== -->
+<!-- === IDE targets =========================================================== -->
 
   <!-- Generate the Emacs JDE project file -->
   <target name="emacs-project" depends="init" description="Generate the Emacs project files">
