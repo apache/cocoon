@@ -76,7 +76,7 @@ import java.util.List;
  * A simple cocoon crawler.
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.1 2003/03/09 00:08:48 pier Exp $
+ * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.2 2003/10/06 16:30:41 jeremy Exp $
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
         implements CocoonCrawler, Configurable, Disposable, Recyclable {
@@ -86,8 +86,6 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *   Its value is <code>link-content-type</code>.
      * </p>
-     *
-     * @since
      */
     public final static String LINK_CONTENT_TYPE_CONFIG = "link-content-type";
 
@@ -96,10 +94,8 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *   Its value is <code>application/x-cocoon-links</code>.
      * </p>
-     *
-     * @since
      */
-    public final String LINK_CONTENT_TYPE_DEFAULT = "application/x-cocoon-links";
+    public final String LINK_CONTENT_TYPE_DEFAULT = Constants.LINK_CONTENT_TYPE;
 
     /**
      * Config element name specifying query-string appendend for requesting links
@@ -107,18 +103,14 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *  Its value is <code>link-view-query</code>.
      * </p>
-     *
-     * @since
      */
     public final static String LINK_VIEW_QUERY_CONFIG = "link-view-query";
 
     /**
-     * Default value of <code>link-view-query</code> configuration value.
+     * Default value of <code>link-view-query</code> configuration option.
      * <p>
      *   Its value is <code>?cocoon-view=links</code>.
      * </p>
-     *
-     * @since
      */
     public final static String LINK_VIEW_QUERY_DEFAULT = "cocoon-view=links";
 
@@ -127,8 +119,6 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *  Its value is <code>exclude</code>.
      * </p>
-     *
-     * @since
      */
     public final static String EXCLUDE_CONFIG = "exclude";
 
@@ -137,8 +127,6 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *  Its value is <code>include</code>.
      * </p>
-     *
-     * @since
      */
     public final static String INCLUDE_CONFIG = "include";
 
@@ -147,16 +135,12 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *  Its value is <code>user-agent</code>.
      * </p>
-     *
-     * @since
      */
     public final static String USER_AGENT_CONFIG = "user-agent";
 
     /**
-     * Default value of <code>user-agent</code> configuration value.
+     * Default value of <code>user-agent</code> configuration option.
      * @see Constants#COMPLETE_NAME
-     *
-     * @since
      */
     public final static String USER_AGENT_DEFAULT = Constants.COMPLETE_NAME;
 
@@ -165,20 +149,17 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * <p>
      *  Its value is <code>accept</code>.
      * </p>
-     *
-     * @since
      */
     public final static String ACCEPT_CONFIG = "accept";
 
     /**
-     * Default value of <code>accept</code> configuration value.
+     * Default value of <code>accept</code> configuration option.
      * <p>
      *   Its value is <code>* / *</code>
      * </p>
-     *
-     * @since
      */
     public final static String ACCEPT_DEFAULT = "*/*";
+
 
     private String linkViewQuery = LINK_VIEW_QUERY_DEFAULT;
     private String linkContentType = LINK_CONTENT_TYPE_DEFAULT;
@@ -187,14 +168,16 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
     private String userAgent = USER_AGENT_DEFAULT;
     private String accept = ACCEPT_DEFAULT;
 
+	private int depth;
+
     private HashSet crawled;
     private HashSet urlsToProcess;
-
-
+    private HashSet urlsNextDepth;
+    
+	
+	
     /**
      * Constructor for the SimpleCocoonCrawlerImpl object
-     *
-     * @since
      */
     public SimpleCocoonCrawlerImpl() {
         // by default include everything
@@ -220,11 +203,11 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * &lt;exclude&gt;.*\.gif&lt;/exclude&gt; or &lt;exclude&gt;.*\.gif, .*\.jpe?g&lt;/exclude&gt;
      * &lt;link-content-type&gt; application/x-cocoon-links &lt;/link-content-type&gt;
      * &lt;link-view-query&gt; ?cocoon-view=links &lt;/link-view-query&gt;
+     * &lt;crawl-domain&gt; host | web &lt;/crawl-domain&gt;
      * </tt></pre>
      *
      * @param  configuration               XML configuration of this avalon component.
      * @exception  ConfigurationException  is throwing if configuration is invalid.
-     * @since
      */
     public void configure(Configuration configuration)
             throws ConfigurationException {
@@ -308,17 +291,17 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
                 this.accept = value;
             }
         }
+        
     }
 
 
     /**
      * dispose at end of life cycle, releasing all resources.
-     *
-     * @since
      */
     public void dispose() {
         crawled = null;
         urlsToProcess = null;
+        urlsNextDepth = null;
         excludeCrawlingURL = null;
         includeCrawlingURL = null;
     }
@@ -326,53 +309,64 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
 
     /**
      * recylcle this object, relasing resources
-     *
-     * @since
      */
     public void recycle() {
         crawled = null;
         urlsToProcess = null;
+        urlsNextDepth = null;
+        depth = -1;
     }
 
 
     /**
-     * Start crawling a URL.
-     *
-     * <p>
-     *   Use this method to start crawling.
-     *   Get the this url, and all its children  by using <code>iterator()</code>.
-     *   The Iterator object will return URL objects.
-     * </p>
-     * <p>
-     *  You may use the crawl(), and iterator() methods the following way:
-     * </p>
-     * <pre><tt>
-     *   SimpleCocoonCrawlerImpl scci = ....;
-     *   scci.crawl( "http://foo/bar" );
-     *   Iterator i = scci.iterator();
-     *   while (i.hasNext()) {
-     *     URL url = (URL)i.next();
-     *     ...
-     *   }
-     * </tt></pre>
-     * <p>
-     *   The i.next() method returns a URL, and calculates the links of the
-     *   URL before return it.
-     * </p>
-     *
-     * @param  url  Crawl this URL, getting all links from this URL.
-     * @since
+     * The same as calling crawl(url,-1);
+     * 
+	 * @param  url  Crawl this URL, getting all links from this URL.
      */
     public void crawl(URL url) {
-        crawled = new HashSet();
-        urlsToProcess = new HashSet();
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("crawl URL " + url);
-        }
-
-        urlsToProcess.add(url);
+		crawl(url, -1);
     }
+
+	/**
+	 * Start crawling a URL.
+	 *
+	 * <p>
+	 *   Use this method to start crawling.
+	 *   Get the this url, and all its children  by using <code>iterator()</code>.
+	 *   The Iterator object will return URL objects.
+	 * </p>
+	 * <p>
+	 *  You may use the crawl(), and iterator() methods the following way:
+	 * </p>
+	 * <pre><tt>
+	 *   SimpleCocoonCrawlerImpl scci = ....;
+	 *   scci.crawl( "http://foo/bar" );
+	 *   Iterator i = scci.iterator();
+	 *   while (i.hasNext()) {
+	 *     URL url = (URL)i.next();
+	 *     ...
+	 *   }
+	 * </tt></pre>
+	 * <p>
+	 *   The i.next() method returns a URL, and calculates the links of the
+	 *   URL before return it.
+	 * </p>
+	 *
+	 * @param  url  Crawl this URL, getting all links from this URL.
+	 * @param  maxDepth  maximum depth to crawl to. -1 for no maximum.
+	 */
+	public void crawl(URL url, int maxDepth) {
+		crawled = new HashSet();
+		urlsToProcess = new HashSet();
+		urlsNextDepth = new HashSet();
+		depth = maxDepth;
+
+		if (getLogger().isDebugEnabled()) {
+			getLogger().debug("crawl URL " + url + " to depth " + maxDepth);
+		}
+		
+		urlsToProcess.add(url);
+	}
 
 
     /**
@@ -464,6 +458,9 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
                     + ((sURL.indexOf("?") == -1) ? "?" : "&")
                     + linkViewQuery);
             URLConnection links_url_connection = links.openConnection();
+            links_url_connection.setRequestProperty("Accept", accept);
+            links_url_connection.setRequestProperty("User-Agent", userAgent);
+			links_url_connection.connect();
             InputStream is = links_url_connection.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -503,7 +500,7 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
                     if (add_url) {
                         add_url &= !crawled.contains(new_url.toString());
                     }
-
+                    
                     // don't add if is not matched by existing include definition
                     if (add_url) {
                         add_url &= isIncludedURL(new_url.toString());
@@ -536,13 +533,12 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
         return url_links;
     }
 
-
+	
     /**
      * check if URL is a candidate for indexing
      *
-     * @param  url  Description of Parameter
+     * @param  url  the URL to check
      * @return      The excludedURL value
-     * @since
      */
     private boolean isExcludedURL(String url) {
         // by default do not exclude URL for crawling
@@ -573,7 +569,6 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      *
      * @param  url  Description of Parameter
      * @return      The includedURL value
-     * @since
      */
     private boolean isIncludedURL(String url) {
         // by default include URL for crawling
@@ -597,7 +592,7 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
         }
         return false;
     }
-
+        
 
     /**
      * Helper class implementing an Iterator
@@ -607,17 +602,16 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * </p>
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.1 2003/03/09 00:08:48 pier Exp $
+     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.2 2003/10/06 16:30:41 jeremy Exp $
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;
 
 
         /**
-         *Constructor for the CocoonCrawlerIterator object
+         * Constructor for the CocoonCrawlerIterator object
          *
-         * @param  cocoonCrawler  Description of Parameter
-         * @since
+         * @param  cocoonCrawler  the containing CocoonCrawler instance.
          */
         CocoonCrawlerIterator(SimpleCocoonCrawlerImpl cocoonCrawler) {
             this.cocoonCrawler = cocoonCrawler;
@@ -627,21 +621,26 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
         /**
          * check if crawling is finished.
          *
-         * @return    Description of the Returned Value
-         * @since
+         * @return    <code>true</code> if crawling has finished,
+         * else <code>false</code>.
          */
         public boolean hasNext() {
-            return cocoonCrawler.urlsToProcess.size() > 0;
+            return cocoonCrawler.urlsToProcess.size() > 0 
+            || cocoonCrawler.urlsNextDepth.size() > 0;
         }
 
 
         /**
-         * return the next URL
-         *
-         * @return    Description of the Returned Value
-         * @since
+         * @return    the next URL
          */
         public Object next() {
+        	if (cocoonCrawler.urlsToProcess.size() == 0 
+        	    && cocoonCrawler.urlsNextDepth.size() > 0) {
+        	    // process queued urls belonging to the next depth level
+				cocoonCrawler.urlsToProcess = cocoonCrawler.urlsNextDepth;
+				cocoonCrawler.urlsNextDepth = new HashSet();
+				cocoonCrawler.depth--;
+    	    }
             URL url = null;
             Iterator i = cocoonCrawler.urlsToProcess.iterator();
             if (i.hasNext()) {
@@ -651,12 +650,14 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
                 // remove it from the to-do list
                 cocoonCrawler.urlsToProcess.remove(url);
 
-                // calc all links from this url
-                List url_links = cocoonCrawler.getLinks(url);
-                if (url_links != null) {
-                    // add links of this url to the to-do list
-                    cocoonCrawler.urlsToProcess.addAll(url_links);
-                }
+				if (cocoonCrawler.depth == -1 || cocoonCrawler.depth > 0) {
+					// calc all links from this url
+					List url_links = cocoonCrawler.getLinks(url);
+					if (url_links != null) {
+						// add links of this url to the to-do list
+						cocoonCrawler.urlsNextDepth.addAll(url_links);
+					}					
+				}
             }
             // finally return this url
             return url;
@@ -665,8 +666,6 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
 
         /**
          * remove is not implemented
-         *
-         * @since
          */
         public void remove() {
             throw new UnsupportedOperationException("remove is not implemented");
