@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.118 2000-09-29 04:25:19 balld Exp $
+  $Id: changes.xml,v 1.119 2000-10-02 20:44:36 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix">
+   put heapsize line back into cocoon.properties
+  </action>
   <action dev="DB" type="update">
    a doozy of a patch to esql - i made it so that you can execute queries either in their own special methods or inlined code - both on the same page even (can't imagine why you'd want to tho)
   </action>
