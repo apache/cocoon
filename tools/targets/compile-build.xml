@@ -23,11 +23,10 @@
 
   <!-- compiles everything -->
   <target name="compile"
-      depends="compile-core, compile-deprecated, compile-tests"/>
+          depends="compile-core, compile-deprecated, compile-tests"/>
 
-  <!-- compiles the core -->
-  <target name="compile-core" depends="prepare">
-
+  <!-- compiles mocks -->
+  <target name="compile-mocks" depends="prepare">
     <!-- copy those files that need to be in the classpath -->
     <copy todir="${build.dest}">
       <fileset dir="${java}">
@@ -36,8 +35,6 @@
         <exclude name="**/*.xconf"/>
       </fileset>
     </copy>
-
-    <!-- compile mock classes -->
     <mkdir dir="${build.mocks}"/>
     <javac srcdir="${mocks}"
            destdir="${build.mocks}"
@@ -49,8 +46,10 @@
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
+  </target>
 
-    <!-- compile core source files -->
+  <!-- compiles the core -->
+  <target name="compile-core" depends="compile-mocks, clover.on">
     <javac srcdir="${java}"
            destdir="${build.dest}"
            debug="${compiler.debug}"
@@ -59,12 +58,11 @@
            target="${target.vm}"
            source="${source.vm}"
            nowarn="${compiler.nowarn}"
-           compiler="${compiler}"
            classpathref="classpath"/>
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare"
+  <target name="compile-deprecated" depends="prepare, clover.off"
           unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
@@ -83,7 +81,9 @@
            classpathref="classpath"/>
   </target>
 
-  <target name="compile-tests" depends="compile-core, compile-deprecated">
+  <!-- compiles tests classes -->
+  <target name="compile-tests"
+          depends="compile-core, compile-deprecated, clover.off">
     <mkdir dir="${build.test}"/>
 
     <!-- Copy test files to build test dir -->
@@ -118,7 +118,7 @@
 
   <!-- packages everything -->
   <target name="package"
-      depends="package-core, package-deprecated, package-testcase"/>
+          depends="package-core, package-deprecated, package-testcase"/>
 
   <!-- package the core -->
   <target name="package-core" depends="compile-core, block-roles">
