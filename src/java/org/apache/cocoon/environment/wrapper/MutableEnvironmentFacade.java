@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,31 +27,30 @@ import org.apache.cocoon.environment.Environment;
  * in sitemap sources ("cocoon:"). This is because {@link org.apache.cocoon.components.source.impl.SitemapSource} keeps
  * the environment in which the internal request should be processed. But internal redirects create a new
  * processing environment and there's no way to change the one held by the <code>SitemapSource</code>. So the
- * processing of internal redirects actually changes the delegate of this class, transparently for the 
+ * processing of internal redirects actually changes the delegate of this class, transparently for the
  * <code>SitemapSource</code>.
- * 
+ *
  * @see org.apache.cocoon.components.source.impl.SitemapSource
- * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.11 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.12 2004/06/22 22:13:43 vgritsenko Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
-    
+
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
     }
-    
+
     public EnvironmentWrapper getDelegate() {
         return this.env;
     }
-    
+
     public void setDelegate(EnvironmentWrapper env) {
         this.env = env;
     }
-    
+
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
     }
@@ -64,7 +63,7 @@ public class MutableEnvironmentFacade implements Environment {
     public String getRedirectURL() {
         return this.env.getRedirectURL();
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#getURI()
      */
@@ -94,16 +93,16 @@ public class MutableEnvironmentFacade implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
+     * @see org.apache.cocoon.environment.Environment#redirect(String, boolean, boolean)
      */
-    public void redirect(String url, 
-                         boolean global, 
+    public void redirect(String url,
+                         boolean global,
                          boolean permanent) throws IOException {
         env.redirect(url, global, permanent);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setContentType(java.lang.String)
+     * @see org.apache.cocoon.environment.Environment#setContentType(String)
      */
     public void setContentType(String mimeType) {
         env.setContentType(mimeType);
@@ -159,7 +158,7 @@ public class MutableEnvironmentFacade implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setAttribute(java.lang.String, java.lang.Object)
+     * @see org.apache.cocoon.environment.Environment#setAttribute(String, Object)
      */
     public void setAttribute(String name, Object value) {
         env.setAttribute(name, value);
@@ -220,7 +219,7 @@ public class MutableEnvironmentFacade implements Environment {
     public boolean isExternal() {
         return env.isExternal();
     }
-    
+
     public void reset() {
         this.env.reset();
     }
@@ -231,5 +230,4 @@ public class MutableEnvironmentFacade implements Environment {
     public boolean isInternalRedirect() {
         return env.isInternalRedirect();
     }
-
 }
