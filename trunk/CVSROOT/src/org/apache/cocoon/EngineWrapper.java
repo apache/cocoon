@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.3 1999-11-09 02:29:14 dirkx Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.4 1999-12-01 11:27:48 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,20 +61,32 @@ import org.apache.cocoon.framework.*;
  * This class implements wrapping methods that allow the engine to be
  * called even from other APIs or standalone applications.
  *
+ * NOTE: this is a dirty hack and I know it. The problem is that Cocoon is
+ * a servlet and the servlet API are not that easy to deal with when you
+ * enter other modes of operation (like command line or RMI).
+ * 
+ * We will need to clean this up and remove the need of direct 
+ * HttpServletRequest/Response emulation when we integrate with Stylebook.
+ * But I have more important stuff to do right now.
+ *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:14 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-01 11:27:48 $
  */
 
 public class EngineWrapper extends Engine {
-    
+
     public EngineWrapper(Configurations confs) throws Exception {
         super(confs);
     }
 
-    public void handle(PrintWriter out, String document) throws Exception {
-        this.handle(new HttpServletRequestImpl(document), new HttpServletResponseImpl(out));
+    public void handle(PrintWriter out, File pathToDocument) throws Exception {
+        this.handle(new HttpServletRequestImpl(pathToDocument), new HttpServletResponseImpl(out));
     }
-    
+
+    public void handle(PrintWriter out, File documentPath, String document) throws Exception {
+        this.handle(new HttpServletRequestImpl(documentPath, document), new HttpServletResponseImpl(out));
+    }
+
     /**
      * Dummy implementation of the HttpServletRequest class to create a 
      * fake but funtional request for the main engine.
@@ -82,10 +94,21 @@ public class EngineWrapper extends Engine {
      */
     public class HttpServletRequestImpl implements HttpServletRequest {
         
-        private String pathTranslated;
+        private String pathTranslated = "/";
+        private String document = null;
         
-        public HttpServletRequestImpl(String pathTranslated) {
-            this.pathTranslated = pathTranslated;
+        public HttpServletRequestImpl(File path) {
+            this(path, null);
+        }
+
+        public HttpServletRequestImpl(File pathTranslated, String document) {
+            if (path != null) {
+                this.pathTranslated = pathTranslated.toString();
+            }
+            
+            if (document != null) {
+                this.document = document;
+            }
         }
 
         public String getPathTranslated() {
@@ -96,7 +119,18 @@ public class EngineWrapper extends Engine {
         // with FileProducer. Check this when Servlet 2.2 are in place.
         public String getPathInfo() { return ""; }
 
-        public String getParameter(String name) { return null; }
+        public String getParameter(String name) { 
+            if ((data != null) &&  (name.equalsIgnoreCase("producer"))) {
+                return "org.apache.cocoon.producer.ProducerFromRequest";
+            } else {
+                return null;
+            }
+        }
+
+        public BufferedReader getReader () throws IOException { 
+            return (document == null) ? null : new BufferedReader(new StringReader(document)); 
+        }
+        
         public Enumeration getParameterNames() { return null; }
         public String[] getParameterValues(String name) { return null; }
         public int getContentLength() { return -1; }
@@ -109,7 +143,6 @@ public class EngineWrapper extends Engine {
         public String getRemoteHost() { return null; }
         public ServletInputStream getInputStream() throws IOException { return null; }
         public Object getAttribute(String name) { return null; }
-        public BufferedReader getReader () throws IOException { return null; }
         public String getCharacterEncoding () { return null; }
         public Cookie[] getCookies() { return null; }
         public String getMethod() { return null; }
