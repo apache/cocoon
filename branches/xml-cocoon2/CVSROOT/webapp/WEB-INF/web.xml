@@ -34,7 +34,7 @@
         com.ibm.servlet.classloader.Handler
 
         <!-- For PostgeSQL Database: -->
-        postgresql.Driver
+        org.postgresql.Driver
 
         <!-- For Oracle Database: -->
         oracle.jdbc.driver.OracleDriver
