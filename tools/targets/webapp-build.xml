@@ -105,10 +105,12 @@
 
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="internal.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
+<!--
     <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
             srcdir="${deprecated.conf}"
             includes="**/*.xconf"
             addComments="true"/>
+-->
   </target>
 
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="internal.exclude.webapp.javadocs">

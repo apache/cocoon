@@ -65,10 +65,11 @@
       unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
+<!--
     <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
             srcdir="${deprecated.conf}"
             includes="**/*.xroles"/>
-
+-->
     <javac srcdir="${deprecated.src}"
            destdir="${build.deprecated}"
            debug="${compiler.debug}"
