@@ -91,14 +91,14 @@ public class StoreJanitorImpl extends AbstractLogEnabled
     /** Used memory change rate in bytes per second */
     private long maxRateOfChange = 1;
 
-    
+
     /**
      * Parameterize the StoreJanitorImpl.
      */
     public void parameterize(Parameters params) throws ParameterException {
         this.jvm = Runtime.getRuntime();
         this.minFreeMemory = params.getParameterAsInteger("freememory", 1024 * 1024);
-        this.maxHeapSize = params.getParameterAsInteger("heapsize", 60 * 1024 * 1024);
+        this.maxHeapSize = params.getParameterAsInteger("heapsize", 66600000);
         // Parameter value is in seconds, converted to millis
         this.threadInterval = params.getParameterAsInteger("cleanupthreadinterval", 10) * 1000;
         this.adaptiveThreadInterval = params.getParameterAsBoolean("adaptivethreadinterval", false);

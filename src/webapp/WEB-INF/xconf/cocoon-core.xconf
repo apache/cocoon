@@ -43,11 +43,9 @@
       | For development environment, set the check-reload to yes.
       | For production environment, it is advisable to set check-reload to no.
       +-->
-  <sitemap
-    file="context://sitemap.xmap"
-    check-reload="yes"
-    logger="sitemap"
-  />
+  <sitemap file="context://sitemap.xmap"
+           check-reload="yes"
+           logger="sitemap"/>
 
 <!-- ========================= Sitemap Flowscript ========================== -->
 
@@ -113,14 +111,14 @@
       | expiring continuations. Currently only the "periodic" type is
       | supported.
       |
-      | If you need higher security you can bind your continuations 
+      | If you need higher security you can bind your continuations
       | to session. This way only the session that initially created
-      | the continuation can later resume it. Also if session gets 
-      | invalidated all continuations are invalidated as well. 
+      | the continuation can later resume it. Also if session gets
+      | invalidated all continuations are invalidated as well.
       | Enable this feature for web applications by setting
       | 'session-bound-continuations' to true.
       +-->
-  <continuations-manager logger="flow.manager" time-to-live="3600000" 
+  <continuations-manager logger="flow.manager" time-to-live="3600000"
                          session-bound-continuations="false">
     <expirations-check type="periodic">
       <offset>180000</offset>
@@ -311,8 +309,8 @@
       |     <parameter name="verbosity" value="2"/>
       +-->
   <entity-resolver logger="core.resolver">
-   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-   <parameter name="verbosity" value="1"/>
+    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+    <parameter name="verbosity" value="1"/>
   </entity-resolver>
 
   <!--+
@@ -430,14 +428,14 @@
      <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
   </component>
-  +-->
+      +-->
 
   <!-- Xpath Processor: -->
   <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl" logger="core.xpath-processor"/>
 
   <!-- The XMLizers converts different mime-types to XML -->
   <xmlizer>
-      <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml"/>
+    <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml"/>
   </xmlizer>
 
 <!-- ============================ Object Stores =========================== -->
@@ -493,23 +491,45 @@
       |      to be a working value).
       +-->
   <store-janitor logger="core.store.janitor">
-     <!-- How much free memory shall be available in the jvm -->
-     <parameter name="freememory" value="2048000"/>
-     <!-- Indicates the limit of the jvm memory consumption. The default max
-          heapsize for Sun's JVM is (almost) 64Mb -->
-     <parameter name="heapsize" value="66600000"/>
-     <!-- How often shall the cleanup thread check memory -->
-     <parameter name="cleanupthreadinterval" value="10"/>
-     <!-- Experimental adaptive algorithm for cleanup interval
-     <parameter name="adaptivethreadinterval" value="true"/>
-     -->
-     <!-- Indicates the thread priority of the cleanup thread -->
-     <parameter name="threadpriority" value="5"/>
-     <!-- How much percent of the elements of each registered Store
-          shall be removed when low on memory. Default 10% -->
-     <parameter name="percent_to_free" value="10"/>
-     <!-- Invoke the garbage collector when low memory is reached -->
-     <parameter name="invokegc" value="false"/>
+    <!--+
+        | How much free memory shall be available in the jvm?
+        | If not specified, defaults to 1Mb.
+        +-->
+    <parameter name="freememory" value="2048000"/>
+    <!--+
+        | How much memory at max jvm can consume?
+        | The default max heapsize for Sun's JVM is (almost) 64Mb,
+        | can be increased by specifying -Xmx command line parameter.
+        | If not specified, defaults to 66600000 bytes.
+        +-->
+    <parameter name="heapsize" value="66600000"/>
+    <!--+
+        | How often shall the cleanup thread check memory?
+        | If not specified, defaults to 10 seconds.
+        +-->
+    <parameter name="cleanupthreadinterval" value="10"/>
+    <!--+
+        | Experimental adaptive algorithm for cleanup interval
+    <parameter name="adaptivethreadinterval" value="true"/>
+        +-->
+    <!--+
+        | What percent of the store elements shall be dropped on low memory?
+        | If not specified, defaults to 10%
+        +-->
+    <parameter name="percent_to_free" value="10"/>
+    <!--+
+        | Shall garbage collector be invoked on low memory?
+        | If not specified, defaults to false.
+        +-->
+    <parameter name="invokegc" value="false"/>
+
+    <!--+
+        | What should be the priority of the cleanup thread?
+        | This parameter is used only by older implementation of the janitor.
+        | New implementation uses centrally configured thread pool (see
+        | thread-pools element below).
+    <parameter name="threadpriority" value="5"/>
+        +-->
   </store-janitor>
 
 <!-- ========================= Protocol Handlers =========================== -->
