@@ -91,7 +91,7 @@
     </s3>
     <s3 title = "sendPageAndWait"><anchor id="sendPageAndWait"/>
     <p>
-    <em>Function</em> <code>[WebContinuation] sendPageAndWait([String] uri, [Object] bean, [Number] timeToLive)</code>
+    <em>Function</em> <code>[WebContinuation] sendPageAndWait([String] uri, [Object] bean, [Function] postPipelineCode, [Number] timeToLive)</code>
     </p>
      <p>
      Passes control to the Cocoon sitemap to generate the output page.
@@ -102,6 +102,22 @@
       <p>
         <code>bean</code> is a context object which can be accessed inside this page to extract
         various values and place them in the generated page.</p>
+     <p>If provided, the <code>postPipelineCode</code> function will be executed after pipeline processing is complete but before the script is suspended. You can use this to release resources that are needed during the pipeline processing but should not become part of the continuation. For example:</p>
+<source>
+
+function processPage() {
+   var id = ...
+   var bizData = ...
+   var uri = ...
+   var comp = cocoon.getComponent(id);
+   // use comp
+   ...
+   cocoon.sendPageAndWait(uri, bizData, function() {
+      cocoon.releaseComponent(comp);
+      comp = null;
+   });
+}
+</source>
      <p><code>timeToLive</code> is the time to live in milliseconds for the continuation created.</p>
      <p>The return value is the <link href="#WebContinuation">continuation</link> object.</p>
     </s3>
