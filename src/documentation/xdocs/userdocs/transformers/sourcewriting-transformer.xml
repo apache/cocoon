@@ -13,7 +13,8 @@
 	</header>
 	<body>
 		<s1 title="Source Writing Transformer">
-			<p>Diverts xml from a pipeline, writing it to a Source.</p>
+			<p>Diverts xml from a pipeline, writing it to a Source (or
+      deleting it).</p>
 			<p>Thankfully, <code>FileSource</code> is no longer the only <code>Source</code> that currently implements <code>WritableSource</code>; there are implementations of WebDAV and Apache Slide WritableSources in the scratchpad. Hopefully further <code>ModifiableSource</code> implementations (XMLDB, CVS, Email, SQL, etc.) will be appear in the future.</p>
 			<ul>
 				<li>Name : write-source</li>
@@ -39,10 +40,21 @@
 			[<source:replace/>]
 			[<source:reinsert/>]
 		</source:insert>
+
+		<source:delete/>
+			<source:source/>
+			[<source:path/>] - Ignored
+			[<source:fragment/>] - Ignored
+			[<source:replace/>] - Ignored
+			[<source:reinsert/>] - Ignored
+		</source:insert>
 					]]>
 				</source>
 			<p>In the namespace <code>xmlns:source="http://apache.org/cocoon/source/1.0"</code>.</p>
-			<p>The contents of the <code><![CDATA[<source:fragment/>]]></code> tag are written to the specified ModifiableSource when the document containing it is transformed by SourceWritingTransformer.</p>
+			<p>The contents of the <code><![CDATA[<source:fragment/>]]></code>
+      tag are written to the specified ModifiableSource when the
+      document containing it is transformed by SourceWritingTransformer
+      (or deleted if you are using the <code>delete </code>instruction).</p>
 		</s1>
 		<s1 title="Definition">
 				<source>
@@ -170,6 +182,16 @@
 						<li>if 'reinsert' is specified and it does not exist, no action occurs.</li>
 					</ul>
 			</s2>
+      <s2 title="source:delete">
+         <p>This instruction takes only a <code><![CDATA[<source:source/>]]></code>
+         parameter (as a child tag) and deletes the corresponding
+         source. All other <code>source:*</code> tags are ignored, if
+         present: this allows for easy source-write instructions to be
+         generated on the fly (e.g. by a stylesheet). Just change 
+         <code>source:write</code> to <code>source:delete</code> and
+         you're set.
+         </p>
+      </s2>
 		</s1>
 		
 		<s1 title="Examples">
@@ -251,6 +273,20 @@
 					<p>This sample does not currently work, see the tests in the scratchpad at <code>http://localhost:8080/cocoon/mount/editor/tests</code>.</p>
 					<note>You must have built Cocoon with the scratchpad included for this link to work.</note>
 			</s2>
+			<s2 title="Delete a source">
+					<source>
+						<![CDATA[
+ <page>
+   ...
+   <source:delete>
+     <source:source>context://doc/editable/my.xml</source:source>
+   <source:delete>
+   ...
+ </page>
+						]]>
+            </source>
+
+      </s2>
 			<s2 title="Sample of the output of these tags">
 				<p>This is the kind of information that the <code>SourceWritingTransformer</code> outputs to the pipeline, replacing the original <code>source:write</code> and <code>source:insert</code> tags</p>
 					<source>
