@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapManager;
 
-import org.xml.sax.EntityResolver;
+//import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.15 $ $Date: 2000-07-27 21:48:31 $
+ * @version CVS $Revision: 1.4.2.16 $ $Date: 2000-07-28 16:20:00 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, 
@@ -146,7 +146,6 @@ implements Component, Configurable, ComponentManager, Modifiable,
             Configuration co=(Configuration)e.nextElement();
             String ro=co.getAttribute("role");
             String cl=co.getAttribute("class");
-            System.out.println("Adding component: "+ro);
             this.components.put(ro,this.getClass(cl,co));
             this.configurations.put(ro,co);
         }
@@ -158,7 +157,6 @@ implements Component, Configurable, ComponentManager, Modifiable,
         this.sitemapManager.setComponentManager(this);
         this.sitemapManager.setConfiguration(conf);
         this.sitemapFileName = sconf.getAttribute("file");
-        System.out.println("The root sitemap is located at \""+this.sitemapFileName+"\"");
     }
 
     /**
@@ -175,13 +173,9 @@ implements Component, Configurable, ComponentManager, Modifiable,
      */
     public boolean process(Environment environment, OutputStream out) 
     throws Exception  {
-        String s = environment.resolveEntity(this.sitemapFileName).getSystemId();
-        if (s.startsWith("file:")) {
-            if (s.startsWith("file://")) 
-                s = s.substring(7);
-            else
-                s = s.substring(5);
-        }
+        String s = environment.resolveEntity(null,this.sitemapFileName).getSystemId();
+        URL url = new URL (s);
+        s = url.getFile();
         return this.sitemapManager.invoke (environment, "",
                           s, true, out);
     }

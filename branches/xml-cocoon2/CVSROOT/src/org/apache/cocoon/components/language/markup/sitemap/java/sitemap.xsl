@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-07-27 21:48:46 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-07-28 16:20:06 $
 -->
 
 <xsl:stylesheet 
@@ -347,6 +347,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:serializers/@default"/>
       <xsl:with-param name="method">setSerializer</xsl:with-param>
       <xsl:with-param name="prefix">serializer</xsl:with-param>
+      <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template> 
     return pipeline.process (environment, out);
   </xsl:template> <!-- match="map:serialize" --> 
@@ -356,6 +357,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:readers/@default"/>
       <xsl:with-param name="method">setReader</xsl:with-param>
       <xsl:with-param name="prefix">reader</xsl:with-param>
+      <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template> 
     return pipeline.process (environment, out);
   </xsl:template> <!-- match="map:read" --> 
@@ -493,6 +495,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:param name="default-component"/>
     <xsl:param name="method"/>
     <xsl:param name="prefix"/>
+    <xsl:param name="mime-type"/>
     <xsl:variable name="component-type"> 
       <xsl:call-template name="get-parameter"> 
         <xsl:with-param name="parname">type</xsl:with-param> 
@@ -521,15 +524,34 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:apply-templates select="parameter"/>
     <xsl:choose> 
       <xsl:when test="$component-source='null'"> 
-        pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>, 
-            null, <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
-            <xsl:value-of select="$component-param"/>); 
+        <xsl:choose>
+          <xsl:when test="$mime-type!=''">
+            pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>, 
+                null, <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
+                <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"); 
+          </xsl:when>
+          <xsl:otherwise>
+            pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>, 
+                null, <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
+                <xsl:value-of select="$component-param"/>); 
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when> 
       <xsl:otherwise> 
-        pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>,  
-            substitute(listOfLists,"<xsl:value-of select="$component-source"/>"), 
-            <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
-            <xsl:value-of select="$component-param"/>); 
+        <xsl:choose>
+          <xsl:when test="$mime-type!=''">
+            pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>,  
+                substitute(listOfLists,"<xsl:value-of select="$component-source"/>"), 
+                <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
+                <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"); 
+          </xsl:when>
+          <xsl:otherwise>
+            pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>,  
+                substitute(listOfLists,"<xsl:value-of select="$component-source"/>"), 
+                <xsl:value-of select="$prefix"/>_config_<xsl:value-of select="$component-type"/>,
+                <xsl:value-of select="$component-param"/>); 
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise> 
     </xsl:choose> 
   </xsl:template>

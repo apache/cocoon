@@ -23,7 +23,8 @@
    <map:transformer     name="xinclude"  src="org.apache.cocoon.transformation.XIncludeTransformer"/> 
   </map:transformers> 
 
-  <map:readers default="binary"> 
+  <map:readers default="resource"> 
+   <map:reader name="resource"       src="org.apache.cocoon.reading.ResourceReader"/> 
   </map:readers> 
    
   <map:serializers default="html"> 
@@ -86,6 +87,18 @@
     <map:serialize> 
      <parameter name="contentType" value="text/html"/> 
     </map:serialize> 
+   </map:match>
+
+   <map:match pattern="^(.*).css$"> 
+    <map:read src="{1}.css" mime-type="text/css"/> 
+   </map:match>
+
+   <map:match pattern="^resources/(.*).gif$"> 
+    <map:read src="resources/images/{1}.gif" mime-type="image/gif"/> 
+   </map:match>
+
+   <map:match pattern="^resources/(.*).png$"> 
+    <map:read src="resources/images/{1}.png" mime-type="image/png"/> 
    </map:match>
 
    <map:match pattern="^simple_dynamic_page$"> 

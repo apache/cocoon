@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-22 22:40:55 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-28 16:20:31 $
  */
 public interface Reader extends SitemapComponent {
 

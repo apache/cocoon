@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:49:00 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-28 16:20:18 $
  */
 public class FileGenerator extends ComposerGenerator {
 
@@ -28,6 +28,6 @@ public class FileGenerator extends ComposerGenerator {
         Parser parser=(Parser)this.manager.getComponent("parser");
         parser.setContentHandler(this.contentHandler);
         parser.setLexicalHandler(this.lexicalHandler);
-        parser.parse(super.environment.resolveEntity(this.source));
+        parser.parse(super.environment.resolveEntity(null,this.source));
     }    
 }

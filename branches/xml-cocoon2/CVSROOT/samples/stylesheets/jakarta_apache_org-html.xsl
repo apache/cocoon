@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: jakarta_apache_org-html.xsl,v 1.1.2.1 2000-06-06 23:20:04 stefano Exp $ -->
+<!-- Version: $Id: jakarta_apache_org-html.xsl,v 1.1.2.2 2000-07-28 16:19:54 giacomo Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -13,6 +13,16 @@
      <link rel="stylesheet" href="style.css"><!-- no not remove this comment --></link>
     </head>
     <body bgcolor="#FFFFFF">
+     <table width="100%" border="0">
+      <tr> 
+       <td> 
+        <p>
+         <a href="welcome"><img src="{/page/logo/@href}"
+           alt="The Jakarta Project" border="0"/></a> 
+        </p>
+       </td>
+      </tr>
+     </table>
      <table width="100%" border="0" cellpadding="10" cellspacing="0">
       <tr valign="top">
        <xsl:apply-templates/>

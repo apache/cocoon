@@ -15,7 +15,7 @@ import org.apache.cocoon.Cocoon;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-28 16:20:18 $
  */
 public abstract class ComposerGenerator extends AbstractGenerator
 implements Composer {
@@ -29,7 +29,5 @@ implements Composer {
      */
     public void setComponentManager(ComponentManager manager) {
         this.manager=manager;
-System.out.println ("ComposerGenerator.setComponentManager: manager is "
-+((this.manager == null)?"null":"set"));
     }
 }

@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-27 21:49:05 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-28 16:20:38 $
  */
 public abstract class AbstractSitemap
          implements Sitemap {      
@@ -46,7 +46,6 @@ public abstract class AbstractSitemap
      * <code>Composer</code>.  
      */  
     public void setComponentManager(ComponentManager manager) {  
-System.out.println ("AbstractSitemap.setComponentManager manager = "+(manager==null?"null":"set"));
         this.manager=manager;  
     }  
 

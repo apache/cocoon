@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-07-27 21:49:05 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-07-28 16:20:41 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -39,12 +39,14 @@ public class ResourcePipeline implements Composer {
     private Reader reader = null;
     private Parameters readerParam = null;
     private String readerSource = null;
+    private String readerMimeType = null;
     private Vector transformers = new Vector();
     private Vector transformerParams = new Vector();
     private Vector transformerSources = new Vector();
     private Serializer serializer = null;
     private Parameters serializerParam = null;
     private String serializerSource = null;
+    private String serializerMimeType = null;
 
     /** the component manager */
     private ComponentManager manager = null;
@@ -54,17 +56,11 @@ public class ResourcePipeline implements Composer {
 
     public void setComponentManager (ComponentManager manager) {
         this.manager = manager;
-System.out.println ("ResourcePipeline.setComponentManager: manager is "
-+((this.manager == null)?"null":"set"));
     }
     public void setGenerator (Generator generator, String source, 
                               Configuration conf, Parameters param) 
     throws InstantiationException, IllegalAccessException {
         this.generator = (Generator)generator.getClass().newInstance();
-System.out.println ("ResourcePipeline.setGenerator: object is "
-+((this.generator instanceof Composer)?"a":"not a")+" Composer");
-System.out.println ("ResourcePipeline.setGenerator: manager is "
-+((this.manager == null)?"null":"set"));
         if (this.generator instanceof Composer) 
             ((Composer)this.generator).setComponentManager (manager);
         if (this.generator instanceof Configurable) 
@@ -76,6 +72,12 @@ System.out.println ("ResourcePipeline.setGenerator: manager is "
     public void setReader (Reader reader, String source, 
                            Configuration conf, Parameters param) 
     throws InstantiationException, IllegalAccessException {
+        this.setReader (reader, source, conf, param, null);
+    }
+
+    public void setReader (Reader reader, String source, 
+                           Configuration conf, Parameters param, String mimeType) 
+    throws InstantiationException, IllegalAccessException {
         this.reader = (Reader)reader.getClass().newInstance();
         if (this.reader instanceof Composer) 
             ((Composer)this.generator).setComponentManager (manager);
@@ -83,10 +85,17 @@ System.out.println ("ResourcePipeline.setGenerator: manager is "
             ((Configurable)this.reader).setConfiguration (conf);
         this.readerSource = source;
         this.readerParam = param;
+        this.readerMimeType = mimeType;
     }
 
     public void setSerializer (Serializer serializer, String source, 
                                Configuration conf, Parameters param) 
+    throws InstantiationException, IllegalAccessException {
+        this.setSerializer (serializer, source, conf, param, null);
+    }
+
+    public void setSerializer (Serializer serializer, String source, 
+                               Configuration conf, Parameters param, String mimeType) 
     throws InstantiationException, IllegalAccessException {
         this.serializer = (Serializer)serializer.getClass().newInstance();
         if (this.serializer instanceof Composer) 
@@ -114,6 +123,8 @@ System.out.println ("ResourcePipeline.setGenerator: manager is "
                             throws ProcessingException, IOException, SAXException {
         if (generator == null) {
             if (reader != null) {
+                if (readerMimeType != null)
+                    environment.setContentType (readerMimeType);
                 reader.setup (environment, readerSource, readerParam);
                 reader.setOutputStream (out);
                 reader.generate();
@@ -137,6 +148,8 @@ System.out.println ("ResourcePipeline.setGenerator: manager is "
                 producer = transformer;
             }
 
+            if (serializerMimeType != null)
+                    environment.setContentType (readerMimeType); 
             serializer.setup (environment, serializerSource, serializerParam);
             serializer.setOutputStream (out);
             producer.setConsumer (serializer);

@@ -10,7 +10,8 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.Modifiable;
 
 import java.io.File;
-import org.apache.cocoon.Request;
+//import org.apache.cocoon.Request; 
+import org.apache.cocoon.environment.Environment; 
 import org.xml.sax.helpers.AttributesImpl;
 
 import org.xml.sax.SAXException;
@@ -20,7 +21,7 @@ import org.xml.sax.SAXException;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:46 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-28 16:20:17 $
  */
 public abstract class AbstractServerPage
   extends ComposerGenerator
@@ -75,7 +76,7 @@ public abstract class AbstractServerPage
    * dynamically generated content has changed
    * @return Whether content has changes for this request's data
    */
-  public boolean hasContentChanged(Request request) {
+  public boolean hasContentChanged(Environment environment) {
     return true;
   }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <page title="The Jakarta Project">
+ <logo href="resources/banner.gif"/>
  <sidebar>
   <group name="Essentials">
    <link href="index.html">Front Page</link>

@@ -19,7 +19,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-27 21:49:03 $ 
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-28 16:20:24 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {
@@ -151,19 +151,4 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
         expr[y]=MATCH_END;
         return(expr);
     }        
-     
-    /** Testing */
-    public static void main(String argv[]) {
-        try {
-            if (argv.length<1) return;
-            System.out.println("Matching Expr.    \""+argv[0]+"\"");
-            WildcardURIMatcherFactory wm = new WildcardURIMatcherFactory();
-            System.out.println(wm.generateClassSource ("", argv[0], null));
-            System.out.println(wm.generateMethodSource ("", argv[0], null));
-        } catch (Exception e) {
-            System.out.println(e.getClass().getName());
-            System.out.println(e.getMessage());
-        }
-    }
-
 }

@@ -39,7 +39,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-25 18:48:47 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-28 16:20:49 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -67,7 +67,7 @@ implements Transformer, Composer {
         StylesheetRoot stylesheet=null;
         if (true) {
             XSLTProcessor loaderprocessor=XSLTProcessorFactory.getProcessor();
-            InputSource xslsrc=environment.resolveEntity(xsluri);
+            InputSource xslsrc=environment.resolveEntity(null,xsluri);
             XSLTInputSource style=new XSLTInputSource(xslsrc);
             stylesheet=loaderprocessor.processStylesheet(style);
         }

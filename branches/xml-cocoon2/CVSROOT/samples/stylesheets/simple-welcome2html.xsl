@@ -9,16 +9,16 @@
    </head>
    <body bgcolor="#ffffff">
     <p align="center">The Apache Software Foundation is proud to present...</p>
-    
+
     <!-- Need to implement <read> in the sitemap before turning this on (SM) -->
-    <!-- <p align="center"><img border="0" src="{welcome/logo/@href}"/></p> -->
-    
+    <p align="center"><img border="0" src="{welcome/logo/@href}"/></p>
+
     <h1 align="center"><xsl:value-of select="welcome/@title"/></h1>
-   
+
     <h3 align="center">version 2.0a1</h3>
 
     <p><br/></p>
-    
+
     <xsl:apply-templates/>
 
     <p align="center">

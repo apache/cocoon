@@ -58,19 +58,13 @@ public class HttpEnvironment implements Environment {
         this.req = new HttpRequest (req, this);
         this.res = new HttpResponse (res);
         this.servletContext = servletContext; 
-        System.out.println ("HttpEnvironment: Context path is \""+req.getContextPath()+"\"");
-        System.out.println ("HttpEnvironment: Servlet path is \""+req.getServletPath()+"\"");
-        System.out.println ("HttpEnvironment: Translated path is \""+req.getPathTranslated()+"\"");
-        System.out.println ("HttpEnvironment: Real path is \""+servletContext.getRealPath("/")+"\"");
         this.context = new URL("file://"+servletContext.getRealPath("/"));
-        System.out.println ("HttpEnvironment: Context path is \""+servletContext.getRealPath("/")+"\"");
     }
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
     public void changeContext(String prefix, String context) 
     throws MalformedURLException { 
-        System.out.println ("Environment: addUriPrefix(\""+prefix+"\",\""+context+"\")");
         if (uri.startsWith (prefix)) {
             this.prefix.append (prefix);
             uri = uri.substring(prefix.length());
@@ -79,11 +73,9 @@ public class HttpEnvironment implements Environment {
                 this.context=f.getParentFile().toURL(); 
             else
                 this.context = f.toURL();
-            System.out.println ("HttpEnvironment: New context path set to \""+this.context+"\"");
         } else {
             //FIXME: should we throw an error here ?
         }
-        System.out.println ("Environment: addUriPrefix: new uri=\""+this.uri+"\", new context=\""+this.context+"\")");
     }
 
     /**
@@ -97,38 +89,42 @@ public class HttpEnvironment implements Environment {
      * Returns the uri in progress. The prefix is stripped off
      */
     public String getUri () {
-        System.out.println ("Environment: getUri = \""+this.uri+"\"");
         return this.uri;
     }
 
     /**
-     * Returns a wrapped HttpRequest object of the real HttpRequest in progress
+     * Returns a wrapped HttpResponse object of the real HttpServletResponse in progress
+     */
+    public HttpResponse getResponse () {
+        return this.res;
+    }
+
+    /**
+     * Returns a wrapped HttpRequest object of the real HttpServletRequest in progress
      */
     public HttpRequest getRequest () {
         return this.req;
     }
  
     /** 
-     * Returns a wrapped HttpResponse object of the real HttpResponse in progress 
+     * Set the ContentType 
      */ 
-    public HttpResponse getResponse () { 
-        return this.res; 
+    public void setContentType (String contentType) { 
+        this.res.setContentType (contentType); 
     } 
-  
-    /** 
-     * Resolve an entity. 
-     */ 
-    public InputSource resolveEntity(String systemId) 
-    throws SAXException, IOException { 
-        return(this.resolveEntity(null,systemId)); 
-    } 
+
+    /**
+     * Returns the ServletContext in progress
+     */
+    public ServletContext getContext () {
+        return this.servletContext;
+    }
  
     /** 
      * Resolve an entity. 
      */ 
     public InputSource resolveEntity(String publicId, String systemId) 
     throws SAXException, IOException { 
-        System.out.println ("Environment: resolveEntity(\""+publicId+"\",\""+systemId+"\")");
         if (systemId==null) throw new SAXException("Invalid System ID"); 
  
         if (systemId.length()==0) 

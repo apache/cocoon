@@ -5,21 +5,18 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.generation;
+package org.apache.cocoon.reading;
 
 import org.apache.avalon.utils.Parameters;
+
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.xml.AbstractXMLProducer;
 
 /**
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-28 16:20:16 $
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-28 16:20:30 $
  */
-public abstract class AbstractGenerator extends AbstractXMLProducer
-implements Generator {
-
+public abstract class AbstractReader implements Reader {
     /** The current <code>Environment</code>. */
     protected Environment environment=null;
     /** The current <code>Parameters</code>. */
