@@ -2,25 +2,35 @@
  * Runtime JavaScript library for Woody.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody-lib.js,v 1.1 2003/11/18 22:45:28 sylvain Exp $
+ * @version CVS $Id: woody-lib.js,v 1.2 2003/11/19 16:54:02 sylvain Exp $
  */
 
-var woody_initHandlers = new Array();
+// Handlers that are to be called in the document's "onload" event
+var woody_onloadHandlers = new Array();
 
-function woody_init() {
-    for (var i = 0; i < woody_initHandlers.length; i++) {
-        woody_initHandlers[i].handle();
+function woody_onload() {
+    for (var i = 0; i < woody_onloadHandlers.length; i++) {
+        woody_onloadHandlers[i].woody_onload();
     }
+    // Clear it (we no more need them)
+    woody_onloadHandlers = null;
 }
 
-/**
- * Crawl the parents of an element up to finding a form.
- */
-function woody_getForm(element) {
-    while(element != null && element.tagName != "FORM") {
-        element = element.parentNode;
+// Handlers that are to be called in form's "onsubmit" event
+//FIXME: this single var implies only one woody form per page, and needs to be
+//       visited if we decide to support several forms per page.
+var woody_onsubmitHandlers = new Array();
+
+function woody_onsubmit() {
+    if (woody_onsubmitHandlers == null) {
+        alert("onsubmit called twice!");
     }
-    return element;
+
+    for (var i = 0; i < woody_onsubmitHandlers.length; i++) {
+        woody_onsubmitHandlers[i].woody_onsubmit();
+    }
+    // clear it
+    woody_onsubmitHandlers = null;
 }
 
 /**
@@ -37,8 +47,20 @@ function woody_submitForm(element, name) {
         alert("Cannot find form for " + element);
     } else {
         form["woody_submit_id"].value = name;
+        // FIXME: programmatically submitting the form doesn't trigger onsubmit ? (both in IE and Moz)
+        woody_onsubmit();
         form.submit();
     }
+}
+
+/**
+ * Crawl the parents of an element up to finding a form.
+ */
+function woody_getForm(element) {
+    while(element != null && element.tagName != "FORM") {
+        element = element.parentNode;
+    }
+    return element;
 }
 
 /**
@@ -60,20 +82,41 @@ function woody_moveInBody(element) {
  * @param id the ID of the element to make a popup with.
  */
 function woody_createPopupWindow(id) {
-    woody_initHandlers.push(new woody_moveInBodyHandler(id));
     var result = new PopupWindow(id);
     result.autoHide();
+    // add to onload handlers
+    result.woody_id = id;
+    result.woody_onload = function() {
+        woody_moveInBody(document.getElementById(this.woody_id));
+    }
+    woody_onloadHandlers.push(result);
     return result;
 }
 
-function woody_moveInBodyHandler(id) {
-    this.id = id;
-    this.handle = function() {
-        var element = document.getElementById(this.id);
-        element.parentNode.removeChild(element);
-        document.body.appendChild(element);
+
+function woody_createOptionTransfer(id) {
+    var result = new OptionTransfer(id + ".unselected", id);
+    result.setAutoSort(true);
+    // add to onload handlers
+    result.woody_id = id;
+    result.woody_onload = function() {
+        var form = woody_getForm(document.getElementById(this.woody_id));
+        this.init(form);
+        sortSelect(this.left);
+        sortSelect(this.right);
     }
+    woody_onloadHandlers.push(result);
+    
+    // add to onsubmit handlers
+    result.woody_onsubmit = function() {
+        // Select all options in the "selected" list to that
+        // its values are sent.
+        selectAllOptions(this.right);
+    }
+    woody_onsubmitHandlers.push(result);
+    return result;
 }
+
 
 /**
  * Show a tab in a <wi:group>
