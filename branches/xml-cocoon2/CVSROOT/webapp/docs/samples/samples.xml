@@ -45,6 +45,13 @@
    <sample name="slides" href="slides/slides">
     Example of complex XSLT usage.
    </sample>
+   <sample name="SVG welcome page" href="welcome-svg">
+   	A version of this page rendered as a series of SVG
+	images embedded within an HTML page. This example
+	uses the 'fragment extractor' transformer and generator
+	to automatically extract the images and feed them through
+	a separate pipeline.
+   </sample>
   </group>
 
   <group name="Dynamic Content">
