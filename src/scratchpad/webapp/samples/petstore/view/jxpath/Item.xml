@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
-        <backpointer name="{product/name}" do="viewProduct.do?productId={product/productId}"/>
-        <item id="{item/itemId}">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <backpointer name="#{product/name}" do="viewProduct.do?productId=#{product/productId}"/>
+        <item id="#{item/itemId}">
             <product-desc><jxpath:value-of select="product/descn"/></product-desc>
             <product-name><jxpath:value-of select="product/name"/></product-name>
             <desc>

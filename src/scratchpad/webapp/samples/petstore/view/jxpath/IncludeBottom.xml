@@ -1,14 +1,14 @@
 <c:template xmlns:c="http://cocoon.apache.org/transformation/jxpath/1.0">
 <br />
-<c:if test="{accountForm/account}">
-  <c:if test="{accountForm/account/username}">
-    <c:if test="{accountForm/account/bannerOption}">
+<c:if test="#{accountForm/account}">
+  <c:if test="#{accountForm/account/username}">
+    <c:if test="#{accountForm/account/bannerOption}">
       <table align="center" background="images/bkg-topbar.gif" cellpadding="5" width="100%">
       <tr><td>
-<c:if test="{accountForm/account/bannerName}"> 
+<c:if test="#{accountForm/account/bannerName}"> 
       <center>
           <image>
-          <c:value-of select="{accountForm/account/bannerName}"/>
+          <c:value-of select="#{accountForm/account/bannerName}"/>
 	  </image>
       </center>
 </c:if>

@@ -6,7 +6,7 @@
 
 <html xmlns:t="http://cocoon.apache.org/transformation/jxpath/1.0">
 <body>
-<t:import uri="{'view/jxpath/IncludeTop.xml'}" select="{.}"/>
+<t:import uri="view/jxpath/IncludeTop.xml"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td valign="top" width="20%" align="left">
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
@@ -22,36 +22,36 @@
   <td><b>Item ID</b></td>  <td><b>Product ID</b></td>  <td><b>Description</b></td>  <td><b>Quantity</b></td>  <td><b>List Price</b></td>  <td> </td>
   </tr>
 
-<t:if test="{number(cartForm/cart/numberOfItems) = 0}"> 
+<t:if test="#{number(cartForm/cart/numberOfItems) = 0}"> 
 <tr bgcolor="#FFFF88"><td colspan="6"><b>Your cart is empty.</b></td></tr>
 </t:if>
-<t:for-each select="{cartItems}">
+<t:for-each select="#{cartItems}">
   <tr bgcolor="#FFFF88">
   <td><b>
- {item/itemId}
- <a href="viewItem.do?cartItem={item/itemId}">
+ #{item/itemId}
+ <a href="viewItem.do?cartItem=#{item/itemId}">
 </a></b></td>
-  <td>{item/productId}</td>
+  <td>#{item/productId}</td>
   <td>
-     {item/attr1}
-     {item/attr2}
-     {item/attr3}
-     {item/attr4}
-     {item/attr5}
-     {item/product/name}
+     #{item/attr1}
+     #{item/attr2}
+     #{item/attr3}
+     #{item/attr4}
+     #{item/attr5}
+     #{item/product/name}
    </td>
   <td align="center">
-  <input type="text" size="3" name="{item/itemId}" value="{quantity}" />
+  <input type="text" size="3" name="#{item/itemId}" value="#{quantity}" />
   </td>
-  <td align="right">{ format-number(item/listPrice, '$#,##0.00') }</td>
-  <td><a href="removeItemFromCart.do?workingItemId={item/itemId}">
+  <td align="right">#{ format-number(item/listPrice, '$#,##0.00') }</td>
+  <td><a href="removeItemFromCart.do?workingItemId=#{item/itemId}">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
 </t:for-each>
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
 
-<b>Sub Total: { format-number(cartForm/cart/subTotal, '$#,##0.00') }</b><br />
+<b>Sub Total: #{ format-number(cartForm/cart/subTotal, '$#,##0.00') }</b><br />
 <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
 
 </td><td> </td>
@@ -59,7 +59,7 @@
 </table>
 </form>
 
-<t:if test="{number(cartForm/cart/numberOfItems) > 0}">
+<t:if test="#{number(cartForm/cart/numberOfItems) > 0}">
 <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 </t:if>
 
@@ -67,10 +67,10 @@
 
 
 <td valign="top" width="20%" align="right">
-<t:if test="{accountForm}">
- <t:if test="{accountForm/account}">
-  <t:if test="{accountForm/account/username}">
-    <t:if test="{accountForm/account/listOption}">
+<t:if test="#{accountForm}">
+ <t:if test="#{accountForm/account}">
+  <t:if test="#{accountForm/account/username}">
+    <t:if test="#{accountForm/account/listOption}">
       <t:import uri="view/jxpath/IncludeMyList.xml"/>
     </t:if>
   </t:if>

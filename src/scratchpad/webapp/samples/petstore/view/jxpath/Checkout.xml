@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
         <cart name="Checkout Summary">
             <backpointer name="Shopping Cart" do="viewCart.do" />
             <jxpath:for-each select="cartItems" >
-                <item product-id="{item/productId}" id="{item/itemId}">
+                <item product-id="#{item/productId}" id="#{item/itemId}">
                     <desc>
                         <jxpath:value-of select="item/attr1"/> 
                         <jxpath:value-of select="item/attr2"/> 
@@ -19,7 +19,7 @@
                 </item>
             </jxpath:for-each>
             <total><jxpath:value-of select="cartForm/cart/subTotal"/></total>
-            <nextpointer img="images/button_continue.gif" do="{$continuation/id}.kont"/>
+            <nextpointer img="images/button_continue.gif" do="#{$continuation/id}.kont"/>
         </cart>
     </site>
 </page>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
         <backpointer name="Main Menu" do="index.do" />
-        <form method="POST" styleId="workingOrderForm" action="{$continuation/id}.kont">
+        <form method="POST" styleId="workingOrderForm" action="#{$continuation/id}.kont">
         <panel>
             <panel label="Shipping Address">
                 <input type="text" name="shipToFirstName" label="First name" />
