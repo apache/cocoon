@@ -69,7 +69,7 @@
    <!-- match comments -->
    <xsl:template match="comment()">
       <DIV class="e">
-         <SPAN class="b" onclick="toggle(event)">-</SPAN>
+         <SPAN class="b" onclick="xml2html.toggle(event)">-</SPAN>
          <SPAN class="m">
             <xsl:text>&lt;!--</xsl:text>
          </SPAN>
@@ -119,7 +119,7 @@
    <xsl:template match="*[node()]">
       <DIV class="e">
          <DIV>
-            <SPAN class="b" onclick="toggle(event)">-</SPAN>
+            <SPAN class="b" onclick="xml2html.toggle(event)">-</SPAN>
             <SPAN class="m">&lt;</SPAN>
             <SPAN class="en">
                <xsl:value-of select="name(.)"/>
@@ -180,7 +180,7 @@
    <xsl:template match="*[*]" priority="20">
       <DIV class="e">
          <DIV>
-            <SPAN class="b" onclick="toggle(event)">-</SPAN>
+            <SPAN class="b" onclick="xml2html.toggle(event)">-</SPAN>
             <SPAN class="m">&lt;</SPAN>
             <SPAN class="en">
                <xsl:value-of select="name(.)"/>

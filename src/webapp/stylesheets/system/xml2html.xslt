@@ -65,7 +65,7 @@
    <!-- match comments -->
    <xsl:template match="comment()">
       <DIV class="e">
-         <SPAN class="b" onclick="toggle(event)">-</SPAN>
+         <SPAN class="b" onclick="xml2html.toggle(event)">-</SPAN>
          <SPAN class="m">&lt;!--</SPAN>
          <SPAN class="c">
             <PRE>
@@ -138,7 +138,7 @@
    <xsl:template match="*[node()]">
       <DIV class="e">
          <DIV>
-            <SPAN class="b" onclick="toggle(event)">-</SPAN>
+            <SPAN class="b" onclick="xml2html.toggle(event)">-</SPAN>
             <SPAN class="m">&lt;</SPAN>
             <SPAN class="en">
                <xsl:value-of select="name(.)"/>
