@@ -50,26 +50,54 @@
 package org.apache.cocoon.components.source;
 
 import org.apache.avalon.framework.component.Component;
-
+import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
-import org.apache.cocoon.components.source.helpers.SourceProperty;
-
 /**
- * A source inspector helps to get properties from sources
+ * A source inspector exposes source properties.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
+ * @version CVS $Id: SourceInspector.java,v 1.2 2003/10/23 16:54:31 unico Exp $
  */
 public interface SourceInspector extends Component {
 
     public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
 
+    /**
+     * Gets the SourceProperty associated with the given Source identified 
+     * by the requested namespace and name.
+     * 
+     * @param source  the source for which to compute the property
+     * @param namespace  the namespace uri of the property
+     * @param name  the name of the property
+     * @return  the SourceProperty associated with the Source, <code>null</code>
+     * if the inspector does not provide this property.
+     * @throws SourceException
+     */
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException;
 
+    /**
+     * Gets all the SourceProperties associated with the given Source.
+     * 
+     * @param source  the Source for wich to compute the property.
+     * @return  the collection of all SourceProperties that could be computed
+     * by this SourceInspector.
+     * @throws SourceException  
+     */
     public SourceProperty[] getSourceProperties(Source source) throws SourceException;
-
+    
+    /**
+     * Gets the list of all SourceProperties that are handled by this SourceInspector.
+     * The Strings it returns follow the following format:
+     * <p>
+     * <code>
+     *  SourceProperty::getNamespace() + "#" + SourceProperty.getName()
+     * </code>
+     * </p>
+     * @return  the list of SourceProperties supported by this SourceInspector.
+     */
+    public String[] getExposedSourcePropertyTypes();
 }
 
