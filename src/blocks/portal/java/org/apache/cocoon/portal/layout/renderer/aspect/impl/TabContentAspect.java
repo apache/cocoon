@@ -59,6 +59,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
+import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -72,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.11 2003/08/20 12:05:35 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.12 2003/12/12 08:17:27 cziegeler Exp $
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -101,11 +102,13 @@ public class TabContentAspect
             
             // loop over all tabs
             for (int j = 0; j < tabLayout.getSize(); j++) {
-                NamedItem tab = (NamedItem) tabLayout.getItem(j);
+                Item tab = tabLayout.getItem(j);
 
                 // open named-item tag
                 attributes.clear();
-                attributes.addCDATAAttribute("name", String.valueOf(tab.getName()));
+                if ( tab instanceof NamedItem ) {
+                    attributes.addCDATAAttribute("name", String.valueOf(((NamedItem)tab).getName()));
+                }
                 if (j == selected) {
                     attributes.addCDATAAttribute("selected", "true");
                 } else {
