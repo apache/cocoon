@@ -99,6 +99,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * <pre>
  *  &lt;map:transformer name="linkrewriter"
  *    src="org.apache.cocoon.transformation.LinkRewriterTransformer">
+ *    &lt;link-attrs>href src&lt;/link-attrs>
+ *    &lt;schemes>site ext&lt;/schemes>
  *    &lt;input-module name="site">
  *      &lt;file src="cocoon://samples/link/linkmap" reloadable="true"/>
  *    &lt;/input-module>
@@ -111,7 +113,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *    &lt;/input-module>
  *  &lt;/map:transformer>
  * </pre>
- * Here, we have established dynamic configuration templates for two modules,
+ * Here, we have first configured which attributes to examine, and which URL
+ * schemes to consider rewriting.  In this example, &lt;a href="site:index"> would
+ * be processed.  See below for more configuration options.
+ * Then, we have established dynamic configuration templates for two modules,
  * 'site' (an {@link org.apache.cocoon.components.modules.input.XMLFileModule}
  * and 'mapper' (A {@link
  * org.apache.cocoon.components.modules.input.SimpleMappingMetaModule}.  All
@@ -156,7 +161,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * <h3>Configuration</h3>
  * <p>
- * The following map:parameter's are recognised:
+ * The following map:parameter's and map:transformer parameters are recognised:
  * <dl>
  *  <dt>link-attrs</dt>
  *  <dd>Space-separated list of attributes to consider links (to be
@@ -174,7 +179,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.6 2003/05/13 11:13:00 jefft Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.7 2003/06/19 11:31:05 jefft Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
@@ -209,6 +214,7 @@ public class LinkRewriterTransformer
      */
     public void configure(Configuration conf)
         throws ConfigurationException {
+        if (conf == null) throw new NullPointerException("No static configuration passed to LinkRewriter");
         this.origConf = conf;
     }
  
@@ -230,10 +236,29 @@ public class LinkRewriterTransformer
     {
         super.setup(resolver, objectModel, src, parameters);
         this.links = new HashSet();
-        this.badLinkStr = parameters.getParameter("bad-link-str", null);
-        this.linkAttrs = split(parameters.getParameter("link-attrs", "href"), " ");
-        this.inSchemes = split(parameters.getParameter("schemes", ""), " ");
-        this.outSchemes = split(parameters.getParameter("exclude-schemes", "http https ftp news mailto"), " ");
+        this.badLinkStr = parameters.getParameter("bad-link-str",    // per-request config
+                origConf.getChild("bad-link-str"). // else fall back to per-instance config
+                getValue(null)                     // else use hardcoded default
+                );
+        this.linkAttrs = split(parameters.getParameter("link-attrs",
+                    origConf.getChild("link-attrs").
+                    getValue("href")
+                    ), " ");
+        this.inSchemes = split(parameters.getParameter("schemes",
+                    origConf.getChild("schemes").
+                    getValue("")
+                    ), " ");
+        this.outSchemes = split(parameters.getParameter("exclude-schemes",
+                    origConf.getChild("exclude-schemes").
+                    getValue("http https ftp news mailto")
+                    ), " ");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("bad-link-str = "+badLinkStr);
+            getLogger().debug("link-attrs = "+linkAttrs);
+            getLogger().debug("schemes = "+inSchemes);
+            getLogger().debug("exclude-schemes = "+outSchemes);
+        }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Will ignore the following schemes: " + outSchemes);
         }
@@ -267,6 +292,7 @@ public class LinkRewriterTransformer
      * @return A Set of strings in 'str'
      */
     private Set split(String str, String delim) {
+        if (str == null) return null;
         Set schemes = new HashSet();
         StringTokenizer st = new StringTokenizer(str, delim);
         while (st.hasMoreTokens()) {
@@ -364,7 +390,7 @@ public class LinkRewriterTransformer
      * @return Configuration for specified scheme, from the map:transformer block.
      */
     private Configuration getConf(String scheme) {
-        Configuration[] schemeConfs = this.conf.getChildren();
+        Configuration[] schemeConfs = this.conf.getChildren("input-module");
         for (int i=0; i<schemeConfs.length; i++) {
             if (scheme.equals(schemeConfs[i].getAttribute("name", null))) {
                 return schemeConfs[i];
