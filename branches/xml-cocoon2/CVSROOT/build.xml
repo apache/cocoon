@@ -104,7 +104,7 @@ by the main ones.
   -->
   <property name="build.compiler.emacs" value="on"/>
   <property name="build.compiler.warnings" value="true"/>
-  <property name="build.compiler.pedantic" value="true"/>
+  <property name="build.compiler.pedantic" value="false"/>
   <property name="build.compiler.depend" value="true"/>
   <property name="build.compiler.fulldepend" value="true"/>
 
@@ -239,9 +239,9 @@ by the main ones.
         <exclude name="**/http/HttpRequest2*.java"/>
         <exclude name="**/http/RequestWrapper2*.java"/>
         <exclude name="**/http/HttpResponse2*.java"/>
-	<exclude name="**/Ora*.java" unless="ora.driver.present"/>
-	<exclude name="**/Sendmail*.java" unless="mail.present"/>
-	<exclude name="**/browser/*.x*"/>
+        <exclude name="**/Ora*.java" unless="ora.driver.present"/>
+        <exclude name="**/Sendmail*.java" unless="mail.present"/>
+        <exclude name="**/browser/*.x*"/>
       </fileset>
     </copy>
   </target>
