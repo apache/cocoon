@@ -171,7 +171,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-08 18:51:05 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-08 19:29:45 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -340,6 +340,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-width", -1));
+                    request.setAttribute(attribute, param.getParameter("image-width", ""));
                 }
                 break;
             case Types.BIT:
@@ -349,6 +350,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-height", -1));
+                    request.setAttribute(attribute, param.getParameter("image-height", ""));
                 }
                 break;
             case Types.CHAR:
@@ -358,6 +360,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-size", -1));
+                    request.setAttribute(attribute, param.getParameter("image-size", ""));
                 }
                 break;
         }
