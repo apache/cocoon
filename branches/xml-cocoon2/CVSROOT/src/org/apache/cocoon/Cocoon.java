@@ -21,8 +21,7 @@ import java.util.Iterator;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotFoundException;
-import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
@@ -47,7 +46,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.39 $ $Date: 2000-12-29 18:50:44 $
+ * @version CVS $Revision: 1.4.2.40 $ $Date: 2001-01-05 16:20:57 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -111,8 +110,10 @@ public class Cocoon
      * the specified file.
      */
     public Cocoon(final URL configurationFile, final String classpath, File workDir, final String root)
-    throws SAXException, IOException, ConfigurationException,
-    ComponentNotFoundException, ComponentNotAccessibleException {
+    throws SAXException,
+           IOException,
+	   ConfigurationException,
+           ComponentManagerException {
         this();
 
         this.classpath = classpath;
@@ -218,7 +219,7 @@ public class Cocoon
      * Get the <code>Component</code> associated with the given role.
      */
     public Component lookup(String role)
-    throws ComponentNotFoundException, ComponentNotAccessibleException {
+    throws ComponentManagerException {
         return this.componentManager.lookup(role);
     }
 

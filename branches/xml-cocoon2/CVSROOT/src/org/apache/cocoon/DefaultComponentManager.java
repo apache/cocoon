@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.SingleThreaded;
@@ -35,7 +36,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-02 13:40:05 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-05 16:20:59 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -75,7 +76,7 @@ public class DefaultComponentManager implements ComponentManager {
     /** Return an instance of a component.
      */
     public Component lookup( String role ) throws
-        ComponentNotFoundException, ComponentNotAccessibleException {
+        ComponentManagerException {
 
         Component component;
 
@@ -169,8 +170,7 @@ public class DefaultComponentManager implements ComponentManager {
      * @return and instance of the component.
      */
     private Component getThreadsafeComponent(Class componentClass)
-    throws ComponentNotAccessibleException,
-           ComponentNotFoundException {
+    throws ComponentManagerException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
         if ( component == null ) {
@@ -198,7 +198,8 @@ public class DefaultComponentManager implements ComponentManager {
     /** Return an instance of a component from its associated pool.
      * @param componentClass the class of the component of which we need an instance.
      */
-    private Component getPooledComponent(Class componentClass) throws ComponentNotAccessibleException {
+    private Component getPooledComponent(Class componentClass)
+    throws ComponentManagerException {
         ComponentPool pool = (ComponentPool)pools.get(componentClass);
 
         if ( pool == null ) {
@@ -237,8 +238,7 @@ public class DefaultComponentManager implements ComponentManager {
      * @param c the component to configure.
      */
     private void setupComponent(Component c)
-    throws ComponentNotAccessibleException,
-           ComponentNotFoundException {
+    throws ComponentManagerException {
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(
@@ -264,7 +264,8 @@ public class DefaultComponentManager implements ComponentManager {
      * @param Configuration the configuration for this component.
      */
     public void addComponent(String role, Class component, Configuration config)
-    throws ConfigurationException {
+    throws ConfigurationException,
+           ComponentManagerException {
         if (component.equals(CocoonComponentSelector.class)) {
             CocoonComponentSelector selector = new CocoonComponentSelector();
             Iterator instances = config.getChildren("component-instance");

@@ -15,6 +15,7 @@ import java.util.Collections;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.SingleThreaded;
@@ -34,7 +35,7 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-30 21:40:30 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-05 16:20:58 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer, ThreadSafe {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -74,7 +75,8 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
 
     /** Implement Composer interface
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager)
+    throws ComponentManagerException {
         if (this.manager == null) {
             this.manager = manager;
         }
@@ -82,8 +84,8 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
 
     /** Return an instance of a component.
      */
-    public Component select( Object hint ) throws
-        ComponentNotFoundException, ComponentNotAccessibleException {
+    public Component select( Object hint )
+    throws ComponentManagerException {
 
         Component component;
 
@@ -166,8 +168,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
      * @return and instance of the component.
      */
     private Component getThreadsafeComponent(Class componentClass)
-    throws ComponentNotAccessibleException,
-           ComponentNotFoundException {
+    throws ComponentManagerException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
         if ( component == null ) {
@@ -195,7 +196,8 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
     /** Return an instance of a component from its associated pool.
      * @param componentClass the class of the component of which we need an instance.
      */
-    private Component getPooledComponent(Class componentClass) throws ComponentNotAccessibleException {
+    private Component getPooledComponent(Class componentClass)
+    throws ComponentManagerException {
         ComponentPool pool = (ComponentPool)pools.get(componentClass);
 
         if ( pool == null ) {
@@ -233,8 +235,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
      * @param c the component to configure.
      */
     private void setupComponent(Component c)
-    throws ComponentNotAccessibleException,
-           ComponentNotFoundException {
+    throws ComponentManagerException {
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(
