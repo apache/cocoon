@@ -49,11 +49,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -61,7 +63,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -70,7 +71,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.6 2004/01/14 15:10:53 coliver Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.7 2004/01/15 00:36:18 joerg Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
     protected List parameters;
@@ -134,8 +135,6 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
     }
 
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        Redirector redirector = PipelinesNode.getRedirector(env);
-        
         List params = null;
 
         // Resolve parameters
