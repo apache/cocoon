@@ -96,13 +96,10 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
             Class clazz = Class.forName(formHandlerClassName);
             formHandler = (FormHandler)clazz.newInstance();
             formHandler.setup(form);
+            form.setFormHandler(formHandler);
         }
 
-        FormContext formContext;
-        if (formHandler == null)
-            formContext = new FormContext(request, Locale.US);
-        else
-            formContext = new FormContext(request, Locale.US, formHandler);
+        FormContext formContext = new FormContext(request, Locale.US);
 
         boolean finished = form.process(formContext);
         request.setAttribute(formAttribute, form);

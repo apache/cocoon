@@ -62,17 +62,11 @@ public class FormContext {
     private Request request;
     private Locale locale;
     private ActionEvent actionEvent;
-    private FormHandler formHandler;
     private boolean doValidation;
 
     public FormContext(Request request, Locale locale) {
-        this(request, locale, null);
-    }
-
-    public FormContext(Request request, Locale locale, FormHandler formHandler) {
         this.request = request;
-        this.locale = locale;
-        this.formHandler = formHandler;
+        this.locale = locale;;
         doValidation = true;
     }
 
@@ -107,9 +101,5 @@ public class FormContext {
 
     public boolean doValidation() {
         return doValidation;
-    }
-
-    public FormHandler getFormHandler() {
-        return formHandler;
     }
 }
