@@ -51,22 +51,21 @@
 package org.apache.cocoon.components;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
- * Objects implementing this marker interface can get a configuration
- * from the map:pipelines section of the sitemap each time they
- * are looked up.
- *
+ * This configuration object is used for {@link SitemapConfigurable} 
+ * components. It extends {@link Configuration} by a parent.
+ * 
  * @since 2.1
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
+ * @version CVS $Id: ChainedConfiguration.java,v 1.1 2003/03/19 12:47:34 cziegeler Exp $
  */
-public interface SitemapConfigurable {
+public interface ChainedConfiguration extends Configuration {
 
-    /**
-     * Set the <code>Configuration</code>.
+    /** 
+     * Get the parent configuration
+     * @return the parent configuration or null.
      */
-    void setSitemapConfiguration(Configuration config)
-    throws ConfigurationException;
+    ChainedConfiguration getParent();
 }
