@@ -106,6 +106,12 @@
    </a>
   </xsl:template>
 
+  <xsl:template match="error">
+    <span class="error">
+      <xsl:apply-templates/>
+    </span>
+  </xsl:template>
+
   <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
   <xsl:template match="text()" priority="-1"><xsl:value-of select="."/></xsl:template>
 </xsl:stylesheet>
