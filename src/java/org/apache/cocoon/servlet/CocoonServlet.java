@@ -130,7 +130,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.19 2003/10/20 13:27:17 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.20 2003/11/03 21:23:45 mpo Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -498,7 +498,8 @@ public class CocoonServlet extends HttpServlet {
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
-
+        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
+        
 		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
 		this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);

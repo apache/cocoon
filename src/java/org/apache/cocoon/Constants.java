@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.9 2003/10/31 11:12:56 sylvain Exp $
+ * @version CVS $Id: Constants.java,v 1.10 2003/11/03 21:23:45 mpo Exp $
  */
 public final class Constants {
 
@@ -301,6 +301,10 @@ public final class Constants {
      */
     public static final String CONTEXT_CONFIG_URL = "config-url";
 
+    /** Application <code>Context</code> Key for the default encoding */
+    public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
+
+    
     /**
      * Should descriptors be reloaded?
      *
