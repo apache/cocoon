@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.7 2003/10/19 14:34:40 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.8 2003/10/27 07:57:26 cziegeler Exp $
  */
 public interface Environment {
 
@@ -71,17 +71,22 @@ public interface Environment {
     String getURI();
 
     /**
-     * Get the prefix of the URI in progress.
+     * Set the URI to process.
+     */
+    void setURI(String value);
+    
+    /**
+     * Get the prefix of the URI in progress - TODO(CZ) - Remove this
      */
     String getURIPrefix();
 
     /**
-     * Get the Root Context
+     * Get the Root Context - TODO(CZ) - Remove this
      */
     String getRootContext();
 
     /**
-     * Get current context
+     * Get current context - TODO(CZ) - Remove this
      */
     String getContext();
 
@@ -97,12 +102,12 @@ public interface Environment {
 
     /**
      * Set the context. This is similar to changeContext()
-     * except that it is absolute.
+     * except that it is absolute.  - TODO(CZ) - Remove this
      */
     void setContext(String prefix, String uri, String context);
 
     /**
-     * Change the context from uriprefix to context
+     * Change the context from uriprefix to context  - TODO(CZ) - Remove this
      */
     void changeContext(String uriprefix, String context) throws Exception;
 

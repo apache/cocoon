@@ -69,7 +69,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.4 2003/10/24 12:49:40 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.5 2003/10/27 07:57:26 cziegeler Exp $
  * @since 2.2
  */
 
@@ -182,8 +182,7 @@ implements SourceResolver, Serviceable, Disposable {
             // of uris - the prefix always ends with a slash!
             final int l = this.prefix.length();
             uris = uris.substring(l);
-            // TODO (CZ) Implement this in the environment
-            // env.setURI(uris);
+            env.setURI(uris);
         }
     }
     

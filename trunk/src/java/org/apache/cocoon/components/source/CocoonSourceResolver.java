@@ -69,7 +69,7 @@ import org.apache.excalibur.source.impl.SourceResolverImpl;
  * Cocoon.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonSourceResolver.java,v 1.3 2003/10/27 02:05:15 ghoward Exp $
+ * @version CVS $Id: CocoonSourceResolver.java,v 1.4 2003/10/27 07:57:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceResolver"
@@ -91,6 +91,7 @@ implements SourceResolver {
         if ( baseURI == null ) {
             final Processor processor = EnvironmentHelper.getCurrentProcessor();
             if ( processor != null ) {
+                // FIXME (CZ) - No recursive call here, get the context from the processor!
                 return processor.getSourceResolver().resolveURI(location, null, parameters);
             }
         }

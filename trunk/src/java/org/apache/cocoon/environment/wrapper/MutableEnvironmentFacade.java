@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.5 2003/10/27 07:32:00 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.6 2003/10/27 07:57:26 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -102,6 +102,13 @@ public class MutableEnvironmentFacade implements Environment {
             this.prefix = prefix;
             this.uri = uri;
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
+     */
+    public void setURI(String value) {
+        // TODO Auto-generated method stub
     }
 
     public void setOutputStream(OutputStream os) {
