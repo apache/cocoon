@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id$
+    | @version $Id$
     +-->
 
 <fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
