@@ -24,7 +24,7 @@ var db = Packages.org.apache.cocoon.samples.tour.beans.DatabaseFacade.getInstanc
 
 // Query all TaskBean objects and display them
 function query_allTasks() {
-    list = db.getTasks();
+    var list = db.getTasks();
 
     cocoon.sendPage("internal/generate-view/taskList", {
         title : "List of tasks",
@@ -35,15 +35,15 @@ function query_allTasks() {
 
 // Query a single TaskBean object and display it
 function query_singleTask() {
-    id = cocoon.request.getParameter("taskId");
-    bean = db.getTaskBeanById(id);
+    var id = cocoon.request.getParameter("taskId");
+    var bean = db.getTaskBeanById(id);
     displayTaskBean(id,bean);
 }
 
 // Edit a single TaskBean object using Cocoon Forms
 function singleTaskEditor(form) {
-    id = cocoon.request.getParameter("taskId");
-    bean = db.getTaskBeanById(id);
+    var id = cocoon.request.getParameter("taskId");
+    var bean = db.getTaskBeanById(id);
 
     form.load(bean);
     form.showForm("internal/show-form/singleTask");
