@@ -424,7 +424,13 @@ select="@project"/>-compile</xsl:for-each></xsl:attribute>
 
          <javac srcdir="{string('${blocks}')}/{$block-name}/test"
                 destdir="{string('${build.blocks}')}/{$block-name}/test"
-                fork="true">
+                fork="true"
+                debug="{string('${compiler.debug}')}"
+                optimize="{string('${compiler.optimize}')}"
+                deprecation="{string('${compiler.deprecation}')}"
+                target="{string('${target.vm}')}"
+                nowarn="{string('${compiler.nowarn}')}"
+                compiler="{string('${compiler}')}">
             <classpath>
                <path refid="test.classpath"/>
                <path refid="{$block-name}.classpath"/>
