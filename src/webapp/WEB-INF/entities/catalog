@@ -56,12 +56,12 @@ PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN"
 -- these entries are used for the catalog-demo sample application --
 OVERRIDE NO
 PUBLIC "-//Arbortext//TEXT Test Override//EN"
-       "catalog-demo/override.xml"
+       "catalog-demo/override.txt"
 OVERRIDE YES
 PUBLIC "-//Arbortext//TEXT Test Public Identifier//EN"
-       "catalog-demo/testpub.xml"
+       "catalog-demo/testpub.txt"
 SYSTEM "urn:x-arbortext:test-system-identifier"
-       "catalog-demo/testsys.xml"
+       "catalog-demo/testsys.txt"
 PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
        "catalog-demo/catalog-demo-v10.dtd"
 -- end of entries for the catalog-demo sample application --
