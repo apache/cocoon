@@ -19,8 +19,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.Constants;
@@ -28,6 +26,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.http.HttpResponse;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-12 17:53:12 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-23 13:48:54 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -66,8 +66,8 @@ public class ResourceReader extends AbstractReader implements Composer {
      * Generates the requested resource.
      */
     public void generate() throws IOException, ProcessingException {
-        HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
-        HttpServletResponse res = (HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);
+        HttpRequest req = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        HttpResponse res = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);
         URLFactory urlFactory = null;
 
         try {
@@ -159,12 +159,12 @@ public class ResourceReader extends AbstractReader implements Composer {
     /**
      * Checks if the file has been modified
      */
-    private boolean modified (long lastModified, HttpServletRequest req, HttpServletResponse res) {
+    private boolean modified (long lastModified, HttpRequest req, HttpResponse res) {
         res.setDateHeader("Last-Modified", lastModified);
         long if_modified_since = req.getDateHeader("if-modified-since");
 
         if (if_modified_since >= lastModified) {
-            res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            res.setStatus(HttpResponse.SC_NOT_MODIFIED);
         }
 
         getLogger().debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
@@ -175,7 +175,7 @@ public class ResourceReader extends AbstractReader implements Composer {
      * Returns the mime-type of the resource in process.
      */
     public String getMimeType () {
-        ServletContext ctx = (ServletContext) objectModel.get("context");
+        ServletContext ctx = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
 
         if (ctx != null) {
            return ctx.getMimeType(this.source);

@@ -19,13 +19,13 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.AddressException;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.http.HttpRequest;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 
@@ -74,7 +74,7 @@ public class SendmailAction extends AbstractAction {
     HashMap results = new HashMap();
     try {
       getLogger().debug("SendmailAction: act start");
-      HttpServletRequest request = (HttpServletRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
       Properties properties = new Properties(default_properties);
       if (parameters.isParameter("smtphost")) {
         properties.put("mail.smtp.host",parameters.getParameter("smtphost",null));

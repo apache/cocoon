@@ -9,7 +9,6 @@ package org.apache.cocoon.acting;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
@@ -22,13 +21,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.http.HttpRequest;
 
 /**
  * A simple Action that tracks if a <code>Session</code> object
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-19 21:20:13 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-23 13:48:52 $
  */
 public class HelloAction extends ComposerAction {
 
@@ -37,7 +37,7 @@ public class HelloAction extends ComposerAction {
      * has been created
      */
     public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        HttpRequest req = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
         if (req != null) {
             HttpSession session = req.getSession (false);
 

@@ -27,7 +27,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:38:56 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-23 13:48:53 $
  */
 
 public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
@@ -87,7 +87,7 @@ public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("HashMap map = new HashMap ();")
-          .append("String host = ((HttpServletRequest)objectModel.get(Constants.REQUEST_OBJECT)).getHeader(\"Host\");")
+          .append("String host = ((HttpRequest)objectModel.get(Constants.REQUEST_OBJECT)).getHeader(\"Host\");")
           .append("getLogger().debug(\"Matching against host: \" + host + \".\");")
           .append("if(pattern.match(host)) {");
         /* Handle parenthesised subexpressions. XXX: could be faster if we count

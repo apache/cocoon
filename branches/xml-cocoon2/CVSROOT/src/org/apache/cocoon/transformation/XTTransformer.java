@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
+import org.apache.cocoon.environment.http.HttpRequest;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
@@ -71,7 +71,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-19 21:20:48 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-23 13:48:56 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer, Loggable, Poolable {
@@ -119,7 +119,7 @@ implements Transformer, Composer, Loggable, Poolable {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
         if (request == null) {
             throw new ProcessingException ("Missing request object in objectModel");
         }

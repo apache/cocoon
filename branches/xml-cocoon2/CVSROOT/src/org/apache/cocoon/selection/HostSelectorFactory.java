@@ -38,7 +38,7 @@ import org.apache.cocoon.CodeFactory;
  *   </map:select>
  *
  * @author 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-23 09:05:48 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-23 13:48:55 $
 */
 
 
@@ -85,9 +85,9 @@ public class HostSelectorFactory implements CodeFactory {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
          sb.append("if (pattern != null && objectModel.get(Constants.REQUEST_OBJECT) != null) {")
-          .append("javax.servlet.http.HttpServletRequest request = (javax.servlet.http.HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);")
+          .append("HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);")
           .append("String hostServer = request.getHeader(\"host\");")
-          .append("javax.servlet.http.HttpServletResponse response = (javax.servlet.http.HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);")
+          .append("HttpResponse response = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);")
           .append("response.addHeader(\"Vary\", \"host\");")
           .append("for (int i = 0; i < pattern.length; i++) {")
           .append("if (hostServer.indexOf(pattern[i]) != -1) return true;}");

@@ -17,7 +17,7 @@ import java.text.StringCharacterIterator;
 
 import java.lang.reflect.Method;
 
-import javax.servlet.http.HttpServletRequest;
+import org.apache.cocoon.environment.http.HttpRequest;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-19 21:20:47 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-23 13:48:56 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {
@@ -161,7 +161,7 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
         // Check the stylesheet uri
         String xsluri = src;

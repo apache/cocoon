@@ -35,8 +35,8 @@ import java.util.Date;
 
 import org.xml.sax.SAXException;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
+import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.http.HttpResponse;
 
 /**
  * This Reader pulls a resource from a database.  It is configured with
@@ -108,8 +108,8 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
             ResultSet set = statement.executeQuery();
             if (set.next() == false) throw new ResourceNotFoundException("There is no image with that key");
 
-            HttpServletResponse res = (HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);
-            HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+            HttpResponse res = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);
+            HttpRequest req = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
             if (this.modifiedSince(set, req, res)) {
                 Blob object = set.getBlob(1);
@@ -187,7 +187,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      * more prone to change than filesystems, and don't have intrinsic
      * timestamps on column updates.
      */
-    public boolean modifiedSince(ResultSet set, HttpServletRequest request, HttpServletResponse response)
+    public boolean modifiedSince(ResultSet set, HttpRequest request, HttpResponse response)
     throws SQLException {
         String lastModified = this.parameters.getParameter("last-modified", null);
 
@@ -207,7 +207,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
     /**
      * This method actually performs the serialization.
      */
-    public void serialize(Blob object, HttpServletResponse response)
+    public void serialize(Blob object, HttpResponse response)
     throws IOException, SQLException {
         if (object == null) {
             throw new SQLException("The Blob is empty!");

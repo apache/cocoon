@@ -13,9 +13,10 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.http.HttpResponse;
 
 /**
  * This abstract class provides the basis for testing the environment with
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpSession;
  * variables for developer ease.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-06 21:03:37 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-23 13:48:55 $
  */
 public abstract class CodedSelectorHelper
 {
@@ -36,15 +37,15 @@ public abstract class CodedSelectorHelper
     {
         context = (ServletContext)
                   objectModel.get(Constants.CONTEXT_OBJECT);
-        request = (HttpServletRequest)
+        request = (HttpRequest)
                   objectModel.get(Constants.REQUEST_OBJECT);
-        response = (HttpServletResponse)
+        response = (HttpResponse)
                    objectModel.get(Constants.RESPONSE_OBJECT);
         session = request.getSession(false);
     }
 
     protected ServletContext context;
-    protected HttpServletRequest request;
-    protected HttpServletResponse response;
+    protected HttpRequest request;
+    protected HttpResponse response;
     protected HttpSession session;
 }
