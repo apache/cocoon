@@ -39,7 +39,8 @@
             </ul>
         </p>
         <p>
-            I say <em>not limited to</em>, because I might have forgotten some,
+            We say <em>not limited to</em>, because we might have forgotten
+            to list some,
             but also because it is fairly easy for a Java programmer to implement
             any output format by writing a new <em>Serializer</em> or extending
             an existing one.
