@@ -73,11 +73,15 @@ import org.xml.sax.SAXException;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.1 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.2 2003/10/01 08:53:49 sylvain Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
+    
+    // Track the first values set for prefix and uri
+    private String prefix = null;
+    private String uri = null;
     
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
@@ -95,6 +99,13 @@ public class MutableEnvironmentFacade implements Environment {
     // EnvironmentWrapper-specific method (SW:still have to understand why SitemapSource needs them)
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
+        
+        if (this.uri == null) {
+            // First call : keep the values to restore them on the wrapped
+            // enviromnent in reset()
+            this.prefix = prefix;
+            this.uri = uri;
+        }
     }
 
     public void setOutputStream(OutputStream os) {
@@ -112,6 +123,7 @@ public class MutableEnvironmentFacade implements Environment {
     
     public void reset() {
         this.env.reset();
+        this.env.setURI(this.uri, this.prefix);
     }
     //----------------------------------
 
