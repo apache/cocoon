@@ -1,5 +1,5 @@
 /*
-$Id: AbstractCondition.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: AbstractCondition.java,v 1.3 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -59,10 +59,10 @@ import org.apache.lenya.workflow.Condition;
 import org.apache.lenya.workflow.WorkflowException;
 
 /**
- * @author andreas
+ * Abstract base class for workflow conditions.
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: AbstractCondition.java,v 1.3 2004/03/01 11:24:11 andreas Exp $
  */
 public abstract class AbstractCondition implements Condition {
 

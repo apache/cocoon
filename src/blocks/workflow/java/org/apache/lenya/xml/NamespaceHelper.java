@@ -1,5 +1,5 @@
 /*
-$Id: NamespaceHelper.java,v 1.1 2004/02/29 17:34:48 gregor Exp $
+$Id: NamespaceHelper.java,v 1.2 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -68,7 +68,7 @@ import org.w3c.dom.Text;
  * {@link #NamespaceHelper(Document, String, String)} constructor or created
  * using the {@link #NamespaceHelper(String, String, String)} constructor.
  *
- * @author andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
  */
 public class NamespaceHelper {
     private String namespaceUri;

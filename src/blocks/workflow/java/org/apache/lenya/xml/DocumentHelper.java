@@ -89,9 +89,10 @@ import org.xml.sax.SAXException;
  * Various utility methods to work with JAXP.
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: DocumentHelper.java,v 1.1 2004/02/29 17:34:48 gregor Exp $
+ * @version $Id: DocumentHelper.java,v 1.2 2004/03/01 11:24:11 andreas Exp $
  */
 public class DocumentHelper {
+    
     /**
      * Creates a non-validating and namespace-aware DocumentBuilder.
      *
