@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.67 2001-02-20 05:09:53 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.68 2001-02-22 19:03:02 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -174,6 +174,9 @@
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>java.io.PrintWriter</xsp:include>
+      <xsl:if test="$environment = 'cocoon2'">
+          <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+      </xsl:if>
       <xsl:if test=".//esql:connection/esql:pool">
         <xsl:choose>
           <xsl:when test="$environment = 'cocoon1'">
@@ -182,7 +185,6 @@
           </xsl:when>
           <xsl:when test="$environment = 'cocoon2'">
             <xsp:include>org.apache.avalon.util.datasource.DataSourceComponent</xsp:include>
-            <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
           </xsl:when>
         </xsl:choose>
       </xsl:if>
@@ -305,10 +307,10 @@
           try {
             _esql_connection.dburl = String.valueOf(<xsl:copy-of select="$dburl"/>);
             <xsl:if test="esql:username">
-              _esql_connection.info.put("user", String.valueOf(<xsl:copy-of select="$username"/>)); 
+              _esql_connection.info.put("user", String.valueOf(<xsl:copy-of select="$username"/>));
             </xsl:if>
             <xsl:if test="esql:password">
-              _esql_connection.info.put("password", String.valueOf(<xsl:copy-of select="$password"/>)); 
+              _esql_connection.info.put("password", String.valueOf(<xsl:copy-of select="$password"/>));
             </xsl:if>
             <xsl:for-each select="esql:property">
               _esql_connection.info.put("<xsl:value-of select="@name"/>",<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>);
@@ -745,11 +747,26 @@
     </xsl:when>
     <xsl:when test="$environment = 'cocoon2'">
       <xsp:logic>
-        try {
-          XSPUtil.include(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)),this.contentHandler,parser);
-        } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-          throw new RuntimeException("error parsing xml: "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage()+": "+String.valueOf(<xsl:copy-of select="$content"/>));
-        }
+      {
+          org.apache.cocoon.components.parser.Parser newParser = null;
+
+          try {
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+
+              InputSource __is = new InputSource(
+                      new StringReader(
+                          String.valueOf(<xsl:copy-of select="$content"/>)
+                      )
+                  );
+
+
+              XSPUtil.include(__is, this.contentHandler, newParser);
+          } catch (Exception e) {
+              getLogger().error("Could not include page", e);
+          } finally {
+              if (newParser != null) this.manager.release((Component) newParser);
+          }
+      }
       </xsp:logic>
     </xsl:when>
     <xsl:otherwise>
