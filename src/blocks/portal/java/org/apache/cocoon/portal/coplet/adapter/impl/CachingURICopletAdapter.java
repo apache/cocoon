@@ -55,8 +55,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -66,11 +66,12 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: CachingURICopletAdapter.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: CachingURICopletAdapter.java,v 1.2 2004/02/09 13:39:42 cziegeler Exp $
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
     implements Parameterizable {
+    
     /**
      * The cache for saving the coplet data
      */
@@ -101,49 +102,45 @@ public class CachingURICopletAdapter
      */
     private boolean disableCaching = false;
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
     public void parameterize(Parameters parameters) {
         if (parameters != null) {
-            disableCaching =
-                parameters.getParameterAsBoolean(
-                    PARAMETER_DISABLE_CACHING,
-                    false);
+            this.disableCaching = parameters.getParameterAsBoolean(PARAMETER_DISABLE_CACHING, false);
             if (disableCaching) {
-                getLogger().info(
-                    this.getClass().getName() + " Caching is disabled.");
-            }
-            else {
-                getLogger().info(
-                    this.getClass().getName() + " Caching is enabled.");
+                getLogger().info(this.getClass().getName() + " Caching is disabled.");
+            } else {
+                getLogger().info(this.getClass().getName() + " Caching is enabled.");
             }
         }
     }
 
-    public void streamContent(
-        CopletInstanceData coplet,
-        ContentHandler contentHandler)
-        throws SAXException {
-        this.streamContent(
-            coplet,
-            (String) coplet.getCopletData().getAttribute("uri"),
-            contentHandler);
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     */
+    public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
+    throws SAXException {
+        this.streamContent( coplet, (String) coplet.getCopletData().getAttribute("uri"), contentHandler);
     }
 
-    public void streamContent(
-        final CopletInstanceData coplet,
-        final String uri,
-        final ContentHandler contentHandler)
-        throws SAXException {
-        if (isValidCache(coplet)) {
-            toSAXFromCache(coplet, contentHandler);
-        }
-        else {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, java.lang.String, org.xml.sax.ContentHandler)
+     */
+    public void streamContent( final CopletInstanceData coplet,
+                               final String uri,
+                               final ContentHandler contentHandler)
+    throws SAXException {
+        if (this.isValidCache(coplet)) {
+            this.toSAXFromCache(coplet, contentHandler);
+        } else {
             XMLByteStreamCompiler bc = new XMLByteStreamCompiler();
 
             super.streamContent(coplet, uri, bc);
 
-            toCache(coplet, bc.getSAXFragment());
+            this.toCache(coplet, bc.getSAXFragment());
 
-            toSAXFromCache(coplet, contentHandler);
+            this.toSAXFromCache(coplet, contentHandler);
         }
     }
 
@@ -155,7 +152,7 @@ public class CachingURICopletAdapter
     private void toCache(CopletInstanceData coplet, Object data) {
         coplet.setAttribute(CACHE, data);
 
-        setCacheValid(coplet);
+        this.setCacheValid(coplet);
     }
 
     /**
@@ -164,10 +161,9 @@ public class CachingURICopletAdapter
      * @param contentHandler the handler, that should receive the SAX events
      * @throws SAXException
      */
-    private void toSAXFromCache(
-        CopletInstanceData coplet,
-        ContentHandler contentHandler)
-        throws SAXException {
+    private void toSAXFromCache(CopletInstanceData coplet,
+                                ContentHandler contentHandler)
+    throws SAXException {
         XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
         bi.setContentHandler(contentHandler);
 
@@ -179,18 +175,15 @@ public class CachingURICopletAdapter
      * @param coplet the coplet instance data
      */
     public boolean isValidCache(CopletInstanceData coplet) {
-        if (disableCaching)
+        if (disableCaching) {
             return false;
-
+        }
         String cacheValidity = (String) coplet.getAttribute(CACHE_VALIDITY);
 
-        if (cacheValidity == null)
+        if (cacheValidity == null) {
             return false;
-
-        if (CACHE_VALID.equals(cacheValidity))
-            return true;
-        else
-            return false;
+        }
+        return CACHE_VALID.equals(cacheValidity);
     }
 
     /**
@@ -213,29 +206,24 @@ public class CachingURICopletAdapter
      * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
      */
     public void inform(Event e) {
-        if (e instanceof CopletLinkEvent) {
-            getLogger().info(
-                "CopletLinkEvent " + e + " caught by CachingURICopletAdapter");
-            handleCopletLinkEvent(e);
+        if (e instanceof CopletInstanceEvent) {
+            if ( this.getLogger().isInfoEnabled() ) {
+                this.getLogger().info("CopletInstanceEvent " + e + " caught by CachingURICopletAdapter");
+            }
+            this.handleCopletInstanceEvent(e);
         }
+        super.inform(e);
     }
 
     /**
-     * This adapter listens for CopletLinkEvents. Each CopletLinkEvent sets the cache invalid.
+     * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid.
      */
-    public void handleCopletLinkEvent(Event e) {
-        CopletLinkEvent event = (CopletLinkEvent) e;
+    public void handleCopletInstanceEvent(Event e) {
+        final CopletInstanceEvent event = (CopletInstanceEvent) e;
 
-        CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
+        final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
 
-        setCacheInvalid(coplet);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
-     */
-    public Class getEventType() {
-        return CopletLinkEvent.class;
+        this.setCacheInvalid(coplet);
     }
 
 }
