@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.14 2001-03-26 00:17:11 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.15 2001-03-26 00:30:15 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.14 $ $Date: 2001-03-26 00:17:11 $
+ * @version $Revision: 1.15 $ $Date: 2001-03-26 00:30:15 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -145,7 +145,7 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
                     .invoke (driver, new Object [] {outStream});
             }
             else {
-                PrintWriter pw = new PrintWriter (new OutputStreamWriter (stream));
+                PrintWriter pw = new PrintWriter (new OutputStreamWriter (outStream));
 
                 // We use reflection here to avoid compile-time errors
                 // This translates at runtime to
