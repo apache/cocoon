@@ -21,25 +21,25 @@
   </map:flow>
 
   <map:pipelines>
-    
     <map:pipeline internal-only="true">
-    
       <map:match pattern="read">
         <map:read src="sitemap.xmap"/>
       </map:match>
-    
     </map:pipeline>
     
     <map:pipeline>
-      
       <map:match pattern="redirect-to-from-sitemap">
         <map:redirect-to uri="explain-test.html"/>
       </map:match>
-      
+
+      <map:match pattern="redirect-to-internal-from-sitemap">
+        <map:redirect-to uri="cocoon://samples/test/redirect/explain-test.html"/>
+      </map:match>
+
       <map:match pattern="redirect-to-from-flow">
         <map:call function="redirectTo"/>
       </map:match>
-      
+
       <map:match pattern="send-status">
         <map:call function="sendStatus"/>
       </map:match>

@@ -15,20 +15,21 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: index.xml,v 1.4 2004/03/06 02:25:36 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <page>
     <title>Test pages</title>
     <content>
         <para>
-            Stuff found in and under this directory is meant for automated anteater tests.
+            Stuff found in and under this directory is meant for automated
+            anteater tests.
         </para>
         <para>
-            To run tests used the <em>anteater-tests</em> build target.
+            To run tests use the <em>anteater-tests</em> build target.
         </para>
         <para>
-            To create a new test set, create a new subdirectory here and add an <em>explain-test.xml</em>
-            document into it.
+            To create a new test set, create a new subdirectory here and
+            add an <em>explain-test.xml</em> document into it.
         </para>
         <para>
             <b>Available tests</b>:
