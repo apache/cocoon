@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.ContainerWidget;
+import org.apache.cocoon.forms.formmodel.DataWidget;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Struct;
 import org.apache.cocoon.forms.formmodel.Union;
@@ -47,7 +48,7 @@ import java.util.Map;
 // The corresponding TODO in the EffectPipe needs to be completed first.
 
 /**
- * The basic operation of this Pipe is that it replaces wt:widget (in the
+ * The basic operation of this Pipe is that it replaces ft:widget (in the
  * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
@@ -70,6 +71,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      */
     private static final String LOCATION = "location";
 
+    private static final String AGGREGATE_WIDGET = "aggregate-widget";
+    private static final String CHOOSE = "choose";
     private static final String CLASS = "class";
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
@@ -77,42 +80,45 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String REPEATER_SIZE = "repeater-size";
     private static final String REPEATER_WIDGET = "repeater-widget";
     private static final String REPEATER_WIDGET_LABEL = "repeater-widget-label";
-    private static final String AGGREGATE_WIDGET = "aggregate-widget";
     private static final String STRUCT = "struct";
     private static final String STYLING_EL = "styling";
     private static final String UNION = "union";
     private static final String VALIDATION_ERROR = "validation-error";
-    private static final String WIDGET_LABEL = "widget-label";
     private static final String WIDGET = "widget";
+    private static final String WIDGET_LABEL = "widget-label";
 
     protected Widget contextWidget;
     protected LinkedList contextWidgets;
-    protected String widgetId;
+    protected LinkedList chooseWidgets;
+    protected String widgetPath;
     protected Widget widget;
     protected Map classes;
 
+    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
+    private final ChooseHandler              chooseHandler          = new ChooseHandler();
+    private final ChoosePassThruHandler      choosePassThruHandler  = new ChoosePassThruHandler();
+    private final ClassHandler               classHandler           = new ClassHandler();
+    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
     private final DocHandler                 docHandler             = new DocHandler();
     private final FormHandler                formHandler            = new FormHandler();
     private final NestedHandler              nestedHandler          = new NestedHandler();
-    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
-    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final NewHandler                 newHandler             = new NewHandler();
     private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
-    private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
     private final RepeaterWidgetHandler      repeaterWidgetHandler  = new RepeaterWidgetHandler();
-    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
+    private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
+    private final SkipHandler                skipHandler            = new SkipHandler();
     private final StructHandler              structHandler          = new StructHandler();
+    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
     private final UnionHandler               unionHandler           = new UnionHandler();
     private final UnionPassThruHandler       unionPassThruHandler   = new UnionPassThruHandler();
-    private final NewHandler                 newHandler             = new NewHandler();
-    private final ClassHandler               classHandler           = new ClassHandler();
-    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
-    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
     private final ValidationErrorHandler     validationErrorHandler = new ValidationErrorHandler();
+    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
 
     /**
      * Map containing all handlers
      */
-    private final Map templates = new HashMap(12, 1);
+    private final Map templates = new HashMap();
 
     protected FormsPipelineConfig pipeContext;
 
@@ -129,18 +135,19 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public EffectWidgetReplacingPipe() {
         // Setup map of templates.
-        templates.put(WIDGET, widgetHandler);
-        templates.put(WIDGET_LABEL, widgetLabelHandler);
-        templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
         templates.put(AGGREGATE_WIDGET, aggregateWidgetHandler);
+        templates.put(CHOOSE, chooseHandler);
+        templates.put(CLASS, classHandler);
+        templates.put(CONTINUATION_ID, continuationIdHandler);
+        templates.put(NEW, newHandler);
         templates.put(REPEATER_SIZE, repeaterSizeHandler);
+        templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
         templates.put(REPEATER_WIDGET_LABEL, repeaterWidgetLabelHandler);
         templates.put(STRUCT, structHandler);
         templates.put(UNION, unionHandler);
-        templates.put(NEW, newHandler);
-        templates.put(CLASS, classHandler);
-        templates.put(CONTINUATION_ID, continuationIdHandler);
         templates.put(VALIDATION_ERROR, validationErrorHandler);
+        templates.put(WIDGET, widgetHandler);
+        templates.put(WIDGET_LABEL, widgetLabelHandler);
     }
 
     private void throwSAXException(String message) throws SAXException{
@@ -156,6 +163,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
         // Initialize widget related variables
         contextWidgets = new LinkedList();
+        chooseWidgets = new LinkedList();
         classes = new HashMap();
     }
 
@@ -167,22 +175,30 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         return widgetId;
     }
 
-    protected Widget getWidget(String widgetId) throws SAXException {
-        Widget widget = ((ContainerWidget)contextWidget).getChild(widgetId);
+    protected String getWidgetPath(Attributes attributes) throws SAXException {
+        String widgetPath = attributes.getValue("path");
+        if (widgetPath == null || widgetPath.equals("")) {
+            throwSAXException("Missing required widget \"path\" attribute.");
+        }
+        return widgetPath;
+    }
+
+    protected Widget getWidget(String widgetPath) throws SAXException {
+        Widget widget = ((ContainerWidget)contextWidget).lookupWidget(widgetPath);
         if (widget == null) {
             if (contextWidget.getRequestParameterName().equals("")) {
-                throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the form container.");
+                throwSAXException("No widget exists at the path \"" + widgetPath + "\", relative to the form container.");
             } else {
-                throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the container \"" +
-                                  contextWidget.getRequestParameterName() + "\"");
+                throwSAXException("No widget exists at the path \"" + widgetPath + "\", relative to the container \"" +
+                                  contextWidget.getRequestParameterName() + "\".");
             }
         }
         return widget;
     }
 
     protected void getRepeaterWidget(String handler) throws SAXException {
-        widgetId = getWidgetId(input.attrs);
-        widget = getWidget(widgetId);
+        widgetPath = getWidgetId(input.attrs);
+        widget = getWidget(widgetPath);
         if (!(widget instanceof Repeater)) {
             throwWrongWidgetType("RepeaterWidgetLabelHandler", input.loc, "repeater");
         }
@@ -278,7 +294,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             switch(event) {
             case EVENT_START_ELEMENT:
                 if (contextWidget != null) {
-                    throwSAXException("Detected nested wt:form-template elements, this is not allowed.");
+                    throwSAXException("Detected nested ft:form-template elements, this is not allowed.");
                 }
 
                 // ====> Retrieve the form
@@ -356,12 +372,28 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    protected class SkipHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_START_ELEMENT:
+                return this;
+            case EVENT_ELEMENT:
+                return nestedTemplate();
+            case EVENT_END_ELEMENT:
+                return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
     protected class WidgetLabelHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                Widget widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                Widget widget = getWidget(widgetPath);
                 widget.generateLabel(getContentHandler());
                 widget = null;
                 return this;
@@ -380,8 +412,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
 
                 if (isVisible(widget)) {
                     gotStylingElement = false;
@@ -438,10 +470,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             switch(event) {
             case EVENT_START_ELEMENT:
                 getRepeaterWidget("RepeaterWidgetLabelHandler");
-                String widgetId = input.attrs.getValue("widget-id");
-                if (widgetId == null || widgetId.equals(""))
+                String widgetPath = input.attrs.getValue("widget-id");
+                if (widgetPath == null || widgetPath.equals(""))
                     throwSAXException("Element repeater-widget-label missing required widget-id attribute.");
-                ((Repeater)widget).generateWidgetLabel(widgetId, getContentHandler());
+                ((Repeater)widget).generateWidgetLabel(widgetPath, getContentHandler());
                 widget = null;
                 return this;
             case EVENT_ELEMENT:
@@ -497,12 +529,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
                 if (!(widget instanceof AggregateField)) {
                     throwWrongWidgetType("AggregateWidgetHandler", input.loc, "aggregate");
                 }
-
                 if (isVisible(widget)) {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;
@@ -526,17 +557,14 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
                 if (!(widget instanceof Struct)) {
                     throwWrongWidgetType("StructHandler", input.loc, "struct");
                 }
                 if (isVisible(widget)) {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;
-                    out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "struct");
-                    out.attributes();
-                    out.startElement();
                     return this;
                 } else {
                     return nullHandler;
@@ -544,9 +572,82 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
-                out.copy();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
+    protected class ChooseHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_START_ELEMENT:
+                widgetPath = getWidgetPath(input.attrs);
+                widget = getWidget(widgetPath);
+                // TODO: Should instead check for datatype convertable to String.
+                if (!(widget instanceof DataWidget)) {
+                    throwWrongWidgetType("ChooseHandler", input.loc, "DataWidget");
+                }
+                contextWidgets.addFirst(contextWidget);
+                // Choose does not change the context widget like Union does:
+                //    contextWidget = widget;
+                chooseWidgets.addFirst(widget);
+                return this;
+            case EVENT_ELEMENT:
+                if (Constants.TEMPLATE_NS.equals(input.uri)) {
+                    if ("when".equals(input.loc)) {
+                        String testValue = input.attrs.getValue("value");
+                        if (testValue == null) throwSAXException("Element \"when\" missing required \"value\" attribute.");
+                        String value = (String)((Widget)chooseWidgets.get(0)).getValue();
+                        if (testValue.equals(value)) {
+                            return skipHandler;
+                        } else {
+                            return nullHandler;
+                        }
+                    } else if (FORM_TEMPLATE_EL.equals(input.loc)) {
+                        throwSAXException("Element \"form-template\" must not be nested.");
+                    } else {
+                        throwSAXException("Unrecognized template: " + input.loc);
+                    }
+                } else {
+                    return choosePassThruHandler;
+                }
+            case EVENT_END_ELEMENT:
+                chooseWidgets.removeFirst();
+                contextWidget = (Widget)contextWidgets.removeFirst();
+                return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
+    protected class ChoosePassThruHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_ELEMENT:
+                if (Constants.TEMPLATE_NS.equals(input.uri)) {
+                    if ("when".equals(input.loc)) {
+                        String testValue = input.attrs.getValue("value");
+                        if (testValue == null) throwSAXException("Element \"when\" missing required \"value\" attribute.");
+                        String value = (String)((Widget)chooseWidgets.get(0)).getValue();
+                        if (testValue.equals(value)) {
+                            return skipHandler;
+                        } else {
+                            return nullHandler;
+                        }
+                    } else if (FORM_TEMPLATE_EL.equals(input.loc)) {
+                        throwSAXException("Element \"form-template\" must not be nested.");
+                    } else {
+                        throwSAXException("Unrecognized template: " + input.loc);
+                    }
+                } else {
+                    return this;
+                }
             default:
                 out.copy();
                 return this;
@@ -558,16 +659,14 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
                 if (!(widget instanceof Union)) {
                     throwWrongWidgetType("UnionHandler", input.loc, "union");
                 }
                 if (isVisible(widget)) {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;
-                    out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
-                    out.startElement();
                     return this;
                 } else {
                     return nullHandler;
@@ -579,7 +678,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         if (id == null) throwSAXException("Element \"case\" missing required \"id\" attribute.");
                         String value = (String)contextWidget.getValue();
                         if (id.equals(value != null ? value : "")) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
@@ -592,7 +691,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     return unionPassThruHandler;
                 }
             case EVENT_END_ELEMENT:
-                out.endElement();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
             default:
@@ -609,7 +707,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {
                         if (contextWidget.getValue().equals(input.attrs.getValue("id"))) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
@@ -632,10 +730,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                SaxBuffer classBuffer = (SaxBuffer)classes.get(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                SaxBuffer classBuffer = (SaxBuffer)classes.get(widgetPath);
                 if (classBuffer == null) {
-                    throwSAXException("New: Class \"" + widgetId + "\" does not exist.");
+                    throwSAXException("New: Class \"" + widgetPath + "\" does not exist.");
                 }
                 handlers.addFirst(handler);
                 handler = nestedHandler;
@@ -657,13 +755,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
+                widgetPath = getWidgetId(input.attrs);
                 out.bufferInit();
                 return this;
             case EVENT_ELEMENT:
                 return bufferHandler;
             case EVENT_END_ELEMENT:
-                classes.put(widgetId, out.getBuffer());
+                classes.put(widgetPath, out.getBuffer());
                 out.bufferFini();
                 return this;
             default:
@@ -750,8 +848,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
-                widgetId = getWidgetId(input.attrs);
-                widget = getWidget(widgetId);
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
                 out.bufferInit();
                 return this;
 
@@ -846,7 +944,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         super.recycle();
         this.contextWidget = null;
         this.widget = null;
-        this.widgetId = null;
+        this.widgetPath = null;
         this.pipeContext = null;
         this.namespacePrefix = null;
     }
