@@ -6,25 +6,31 @@
   <title>Live Sites powered by Cocoon</title>
   <authors>
    <person name="Donald Ball" email="balld@webslingerZ.com"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
   </authors>
  </header>
  
  <body>
   <s1 title="Live Sites powered by Cocoon">
    <p>
-    Here is a list of web sites that are proudly powered by Cocoon.
+    Here is a list of web sites that are proudly powered by Cocoon (in chronological order):
    </p>
    
    <ul>
-    <li><link href="http://www.zen.co.za/">http://www.zen.co.za/</link></li>
-    <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za/</link></li>
-    <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com/</link></li>
-	   <li><link href="http://www.north-wood.co.uk/">http://www.north-wood.co.uk/</link></li>
-	   <li><link href="http://www.eurofootball.com/">http://www.eurofootball.com/ (partially)</link></li>
+    <li><link href="http://www.zen.co.za/">http://www.zen.co.za</link></li>
+    <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za</link></li>
+    <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com</link></li>
+    <li><link href="http://www.north-wood.co.uk/">http://www.north-wood.co.uk</link></li>
+    <li><link href="http://www.eurofootball.com/">http://www.eurofootball.com</link></li>
+    <li><link href="http://www.caida.org/">http://www.caida.org</link></li>
+    <li><link href="http://grapeape.codingapes.com/">http://grapeape.codingapes.com</link></li>
+    <li><link href="http://http://www.xmls.com/">http://www.xmls.com</link></li>
+    <li><link href="http://http://www.xmltimes.com/">http://www.xmltimes.com</link></li>
+<!--<li><link href="http:///"></link></li>-->
    </ul>
-   
+
    <p>
-    If you don't find your site upthere, make sure you tell us. We want this list
+    If you don't find your site here, make sure you tell us. We want this list
     to grow bigger every day :-)
    </p>
   </s1>
