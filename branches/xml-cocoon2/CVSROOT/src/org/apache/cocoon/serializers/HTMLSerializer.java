@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.1 $ $Date: 2000-02-27 17:48:21 $
+ * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-03-30 04:53:26 $
  */
 public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -150,13 +150,13 @@ public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
     public void endElement (String uri, String loc, String raw)
     throws SAXException {
         String name=this.ns.resolve(uri,raw,null,loc).getRawName();
-        if ((name.equals("AREA"))     || (name.equals("BASE"))     ||        
-            (name.equals("BASEFONT")) || (name.equals("BR"))       ||          
-            (name.equals("COL"))      || (name.equals("FRAME"))    ||       
-            (name.equals("HR"))       || (name.equals("IMG"))      ||         
-            (name.equals("INPUT"))    || (name.equals("ISINDEX"))  ||     
-            (name.equals("LINK"))     || (name.equals("META"))     ||        
-            (name.equals("PARA"))) return;
+        if ((name.equalsIgnoreCase("AREA"))     || (name.equalsIgnoreCase("BASE"))     ||        
+            (name.equalsIgnoreCase("BASEFONT")) || (name.equalsIgnoreCase("BR"))       ||          
+            (name.equalsIgnoreCase("COL"))      || (name.equalsIgnoreCase("FRAME"))    ||       
+            (name.equalsIgnoreCase("HR"))       || (name.equalsIgnoreCase("IMG"))      ||         
+            (name.equalsIgnoreCase("INPUT"))    || (name.equalsIgnoreCase("ISINDEX"))  ||     
+            (name.equalsIgnoreCase("LINK"))     || (name.equalsIgnoreCase("META"))     ||        
+            (name.equalsIgnoreCase("PARA"))) return;
         this.print('<');
         this.print('/');
         this.print(name);
