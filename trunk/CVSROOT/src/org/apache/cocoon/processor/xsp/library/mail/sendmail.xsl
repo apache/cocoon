@@ -97,7 +97,7 @@
     try {
       Properties properties = new Properties(this.properties);
       if (!"null".equals(String.valueOf(<xsl:copy-of select="$smtphost"/>))) {
-        properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphose"/>));
+        properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphost"/>));
       }
       Session _sendmail_session = Session.getDefaultInstance(properties,null);
       Message message = new MimeMessage(_sendmail_session);
