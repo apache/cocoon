@@ -71,7 +71,7 @@
   <xsl:template match="fi:help">
     <xsl:variable name="id" select="generate-id()"/>
     <div class="forms-help" id="help{$id}" style="visibility:hidden; position:absolute;">
-    	<span style="float:right"><a href="#" onClick="helpWin{$id}.hidePopup();return false;"><img align="top" alt="close" src="{$resources-uri}/close.gif" height="6" width="6"/></a></span>
+    	<span style="float:right"><a href="#" onClick="helpWin{$id}.hidePopup();return false;"><img align="top" alt="close" src="{$resources-uri}/img/close.gif" height="6" width="6"/></a></span>
       <xsl:apply-templates select="node()"/>
     </div>
     <script type="text/javascript">
@@ -79,7 +79,7 @@
     </script>
     <a id="{$id}" name="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;">
       <!-- TODO: i18n key for helppopup -->
-      <img src="{$resources-uri}/help.gif" alt="helppopup"/>
+      <img src="{$resources-uri}/img/help.gif" alt="helppopup"/>
     </a>
   </xsl:template>
 

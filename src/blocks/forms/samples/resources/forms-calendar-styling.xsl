@@ -36,7 +36,7 @@
       forms_calendar.showYearNavigationInput();
       forms_calendar.setCssPrefix("forms_");
     </script>
-    <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms-calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="{$resources-uri}/css/forms-calendar.css"/>
   </xsl:template>
 
   <xsl:template match="body" mode="forms-calendar">
@@ -74,13 +74,13 @@
     <xsl:choose>
       <xsl:when test="@state = 'disabled'">
         <!-- TODO: i18n key for @alt -->
-        <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
+        <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
       </xsl:when>
       <xsl:otherwise>
         <a href="#" name="{$id}" id="{$id}"
            onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
           <!-- TODO: i18n key for @alt -->
-          <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
+          <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
         </a>
       </xsl:otherwise>
     </xsl:choose>
