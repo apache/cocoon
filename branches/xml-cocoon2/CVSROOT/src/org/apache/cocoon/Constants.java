@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-30 21:33:12 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-07 17:52:37 $
  */
 
 public interface Constants {
@@ -33,7 +33,7 @@ public interface Constants {
     String DEFAULT_CONF_FILE   = "cocoon.xconf";
 
     String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
-    String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";
+    String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.JaxpParser";
 
     String XSP_PREFIX          = "xsp";
     String XSP_URI             = "http://apache.org/xsp";
