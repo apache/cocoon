@@ -152,9 +152,9 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           target="1.3"
+           source="${source.vm}"
+           target="${source.vm}"
            nowarn="on"
-           compiler="${compiler}"
            classpathref="tasks.classpath"/>
 
     <!-- A task to patch xml files -->
@@ -178,9 +178,9 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           target="1.3"
-           nowarn="on"
-           compiler="${compiler}"/>
+           source="${source.vm}"
+           target="${source.vm}"
+           nowarn="on"/>
 
     <!-- Ant-Contrib tasks -->
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
