@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.11 2000-03-20 21:14:16 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.12 2000-03-30 00:35:25 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-03-20 21:14:16 $
+ * @version $Revision: 1.12 $ $Date: 2000-03-30 00:35:25 $
  */
 
 public final class Utils {
@@ -234,11 +234,19 @@ public final class Utils {
         try {
             // detect if the engine supports at least Servlet API 2.2
             request.getContextPath();
-            URL resource = ((ServletContext) context).getResource(request.getServletPath());
-            if (resource.getProtocol().equals("file")) {
-                return resource.getFile();
+            // we need to check this in case we've been included in a servlet or jsp
+            String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
+            // otherwise, we find it out ourselves
+            if (path == null) path = request.getServletPath();
+
+            // FIXME (SM): we should use getResource() instead when we are
+            // able to handle remote resources.
+            String resource = ((ServletContext) context).getRealPath(path);
+
+            if (resource != null) {
+                return resource.replace('\\', '/');
             } else {
-                throw new RuntimeException("Cannot handle remote resources.");
+                throw new RuntimeException("Cannot access non-file/war resources");
             }
         } catch (NoSuchMethodError e) {
             // if there is no such method we must be in Servlet API 2.1
@@ -249,8 +257,6 @@ public final class Utils {
                 // otherwise use the deprecated method on all other servlet engines.
                 return request.getRealPath(request.getRequestURI()).replace('\\', '/');
             }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Malformed request URL.");
         } catch (NullPointerException e) {
             // if there is no context set, we must be called from the command line
             return request.getPathTranslated().replace('\\','/');
@@ -266,4 +272,48 @@ public final class Utils {
         e.printStackTrace(writer);
         return bytes.toString();
     }
+    
+    /*
+     * Returns the resource pointed by the given location.
+     */
+    public static final Object getLocationResource(String location) throws MalformedURLException {
+        Object resource = null;
+        
+        if (location.indexOf("://") < 0) {
+            resource = new File(location);
+        } else if (location.startsWith("resource://")) {
+            // FIXME (SM): this should _not_ be system resource, but rather a resource of current classloader
+            resource = ClassLoader.getSystemResource(location.substring("resource://".length()));
+        } else {
+            resource = new URL(location);
+        }
+        
+        return resource;
+    }
+
+    /*
+     * Returns the resource pointed by the given location relative to the given request.
+     */
+    public static final Object getLocationResource(String location, HttpServletRequest request, ServletContext context) throws Exception {
+        Object resource = null;
+        
+        if (location.indexOf("://") < 0) {
+            if (location.charAt(0) == '/') {
+                // Location is relative to webserver's root
+                location = context.getRealPath(location);
+            } else {
+                // Location is relative to requested page's virtual directory
+                String basename = getBasename(request, context);
+                location = basename.substring(0, basename.lastIndexOf('/') + 1) + location;
+            }
+            resource = new File(location);
+        } else if (location.startsWith("resource://")) {
+            // FIXME (SM): this should _not_ be system resource, but rather a resource of current classloader
+            resource = ClassLoader.getSystemResource(location.substring("resource://".length()));
+        } else {
+            resource = new URL(location);
+        }
+        
+        return resource;
+    }    
 }
