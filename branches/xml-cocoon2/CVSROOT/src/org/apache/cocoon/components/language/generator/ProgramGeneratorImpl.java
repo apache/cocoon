@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.41 $ $Date: 2001-03-12 04:38:37 $
+ * @version CVS $Revision: 1.1.2.42 $ $Date: 2001-03-13 15:41:12 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -185,14 +185,14 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
          */
 
         if (programInstance != null && programInstance.modifiedSince(file.lastModified())) {
-            // Release the component.            
+            // Release the component.
             release(programInstance);
 
             // Unload program
             ProgrammingLanguage programmingLanguage = (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
             programmingLanguage.setLanguageName(programmingLanguageName);
             programmingLanguage.unload(program, normalizedName, this.workDir);
-            
+
             // Invalidate previous program/instance pair
             program = null;
             programInstance = null;
@@ -258,7 +258,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         return program;
     }
 
-    public CompiledComponent select(String componentName) 
+    public CompiledComponent select(String componentName)
         throws Exception {
         CompiledComponent component = (CompiledComponent)this.cache.select(componentName);
         return component;
