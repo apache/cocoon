@@ -140,7 +140,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.14 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.15 2004/03/28 22:03:02 antonio Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -564,7 +564,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (getLogger().isDebugEnabled())
             getLogger().debug(
                 "startInputElement " + name + " attributes " + this.printAttributes(attr));
-        if (aName == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
+        if (aName == null || this.fixed || (fixed != null && BooleanUtils.toBoolean(fixed))) {
             this.relayStartElement(uri, name, raw, attr);
 
         } else {
@@ -608,7 +608,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (getLogger().isDebugEnabled())
             getLogger().debug(
                 "startSelectElement " + name + " attributes " + this.printAttributes(attr));
-        if (aName != null && !(this.fixed || (fixed != null && parseBoolean(fixed)))) {
+        if (aName != null && !(this.fixed || (fixed != null && BooleanUtils.toBoolean(fixed)))) {
             if (attr.getIndex("multiple") > -1) {
                 this.values = this.getValues(aName);
             } else {
@@ -686,7 +686,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (aName != null) {
             value = this.getNextValue(aName);
         }
-        if (value == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
+        if (value == null || this.fixed || (fixed != null && BooleanUtils.toBoolean(fixed))) {
             this.relayStartElement(uri, name, raw, attributes);
         } else {
             if (getLogger().isDebugEnabled())
@@ -773,7 +773,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (fixed == null) {
             this.relayStartElement(uri, name, raw, attr);
         } else {
-            if (!this.fixed && parseBoolean(fixed)) {
+            if (!this.fixed && BooleanUtils.toBoolean(fixed)) {
                 this.fixed = true;
             }
             // remove attributes not meant for client
@@ -803,7 +803,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         throws SAXException {
 
         if (this.recordingCount == 0) {
-            if (!(this.fixed || parseBoolean(attr.getValue(this.fixedName)))) {
+            if (!(this.fixed || BooleanUtils.toBoolean(attr.getValue(this.fixedName)))) {
                 RepeaterStatus status =
                     new RepeaterStatus("${" + attr.getValue("using") + "}", 0, attr.getValue("on"));
                 this.repeater.add(status);
@@ -952,15 +952,6 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                     this.relayEndElement(uri, name, raw);
             }
         }
-    }
-
-    /**
-     * Check if a string is one of "yes", "true" ignoring case.
-     * @param aBoolean
-     * @return true if string is one of "yes", true"
-     */
-    private static boolean parseBoolean(String aBoolean) {
-        return BooleanUtils.toBoolean(aBoolean);
     }
 
     /**
