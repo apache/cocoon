@@ -46,7 +46,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * at this time.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-22 20:30:46 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-22 20:57:35 $
  */
 public class ImageUploadAction extends ComposerAction implements Contextualizable {
     private final static int SIZE = 0;
@@ -92,6 +92,7 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
 
         String table = param.getParameter("table", null);
         String column = param.getParameter("image", null);
+        String keycol = param.getParameter("key", null);
 
         if (table == null || column == null) {
             throw new ProcessingException("Cannot insert into a null table/column");
@@ -110,7 +111,14 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
             paramColumns[i] = param.getParameter(ImageUploadAction.PARAM_NAMES[i], null);
         }
 
-        String query = this.setupInsertQuery(table, column, paramColumns, paramPositions);
+        String query;
+
+        if (keycol == null || source == null) {
+            query = this.setupInsertQuery(table, column, paramColumns, paramPositions);
+        } else {
+            query = this.setupUpdateQuery(table, column, paramColumns, paramPositions, keycol, source);
+        }
+
         File image = null;
 
         try {
@@ -125,10 +133,16 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
 
             statement.setBinaryStream(1, new FileInputStream(image), paramValues[ImageUploadAction.SIZE]);
 
+            int maxIndex = 1;
             for (int i = 0; i < ImageUploadAction.NUM_PARAMS; i++) {
                 if (paramPositions[i] > 0) {
                     statement.setInt(paramPositions[i], paramValues[i]);
+                    maxIndex = Math.max(paramPositions[i], maxIndex);
                 }
+            }
+
+            if (keycol != null && source != null) {
+                statement.setString(maxIndex, source);
             }
 
             statement.execute();
@@ -160,10 +174,8 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
         }
 
         query.append(") VALUES (?");
+
         int index = 2;
-        int widthIndex = -1;
-        int heightIndex = -1;
-        int sizeIndex = -1;
 
         for (int i = 0; i < ImageUploadAction.NUM_PARAMS; i++) {
             if (paramNames[i] != null) {
@@ -176,6 +188,26 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
         }
 
         query.append(")");
+
+        return query.toString();
+    }
+
+    String setupUpdateQuery(String table, String column, String[] paramNames, int[] paramPositions, String keyColumn, String key) {
+        StringBuffer query = new StringBuffer("UPDATE ");
+        query.append(table).append(" SET ").append(column).append(" = ?");
+        int index = 2;
+
+        for (int i = 0; i < ImageUploadAction.NUM_PARAMS; i++) {
+            if (paramNames[i] != null) {
+                query.append(", ").append(paramNames[i]).append(" = ?");
+                paramPositions[i] = index;
+                index++;
+            } else {
+                paramPositions[i] = -1;
+            }
+        }
+
+        query.append(" WHERE ").append(keyColumn).append(" = ?");
 
         return query.toString();
     }
