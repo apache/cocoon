@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.10 2004/05/27 23:20:22 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.11 2004/06/08 20:39:24 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -153,7 +153,9 @@
                 </input>
               </td>
               <td>
-                <label for="{generate-id()}"><xsl:copy-of select="fi:label/node()"/></label>
+                <xsl:apply-templates select="." mode="label">
+                  <xsl:with-param name="id" select="generate-id()"/>
+                </xsl:apply-templates>
               </td>
               <xsl:if test="position() = 1">
                 <td rowspan="{count(../fi:item)}">
@@ -173,7 +175,9 @@
               </xsl:if>
               <xsl:apply-templates select="../.." mode="styling"/>
             </input>
-            <label for="{generate-id()}"><xsl:copy-of select="fi:label/node()"/></label>
+            <xsl:apply-templates select="." mode="label">
+              <xsl:with-param name="id" select="generate-id()"/>
+            </xsl:apply-templates>
           </xsl:for-each>
         </span>
         <xsl:apply-templates select="." mode="common"/>
@@ -245,7 +249,8 @@
       | Labels for form elements.
       +-->
   <xsl:template match="fi:*" mode="label">
-    <label for="{@id}" title="{fi:hint}">
+    <xsl:param name="id" select="@id"/>
+    <label for="{$id}" title="{fi:hint}">
       <xsl:copy-of select="fi:label/node()"/>
     </label>
   </xsl:template>
@@ -253,7 +258,7 @@
   <!--+
       | Labels for pure outputs must not contain <label/> as there is no element to point to.
       +-->
-  <xsl:template match="fi:output | fi:field[fi:styling/@type='output']" mode="label">
+  <xsl:template match="fi:output | fi:field[fi:styling/@type='output'] | fi:messages" mode="label">
     <xsl:copy-of select="fi:label/node()"/>
   </xsl:template>
 
@@ -320,7 +325,9 @@
             <xsl:attribute name="checked">checked</xsl:attribute>
           </xsl:if>
         </input>
-        <label for="{generate-id()}"><xsl:copy-of select="fi:label/node()"/></label>
+        <xsl:apply-templates select="." mode="label">
+          <xsl:with-param name="id" select="generate-id()"/>
+        </xsl:apply-templates>
         <br/>
       </xsl:for-each>
     </span>
@@ -442,12 +449,12 @@
               <td>
                 <xsl:apply-templates select="."/>
                 <xsl:text> </xsl:text>
-                <xsl:copy-of select="fi:label"/>
+                <xsl:apply-templates select="." mode="label"/>
               </td>
             </xsl:when>
             <xsl:otherwise>
               <td>
-                <xsl:copy-of select="fi:label"/>
+                <xsl:apply-templates select="." mode="label"/>
               </td>
               <td>
                 <xsl:apply-templates select="."/>
@@ -468,7 +475,7 @@
 
   <xsl:template match="fi:messages">
     <xsl:if test="fi:message">
-      <xsl:copy-of select="fi:label/node()"/>:
+      <xsl:apply-templates select="." mode="label"/>:
       <ul>
         <xsl:for-each select="fi:message">
           <li><xsl:apply-templates/></li>
@@ -498,14 +505,17 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="frm" select="ancestor::fi:form-template"/>
-    <xsl:if test="$frm and $frm//fi:validation-message">
+    <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
+    <xsl:if test="$messages">
       <xsl:copy-of select="$header"/>
       <ul>
-        <xsl:for-each select="$frm//fi:validation-message">
+        <xsl:for-each select="$messages">
           <li class="forms-validation-error">
-            <xsl:if test="../fi:label">
-              <xsl:value-of select="../fi:label"/><xsl:text>: </xsl:text>
+            <xsl:variable name="label">
+              <xsl:apply-templates select=".." mode="label"/>
+            </xsl:variable>
+            <xsl:if test="$label">
+              <xsl:copy-of select="$label"/><xsl:text>: </xsl:text>
             </xsl:if>
             <xsl:value-of select="."/>
           </li>
