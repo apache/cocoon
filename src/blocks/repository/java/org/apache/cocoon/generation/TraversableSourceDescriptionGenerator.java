@@ -55,12 +55,10 @@ import java.util.Enumeration;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.LockableSource;
 import org.apache.cocoon.components.source.RestrictableSource;
-import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.VersionableSource;
 import org.apache.cocoon.components.source.helpers.GroupSourcePermission;
 import org.apache.cocoon.components.source.helpers.PrincipalSourcePermission;
@@ -68,7 +66,6 @@ import org.apache.cocoon.components.source.helpers.SourceLock;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.TraversableSource;
 import org.xml.sax.SAXException;
@@ -97,13 +94,13 @@ import org.xml.sax.helpers.AttributesImpl;
  *       whether to generate permission information.</li>
  *   <li><code>properties</code> (<code>true</code>) 
  *       whether to generate source property information.</li>
+ *  </ul>
  * </p>
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  */
-public class TraversableSourceDescriptionGenerator
-    extends TraversableGenerator {
+public class TraversableSourceDescriptionGenerator extends TraversableGenerator {
     
     protected static final String MIME_TYPE_ATTR_NAME = "mimeType";
     
@@ -165,10 +162,23 @@ public class TraversableSourceDescriptionGenerator
         super.setup(resolver, objectModel, location, parameters);
 
         this.properties = parameters.getParameterAsBoolean("properties", true);
-        this.permissions = parameters.getParameterAsBoolean("permissions", true);
-        this.locks = parameters.getParameterAsBoolean("locks", true);
-        this.version = parameters.getParameterAsBoolean("version", true);
+        super.cacheKeyParList.add(String.valueOf(this.permissions));
         
+        this.permissions = parameters.getParameterAsBoolean("permissions", true);
+        super.cacheKeyParList.add(String.valueOf(this.permissions));
+
+        this.locks = parameters.getParameterAsBoolean("locks", true);
+        super.cacheKeyParList.add(String.valueOf(this.locks));
+        
+        this.version = parameters.getParameterAsBoolean("version", true);
+        super.cacheKeyParList.add(String.valueOf(this.version));
+        
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("properties: " + this.properties);
+            getLogger().debug("permissions: " + this.permissions);
+            getLogger().debug("locks: " + this.locks);
+            getLogger().debug("version: " + this.version);
+        }
     }
     
     /**
@@ -176,79 +186,90 @@ public class TraversableSourceDescriptionGenerator
      * 
      * @param source  the Source to describe.
      */
-    protected void addContent(TraversableSource source)
+    protected final void addContent(TraversableSource source)
         throws SAXException, ProcessingException {
         
         super.addContent(source);
         try {
-            pushSourceDescription(source);
+            if (this.properties && (source instanceof InspectableSource)) {
+                pushSourceProperties((InspectableSource) source);
+            }
+            if (this.permissions && (source instanceof RestrictableSource)) {
+                pushSourcePermissions((RestrictableSource) source);
+            }
+            if (this.locks && (source instanceof LockableSource)) {
+                pushSourceLocks((LockableSource) source);
+            }
         } catch (SourceException e) {
             throw new ProcessingException(e);
         }
 
     }
     
-
     /**
-     * Push a XML description of specified source.
-     *
+     * Augments source node elements with additional attributes describing the Source.
+     * The additional attributes are a <code>mimeType</code> attribute, 
+     * and iff the Source is an instance of VersionableSource and the generator 
+     * is configured to output versioning information two attributes: 
+     * <code>revision</code> and <code>branch</code>.
+     * 
      * @param source  the Source to describe.
      */
-    private void pushSourceDescription(Source source) 
-        throws SAXException, SourceException {
-        
-        if (source == null) {
-            return;
+    protected void setNodeAttributes(TraversableSource source) throws SAXException, ProcessingException {
+        super.setNodeAttributes(source);
+        if (!source.isCollection()) {
+            String mimeType = source.getMimeType();
+            if (mimeType != null) {
+                attributes.addAttribute("", MIME_TYPE_ATTR_NAME, MIME_TYPE_ATTR_NAME,
+                                        "CDATA", source.getMimeType());
+            }
         }
-        try {
-            if (this.properties) {
-                pushComputedSourceProperties(source);
-                if ((source instanceof InspectableSource)) {
-                    pushLiveSourceProperties((InspectableSource) source);
-                }
-            }
-            if (this.permissions) {
-                try {
-                    if (source instanceof RestrictableSource) {
-                        pushSourcePermissions((RestrictableSource) source);
+        if (this.version && source instanceof VersionableSource) {
+            try {
+                VersionableSource versionablesource = (VersionableSource) source;
+                if (versionablesource.isVersioned()) {
+                    if ((versionablesource.getSourceRevision()!=null) &&
+                        (versionablesource.getSourceRevision().length()>0)) {
+                        attributes.addAttribute("",
+                                                REVISION_ATTR_NAME,
+                                                REVISION_ATTR_NAME, "CDATA",
+                                                versionablesource.getSourceRevision());
                     }
-                } catch (SourceException se) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Could not retrieve source permissions", se);
+                
+                    if ((versionablesource.getSourceRevisionBranch()!=null) &&
+                        (versionablesource.getSourceRevisionBranch().length()>
+                         0)) {
+                        attributes.addAttribute("",
+                                                REVISIONBRANCH_ATTR_NAME,
+                                                REVISIONBRANCH_ATTR_NAME,
+                                                "CDATA",
+                                                versionablesource.getSourceRevisionBranch());
                     }
                 }
+            } catch (SourceException e) {
+                throw new ProcessingException(e);
             }
-            if (this.locks && (source instanceof LockableSource)) {
-                pushSourceLocks((LockableSource) source);
-            }
-        } catch (SAXException saxe) {
-            throw saxe;
         }
     }
-
+    
     /**
      * Push a XML description about all properties, which
      * the source owns.
      *
      * @param source  the Source to describe.
      */
-    private void pushLiveSourceProperties(InspectableSource source)
+    private void pushSourceProperties(InspectableSource source)
         throws SAXException, SourceException {
         
         SourceProperty[] properties = source.getSourceProperties();
         if (properties != null && properties.length > 0) {
             SourceProperty property;
             AttributesImpl attributes = new AttributesImpl();
-            attributes.addAttribute("", PROPERTY_TYPE_ATTR_NAME,
-                                    PROPERTY_TYPE_ATTR_NAME, "CDATA", "live");
             this.contentHandler.startElement(URI, PROPERTIES_NODE_NAME,
                                              PROPERTIES_NODE_QNAME, attributes);
-        
             for (int i = 0; i < properties.length; i++) {
                 property = properties[i];
-
-                this.contentHandler.startPrefixMapping("",
-                                                       property.getNamespace());
+                this.contentHandler.startPrefixMapping("",property.getNamespace());
                 property.toSAX(this.contentHandler);
                 this.contentHandler.endPrefixMapping("");
             }
@@ -257,43 +278,6 @@ public class TraversableSourceDescriptionGenerator
         }
     }
 
-    /**
-     * Push a XML description about all properties, which
-     * were computed by source inspectors.
-     *
-     * @param source  the Source to describe.
-     */
-    private void pushComputedSourceProperties(Source source)
-        throws SAXException, SourceException {
-        
-        AttributesImpl attributes = new AttributesImpl();
-        attributes.addAttribute("", PROPERTY_TYPE_ATTR_NAME,
-                                PROPERTY_TYPE_ATTR_NAME, "CDATA", "computed");
-        this.contentHandler.startElement(URI, PROPERTIES_NODE_NAME,
-                                         PROPERTIES_NODE_QNAME, attributes);
-        
-        SourceInspector inspector = null;
-        try {
-            inspector = (SourceInspector) this.manager.lookup(SourceInspector.ROLE);
-            SourceProperty[] properties = inspector.getSourceProperties(source);
-            for (int i = 0; i < properties.length; i++) {
-                this.contentHandler.startPrefixMapping("", properties[i].getNamespace());
-                properties[i].toSAX(this.contentHandler);
-                this.contentHandler.endPrefixMapping("");
-            }
-        } catch (ServiceException ce) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Could not retrieve source inspector", ce);
-            }
-        } finally {
-            if (inspector!=null) {
-                this.manager.release(inspector);
-            }
-        }
-
-        this.contentHandler.endElement(URI, PROPERTIES_NODE_NAME,
-                                       PROPERTIES_NODE_QNAME);
-    }
 
     /**
      * Push a XML description of all permissions of a source.
@@ -395,50 +379,4 @@ public class TraversableSourceDescriptionGenerator
         }
     }
     
-    /**
-     * Augments node elements with additional attributes describing the Source.
-     * The additional attributes are a <code>mimeType</code> attribute, 
-     * and iff the Source is an instance of VersionableSource and the generator 
-     * is configured to output versioning information two attributes: 
-     * <code>revision</code> and <code>branch</code>.
-     * 
-     * @param source  the Source to describe.
-     */
-    protected void setNodeAttributes(TraversableSource source) throws SAXException, ProcessingException {
-        super.setNodeAttributes(source);
-        if (!source.isCollection()) {
-            String mimeType = source.getMimeType();
-            if (mimeType != null) {
-                attributes.addAttribute("", MIME_TYPE_ATTR_NAME, MIME_TYPE_ATTR_NAME,
-                                        "CDATA", source.getMimeType());
-            }
-        }
-        if (this.version && (source instanceof VersionableSource)) {
-            try {
-                VersionableSource versionablesource = (VersionableSource) source;
-                if (versionablesource.isVersioned()) {
-                    if ((versionablesource.getSourceRevision()!=null) &&
-                        (versionablesource.getSourceRevision().length()>0)) {
-                        attributes.addAttribute("",
-                                                REVISION_ATTR_NAME,
-                                                REVISION_ATTR_NAME, "CDATA",
-                                                versionablesource.getSourceRevision());
-                    }
-                
-                    if ((versionablesource.getSourceRevisionBranch()!=null) &&
-                        (versionablesource.getSourceRevisionBranch().length()>
-                         0)) {
-                        attributes.addAttribute("",
-                                                REVISIONBRANCH_ATTR_NAME,
-                                                REVISIONBRANCH_ATTR_NAME,
-                                                "CDATA",
-                                                versionablesource.getSourceRevisionBranch());
-                    }
-                }
-            } catch (SourceException e) {
-                throw new ProcessingException(e);
-            }
-        }
-    }
-
 }
