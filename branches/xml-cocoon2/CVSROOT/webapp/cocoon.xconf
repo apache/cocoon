@@ -55,5 +55,8 @@
   <!-- these components are the image encoders for the SVG serializer -->
   <component role="jpegencoder" class="org.apache.cocoon.components.image.JPEGEncoder"/>
 
+  <!-- these components is used as a PoolController for the sitemap component pools  -->
+  <component role="sitemap-component-pool-controller" class="org.apache.cocoon.sitemap.ComponentPoolController"/>
+
   <sitemap file="sitemap.xmap"/> 
 </cocoon>
