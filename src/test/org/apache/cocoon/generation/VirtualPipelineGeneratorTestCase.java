@@ -103,18 +103,18 @@ public class VirtualPipelineGeneratorTestCase extends SitemapComponentTestCase {
     }
 
     public void testVirtualPipeSourceParam() throws Exception {
-        process("v3");
+        pipeTest("v3", "vpc-source-param-expected.xml");
     }
 
     public void testVirtualSubPipeSourceParam() throws Exception {
-        process("sub/v3");
+        pipeTest("sub/v3", "vpc-source-param-expected.xml");
     }
 
     public void testVirtualPipeSrc() throws Exception {
-        process("v4");
+        pipeTest("v4", "vpc-test.xml");
     }
 
     public void testVirtualSubPipeSrc() throws Exception {
-        process("sub/v4");
+        pipeTest("sub/v4", "vpc-test.xml");
     }
 }
