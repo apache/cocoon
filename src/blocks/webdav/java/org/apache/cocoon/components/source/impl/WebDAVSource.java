@@ -83,12 +83,12 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  *  A source implementation to get access to WebDAV repositories. Use it
- *  as webdav://[host][:port]/path[?principal=user&password=password].
+ *  as webdav://[usr]:[password]@[host][:port]/path.
  *
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.3 2003/07/27 12:56:16 gianugo Exp $
+ *  @version $Id: WebDAVSource.java,v 1.4 2003/07/27 20:53:39 gianugo Exp $
 */
 public class WebDAVSource
     implements Source, RestrictableSource, ModifiableTraversableSource {
@@ -109,6 +109,7 @@ public class WebDAVSource
     private String password;
 
     private SourceValidity validity = null;
+    private long cachedLastModificationDate;
     private SourceCredential sourcecredential = null;
 
     private WebdavResource resource = null;
@@ -220,9 +221,9 @@ public class WebDAVSource
                 return bi;
             }
         } catch (HttpException he) {
-            throw new SourceException("Could not get WebDAV resource", he);
+            throw new SourceException("Could not get WebDAV resource " + getSecureURI(), he);
         } catch (Exception e) {
-            throw new SourceException("Could not get WebDAV resource", e);
+            throw new SourceException("Could not get WebDAV resource" + getSecureURI(), e);
         }
     }
 
@@ -239,6 +240,14 @@ public class WebDAVSource
 		return "webdav://"  +  this.systemId.substring(7);
         
     }
+    
+    /**
+     * Return the URI securely, without username and password
+     * 
+     */
+    protected String getSecureURI() {
+		return "webdav://"  +  this.systemId.substring(7);    	
+    }
 
     /**
      *  Get the Validity object. This can either wrap the last modification
@@ -247,10 +256,21 @@ public class WebDAVSource
      *  <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        if (this.validity == null)
-            this.validity =
-                new TimeStampValidity(this.resource.getGetLastModified());
-        return this.validity;
+    	// TODO: Implementation taken from HttpClientSource, who took it from URLSource: time for a separate impl?
+		final long lm = getLastModified();
+
+		if ( lm > 0 )
+		{
+			if ( lm == cachedLastModificationDate )
+			{
+				return validity;
+			}
+
+			cachedLastModificationDate = lm;
+			validity = new TimeStampValidity( lm );
+			return validity;
+		}
+		return null;
     }
 
     /**
@@ -626,7 +646,13 @@ public class WebDAVSource
      * @see org.apache.excalibur.source.ModifiableSource#delete()
      */
     public void delete() throws SourceException {
-        // TODO Auto-generated method stub
+    	try {
+            this.resource.deleteMethod();
+        } catch (HttpException e) {
+        	throw new SourceException("Unable to delete source: " + getSecureURI(), e);
+        } catch (IOException e) {
+			throw new SourceException("Unable to delete source: " + getSecureURI(), e);
+        }
     }
 
     /**
@@ -638,10 +664,11 @@ public class WebDAVSource
     	try {
             resource.mkcolMethod();
         } catch (HttpException e) {
-            throw new SourceException("Unable to create collection(s)", e);
+            throw new SourceException("Unable to create collection(s) " + getSecureURI(), e);
         } catch (IOException e) {
-            throw new SourceException("Unable to create collection(s)", e);			
+            throw new SourceException("Unable to create collection(s)"  + getSecureURI(), e);			
         }
     }
+    
 
 }
