@@ -52,6 +52,7 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
@@ -65,9 +66,9 @@ import java.util.Map;
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @version CVS $Id: CookieMatcher.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: CookieMatcher.java,v 1.3 2003/10/25 22:10:34 unico Exp $
  */
-public class CookieMatcher extends AbstractLogEnabled implements Matcher {
+public class CookieMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe {
 
     public Map match(String pattern, Map objectModel, Parameters parameters)
             throws PatternException {
