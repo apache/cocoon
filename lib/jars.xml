@@ -614,7 +614,7 @@
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>optional/xmldb-api-20030701.jar</lib>
-    <homepage>http://www.xmldb.org/</homepage>
+    <homepage>http://xmldb-org.sourceforge.net/</homepage>
   </file>
 
   <file>
