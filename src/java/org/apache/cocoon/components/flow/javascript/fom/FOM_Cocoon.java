@@ -39,6 +39,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;
@@ -125,9 +126,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return session;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);            
-            session = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getRequest(objectModel).getSession(true),
-                    getParentScope());
+            session = new FOM_Session(
+                    getParentScope(),
+                    ObjectModelHelper.getRequest(objectModel).getSession(true));
             return session;
         }
 
@@ -136,9 +137,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return request;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            request = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getRequest(objectModel),
-                    getParentScope());
+            request = new FOM_Request(
+                    getParentScope(),
+                    ObjectModelHelper.getRequest(objectModel));
             return request;
         }
 
@@ -147,9 +148,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return context;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            context = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getContext(objectModel),
-                    getParentScope());
+            context = new FOM_Context(
+                    getParentScope(),
+                    ObjectModelHelper.getContext(objectModel));
             return context;
         }
 
@@ -450,11 +451,14 @@ public class FOM_Cocoon extends ScriptableObject {
             return super.has(name, start) || getAttribute(name) != null;
         }
         
+        protected abstract String getAttributeDescription();
+        
         public Object get(String name, Scriptable start) {
             Object result = super.get(name, start);
             if (result == NOT_FOUND) {
                 result = getAttribute(name);
                 if (result != null) {
+                    DeprecationLogger.log("Accessing " + getAttributeDescription() + " will be removed in Cocoon 2.2");
                     result = wrap(start, result, null);
                 } else {
                     result = NOT_FOUND;
@@ -486,6 +490,10 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.request.getParameter(name);
         }
+
+        protected String getAttributeDescription() {
+            return "request parameters as JS properties of cocoon.request";
+        }       
     }
 
     /**
@@ -508,6 +516,10 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.session.getAttribute(name);
         }
+
+        protected String getAttributeDescription() {
+            return "session attributes as JS properties of cocoon.session";
+        }       
     }
 
     /**
@@ -530,6 +542,10 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.context.getAttribute(name);
         }
+
+        protected String getAttributeDescription() {
+            return "context attributes as JS properties of cocoon.context";
+        }       
     }
 
     public Scriptable jsGet_request() {
