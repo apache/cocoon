@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: row-action widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="row-action widget">
+      <p>This is a specific type of action widget that handles frequent actions
+      occuring on a repeater row, such as adding/removing a row and moving
+      it up and down. These widgets should be placed inside a repeater and
+      act on the current row.</p>
+
+      <source><![CDATA[<fd:row-action id="..." action-command="add-after|delete|move-up|move-down">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:on-activate>
+    ...
+  </fd:on-activate>
+</fd:row-action>]]></source>
+
+      <p>The <strong>action-command</strong> attribute should have either the
+      value <code>add-after</code>, <code>delete</code>, <code>move-up</code>
+      or <code>move-down</code>.</p>
+
+      <p><strong>fd:on-activate</strong> allows additional event handlers to
+      be defined, see also <link href="eventhandling.html">Event Handling</link>. The interface to be implemented
+      for Java event listeners is <code>org.apache.cocoon.forms.event.ActionListener</code>.
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.</p>
+
+      <p>Where all you want to do is submit a specific row on a repeater,
+      simply add a fd:submit element to the widgets for the repeater.</p>
+
+      <p>Then, you can access the submitted row either using an event handler
+      with event.getSourceWidget().getParent(), or from the flow using
+      form.getWidget().getSubmitWidget().getParent(). The row itself has a
+      getWidget(widgetName) method that can be used to access specific
+      widgets for the row.</p>
+    </s1>
+  </body>
+</document>

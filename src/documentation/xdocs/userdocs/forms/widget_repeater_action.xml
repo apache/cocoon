@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: repeater-action widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="repeater-action widget">
+      <p>This is a specific type of action widget that handles the much
+      needed case of adding or removing rows from a repeater.</p>
+
+      <source><![CDATA[<fd:repeater-action id="..." action-command="delete-rows|add-row" repeater="..." select="...">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:on-activate>
+    ...
+  </fd:on-activate>
+</fd:repeater-action>]]></source>
+
+      <p>The <strong>action-command</strong> attribute should have either
+      the value <code>delete-rows</code> or <code>add-row</code>. If
+      <strong>add-row</strong> is specified, the attribute repeater is required.
+      If <strong>delete-rows</strong> is specified, both the repeater and
+      select attributes are required.</p>
+
+      <p>The <strong>repeater</strong> attribute should contain the id of the repeater widget
+      on which this repeater-action should act. This must be a sibling of
+      the repeater-action widget (see also row-action for actions inside a row).</p>
+
+      <p>The <strong>select</strong> attribute should contain the id of the
+      booleanfield widget (or any type of widget who's getValue() method
+      returns a boolean) that is part of the repeater and used to mark
+      the rows to be deleted.</p>
+
+      <p><strong>fd:on-activate</strong> allows additional event handlers
+      to be defined, see also <link href="eventhandling.html">Event Handling</link>. The interface to be
+      implemented for Java event listeners is <code>org.apache.cocoon.forms.event.ActionListener</code>.
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.</p>
+    </s1>
+  </body>
+</document>
