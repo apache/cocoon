@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xsp"?>
+
+<xsp:page
+  language="java"
+  xmlns:sql="http://www.apache.org/1999/SQL"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+  <page title="SQL Search Results">
+
+  	<sql:execute-query>
+		<sql:driver>org.gjt.mm.mysql.Driver</sql:driver>
+		<sql:dburl>jdbc:mysql://localhost/test</sql:dburl>
+		<sql:doc-element>options</sql:doc-element>
+		<sql:row-element>option</sql:row-element>
+		<sql:tag-case>lower</sql:tag-case>
+		<sql:null-indicator>yes</sql:null-indicator>
+		<sql:id-attribute>ID</sql:id-attribute>
+		<sql:id-attribute-column>foo_id</sql:id-attribute-column>
+		<sql:error-element>sqlerror</sql:error-element>
+		<sql:error-message-attribute>message</sql:error-message-attribute>
+		<sql:error-stacktrace-attribute>stacktrace</sql:error-stacktrace-attribute>
+		<sql:error-message-text>A horrible error occured</sql:error-message-text>
+		<sql:query>select * from foo_table</sql:query>
+	</sql:execute-query>
+
+  	<sql:execute-query>
+		<sql:driver>org.gjt.mm.mysql.Driver</sql:driver>
+		<sql:dburl>jdbc:mysql://localhost/test</sql:dburl>
+		<sql:doc-element>options</sql:doc-element>
+		<sql:row-element>option</sql:row-element>
+		<sql:tag-case>lower</sql:tag-case>
+		<sql:null-indicator>yes</sql:null-indicator>
+		<sql:id-attribute>ID</sql:id-attribute>
+		<sql:id-attribute-column>foo_id</sql:id-attribute-column>
+		<sql:max-rows>10</sql:max-rows>
+		<sql:skip-rows>0</sql:skip-rows>
+		<sql:error-element>sqlerror</sql:error-element>
+		<sql:error-message-attribute>message</sql:error-message-attribute>
+		<sql:error-stacktrace-attribute>stacktrace</sql:error-stacktrace-attribute>
+		<sql:error-message-text>A horrible error occured</sql:error-message-text>
+		<sql:query>select * from foo_table where foo_id = <xsp:expr>request.getParameter("id")</xsp:expr></sql:query>
+	</sql:execute-query>
+
+  </page>
+
+</xsp:page>
