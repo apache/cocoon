@@ -17,7 +17,6 @@ package org.apache.cocoon.components.hsqldb;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Startable;
