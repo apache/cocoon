@@ -53,7 +53,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -93,8 +93,8 @@ public class GarbageGenerator extends ComposerGenerator {
     }
 
     private static class CacheEntry {
-	Tree tree;
-	long compileTime;
+        Tree tree;
+        long compileTime;
     }
 
     public void setup(SourceResolver resolver, Map objectModel,
@@ -121,28 +121,29 @@ public class GarbageGenerator extends ComposerGenerator {
         Object bean = FlowHelper.getContextObject(objectModel);
         WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
         setContext(bean, kont,
-		   ObjectModelHelper.getRequest(objectModel),
-		   ObjectModelHelper.getResponse(objectModel),
-		   ObjectModelHelper.getContext(objectModel),
-		   parameters);
+                   FOM_JavaScriptFlowHelper.getRequest(objectModel),
+                   FOM_JavaScriptFlowHelper.getResponse(objectModel),
+                   FOM_JavaScriptFlowHelper.getSession(objectModel),
+                   FOM_JavaScriptFlowHelper.getContext(objectModel),
+                   parameters);
     }
     
     private void setContext(Object contextObject,
-			    WebContinuation kont,
-			    Request request,
-			    Response response,
-			    org.apache.cocoon.environment.Context app,
-			    Parameters parameters) {
+                            WebContinuation kont,
+                            Object request,
+                            Object response,
+                            Object session,
+                            Object context,
+                            Parameters parameters) {
         jxpathContext = JXPathContext.newContext(contextObject);
-	Variables varScope = jxpathContext.getVariables();
-	varScope.declareVariable("flowContext", contextObject);
-	varScope.declareVariable("continuation", kont);
-	varScope.declareVariable("request", request);
-	varScope.declareVariable("response", response);
-	varScope.declareVariable("context", app);
-	varScope.declareVariable("parameters", parameters);
-	varScope.declareVariable("session", request.getSession(false));
-	jxpathContext.setVariables(varScope);
+        Variables varScope = jxpathContext.getVariables();
+        varScope.declareVariable("flowContext", contextObject);
+        varScope.declareVariable("continuation", kont);
+        varScope.declareVariable("request", request);
+        varScope.declareVariable("response", response);
+        varScope.declareVariable("session", session);
+        varScope.declareVariable("context", context);
+        varScope.declareVariable("parameters", parameters);
     }
 
     public void setConsumer(XMLConsumer consumer) {
@@ -151,25 +152,25 @@ public class GarbageGenerator extends ComposerGenerator {
 
     public void generate() 
         throws IOException, SAXException, ProcessingException {
-	try {
-	    CacheEntry t;
-	    synchronized (cache) {
-		t = (CacheEntry)cache.get(source.getURI());
-	    }
-	    if (t == null) {
-		t = new CacheEntry();
-		t.compileTime = source.getLastModified();
-		Parser parser = new Parser();
-		InputSource is = new InputSource(source.getInputStream());
-		is.setSystemId(source.getURI());
-		t.tree = parser.parse(is);
-		synchronized (cache) {
-		    cache.put(source.getURI(), t);
-		}
-	    }
-	    new Processor(consumer, consumer).process(t.tree, jxpathContext);
-	} catch (TreeException exc) {
-	    throw new SAXParseException(exc.getMessage(), exc, exc);
-	}
+        try {
+            CacheEntry t;
+            synchronized (cache) {
+                t = (CacheEntry)cache.get(source.getURI());
+            }
+            if (t == null) {
+                t = new CacheEntry();
+                t.compileTime = source.getLastModified();
+                Parser parser = new Parser();
+                InputSource is = new InputSource(source.getInputStream());
+                is.setSystemId(source.getURI());
+                t.tree = parser.parse(is);
+                synchronized (cache) {
+                    cache.put(source.getURI(), t);
+                }
+            }
+            new Processor(consumer, consumer).process(t.tree, jxpathContext);
+        } catch (TreeException exc) {
+            throw new SAXParseException(exc.getMessage(), exc, exc);
+        }
     }
 }
