@@ -57,6 +57,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -100,7 +101,7 @@ import java.util.Map;
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
  * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeGenerator.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: SessionAttributeGenerator.java,v 1.3 2003/10/08 12:38:58 bruno Exp $
  */
 public class SessionAttributeGenerator extends AbstractGenerator {
 
@@ -133,7 +134,7 @@ public class SessionAttributeGenerator extends AbstractGenerator {
         }
 
         // Get the object to stream
-        Request request = (Request)ObjectModelHelper.getRequest(objectModel);
+        Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(false);
         if (session != null) {
             this.attrObject = session.getAttribute(attrName);
@@ -176,10 +177,10 @@ public class SessionAttributeGenerator extends AbstractGenerator {
 
         if (this.elementName != null) {
             xmlConsumer.startElement("", this.elementName, this.elementName, new AttributesImpl());
-            XMLUtils.valueOf(xmlConsumer, this.attrObject);
+            XMLUtils.valueOf(new IncludeXMLConsumer(xmlConsumer), this.attrObject);
             xmlConsumer.endElement("", this.elementName, this.elementName);
         } else {
-            XMLUtils.valueOf(xmlConsumer, this.attrObject);
+            XMLUtils.valueOf(new IncludeXMLConsumer(xmlConsumer), this.attrObject);
         }
         
         xmlConsumer.endDocument();
