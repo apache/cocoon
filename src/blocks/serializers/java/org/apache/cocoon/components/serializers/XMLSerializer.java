@@ -25,9 +25,8 @@ import org.xml.sax.SAXException;
 
 /**
  *
- *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.7 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class XMLSerializer extends EncodingSerializer {
 
@@ -38,12 +37,6 @@ public class XMLSerializer extends EncodingSerializer {
     private static final char S_DOCUMENT_1[] = "<?xml version=\"1.0".toCharArray();
     private static final char S_DOCUMENT_2[] = "\" encoding=\"".toCharArray();
     private static final char S_DOCUMENT_3[] = "\"?>".toCharArray();
-
-    private static final char S_DOCTYPE_1[] = "<!DOCTYPE ".toCharArray();
-    private static final char S_DOCTYPE_2[] = " PUBLIC \"".toCharArray();
-    private static final char S_DOCTYPE_3[] = "\" \"".toCharArray();
-    private static final char S_DOCTYPE_4[] = " SYSTEM \"".toCharArray();
-    private static final char S_DOCTYPE_5[] = "\">".toCharArray();
 
     private static final char S_ELEMENT_1[] = "=\"".toCharArray();
     private static final char S_ELEMENT_2[] = "</".toCharArray();
@@ -187,43 +180,20 @@ public class XMLSerializer extends EncodingSerializer {
     public void body(String uri, String local, String qual)
     throws SAXException {
         this.processing_prolog = false;
-
         this.writeln();
 
         /* We have a document type. */
         if (this.doctype != null) {
 
             String root_name = this.doctype.getName();
-            String public_id = this.doctype.getPublicId();
-            String system_id = this.doctype.getSystemId();
-
             /* Check the DTD and the root element */
             if (!root_name.equals(qual)) {
                 throw new SAXException("Root element name \"" + root_name
                         + "\" declared by document type declaration differs "
                         + "from actual root element name \"" + qual + "\"");
             }
-
-            /* Output a <!DOCTYPE ...> declaration. */
-            this.write(S_DOCTYPE_1); // [<!DOCTYPE ]
-            this.write(root_name);
-            if (public_id != null) {
-                this.write(S_DOCTYPE_2); // [ PUBLIC "]
-                this.write(public_id);
-                /* This is wring in XML, but not in SGML/HTML */
-                if (system_id != null) {
-                    this.write(S_DOCTYPE_3); // [" "]
-                    this.write(system_id);
-                }
-                this.write(S_DOCTYPE_5); // [">]
-            } else if (system_id != null) {
-                this.write(S_DOCTYPE_4); // [ SYSTEM "]
-                this.write(system_id);
-                this.write(S_DOCTYPE_5); // [">]
-            } else {
-                this.write(C_GT); // [>]
-            }
-            this.writeln();
+            /* Output the <!DOCTYPE ...> declaration. */
+            this.write(this.doctype.toString());
         }
 
         /* Output all PIs and comments we cached in the prolog */
