@@ -81,27 +81,26 @@ import java.util.List;
 /**
  * A simple class building lucene documents from xml content.
  *
- *	<p>
- *    It has two parameters that effect the way it works:
- *	</p><p>
- *	  <tt>&lt;store-fields/&gt;</tt> 
- *		Sets which tags in your content are stored in Lucene as fields, 
- *		during the indexing process. Allows them to be output with search hits.
- *	</p><p>		
- *		<tt>&lt;content-view-query/&gt;</tt>
- *		Sets the view the indexer will request for indexing content.
- *	</p><p>
- *	Example configuration (goes in cocoon.xconf)
- *	<pre><tt>
- *		&lt;lucene-xml-indexer logger="core.search.lucene"&gt;
- *			&lt;store-fields&gt;title, summary&lt;store-fields&gt;
- *			&lt;content-view-query&gt;cocoon-view=search&lt;/content-view-query&gt;
- *		&lt;/lucene-xml-indexer&gt;
- *	</tt></pre></p>
+ * <p>It has two parameters that effect the way it works:</p>
+ * <p>
+ *   <tt>&lt;store-fields/&gt;</tt> 
+ *   Sets which tags in your content are stored in Lucene as fields, 
+ *   during the indexing process. Allows them to be output with search hits.
+ * </p><p>
+ *   <tt>&lt;content-view-query/&gt;</tt>
+ *   Sets the view the indexer will request for indexing content.
+ * </p><p>
+ *   Example configuration (goes in cocoon.xconf)
+ *   <pre><tt>
+ *     &lt;lucene-xml-indexer logger="core.search.lucene"&gt;
+ *       &lt;store-fields&gt;title, summary&lt;store-fields&gt;
+ *       &lt;content-view-query&gt;cocoon-view=search&lt;/content-view-query&gt;
+ *     &lt;/lucene-xml-indexer&gt;
+ *   </tt></pre></p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.3 2003/05/06 14:12:54 vgritsenko Exp $
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
          implements LuceneXMLIndexer, Configurable, Composable, ThreadSafe {

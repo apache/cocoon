@@ -61,7 +61,7 @@ import org.apache.avalon.framework.component.Component;
  * The standard interface for Web3Producer.
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
- * @version CVS $Id: Web3Streamer.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: Web3Streamer.java,v 1.3 2003/05/06 14:12:59 vgritsenko Exp $
  */
 public interface Web3Streamer extends Component {
 

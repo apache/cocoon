@@ -4,7 +4,6 @@
   <!-- =========================== Components ================================ -->
 
   <map:components>
-
     <map:generators default="file"/>
     <map:transformers default="xslt"/>
     <map:readers default="resource"/>
@@ -13,11 +12,9 @@
     <map:selectors default="browser"/>
   </map:components>
 
-
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
-
     <map:pipeline>
      <map:match pattern="">
        <map:redirect-to uri="welcome"/>
@@ -28,7 +25,6 @@
           <map:parameter name="contextPath" value="{request:contextPath}"/>
        </map:transform>
        <map:serialize/>
-
      </map:match>
    </map:pipeline>
 
@@ -39,8 +35,5 @@
         <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
       </map:match>
     </map:pipeline>
-
   </map:pipelines>
-
 </map:sitemap>
-

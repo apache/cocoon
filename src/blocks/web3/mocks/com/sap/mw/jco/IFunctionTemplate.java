@@ -62,7 +62,7 @@ package com.sap.mw.jco;
  *
  * **********************************************************************
  * 
- * @version CVS $Id: IFunctionTemplate.java,v 1.1 2003/03/09 00:06:40 pier Exp $
+ * @version CVS $Id: IFunctionTemplate.java,v 1.2 2003/05/06 14:13:01 vgritsenko Exp $
  */
  
 public interface IFunctionTemplate {

@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" 
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-<!-- $Id: portalconfHTML.xsl,v 1.1 2003/03/09 00:05:32 pier Exp $ 
-
+<!-- $Id: portalconfHTML.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
 
  Description: Portal Configuration to HTML
 
 -->
+
+<xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!-- Frameset -->
 
@@ -1984,9 +1983,8 @@
 	</xsl:if>
 </xsl:template>
 
-<!-- Copy all and apply templates -->
-
-<xsl:template match="@*|node()">
+  <!-- Copy all and apply templates -->
+  <xsl:template match="@*|node()">
    <xsl:copy>
     <xsl:apply-templates select="@*|node()" />
    </xsl:copy>

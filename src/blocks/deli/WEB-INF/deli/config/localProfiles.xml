@@ -5,7 +5,6 @@
 <!-- Legacy devices contributed by Johannes Koch - Thanks Johannes -->
 
 <!-- Alcatel -->
-
 	<device>
 		<ua value="Alcatel-BF4/2.0"
 		profile="Alcatel_OT512.rdf"/>
@@ -32,7 +31,6 @@
 	</device>
 
 <!-- Ericsson -->
-
 	<device>
 		<ua value="EricssonA2628/R2A"
 		profile="Ericsson_A2628.rdf"/>
@@ -54,18 +52,16 @@
 	</device>
 
 <!-- Sony -->
-
 	<device>
 		<ua value="Sony CMD-Z5"
 		profile="Sony_CMD-Z5.rdf"/>
-	</device>	
+	</device>
 
 <!-- Siemens -->
-
 	<device>
 		<ua value="SIE-S45/05"
 		profile="Siemens_S45.rdf"/>
-	</device>	
+	</device>
 
 	<device>
 		<ua value="SIE-S35"
@@ -78,14 +74,12 @@
 	</device>
 
 <!-- NEC -->
-
 	<device>
 		<ua value="n21i-10"
 		profile="NEC_21i.rdf"/>
 	</device>
 
 <!-- Motorola -->
-
 	<device>
 		<ua value="MOT-SAP4"
 		profile="Motorola_V66.rdf"/>
@@ -136,9 +130,7 @@
 		profile="Motorola_A008.rdf"/>
 	</device>
 
-
 <!-- Nokia -->
-
 	<device>
 		<ua value="Nokia9210"
 		profile="Nokia_9210_WML.rdf"/>
@@ -263,31 +255,27 @@
 -->
 
 <!-- UAProf phones - remove when UAProf enabled WAP gateways are more widespread -->
-
 	<device>
 		<ua value="Mitsu/1.2.A (Eclipse)"
 		profile="Trium_Eclipse.rdf"/>
-	</device>	
+	</device>
 
 	<device>
 		<ua value="EricssonT68"
 		profile="Ericsson_T68R1.rdf"/>
-	</device>	
-
+	</device>
 
         <device>
                 <ua value="SonyEricssonT68/R201A"
                 profile="SonyEricsson_T68R201A.rdf"/>
         </device>
-
 	
 	<device>
 		<ua value="EricssonT39"
 		profile="Ericsson_T39.rdf"/>
-	</device>	
+	</device>
 
 <!-- Demonstration legacy devices - the information in these profiles SHOULD NOT be used for content adaptation -->
-
 	<device>
 		<ua value="amaya"
 		profile="amaya.rdf"/>

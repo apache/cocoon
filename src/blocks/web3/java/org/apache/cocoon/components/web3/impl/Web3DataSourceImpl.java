@@ -69,7 +69,7 @@ import org.apache.cocoon.components.web3.Web3DataSource;
  * normal <code>com.sap.mw.jco.JCO</code> classes.
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
- * @version CVS $Id: Web3DataSourceImpl.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
+ * @version CVS $Id: Web3DataSourceImpl.java,v 1.3 2003/05/06 14:13:00 vgritsenko Exp $
  */
 public class Web3DataSourceImpl extends AbstractLogEnabled
 implements Web3DataSource, ThreadSafe {

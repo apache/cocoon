@@ -67,7 +67,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author  <a href="mailto:mge@efp.co.at">Michael Gerzabek</a>
  * @since 21. Oct. 2002
- * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.4 2003/03/31 11:14:11 haul Exp $
+ * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.5 2003/05/06 14:13:00 vgritsenko Exp $
  */
 public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
 

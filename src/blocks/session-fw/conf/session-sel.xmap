@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <xmap xpath="/sitemap/components/selectors"
       unless="selector[@name='session-media']">
 
