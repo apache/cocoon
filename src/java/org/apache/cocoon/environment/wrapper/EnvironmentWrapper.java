@@ -60,7 +60,8 @@ public class EnvironmentWrapper
     protected boolean internalRedirect = false;
     
     /**
-     * Construct a new environment
+     * Construct a new environment.
+     * 
      * @param env    The origial Environment
      * @param info   A description of the uri for the new environment
      * @param logger The logger to be used by this environment
@@ -68,6 +69,21 @@ public class EnvironmentWrapper
     public EnvironmentWrapper(Environment       env,
                               SitemapSourceInfo info,
                               Logger            logger) {
+        this(env, info, logger, true);
+    }
+
+    /**
+     * Construct a new environment.
+     * 
+     * @param env    The origial Environment
+     * @param info   A description of the uri for the new environment
+     * @param logger The logger to be used by this environment
+     * @param wrapResponse  Whether or not to wrap the Response object
+     */
+    public EnvironmentWrapper(Environment       env,
+                              SitemapSourceInfo info,
+                              Logger            logger,
+                              boolean           wrapResponse) {
         super(env.getURI(), info.view, env.getAction());
         
         this.enableLogging(logger);
@@ -91,9 +107,12 @@ public class EnvironmentWrapper
                                           info.queryString,
                                           this,
                                           info.rawMode);
-        Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
+
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
+        if (wrapResponse) {
+            Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
+            this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
+        }
 
         this.setURI(info.prefix, info.uri);        
     }
