@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: Woody Flow Model Selection List
- </annotation>
-
  <roles>
 
   <role name="org.apache.cocoon.woody.datatype.DatatypeManager"

@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: Cocoon Forms Dynamic Selection List
- </annotation>
-
  <roles>
 
   <role name="org.apache.cocoon.forms.datatype.DatatypeManager"

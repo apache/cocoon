@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: PreparedVariableResolver
- </annotation>
-
  <roles>
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"

@@ -16,10 +16,6 @@
 -->
 
 <testcase>
- <annotation>
-  Test Cases: FileGenerator
- </annotation>
-
  <roles>
   <role name="org.apache.excalibur.xml.sax.SAXParser"
         shorthand="xml-parser"
