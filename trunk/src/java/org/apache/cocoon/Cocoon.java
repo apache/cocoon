@@ -62,10 +62,13 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.EnvironmentStack;
@@ -79,6 +82,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.excalibur.event.Queue;
+import org.apache.excalibur.event.command.CommandManager;
+import org.apache.excalibur.event.command.TPCThreadManager;
+import org.apache.excalibur.event.command.ThreadManager;
 import org.apache.excalibur.instrument.InstrumentManageable;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
@@ -101,7 +108,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.3 2003/03/12 15:35:22 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.4 2003/03/13 14:11:59 bloritsch Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -115,6 +122,8 @@ public class Cocoon
                    Composable,
                    LogKitManageable,
                    InstrumentManageable {
+
+    private ThreadManager threads;
 
     /** The application context */
     private Context context;
@@ -186,7 +195,36 @@ public class Cocoon
      */
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
-            this.context = context;
+            this.context = new DefaultContext(context);
+            
+            try
+            {
+                DefaultContext setup = (DefaultContext)this.context;
+                threads = new TPCThreadManager();
+                CommandManager commands = new CommandManager();
+                
+                Parameters params = new Parameters();
+                params.setParameter("threads-per-processor", "1");
+                params.setParameter("sleep-time", "100");
+                params.setParameter("block-timeout", "1000");
+                params.setParameter("force-shutdown", "false");
+                params.makeReadOnly();
+                
+                ContainerUtil.enableLogging(threads, getLogger().getChildLogger("thread.manager"));
+                ContainerUtil.parameterize(threads, params);
+                ContainerUtil.initialize(threads);
+                
+                threads.register(commands);
+                
+                setup.put(Queue.ROLE, commands.getCommandSink());
+                
+                setup.makeReadOnly();
+            }
+            catch (Exception e)
+            {
+                getLogger().error("Could not set up the Command Manager", e);
+            }
+            
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
             this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             try {
@@ -467,6 +505,7 @@ public class Cocoon
         this.componentManager.release((Component)this.xmlizer);
         this.sourceResolver = null;
         this.xmlizer = null;
+        ContainerUtil.dispose(threads);
         this.componentManager.dispose();
         this.disposed = true;
     }
