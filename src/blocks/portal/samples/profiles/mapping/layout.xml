@@ -10,8 +10,8 @@
     
     <class name="org.apache.cocoon.portal.layout.AbstractLayout"
            extends="org.apache.cocoon.portal.layout.AbstractParameters">
-        <field name="rendererName" type="java.lang.String">
-            <bind-xml name="renderer-name" node="attribute" />
+        <field name="layoutRendererName" type="java.lang.String">
+            <bind-xml name="layout-renderer-name" node="attribute" />
         </field>
         <field name="name" type="java.lang.String">
             <bind-xml name="name" node="attribute" />
