@@ -74,7 +74,7 @@
 											<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
 												<i18n:text i18n:catalogue="local">search.${crit.match}.match</i18n:text>
 											</span>
-											<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${crit.value}”</span>
+											<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${crit.term}”</span>
 										</li>
 									</jx:forEach>
 								</ul>
