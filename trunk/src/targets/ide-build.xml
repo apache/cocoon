@@ -29,8 +29,6 @@
       <pathelement path="${src}/java"/>
       <!-- deprecated source dir -->
       <pathelement path="${src}/deprecated/java"/>
-      <!-- scratchpad source dir -->
-      <pathelement path="${src}/scratchpad/src"/>
       <!-- test source dir -->
       <pathelement path="${src}/test"/>
       <!-- blocks source dirs -->
@@ -56,10 +54,6 @@
         <include name="optional/*.jar"/>
         <include name="local/*.jar"/>
         <include name="endorsed/*.jar"/>
-      </fileset>
-      <!-- scratchpad libs -->
-      <fileset dir="${scratchpad}/lib">
-        <include name="*.jar"/>
       </fileset>
       <!-- blocks lib -->
       <fileset dir="${blocks}">
