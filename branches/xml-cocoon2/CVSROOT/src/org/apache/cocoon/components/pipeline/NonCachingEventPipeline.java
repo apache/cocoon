@@ -1,36 +1,31 @@
-/*****************************************************************************
+        /*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.sitemap;
+package org.apache.cocoon.components.pipeline;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.IOException;
-import java.io.OutputStream;
 
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.saxconnector.SAXConnector;
 
@@ -41,38 +36,22 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-19 21:20:40 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-04 15:42:42 $
  */
-public class ResourcePipeline implements Composer {
+public class NonCachingEventPipeline extends AbstractXMLProducer implements EventPipeline {
     private Generator generator;
     private Parameters generatorParam;
     private String generatorSource;
-    private Reader reader;
-    private Parameters readerParam;
-    private String readerSource;
-    private String readerMimeType;
-    private String sitemapReaderMimeType;
     private ArrayList transformers = new ArrayList();
     private ArrayList transformerParams = new ArrayList();
     private ArrayList transformerSources = new ArrayList();
     private ArrayList connectors = new ArrayList();
-    private Serializer serializer;
-    private Parameters serializerParam;
-    private String serializerSource;
-    private String serializerMimeType;
-    private String sitemapSerializerMimeType;
-
-    private Logger log;
 
     /** the component manager */
     private ComponentManager manager;
 
     public void compose (ComponentManager manager) {
         this.manager = manager;
-    }
-
-    public void setLogger(Logger log) {
-        this.log = log;
     }
 
     public void setGenerator (String role, String source, Parameters param, Exception e)
@@ -97,42 +76,6 @@ public class ResourcePipeline implements Composer {
         this.generatorParam = param;
     }
 
-    public void setReader (String role, String source, Parameters param)
-    throws Exception {
-        this.setReader (role, source, param, null);
-    }
-
-    public void setReader (String role, String source, Parameters param, String mimeType)
-    throws Exception {
-        if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
-        }
-        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
-        this.reader = (Reader)selector.select(role);
-        this.readerSource = source;
-        this.readerParam = param;
-        this.readerMimeType = mimeType;
-        this.sitemapReaderMimeType = selector.getMimeTypeForRole(role);
-    }
-
-    public void setSerializer (String role, String source, Parameters param)
-    throws Exception {
-        this.setSerializer (role, source, param, null);
-    }
-
-    public void setSerializer (String role, String source, Parameters param, String mimeType)
-    throws Exception {
-        if (this.serializer != null) {
-            throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
-        }
-        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
-        this.serializer = (Serializer)selector.select(role);
-        this.serializerSource = source;
-        this.serializerParam = param;
-        this.serializerMimeType = mimeType;
-        this.sitemapSerializerMimeType = selector.getMimeTypeForRole(role);
-    }
-
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
         ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
@@ -141,52 +84,22 @@ public class ResourcePipeline implements Composer {
         this.transformerParams.add (param);
     }
 
-    public boolean process(Environment environment)
-    throws ProcessingException {
-        if ( this.reader != null ) {
-            return processReader(environment);
-        } else {
-            if ( !checkPipeline() ) {
-                throw new ProcessingException("Attempted to process incomplete pipeline.");
-            }
-
-            setupPipeline(environment);
-            connectPipeline();
-
-            // execute the pipeline:
-            try {
-                this.generator.generate();
-            } catch ( Exception e ) {
-                throw new ProcessingException(
-                    "Failed to execute pipeline.",
-                    e
-                );
-            }
-
-            return true;
+    public boolean process(Environment environment) throws Exception {
+        if ( !checkPipeline() ) {
+            throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
-    }
+        
+        setupPipeline(environment);
+        connectPipeline();
 
-    /** Process the pipeline using a reader.
-     * @throws ProcessingException if
-     */
-    private boolean processReader(Environment environment)
-    throws ProcessingException {
-        String mimeType;
+        // execute the pipeline:
         try {
-            this.reader.setup((EntityResolver) environment,environment.getObjectModel(),readerSource,readerParam);
-            mimeType = this.reader.getMimeType();
-            if ( mimeType != null ) {
-                environment.setContentType(mimeType);
-            } else if ( readerMimeType != null ) {
-                environment.setContentType(this.readerMimeType);
-            } else {
-                environment.setContentType(this.sitemapReaderMimeType);
-            }
-            this.reader.setOutputStream(environment.getOutputStream());
-            this.reader.generate();
+            this.generator.generate();
         } catch ( Exception e ) {
-            throw new ProcessingException("Error reading resource",e);
+            throw new ProcessingException(
+                "Failed to execute pipeline.",
+                e
+            );
         }
         return true;
     }
@@ -199,10 +112,6 @@ public class ResourcePipeline implements Composer {
             return false;
         }
 
-        if ( this.serializer == null ) {
-            return false;
-        }
-
         Iterator itt = this.transformers.iterator();
         while ( itt.hasNext() ) {
             if ( itt.next() == null) {
@@ -210,6 +119,9 @@ public class ResourcePipeline implements Composer {
             }
         }
 
+        if (super.xmlConsumer == null) {
+            return false;
+        }
         return true;
     }
 
@@ -239,19 +151,6 @@ public class ResourcePipeline implements Composer {
                     (Parameters)transformerParamItt.next()
                 );
             }
-
-            this.serializer.setOutputStream(environment.getOutputStream());
-            String mimeType = this.serializer.getMimeType();
-            if (mimeType != null) {
-                // we have a mimeType freom the component itself
-                environment.setContentType (mimeType);
-            } else if (serializerMimeType != null) {
-                // there was a mimeType specified in the sitemap pipeline
-                environment.setContentType (serializerMimeType);
-            } else {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType (this.sitemapSerializerMimeType);
-            }
         } catch (SAXException e) {
             throw new ProcessingException(
                 "Could not setup pipeline.",
@@ -277,8 +176,7 @@ public class ResourcePipeline implements Composer {
             Iterator itt = this.transformers.iterator();
             while ( itt.hasNext() ) {
                 // connect SAXConnector
-                SAXConnector connect = (SAXConnector)
-                    this.manager.lookup(Roles.SAX_CONNECTOR);
+                SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
                 this.connectors.add(connect);
                 next = (XMLConsumer) connect;
                 prev.setConsumer(next);
@@ -292,15 +190,14 @@ public class ResourcePipeline implements Composer {
             }
 
             // insert SAXConnector
-            SAXConnector connect = (SAXConnector)
-                this.manager.lookup(Roles.SAX_CONNECTOR);
+            SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
             this.connectors.add(connect);
             next = (XMLConsumer) connect;
             prev.setConsumer(next);
             prev = (XMLProducer) connect;
 
-            // connect serializer.
-            prev.setConsumer(this.serializer);
+            // insert this consumer
+            prev.setConsumer(super.xmlConsumer);
         } catch ( ComponentManagerException e ) {
             throw new ProcessingException(
                 "Could not connect pipeline.",
@@ -310,27 +207,17 @@ public class ResourcePipeline implements Composer {
 
     }
 
-    public void dispose() {
-        this.log.debug("Disposing of ResourcePipeline");
+    public void recycle() {
+        getLogger().debug("Recycling of NonCachingEventPipeline");
 
+        super.recycle();
         try {
-            // release reader.
-            if ( this.reader != null ) {
-                ((ComponentSelector) this.manager.lookup(Roles.READERS))
-                    .release(this.reader);
-            }
-
             // release generator
             if ( this.generator != null ) {
                 ((ComponentSelector) this.manager.lookup(Roles.GENERATORS))
                     .release(this.generator);
             }
-
-            // release serializer
-            if ( this.serializer != null ) {
-                ((ComponentSelector) this.manager.lookup(Roles.SERIALIZERS))
-                    .release(this.serializer);
-            }
+            this.generator = null;
 
             // Release transformers
             ComponentSelector transformerSelector;
@@ -340,23 +227,23 @@ public class ResourcePipeline implements Composer {
                 transformerSelector.release((Component)itt.next());
             }
             this.transformers.clear();
+            this.transformerParams.clear();
+            this.transformerSources.clear();
+
+            // Release connectors
+            Iterator itc = this.connectors.iterator();
+            while ( itc.hasNext() ) {
+                this.manager.release((Component) itc.next());
+            }
+            this.connectors.clear();
         } catch ( ComponentManagerException e ) {
-            this.log.warn(
-                "Failed to release components from resource pipeline.",
+            getLogger().warn(
+                "Failed to release components from non caching event pipeline.",
                 e
             );
         } finally {
-            this.reader = null;
             this.generator = null;
-            this.serializer = null;
             this.transformers.clear();
         }
-
-        // Release connectors
-        Iterator itt = this.connectors.iterator();
-        while ( itt.hasNext() ) {
-            this.manager.release((Component) itt.next());
-        }
-        this.connectors.clear();
     }
 }

@@ -90,5 +90,11 @@
 
   <sax-connector class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
 
+  <component role="org.apache.cocoon.components.pipeline.StreamPipeline"
+            class="org.apache.cocoon.components.pipeline.NonCachingStreamPipeline"/>
+
+  <component role="org.apache.cocoon.components.pipeline.EventPipeline"
+            class="org.apache.cocoon.components.pipeline.NonCachingEventPipeline"/>
+
   <sitemap file="sitemap.xmap"/>
 </cocoon>

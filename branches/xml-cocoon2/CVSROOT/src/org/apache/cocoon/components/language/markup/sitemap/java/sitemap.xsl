@@ -82,7 +82,8 @@
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.selection.Selector;
     import org.apache.cocoon.sitemap.AbstractSitemap;
-    import org.apache.cocoon.sitemap.ResourcePipeline;
+    import org.apache.cocoon.components.pipeline.StreamPipeline;
+    import org.apache.cocoon.components.pipeline.EventPipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.Manager;
@@ -94,7 +95,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.93 2001-03-23 19:38:04 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.94 2001-04-04 15:42:40 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -294,15 +295,15 @@
       <xsl:for-each select="/map:sitemap/map:resources/map:resource">
         /**
          * This is the internal resource named "<xsl:value-of select="@name"/>"
-         * @param pipeline A &lt;code&gt;ResourcePipeline&lt;/code&gt; holding the sitemap component collected so far
+         * @param pipeline A &lt;code&gt;StreamPipeline&lt;/code&gt; holding the sitemap component collected so far
          * @param listOfMaps A &lt;code&gt;List&lt;/code&gt; of Maps holding replacement values for src attributes
          * @param environment The &lt;code&gt;Environment&lt;/code&gt; requesting a resource
          * @param cocoon_view The view of the resource requested
          * @return Wether the request has been processed or not
          * @exception Exception If an error occurs during request evaluation and production
          */
-        private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline,
-            List listOfMaps, Environment environment, String cocoon_view)
+        private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
+            EventPipeline eventPipeline, List listOfMaps, Environment environment, String cocoon_view)
         throws Exception {
           Map map = null;
           Parameters param = null;
@@ -315,14 +316,14 @@
       <xsl:for-each select="/map:sitemap/map:views/map:view">
         /**
          * This is the method to produce the "<xsl:value-of select="@name"/>" view of the requested resource
-         * @param pipeline A &lt;code&gt;ResourcePipeline&lt;/code&gt; holding the sitemap component collected so far
+         * @param pipeline A &lt;code&gt;StreamPipeline&lt;/code&gt; holding the sitemap component collected so far
          * @param listOfMaps A &lt;code&gt;List&lt;/code&gt; of Maps holding replacement values for src attributes
          * @param environment The &lt;code&gt;Environment&lt;/code&gt; requesting a resource
          * @return Wether the request has been processed or not
          * @exception Exception If an error occurs during request evaluation and production
          */
-        private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline,
-            List listOfMaps, Environment environment)
+        private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
+            EventPipeline eventPipeline, List listOfMaps, Environment environment)
         throws Exception {
           Map map = null;
           Parameters param = null;
@@ -369,13 +370,30 @@
       /**
        * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
        */
-      public boolean process(Environment environment)
+      public boolean process(Environment environment) throws Exception {
+        /* the &lt;code&gt;EventPipeline&lt;/code&gt; is used to collect the xml producing sitemap
+           components and the &lt;code&gt;StreamPipeline&lt;/code&gt; to produce the requested resource */
+        EventPipeline eventPipeline = (EventPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.EventPipeline");
+        StreamPipeline pipeline = (StreamPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.StreamPipeline");
+        pipeline.setEventPipeline(eventPipeline);
+        boolean result = false;
+        try {
+           result = process (environment, pipeline, eventPipeline);
+        } catch (Exception e) {
+          getLogger().error("processing of resource failed", e);
+          throw e;
+        } finally {
+          manager.release(eventPipeline);
+          manager.release(pipeline);
+        }
+        return result;
+      }
+
+      /**
+       * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
+       */
+      private final boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
       throws Exception {
-        /* the &lt;code&gt;ResourcePipeline&lt;/code&gt; used to collect the sitemap
-           components to produce the requested resource */
-        ResourcePipeline pipeline = new ResourcePipeline ();
-        pipeline.setLogger(getLogger());
-        pipeline.compose(this.manager);
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values
            delivered from matchers and selectors to replace occurences of
            XPath kind expressions in values of src attribute used with
@@ -421,14 +439,23 @@
         <xsl:if test="(./map:handle-errors)">
           private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e)
           throws Exception {
-            ResourcePipeline pipeline = new ResourcePipeline ();
-            pipeline.setLogger(getLogger());
-            pipeline.compose(this.manager);
-            List listOfMaps = (List)(new ArrayList());
-            Map map;
-            Parameters param;
-            pipeline.setGenerator ("!error-notifier!", e.getMessage(), emptyParam, e);
-            <xsl:apply-templates select="./map:handle-errors/*"/>
+            StreamPipeline pipeline = null;
+            EventPipeline eventPipeline = null;
+            try {
+              eventPipeline = (EventPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.EventPipeline");
+              pipeline = (StreamPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.StreamPipeline");
+              pipeline.setEventPipeline(eventPipeline);
+              List listOfMaps = (List)(new ArrayList());
+              Map map;
+              Parameters param;
+              eventPipeline.setGenerator ("!error-notifier!", e.getMessage(), emptyParam, e);
+              <xsl:apply-templates select="./map:handle-errors/*"/>
+            } catch (Exception ex) {
+              getLogger().error("error notifier barfs", ex);
+              throw e;
+            } finally {
+              this.manager.release(pipeline);
+            }
             return false;
           }
         </xsl:if>
@@ -770,7 +797,7 @@
   <xsl:template match="map:generate">
     <xsl:call-template name="setup-component">
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:generators/@default"/>
-      <xsl:with-param name="method">setGenerator</xsl:with-param>
+      <xsl:with-param name="method">eventPipeline.setGenerator</xsl:with-param>
       <xsl:with-param name="prefix">generator</xsl:with-param>
     </xsl:call-template>
   </xsl:template> <!-- match="map:generate" -->
@@ -779,7 +806,7 @@
   <xsl:template match="map:transform">
     <xsl:call-template name="setup-component">
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:transformers/@default"/>
-      <xsl:with-param name="method">addTransformer</xsl:with-param>
+      <xsl:with-param name="method">eventPipeline.addTransformer</xsl:with-param>
       <xsl:with-param name="prefix">transformer</xsl:with-param>
     </xsl:call-template>
   </xsl:template> <!-- match="map:transformer" -->
@@ -788,7 +815,7 @@
   <xsl:template match="map:serialize">
     <xsl:call-template name="setup-component">
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:serializers/@default"/>
-      <xsl:with-param name="method">setSerializer</xsl:with-param>
+      <xsl:with-param name="method">pipeline.setSerializer</xsl:with-param>
       <xsl:with-param name="prefix">serializer</xsl:with-param>
       <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template>
@@ -807,8 +834,6 @@
       } catch (Exception pipelineException<xsl:value-of select="generate-id(.)"/>) {
           getLogger().debug("Error processing pipeline", pipelineException<xsl:value-of select="generate-id(.)"/>);
           throw pipelineException<xsl:value-of select="generate-id(.)"/>;
-      } finally {
-          pipeline.dispose();
       }
 
       if(true) return result;
@@ -819,7 +844,7 @@
   <xsl:template match="map:read">
     <xsl:call-template name="setup-component">
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:readers/@default"/>
-      <xsl:with-param name="method">setReader</xsl:with-param>
+      <xsl:with-param name="method">pipeline.setReader</xsl:with-param>
       <xsl:with-param name="prefix">reader</xsl:with-param>
       <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template>
@@ -833,8 +858,6 @@
       } catch (Exception RpipelineException<xsl:value-of select="generate-id(.)"/>) {
           getLogger().debug("Error processing pipeline", RpipelineException<xsl:value-of select="generate-id(.)"/>);
           throw RpipelineException<xsl:value-of select="generate-id(.)"/>;
-      } finally {
-          pipeline.dispose();
       }
 
       if(true) return result;
@@ -872,7 +895,7 @@
 
       <!-- redirect to a internal resource definition -->
       <xsl:when test="@resource">
-        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfMaps, environment, cocoon_view);
+        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, eventPipeline, listOfMaps, environment, cocoon_view);
       </xsl:when>
 
       <!-- redirect to a external resource definition with optional session mode attribute. Let the environment do the redirect -->
@@ -904,7 +927,7 @@
   <xsl:template match="map:label">
     <xsl:apply-templates/>
     if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
-      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
+      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
   </xsl:template> <!-- match="map:label" -->
 
   <!-- collect parameter definitions -->
@@ -1031,12 +1054,12 @@
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='last']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
             getLogger().debug("View <xsl:value-of select="@name"/>");
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
           }
         </xsl:for-each>
         // performing link translation
         if (environment.getObjectModel().containsKey(Constants.LINK_OBJECT)) {
-            pipeline.addTransformer ("!link-translator!", null, emptyParam);
+            eventPipeline.addTransformer ("!link-translator!", null, emptyParam);
         }
       </xsl:if>
     </xsl:if>
@@ -1086,12 +1109,12 @@
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
             getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
+            <xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"
             );
           </xsl:when>
           <xsl:otherwise>
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
+            <xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>
             );
           </xsl:otherwise>
@@ -1102,12 +1125,12 @@
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
             getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
+            <xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
                 substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>");
           </xsl:when>
           <xsl:otherwise>
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
+            <xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
                 substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>);
           </xsl:otherwise>
@@ -1128,14 +1151,14 @@
       <xsl:if test="$component-label">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-label=$component-label]">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
           }
         </xsl:for-each>
       </xsl:if>
       <xsl:if test="$prefix='generator'">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='first']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
           }
         </xsl:for-each>
       </xsl:if>

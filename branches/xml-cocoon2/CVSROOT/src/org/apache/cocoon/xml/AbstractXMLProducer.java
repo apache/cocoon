@@ -19,9 +19,12 @@ import org.apache.avalon.Recyclable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-12 14:17:47 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-04 15:42:47 $
  */
 public abstract class AbstractXMLProducer extends AbstractLoggable implements XMLProducer, Recyclable {
+
+    /** The <code>XMLConsumer</code> receiving SAX events. */
+    protected XMLConsumer xmlConsumer;
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     protected ContentHandler contentHandler;
@@ -36,6 +39,7 @@ public abstract class AbstractXMLProducer extends AbstractLoggable implements XM
      * and <code>setLexicalHandler(consumer)</code>.
      */
     public void setConsumer(XMLConsumer consumer) {
+        this.xmlConsumer = consumer;
         this.contentHandler = consumer;
         this.lexicalHandler = consumer;
     }
@@ -68,6 +72,7 @@ public abstract class AbstractXMLProducer extends AbstractLoggable implements XM
      * Recycle the producer by removing references
      */
     public void recycle() {
+        this.xmlConsumer = null;
         this.contentHandler = null;
         this.lexicalHandler = null;
     }
