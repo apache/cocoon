@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.72 2000-05-11 12:00:43 ricardo Exp $
+  $Id: changes.xml,v 1.73 2000-05-12 12:43:26 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Bill Parkinson" due-to-email="bill_parkinson@merck.com">
+   Work around context.getRealPath() that fails on some engines.
+  </action>
+  <action dev="SM" type="fix" due-to="Paul Lamb" due-to-email="paul@redfork.com">
+   Fixed problem with getResource() not implemented on some servlet engine. Now we test for Servlet 2.2
+  </action>
   <action dev="RR" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
     Fixed backslash escaping in text node strings
   </action>
