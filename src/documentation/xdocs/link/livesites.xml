@@ -90,35 +90,20 @@
       <link href="http://www.triptravel.net/">Wh@m Project</link></li>
      <li><link href="http://www.navigationzone.net/">NavigationZone</link></li>
      <li><link href="http://www.intexti.it/">Intexti - supply chain management solutions (Italian)</link></li>
-     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
-      <link href="http://newscentre.towngas.com/">Towngas NewsCentre</link></li>
      <li><link href="http://www.galatea.com/">Galatea Information Strategies</link></li>
      <li><link href="http://www.nzetc.org/">New Zealand Electronic Text Centre</link></li>
      <li><link href="http://www.duitslandweb.nl/">Duitsland Web</link></li>
      <li><link href="http://www.workthing.com/">workthing.com</link></li>
-     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
-      <link href="http://www.cbossbilling.com/">CBOSS</link></li>
      <li><link href="http://www.caida.org/">CAIDA (Cooperative Association for Internet Data Analysis)</link></li>
      <li><link href="http://www.fox-warner.ch/">20th Century Fox Switzerland</link></li>
      <li><link href="http://www.tatry.info">High Tatras - Beautiful mountains located on the Polish-Slovakian border.</link></li>
      <li><link href="http://www.aromax.hu/">Aromax</link></li>
+     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
+      <link href="http://newscentre.towngas.com/">Towngas NewsCentre</link></li>
+     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
+      <link href="http://www.cbossbilling.com/">CBOSS</link></li>
     </ul>
    </s2>
-   <!-- switched to PHP, Slash or whatever or even Frontpage!! -->
-     <!-- X-Powered-By: PHP/4.1.0
-     <li><link href="http://www.generasound.com/">GeneraSound</link></li> -->
-     <!-- Geoff asked them IIRC
-     <li><link href="http://www.ccel.org/">The Christian Classics Ethereal Library</link></li> -->
-     <!-- some pages: X-Powered-By PHP/4.0.6, no hint on Cocoon
-     <li><link href="http://www.elysee.tv/">elysee.tv</link></li>-->
-     <!-- X-Powered-By: Slash 2.002006, homepage: http://sourceforge.net/projects/slashcode/
-     <li><link href="http://www.owal.co.uk/">Openweb Analysts Ltd.</link></li>-->
-     <!-- HTTP 404
-     <li><link href="http://www.kangax.com/">XML Publishing Tool</link></li>-->
-
-     <!-- Generator: FrontPage, seem to be only 2 index pages, links to sex sites 
-     <li><link href="http://www.belfoot.tv/">belfoot.tv</link></li>
-     <li><link href="http://www.orderupdelivery.com/">Order Up Delivery</link></li>-->
 
    <p>Of course, all of the websites listed on the Apache Forrest
     <link href="http://xml.apache.org/forrest/live-sites.html">Live sites</link>
@@ -170,18 +155,6 @@
      <li><link href="http://www.dla.org/">Dartmouth Lawyers Association</link></li>
     </ul>
    </s2>
-    <!-- ASP <li><link href="http://www.xmltimes.com/">Charles F. Goldfarb's XMLTimes</link></li>-->
-    <!-- ASP.NET <li><link href="http://www.cwinsurance.com/">Countrywide Credit Industries</link></li>-->
-    <!-- any real content <li><link href="http://www.visolve.com/xbeta/">Visolve.com</link></li>-->
-    <!-- linking to self-roster.com, already mentioned above in Cocoon 2.0.4
-    <li><link href="http://www.duty-rota.com/">Duty-Rota.com</link></li> -->
-    <!-- HTTP 404 <li><link href="http://www.gtsuae.com/">Global Technology Services</link></li>-->
-    <!-- HTTP 404 <li><link href="http://www.reponsenet.com/">ResponseNet</link></li>-->
-    <!-- JSP <li><link href="http://www.efb2.com/">StrongHoldNET</link></li>-->
-    <!-- JSP <li><link href="http://www.truelook.com/">TrueLook</link></li>-->
-    <!-- PHP <li><link href="http://www.quart.no/">Quart Festival</link></li>-->
-    <!-- X-Powered-By PHP/4.1.2
-    <li><link href="http://www.hungerinamerica.org/">Hunger in America (Client Data section)</link></li>-->
   </s1>
 
   <s1 title="How to get listed">
