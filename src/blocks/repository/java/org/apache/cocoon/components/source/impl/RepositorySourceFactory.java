@@ -118,7 +118,9 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     }
     
     public void release(final Source source) {
-        ((RepositorySource) source).recycle();
+        if (source instanceof RepositorySource) {
+            m_resolver.release(((RepositorySource) source).m_delegate);
+        }
     }
 
 }

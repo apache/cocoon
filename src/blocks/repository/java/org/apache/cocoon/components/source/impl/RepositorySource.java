@@ -58,7 +58,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
@@ -90,10 +89,10 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public class RepositorySource extends AbstractLogEnabled 
-implements Source, ModifiableTraversableSource, InspectableSource, Recyclable {
+implements Source, ModifiableTraversableSource, InspectableSource {
     
     // the wrapped source
-    private final ModifiableTraversableSource m_delegate;
+    final ModifiableTraversableSource m_delegate;
     private final ServiceManager m_manager;
     private final SourceDescriptor m_descriptor;
     
@@ -114,13 +113,7 @@ implements Source, ModifiableTraversableSource, InspectableSource, Recyclable {
             throw new SourceException("Missing service",e);
         }
     }
-    
-    public void recycle() {
-        if (m_delegate instanceof Recyclable) {
-            ((Recyclable) m_delegate).recycle();
-        }
-    }
-    
+        
     // ---------------------------------------------------- InspectableSource implementation
     
     /**
