@@ -78,12 +78,12 @@ import javax.servlet.ServletException;
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BootstrapServlet.java,v 1.2 2003/06/03 13:25:42 sylvain Exp $
+ * @version CVS $Id: BootstrapServlet.java,v 1.3 2003/07/02 18:33:38 cziegeler Exp $
  */
 
 public class BootstrapServlet extends ParanoidCocoonServlet {
     
-    private File contextDir;
+    protected File contextDir;
     
 	protected File getContextDir() throws ServletException {
 		
@@ -124,12 +124,12 @@ public class BootstrapServlet extends ParanoidCocoonServlet {
 	}
 
 
-    protected void initServlet(Servlet servlet) throws ServletException {
+    protected void initServlet() throws ServletException {
         
         ServletContext newContext = new ContextWrapper(getServletContext(), this.contextDir);
         ServletConfig newConfig = new ConfigWrapper(getServletConfig(), newContext);
         
-        servlet.init(newConfig);        
+        this.servlet.init(newConfig);        
     }
 
     //-------------------------------------------------------------------------
