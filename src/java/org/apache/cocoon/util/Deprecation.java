@@ -99,6 +99,10 @@ public class Deprecation {
     }
     
     public static void setForbiddenLevel(LogLevel level) {
+        // If null, reset to the default level
+        if (level == null) {
+            level = ERROR;
+        }
         ((LoggerWrapper)logger).setForbiddenLevel(level);
     }
     
