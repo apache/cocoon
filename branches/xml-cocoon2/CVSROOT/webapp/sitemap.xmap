@@ -312,7 +312,7 @@
     <map:read src="resources/images/{1}.png" mime-type="image/png"/>
    </map:match>
 
-   <map:match pattern="*">
+   <map:match pattern="**/">
     <map:generate type="directory" src="{1}"/>
     <map:transform src="stylesheets/system/directory2html.xsl"/>
     <map:serialize/>
