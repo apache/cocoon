@@ -27,6 +27,7 @@ import org.apache.avalon.AbstractLoggable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.Handler;
+import org.apache.cocoon.sitemap.XSLTFactoryLoader;
 
 import org.xml.sax.SAXException;
 
@@ -36,7 +37,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-19 21:57:50 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-20 12:47:43 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 
@@ -74,6 +75,13 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
             prefix = uri_prefix;
         Handler sitemapHandler = (Handler) sitemaps.get(source);
 
+        /* FIXME: Workaround -- set the logger XSLTFactoryLoader used to generate source
+         * within the sitemap generation phase.
+         * Needed because we never have the opportunity to handle the lifecycle of the
+         * XSLTFactoryLoader, since it is created by the Xalan engine.
+         */
+        XSLTFactoryLoader.setLogger(getLogger());
+        
         if (sitemapHandler != null) {
             if (sitemapHandler.available()) {
                 if (check_reload

@@ -23,13 +23,16 @@ import org.apache.avalon.Loggable;
  * generation stylesheet to load <code>MatcherFactory</code>s or
  * <code>SelectorFactory</code>s to get the generated source code.
  *
+ * <strong>Note:</strong> This class uses a static log instance to
+ * set up the instances it creates. This is suboptimal.
+ *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:49 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-20 12:47:46 $
  */
 
-public class XSLTFactoryLoader implements Loggable {
-    protected Logger log;
+public class XSLTFactoryLoader {
+    protected static Logger log;
 
     private HashMap obj = new HashMap();
 
@@ -50,27 +53,27 @@ public class XSLTFactoryLoader implements Loggable {
                             + "\". Should implement the CodeFactory interface");
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+    public static void setLogger(Logger logger) {
+        if (log == null) {
+            log = logger;
         }
     }
 
     public String getParameterSource(String className, NodeIterator conf)
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Object factory = obj.get(className);
-    if (factory == null) factory = ClassUtils.newInstance(className);
-    obj.put (className, factory);
+        if (factory == null) factory = ClassUtils.newInstance(className);
+        obj.put (className, factory);
 
-    if (factory instanceof Loggable) {
-        ((Loggable)factory).setLogger(this.log);
-    }
-    if (factory instanceof CodeFactory) {
-        return ((CodeFactory) factory).generateParameterSource(conf);
-    }
-
-    throw new Exception ("Wrong class \"" + factory.getClass().getName()
-                         + "\". Should implement the CodeFactory interface");
+        if (factory instanceof Loggable) {
+            ((Loggable)factory).setLogger(this.log);
+        }
+        if (factory instanceof CodeFactory) {
+            return ((CodeFactory) factory).generateParameterSource(conf);
+        }
+    
+        throw new Exception ("Wrong class \"" + factory.getClass().getName()
+                             + "\". Should implement the CodeFactory interface");
     }
 
     public String getMethodSource(String className, NodeIterator conf)
