@@ -50,68 +50,26 @@
 */
 package org.apache.cocoon.components.jsp;
 
-import java.io.IOException;
+import java.util.Enumeration;
 
-import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
- * Allows Servlets and JSPs to be used as a generator.
- *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.9 2004/01/16 13:49:32 unico Exp $
+ * Stub implementation of ServletConfig.
  */
-public class JSPEngineImpl extends AbstractLogEnabled
-    implements JSPEngine, Parameterizable, ThreadSafe {
+public final class JSPEngineServletConfig implements ServletConfig {
 
-    /** The Default Servlet Class Name for Tomcat 3.X and 4.X */
-    public static final String DEFAULT_SERVLET_CLASS = "org.apache.jasper.servlet.JspServlet";
-
-    /** Servlet Class Name */
-    public String jspServletClass = DEFAULT_SERVLET_CLASS;
+    private final ServletContext context;
+    private final String name;
     
-    /**
-     * @param params The configuration parameters
-     */
-    public void parameterize(Parameters params) {
-        this.jspServletClass = params.getParameter("servlet-class", DEFAULT_SERVLET_CLASS);
+    public JSPEngineServletConfig(ServletContext context, String name) {
+        this.context = context;
+        this.name = name;
     }
-    
-    /**
-     * Execute the Servlet/JSP and return the output in UTF8 encoding.
-     */
-    public byte[] executeJSP(String url, 
-                             HttpServletRequest servletRequest, 
-                             HttpServletResponse servletResponse,
-                             ServletContext context)
-        throws IOException, ServletException, Exception {
-        
-        JSPEngineServletOutputStream output = new JSPEngineServletOutputStream();
-        JSPEngineServletRequest request = new JSPEngineServletRequest(servletRequest, url);
-        JSPEngineServletResponse response = new JSPEngineServletResponse(servletResponse,output);
-        
-        byte[] bytes = null;
-
-        // start the servlet
-        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(this.jspServletClass);
-        Servlet servlet = (Servlet) clazz.newInstance();
-        servlet.init(new JSPEngineServletConfig(context,"JSPEngineImpl"));
-        servlet.service(request, response);
-        
-        bytes = output.toByteArray();
-        
-        // clean up
-        servlet.destroy();
-
-        return bytes;
-    }
+    public String getServletName() { return name; }
+    public Enumeration getInitParameterNames() { return context.getInitParameterNames(); }
+    public ServletContext getServletContext() { return context; }
+    public String getInitParameter(String name) { return context.getInitParameter(name); }
 
 }

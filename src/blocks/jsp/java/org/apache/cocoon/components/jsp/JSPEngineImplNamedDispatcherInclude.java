@@ -50,269 +50,118 @@
 */
 package org.apache.cocoon.components.jsp;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.xml.sax.SAXException;
 
 /**
- * Allows JSP to be used as a generator.  Builds upon the JSP servlet
- * functionality - overrides the output method and returns the byte(s).
- * This implementation includes via ServletContext.getNamedDispatcher() the
- * jsp-response. This a generic implementation.
+ * Allows a Servlet or JSP to be used as a generator.
+ * 
+ * <p>
+ * This implementation includes the servlet response using the 
+ * RequestDispatcher from ServletContext.getNamedDispatcher().
+ * </p>
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.6 2004/01/05 14:54:27 unico Exp $
+ * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.7 2004/01/16 13:49:32 unico Exp $
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
 
-    /** The servlet include path. */
-    public static final String INC_SERVLET_PATH = "javax.servlet.include.servlet_path";
-    /** The servlet request uri, needed for Resin. */
-    public static final String INC_REQUEST_URI = "javax.servlet.include.request_uri";
-
-    /** config-parameter name for specifying the jsp servlet-name.
-      ie. servlet-name
-    */
+    /**
+     * 'servlet-name' configuration parameter name for specifying 
+     * the servlet name to dispatch to.
+     */
     public static final String CONFIG_SERVLET_NAME = "servlet-name";
-    /** default value of CONFIG_SERVLET_NAME.
-      ie. *jsp, this is the WLS JSP servlet default name
-    */
+    
+    /**
+     * 'forward' configuration parameter name for specifying
+     * whether or not the dispather should use forward 
+     * instead of include.
+     */
+    public static final String CONFIG_FORWARD = "forward";
+    
+    /** 
+     * Default value of CONFIG_SERVLET_NAME.
+     * The value is <code>*.jsp</code>, 
+     * this is the WLS JSP servlet default name.
+     */
     public static final String DEFAULT_SERVLET_NAME = "*.jsp";
-    /** the configured name of the jsp servlet
-    */
-    String servletName = DEFAULT_SERVLET_NAME;
+    
+    /**
+     * Default value of CONFIG_FORWARD.
+     * The value is <code>false</code>.
+     */
+    public static final boolean DEFAULT_FORWARD = false;
+    
+    /** 
+     * the configured name of the jsp servlet
+     */
+    private String servletName = DEFAULT_SERVLET_NAME;
+    
+    /**
+     * Whether or not to use forward instead of include
+     * when dispatching to the Servlet.
+     */
+    private boolean forward = DEFAULT_FORWARD;
 
     /**
-     * parameterize
-     * @param params Parameters
-     * @exception ParameterException
+     * <p>
+     * The <code>forward</code> configuration parameter allows you to
+     * control whether to use the forward dispatch method instead of 
+     * the include method which is used by default.
+     * </p>
+     * <p>
+     * Using the <code>servlet-name</code> configuration parameter
+     * you can specify the name of the Servlet to dispatch to.
+     * </p>
      */
-    public void parameterize(Parameters params) throws ParameterException {
+    public void parameterize(Parameters params) {
         this.servletName = params.getParameter(CONFIG_SERVLET_NAME, DEFAULT_SERVLET_NAME);
+        this.forward = params.getParameterAsBoolean(CONFIG_FORWARD, DEFAULT_FORWARD);
     }
 
     /**
-     * execute the JSP and return the output
-     *
-     * @param context The Servlet Context
-     * @exception IOException
-     * @exception ServletException
-     * @exception SAXException
-     * @exception Exception
+     * Execute the Servlet and return the output.
      */
-    public byte[] executeJSP(String url, HttpServletRequest httpRequest, HttpServletResponse httpResponse, ServletContext context)
-        throws IOException, ServletException, SAXException, Exception {
-
+    public byte[] executeJSP(String url,
+                             HttpServletRequest servletRequest,
+                             HttpServletResponse servletResponse,
+                             ServletContext servletContext)
+        throws IOException, ServletException, Exception {
+        
+        JSPEngineServletOutputStream output = new JSPEngineServletOutputStream();
+        JSPEngineServletRequest request = new JSPEngineServletRequest(servletRequest,url);
+        JSPEngineServletResponse response = new JSPEngineServletResponse(servletResponse,output);
+        
         byte[] bytes = null;
-
-        MyServletRequest request = new MyServletRequest(httpRequest, url);
-        MyServletResponse response = new MyServletResponse(httpResponse);
-
-        // start JSPServlet.
-        javax.servlet.RequestDispatcher rd = context.getNamedDispatcher( servletName );
+        
+        // dispatch to the named servlet
+        RequestDispatcher rd = servletContext.getNamedDispatcher(servletName);
         if (rd != null) {
-            rd.include( request, response );
+            if (forward) {
+                rd.forward(request,response);
+            }
+            else {
+                rd.include(request,response);
+            }
             response.flushBuffer();
-            bytes = response.toByteArray();
+            bytes = output.toByteArray();
         } else {
-            // FIXME: I guess it's better to throw a more specific exception.
             throw new Exception("No RequestDispatcher found. Specify a correct '"
-                                + CONFIG_SERVLET_NAME + "': " + servletName);
+                                 + CONFIG_SERVLET_NAME + "': " + servletName);
         }
         return bytes;
-    }
-
-
-    /**
-     * Stub implementation of HttpServletRequest
-     */
-    class MyServletRequest implements HttpServletRequest {
-        HttpServletRequest request;
-        String jspFile;
-
-        public MyServletRequest(HttpServletRequest request, String jspFile) {
-            this.request = request;
-            this.jspFile = jspFile;
-        }
-        public String getAuthType(){ return request.getAuthType(); }
-        public Cookie[] getCookies(){ return request.getCookies(); }
-        public long getDateHeader(String s){ return request.getDateHeader(s); }
-        public String getHeader(String s){ return request.getHeader(s); }
-        public Enumeration getHeaders(String s){ return request.getHeaders(s); }
-        public Enumeration getHeaderNames(){ return request.getHeaderNames(); }
-        public int getIntHeader(String s){ return request.getIntHeader(s); }
-        public String getMethod(){ return request.getMethod(); }
-        public String getPathInfo(){ return request.getPathInfo(); }
-        public String getPathTranslated(){ return request.getPathTranslated(); }
-        public String getContextPath(){ return request.getContextPath(); }
-        public String getQueryString(){ return request.getQueryString(); }
-        public String getRemoteUser(){ return request.getRemoteUser(); }
-        public boolean isUserInRole(String s){ return request.isUserInRole(s); }
-        public Principal getUserPrincipal(){ return request.getUserPrincipal(); }
-        public String getRequestedSessionId(){ return request.getRequestedSessionId(); }
-        public String getRequestURI(){ return request.getRequestURI(); }
-        public String getServletPath(){ return request.getServletPath(); }
-        public HttpSession getSession(boolean flag){ return request.getSession(flag); }
-        public HttpSession getSession(){ return request.getSession(); }
-        public boolean isRequestedSessionIdValid(){ return request.isRequestedSessionIdValid(); }
-        public boolean isRequestedSessionIdFromCookie(){ return request.isRequestedSessionIdFromCookie(); }
-        public boolean isRequestedSessionIdFromURL(){ return request.isRequestedSessionIdFromURL(); }
-        /** @deprecated use isRequestedSessionIdFromURL instead. */
-        public boolean isRequestedSessionIdFromUrl(){ return request.isRequestedSessionIdFromUrl(); }
-        public Object getAttribute(String s){
-            if (s != null && (s.equals(INC_SERVLET_PATH) || s.equals(INC_REQUEST_URI))) {
-                return jspFile;
-            }
-            return request.getAttribute(s);
-        }
-        public Enumeration getAttributeNames(){ return request.getAttributeNames(); }
-        public String getCharacterEncoding(){ return request.getCharacterEncoding(); }
-        public int getContentLength(){ return request.getContentLength(); }
-        public String getContentType(){ return request.getContentType(); }
-        public ServletInputStream getInputStream() throws IOException{ return request.getInputStream(); }
-        public String getParameter(String s){ return request.getParameter(s); }
-        public Enumeration getParameterNames(){ return request.getParameterNames(); }
-        public String[] getParameterValues(String s){ return request.getParameterValues(s); }
-        public String getProtocol(){ return request.getProtocol(); }
-        public String getScheme(){ return request.getScheme(); }
-        public String getServerName(){ return request.getServerName(); }
-        public int getServerPort(){ return request.getServerPort(); }
-        public BufferedReader getReader()
-            throws IOException{ return request.getReader(); }
-        public String getRemoteAddr(){ return request.getRemoteAddr(); }
-        public String getRemoteHost(){ return request.getRemoteHost(); }
-        public void setAttribute(String s, Object obj){ request.setAttribute(s,obj); }
-        public void removeAttribute(String s){ request.removeAttribute(s); }
-        public Locale getLocale(){ return request.getLocale(); }
-        public Enumeration getLocales(){ return request.getLocales(); }
-        public boolean isSecure(){ return request.isSecure(); }
-        public RequestDispatcher getRequestDispatcher(String s){ return request.getRequestDispatcher(s); }
-        /** @deprecated use ServletContext.getRealPath(java.lang.String) instead. */
-        public String getRealPath(String s){ return request.getRealPath(s); }
-        public java.lang.StringBuffer getRequestURL() { return null; }
-        public java.util.Map getParameterMap() { return null; }
-        public void setCharacterEncoding(java.lang.String s) { }
-    }
-
-    /**
-     * Stub implementation of HttpServletResponse
-     */
-    class MyServletResponse implements HttpServletResponse {
-        HttpServletResponse response;
-        MyServletOutputStream output;
-        boolean hasOutputStream = false;
-        boolean hasWriter = false;
-
-        public MyServletResponse(HttpServletResponse response){
-            this.response = response;
-            this.output = new MyServletOutputStream();
-        }
-        public void flushBuffer() throws IOException { }
-        public int getBufferSize() { return 1024; }
-        public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
-        public Locale getLocale(){ return this.response.getLocale();}
-        public PrintWriter getWriter() {
-            if (this.hasOutputStream) {
-                throw new IllegalStateException("getOutputStream was already called.");
-            }
-            this.hasWriter = true;
-            return this.output.getWriter();
-        }
-        public boolean isCommitted() { return false; }
-        public void reset() {}
-        public void setBufferSize(int size) {}
-        public void setContentLength(int len) {}
-        public void setContentType(java.lang.String type) {}
-        public void setLocale(java.util.Locale loc) {}
-        public ServletOutputStream getOutputStream() {
-            if (this.hasWriter) {
-                throw new IllegalStateException("getWriter was already called.");
-            }
-            this.hasOutputStream = true;
-            return this.output;
-        }
-        public void addCookie(Cookie cookie){ response.addCookie(cookie); }
-        public boolean containsHeader(String s){ return response.containsHeader(s); }
-        /** @deprecated use encodeURL(String url) instead. */
-        public String encodeUrl(String s){ return response.encodeUrl(s); }
-        public String encodeURL(String s){ return response.encodeURL(s); }
-        /** @deprecated use encodeRedirectURL(String url) instead. */
-        public String encodeRedirectUrl(String s){ return response.encodeRedirectUrl(s); }
-        public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
-        public void sendError(int i, String s)
-            throws IOException{response.sendError(i,s); }
-        public void sendError(int i)
-            throws IOException{response.sendError(i); }
-        public void sendRedirect(String s)
-            throws IOException{response.sendRedirect(s); }
-        public void setDateHeader(String s, long l){response.setDateHeader(s, l); }
-        public void addDateHeader(String s, long l){response.addDateHeader(s, l); }
-        public void setHeader(String s, String s1){response.setHeader(s, s1); }
-        public void addHeader(String s, String s1){response.addHeader(s, s1); }
-        public void setIntHeader(String s, int i){response.setIntHeader(s, i); }
-        public void addIntHeader(String s, int i){response.addIntHeader(s, i); }
-        public void setStatus(int i){response.setStatus(i); }
-        /** @deprecated use sendError(int, String) instead */
-        public void setStatus(int i, String s){response.setStatus(i, s); }
-        public void resetBuffer(){}
-
-        public byte[] toByteArray() {
-            return output.toByteArray();
-        }
-    }
-
-    /**
-     * Stub implementation of ServletOutputStream
-     */
-    class MyServletOutputStream extends ServletOutputStream {
-        ByteArrayOutputStream output;
-        PrintWriter writer;
-
-        public MyServletOutputStream() {
-            this.output = new ByteArrayOutputStream();
-            try {
-                this.writer = new PrintWriter(new OutputStreamWriter(output, "utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                // This can't be true: JVM must support UTF-8 encoding.
-                this.writer = new PrintWriter(new OutputStreamWriter(output));
-            }
-        }
-        public PrintWriter getWriter() {
-            return this.writer;
-        }
-        public void write(int b) throws java.io.IOException {
-            this.output.write(b);
-        }
-        public byte[] toByteArray() {
-            this.writer.flush();
-            byte[] bytes = output.toByteArray();
-            return bytes;
-        }
     }
 }
 
