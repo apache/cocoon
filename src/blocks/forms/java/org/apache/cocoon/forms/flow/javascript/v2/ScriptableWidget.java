@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version $Id: ScriptableWidget.java,v 1.3 2004/03/20 19:19:49 coliver Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -330,9 +330,40 @@ public class ScriptableWidget extends ScriptableObject {
     }
 
     public void jsSet_value(Object value) throws JavaScriptException {
+        if (delegate instanceof AggregateField) {
+            AggregateField aggregateField = (AggregateField)delegate;
+            if (value instanceof Scriptable) {
+                Scriptable obj = (Scriptable)value;
+                Object[] ids = obj.getIds();
+                for (int i = 0; i < ids.length; i++) {
+                    String id = String.valueOf(ids[i]);
+                    Object val = getProperty(obj, id);
+                    ScriptableWidget wid = wrap(aggregateField.getWidget(id));
+                    if (wid == null) {
+                        throw new JavaScriptException("No field \"" + id + "\" in widget \"" + aggregateField.getId() + "\"");
+                    }
+                    if (wid.delegate instanceof Field || 
+                        wid.delegate instanceof BooleanField ||
+                        wid.delegate instanceof Output) {
+                        if (val instanceof Scriptable) {
+                            Scriptable s = (Scriptable)val;
+                            if (s.has("value", s)) {
+                                wid.jsSet_value(s.get("value", s));
+                            }
+                        }
+                    } else {
+                        wid.jsSet_value(val);
+                    }
+                }
+                aggregateField.combineFields();
+                return;
+            }
+            // fall through
+        }
         if (delegate instanceof DataWidget) {
             value = unwrap(value);
             if (value != null) {
+                // Coerce values
                 Datatype datatype = ((DataWidget)delegate).getDatatype();
                 Class typeClass = datatype.getTypeClass();
                 if (typeClass == String.class) {
@@ -377,32 +408,6 @@ public class ScriptableWidget extends ScriptableObject {
                     Object elemValue = getProperty(arr, i);
                     ScriptableWidget wid = wrap(repeater.getRow(i));
                     wid.jsSet_value(elemValue);
-                }
-            }
-        } else if (delegate instanceof AggregateField) {
-            AggregateField aggregateField = (AggregateField)delegate;
-            if (value instanceof Scriptable) {
-                Scriptable obj = (Scriptable)value;
-                Object[] ids = obj.getIds();
-                for (int i = 0; i < ids.length; i++) {
-                    String id = String.valueOf(ids[i]);
-                    Object val = getProperty(obj, id);
-                    ScriptableWidget wid = wrap(aggregateField.getWidget(id));
-                    if (wid == null) {
-                        throw new JavaScriptException("No field \"" + id + "\" in widget \"" + aggregateField.getId() + "\"");
-                    }
-                    if (wid.delegate instanceof Field || 
-                        wid.delegate instanceof BooleanField ||
-                        wid.delegate instanceof Output) {
-                        if (val instanceof Scriptable) {
-                            Scriptable s = (Scriptable)val;
-                            if (s.has("value", s)) {
-                                wid.jsSet_value(s.get("value", s));
-                            }
-                        }
-                    } else {
-                        wid.jsSet_value(val);
-                    }
                 }
             }
         } else if (delegate instanceof Repeater.RepeaterRow) {
