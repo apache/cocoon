@@ -61,6 +61,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
+import org.apache.excalibur.source.URIAbsolutizer;
+import org.apache.excalibur.source.SourceUtil;
 
 /**
  * This class implements the cocoon: protocol.
@@ -68,11 +70,11 @@ import org.apache.excalibur.source.SourceFactory;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.1 2003/03/09 00:09:14 pier Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.2 2003/06/07 21:19:36 bruno Exp $
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Composable
+    implements SourceFactory, ThreadSafe, Composable, URIAbsolutizer
 {
     /** The <code>ComponentManager</code> */
     private ComponentManager manager;
@@ -111,5 +113,9 @@ public final class SitemapSourceFactory
             ((SitemapSource)source).recycle();
         }
     }
-    
+
+    public String absolutize(String baseURI, String location) {
+        return SourceUtil.absolutize(baseURI, location, true);
+    }
+
 }
