@@ -6,7 +6,7 @@
 		<map:transformers default="xslt">
 			<!-- include the transformer like this: 
  			 -->
-			<map:transformer name="rfc" src="org.apache.cocoon.transformation.Web3RfcTransformer" logger="web3.transformation">
+			<map:transformer name="rfc" src="org.apache.cocoon.transformation.Web3RfcTransformer" logger="core.web3.transformation">
 				<system>indy</system>
 			</map:transformer>
 		</map:transformers>
@@ -69,8 +69,8 @@
 			<map:match pattern="*.xml">
 				<map:generate src="resources/{1}.xml" label="source"/>
 				<map:transform type="rfc" label="generic"/>
-				<map:transform src="stylesheets/proper.xsl"/>
-				<map:transform src="stylesheets/pretty.xsl"/>
+				<map:transform src="stylesheets/proper.xsl" type="xalan"/>
+				<map:transform src="stylesheets/pretty.xsl" type="xalan"/>
 				<map:serialize type="xml"/>
 			</map:match>
 		</map:pipeline>
