@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 		&lt;a href="http://eventlinkexample"/&gt;
  * 	&lt;/event:event&gt;
  * 	&lt;event:event element="uri"&gt;
- * 		&lt;link>&lt;uri&gt;http://eventlinkexample&lt;/uri&gt;&lt;/link&gt;
+ * 		&lt;link&gt;&lt;uri&gt;http://eventlinkexample&lt;/uri&gt;&lt;/link&gt;
  * 	&lt;/event:event&gt;
  * &lt;/root&gt;<br></pre>
  *
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.8 2004/03/16 09:16:59 cziegeler Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.9 2004/04/25 20:02:27 haul Exp $
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {
