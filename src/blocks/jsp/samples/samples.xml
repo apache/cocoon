@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,16 +15,24 @@
   limitations under the License.
 -->
 
-<%@ page language='java' session='false' %>
-<page>
-  <title>Hello</title>
-  <content>
-    <para>This is my first Cocoon2 page!</para>
-<%    
-out.println("\t<para>With help from JSP on " + new java.util.Date() + "</para>");
-%>
-  </content>
-</page>
+<!--+
+    | $Id$
+    +-->
+<samples name="JSP Block Samples">
 
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
 
+  <group name="JSP Block">
+    <note>
+      JSP Block requires configuration. By default, JSP block
+      is configured to run with Tomcat Jasper JSP compiler.
+    </note>
+    <sample name="Welcome" href="welcome.htm">
+      Welcome to JSP samples
+    </sample>
+  </group>
 
+</samples>
