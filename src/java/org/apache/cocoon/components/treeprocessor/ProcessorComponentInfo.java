@@ -26,6 +26,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.core.container.DefaultServiceSelector;
 import org.apache.cocoon.generation.Generator;
@@ -128,7 +129,7 @@ public class ProcessorComponentInfo {
             || role.startsWith(READER_PREFIX)
             || role.startsWith(PIPELINE_PREFIX)) {
             
-            ((DefaultConfiguration)config).setAttribute("model", "non-thread-safe-pooled");
+            ((DefaultConfiguration)config).setAttribute("model", ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED);
         }
     }
 

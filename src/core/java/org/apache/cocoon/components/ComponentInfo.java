@@ -30,6 +30,10 @@ public final class ComponentInfo {
     public static final int MODEL_POOLED    = 2;
     public static final int MODEL_NON_THREAD_SAFE_POOLED = 3;
     
+    public static final String TYPE_SINGLETON = "singleton";
+    public static final String TYPE_POOLED = "pooled";
+    public static final String TYPE_NON_THREAD_SAFE_POOLED = "non-thread-safe-pooled";
+
     private int model;
     private String initMethodName;
     private String destroyMethodName;
@@ -153,15 +157,15 @@ public final class ComponentInfo {
     public void fill(Configuration attr) {
         // test model
         final String model = attr.getAttribute("model", null);
-        if ( "pooled".equals(model) ) {
+        if ( TYPE_POOLED.equals(model) ) {
             this.setModel(ComponentInfo.MODEL_POOLED);
             this.setPoolInMethodName(attr.getAttribute("pool-in", null));
             this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
-        } else if ("non-thread-safe-pooled".equals(model)) {
+        } else if (TYPE_NON_THREAD_SAFE_POOLED.equals(model)) {
             this.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
             this.setPoolInMethodName(attr.getAttribute("pool-in", null));
             this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
-        } else if ( "singleton".equals(model) ) {
+        } else if ( TYPE_SINGLETON.equals(model) ) {
             this.setModel(ComponentInfo.MODEL_SINGLETON);
         }
         this.setInitMethodName(attr.getAttribute("init", null));
