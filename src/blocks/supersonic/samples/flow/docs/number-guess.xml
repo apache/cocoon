@@ -21,6 +21,9 @@
 >
     <content>
         <p>
+            <em>Adapted from Tony Collen's GettingStartedWithFlow page on the Cocoon wiki.</em>
+        </p>
+        <p>
             In this example, an HTML
             form is shown repeatedly, until the user guesses the correct number.
         </p>
