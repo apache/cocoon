@@ -70,7 +70,7 @@
     <browser name="mozilla5" useragent="Netscape6/"/>
     <browser name="netscape" useragent="Mozilla"/>
    </map:selector>
-
+   <map:selector name="coded" factory="org.apache.cocoon.selection.CodedSelectorFactory"/>
   </map:selectors>
 
   <map:matchers default="wildcard">

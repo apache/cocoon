@@ -17,7 +17,7 @@ import org.apache.cocoon.CodeFactory;
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-12-04 12:06:59 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-04 19:41:49 $
  */
 public class CodedSelectorFactory implements CodeFactory
 {
@@ -41,7 +41,7 @@ public class CodedSelectorFactory implements CodeFactory
         .append("_expr = new org.apache.cocoon.selection.helpers.CodedSelectorHelper() {")
         .append("public boolean evaluate(Map objectModel) {")
         .append("initialize(objectModel);")
-        .append("return (" + test + ") ? true : false;")
+        .append("return (" + test + ");")
         .append("}")
         .append("};");
         return sb.toString();
