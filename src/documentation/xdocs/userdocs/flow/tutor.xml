@@ -26,8 +26,8 @@
   <map:generators default="file">
     <!-- in this example we use JXTemplateGenerator to insert
          Flow variables in page content -->
-    <map:generator label="content,data" logger="sitemap.generator.jxt"
-                   name="jxt" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+    <map:generator label="content,data" logger="sitemap.generator.jx"
+                   name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
   </map:generators>
   <map:flow-interpreters default="JavaScript"/>
   <map:transformers default="xslt"/>
@@ -65,8 +65,8 @@
     </map:match>
 
     <!-- use JXtemplate to generate page content -->
-    <map:match pattern="*.jxt">
-      <map:generate type="jxt" src="documents/{1}.jxt"/>
+    <map:match pattern="*.jx">
+      <map:generate type="jx" src="documents/{1}.jx"/>
       <map:serialize type="xhtml"/>
     </map:match>
 
@@ -103,7 +103,7 @@
       <p>Inside the new subdirectory, create two more directories,
         <code>documents/</code> and <code>flow/</code>.</p>
       <p>Inside <code>documents/</code>, you will store the "views" -- pages to
-        send to the player. Create the file <code>guess.jxt</code>, which will
+        send to the player. Create the file <code>guess.jx</code>, which will
         be the page the player will enter their guess:</p>
       <source><![CDATA[
 <?xml version="1.0"?>
@@ -115,7 +115,7 @@
   <h1>Guess the Number Between 1 and 10</h1>
   <h2>${hint}</h2>
   <h3>You've guessed ${guesses} times.</h3>
-  <form method="post" action="${continuation.id}.kont">
+  <form method="post" action="${cocoon.continuation.id}.kont">
     <input type="text" name="guess"/>
     <input type="submit"/>
   </form>
@@ -124,7 +124,7 @@
 ]]></source>
       <p>
         You'll also need a page to display when the person chooses the correct
-        number. Name it <code>success.jxt</code> (Again in <code>documents/</code>):
+        number. Name it <code>success.jx</code> (Again in <code>documents/</code>):
       </p>
       <source><![CDATA[
 <?xml version="1.0"?>
@@ -182,7 +182,7 @@ function main() {
     }
   }
 
-  cocoon.sendPage("success.jxt", {"random" : random, "guess" : guess,
+  cocoon.sendPage("success.jx", {"random" : random, "guess" : guess,
                                   "guesses" : guesses} );
 }
 ]]></source>
@@ -210,7 +210,7 @@ function main() {
 cocoon.sendPageAndWait("guess.jxt", { "random" : random, "hint" : hint, "guesses" : guesses} );
 </source>
       <p>
-        The Flow layer sends the contents of the URI "guess.jxt" which is matched
+        The Flow layer sends the contents of the URI "guess.jx" which is matched
         in the sitemap (see above). We also pass an inline Javascript object,
         containing three key/value pairs, one named "random" which contains the
         value of the variable random as initialized above, and so on for hint and
@@ -219,7 +219,7 @@ cocoon.sendPageAndWait("guess.jxt", { "random" : random, "hint" : hint, "guesses
       </p>
       <p>We could also do the following:</p>
       <source>
-cocoon.sendPageAndWait("guess.jxt", { "foo" : random } );
+cocoon.sendPageAndWait("guess.jx", { "foo" : random } );
 </source>
       <p>
         In this case, the value of random would be able to be substituted in our
@@ -236,8 +236,8 @@ cocoon.sendPageAndWait("guess.jxt", { "foo" : random } );
       </p>
       <p>
         Picking back up in the script execution, the client is sent through
-        the pipeline matching "guess.jxt". Referring back to the sitemap, we
-        match *.jxt, and run the file through the JXTemplateGenerator, which
+        the pipeline matching "guess.jx". Referring back to the sitemap, we
+        match *.jx, and run the file through the JXTemplateGenerator, which
         substitutes the keynames for the values sent from the
         <link href="api.html#sendPageAndWait">cocoon.sendPageAndWait()</link>
         function.
@@ -247,10 +247,10 @@ cocoon.sendPageAndWait("guess.jxt", { "foo" : random } );
         player submits the guess:
       </p>
       <source><![CDATA[
-<form method="post" action="${continuation.id}.kont">
+<form method="post" action="${cocoon.continuation.id}.kont">
 ]]></source>
       <p>
-        Here, ${continuation.id} is resolved to a unique identifier which points
+        Here, ${cocoon.continuation.id} is resolved to a unique identifier which points
         to the current continuation. One can think of this somewhat of a session ID.
       </p>
       <p>
@@ -288,7 +288,7 @@ cocoon.sendPageAndWait("guess.jxt", { "foo" : random } );
       </p>
       <p>
         If the guess was correct, we break out of the main loop and send the
-        player to a different view, this time to "success.jxt", and we give the
+        player to a different view, this time to "success.jx", and we give the
         template not only their number and the random number (pointless, yes,
         because they were the same), but also the number of guesses to tell the
         player how good or bad at guessing numbers they are.

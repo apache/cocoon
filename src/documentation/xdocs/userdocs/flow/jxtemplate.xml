@@ -98,6 +98,27 @@ You would typically access the <code>id</code> of the Web Continuation:</p>
 </dl>
 </s1>
 
+<s1 title ="Parameters">
+<s2 title="lenient-xpath">
+<p>
+By default XPath evaluation throws an exception if the supplied XPath does not map to an existing property. This constraint can be relaxed by setting the parameter <code>lenient-xpath</code> to <code>true</code>. In the lenient mode evaluation simply returns null if the path maps to nothing.
+</p>
+<p>
+Example:
+</p>
+<p><source>
+<![CDATA[
+    <map:match pattern="*.jx">
+      <map:generate type="jx" src="documents/{1}.jx">
+           <map:parameter name="lenient-xpath" value="true"/>
+      </map:generate>
+      <map:serialize type="xhtml"/>
+    </map:match>
+]]>
+</source>
+</p>
+</s2>
+</s1>
 <s1 title ="Tags">
 <p>The JXTemplate Generator tags are defined in the namespace</p>
 <source>
@@ -229,8 +250,31 @@ attribute specifies the item to end with (<code>0</code> = first item,
 <code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
 processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.</p>
 <p>
-If the <code>varStatus</code> attribute is present a variable will be created to hold information about the current loop status. The variable named by the <code>varStatus</code> attribute will hold a reference to an object with the following properties:
-</p>
+
+<p>An alternate form of <code>forEach</code> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
+<source>
+&lt;jx:forEach select="XPathExpression"&gt;
+  body
+&lt;/jx:forEach&gt;
+</source>
+<p>When using XPath expressions within <code>forEach</code> the current element is the context node and can be referenced with: 
+<code>#{.}</code></p>
+<p>Jexl Example:</p>
+<source>
+&lt;jx:forEach var="item" items="${cart.cartItems}" 
+               begin="${start}" end="${count-start}" step="1"&gt;
+   &lt;td&gt;${item.productId}&lt;/td&gt;
+&lt;/jx:forEach&gt;
+</source>
+ <p/>
+<p>JXPath Example:</p>
+<source>
+&lt;jx:forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
+   &lt;td&gt;#{./productId}&lt;/td&gt;
+&lt;/jx:forEach&gt;
+</source>
+ <p/>
+If the <code>varStatus</code> attribute is present a variable will be created to hold information about the current loop status. The variable named by the <code>varStatus</code> attribute will hold a reference to an object with the following properties:</p>
     <table>
      <tr>
        <td>
@@ -305,28 +349,32 @@ If the <code>varStatus</code> attribute is present a variable will be created to
        </td>
      </tr>
     </table>
-<p>An alternate form of <code>forEach</code> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
-<source>
-&lt;jx:forEach select="XPathExpression"&gt;
-  body
-&lt;/jx:forEach&gt;
-</source>
-<p>When using XPath expressions within <code>forEach</code> the current element is the context node and can be referenced with: 
-<code>#{.}</code></p>
 <p>Jexl Example:</p>
 <source>
-&lt;jx:forEach var="item" items="${cart.cartItems} begin="${start}" end="${count-start}" step="1""&gt;
-   &lt;td&gt;${item.productId}&lt;/td&gt;
+&lt;jx:forEach items="${items}" varStatus="status"&gt;
+    index=${status.index},
+    count=${status.count},
+    current=${status.current},
+    first=${status.first},
+    last=${status.last},
+    begin=${status.begin},
+    end=${status.end}
 &lt;/jx:forEach&gt;
 </source>
  <p/>
 <p>JXPath Example:</p>
 <source>
-&lt;jx:forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
-   &lt;td&gt;#{./productId}&lt;/td&gt;
+&lt;jx:forEach items="#{items}" varStatus="status"&gt;
+    index=#{$status.index},
+    count=#{$status.count},
+    current=#{$status.current},
+    first=#{$status.first},
+    last=#{$status.last},
+    begin=#{$status.begin},
+    end=#{$status.end}
 &lt;/jx:forEach&gt;
 </source>
- <p/>
+<p/>
 </s2>
 <s2 title="formatNumber">
 <p>
