@@ -230,8 +230,6 @@
   ]]></xsp:logic>
 
   <html>
-    <xsp:logic>
-    </xsp:logic>
     <head>
       <title>Source Code</title>
       <link rel="stylesheet" type="text/css" href="style" title="Style"/>
