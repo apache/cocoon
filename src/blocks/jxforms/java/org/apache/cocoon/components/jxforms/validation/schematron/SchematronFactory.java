@@ -70,7 +70,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
- * @version CVS $Id: SchematronFactory.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
+ * @version CVS $Id: SchematronFactory.java,v 1.3 2003/09/09 18:50:17 joerg Exp $
  */
 public class SchematronFactory extends SchemaFactory {
 
@@ -420,7 +420,7 @@ public class SchematronFactory extends SchemaFactory {
     /**
      * Replace all occurances of sch: with the actual Schema prefix used in the document.
      *
-     * TODO: fix this implementaion. There are problems with DOM.
+     * TODO: fix this implementation. There are problems with DOM.
      * Returns null instead of the actual namespace prefix (e.g. "sch") as expected.
      *
      * @param path       
