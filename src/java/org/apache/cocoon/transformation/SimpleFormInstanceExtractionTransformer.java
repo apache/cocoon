@@ -53,14 +53,14 @@ package org.apache.cocoon.transformation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 
@@ -86,10 +86,10 @@ import org.xml.sax.SAXException;
  * request parameter exists.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.2 2003/10/27 21:36:55 joerg Exp $
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
-    implements Configurable, Composable, Recyclable {
+    implements Configurable, Serviceable, Recyclable {
 
     protected class ElementData {
         public String uri = null;
@@ -130,7 +130,7 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
     String outputModuleName = "request-attr";
     Configuration outputConf = null;
 
-    ComponentManager manager = null;
+    ServiceManager manager = null;
     Map objectModel = null;
 
     public void configure(Configuration config) throws ConfigurationException {
@@ -151,7 +151,7 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
         this.outputModuleName = this.outputConf.getAttribute("name",this.outputModuleName);
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -248,14 +248,14 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
      */
     public void handleExtractedDocument(Document doc) {
         
-        ComponentSelector outputSelector = null;
+        ServiceSelector outputSelector = null;
         OutputModule output = null;
 
         try {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("wrote ['"+this.instanceName+"'] to "+output+" using "+outputConf);
-            outputSelector = (ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
-            if (outputSelector.hasComponent(this.outputModuleName)) {
+            outputSelector = (ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
+            if (outputSelector.isSelectable(this.outputModuleName)) {
                 output = (OutputModule) outputSelector.select(this.outputModuleName);
             }
             output.setAttribute(outputConf, this.objectModel, this.instanceName, new DocumentWrapper(doc));
