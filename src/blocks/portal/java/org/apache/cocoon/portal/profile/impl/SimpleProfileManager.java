@@ -86,7 +86,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.11 2003/05/26 14:29:53 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.12 2003/05/27 07:38:33 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -149,10 +149,10 @@ public class SimpleProfileManager
                 // now search for a layout
                 Map layoutMap = (Map)service.getAttribute("layout-map");
                 if ( layoutMap == null ) {
-                    Object[] objects = (Object[])service.getAttribute(portalPrefix+"/Layout");
-                    if (objects != null && objects[0] != null) {
+                    layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
+                    if (layout != null) {
                         layoutMap = new HashMap();
-                        this.cacheLayouts(layoutMap, (Layout)objects[0]);
+                        this.cacheLayouts(layoutMap, layout);
                         service.setAttribute("layout-map", layoutMap);
                     }
                 }
@@ -369,8 +369,8 @@ public class SimpleProfileManager
 			try {
 				adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 				map.put("type", "user");
-				// FIXME - disabled saving for testing
-				// adapter.saveProfile(key, map, result);
+				
+                adapter.saveProfile(key, map, result);
 			} finally {
 				this.manager.release(adapter);
 			}
