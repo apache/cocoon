@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.43 2001-02-06 15:23:39 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.44 2001-02-06 19:00:46 balld Exp $-->
 <!--
 
  ============================================================================
@@ -245,7 +245,7 @@
   </xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*[not(starts-with(name(.),'xsp:'))]">
+<xsl:template match="xsp:page/*[not(self::xsp:*)]">
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
     <xsp:logic>
