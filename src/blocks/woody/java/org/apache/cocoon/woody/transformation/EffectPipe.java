@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * CVS $Id: EffectPipe.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
+ * CVS $Id: EffectPipe.java,v 1.3 2003/12/29 22:46:25 sylvain Exp $
  * @author Timothy Larson
  */
 public class EffectPipe extends AbstractXMLPipe {
@@ -261,24 +261,24 @@ public class EffectPipe extends AbstractXMLPipe {
  
         public void copy() throws SAXException {
             switch(event) {
-            case EVENT_SET_DOCUMENT_LOCATOR:   setDocumentLocator(locator); break;
-            case EVENT_START_DOCUMENT:         startDocument(); break;
-            case EVENT_END_DOCUMENT:           endDocument(); break;
-            case EVENT_START_PREFIX_MAPPING:   startPrefixMapping(); break;
-            case EVENT_END_PREFIX_MAPPING:     endPrefixMapping(); break;
-            case EVENT_START_ELEMENT:          element(); attributes(); startElement(); break;
-            case EVENT_END_ELEMENT:            endElement(); break;
-            case EVENT_CHARACTERS:             characters(c, start, len); break;
-            case EVENT_IGNORABLE_WHITESPACE:   ignorableWhitespace(c, start, len); break;
-            case EVENT_PROCESSING_INSTRUCTION: processingInstruction(target, data); break;
-            case EVENT_SKIPPED_ENTITY:         skippedEntity(name); break;
-            case EVENT_START_DTD:              startDTD(name, publicId, systemId); break;
-            case EVENT_END_DTD:                endDTD(); break;
-            case EVENT_START_ENTITY:           startEntity(name); break;
-            case EVENT_END_ENTITY:             endEntity(name); break;
-            case EVENT_START_CDATA:            startCDATA(); break;
-            case EVENT_END_CDATA:              endCDATA(); break;
-            case EVENT_COMMENT:                comment(c, start, len); break;
+            case EVENT_SET_DOCUMENT_LOCATOR:   this.setDocumentLocator(locator); break;
+            case EVENT_START_DOCUMENT:         this.startDocument(); break;
+            case EVENT_END_DOCUMENT:           this.endDocument(); break;
+            case EVENT_START_PREFIX_MAPPING:   this.startPrefixMapping(); break;
+            case EVENT_END_PREFIX_MAPPING:     this.endPrefixMapping(); break;
+            case EVENT_START_ELEMENT:          this.element(); attributes(); startElement(); break;
+            case EVENT_END_ELEMENT:            this.endElement(); break;
+            case EVENT_CHARACTERS:             this.characters(c, start, len); break;
+            case EVENT_IGNORABLE_WHITESPACE:   this.ignorableWhitespace(c, start, len); break;
+            case EVENT_PROCESSING_INSTRUCTION: this.processingInstruction(target, data); break;
+            case EVENT_SKIPPED_ENTITY:         this.skippedEntity(name); break;
+            case EVENT_START_DTD:              this.startDTD(name, publicId, systemId); break;
+            case EVENT_END_DTD:                this.endDTD(); break;
+            case EVENT_START_ENTITY:           this.startEntity(name); break;
+            case EVENT_END_ENTITY:             this.endEntity(name); break;
+            case EVENT_START_CDATA:            this.startCDATA(); break;
+            case EVENT_END_CDATA:              this.endCDATA(); break;
+            case EVENT_COMMENT:                this.comment(c, start, len); break;
             }
         }
  
