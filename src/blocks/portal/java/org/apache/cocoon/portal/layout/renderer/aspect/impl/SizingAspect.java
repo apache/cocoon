@@ -62,11 +62,14 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * This renderer aspect tests, if a coplet is sizable and/or maxpageable.
+ * 
+ * TODO: make the names of the aspects to test configurable
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.5 2003/07/18 14:41:44 cziegeler Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.6 2003/09/02 08:55:26 cziegeler Exp $
  */
 public class SizingAspect extends AbstractAspect {
 
@@ -81,28 +84,54 @@ public class SizingAspect extends AbstractAspect {
         
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        Boolean sizable = (Boolean)cid.getCopletData().getAspectData("sizable");
-        if ( sizable.booleanValue() ) {
-            Integer size = (Integer)cid.getAspectData("size");
+        boolean showContent = true;
+        
+        boolean sizable = ((Boolean)cid.getCopletData().getAspectData("sizable")).booleanValue();
+        Integer size = null;
+        
+        if ( sizable ) {
+            size = (Integer)cid.getAspectData("size");
             if ( size == null ) {
                 size = SizingStatus.STATUS_MAXIMIZED;
             }
 
             ChangeCopletInstanceAspectDataEvent event;    
 
-            if ( !size.equals(SizingStatus.STATUS_MINIMIZED)) {
+            if ( size.equals(SizingStatus.STATUS_MAXIMIZED) ) {
                 event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MINIMIZED);
                 XMLUtils.createElement(handler, "minimize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             }
 
-            if ( !size.equals(SizingStatus.STATUS_MAXIMIZED)) {
+            if ( size.equals(SizingStatus.STATUS_MINIMIZED)) {
                 event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MAXIMIZED);
                 XMLUtils.createElement(handler, "maximize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             }
-            if (size != SizingStatus.STATUS_MINIMIZED) {
-                context.invokeNext(layout, service, handler);
+            
+            if (size == SizingStatus.STATUS_MINIMIZED) {
+                showContent = false;
             }
-        } else {
+        } 
+/*        boolean maxPageable = ((Boolean)cid.getCopletData().getAspectData("maxpageable")).booleanValue();
+        if ( maxPageable ) {
+            if ( size == null ) {
+                size = (Integer)cid.getAspectData("size");
+                if ( size == null ) {
+                    size = SizingStatus.STATUS_MAXIMIZED;
+                }
+            }
+            ChangeCopletInstanceAspectDataEvent event;    
+
+            if ( size == SizingStatus.STATUS_MAXIMIZED) {
+                event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MAXPAGED);
+                XMLUtils.createElement(handler, "maxpage-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+            }
+            if ( size == SizingStatus.STATUS_MAXPAGED) {
+                event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MAXIMIZED);
+                XMLUtils.createElement(handler, "minpage-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+            }
+        }
+*/               
+        if ( showContent ) {
             context.invokeNext(layout, service, handler);
         }
 	}
