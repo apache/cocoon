@@ -21,8 +21,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.event.ValueChangedEvent;
@@ -35,7 +33,7 @@ import org.mozilla.javascript.Script;
  * Listeners built by {@link org.apache.cocoon.woody.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.8 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: JavaScriptWidgetListener.java,v 1.9 2004/04/30 22:52:43 joerg Exp $
  */
 public abstract class JavaScriptWidgetListener {
     

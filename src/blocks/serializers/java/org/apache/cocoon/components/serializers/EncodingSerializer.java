@@ -15,25 +15,20 @@
  */
 package org.apache.cocoon.components.serializers;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.components.serializers.encoding.Charset;
 import org.apache.cocoon.components.serializers.encoding.CharsetFactory;
-import org.apache.cocoon.components.serializers.encoding.DefaultEncoder;
 import org.apache.cocoon.components.serializers.encoding.Encoder;
 import org.apache.cocoon.components.serializers.util.Namespaces;
 import org.apache.cocoon.serialization.Serializer;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -42,7 +37,7 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: EncodingSerializer.java,v 1.1 2004/04/21 09:33:22 pier Exp $
+ * @version CVS $Id: EncodingSerializer.java,v 1.2 2004/04/30 22:52:43 joerg Exp $
  */
 public abstract class EncodingSerializer
 implements Serializer, Locator, Recyclable, Configurable  {

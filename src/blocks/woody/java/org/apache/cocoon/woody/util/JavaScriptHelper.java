@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
-import org.apache.cocoon.environment.Request;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -36,7 +35,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.8 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.9 2004/04/30 22:52:43 joerg Exp $
  */
 public class JavaScriptHelper {
 
