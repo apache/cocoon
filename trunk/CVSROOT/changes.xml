@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.155 2000-11-22 00:03:44 greenrd Exp $ 
+  $Id: changes.xml,v 1.156 2000-11-22 10:41:11 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Added HTTP Vary header to responses where a selection is made
+   by Cocoon on the basis of a User-Agent header, in order to give
+   correct proxy behaviour.
+  </action>
   <action dev="RDG" type="update" due-to="Ovidiu Predescu"
    due-to-email="ovidiu@cup.hp.com">
    Request headers (prefixed by R_) and cookies (prefixed by C_)

@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.19 2000-11-22 00:03:45 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.20 2000-11-22 10:41:13 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.19 $ $Date: 2000-11-22 00:03:45 $
+ * @version $Revision: 1.20 $ $Date: 2000-11-22 10:41:13 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -98,13 +98,14 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
         if (sheet != null) return sheet;
 
         HttpServletRequest request = (HttpServletRequest) parameters.get("request");
+        HttpServletResponse response = (HttpServletResponse) parameters.get ("response");
         ServletContext context = (ServletContext) parameters.get("context");
         String path = (String) parameters.get("path");
         String browser = (String) parameters.get("browser");
         Hashtable params = this.filterParameters(request);
 
         try {
-            Object resource = getResource(context, request, document, path, browser);
+            Object resource = getResource(context, request, response, document, path, browser);
             Document stylesheet = getStylesheet(resource, request);
             Document result = this.parser.createEmptyDocument();
             return transformer.transform(document, path, stylesheet, 
@@ -171,7 +172,9 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
                                 return valid_name;				
     }
     
-    private Object getResource(ServletContext context, HttpServletRequest request, Document document, String path, String browser) throws ProcessorException {
+    private Object getResource(ServletContext context, HttpServletRequest request, 
+     HttpServletResponse response, Document document, String path, String browser)
+     throws ProcessorException {
 
         Object resource = null;
 
@@ -186,7 +189,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
                     Object local = null;
 
                     try {
-                        if (url.charAt(0) == '#') {
+                        if (url.charAt(0) == '#') { // does not support useragent selection with fragments
                             return null;
                         } else if (url.charAt(0) == '/') {
                             local = new File(Utils.getRootpath(request, context) + url);
@@ -205,10 +208,17 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
                     if (media == null) {
                         resource = local;
                         if (browser == null) break;
-                    } else if (browser != null) {
-                        if (media.equals(browser)) {
-                            resource = local;
-                            break;
+                    } else {
+                        // set HTTP Vary header to notify proxies
+                        if (!response.containsHeader ("Vary")) {
+                           response.setHeader ("Vary", "User-Agent");
+                        }
+
+                        if (browser != null) {
+                            if (media.equals(browser)) {
+                               resource = local;
+                               break;
+                            }
                         }
                     }
                 }
