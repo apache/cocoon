@@ -41,7 +41,7 @@ import org.xml.sax.InputSource;
 /**
  * Component implementing the {@link FormManager} role.
  * 
- * @version $Id: DefaultFormManager.java,v 1.3 2004/03/11 02:56:33 joerg Exp $
+ * @version $Id: DefaultFormManager.java,v 1.4 2004/03/18 13:56:09 bruno Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
@@ -97,6 +97,14 @@ public class DefaultFormManager
         return (Form)formDefinition.createInstance();
     }
 
+    public Form createForm(Element formElement) throws Exception {
+        return (Form)getFormDefinition(formElement).createInstance();
+    }
+
+    public FormDefinition createFormDefinition(Element formElement) throws Exception {
+        return getFormDefinition(formElement);
+    }
+
     public FormDefinition getFormDefinition(Source source) throws Exception {
         FormDefinition formDefinition = (FormDefinition)this.cacheManager.get(source, PREFIX);
         if (formDefinition == null) {
@@ -111,16 +119,19 @@ public class DefaultFormManager
             }
 
             Element formElement = formDocument.getDocumentElement();
-
-            // check that the root element is a fd:form element
-            if (!(formElement.getLocalName().equals("form") || Constants.DEFINITION_NS.equals(formElement.getNamespaceURI())))
-                throw new Exception("Expected a Cocoon Forms form element at " + DomHelper.getLocation(formElement));
-
-            FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
-            formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
+            formDefinition = getFormDefinition(formElement);
             this.cacheManager.set(formDefinition, source, PREFIX);
         }
         return formDefinition;
+    }
+
+    public FormDefinition getFormDefinition(Element formElement) throws Exception {
+        // check that the root element is a fd:form element
+        if (!(formElement.getLocalName().equals("form") || Constants.DEFINITION_NS.equals(formElement.getNamespaceURI())))
+            throw new Exception("Expected a Cocoon Forms form element at " + DomHelper.getLocation(formElement));
+
+        FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
+        return (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
     }
 
     /**
