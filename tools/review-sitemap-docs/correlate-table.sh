@@ -48,5 +48,12 @@ diff components-source.txt components-sitemaptask.txt \
 > components-javadoc-sitemaptask-diff.txt
 
 echo
+echo "Comparing the table list with the list obtained via SitemapTask."
+echo "Whitespace lines are table entries which are missing a javadoc reference."
+echo "doing 'diff components-sitemaptask.txt components-table.txt'"
+echo " (See components-sitemaptask-diff.txt)"
+diff components-sitemaptask.txt components-table.txt > components-sitemaptask-diff.txt
+
+echo
 echo "Counting the number of components in the table."
 wc -l components-table.txt
