@@ -2,7 +2,7 @@
 <!--
 
  ============================================================================
-                   The Apache Software License, Version 1.1
+                   The Apache Software License, Version 1.2
  ============================================================================
 
  Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
