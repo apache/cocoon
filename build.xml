@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.11 2003/03/15 23:27:39 stefano Exp $:
+       CVS: $Id: build.xml,v 1.12 2003/03/15 23:38:37 stefano Exp $:
 
 ============================================================================ -->
 
@@ -636,7 +636,13 @@
     <copy file="${resources.styles}/cocoon.css" tofile="${build.webapp}/resources/styles/cocoon.css"/>
 
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
-    
+
+    <copy todir="${build.webapp}">
+      <fileset dir="${webapp}/stylesheets">
+        <include name="*.xslt"/>
+      </fileset>
+    </copy>
+        
     <copy todir="${build.webapp}/WEB-INF" filtering="on">
       <fileset dir="${webapp}/WEB-INF">
         <include name="entities/**"/>
