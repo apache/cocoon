@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.41 $ $Date: 2000-12-29 16:55:19 $
+ * @version CVS $Revision: 1.1.4.42 $ $Date: 2001-01-06 16:32:20 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -96,7 +96,7 @@ public class CocoonServlet extends HttpServlet {
 
         this.setClassPath(conf.getInitParameter("classpath-attribute"), this.context);
 
-        this.forceLoad(conf.getInitParameter("force-load"));
+        this.forceLoad(conf.getInitParameter("driver"));
 
         this.workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
 

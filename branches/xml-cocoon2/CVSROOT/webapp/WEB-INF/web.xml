@@ -42,10 +42,17 @@
    <param-value>DEBUG</param-value>
   </init-param>
     <init-param>
-      <param-name>force-load</param-name>
+      <param-name>driver</param-name>
+      <param-value>
+        <!-- For IBM WebSphere: -->
+        com.ibm.servlet.classloader.Handler
 
-      <!-- For IBM WebSphere: -->
-      <param-value>com.ibm.servlet.classloader.Handler</param-value>
+        <!-- For PostgeSQL Database: -->
+        postgresql.Driver
+
+        <!-- For Oracle Database: -->
+        oracle.jdbc.driver.OracleDriver
+      </param-value>
     </init-param>
  </servlet>
  <servlet-mapping>
