@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.2 2003/08/16 01:44:12 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.3 2004/02/07 15:13:26 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -63,7 +63,7 @@
       </map:match>
 
       <map:match pattern="aggregate">
-        <map:aggregate element="page" ns="http://foo.bar.com/myspace">
+        <map:aggregate element="page">
           <!--+
               | Aggregation is a very powerful concept that allows a document
               | be generated from several other documents. Strictly speaking,
@@ -90,14 +90,14 @@
               | Thus, the parts refer to the pipeline fragments above.
               |
               | The optional element attribute places the content in a new root
-              | element named as specified, using the namespace provided by the
+              | element named as specified, using the namespace provided by an
               | optional ns attribute.
               |
               | Please see docs for further explanations.
               +-->
-         <map:part element="news" ns="http://foo.bar.com/slashdot" src="cocoon:/slashdot"/>
-         <map:part element="news" ns="http://foo.bar.com/moreover" src="cocoon:/moreover"/>
-         <map:part element="news" ns="http://foo.bar.com/xmlhack" src="cocoon:/xmlhack"/>
+         <map:part src="cocoon:/slashdot" element="slashdot"/>
+         <map:part src="cocoon:/moreover" element="moreover"/>
+         <map:part src="cocoon:/xmlhack" element="xmlhack"/>
         </map:aggregate>
         <map:transform src="stylesheets/news.xsl"/>
         <map:serialize/>
@@ -105,9 +105,9 @@
 
       <!-- Aggregation using the Cocoon Include transformer -->
       <map:match pattern="aggregate2">
-        <map:generate src="aggregate.xsp" type="serverpages"/>
+        <map:generate src="aggregate.xml"/>
         <map:transform type="cinclude"/>
-        <map:transform src="stylesheets/news.xsl"/>
+        <map:transform type="xsltc" src="stylesheets/news.xsl"/>
         <map:serialize/>
       </map:match>
 
