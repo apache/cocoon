@@ -624,6 +624,7 @@ public class Cocoon
         }
 
         Object key = CocoonComponentManager.startProcessing(environment);
+        final int environmentDepth = CocoonComponentManager.markEnvironment();
         CocoonComponentManager.enterEnvironment(environment,
                                                 this.componentManager,
                                                 this);
@@ -690,7 +691,7 @@ public class Cocoon
             }
 
             // TODO (CZ): This is only for testing - remove it later on
-            CocoonComponentManager.checkEnvironment(getLogger());
+            CocoonComponentManager.checkEnvironment(environmentDepth, getLogger());
         }
     }
 
