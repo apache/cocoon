@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" 
- xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
- xmlns:n="http://www.betaversion.org/linotype/news/1.0"
- xmlns:h="http://www.w3.org/1999/xhtml"
->
-  
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                              xmlns:n="http://www.betaversion.org/linotype/news/1.0"
+                              xmlns:h="http://www.w3.org/1999/xhtml"
+                              xmlns="http://www.w3.org/1999/xhtml">
+
   <xsl:param name="home"/>
   <xsl:param name="count"/>
-  
+
   <xsl:template match="/">
    <xsl:for-each select="//n:news[@online = 'on']">
     <xsl:if test="position() &lt;= number($count)">
@@ -16,7 +15,7 @@
     </xsl:if>
    </xsl:for-each>
   </xsl:template>
-  
+
   <xsl:template match="n:news">
    <xsl:variable name="id" select="../@id"/>
    <div class="news">
@@ -27,7 +26,7 @@
     <div class="separator"><img align="center" src="images/separator1.jpg"/></div>
    </div>
   </xsl:template>
-  
+
   <xsl:template name="find-id">
    <xsl:param name="node"/>
    <xsl:choose>
@@ -42,13 +41,13 @@
     </xsl:otherwise>
    </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="h:body">
    <div class="body">
     <xsl:apply-templates/>
    </div>
   </xsl:template>
-  
+
   <xsl:template match="@src" priority="1">
    <xsl:variable name="id"><xsl:call-template name="find-id"><xsl:with-param name="node" select=".."/></xsl:call-template></xsl:variable>
    <xsl:choose>
@@ -71,21 +70,21 @@
     <xsl:apply-templates select="text()[position() &gt; 1]|@*|*"/>
    </xsl:copy>
   </xsl:template-->
-  
+
   <xsl:template match="h:p[1]">
    <p class="first">
     <xsl:apply-templates/>
    </p>
   </xsl:template>
-  
+
   <xsl:template match="hr">
-  	<div class="separator"><img src="images/separator2.jpg"/></div>
+    <div class="separator"><img src="images/separator2.jpg"/></div>
   </xsl:template>
-    
+
   <xsl:template match="@*|node()">
    <xsl:copy>
     <xsl:apply-templates select="@*|node()"/>
    </xsl:copy>
   </xsl:template>
-     
+
 </xsl:stylesheet>

@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:r="http://apache.org/cocoon/request/2.0"
-                xmlns:h="http://www.w3.org/1999/xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="h r">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                              xmlns:r="http://apache.org/cocoon/request/2.0"
+                              xmlns:h="http://www.w3.org/1999/xhtml"
+                              xmlns="http://www.w3.org/1999/xhtml"
+                              exclude-result-prefixes="h r">
 
   <xsl:template match="/">
    <xsl:apply-templates select="//r:requestParameters"/>
