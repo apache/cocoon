@@ -16,6 +16,7 @@
   <wb:value id="birthday" path="birthday"/>
   <wb:value id="number" path="aNumber"/>
   <wb:value id="choose" path="choose"/>
+  <wb:value id="sex" path="sex"/>
 
   <!-- An aggregatefield is a special kind of widget that lets
   the user edit the value of multiple widgets through one text box

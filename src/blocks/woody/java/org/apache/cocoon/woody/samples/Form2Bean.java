@@ -68,8 +68,23 @@ public class Form2Bean {
     private Date birthday;
     private int aNumber;
     private boolean choose;
+    private Sex sex;
 
     private Collection contacts = new ArrayList();
+
+    /**
+     * @return Returns the sex.
+     */
+    public Sex getSex() {
+        return sex;
+    }
+
+    /**
+     * @param sex The sex to set.
+     */
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
 
     public Form2Bean() {
     }
