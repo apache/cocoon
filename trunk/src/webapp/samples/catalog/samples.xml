@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.5 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.6 2003/09/30 20:13:10 joerg Exp $ -->
 
 <samples name="Catalogs and DocBook" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -30,9 +30,12 @@
           href="sdocbook-demo">
    Demonstration of Catalog Entity Resolver and Simplified DocBook.
    You will need the DocBook DTDs installed locally and the catalog
-   properly configured. If you get a FileNotFoundException, then you
-   have not configured the OASIS catalog properly.
+   properly configured.
   </sample>
+  <note>
+   If you get a FileNotFoundException, then you have not configured the
+   OASIS catalog properly.
+  </note>
  </group>
 
 </samples>
