@@ -131,8 +131,14 @@
   </target>
 
   <!-- Prepares the webapp to make it directly usable with the eclipse project -->
-  <target name="eclipse-webapp-prepare" depends="eclipse-webapp-delete-jars, eclipse-webapp-restore-meta"
+  <target name="eclipse-webapp-prepare" depends="eclipse-webapp-delete-jars, eclipse-webapp-restore-roles, eclipse-webapp-restore-meta"
           description="Prepares the webapp directory to make it usable within Eclipse"/>
+
+  <target name="eclipse-webapp-restore-roles" depends="prepare">
+      <copy file="${build.dest}/org/apache/cocoon/cocoon.roles"
+            tofile="${build.webapp}/WEB-INF/classes/org/apache/cocoon/cocoon.roles"
+            overwrite="yes"/>
+  </target>
 
   <target name="eclipse-webapp-restore-meta" depends="prepare">
       <copy todir="${build.webapp}/WEB-INF/classes">
