@@ -45,7 +45,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 
     public void testJexlEnvExpression() throws Exception {
@@ -57,7 +57,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 
     public void testJXPathExpression() throws Exception {
@@ -66,7 +66,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 
     public void testJXPathEnvExpression() throws Exception {
@@ -75,6 +75,6 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 }
