@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.17 2000-11-16 17:31:53 greenrd Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.18 2000-12-12 16:08:02 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,10 +64,18 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.17 $ $Date: 2000-11-16 17:31:53 $
+ * @version $Revision: 1.18 $ $Date: 2000-12-12 16:08:02 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
+
+    // Quick workaround for Websphere bug
+    static {
+      try {
+        Class.forName ("com.ibm.servlet.classloader.Handler");
+      }
+      catch (Throwable t) {} // ignore
+    }
 
     Engine engine = null;
     String message = null;
