@@ -74,7 +74,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplWLS.java,v 1.1 2003/03/09 00:04:13 pier Exp $
+ * @version CVS $Id: JSPEngineImplWLS.java,v 1.2 2003/07/10 23:38:04 joerg Exp $
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -248,10 +248,12 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
       public Locale getLocale(){ return this.response.getLocale();}
       public void addCookie(Cookie cookie){ response.addCookie(cookie); }
       public boolean containsHeader(String s){ return response.containsHeader(s); }
-      public String encodeURL(String s){ return response.encodeURL(s); }
-      public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
+      /** @deprecated use encodeURL(String url) instead. */
       public String encodeUrl(String s){ return response.encodeUrl(s); }
+      public String encodeURL(String s){ return response.encodeURL(s); }
+      /** @deprecated use encodeRedirectURL(String url) instead. */
       public String encodeRedirectUrl(String s){ return response.encodeRedirectUrl(s); }
+      public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
       public void sendError(int i, String s)
           throws IOException{response.sendError(i,s); }
       public void sendError(int i)
@@ -265,6 +267,7 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
       public void setIntHeader(String s, int i){response.setIntHeader(s, i); }
       public void addIntHeader(String s, int i){response.addIntHeader(s, i); }
       public void setStatus(int i){response.setStatus(i); }
+      /** @deprecated use sendError(int, String) instead */
       public void setStatus(int i, String s){response.setStatus(i, s); }
     }
 }

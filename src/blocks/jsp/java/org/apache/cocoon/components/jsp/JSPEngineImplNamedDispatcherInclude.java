@@ -74,7 +74,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.2 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.3 2003/07/10 23:38:04 joerg Exp $
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -167,6 +167,7 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public boolean isRequestedSessionIdValid(){ return request.isRequestedSessionIdValid(); }
         public boolean isRequestedSessionIdFromCookie(){ return request.isRequestedSessionIdFromCookie(); }
         public boolean isRequestedSessionIdFromURL(){ return request.isRequestedSessionIdFromURL(); }
+        /** @deprecated use isRequestedSessionIdFromURL instead. */
         public boolean isRequestedSessionIdFromUrl(){ return request.isRequestedSessionIdFromUrl(); }
         public Object getAttribute(String s){
             if(s != null && s.equals(INC_SERVLET_PATH))
@@ -195,6 +196,7 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public Enumeration getLocales(){ return request.getLocales(); }
         public boolean isSecure(){ return request.isSecure(); }
         public RequestDispatcher getRequestDispatcher(String s){ return request.getRequestDispatcher(s); }
+        /** @deprecated use ServletContext.getRealPath(java.lang.String) instead. */
         public String getRealPath(String s){ return request.getRealPath(s); }
         public java.lang.StringBuffer getRequestURL() { return null; }
         public java.util.Map getParameterMap() { return null; }
@@ -230,10 +232,12 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
         public boolean containsHeader(String s){ return response.containsHeader(s); }
-        public String encodeURL(String s){ return response.encodeURL(s); }
-        public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
+        /** @deprecated use encodeURL(String url) instead. */
         public String encodeUrl(String s){ return response.encodeUrl(s); }
+        public String encodeURL(String s){ return response.encodeURL(s); }
+        /** @deprecated use encodeRedirectURL(String url) instead. */
         public String encodeRedirectUrl(String s){ return response.encodeRedirectUrl(s); }
+        public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
         public void sendError(int i, String s)
             throws IOException{response.sendError(i,s); }
         public void sendError(int i)
@@ -247,6 +251,7 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public void setIntHeader(String s, int i){response.setIntHeader(s, i); }
         public void addIntHeader(String s, int i){response.addIntHeader(s, i); }
         public void setStatus(int i){response.setStatus(i); }
+        /** @deprecated use sendError(int, String) instead */
         public void setStatus(int i, String s){response.setStatus(i, s); }
         public void resetBuffer(){}
 
