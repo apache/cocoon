@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:30 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-27 07:36:01 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -215,7 +215,8 @@ public class NamespacesTable {
             else uri=temp;
         }
         NameImpl name=new NameImpl();
-        name.uri=uri;
+		if (uri.length() > 0) name.uri=uri;
+		else name.uri=null;
         name.raw=raw;
         name.prefix=prefix;
         name.local=local;
