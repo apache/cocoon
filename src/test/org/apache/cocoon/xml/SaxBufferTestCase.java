@@ -63,6 +63,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Testcase for SaxBuffer
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version
  */
 
 public final class SaxBufferTestCase extends AbstractXMLTestCase {
@@ -72,10 +73,10 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
 
     public void testCompareDOM() throws Exception {
         DOMBuilder in = new DOMBuilder();
-        generateSAX(in);
+        generateLargeSAX(in);
 
         SaxBuffer sb = new SaxBuffer();
-        generateSAX(sb);
+        generateLargeSAX(sb);
 
         DOMBuilder out = new DOMBuilder();
         sb.toSAX(out);
@@ -86,12 +87,12 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
     public void testStressLoop() throws Exception {
         SaxBuffer sb = new SaxBuffer();
 
-        long loop = 50000;
+        long loop = 10000;
 
         // simply consume documents
         long start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {
-            generateSAX(sb);
+            generateSmallSAX(sb);
             sb.recycle();
         }
         long stop = System.currentTimeMillis();
@@ -102,7 +103,7 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
 
     public void testCompareToParsing() throws Exception {
         DOMBuilder in = new DOMBuilder();
-        generateSAX(in);
+        generateSmallSAX(in);
 
         SAXParserFactory pfactory = SAXParserFactory.newInstance();
         SAXParser p = pfactory.newSAXParser();
@@ -112,7 +113,7 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
         DefaultHandlerWrapper wrapper = new DefaultHandlerWrapper(b);
         ByteArrayInputStream bis = new ByteArrayInputStream(generateByteArray());
 
-        long loop = 50000;
+        long loop = 10000;
 
         long start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {

@@ -63,6 +63,7 @@ import java.io.ByteArrayInputStream;
  * Testcase for XMLByteStreamCompiler and Interpreter
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version
  */
 
 public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLTestCase {
@@ -73,11 +74,11 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
     public void testCompareDOM() throws Exception {
         // reference
         DOMBuilder in = new DOMBuilder();
-        generateSAX(in);
+        generateLargeSAX(in);
 
         // capture events
         XMLByteStreamCompiler xmlc = new XMLByteStreamCompiler();
-        generateSAX(xmlc);
+        generateLargeSAX(xmlc);
 
         // recall events and build a DOM from it
         XMLByteStreamInterpreter xmli = new XMLByteStreamInterpreter();
@@ -92,7 +93,7 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
     public void testCompareByteArray() throws Exception {
         // capture events
         XMLByteStreamCompiler sa = new XMLByteStreamCompiler();
-        generateSAX(sa);
+        generateLargeSAX(sa);
 
         // serialize events
         byte[] aa = (byte[]) sa.getSAXFragment();
@@ -116,12 +117,12 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
     public void testStressLoop() throws Exception {
         XMLByteStreamCompiler xmlc = new XMLByteStreamCompiler();
 
-        long loop = 50000;
+        long loop = 10000;
 
         // simply consume documents
         long start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {
-            generateSAX(xmlc);
+            generateSmallSAX(xmlc);
             xmlc.recycle();
         }
         long stop = System.currentTimeMillis();
@@ -132,7 +133,7 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
 
     public void testCompareToParsing() throws Exception {
         DOMBuilder in = new DOMBuilder();
-        generateSAX(in);
+        generateSmallSAX(in);
 
         SAXParserFactory pfactory = SAXParserFactory.newInstance();
         SAXParser p = pfactory.newSAXParser();
@@ -142,7 +143,7 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
 
         ByteArrayInputStream bis = new ByteArrayInputStream(generateByteArray());
 
-        long loop = 50000;
+        long loop = 10000;
 
         // parse documents
         long start = System.currentTimeMillis();

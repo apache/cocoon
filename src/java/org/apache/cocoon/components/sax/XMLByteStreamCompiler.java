@@ -63,14 +63,14 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.3 2003/11/07 14:28:27 joerg Exp $
+ * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.4 2003/11/19 01:48:12 tcurdt Exp $
  */
 
-public final class XMLByteStreamCompiler
-implements XMLSerializer, Recyclable {
+public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
 
     private HashMap map;
-    private int     count;
+    private int mapCount;
 
     /** The buffer for the compile xml byte stream. */
     private byte buf[];
@@ -78,15 +78,19 @@ implements XMLSerializer, Recyclable {
     /** The number of valid bytes in the buffer. */
     private int bufCount;
 
+    private int bufCountAverage;
+
+
     public XMLByteStreamCompiler() {
         this.map = new HashMap();
+        this.bufCountAverage = 2000;
         this.initOutput();
     }
 
     private void initOutput() {
-        this.count = 0;
+        this.mapCount = 0;
         this.map.clear();
-        this.buf = new byte[2000];
+        this.buf = new byte[bufCountAverage];
         this.buf[0] = (byte)'C';
         this.buf[1] = (byte)'X';
         this.buf[2] = (byte)'M';
@@ -97,6 +101,7 @@ implements XMLSerializer, Recyclable {
     }
 
     public void recycle() {
+        bufCountAverage = (bufCountAverage + bufCount) / 2;
         this.initOutput();
     }
 
@@ -121,12 +126,18 @@ implements XMLSerializer, Recyclable {
 
 
     public Object getSAXFragment() {
-        if ( this.bufCount == 6) { // no event arrived yet
+        if (this.bufCount == 6) { // no event arrived yet
             return null;
         }
+        /*
+        TC:
+        not nececcary since we create a new buffer on each recyle()
+
         byte newbuf[] = new byte[this.bufCount];
         System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
         return newbuf;
+        */
+        return buf;
     }
 
     public void startDocument() throws SAXException {
@@ -137,8 +148,7 @@ implements XMLSerializer, Recyclable {
         this.writeEvent(END_DOCUMENT);
     }
 
-    public void startPrefixMapping(java.lang.String prefix, java.lang.String uri)
-    throws SAXException {
+    public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
         this.writeEvent(START_PREFIX_MAPPING);
         this.writeString(prefix);
         this.writeString(uri);
@@ -149,8 +159,7 @@ implements XMLSerializer, Recyclable {
        this.writeString(prefix);
     }
 
-    public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
-    throws SAXException {
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         int length = atts.getLength();
         this.writeEvent(START_ELEMENT);
         this.writeAttributes(length);
@@ -166,28 +175,24 @@ implements XMLSerializer, Recyclable {
          this.writeString(qName);
      }
 
-    public void endElement(String namespaceURI, String localName, String qName)
-    throws SAXException {
+    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
         this.writeEvent(END_ELEMENT);
         this.writeString((namespaceURI == null ? "" : namespaceURI));
         this.writeString(localName);
         this.writeString(qName);
     }
 
-    public void characters(char[] ch, int start, int length)
-    throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         this.writeEvent(CHARACTERS);
         this.writeChars(ch, start, length);
     }
 
-    public void ignorableWhitespace(char[] ch, int start, int length)
-    throws SAXException {
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         this.writeEvent(IGNORABLE_WHITESPACE);
         this.writeChars(ch, start, length);
     }
 
-    public void processingInstruction(String target, String data)
-    throws SAXException {
+    public void processingInstruction(String target, String data) throws SAXException {
         this.writeEvent(PROCESSING_INSTRUCTION);
         this.writeString(target);
         this.writeString(data);
@@ -215,8 +220,7 @@ implements XMLSerializer, Recyclable {
     /**
      * SAX Event Handling: LexicalHandler
      */
-    public void startDTD(String name, String publicId, String systemId) 
-    throws SAXException {
+    public void startDTD(String name, String publicId, String systemId) throws SAXException {
         this.writeEvent(START_DTD);
         this.writeString(name);
         this.writeString(publicId!=null?publicId:"");
@@ -264,8 +268,7 @@ implements XMLSerializer, Recyclable {
     /**
      * SAX Event Handling: LexicalHandler
      */
-    public void comment(char ary[], int start, int length)
-    throws SAXException {
+    public void comment(char ary[], int start, int length) throws SAXException {
         try {
             this.writeEvent(COMMENT);
             this.writeChars(ary, start, length);
@@ -274,96 +277,153 @@ implements XMLSerializer, Recyclable {
         }
     }
 
-    public final void writeEvent(int event) throws SAXException {
+    public final void writeEvent( final int event) throws SAXException {
         this.write(event);
     }
 
-    public final void writeAttributes(int attributes) throws SAXException {
+    public final void writeAttributes( final int attributes) throws SAXException {
+        if (attributes > 0xFFFF) throw new SAXException("Too many attributes");
         this.write((attributes >>> 8) & 0xFF);
         this.write((attributes >>> 0) & 0xFF);
     }
 
-    public final void writeString(String str) throws SAXException {
+    public final void writeString( final String str) throws SAXException {
         Integer index = (Integer) map.get(str);
         if (index == null) {
+            map.put(str, new Integer(mapCount++));
             int length = str.length();
-            map.put(str, new Integer(count++));
             this.writeChars(str.toCharArray(), 0, length);
-        } else {
+        }
+        else {
             int i = index.intValue();
+
+            if (i > 0xFFFF) throw new SAXException("Index too large");
+
             this.write(((i >>> 8) & 0xFF) | 0x80);
             this.write((i >>> 0) & 0xFF);
         }
     }
 
-    public final void writeChars(char[] ch, int start, int length)
-    throws SAXException {
+    public final void writeChars( final char[] ch, final int start, final int length) throws SAXException {
         int utflen = 0;
-        int c, count = 0;
+        int c;
 
         for (int i = 0; i < length; i++) {
             c = ch[i + start];
             if ((c >= 0x0001) && (c <= 0x007F)) {
                 utflen++;
-            } else if (c > 0x07FF) {
+            }
+            else if (c > 0x07FF) {
                 utflen += 3;
-            } else {
+            }
+            else {
                 utflen += 2;
             }
         }
 
-        if (utflen > 0x00007FFF) {
-            // handling "UTFDataFormatException: String cannot be longer than 32k."
-            int split = length / 2;
-            writeChars(ch, start, length - split);
-            writeEvent(CHARACTERS);
-            writeChars(ch, start + length - split, split);
-            return;
+        if (utflen >= 0x00007FFF) {
+            assure(bufCount + utflen + 6);
+
+            buf[bufCount++] = (byte)0x7F;
+            buf[bufCount++] = (byte)0xFF;
+
+            buf[bufCount++] = (byte) ((utflen >>> 24) & 0xFF);
+            buf[bufCount++] = (byte) ((utflen >>> 16) & 0xFF);
+            buf[bufCount++] = (byte) ((utflen >>>  8) & 0xFF);
+            buf[bufCount++] = (byte) ((utflen >>>  0) & 0xFF);
+        }
+        else {
+            assure(bufCount + utflen + 2);
+
+            buf[bufCount++] = (byte) ((utflen >>> 8) & 0xFF);
+            buf[bufCount++] = (byte) ((utflen >>> 0) & 0xFF);
         }
 
-        byte[] bytearr = new byte[utflen+2];
-        bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
-        bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
         for (int i = 0; i < length; i++) {
             c = ch[i + start];
             if ((c >= 0x0001) && (c <= 0x007F)) {
-                bytearr[count++] = (byte) c;
-            } else if (c > 0x07FF) {
-                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
-            } else {
-                bytearr[count++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+                buf[bufCount++] = (byte) c;
+            }
+            else if (c > 0x07FF) {
+                buf[bufCount++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  6) & 0x3F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            }
+            else {
+                buf[bufCount++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
             }
         }
 
-        this.write(bytearr);
+
+/*
+        if (length == 0) return;
+
+        assure( (int) (buf.length + length * utfRatioAverage) );
+
+        int utflentotal = 0;
+
+        bufCount += 2;
+        int bufStart = bufCount;
+
+        for (int i = 0; i < length; i++) {
+            int c = ch[i + start];
+            int l = bufCount-bufStart;
+
+            if (l+3 >= 0x7FFF) {
+                buf[bufStart-2] = (byte) ((l >>> 8) & 0xFF);
+                buf[bufStart-1] = (byte) ((l >>> 0) & 0xFF);
+                utflentotal += l;
+                bufCount += 2;
+                bufStart = bufCount;
+            }
+
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                assure(bufCount+1);
+                buf[bufCount++] = (byte)c;
+            }
+            else if (c > 0x07FF) {
+                assure(bufCount+3);
+                buf[bufCount++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  6) & 0x3F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            }
+            else {
+                assure(bufCount+2);
+                buf[bufCount++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
+                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            }
+        }
+
+        int l = bufCount-bufStart;
+        buf[bufStart-2] = (byte) ((l >>> 8) & 0xFF);
+        buf[bufStart-1] = (byte) ((l >>> 0) & 0xFF);
+        utflentotal += l;
+
+        utfRatioAverage = (utfRatioAverage + (utflentotal / length) / 2);
+*/
     }
 
-    private void write(byte[] b) {
-        int len = b.length;
-        if (len == 0) return;
-        int newcount = this.bufCount + len;
-        if (newcount > this.buf.length) {
-            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
-            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
-            this.buf = newbuf;
-        }
-        System.arraycopy(b, 0, this.buf, this.bufCount, len);
+    private void write( final byte[] b ) {
+        int newcount = this.bufCount + b.length;
+        assure(newcount);
+        System.arraycopy(b, 0, this.buf, this.bufCount, b.length);
         this.bufCount = newcount;
     }
 
-    private void write(int b) {
+    private void write( final int b ) {
         int newcount = this.bufCount + 1;
-        if (newcount > this.buf.length) {
-            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
-            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
-            this.buf = newbuf;
-        }
+        assure(newcount);
         this.buf[this.bufCount] = (byte)b;
         this.bufCount = newcount;
     }
 
+    private void assure( final int size ) {
+        if (size > this.buf.length) {
+            byte newbuf[] = new byte[Math.max(this.buf.length << 1, size)];
+            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+            this.buf = newbuf;
+        }
+    }
 }
 
