@@ -140,8 +140,8 @@ function AccountForm(username, password) {
 function CartItem(cart, item) {
     this.cart = cart;
     this.item = item;
-    this.quantity = 1
-    this.listPrice = Number(item.listPrice);
+    this.quantity = 1;
+    this.listPrice = new Number(item.listPrice);
     this.total = this.listPrice * this.quantity;
     cart.subTotal += this.listPrice;
 }
@@ -555,7 +555,7 @@ PetStore.prototype.testDuplicateLogin = function(username) {
     
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
-    return Number(result);
+    return new Number(result);
 }
 
 PetStore.prototype.insertNewUser = function(model) {
@@ -623,7 +623,7 @@ PetStore.prototype.getProductRowCountByCategory = function(key) {
                         [key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
-    return Number(result);
+    return new Number(result);
 }
 
 PetStore.prototype.getItemRowCountByProduct = function(key) {
@@ -632,7 +632,7 @@ PetStore.prototype.getItemRowCountByProduct = function(key) {
                         [key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
-    return Number(result);
+    return new Number(result);
 }
 
 PetStore.prototype.searchProductList = function(key, skipResults, maxResults) {

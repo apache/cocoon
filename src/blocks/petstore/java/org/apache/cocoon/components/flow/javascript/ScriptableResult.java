@@ -50,7 +50,7 @@ import java.sql.*;
 
 /**
  *
- * @version CVS $Id: ScriptableResult.java,v 1.1 2003/07/12 19:09:39 coliver Exp $
+ * @version CVS $Id: ScriptableResult.java,v 1.2 2004/02/23 01:19:45 coliver Exp $
  */
 public class ScriptableResult extends ScriptableObject {
 
@@ -65,6 +65,10 @@ public class ScriptableResult extends ScriptableObject {
 
         public String getClassName() {
             return "Row";
+        }
+
+        public boolean has(String name, Scriptable start) {
+            return super.has(name.toUpperCase(), start);
         }
 
         public Object get(String name, Scriptable start) {

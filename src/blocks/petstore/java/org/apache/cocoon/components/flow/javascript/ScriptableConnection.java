@@ -52,11 +52,29 @@ import java.sql.*;
  * A ScriptableConnection provides two methods:
  *
  * <UL>
- * <LI>query([String] stmt, [Array] parameters, [Number] startRow, [Number] maxRows)</LI>
+ * <LI>query([String] stmt, [Array] parameters, [Number] startRow, [Number] maxRows, [Function] fun)</LI>
  * <LI>update([String] stmt, [Array] parameters)</LI>
  * </UL>
- * The object returned by <code>query</code> contains the following
- * properties:
+ * If the <code>fun</code> argument is provided to <code>query</code> it
+ * will be called for each row returned (the row object will be passed as its 
+ * argument). For example:
+ * <pre>
+ * var db = Database.getConnection(...);
+ * var queryVal = ...;
+ * var startRow = 0;
+ * var maxRows = 100; 
+ *
+ * db.query("select * from table where column = ?", 
+ *          [queryVal], 
+ *          startRow,
+ *          maxRows,
+ *          function(row) {
+ *              print("column = " + row.column);
+ *          });
+ *
+ * </pre>
+ * If <code>fun</code> is undefined, an object containing the following 
+ * properties will be returned instead:
  * <UL>
  * <LI>[Array] rows - an array of row objects</LI>
  * <LI>[Array] rowsByIndex - An array with an array per row of column values</LI>
@@ -68,7 +86,7 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.2 2003/09/05 07:21:48 cziegeler Exp $
+ * @version CVS $Id: ScriptableConnection.java,v 1.3 2004/02/23 01:19:45 coliver Exp $
  */
 public class ScriptableConnection extends ScriptableObject {
 
@@ -206,7 +224,8 @@ public class ScriptableConnection extends ScriptableObject {
     }
 
     public Object jsFunction_query(String sql, Object params,
-                                   int startRow, int maxRows) 
+                                   int startRow, int maxRows,
+                                   Object funObj) 
         throws JavaScriptException {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -229,11 +248,52 @@ public class ScriptableConnection extends ScriptableObject {
             if (maxRows == 0) {
                 maxRows = -1;
             }
-            ScriptableResult s = new ScriptableResult(this, rs, 
-                                                      startRow, maxRows);
-            s.setParentScope(getTopLevelScope(this));
-            s.setPrototype(getClassPrototype(this, s.getClassName()));
-            return s;
+            if (funObj instanceof Function) {
+                Context cx = Context.getCurrentContext();
+                Function fun = (Function)funObj;
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int noOfColumns = rsmd.getColumnCount();
+                // Throw away all rows upto startRow
+                for (int i = 0; i < startRow; i++) {
+                    rs.next();
+                }
+                // Process the remaining rows upto maxRows
+                int processedRows = 0;
+                int index = 0;
+                boolean isLimited = false;
+                Scriptable scope = getTopLevelScope(this);
+                Scriptable thisObj;
+                Scriptable proto = getObjectPrototype(scope);
+                Object[] args;
+                while (rs.next()) {
+                    if ((maxRows != -1) && (processedRows == maxRows)) {
+                        isLimited = true; 
+                        break;
+                    }
+                    Scriptable row = new ScriptableResult.Row();
+                    row.setParentScope(scope);
+                    row.setPrototype(proto);
+                    for (int i = 1; i <= noOfColumns; i++) {
+                        Object value =  rs.getObject(i);
+                        if (rs.wasNull()) {
+                            value = null;
+                        }
+                        row.put(rsmd.getColumnName(i), row, value);
+                    }
+                    args = new Object[1];
+                    args[0] = row;
+                    fun.call(cx, scope, scope, args);
+                }
+                return Undefined.instance;
+            } else {
+                ScriptableResult s = new ScriptableResult(this, rs, 
+                                                          startRow, maxRows);
+                s.setParentScope(getTopLevelScope(this));
+                s.setPrototype(getClassPrototype(this, s.getClassName()));
+                return s;
+            }
+        } catch (JavaScriptException e) {
+            throw e;
         } catch (Exception e) {
             throw new JavaScriptException(e);
         }
