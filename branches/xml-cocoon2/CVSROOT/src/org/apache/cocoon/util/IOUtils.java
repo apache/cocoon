@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-06 23:22:26 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-14 11:08:08 $
  */
 public class IOUtils {
   /**
@@ -49,7 +49,7 @@ public class IOUtils {
 	getFullFilename(file).replace(File.separatorChar, '/')
       );
     } else if (location.startsWith("resource://")) {
-      return ClassUtils.getClassLoader().getSystemResource(
+      return ClassUtils.getClassLoader().getResource(
         location.substring("resource://".length())
       );
     } else {
