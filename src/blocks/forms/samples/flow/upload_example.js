@@ -25,8 +25,8 @@ function upload() {
     cocoon.sendPage("upload-success-pipeline.jx",
         {
             uploadContent: handleUpload(form), 
-            username: form.getWidget("user").getValue(),
-            filename: form.getWidget("upload").getValue().getHeaders().get("filename")
+            username: form.lookupWidget("user").getValue(),
+            filename: form.lookupWidget("upload").getValue().getHeaders().get("filename")
         }
     );
 }
@@ -35,7 +35,7 @@ function handleUpload(form) {
 
   var buf = new java.lang.StringBuffer();
   
-  var uploadWidget = form.getWidget("upload");
+  var uploadWidget = form.lookupWidget("upload");
   if (uploadWidget.getValue() != null) {
     var stream = uploadWidget.getValue().getInputStream();
     var reader = new java.io.BufferedReader(new java.io.InputStreamReader(stream));

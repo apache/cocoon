@@ -55,17 +55,23 @@ function Form(formDefinition) {
     }
 }
 
+/**
+ * Get the actual Form-Widget (the Java object)
+ */
+Form.prototype.getWidget = function() {
+    return this.form;
+}
 
 /**
  * Get a Widget (the java object) from the form.
  * If <code>name</code> is undefined, the form widget itself is returned.
  * Otherwise, the form's child widget of name <code>name</code> is returned.
  */
-Form.prototype.getWidget = function(name) {
+Form.prototype.lookupWidget = function(name) {
     if (name == undefined) {
         return this.form;
     } else {
-        return this.form.getWidget(name);
+        return this.form.lookupWidget(name);
     }
 }
 

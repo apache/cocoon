@@ -27,8 +27,8 @@
       <xsp:logic>
         // get reference to form and some of the widgets on it
         Form form = (Form)request.getAttribute("countryselectorform");
-        Field usnonus = (Field)form.getWidget("us-nonus");
-        Field country = (Field)form.getWidget("country");
+        Field usnonus = (Field)form.lookupWidget("us-nonus");
+        Field country = (Field)form.lookupWidget("country");
       </xsp:logic>
 
       You selected: <xsp:expr>usnonus.getValue()</xsp:expr>,

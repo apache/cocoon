@@ -18,7 +18,7 @@
   xmlns:xsp="http://apache.org/xsp">
 
   <!--
-    CVS $Id: form_model_gui_success.xsp,v 1.2 2004/04/12 14:05:09 tim Exp $
+    CVS $Id: form_model_gui_success.xsp,v 1.3 2004/05/07 20:54:21 mpo Exp $
   -->
 
   <xsp:structure>
@@ -31,7 +31,7 @@
       <xsp:logic>
         // get reference to form and some of the widgets on it
         Form form = (Form)request.getAttribute("form_model_gui");
-        Repeater repeater = (Repeater)form.getWidget("widgets");
+        Repeater repeater = (Repeater)form.lookupWidget("widgets");
       </xsp:logic>
 
       Repeater has <xsp:expr>repeater.getSize()</xsp:expr> row(s).
