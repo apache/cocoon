@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="ImageReader Samples">
 
   <group name="Main examples page.">
     <sample name="Back" href="..">to Cocoon examples main page</sample>
@@ -36,32 +36,38 @@
   </group>
 
   <group name="ImageReader - Grayscaling">
-    <sample href="image-grayscale" name="Image grayscaled.">
+    <sample href="image-grayscale" name="Image grayscaled">
       The image in gray.
     </sample>
   </group>
 
   <group name="ImageReader - Color Scaling">
-    <sample href="image-color-scale-2-1-1" name="Image tinted red.">
+    <sample href="image-color-scale-2-1-1" name="Image tinted red">
       The values for the color red are doubled.
     </sample>
-    <sample href="image-color-scale-1-2-1" name="Image tinted green.">
+    <sample href="image-color-scale-1-2-1" name="Image tinted green">
       The values for the color green are doubled.
     </sample>
-    <sample href="image-color-scale-1-1-2" name="Image tinted blue.">
+    <sample href="image-color-scale-1-1-2" name="Image tinted blue">
       The values for the color blue are doubled.
     </sample>
   </group>
 
   <group name="ImageReader - Color Offset">
-    <sample href="image-color-offset-50-0-0" name="Image tinted red.">
+    <sample href="image-color-offset-50-0-0" name="Image tinted red">
       The values for the color red are incremented by 50.
     </sample>
-    <sample href="image-color-offset-0-50-0" name="Image tinted green.">
+    <sample href="image-color-offset-0-50-0" name="Image tinted green">
       The values for the color green are incremented by 50.
     </sample>
-    <sample href="image-color-offset-0-0-50" name="Image tinted blue.">
+    <sample href="image-color-offset-0-0-50" name="Image tinted blue">
       The values for the color blue are incremented by 50.
+    </sample>
+  </group>
+
+  <group name="Image Directory Generator">
+    <sample href="list" name="imagedirectory">
+      Read a directory, process images and find their attributes.
     </sample>
   </group>
 </samples>
