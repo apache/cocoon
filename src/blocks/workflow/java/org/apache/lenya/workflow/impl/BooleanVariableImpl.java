@@ -1,5 +1,5 @@
 /*
-$Id: BooleanVariableImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: BooleanVariableImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -70,7 +70,6 @@ public class BooleanVariableImpl implements BooleanVariable {
      * @param initialValue The initial value of the corresponding variable instances.
      */
     protected BooleanVariableImpl(String variableName, boolean initialValue) {
-        assert variableName != null;
         name = variableName;
 
         this.initialValue = initialValue;

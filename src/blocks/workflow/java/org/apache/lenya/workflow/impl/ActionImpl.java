@@ -1,5 +1,5 @@
 /*
-$Id: ActionImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: ActionImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -71,7 +71,6 @@ public class ActionImpl implements Action {
      * @param actionId The action ID.
      */
     protected ActionImpl(String actionId) {
-        assert actionId != null;
         id = actionId;
     }
 
