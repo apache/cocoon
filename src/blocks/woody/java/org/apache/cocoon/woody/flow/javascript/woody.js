@@ -53,7 +53,7 @@ defineClass("org.apache.cocoon.woody.flow.javascript.Woody");
 
 Woody.suicide = new Continuation();
 
-function Form(formDef, attrName) {
+function Form(formDef) {
     var formMgr = null;
     var resolver = null;
     var src = null;
@@ -63,7 +63,6 @@ function Form(formDef, attrName) {
         src = resolver.resolveURI(formDef);
         this.form = formMgr.createForm(src);
         this.formWidget = new Widget(this.form);
-        this.attrName = attrName;
         this.lastWebContinuation = null;
         this.rootContinuation = null;
         this.binding = null;
@@ -130,7 +129,6 @@ Form.prototype.show = function(uri, validator) {
         var formContext = 
             new Packages.org.apache.cocoon.woody.FormContext(this.woody.request,
                                                              java.util.Locale.US);
-        cocoon.request.setAttribute(this.attrName, this.form);
         var finished = this.form.process(formContext);
         var evt = formContext.getActionEvent();
         if (evt != null) {
@@ -150,12 +148,8 @@ Form.prototype.show = function(uri, validator) {
 Form.prototype._show = function(uri, lastWebCont, timeToLive) {
     var k = new Continuation();
     var wk = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
-    var bizData = this.form;
-    if (bizData == undefined) {
-        bizData = null;
-    }
+    var bizData = { "woody-form": this.form };
     this.lastWebContinuation = wk;
-    cocoon.request.setAttribute(this.attrName, this.form);
     this.woody.forwardTo(uri, bizData, wk);
     Woody.suicide();
 }
@@ -201,12 +195,12 @@ Form.prototype.save = function(object) {
     this.binding.saveFormToModel(this.form, object);
 }
 
-function woody(form_function, form_definition, attribute_name) {
-    var form = new Form(form_definition, attribute_name);
-    var args = new Array(arguments.length - 3 + 1);
+function woody(form_function, form_definition) {
+    var form = new Form(form_definition);
+    var args = new Array(arguments.length - 2 + 1);
     args[0] = form;
-    for (var i = 3; i < arguments.length; i++) {
-        args[i-2] = arguments[i];
+    for (var i = 2; i < arguments.length; i++) {
+        args[i-1] = arguments[i];
     }
 
     // set the binding on the form if there's any
