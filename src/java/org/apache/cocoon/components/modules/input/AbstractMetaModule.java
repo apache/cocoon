@@ -69,7 +69,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.2 2003/03/12 14:30:59 jefft Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -101,6 +101,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     private final static int OP_GET = 0;
     private final static int OP_VALUES = 1;
     private final static int OP_NAMES = 2;
+    private final static String[] OPNAME = new String[] {"GET_VALUE", "GET_VALUES", "GET_NAMES"};
 
 
     /**
@@ -304,21 +305,29 @@ public abstract class AbstractMetaModule extends AbstractInputModule
 
         try {
 
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("parameters "+op+": "+modA+", "+modAName+", "+modAConf+" || "+modB+", "+modBName+", "+modBConf);
             if (cs == null)
                 cs = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
 
+            boolean useDynamic;
             if (modB == null && modBName == null) {
+                useDynamic = false;
                 input = modA;
                 name = modAName;
                 conf = modAConf;
             } else {
+                useDynamic = true;
                 input = modB;
                 name = modBName;
                 conf = modBConf;
             }
         
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("MetaModule performing op "+OPNAME[op]+" on " + 
+                        (useDynamic?"dynamically":"statically") + " " +
+                        (input==null?"created":"assigned") +
+                        " module '"+name+"', using config "+modBConf);
+            }
+
             if (input == null) {
                 if (cs.hasComponent(name)) {
                     release = true;
@@ -358,6 +367,4 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         return value;
     }
                               
-
-
 }
