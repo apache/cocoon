@@ -15,11 +15,9 @@
     <!-- copy those files that need to be in the classpath -->
     <copy todir="${build.dest}">
       <fileset dir="${java}">
-        <include name="**/*.xsl"/>
-        <include name="**/*.roles"/>
-        <include name="**/*.xml"/>
-        <include name="**/*.properties"/>
-        <include name="**/*.js"/>
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.xroles"/>
+        <exclude name="**/*.xconf"/>
       </fileset>
     </copy>
 
@@ -52,23 +50,15 @@
     <mkdir dir="${build.scratchpad.src}"/>
     <mkdir dir="${build.scratchpad.dest}"/>
    
-    <available classpathref="classpath"
-               property="activation.present"
-               classname="javax.activation.DataSource"/>
-                   
     <copy todir="${build.scratchpad.src}" filtering="on">
-      <fileset dir="${scratchpad.src}">
-        <exclude name="**/components/axis/**" unless="activation.present"/>
-        <exclude name="**/reading/AxisRPCReader.java" unless="activation.present"/>
-        <exclude name="**/webservices/**" unless="activation.present"/>
-      </fileset>
+      <fileset dir="${scratchpad.src}"/>
     </copy>
 
     <copy todir="${build.scratchpad.dest}">
       <fileset dir="${build.scratchpad.src}">
-        <include name="**/*.xsl"/>
-        <include name="**/*.wsdd"/>
-        <include name="**/*.roles"/>
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.xroles"/>
+        <exclude name="**/*.xconf"/>
       </fileset>
     </copy>
 
@@ -83,7 +73,7 @@
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare,init-xpatch" unless="unless.exclude.deprecated">
+  <target name="compile-deprecated" depends="prepare" unless="unless.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch configuration="${build.dest}/org/apache/cocoon/cocoon.roles" 
@@ -129,7 +119,7 @@
 <!-- === Block Targets ========================================================= -->
 
   <!-- prepares the blocks build -->
-  <target name="prepare-blocks" depends="init">
+  <target name="prepare-blocks" depends="prepare">
     <mkdir dir="${build.blocks}"/>
 
     <xslt in="${gump.descriptor}"
@@ -139,7 +129,7 @@
   </target>
 
   <!-- patch the cocoon role file -->
-  <target name="block-roles" depends="prepare-blocks,init-xpatch">
+  <target name="block-roles" depends="prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"

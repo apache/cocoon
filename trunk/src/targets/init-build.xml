@@ -102,15 +102,6 @@
       <path location="${build.dest}"/>
     </path>
 
-    <!-- Set classpath for building ant tasks -->
-    <path id="tasks.classpath">
-      <path refid="classpath"/>
-      <fileset dir="${tools.lib}">
-        <include name="*.jar"/>
-      </fileset>
-      <path location="${tools.tasks.dest}"/>
-    </path>
-
     <!-- Set classpath for scratchpad -->
     <path id="scratchpad.classpath">
       <path refid="classpath"/>
@@ -120,20 +111,19 @@
     </path>
   </target>
   
-  <target name="init-loader" depends="init">
-    <!-- compile the loader -->
-    <mkdir dir="${tools.loader.dest}"/>
-    <javac srcdir="${tools.loader.src}"
-           destdir="${tools.loader.dest}"
-           debug="off"
-           optimize="on"
-           deprecation="on"
-           target="1.3"
-           nowarn="on"
-           compiler="${compiler}"/>
-  </target>
-  
   <target name="init-tasks" depends="init">
+    <echo>+-------------------------------------------------------------------------------+</echo>
+    <echo>Setting up customized ant tasks...</echo>
+
+    <!-- Set classpath for building ant tasks -->
+    <path id="tasks.classpath">
+      <path refid="classpath"/>
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <path location="${tools.tasks.dest}"/>
+    </path>
+
     <!-- compile the ant tasks -->
     <mkdir dir="${tools.tasks.dest}"/>
     <javac srcdir="${tools.tasks.src}"
@@ -145,17 +135,21 @@
            nowarn="on"
            compiler="${compiler}"
            classpathref="tasks.classpath"/>
-  </target>
-  
-  <target name="init-xpatch" depends="init-tasks">
+
     <!-- A task to patch xml files -->
     <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
+
+    <!-- Jing is used in various targets for XML validation with RELAX NG -->
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
+
+    <echo>... done.</echo>
   </target>
   
 <!-- === Preparation Targets =================================================== -->
 
   <!-- Prepare the build directory -->
-  <target name="prepare" depends="init">
+  <target name="prepare" depends="init-tasks">
+
     <echo>+-------------------------------------------------------------------------------+</echo>
     <echo>                        ${fullname} ${version} [${year}]</echo>
     <echo>+-------------------------------------------------------------------------------+</echo>
@@ -176,9 +170,8 @@
   <!-- Clean -->
   <target name="clean" depends="clean-cocoon,clean-webapp" description="Cleans the cocoon build and the webapp"/>
 
-  <!-- Clean the cocoon build -->
+  <!-- Clean the cocoon build directory -->
   <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
-    <!-- Delete the build directory -->
     <delete dir="${build}"/>
   </target>
 
