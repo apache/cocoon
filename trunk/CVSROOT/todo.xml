@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.27 2000-04-26 13:45:01 stefano Exp $
+  $Id: todo.xml,v 1.28 2000-04-26 23:03:01 stefano Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -24,6 +24,9 @@
  <actions priority="low">
   <action context="docs">
    Cleanup and improve documentation.
+  </action>
+  <action context="docs">
+   Play with the XML doclet a little and write the stylesheets for it.
   </action>
  </actions>
 
