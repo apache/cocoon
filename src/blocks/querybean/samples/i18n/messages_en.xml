@@ -147,6 +147,32 @@
   <message key="simple.page.title">A simple query</message>
 	<message key="required.note">* required</message>
 	<message key="cancel.note">you cancelled your edit</message>
+	<!-- tips -->
+	<message key="query.tip.title">Query Tips</message>
+	<message key="query.tip.high">
+		<p>You can reduce the number of hits like this:
+			<ul>
+				<li>Try adding one or more criteria that match using "does not contain", to remove unwanted hits.</li>
+				<li>Try searching in specific fields instead of all fields.</li>
+				<li>Try requiring that all of your search criteria are matched, instead of just some of them.</li>
+				<li>Try increasing the number of required criteria.</li>
+				<li>Try using the match "contains the phrase" or "contains all words in".</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.low">
+		<p>You can increase the number of hits like this:
+			<ul>
+				<li>Try searching in all fields rather than a specific field.</li>
+				<li>Try matching your words using "is somthing like" or "contains any word in".</li>
+				<li>Try allowing the query to only match some of your criteria, instead of all of them.</li>
+				<li>Try increasing the number of non-required criteria.</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.prohibited">
+		<p>All of your criteria are matched using  "does not contain", this query will not work until you add at least one criterion that positively finds something, then the prohibiting criteria can filter hits from that one.</p>
+	</message>	
 	<!-- errors -->
   <message key="search.error.noquery">There was no query</message>
   <message key="search.error.nohistory">You have no history at the moment</message>

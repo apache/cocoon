@@ -52,9 +52,6 @@
 				</jx:forEach>
 			</ul>
 		</p>
-		<jx:if test="${result.tip != null}">
-			<i18n:text i18n:catalogue="local">${result.tip}</i18n:text>
-		</jx:if>
 		<!-- links -->
 		<p class="links">
 			<a href="${result.query.type}.html?hid=${result.id}" title="local:search.edit.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">search.edit.title</i18n:text></a>
@@ -126,5 +123,9 @@
 				<p class="query.results-none"><i18n:text i18n:catalogue="local">search.norecords.note</i18n:text></p>
 			</jx:otherwise>
 		</jx:choose>
+		<jx:if test="${result.tip != null}">
+			<title><i18n:text i18n:catalogue="local">query.tip.title</i18n:text></title>
+			<i18n:text i18n:catalogue="local">${result.tip}</i18n:text>
+		</jx:if>
 	</content>
 </page>
