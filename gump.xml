@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.160 2004/06/07 01:04:18 antonio Exp $
+    | CVS $Id: gump.xml,v 1.161 2004/06/07 20:27:18 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1148,6 +1148,7 @@
     <depend project="cocoon-block-batik"/>
     <depend project="cocoon-block-fop"/>
     <depend project="cocoon-block-forms"/>
+    <depend project="cocoon-block-slop"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
