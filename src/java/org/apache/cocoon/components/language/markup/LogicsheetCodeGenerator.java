@@ -53,12 +53,13 @@ package org.apache.cocoon.components.language.markup;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.excalibur.source.Source;
 
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerConfigurationException;
@@ -75,13 +76,14 @@ import java.util.Properties;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: LogicsheetCodeGenerator.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: LogicsheetCodeGenerator.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public class LogicsheetCodeGenerator extends AbstractLogEnabled implements MarkupCodeGenerator {
 
     private ContentHandler serializerContentHandler;
 
-    private XMLReader rootReader;
+    private AbstractXMLPipe end;
 
     private TransformerHandler currentParent;
 
@@ -128,17 +130,17 @@ public class LogicsheetCodeGenerator extends AbstractLogEnabled implements Marku
     }
 
     /**
-    * Add a logicsheet to the logicsheet list
-    *
-    * @param logicsheet The logicsheet to be added
-    */
+     * Add a logicsheet to the logicsheet list
+     *
+     * @param logicsheet The logicsheet to be added
+     */
     public void addLogicsheet(Logicsheet logicsheet) throws ProcessingException {
         if (this.currentParent == null) {
             // Setup the first transformer of the chain.
             this.currentParent = logicsheet.getTransformerHandler();
 
             // the parent is the rootReader
-            this.rootReader.setContentHandler(this.currentParent);
+            this.end.setContentHandler(this.currentParent);
 
             // Set content handler for the end of the chain : serializer
             this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
@@ -156,21 +158,20 @@ public class LogicsheetCodeGenerator extends AbstractLogEnabled implements Marku
     }
 
     /**
-    * Generate source code from the input document. Filename information is
-    * ignored in the logicsheet-based code generation approach.
-    *
-    * @param reader The reader
-    * @param input The input source
-    * @param filename The input source original filename
-    * @return The generated source code
-    * @exception Exception If an error occurs during code generation
-    */
-    public String generateCode(XMLReader reader, InputSource input, String filename) throws Exception {
+     * Generate source code from the given source. Filename information is
+     * ignored in the logicsheet-based code generation approach.
+     *
+     * @param source The source of the markup
+     * @return The generated source code
+     * @exception Exception If an error occurs during code generation
+     */
+    public String generateCode(Source source, AbstractXMLPipe filter)
+            throws Exception {
         try {
             // set the root XMLReader of the transformer chain
-            this.rootReader = reader;
+            this.end = filter;
             // start the parsing
-            this.rootReader.parse(input);
+            SourceUtil.toSAX(source, filter);
             return this.writer.toString();
         } catch (SAXException e) {
             if(e.getException() != null) {

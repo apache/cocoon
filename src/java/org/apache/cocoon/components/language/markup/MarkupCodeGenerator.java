@@ -50,26 +50,27 @@
 */
 package org.apache.cocoon.components.language.markup;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
+import org.apache.excalibur.source.Source;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 
 /**
  * This interfaces defines the functionality of a source code generator
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: MarkupCodeGenerator.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: MarkupCodeGenerator.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public interface MarkupCodeGenerator {
+
     /**
-    * Generate source code from the input reader. Filename information may be
-    * needed by certain code-generation approaches and programming languages
-    *
-    * @param reader The input reader
-    * @param input The input source
-    * @param filename The input source original filename
-    * @return The generated source code
-    * @exception Exception If an error occurs during code generation
-    */
-    String generateCode(XMLReader reader, InputSource input, String filename)
+     * Generate source code from the given markup source.
+     * Start and end specify SAX pre processing pipeline.
+     *
+     * @param source The source of the markup program
+     * @param filter Pre-processing SAX filter
+     * @return The generated source code
+     * @exception Exception If an error occurs during code generation
+     */
+    String generateCode(Source source, AbstractXMLPipe filter)
         throws Exception;
 }

@@ -52,10 +52,10 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.Stack;
@@ -67,7 +67,7 @@ import java.util.Stack;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSPMarkupLanguage.java,v 1.1 2003/03/09 00:08:55 pier Exp $
+ * @version CVS $Id: XSPMarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public class XSPMarkupLanguage extends CocoonMarkupLanguage {
 
@@ -92,11 +92,13 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
      *
      * @see XSPMarkupLanguage.PreProcessFilter
      */
-    protected XMLFilter getPreprocessFilter( String filename, ProgrammingLanguage language  )
+    protected AbstractXMLPipe getPreprocessFilter(String filename,
+                                                  AbstractXMLPipe filter,
+                                                  ProgrammingLanguage language)
     {
-        PreProcessFilter filter = new PreProcessFilter(filename, language);
-        filter.enableLogging(getLogger());
-        return filter;
+        PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language);
+        prefilter.enableLogging(getLogger());
+        return prefilter;
     }
 
 //
@@ -111,8 +113,8 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
 
         private Stack stack;
 
-        public PreProcessFilter (String filename, ProgrammingLanguage language) {
-            super(filename, language);
+        public PreProcessFilter (AbstractXMLPipe filter, String filename, ProgrammingLanguage language) {
+            super(filter, filename, language);
         }
 
         public void startDocument() throws SAXException {

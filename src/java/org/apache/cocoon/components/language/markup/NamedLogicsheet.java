@@ -66,17 +66,18 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: NamedLogicsheet.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @version CVS $Id: NamedLogicsheet.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public class NamedLogicsheet extends Logicsheet {
+
     /**
-    * The namespace uri
-    */
+     * The namespace uri
+     */
     protected String uri;
 
     /**
-    * The namespace prefix
-    */
+     * The namespace prefix
+     */
     private String prefix;
 
     public NamedLogicsheet(String systemId, ComponentManager manager, SourceResolver resolver)
@@ -86,37 +87,37 @@ public class NamedLogicsheet extends Logicsheet {
     }
 
     /**
-    * Set the logichseet's namespace prefix
-    *
-    * @param prefix The namespace prefix
-    */
+     * Set the logichseet's namespace prefix
+     *
+     * @param prefix The namespace prefix
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
 
     /**
-    * Return the logicsheet's namespace prefix
-    *
-    * @return The logicsheet's namespace prefix
-    */
+     * Return the logicsheet's namespace prefix
+     *
+     * @return The logicsheet's namespace prefix
+     */
     public String getPrefix() {
         return this.prefix;
     }
 
     /**
-    * Set the logichseet's namespace prefix
-    *
-    * @param prefix The namespace prefix
-    */
+     * Set the logichseet's uri
+     *
+     * @param uri The logicsheet's uri
+     */
     public void setURI(String uri) {
         this.uri = uri;
     }
 
     /**
-    * Return the logicsheet's namespace prefix
-    *
-    * @return The logicsheet's namespace prefix
-    */
+     * Return the logicsheet's namespace prefix
+     *
+     * @return The logicsheet's namespace prefix
+     */
     public String getURI() {
         return this.uri;
     }
