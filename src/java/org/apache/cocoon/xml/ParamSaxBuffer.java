@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,9 +29,9 @@ import org.xml.sax.SAXException;
  * Any <code>{name}</code> expression inside of the character events can be
  * replaced by the content of another SaxBuffer if it is present in the map
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
- * 
+ *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.6 2004/05/06 10:09:03 bruno Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.7 2004/07/06 22:38:28 vgritsenko Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -62,7 +62,7 @@ public class ParamSaxBuffer extends SaxBuffer {
                 if (i > start) {
                     addBit(new Characters(ch, start, i - start));
                 }
-                
+
                 // Find closing brace, and construct parameter name
                 StringBuffer name = new StringBuffer();
                 int j = i + 1;
@@ -76,14 +76,14 @@ public class ParamSaxBuffer extends SaxBuffer {
                     throw new SAXException("Unclosed '}'");
                 }
                 addBit(new Parameter(name.toString()));
-                
+
                 // Continue processing
                 i = j;
                 start = j + 1;
                 continue;
             }
         }
-        
+
         // Send any tailing characters
         if (start < end) {
             addBit(new Characters(ch, start, end - start));
@@ -112,7 +112,7 @@ public class ParamSaxBuffer extends SaxBuffer {
             this.name = name;
         }
 
-        public void send(ContentHandler contentHandler) throws SAXException {
+        public void send(ContentHandler contentHandler) {
         }
 
         public void send(ContentHandler contentHandler, Map parameters) throws SAXException {
