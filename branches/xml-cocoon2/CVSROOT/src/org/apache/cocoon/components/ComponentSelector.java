@@ -36,7 +36,7 @@ import org.apache.cocoon.Roles;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-05 15:40:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-05 16:57:05 $
  */
 public class ComponentSelector extends AbstractLoggable implements Contextualizable, org.apache.avalon.ComponentSelector, Composer, Configurable, ThreadSafe, Disposable {
 
@@ -60,7 +60,13 @@ public class ComponentSelector extends AbstractLoggable implements Contextualiza
      */
     private Map componentHandlers;
 
+    /** Flag for if this is disposed or not.
+     */
     private boolean disposed = false;
+
+    /** Shorthand for hints
+     */
+    private Map hints;
 
     /** Construct a new default component manager.
      */
@@ -156,7 +162,45 @@ public class ComponentSelector extends AbstractLoggable implements Contextualiza
     public void configure(Configuration conf) throws ConfigurationException {
         this.conf = conf;
         getLogger().debug("ComponentSelector setting up with root element: " + conf.getName());
-        Configuration[] instances = conf.getChildren("component-instance");
+
+        Configuration[] hints = conf.getChildren("hint");
+        HashMap hintMap = new HashMap();
+
+        for (int i = 0; i < hints.length; i++) {
+            hintMap.put(hints[i].getAttribute("short-hand").trim(), hints[i].getAttribute("class").trim());
+        }
+
+        this.hints = Collections.unmodifiableMap(hintMap);
+
+        Iterator shorthand = this.hints.keySet().iterator();
+        Configuration[] instances = null;
+
+        while (shorthand.hasNext()) {
+            String type = (String) shorthand.next();
+            Class clazz = null;
+
+            try {
+                clazz = ClassUtils.loadClass((String) this.hints.get(type));
+            } catch (Exception e) {
+                getLogger().error("ComponentSelector The component instance for \"" + type + "\" has an invalid class name.", e);
+                throw new ConfigurationException("The component instance for '" + type + "' has an invalid class name.", e);
+            }
+
+            instances = conf.getChildren(type);
+
+            for (int i = 0; i < instances.length; i++) {
+                Object hint = instances[i].getAttribute("name").trim();
+
+                try {
+                    this.addComponent(hint, clazz, instances[i]);
+                } catch (Exception e) {
+                    getLogger().error("ComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
+                    throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
+                }
+            }
+        }
+
+        instances = conf.getChildren("component-instance");
 
         for (int i = 0; i < instances.length; i++) {
             Object hint = instances[i].getAttribute("name").trim();

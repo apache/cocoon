@@ -23,7 +23,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 /** Default RoleInfo implementation
  * @author <a href="mailto:ricardo@apache,org">Ricardo Rocha</a>
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-05 15:40:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-05 16:57:06 $
  */
 public class DefaultRoleInfo extends AbstractLoggable implements RoleInfo, Configurable {
     private Map shorthands = new Hashtable();
@@ -37,7 +37,6 @@ public class DefaultRoleInfo extends AbstractLoggable implements RoleInfo, Confi
     public Iterator shorthandNames() {
         return Collections.unmodifiableMap(this.shorthands).keySet().iterator();
     }
-
 
     public String defaultClass(String role) {
         return (String) this.classNames.get(role);

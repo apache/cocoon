@@ -77,12 +77,15 @@
   </markup-languages>
 
   <datasources>
-    <component-instance name="personnel" class="org.apache.avalon.util.datasource.JdbcDataSource">
+    <hint short-hand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
+    <hint short-hand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
+
+    <jdbc name="personnel">
       <pool-controller min="5" max="10"/>
       <dburl>jdbc:postgresql://localhost/test</dburl>
       <user>test</user>
       <password>test</password>
-    </component-instance>
+    </jdbc>
   </datasources>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->

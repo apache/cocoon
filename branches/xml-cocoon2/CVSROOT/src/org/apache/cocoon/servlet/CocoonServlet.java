@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.78 $ $Date: 2001-04-04 18:06:30 $
+ * @version CVS $Revision: 1.1.4.79 $ $Date: 2001-04-05 16:57:10 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -525,7 +525,11 @@ public class CocoonServlet extends HttpServlet {
         } catch (Exception e) {
             log.error("Exception reloading", e);
             this.exception = e;
-            this.cocoon.dispose();
+
+            if (cocoon != null) {
+                this.cocoon.dispose();
+            }
+
             this.cocoon = null;
         }
     }
