@@ -1,43 +1,46 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:template match="/">
+ <xsl:import href="copyover.xsl"/>
+
+ <xsl:param name="name"/>
+
+ <xsl:template match="changes">
+  <document>
+   <header>
+    <title><xsl:value-of select="@title"/></title>
+   </header>
+   <body>
     <xsl:apply-templates/>
-  </xsl:template>
+   </body>
+  </document>
+ </xsl:template>
+ 
+ <xsl:template match="release">
+  <s1 title="{$name} {@version} ({@date})">
+   <sl>
+    <xsl:apply-templates/>
+   </sl>
+  </s1>
+ </xsl:template>
 
-  <xsl:template match="changes">
-    <s1 title="{@title}">
-      <xsl:apply-templates/>
-    </s1>
-  </xsl:template>
+ <xsl:template match="action">
+  <li>
+   <icon src="images/{@type}.jpg" alt="{@type}"/>
+   <xsl:apply-templates/>
+   <xsl:text>(</xsl:text><xsl:value-of select="@dev"/><xsl:text>)</xsl:text>
+   
+   <xsl:if test="@due-to">
+    <xsl:text> Thanks to </xsl:text>
+    <link href="mailto:{@due-to-email}"><xsl:value-of select="@due-to"/></link>
+    <xsl:text>.</xsl:text>
+   </xsl:if>
+  </li>
+ </xsl:template>
 
-  <xsl:template match="release">
-    <s2 title="Release {@version} {@date}">
-      <br/><xsl:apply-templates/>
-    </s2>
-  </xsl:template>
-
-  <xsl:template match="features">
-    <s3 title="Features">
-      <ul><xsl:apply-templates/></ul>
-    </s3>
-  </xsl:template>
-
-  <xsl:template match="fixes">
-    <s3 title="Bugs fixed">
-      <ul><xsl:apply-templates/></ul>
-    </s3>
-  </xsl:template>
-
-  <xsl:template match="feat|fix">
-    <li><xsl:apply-templates/></li>
-  </xsl:template>
-
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
+ <xsl:template match="devs">
+  <!-- remove -->
+ </xsl:template>
+ 
 </xsl:stylesheet>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Revision: 1.1 $ $Date: 2000-01-23 23:09:24 $ -->
+<!-- CVS $Revision: 1.2 $ $Date: 2000-01-27 03:34:35 $ -->
 
 <loader>
   <processor name="xslt">
-    <parameter name="stylesheet" value="sbk:/style/book2project.xsl"/>
+    <parameter name="stylesheet" value="sbk:/style/stylesheets/book2project.xsl"/>
   </processor>
 </loader>

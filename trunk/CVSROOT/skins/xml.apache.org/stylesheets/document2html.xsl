@@ -6,15 +6,17 @@
   <xsl:param name="copyright"/>
   <xsl:param name="id"/>
 
-  <xsl:template match="/">
-    <xsl:apply-templates/>
-  </xsl:template>
+<!-- ====================================================================== -->
+<!-- document section -->
+<!-- ====================================================================== -->
 
-  <xsl:template match="s1">
+ <xsl:template match="/">
+  <!-- checks if this is the included document to avoid neverending loop -->
+  <xsl:if test="not(book)">
     <html>
       <head>
         <script language="JavaScript" type="text/javascript" src="resources/script.js"/>
-        <title><xsl:value-of select="@title"/></title>
+        <title><xsl:value-of select="title"/></title>
       </head>
       <body text="#000000" link="#0000ff" vlink="#0000aa" alink="#ff0000"
             topmargin="4" leftmargin="4" marginwidth="4" marginheight="4"
@@ -34,7 +36,7 @@
           </tr>
           <tr>
             <td width="100%" height="35" valign="top" align="left" colspan="2" bgcolor="#0086b2">
-              <img src="graphics/{$id}-header.jpg" width="456" height="35" hspace="0" vspace="0" border="0" alt="{s1/@title}" align="right"/>
+              <img src="graphics/{$id}-header.jpg" width="456" height="35" hspace="0" vspace="0" border="0" alt="{header/title}" align="right"/>
             </td>
           </tr>
           <tr>
@@ -70,6 +72,7 @@
             </td>
           </tr>
         </table>
+        
         <!-- THE MAIN PANEL (SIDEBAR AND CONTENT) -->
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
           <tr>
@@ -86,7 +89,10 @@
               </table>
             </td>
           </tr>
-        </table><br/>
+        </table>
+        
+        <br/>
+        
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr><td bgcolor="#0086b2"><img src="images/dot.gif" width="1" height="1"/></td></tr>
           <tr>
@@ -98,16 +104,18 @@
         </table>
       </body>
     </html>
-  </xsl:template>
-
-<!-- ###################################################################### -->
-<!-- book -->
-
-  <xsl:template match="book">
+   </xsl:if>
+   
+   <xsl:if test="book">
     <xsl:apply-templates/>
+   </xsl:if>
   </xsl:template>
 
-  <xsl:template match="document|faqs|changes|group">
+<!-- ====================================================================== -->
+<!-- book section -->
+<!-- ====================================================================== -->
+
+  <xsl:template match="page|faqs|changes|todo|spec">
     <xsl:if test="@id=$id">
       <img src="graphics/{@id}-label-1.jpg" width="120" height="12" hspace="0" vspace="0" border="0" alt="{@label}"/>
     </xsl:if>
@@ -132,12 +140,20 @@
   <xsl:template match="separator">
     <img src="resources/separator.gif" width="120" height="6" hspace="0" vspace="0" border="0"/><br/>
   </xsl:template>
+  
+<!-- ====================================================================== -->
+<!-- header section -->
+<!-- ====================================================================== -->
 
+ <xsl:template match="header">
+  <!-- ignore on general document -->
+ </xsl:template>
 
-<!-- ###################################################################### -->
-<!-- document -->
+<!-- ====================================================================== -->
+<!-- body section -->
+<!-- ====================================================================== -->
 
-  <xsl:template match="s2">
+  <xsl:template match="s1">
    <div align="right">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
@@ -170,8 +186,7 @@
    <br/>
   </xsl:template>
 
-  <xsl:template match="s3">
-   <br/>
+  <xsl:template match="s2">
    <div align="right">
     <table border="0" width="95%" cellspacing="0" cellpadding="0">
       <tr>
@@ -204,8 +219,7 @@
    <br/>
   </xsl:template>
 
-  <xsl:template match="s4">
-   <br/>
+  <xsl:template match="s3">
    <div align="right">
     <table border="0" width="90%" cellspacing="0" cellpadding="0">
       <tr>
@@ -238,8 +252,50 @@
    <br/>
   </xsl:template>
 
-<!-- ###################################################################### -->
-<!-- blocks -->
+  <xsl:template match="s4">
+   <div align="right">
+    <table border="0" width="85%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td width="100%" bgcolor="#0086b2">
+          <font size="-2" face="arial,helvetica,sanserif" color="#ffffff">
+            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
+         </td>
+        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+     </table>
+     <table border="0" width="90%" cellspacing="0" cellpadding="0">
+      <tr>
+       <td>
+        <font size="-3" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+       </td>
+      </tr>
+    </table>
+   </div>
+   <br/>
+  </xsl:template>
+    
+<!-- ====================================================================== -->
+<!-- footer section -->
+<!-- ====================================================================== -->
+
+ <xsl:template match="footer">
+  <!-- ignore on general documents -->
+ </xsl:template>
+
+<!-- ====================================================================== -->
+<!-- paragraph section -->
+<!-- ====================================================================== -->
 
   <xsl:template match="p">
     <p align="justify"><xsl:apply-templates/></p>
@@ -264,25 +320,13 @@
    </p>
   </xsl:template>
 
-  <xsl:template match="ul">
-    <ul><xsl:apply-templates/></ul>
-  </xsl:template>
-
-  <xsl:template match="ol">
-    <ol><xsl:apply-templates/></ol>
-  </xsl:template>
-
-  <xsl:template match="li">
-    <li><xsl:apply-templates/></li>
-  </xsl:template>
-
   <xsl:template match="source">
-  <div align="center">
-  <table cellspacing="4" cellpadding="0" border="0">
+   <div align="center">
+    <table cellspacing="4" cellpadding="0" border="0">
     <tr>
-      <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" width="1" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       <td bgcolor="#0086b2" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" width="1" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
     <tr>
       <td bgcolor="#0086b2" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
@@ -290,16 +334,61 @@
       <td bgcolor="#0086b2" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
     <tr>
-      <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" width="1" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       <td bgcolor="#0086b2" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" width="1" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
-  </table>
-  </div>
+    </table>
+   </div>
   </xsl:template>
+  
+  <xsl:template match="fixme">
+   <!-- ignore on documentation -->
+  </xsl:template>
+
+<!-- ====================================================================== -->
+<!-- list section -->
+<!-- ====================================================================== -->
+
+ <xsl:template match="ul|ol|dl">
+  <blockquote>
+   <xsl:copy>
+    <xsl:apply-templates/>
+   </xsl:copy>
+  </blockquote>
+ </xsl:template>
+ 
+ <xsl:template match="li">
+  <xsl:copy>
+   <xsl:apply-templates/>
+  </xsl:copy>
+ </xsl:template>
+
+ <xsl:template match="sl">
+  <ul>
+   <xsl:apply-templates/>
+  </ul>
+ </xsl:template>
+
+ <xsl:template match="dt">
+  <li>
+   <strong><xsl:value-of select="."/></strong>
+   <xsl:text> - </xsl:text>
+   <xsl:value-of select="following::dd"/>   
+  </li>
+ </xsl:template>
+ 
+ <xsl:template match="dd">
+  <!-- ignore since already used -->
+ </xsl:template>
+
+<!-- ====================================================================== -->
+<!-- table section -->
+<!-- ====================================================================== -->
 
   <xsl:template match="table">
     <table width="100%" border="0" cellspacing="2" cellpadding="2">
+      <caption><xsl:value-of select="caption"/></caption>
       <xsl:apply-templates/>
     </table>
   </xsl:template>
@@ -329,68 +418,73 @@
       &#160;
     </td>
   </xsl:template>
-
-<!-- ###################################################################### -->
-<!-- markup -->
-
-  <xsl:template match="em">
-    <b><xsl:apply-templates/></b>
+  
+  <xsl:template match="caption">
+    <!-- ignore since already used -->
   </xsl:template>
 
-  <xsl:template match="ref">
+<!-- ====================================================================== -->
+<!-- markup section -->
+<!-- ====================================================================== -->
+
+ <xsl:template match="strong">
+   <b><xsl:apply-templates/></b>
+ </xsl:template>
+
+ <xsl:template match="em">
     <i><xsl:apply-templates/></i>
-  </xsl:template>
-  
-  <xsl:template match="code">
+ </xsl:template>
+
+ <xsl:template match="code">
     <code><font face="courier, monospaced"><xsl:apply-templates/></font></code>
-  </xsl:template>
-  
-  <xsl:template match="br">
-    <br/>
-  </xsl:template>
-  
-<!-- ###################################################################### -->
-<!-- links -->
+ </xsl:template>
+ 
+<!-- ====================================================================== -->
+<!-- images section -->
+<!-- ====================================================================== -->
 
-  <xsl:template match="link">
-    <xsl:if test="string-length(@anchor)=0">
-      <xsl:if test="string-length(@idref)=0">
-        <xsl:apply-templates/>
-      </xsl:if>
-      <xsl:if test="string-length(@idref)>0">
-        <a href="{@idref}.html"><xsl:apply-templates/></a>
-      </xsl:if>
-    </xsl:if>
+ <xsl:template match="figure">
+  <p align="center"><img src="{@src}" alt="{@alt}" border="0" vspace="4" hspace="4"/></p>
+ </xsl:template>
+ 
+ <xsl:template match="img">
+   <img src="{@src}" alt="{@alt}" border="0" vspace="4" hspace="4" align="right"/>
+ </xsl:template>
 
-    <xsl:if test="string-length(@anchor)>0">
-      <xsl:if test="string-length(@idref)=0">
-        <a href="#{@anchor}"><xsl:apply-templates/></a>
-      </xsl:if>
-      <xsl:if test="string-length(@idref)>0">
-        <a href="{@idref}.html#{@anchor}"><xsl:apply-templates/></a>
-      </xsl:if>
-    </xsl:if>
-  </xsl:template>
+ <xsl:template match="icon">
+   <img src="{@src}" alt="{@alt}" border="0" align="absmiddle"/>
+ </xsl:template>
 
-  <xsl:template match="anchor">
-    <a name="{@name}"><xsl:comment>anchor</xsl:comment></a>
-  </xsl:template>
+<!-- ====================================================================== -->
+<!-- links section -->
+<!-- ====================================================================== -->
 
-  <xsl:template match="jump">
-    <a href="{@href}"><xsl:apply-templates/></a>
-  </xsl:template>
+ <xsl:template match="link">
+   <a href="{@href}"><xsl:apply-templates/></a>
+ </xsl:template>
 
-  <xsl:template match="img">
-    <img src="images/{@src}" border="0" vspace="4" hspace="4" align="right"/>
-  </xsl:template>
+ <xsl:template match="connect">
+  <!-- ignore until we have softlinking capabilities -->
+ </xsl:template>
 
-<!-- ###################################################################### -->
-<!-- copy
+ <xsl:template match="jump">
+   <a href="{@href}#{@anchor}"><xsl:apply-templates/></a>
+ </xsl:template>
 
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
--->
+ <xsl:template match="fork">
+   <a href="{@href}" target="_blank"><xsl:apply-templates/></a>
+ </xsl:template>
+
+ <xsl:template match="anchor">
+   <a name="{@name}"><xsl:comment>anchor</xsl:comment></a>
+ </xsl:template>  
+
+<!-- ====================================================================== -->
+<!-- specials section -->
+<!-- ====================================================================== -->
+
+ <xsl:template match="br">
+  <br/>
+ </xsl:template>
+
 </xsl:stylesheet>

@@ -1,53 +1,44 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:template match="/">
-    <xsl:apply-templates/>
-  </xsl:template>
+ <xsl:import href="copyover.xsl"/>
 
   <xsl:template match="faqs">
-    <s1 title="{@title}">
-      <s2 title="Questions">
-        <ul>
-          <xsl:apply-templates select="faq" mode="index"/>
-        </ul>
-      </s2>
-      <s2 title="Answers">
-        <br/>
+   <document>
+    <header>
+     <title><xsl:value-of select="@title"/></title>
+    </header>
+    <body>
+      <s1 title="Questions">
+       <ul>
+        <xsl:apply-templates select="faq" mode="index"/>
+       </ul>
+      </s1>
+      <s1 title="Answers">
         <xsl:apply-templates select="faq"/>
-      </s2>
-    </s1>
+      </s1>
+    </body>
+   </document>  
   </xsl:template>
 
   <xsl:template match="faq" mode="index">
     <li>
-      <link anchor="faq-{position()}">
-        <xsl:if test="string-length(@title)=0">
-          <xsl:value-of select="q"/>
-        </xsl:if>
-        <xsl:if test="string-length(@title)>0">
-          <xsl:value-of select="@title"/>
-        </xsl:if>
-      </link>
+      <jump anchor="faq-{position()}">
+        <xsl:value-of select="question"/>
+      </jump>
     </li>
   </xsl:template>
 
   <xsl:template match="faq">
     <anchor name="faq-{position()}"/>
-    <s3 title="{q}">
-      <xsl:apply-templates select="a"/>
-    </s3>
+    <s2 title="{question}">
+      <xsl:apply-templates/>
+    </s2>
   </xsl:template>
 
-  <xsl:template match="a">
+  <xsl:template match="answer">
     <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
   </xsl:template>
 
 </xsl:stylesheet>

@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
-
-  <xsl:template match="/">
-    <xsl:apply-templates/>
-  </xsl:template>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <!-- match the root book element -->
   <xsl:template match="book">
     <project>
 
       <parameter name="copyright" value="{@copyright}"/>
+      <parameter name="name" value="{@software}"/>
 
       <!-- copy all resources to the targets -->
       <process source="sbk:/style/resources/" producer="directory">
@@ -29,11 +26,38 @@
 <!-- CREATE THE TARGET HTML -->
 <!-- ********************************************************************** -->
 
-  <xsl:template match="document">
-
+  <xsl:template match="page|hidden">
     <process source="{@source}" producer="parser">
       <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2project.xsl"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/scan4resources.xsl"/>
+      </processor>
+    </process>
+
+    <xsl:call-template name="header">
+      <xsl:with-param name="id"     select="@id"/>
+      <xsl:with-param name="source" select="@source"/>
+      <xsl:with-param name="label"  select="@label"/>
+    </xsl:call-template>
+
+    <xsl:if test="not(name(.)='hidden')">
+      <xsl:call-template name="labels">
+        <xsl:with-param name="id" select="@id"/>
+        <xsl:with-param name="label" select="@label"/>
+      </xsl:call-template>
+    </xsl:if>
+    
+    <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
+      <processor name="xslt">
+        <parameter name="id" value="{@id}"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
+      </processor>
+    </create>
+  </xsl:template>
+
+  <xsl:template match="spec">
+    <process source="{@source}" producer="parser">
+      <processor name="xslt">
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/scan4resources.xsl"/>
       </processor>
     </process>
 
@@ -47,20 +71,22 @@
       <xsl:with-param name="id" select="@id"/>
       <xsl:with-param name="label" select="@label"/>
     </xsl:call-template>
-
+    
     <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
       <processor name="xslt">
         <parameter name="id" value="{@id}"/>
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/spec2html.xsl"/>
       </processor>
     </create>
   </xsl:template>
-
-  <xsl:template match="hidden">
-
+  
+  <xsl:template match="changes|faqs|todo">
     <process source="{@source}" producer="parser">
       <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2project.xsl"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/{name(.)}2document.xsl"/>
+      </processor>
+      <processor name="xslt">
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/scan4resources.xsl"/>
       </processor>
     </process>
 
@@ -68,28 +94,7 @@
       <xsl:with-param name="id"     select="@id"/>
       <xsl:with-param name="source" select="@source"/>
       <xsl:with-param name="label"  select="@label"/>
-    </xsl:call-template>
-
-    <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
-      <processor name="xslt">
-        <parameter name="id" value="{@id}"/>
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
-      </processor>
-    </create>
-  </xsl:template>
-
-  <xsl:template match="faqs">
-
-    <process source="{@source}" producer="parser">
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2project.xsl"/>
-      </processor>
-    </process>
-
-    <xsl:call-template name="header">
-      <xsl:with-param name="id"     select="@id"/>
-      <xsl:with-param name="source" select="@source"/>
-      <xsl:with-param name="label"  select="@label"/>
+      <xsl:with-param name="type"   select="name(.)"/>
     </xsl:call-template>
 
     <xsl:call-template name="labels">
@@ -99,110 +104,22 @@
 
     <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
       <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/faqs2document.xsl"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/{name(.)}2document.xsl"/>
       </processor>
       <processor name="xslt">
         <parameter name="id" value="{@id}"/>
         <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
       </processor>
     </create>
-
   </xsl:template>
-
-  <xsl:template match="changes">
-
-    <process source="{@source}" producer="parser">
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2project.xsl"/>
-      </processor>
-    </process>
-
-    <xsl:call-template name="header">
-      <xsl:with-param name="id"     select="@id"/>
-      <xsl:with-param name="source" select="@source"/>
-      <xsl:with-param name="label"  select="@label"/>
-    </xsl:call-template>
-
-    <xsl:call-template name="labels">
-      <xsl:with-param name="id" select="@id"/>
-      <xsl:with-param name="label" select="@label"/>
-    </xsl:call-template>
-
-    <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/changes2document.xsl"/>
-      </processor>
-      <processor name="xslt">
-        <parameter name="id" value="{@id}"/>
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
-      </processor>
-    </create>
-
-  </xsl:template>
-
-  <xsl:template match="group">
-    <xsl:apply-templates/>
-
-    <xsl:call-template name="header">
-      <xsl:with-param name="id"     select="@id"/>
-      <xsl:with-param name="source" select="@source"/>
-      <xsl:with-param name="label"  select="@label"/>
-    </xsl:call-template>
-
-    <xsl:call-template name="labels">
-      <xsl:with-param name="id" select="@id"/>
-      <xsl:with-param name="label" select="@label"/>
-    </xsl:call-template>
-
-    <create source="" target="{@id}.html" producer="project" printer="html">
-      <parameter name="id" value="{@id}"/>
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/book2group.xsl"/>
-      </processor>
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/group2document.xsl"/>
-      </processor>
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
-      </processor>
-    </create>
-
-  </xsl:template>
-
-  <xsl:template match="entry">
-
-    <process source="{@source}" producer="parser">
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2project.xsl"/>
-      </processor>
-    </process>
-
-    <xsl:call-template name="header">
-      <xsl:with-param name="id"     select="@id"/>
-      <xsl:with-param name="source" select="@source"/>
-      <xsl:with-param name="label"  select="@label"/>
-    </xsl:call-template>
-
-    <create source="{@source}" target="{@id}.html" producer="parser" printer="html">
-      <processor name="xslt">
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/faqs2document.xsl"/>
-      </processor>
-      <processor name="xslt">
-        <parameter name="id" value="{@id}"/>
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2html.xsl"/>
-      </processor>
-    </create>
-
-  </xsl:template>
-
+  
   <xsl:template match="external">
-
     <xsl:call-template name="labels">
       <xsl:with-param name="id" select="concat('ext-',position())"/>
       <xsl:with-param name="label" select="@label"/>
     </xsl:call-template>
-
   </xsl:template>
+  
 <!-- ********************************************************************** -->
 <!-- NAMED TEMPLATES -->
 <!-- ********************************************************************** -->
@@ -212,11 +129,16 @@
     <xsl:param name="id"/>
     <xsl:param name="source"/>
     <xsl:param name="label"/>
+    <xsl:param name="type"/>
 
     <create source="{$source}" target="graphics/{$id}-header.jpg" producer="parser" printer="image">
+      <xsl:if test="$type">
+       <processor name="xslt">
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/{$type}2document.xsl"/>
+       </processor>
+      </xsl:if>
       <processor name="xslt">
-        <parameter name="label" value="{$label}"/>
-        <parameter name="stylesheet" value="sbk:/style/stylesheets/any2header.xsl"/>
+        <parameter name="stylesheet" value="sbk:/style/stylesheets/document2image.xsl"/>
       </processor>
     </create>
   </xsl:template>
