@@ -67,14 +67,14 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.23 2003/10/30 16:50:46 vgritsenko Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.24 2004/02/05 13:58:52 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
     implements Environment {
 
     /** The current uri in progress */
-    protected String uris;
+    protected String uri;
 
     /** The prefix */
     protected String prefix;
@@ -108,7 +108,7 @@ public abstract class AbstractEnvironment
      * Constructs the abstract environment
      */
     public AbstractEnvironment(String uri, String view, String action) {
-        this.uris = uri;
+        this.uri = uri;
         this.view = view;
         this.action = action;
         this.objectModel = new HashMap();
@@ -146,33 +146,31 @@ public abstract class AbstractEnvironment
     /**
      * Helper method to extract the action name from the request.
      */
-     protected static String extractAction(Request req) {
-         String action = req.getParameter(Constants.ACTION_PARAM);
-         if (action != null) {
-             /* TC: still support the deprecated syntax */
-             return action;
-         } else {
-             for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
-                 String name = (String)e.nextElement();
-                 if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
-                     if (name.endsWith(".x") || name.endsWith(".y")) {
-                         return name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2);
-                     } else {
-                         return name.substring(Constants.ACTION_PARAM_PREFIX.length());
-                     }
-                 }
-             }
-             return null;
-         }
-     }
+    protected static String extractAction(Request req) {
+        String action = req.getParameter(Constants.ACTION_PARAM);
+        if (action != null) {
+            /* TC: still support the deprecated syntax */
+            return action;
+        } else {
+            for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
+                String name = (String)e.nextElement();
+                if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
+                    if (name.endsWith(".x") || name.endsWith(".y")) {
+                        return name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2);
+                    } else {
+                        return name.substring(Constants.ACTION_PARAM_PREFIX.length());
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
-    // Sitemap methods
-
-    /**
-     * Returns the uri in progress. The prefix is stripped off
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getURI()
      */
     public String getURI() {
-        return this.uris;
+        return this.uri;
     }
 
     /* (non-Javadoc)
@@ -187,77 +185,80 @@ public abstract class AbstractEnvironment
      */
     public void setURI(String prefix, String value) {
         this.prefix = prefix;
-        this.uris = value;
+        this.uri = value;
     }
 
-    /**
-     * Returns the request view
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getView()
      */
     public String getView() {
         return this.view;
     }
 
-    /**
-     * Returns the request action
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAction()
      */
     public String getAction() {
         return this.action;
     }
 
-    /**
-     * Set a status code
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setStatus(int)
      */
     public void setStatus(int statusCode) {
     }
 
-    /**
-     * Returns a Map containing environment specific objects
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getObjectModel()
      */
     public Map getObjectModel() {
         return this.objectModel;
     }
 
-    /**
-     * Check if the response has been modified since the same
-     * "resource" was requested.
-     * The caller has to test if it is really the same "resource"
-     * which is requested.
-     * @return true if the response is modified or if the
-     *         environment is not able to test it
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isResponseModified(long)
      */
     public boolean isResponseModified(long lastModified) {
         return true; // always modified
     }
 
-    /**
-     * Mark the response as not modified.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setResponseIsNotModified()
      */
     public void setResponseIsNotModified() {
         // does nothing
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String name) {
         this.attributes.remove(name);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttributeNames()
+     */
     public Enumeration getAttributeNames() {
         return new IteratorEnumeration(this.attributes.keySet().iterator());
     }
 
-    /**
-     * Get the output stream where to write the generated resource.
-     * The returned stream is buffered by the environment. If the
-     * buffer size is -1 then the complete output is buffered.
-     * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
@@ -274,13 +275,9 @@ public abstract class AbstractEnvironment
         }
     }
 
-    /**
-     * Reset the response if possible. This allows error handlers to have
-     * a higher chance to produce clean output if the pipeline that raised
-     * the error has already output some data.
-     *
-     * @return true if the response was successfully reset
-    */
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#tryResetResponse()
+     */
     public boolean tryResetResponse()
     throws IOException {
         if (this.secureOutputStream != null) {
@@ -290,8 +287,8 @@ public abstract class AbstractEnvironment
         return false;
     }
 
-    /**
-     * Commit the response
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#commitResponse()
      */
     public void commitResponse()
     throws IOException {
@@ -302,17 +299,17 @@ public abstract class AbstractEnvironment
         }
     }
 
-    /**
-     * Notify that the processing starts.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#startingProcessing()
      */
     public void startingProcessing() {
         // do nothing here
     }
 
-    /**
-     * Notify that the processing is finished
-     * This can be used to cleanup the environment object
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#finishingProcessing()
      */
     public void finishingProcessing() {
+        // do nothing here
     }
 }

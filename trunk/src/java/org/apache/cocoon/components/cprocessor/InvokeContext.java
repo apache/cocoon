@@ -63,8 +63,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.environment.internal.EnvironmentContext;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -79,7 +77,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.5 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.6 2004/02/05 13:58:55 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -168,15 +166,14 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
             this.pipelinesManager = this.currentManager;
 
             this.processingPipeline = (ProcessingPipeline)this.pipelinesManager.lookup(ProcessingPipeline.ROLE);
+            if (this.isBuildingPipelineOnly) {
+                this.processingPipeline.setInternalServiceManager(this.pipelinesManager);
+            }
             this.processingPipeline.reservice( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)
             );
-            if (this.isBuildingPipelineOnly) {
-                EnvironmentContext context = EnvironmentHelper.getCurrentEnvironmentContext();
-                context.addAttribute(TreeProcessor.PIPELINE_KEY, this.pipelinesManager);
-            }
         }
         return this.processingPipeline;
     }

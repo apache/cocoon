@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.27 2004/01/31 13:08:49 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.28 2004/02/05 13:59:01 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -124,7 +124,7 @@ public abstract class AbstractProcessingPipeline
     /** the service manager set with service() */
     protected ServiceManager manager;
 
-    /** the service manager set with service() and recompose() */
+    /** the service manager set with service() and reservice() */
     protected ServiceManager newManager;
 
     /** The configuration */
@@ -148,13 +148,33 @@ public abstract class AbstractProcessingPipeline
     /** The current Processor */
     protected Processor processor;
     
-    /**
-     * Serviceable Interface
+    /** The internal manager for releasing */
+    private ServiceManager internalManager;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager)
     throws ServiceException {
         this.manager = manager;
         this.newManager = manager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#release()
+     */
+    public final void releaseInternalPipeline() {
+        if ( this.internalManager != null ) {
+            this.internalManager.release(this);
+            this.internalManager = null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#setInternalServiceManager(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public final void setInternalServiceManager(ServiceManager manager) {
+        this.internalManager = manager;
     }
 
     /**

@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.11 2003/10/30 12:31:05 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.12 2004/02/05 13:58:51 cziegeler Exp $
  */
 public interface Environment {
 
@@ -121,7 +121,6 @@ public interface Environment {
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
      */
     OutputStream getOutputStream(int bufferSize) throws IOException;
 
