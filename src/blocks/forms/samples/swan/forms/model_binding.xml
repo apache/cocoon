@@ -16,9 +16,9 @@
 -->
 
 <!--
-Binding for Swan form model editor.
+  Binding for the Swan form-model editor.
 
-@version CVS $Id$
+  @version $Id$
 -->
 
 <fb:context

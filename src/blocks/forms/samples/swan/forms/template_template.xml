@@ -14,6 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--
+  Template for the Swan form-template editor.
+
+  @version $Id$
+-->
+
 <page
   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">

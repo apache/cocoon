@@ -16,9 +16,9 @@
 -->
 
 <!--
-Binding for example CForms sitemap editor GUI.
+  Binding for the Swan sitemap editor.
 
-@version CVS $Id$
+  @version $Id$
 -->
 
 <fb:context
