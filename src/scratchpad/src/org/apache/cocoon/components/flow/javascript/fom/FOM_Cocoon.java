@@ -87,6 +87,17 @@ public class FOM_Cocoon extends ScriptableObject {
         return "FOM_Cocoon";
     }
 
+    // Called by FOM_JavaScriptInterpreter
+    static void init(Scriptable scope) throws Exception {
+        defineClass(scope, FOM_Cocoon.class);
+        defineClass(scope, FOM_Request.class);
+        defineClass(scope, FOM_Response.class);
+        defineClass(scope, FOM_Cookie.class);
+        defineClass(scope, FOM_Session.class);
+        defineClass(scope, FOM_Context.class);
+        defineClass(scope, FOM_Log.class);
+    }
+
     public void setup(FOM_JavaScriptInterpreter interp,
                       Environment env, 
                       ComponentManager manager) {

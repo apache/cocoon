@@ -100,7 +100,7 @@ import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.1 2003/06/20 08:28:20 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.2 2003/06/22 18:12:27 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -249,19 +249,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         try {
             scope = new Global(context);
             // Access to Cocoon internal objects
-            ScriptableObject.defineClass(scope, FOM_Cocoon.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Request.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Response.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Session.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Context.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Cookie.class);
-            ScriptableObject.defineClass(scope,
-                                         FOM_Cocoon.FOM_Log.class);
+            FOM_Cocoon.init(scope);
             errorReporter = new JSErrorReporter(getLogger());
         }
         catch (Exception e) {
@@ -608,17 +596,17 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         if (enableDebugger) {
             getDebugger().setVisible(true);
         }
-        int size = (params != null ? params.size() : 0);
-        NativeArray parameters = new NativeArray(size);
+        //int size = (params != null ? params.size() : 0);
+        //NativeArray parameters = new NativeArray(size);
 
-        if (size != 0) {
-            for (int i = 0; i < size; i++) {
-                Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                parameters.put(arg.name, parameters, arg.value);
-            }
-        }
-        Object[] args = new Object[] {k};
+        //if (size != 0) {
+        //for (int i = 0; i < size; i++) {
+        //Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+        //parameters.put(arg.name, parameters, arg.value);
+        //}
+        //}
         //cocoon.setParameters(parameters);
+        Object[] args = new Object[] {k};
         try {
             ScriptableObject.callMethod(cocoon, "handleContinuation", args);
         } catch (JavaScriptException ex) {
@@ -644,6 +632,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             }
             throw new CascadingRuntimeException(ee.getMessage(), ee);
         } finally {
+            cocoon.invalidate();
             Context.exit();
         }
     }
