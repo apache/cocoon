@@ -41,7 +41,6 @@ public class CommandLinkTag extends UIComponentTag {
     private String hreflang;
     private String lang;
     private String onblur;
-    private String onclick;
     private String ondblclick;
     private String onfocus;
     private String onkeydown;
@@ -105,10 +104,6 @@ public class CommandLinkTag extends UIComponentTag {
 
     public void setOnblur(String onblur) {
         this.onblur = onblur;
-    }
-
-    public void setOnclick(String onclick) {
-        this.onclick = onclick;
     }
 
     public void setOndblclick(String ondblclick) {
@@ -251,7 +246,6 @@ public class CommandLinkTag extends UIComponentTag {
         setProperty(component, "hreflang", hreflang);
         setProperty(component, "lang", lang);
         setProperty(component, "onblur", onblur);
-        setProperty(component, "onclick", onclick);
         setProperty(component, "ondblclick", ondblclick);
         setProperty(component, "onfocus", onfocus);
         setProperty(component, "onkeydown", onkeydown);
@@ -286,7 +280,6 @@ public class CommandLinkTag extends UIComponentTag {
         hreflang = null;
         lang = null;
         onblur = null;
-        onclick = null;
         ondblclick = null;
         onfocus = null;
         onkeydown = null;
