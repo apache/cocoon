@@ -252,7 +252,7 @@ public class PortletURLProviderImpl
                 this.generatedURL = this.linkService.getLinkURI(l, secure);
             }
         }
-        return this.generatedURL;
+        return linkService.encodeURL(this.generatedURL);
     }
 
     /* (non-Javadoc)
