@@ -42,9 +42,7 @@ class Pipeline {
         this.pipeline.serializer = serializer
     }
     
-    public void process() {
-        builder = new DOMBuilder()
-        this.pipeline.process(null, builder)
-        println(builder.document.documentElement)
+    public void process(environment, consumer) {
+        this.pipeline.process(environment, consumer)
     }
 }

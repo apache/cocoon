@@ -15,7 +15,7 @@
  */
 class MyPipeline extends Pipeline {
   
-    void define(String requestPath) {
+    void setup(String requestPath) {
         if (requestPath =~ ".*\.html") {
             generate "testdata/traxtest-input.xml"
             transform "trax", "testdata/traxtest-style.xsl" 

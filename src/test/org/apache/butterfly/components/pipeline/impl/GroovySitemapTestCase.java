@@ -17,15 +17,15 @@ package org.apache.butterfly.components.pipeline.impl;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-
-import java.io.IOException;
-
 import junit.framework.TestCase;
 
-import org.codehaus.groovy.control.CompilationFailedException;
+import org.apache.butterfly.xml.WhitespaceFilter;
+import org.apache.butterfly.xml.dom.DOMBuilder;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.xml.sax.InputSource;
 
 /**
  * Description of GroovySitemapTestCase.
@@ -48,7 +48,8 @@ public class GroovySitemapTestCase extends TestCase {
         beanFactory = new XmlBeanFactory(res);
     }
 
-    public void testGroovySitemap() throws CompilationFailedException, IOException, InstantiationException, IllegalAccessException {
+    public void testGroovySitemap() throws Exception {
+        XMLUnit.setIgnoreWhitespace(true);
         ClassLoader parent = getClass().getClassLoader();
         GroovyClassLoader loader = new GroovyClassLoader(parent);
         Class pipelineClass = loader.parseClass(getClass().getResourceAsStream("Pipeline.groovy"));
@@ -56,7 +57,12 @@ public class GroovySitemapTestCase extends TestCase {
         GroovyObject pipeline = (GroovyObject) myPipelineClass.newInstance();
         pipeline.setProperty("beanFactory", beanFactory);
         Object[] args = { "index.html" };
-        pipeline.invokeMethod("define", args);
-        pipeline.invokeMethod("process", new Object[] {});
+        pipeline.invokeMethod("setup", args);
+        DOMBuilder builder = new DOMBuilder();
+        pipeline.invokeMethod("process", new Object[] { null, new WhitespaceFilter(builder) });
+        assertTrue("Output from pipeline does not match control file.",
+                XMLUnit.compareXML(
+                        XMLUnit.buildControlDocument(new InputSource("testdata/traxtest-result.xml")),
+                        builder.getDocument()).similar());
     }
 }
