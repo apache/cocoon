@@ -69,7 +69,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletResponse.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
+ * @version CVS $Id: PortletResponse.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  */
 public abstract class PortletResponse implements Response {
 

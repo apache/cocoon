@@ -120,7 +120,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.2 2003/12/03 13:20:30 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.1 2004/02/23 15:14:05 cziegeler Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 

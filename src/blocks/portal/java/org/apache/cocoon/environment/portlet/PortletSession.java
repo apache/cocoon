@@ -64,7 +64,7 @@ import java.util.NoSuchElementException;
  * @see javax.portlet.PortletSession
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletSession.java,v 1.3 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: PortletSession.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  */
 public final class PortletSession implements Session {
 

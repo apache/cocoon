@@ -48,46 +48,66 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portlet;
+package org.apache.cocoon.environment.portlet;
 
-import org.apache.log.format.Formatter;
-import org.apache.log.output.AbstractOutputTarget;
-
-import javax.portlet.PortletContext;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Log output target for JSR-168 Portlet context
+ * Implements the {@link org.apache.cocoon.environment.Request} interface for the
+ * JSR-168 (Portlet) environment.
  *
+ * @version CVS $Id: ActionRequest.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletOutputLogTarget.java,v 1.2 2003/12/03 13:20:30 vgritsenko Exp $
+ * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
  */
-public class PortletOutputLogTarget extends AbstractOutputTarget {
+public final class ActionRequest extends PortletRequest {
 
-    private PortletContext context;
-
-    public PortletOutputLogTarget(PortletContext context) {
-        this.context = context;
-        open();
+    /**
+     * Creates a ActionRequest based on a real ActionRequest object
+     */
+    protected ActionRequest(String servletPath,
+                            String pathInfo,
+                            javax.portlet.ActionRequest request,
+                            PortletEnvironment environment) {
+        super(servletPath, pathInfo, request, environment);
     }
 
-    public PortletOutputLogTarget(PortletContext context, Formatter formatter) {
-        super(formatter);
-        this.context = context;
-        open();
-    }
+    // Request API methods
 
-    protected void write(String message) {
-        PortletContext context = this.context;
-        if (context != null) {
-            synchronized (context) {
-                context.log(message);
-            }
+    public String getCharacterEncoding() {
+        if (super.getCharacterEncoding() == null) {
+            return getActionRequest().getCharacterEncoding();
+        } else {
+            return super.getCharacterEncoding();
         }
     }
 
-    public synchronized void close() {
-        super.close();
-        this.context = null;
+    /**
+     * Action request can be always recognized by POST method
+     */
+    public String getMethod() {
+        return "POST";
+    }
+
+
+    // ActionRequest API methods
+
+    /**
+     * Type cast portletRequest to ActionRequest
+     *
+     * @return type casted portletRequest
+     */
+    public javax.portlet.ActionRequest getActionRequest() {
+        return (javax.portlet.ActionRequest) getPortletRequest();
+    }
+
+    public InputStream getPortletInputStream() throws IOException {
+        return getActionRequest().getPortletInputStream();
+    }
+
+    public BufferedReader getReader() throws IOException {
+        return getActionRequest().getReader();
     }
 }
