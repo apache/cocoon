@@ -18,6 +18,7 @@ package org.apache.cocoon.components.source.impl;
 import java.io.IOException;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -39,13 +40,11 @@ import org.xml.sax.SAXException;
 
 /**
  * This source inspector inspects XML files with a xpath expression.
- *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.7 2004/03/05 13:02:21 bdelacretaz Exp $
+ * 
+ * @version CVS $Id: XPathSourceInspector.java,v 1.8 2004/03/27 21:49:09 unico Exp $
  */
-public class XPathSourceInspector extends AbstractLogEnabled implements 
-    SourceInspector, Serviceable, Parameterizable, ThreadSafe {
+public class XPathSourceInspector extends AbstractLogEnabled 
+implements SourceInspector, Serviceable, Parameterizable, ThreadSafe {
 
     /**
      * The default namespace uri of the property exposed by this SourceInspector.
@@ -63,45 +62,45 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
      */
     public static final String DEFAULT_PROPERTY_NAME = "result";
     
-    private static final SourceValidity VALIDITY = new NOPValidity();
+    private String m_namespace;
+    private String m_propertyname;
+    private String m_extension;
+    private String m_xpath;
     
-    private String propertynamespace;
-    private String propertyname;
-    private String extension;
-    private String xpath;
-
     private ServiceManager manager = null;
-
+    
+    public XPathSourceInspector() {
+    }
+    
     public void service(ServiceManager manager) {
         this.manager = manager;
     }
     
-    public void parameterize(Parameters params)  {
-        this.propertynamespace = params.getParameter("namespace", DEFAULT_PROPERTY_NS);
-        this.propertyname = params.getParameter("name", DEFAULT_PROPERTY_NAME);
-        this.extension = params.getParameter("extension", ".xml");
-        this.xpath = params.getParameter("xpath", "/*");
+    public void parameterize(Parameters params) throws ParameterException {
+        this.m_namespace = params.getParameter("namespace", DEFAULT_PROPERTY_NS);
+        this.m_propertyname = params.getParameter("name", DEFAULT_PROPERTY_NAME);
+        this.m_extension = params.getParameter("extension", ".xml");
+        this.m_xpath = params.getParameter("xpath", "/*");
     }
     
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
-        throws SourceException {
+    throws SourceException {
 
-        if ((namespace.equals(propertynamespace)) && (name.equals(propertyname)) && 
-            (source.getURI().endsWith(extension))) {
+        if ((namespace.equals(m_namespace)) && 
+                (name.equals(m_propertyname)) && 
+                (source.getURI().endsWith(m_extension))) {
 
             DOMParser parser = null;
             Document doc = null;
             try { 
-                parser = (DOMParser)manager.lookup(DOMParser.ROLE);
-
+                parser = (DOMParser) manager.lookup(DOMParser.ROLE);
                 doc = parser.parseDocument(new InputSource(source.getInputStream()));
             } catch (SAXException se) {
-                this.getLogger().error(source.getURI()
-                                        + " is not a valid XML file");
+                this.getLogger().error(source.getURI() + " is not a valid XML file");
             } catch (IOException ioe) {
                 this.getLogger().error("Could not read file", ioe);
             } catch (ServiceException ce) {
-                this.getLogger().error("Could not retrieve component", ce);
+                this.getLogger().error("Missing service dependency: DOMParser", ce);
             } finally {
                 if (parser != null) {
                     this.manager.release(parser);
@@ -109,16 +108,12 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
             }
 
             if (doc != null) {
-
                 XPathProcessor processor = null;
                 try {
                     processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
-
-                    NodeList nodelist = processor.selectNodeList(doc.getDocumentElement(), this.xpath);
-
-                    SourceProperty property = new SourceProperty(this.propertynamespace, this.propertyname);
+                    NodeList nodelist = processor.selectNodeList(doc.getDocumentElement(), m_xpath);
+                    SourceProperty property = new SourceProperty(m_namespace, m_propertyname);
                     property.setValue(nodelist);
-
                     return property;
                 } catch (ServiceException se) {
                     this.getLogger().error("Could not retrieve component", se);
@@ -129,26 +124,25 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
                 }
             }
         } 
-        return null;  
+        return null;
     }
 
     public SourceProperty[] getSourceProperties(Source source) throws SourceException {
-
-        SourceProperty property = getSourceProperty(source, this.propertynamespace, this.propertyname);
+        SourceProperty property = getSourceProperty(source, this.m_namespace, this.m_propertyname);
         if (property!=null)
             return new SourceProperty[]{property};
         return null;
     }
     
     public boolean handlesProperty(String namespace, String name) {
-        return this.propertynamespace.equals(namespace) && this.propertyname.equals(name);
+        return this.m_namespace.equals(namespace) && this.m_propertyname.equals(name);
     }
 
     /**
      * Returns NOPValidity
      */
     public SourceValidity getValidity(Source source) {
-        return VALIDITY;
+        return NOPValidity.SHARED_INSTANCE;
     }
     
 }
