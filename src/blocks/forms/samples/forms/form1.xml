@@ -237,6 +237,14 @@
       </fd:selection-list>
     </fd:field>
   
+    <fd:field id="altbirthdate2" required="true">
+      <fd:label>Select another date on which you'd rather had been born:</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor variant="date" style="full"/>
+      </fd:datatype>
+      <fd:selection-list type="java" class="org.apache.cocoon.forms.samples.DateTestJavaSelectionList" nullable="false"/>
+    </fd:field>
+
     <fd:field id="dieselprice" required="true">
       <fd:label>Price for a liter diesel:</fd:label>
       <fd:datatype base="decimal">

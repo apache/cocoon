@@ -87,6 +87,7 @@
                 <ft:widget id="visa"/>
                 <ft:widget id="ipaddress"/>
                 <ft:widget id="altbirthdate"/>
+                <ft:widget id="altbirthdate2"/>
                 <ft:widget id="dieselprice"/>
               </fi:items>
             </fi:group>
