@@ -22,7 +22,7 @@
     <copy todir="${build.webapp}/resources" filtering="off">
       <fileset dir="${webapp}/resources"/>
     </copy>
-            
+
     <copy todir="${build.webapp}/WEB-INF" filtering="on">
       <fileset dir="${webapp}/WEB-INF">
         <include name="entities/**"/>
@@ -42,7 +42,7 @@
         <include name="*.jar"/>
         <exclude name="servlet*.jar"/>
       </fileset>
-      <!-- Currently, we have no JVM dependent libraries 
+      <!-- Currently, we have no JVM dependent libraries
         <fileset dir="${lib.core}/jvm${target.vm}">
           <include name="*.jar"/>
         </fileset>
@@ -76,15 +76,15 @@
   </target>
 
   <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="unless.exclude.webapp.samples"/>
- 
+
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
-            srcdir="${deprecated.conf}" 
+            srcdir="${deprecated.conf}"
             includes="**/*.xconf"
             addComments="true"/>
   </target>
-  
+
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
     <mkdir dir="${build.webapp.javadocs}"/>
 
@@ -94,13 +94,13 @@
 
     <!-- patch the welcome page to tell we have javadocs to show -->
     <xpatch file="${build.webapp}/welcome.xml"
-            srcdir="${resources.javadoc}" 
-            includes="**/*.xwelcome"/>    
+            srcdir="${resources.javadoc}"
+            includes="**/*.xwelcome"/>
   </target>
-    
+
   <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="unless.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
-    
+
     <copy todir="${build.webapp.docs}" filtering="on">
       <fileset dir="${documentation}">
         <exclude name="**/*.jpg"/>
@@ -115,7 +115,7 @@
       tofile="${build.webapp.docs}/xdocs/status.xml" filtering="on"/>
     <!-- Copy the docs about all jar files (this requires a dependency to validate-jars) -->
     <copy file="${build.temp}/jars.xml"
-      tofile="${build.webapp.docs}/xdocs/installing/jars.xml" 
+      tofile="${build.webapp.docs}/xdocs/installing/jars.xml"
       filtering="off" failonerror="false" overwrite="true"/>
 
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
@@ -133,10 +133,10 @@
 
     <!-- patch the welcome page to tell we have documentation to show -->
     <xpatch file="${build.webapp}/welcome.xml"
-            srcdir="${documentation}" 
-            includes="**/*.xwelcome"/>    
+            srcdir="${documentation}"
+            includes="**/*.xwelcome"/>
   </target>
-  
+
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
   </target>
 
