@@ -78,14 +78,17 @@ import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.source.Source;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.1 2003/03/09 00:09:18 pier Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.2 2003/03/20 08:54:17 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -150,6 +153,9 @@ public class TreeProcessor
     /** component configurations */
     protected Configuration componentConfigurations;
 
+    /** The different sitemap component configurations */
+    protected Map sitemapComponentConfigurations;
+    
     /**
      * Create a TreeProcessor.
      */
@@ -356,6 +362,39 @@ public class TreeProcessor
      * @since 2.1
      */
     public Configuration getComponentConfigurations() {
+        // do we have the sitemap configurations prepared for this processor?
+        /*if ( null == sitemapComponentConfigurations ) {
+
+            // do we have configurations?
+            final Configuration[] childs = (this.componentConfigurations == null ? null : this.componentConfigurations.getChildren());
+            
+            if ( childs == null ) {
+                Map configurationMap = null;
+                if ( null == this.parent ) {
+                    this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
+                } else {
+                    // use configuration from parent
+                    this.sitemapComponentConfigurations = (Map)this.parent.getComponentConfigurations(); 
+                }
+
+            } else {
+
+                Map configurationMap = null;
+                if ( null == this.parent ) {
+                    configurationMap = new HashMap(12);
+                } else {
+                    // copy all configurations from parent
+                    configurationMap = new HashMap((Map)this.parent.getComponentConfigurations()); 
+                }
+                
+                // and now check for new configurations
+                for(int m = 0; m < childs.length; m++) {
+                    
+                    //final String r = this.roleManager.getRoleForName(childs[m].getName());
+                }
+            }
+        }*/
+        
         return this.componentConfigurations;
     }
 
