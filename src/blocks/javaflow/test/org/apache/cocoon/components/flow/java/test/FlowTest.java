@@ -45,27 +45,27 @@ public class FlowTest extends TestCase {
     }
 
     private static ClassLoader loader = new ContinuationClassLoader(FlowTest.class.getClassLoader());
-		private ContinuationContext context;
-		private MockRequest request;
-		private MockRedirector redirector;
-		private HashMap objectmodel;
+    private ContinuationContext context;
+    private MockRequest request;
+    private MockRedirector redirector;
+    private HashMap objectmodel;
 
-		public void setUp() {
+    public void setUp() {
 
         context = new ContinuationContext();
-			
-			  DefaultContext avalonContext = new DefaultContext();
+      
+        DefaultContext avalonContext = new DefaultContext();
 
-				request = new MockRequest();
-				avalonContext.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
-				objectmodel = new HashMap();
-				objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-				avalonContext.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
+        request = new MockRequest();
+        avalonContext.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
+        objectmodel = new HashMap();
+        objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
+        avalonContext.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
         redirector = new MockRedirector();
 
-				context.setAvalonContext(avalonContext);
-				context.setRedirector(redirector);
-		}
+        context.setAvalonContext(avalonContext);
+        context.setRedirector(redirector);
+    }
 
     public void testSimple() throws Exception {
 
@@ -106,7 +106,7 @@ public class FlowTest extends TestCase {
 
         //System.out.println("request=" + request);
         request.addParameter("a", "2.3");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -124,7 +124,7 @@ public class FlowTest extends TestCase {
         assertTrue(!c.isCapturing());
 
         VarMap map = (VarMap)FlowHelper.getContextObject(objectmodel);
-				
+        
         assertEquals(((Float)map.getMap().get("result")).floatValue(), 3.3f, 0.1f);
 
         JXPathContext jxcontext = JXPathContext.newContext(FlowHelper.getContextObject(objectmodel));
@@ -158,7 +158,7 @@ public class FlowTest extends TestCase {
         assertEquals(redirector.getRedirect(), "cocoon:/getNumberA");
 
         request.addParameter("a", "bla");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -177,7 +177,7 @@ public class FlowTest extends TestCase {
 
         assertEquals(redirector.getRedirect(), "cocoon:/error");
 
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -220,7 +220,7 @@ public class FlowTest extends TestCase {
         assertEquals(context.getRedirectedURI(), "cocoon:/getNumberA");
 
         request.addParameter("a", "bla");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -237,7 +237,7 @@ public class FlowTest extends TestCase {
 
         assertEquals(context.getRedirectedURI(), "cocoon:/result");
 
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -322,7 +322,7 @@ public class FlowTest extends TestCase {
         assertEquals(redirector.getRedirect(), "cocoon:/page/getNumberA");
 
         request.addParameter("a", "2");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -344,7 +344,7 @@ public class FlowTest extends TestCase {
         assertEquals(redirector.getRedirect(), "cocoon:/page/getNumberB");
 
         request.addParameter("b", "2");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());
@@ -366,7 +366,7 @@ public class FlowTest extends TestCase {
         assertEquals(redirector.getRedirect(), "cocoon:/page/getOperator");
         
         request.addParameter("operator", "plus");
-				redirector.reset();
+        redirector.reset();
         c = new Continuation(c, context);
 
         assertTrue(c.isRestoring());

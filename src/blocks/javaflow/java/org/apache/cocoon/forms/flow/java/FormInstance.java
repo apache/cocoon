@@ -34,18 +34,18 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.1 2004/03/31 13:32:57 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.2 2004/03/31 14:16:30 stephan Exp $
  */
 public class FormInstance extends AbstractCocoonFlow {
 
-	  private Form form;
-		private Binding binding;
+    private Form form;
+    private Binding binding;
     private Widget formWidget;
-		private Locale locale;
-		private boolean isValid;
-		private String submitId;
-		private Object validator; // Used?
-	
+    private Locale locale;
+    private boolean isValid;
+    private String submitId;
+    private Object validator; // Used?
+  
     /**
      * Create a form, given the URI of its definition file
      */
@@ -69,38 +69,38 @@ public class FormInstance extends AbstractCocoonFlow {
             if (src != null) resolver.release(src);
             releaseComponent(resolver);
         }
-		}
+    }
 
-		/**
+    /**
      * Create a form, given the URI of its definition file, the
-		 * binding file.
+     * binding file.
      */
-		public FormInstance(String definitionFile, String bindingFile) {
-			  this(definitionFile);
-				createBinding(bindingFile);
-		}
+    public FormInstance(String definitionFile, String bindingFile) {
+        this(definitionFile);
+        createBinding(bindingFile);
+    }
 
     /**
      * Create a form of an fd:form element in the form of a org.w3c.dom.Element
      */
     public FormInstance(Element formDefinition) {
         FormManager formMgr = null;
-			  SourceResolver resolver = null;
-				Source src = null;
-		    try {
-					  formMgr = (FormManager)getComponent(FormManager.ROLE);
+        SourceResolver resolver = null;
+        Source src = null;
+        try {
+            formMgr = (FormManager)getComponent(FormManager.ROLE);
             resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
-						Form form = formMgr.createForm(formDefinition);
-		        this.binding = null;
-		        // this.formWidget = new Widget(form);  could not create instance
-		        // this.local = cocoon.createPageLocal(); PageLocal ?
-			  } catch (Exception e) {
+            Form form = formMgr.createForm(formDefinition);
+            this.binding = null;
+            // this.formWidget = new Widget(form);  could not create instance
+            // this.local = cocoon.createPageLocal(); PageLocal ?
+        } catch (Exception e) {
             throw new RuntimeException(e.toString());
-  	    } finally {
+        } finally {
             releaseComponent(formMgr);
             if (src != null) resolver.release(src);
             releaseComponent(resolver);
-				}
+        }
     }
 
     public Widget getModel() {
@@ -125,9 +125,9 @@ public class FormInstance extends AbstractCocoonFlow {
      * redisplayed. If setBookmark() is not called, this is implicitly set to
      * the beginning of showForm().
      */
-/*		public WebContinuation setBookmark() {
-			    return (this.local_.webContinuation = cocoon.createWebContinuation());
-		}*/
+/*    public WebContinuation setBookmark() {
+          return (this.local_.webContinuation = cocoon.createWebContinuation());
+    }*/
 
     /**
      * Returns the bookmark continuation associated with this form, or undefined
@@ -136,12 +136,12 @@ public class FormInstance extends AbstractCocoonFlow {
      */
 /*    public WebContinuation getBookmark() {
         return this.local_.webContinuation;
-    }	*/
+    }  */
 
     public void show(String uri) {
         show(uri, new VarMap());
-		}
-		
+    }
+    
     /**
      * Manages the display of a form and its validation.
      *
@@ -178,7 +178,7 @@ public class FormInstance extends AbstractCocoonFlow {
         do {
             sendPageAndWait(uri, bizData);
         
-						FormContext formContext = new FormContext(getRequest(), locale);
+            FormContext formContext = new FormContext(getRequest(), locale);
 
             // Prematurely add the bizData as a request attribute so that event listeners can use it
             // (the same is done by cocoon.sendPage())
@@ -217,33 +217,33 @@ public class FormInstance extends AbstractCocoonFlow {
      *  created
      * @returns The web continuation associated with submitting this form
      */
-/*		public showForm(String uri, Object fun, ttl) {
+/*    public showForm(String uri, Object fun, ttl) {
         if (!this.getBookmark()) {
-				    this.setBookmark();
-		    }
-				FormContext formContext = FormsFlowHelper.getFormContext(cocoon, this.locale);
-		    // this is needed by the FormTemplateTransformer:
-				//var javaWidget = this.formWidget_.unwrap();;
-		    //this.formWidget_["CocoonFormsInstance"] = javaWidget;
-		    getRequest().setAttribute(Packages.org.apache.cocoon.forms.transformation.CFORMSKEY, this.formWidget);
-		    WebContinuation wk = sendPageAndWait(uri, this.formWidget, fun, ttl);
-		    var formContext = new FormContext(cocoon.request, javaWidget.getLocale());
-		    var userErrors = 0;
+            this.setBookmark();
+        }
+        FormContext formContext = FormsFlowHelper.getFormContext(cocoon, this.locale);
+        // this is needed by the FormTemplateTransformer:
+        //var javaWidget = this.formWidget_.unwrap();;
+        //this.formWidget_["CocoonFormsInstance"] = javaWidget;
+        getRequest().setAttribute(Packages.org.apache.cocoon.forms.transformation.CFORMSKEY, this.formWidget);
+        WebContinuation wk = sendPageAndWait(uri, this.formWidget, fun, ttl);
+        var formContext = new FormContext(cocoon.request, javaWidget.getLocale());
+        var userErrors = 0;
         this.formWidget_.validationErrorListener = function(widget, error) {
             if (error != null) {
                 userErrors++;
             }
-		    }
-		    var finished = javaWidget.process(formContext);
-		    if (this.onValidate) {
+        }
+        var finished = javaWidget.process(formContext);
+        if (this.onValidate) {
             this.onValidate(this);
-		    }
-		    if (!finished || userErrors > 0) {
-		        cocoon.continuation = this.local_.webContinuation;
-				    this.local_.webContinuation.continuation(this.local_.webContinuation);
-				}
-				return wk;
-		}*/
+        }
+        if (!finished || userErrors > 0) {
+            cocoon.continuation = this.local_.webContinuation;
+            this.local_.webContinuation.continuation(this.local_.webContinuation);
+        }
+        return wk;
+    }*/
 
     public void createBinding(String bindingURI) {
         BindingManager bindingManager = null;
@@ -254,7 +254,7 @@ public class FormInstance extends AbstractCocoonFlow {
             resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
             source = resolver.resolveURI(bindingURI);
             this.binding = bindingManager.createBinding(source);
-				} catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.toString());
         } finally {
             if (source != null)
@@ -268,22 +268,22 @@ public class FormInstance extends AbstractCocoonFlow {
         if (this.binding == null)
             throw new Error("Binding not configured for this form.");
 
-				try {
+        try {
             this.binding.loadFormFromModel(this.form, object);
-				} catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.toString());
-				}
+        }
     }
 
     public void save(Object object) {
         if (this.binding == null)
             throw new Error("Binding not configured for this form.");
 
-				try {
+        try {
             this.binding.saveFormToModel(this.form, object);
-				} catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.toString());
-				}
+        }
     }
 
     public void setAttribute(String name, Object value) {
