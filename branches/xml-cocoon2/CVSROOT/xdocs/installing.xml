@@ -35,62 +35,8 @@
 
  <s1 title="Installing Cocoon2 on Apache Tomcat (standalone only)">
 
-  <p>
-    First copy all jar archives from <code>[path-to-Cocoon2]/lib</code>
-    to <code>[path-to-Tomcat]/lib</code> except <code>ant.jar</code>, <code>servlet_2_2.jar</code>
-    and <code>stylebook-1.0-b2.jar</code>.
-  </p>
+  <p>Look into the INSTALL document for now (more docs in preparation)</p>
   
-  <p>
-    Copy <code>[path-to-Cocoon2]/bin/cocoon.jar</code> to
-    <code>[path-to-Tomcat]/lib</code>, as well.
-  </p>
-  
-  <p>
-    If you are running running Tomcat on a Windows operating system you have 
-    to adjust your classpath to include all jar files copied so far in the 
-    <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. Add the following lines 
-    right after the line <code>set CLASSPATH=.</code>
-  </p>
-  
-  <source>
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\AvalonAware.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\bsf.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_13_0.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jakarta-regexp-1.1.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\js.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_1_2.jar
-  </source>
-  
-  <p>
-    On UNIX operating systems, Tomcat will automatically handle the setup of 
-    the classpath based on alphabetical order.  If you use a newer version of 
-    Tomcat (i.e. current CVS version) that requires <code>jaxp.jar</code> and 
-    <code>parser.jar</code> instead of <code>xml.jar</code> you should rename 
-    <code>parser.jar</code> to <code>zparser.jar</code> to make it 
-    appear as last, otherwise Cocoon will not work because it requires SAX2
-    and DOM2 to operate which are included in Xerces so must appear in front.
-  </p>
-  
-  <p>
-    Copy <code>[path-to-Cocoon]/webapps/cocoon.war</code> to 
-    <code>[path-to-Tomcat]/webapps</code>.  Tomcat will create the new Cocoon 
-    context out of the <code>cocoon.war</code> file as soon as it's restarted.
-  </p>
-  
-  <p>
-    Finally, restart Tomcat, point your browser to...
-  </p>
-  
-  <source><link href="http://localhost:8080/cocoon/welcome">http://localhost:8080/cocoon/welcome</link></source>
-  
-  <p>
-    ... where you'll experience samples of Cocoon functionality.
-  </p>
  </s1>
  
  </body>
