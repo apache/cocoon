@@ -1,4 +1,4 @@
-/*-- $Id: HTMLFormatter.java,v 1.6 2000-04-20 22:12:04 stefano Exp $ -- 
+/*-- $Id: HTMLFormatter.java,v 1.7 2001-03-01 16:05:39 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,7 +67,7 @@ import org.apache.cocoon.framework.*;
  * instead.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-04-20 22:12:04 $
+ * @version $Revision: 1.7 $ $Date: 2001-03-01 16:05:39 $
  */
 
 public class HTMLFormatter extends AbstractFormatter {
@@ -86,7 +86,7 @@ public class HTMLFormatter extends AbstractFormatter {
         format.setOmitXMLDeclaration(true);
     }       
         
-    public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
+    public void format(Document document, OutputStream stream, Dictionary p) throws Exception {
+        factory.makeSerializer(stream, format).asDOMSerializer().serialize(document);
     }       
 }        

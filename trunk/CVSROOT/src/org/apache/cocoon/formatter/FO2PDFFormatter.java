@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.9 2001-01-22 03:58:40 balld Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.10 2001-03-01 16:05:37 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.9 $ $Date: 2001-01-22 03:58:40 $
+ * @version $Revision: 1.10 $ $Date: 2001-03-01 16:05:37 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -126,31 +126,46 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
         }
     }
 
-    public void format(Document document, Writer writer, Dictionary parameters) throws Exception {
+    public void format(Document document, OutputStream stream, Dictionary parameters) throws Exception {
 
 	    Driver driver = new Driver();
 	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", FOP_VERSION);
 	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
 	    driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-            driver.setWriter(new PrintWriter(writer));
+
+            if (FOP_VERSION_NO > 0.15) {
+                // We use reflection here to avoid compile-time errors
+                // This translates at runtime to
+                //driver.setOutputStream (stream);
+                Driver.class.getMethod ("setOutputStream", new Class [] {OutputStream.class})
+                    .invoke (driver, new Object [] {stream});
+            }
+            else {
+                PrintWriter pw = new PrintWriter (new OutputStreamWriter (stream));
+                // We use reflection here to avoid compile-time errors
+                // This translates at runtime to
+                //driver.setWriter (pw);
+                Driver.class.getMethod ("setWriter", new Class [] {PrintWriter.class})
+                    .invoke (driver, new Object [] {pw});
+            }
 
 	    if (FOP_VERSION_NO > 0.13) {
   	        driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
 	        driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
 
                 // To workaround the problem that Xalan 1.x does not output DOM2-compliant namespaces,
-                // we use a major hack - output xml as a string and read it in again. 
+                // we use a major hack - output xml as a byte array and read it in again. 
                 // With a DOM2-compliant parser such as Xerces, this should work fine.
                 deferredInit ();
-                StringWriter tempWriter = new StringWriter ();
-                xmlFormatter.format (document, tempWriter, NO_PARAMETERS);
-                String tempXml = tempWriter.toString ();
+                ByteArrayOutputStream tempStream = new ByteArrayOutputStream ();
+                xmlFormatter.format (document, tempStream, NO_PARAMETERS);
+                byte[] tempBytes = tempStream.toByteArray ();
 
                 // For now, we just use Xerces - it would be more complicated to support
                 // other parsers here.
                 SAXParser parser = new SAXParser ();
                 parser.setFeature("http://xml.org/sax/features/namespaces", true);
-                driver.buildFOTree(parser, new InputSource (new StringReader (tempXml)));
+                driver.buildFOTree(parser, new InputSource (new ByteArrayInputStream (tempBytes)));
             }
             else {
 	        driver.buildFOTree(document);

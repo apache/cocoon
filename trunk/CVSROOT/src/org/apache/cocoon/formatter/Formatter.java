@@ -1,4 +1,4 @@
-/*-- $Id: Formatter.java,v 1.5 2000-04-04 11:11:16 stefano Exp $ -- 
+/*-- $Id: Formatter.java,v 1.6 2001-03-01 16:05:38 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.w3c.dom.*;
  * into streams.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:16 $
+ * @version $Revision: 1.6 $ $Date: 2001-03-01 16:05:38 $
  */
 
 public interface Formatter {
@@ -67,7 +67,7 @@ public interface Formatter {
     /**
      * Prints the give document into a page.
      */
-    public void format(Document document, Writer writer, Dictionary parameters) throws Exception;
+    public void format(Document document, OutputStream stream, Dictionary parameters) throws Exception;
 
     /**
      * Returns the encoding used by this formatter for output.

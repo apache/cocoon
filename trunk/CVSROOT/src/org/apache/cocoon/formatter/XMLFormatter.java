@@ -1,4 +1,4 @@
-/*-- $Id: XMLFormatter.java,v 1.5 2000-04-04 11:11:17 stefano Exp $ -- 
+/*-- $Id: XMLFormatter.java,v 1.6 2001-03-01 16:05:41 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:17 $
+ * @version $Revision: 1.6 $ $Date: 2001-03-01 16:05:41 $
  */
 
 public class XMLFormatter extends AbstractFormatter {
@@ -77,7 +77,7 @@ public class XMLFormatter extends AbstractFormatter {
         format.setOmitXMLDeclaration(false);
     }
 
-    public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
+    public void format(Document document, OutputStream stream, Dictionary p) throws Exception {
+        factory.makeSerializer(stream, format).asDOMSerializer().serialize(document);
     }
 }

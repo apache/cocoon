@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.71 2001-02-28 18:11:53 greenrd Exp $
+  $Id: todo.xml,v 1.72 2001-03-01 16:05:32 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -19,9 +19,6 @@
   <action context="code" bugid="11">
    NEEDED URGENTLY FOR TOMCAT 3.3 - because CLASSPATH will be ignored!
    Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
-  </action>
-  <action context="code" assigned-to="RDG">
-   LiteralFormatter
   </action>
   <action context="code" assigned-to="RDG">
    Make redirect semantics configurable in cocoon.properties

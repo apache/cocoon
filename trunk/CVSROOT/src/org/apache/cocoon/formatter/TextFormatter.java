@@ -1,4 +1,4 @@
-/*-- $Id: TextFormatter.java,v 1.5 2000-04-04 11:11:16 stefano Exp $ -- 
+/*-- $Id: TextFormatter.java,v 1.6 2001-03-01 16:05:39 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import org.apache.cocoon.framework.*;
  * plain text outputs, VRML, CSS, etc..
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:16 $
+ * @version $Revision: 1.6 $ $Date: 2001-03-01 16:05:39 $
  */
 
 public class TextFormatter extends AbstractFormatter {
@@ -80,7 +80,7 @@ public class TextFormatter extends AbstractFormatter {
         format.setOmitXMLDeclaration(true);
     }
 
-    public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
+    public void format(Document document, OutputStream stream, Dictionary p) throws Exception {
+        factory.makeSerializer(stream, format).asDOMSerializer().serialize(document);
     }
 }

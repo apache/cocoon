@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.52 2001-01-27 17:26:08 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.53 2001-03-01 16:05:35 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -76,7 +76,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.52 $ $Date: 2001-01-27 17:26:08 $
+ * @version $Revision: 1.53 $ $Date: 2001-03-01 16:05:35 $
  */
 
 public class Engine implements Defaults {
@@ -383,20 +383,20 @@ public class Engine implements Defaults {
                         Formatter formatter = formatters.getFormatter(document);
 
                         // FIXME: I know it sucks to encapsulate a nice stream into
-                        // a long String to push it into the cache. In the future,
+                        // a long array to push it into the cache. In the future,
                         // we'll find a smarter way to do it.
 
                         // format the page
                         if (PROFILE) profiler.startEvent (requestMarker, formatter.getClass ());
-                        StringWriter writer = new StringWriter();
-                        formatter.format(document, writer, environment);
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream ();
+                        formatter.format(document, outputStream, environment);
                         if (PROFILE) profiler.finishEvent (requestMarker, formatter.getClass ());
 
                         if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
 
                         // fill the page bean with content
                         if (PROFILE) profiler.startEvent (requestMarker, OUTPUTTING);
-                        page.setContent(writer.toString());
+                        page.setContent(outputStream.toByteArray());
 
                         // set content type together with encoding if appropriate
                         encoding = formatter.getEncoding();
@@ -439,9 +439,8 @@ public class Engine implements Defaults {
                 // set the response content type
                 response.setContentType(page.getContentType());
 
-                ByteArrayOutputStream outBuf = new ByteArrayOutputStream ();
                 boolean isHead = "HEAD".equals (request.getMethod ());
-                byte[] content = Utils.getBytes (page.getContent (), encoding);
+                byte[] content = page.getContent ();
                 int contentLength = content.length;
 
                 // set the Last-Modified header if this option is enabled in cocoon.properties
@@ -453,26 +452,26 @@ public class Engine implements Defaults {
                    }
                 }
 
-                outBuf.write (content);
-
                 // if verbose mode is on, the output type allows it
                 // and the HTTP request isn't a HEAD
                 // print some processing info as a comment
-                if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
+                String comment = null;
+                byte[] commentBytes = null;
+                if (VERBOSE && (page.allowsMarkup()) && !isHead) {
                     time = System.currentTimeMillis() - time;
-                    String comment = "\n<!-- This page was served "
+                    comment = "\n<!-- This page was served "
                         + (wasInCache ? "from cache " : "")
-                        + "in " + time + " milliseconds by "
+                        + "in " + time + " milliseconds by Apache "
                         + Cocoon.version() + " -->";
-                    byte[] commentBytes = Utils.getBytes (comment, encoding);
-                    outBuf.write (commentBytes);
+                    commentBytes = Utils.getBytes (comment, encoding);
                     contentLength += commentBytes.length;
                 }
                 response.setContentLength (contentLength);
  
                 if (!isHead) {
                      OutputStream realOut = response.getOutputStream();
-                     realOut.write (outBuf.toByteArray ());
+                     realOut.write (content);
+                     if (comment != null) realOut.write (commentBytes);
                      realOut.flush ();
                 }
 
@@ -484,7 +483,7 @@ public class Engine implements Defaults {
 
         } catch (RedirectException ex) {
             // Do nothing - this is used to immediately stop Cocoon processing
-            // to fix a redirect bug on some servlet engines, e.g. Tomcat.
+            // to fix a redirect problem on some servlet engines, e.g. Tomcat.
         } finally {
             // if there is a lock make sure it is released,
             // otherwise this page could never be served

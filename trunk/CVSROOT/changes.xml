@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.213 2001-02-26 21:48:04 greenrd Exp $ 
+  $Id: changes.xml,v 1.214 2001-03-01 16:05:31 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="update" due-to="Kelly Campbell" due-to-email="camk@merlot.channelpoint.com">
+   Updated Cocoon for compatibility with FOP 0.16 and above. Backward compatibility to at least FOP 0.13
+   is still maintained.
+   WARNING: The Formatter interface has been changed. Instead of taking a Writer it now takes
+   an OutputStream. This makes more sense for output types like PDF.
+  </action>
   <action dev="RDG" type="add" due-to="Ingo Bruell" due-to-email="ibruell@gmx.de">
    Stylesheets (but not logicsheets) can now access a COCOON-BROWSER-ID parameter to identify which
    browser they are serving (as an alternative to using different stylesheets for each browser, by

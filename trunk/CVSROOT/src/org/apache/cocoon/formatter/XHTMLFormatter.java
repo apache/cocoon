@@ -1,4 +1,4 @@
-/*-- $Id: XHTMLFormatter.java,v 1.1 2000-04-20 22:12:04 stefano Exp $ -- 
+/*-- $Id: XHTMLFormatter.java,v 1.2 2001-03-01 16:05:40 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,10 +62,10 @@ import org.apache.cocoon.framework.*;
  * have any semantic information about the document type being formatted,
  * this class handles tags like <em>&lt;br/&gt;</em> and transforms them to
  * XHTML that non-XML-aware browsers can understand 
- * (for example, <em>&lt; br/&gt;</em>).
+ * (for example, <em>&lt;br /&gt;</em>).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 2000-04-20 22:12:04 $
+ * @version $Revision: 1.2 $ $Date: 2001-03-01 16:05:40 $
  */
 
 public class XHTMLFormatter extends AbstractFormatter {
@@ -84,7 +84,7 @@ public class XHTMLFormatter extends AbstractFormatter {
         format.setOmitXMLDeclaration(true);
     }       
         
-    public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
+    public void format(Document document, OutputStream stream, Dictionary p) throws Exception {
+        factory.makeSerializer(stream, format).asDOMSerializer().serialize(document);
     }       
 }        

@@ -1,4 +1,4 @@
-/*-- $Id: Page.java,v 1.6 2000-12-22 11:51:08 greenrd Exp $ -- 
+/*-- $Id: Page.java,v 1.7 2001-03-01 16:05:47 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,22 +58,22 @@ import org.w3c.dom.*;
  * The Page wrapper class.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-12-22 11:51:08 $
+ * @version $Revision: 1.7 $ $Date: 2001-03-01 16:05:47 $
  */
 
 public class Page implements java.io.Serializable, Changeable, Cacheable {
 	
-    private String content = "text/xml";
+    private byte[] content;
     private String contentType;
 
     private boolean cached = false;
     private Vector changeables = new Vector(3);
 
-    public String getContent() {
+    public byte[] getContent() {
 	return this.content;
     }
-    
-    public void setContent(String content) {
+
+    public void setContent(byte[] content) {
         this.content = content;
     }
 	
@@ -87,6 +87,13 @@ public class Page implements java.io.Serializable, Changeable, Cacheable {
     
     public boolean isText() {
     	return this.contentType.startsWith("text");
+    }
+
+    public boolean allowsMarkup() {
+        return contentType.equals("text/xml")
+	        || contentType.equals("text/html")
+	        || contentType.equals("text/svg")
+	        || contentType.equals("text/mathml");
     }
     
     public Enumeration getChangeables() {
