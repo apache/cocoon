@@ -53,10 +53,12 @@ package org.apache.cocoon.servlet.multipart;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
@@ -70,7 +72,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.2 2003/05/18 01:50:46 ghoward Exp $
+ * @version CVS $Id: MultipartHttpServletRequest.java,v 1.3 2003/05/18 18:34:01 cziegeler Exp $
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 
@@ -582,5 +584,30 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
     public boolean isRequestedSessionIdFromUrl() {
         return request.isRequestedSessionIdFromURL();
     }
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServletRequest#getRequestURL()
+	 */
+	public StringBuffer getRequestURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletRequest#getParameterMap()
+	 */
+	public Map getParameterMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
+	 */
+	public void setCharacterEncoding(String arg0)
+		throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+
+	}
 
 }
