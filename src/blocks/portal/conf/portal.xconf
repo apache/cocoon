@@ -31,7 +31,7 @@
 
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
-        <aspect type="no-client-caching"/>
+        <aspect type="action-counter"/>
         <aspect type="frame"/>
         <aspect type="link"/>
         <aspect type="full-screen-coplet"/>
