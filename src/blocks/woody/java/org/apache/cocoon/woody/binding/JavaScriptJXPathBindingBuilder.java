@@ -87,7 +87,7 @@ import org.w3c.dom.Element;
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.4 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.5 2004/01/21 21:03:16 tim Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
@@ -101,12 +101,20 @@ public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
             Script loadScript = null;
             if (commonAtts.loadEnabled) {
                 Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
+                if (loadElem == null) {
+                    throw new BindingException("Element \"load-form\" is missing (" +
+                        DomHelper.getLocation(element) + ")");
+                }
                 loadScript = JavaScriptHelper.buildScript(loadElem);
             }
 
             Script saveScript = null;
             if (commonAtts.saveEnabled) {
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
+                if (saveElem == null) {
+                    throw new BindingException("Element \"save-form\" is missing (" +
+                        DomHelper.getLocation(element) + ")");
+                }
                 saveScript = JavaScriptHelper.buildScript(saveElem);
             }
 
