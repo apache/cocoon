@@ -21,9 +21,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.Tokenizer;
 
 import org.apache.regexp.RE;
@@ -184,7 +186,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.8 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.9 2004/03/16 21:38:30 joerg Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -245,6 +247,12 @@ public abstract class AbstractValidatorAction
                     "Validating parameters " + "from given constraint-set " + valsetstr);
             Map csets = this.indexConfiguration(conf.getChildren("constraint-set"));
             params = this.resolveConstraints(valsetstr, csets);
+        }
+        
+        if (params == null) {
+            throw new ProcessingException("Neither a constraint-set nor parameters in the sitemap "
+                                          + "were specified for validating at "
+                                          + SitemapParameters.getStatementLocation(parameters));
         }
         HashMap values = this.createMapOfParameters(objectModel, params);
         allOK = this.validateSetOfParameters(desc, actionMap, resultMap, params, values, this.isStringEncoded());
