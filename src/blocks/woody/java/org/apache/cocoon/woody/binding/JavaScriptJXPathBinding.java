@@ -66,7 +66,7 @@ import org.mozilla.javascript.Script;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.1 2003/10/03 13:40:41 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.2 2003/11/03 17:05:02 sylvain Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
     
@@ -90,28 +90,26 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
         
         // Move to widget context
         Pointer pointer = jctx.getPointer(this.path);
-        JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
-        if (pointer.getNode() != null) {
-            // There are some nodes to load from
-    
-            // FIXME: remove this ugly hack and get the request from the Avalon context once
-            // binding builder are real components
-            Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
-            
-            try {
-                Map values = new HashMap(3);
-                values.put("widget", widget);
-                values.put("jxpathContext", widgetCtx);
-                values.put("jxpathPointer", pointer);
-                
-                JavaScriptHelper.execScript(this.loadScript, values, request);
-                
-            } catch(RuntimeException re) {
-                // rethrow
-                throw re;
-            } catch(Exception e) {
-                throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
+
+        // FIXME: remove this ugly hack and get the request from the Avalon context once
+        // binding builder are real components
+        Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+        
+        try {
+            Map values = new HashMap(3);
+            values.put("widget", widget);
+            values.put("jxpathPointer", pointer);
+            if (pointer.getNode() != null) {
+                values.put("jxpathContext", jctx.getRelativeContext(pointer));
             }
+            
+            JavaScriptHelper.execScript(this.loadScript, values, request);
+            
+        } catch(RuntimeException re) {
+            // rethrow
+            throw re;
+        } catch(Exception e) {
+            throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
         }
     }
 

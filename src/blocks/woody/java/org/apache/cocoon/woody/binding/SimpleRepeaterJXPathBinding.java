@@ -74,14 +74,16 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final String rowPath;
     private final boolean clearOnLoad;
     private final JXPathBindingBase rowBinding;
+    private final boolean deleteIfEmpty;
 
     public SimpleRepeaterJXPathBinding(
-      String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, JXPathBindingBase rowBinding) {
+      String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowBinding = rowBinding;
         this.clearOnLoad = clearOnLoad;
+        this.deleteIfEmpty = deleteIfEmpty;
     }
 
     public void loadFormFromModel(Widget frmModel, JXPathContext jctx) {
@@ -129,18 +131,25 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 
-        // Move to repeater context and create the path if needed
-        // FIXME: should avoid creating the path if repeater is empty
-        JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
+        if (repeater.getSize() == 0 && this.deleteIfEmpty) {
+            // Repeater is empty : erase all
+            jctx.removeAll(this.repeaterPath);
 
-        // Delete all that is already present
-        repeaterContext.removeAll(this.rowPath);
-        
-        for (int i = 0; i < repeater.getSize(); i++) {
-            String path = this.rowPath + '[' + (i+1) + ']';
-            Pointer rowPtr = repeaterContext.createPath(path);
-            JXPathContext rowContext = repeaterContext.getRelativeContext(rowPtr);
-            this.rowBinding.saveFormToModel(repeater.getRow(i), rowContext);
+        } else {
+            // Repeater is not empty
+            
+            // Move to repeater context and create the path if needed
+            JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
+
+            // Delete all that is already present
+            repeaterContext.removeAll(this.rowPath);
+
+            for (int i = 0; i < repeater.getSize(); i++) {
+                String path = this.rowPath + '[' + (i+1) + ']';
+                Pointer rowPtr = repeaterContext.createPath(path);
+                JXPathContext rowContext = repeaterContext.getRelativeContext(rowPtr);
+                this.rowBinding.saveFormToModel(repeater.getRow(i), rowContext);
+            }
         }
     }
 

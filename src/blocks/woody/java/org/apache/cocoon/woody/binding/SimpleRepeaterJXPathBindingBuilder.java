@@ -78,10 +78,11 @@ public class SimpleRepeaterJXPathBindingBuilder
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
             boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
+            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(bindingElem, "delete-parent-if-empty", false);
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElem);
 
-            return new SimpleRepeaterJXPathBinding(repeaterId, parentPath, rowPath, clearOnLoad,
+            return new SimpleRepeaterJXPathBinding(repeaterId, parentPath, rowPath, clearOnLoad, deleteIfEmpty,
                 new ComposedJXPathBindingBase(childBindings));
         } catch (BindingException e) {
             throw e;
