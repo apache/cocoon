@@ -49,7 +49,7 @@ import org.apache.avalon.AbstractLoggable;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-31 20:25:39 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-01-31 20:58:48 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable
      implements MarkupLanguage, Composer, Configurable
@@ -136,7 +136,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable
                 // FIXME (SSA) should be abstracted
                 Logicsheet logicsheet = new Logicsheet();
                 logicsheet.setLogger(getLogger());
-                logicsheet.setInputSource(new InputSource(logicsheetURL.toString()));
+                logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
                 CachedURL entry = new CachedURL(logicsheetURL, logicsheet);
                 entry.setLogger(getLogger());
                 this.logicsheetCache.store(logicsheetName, entry);
@@ -158,7 +158,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable
                     NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
                     namedLogicsheet.setLogger(getLogger());
                     namedLogicsheet.setInputSource(
-                        new InputSource(namedLogicsheetName)
+                        new InputSource(namedLogicsheetURL.openStream())
                     );
                     namedLogicsheet.setPrefix(namedLogicsheetPrefix);
                     namedLogicsheet.setUri(namedLogicsheetUri);
