@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.157 2000-12-01 17:59:27 greenrd Exp $ 
+  $Id: changes.xml,v 1.158 2000-12-01 22:54:40 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add" due-to="Donald Ball" due-to-email="balld@webslingerZ.com">
+   Passed extra parameters to style- and logic- sheets - ENVIRONMENT
+   ("Cocoon @version@") and XSP-VERSION (1.0)
+  </action>
   <action dev="RDG" type="fix">
    Added inefficient workaround for using Xalan 1.x with FOP &gt; 0.13.
    See src/org/apache/cocoon/formatter/FO2PDFFormatter.java.

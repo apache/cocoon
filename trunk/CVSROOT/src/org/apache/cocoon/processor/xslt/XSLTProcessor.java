@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.21 2000-12-01 17:48:38 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.22 2000-12-01 22:54:41 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,6 +62,7 @@ import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.logger.*;
 import org.apache.cocoon.processor.*;
+import org.apache.cocoon.processor.xsp.XSPProcessor;
 import org.apache.cocoon.framework.*;
 import org.apache.cocoon.transformer.*;
 import org.xml.sax.InputSource;
@@ -73,7 +74,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.21 $ $Date: 2000-12-01 17:48:38 $
+ * @version $Revision: 1.22 $ $Date: 2000-12-01 22:54:41 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -104,6 +105,8 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
         String path = (String) parameters.get("path");
         String browser = (String) parameters.get("browser");
         Hashtable params = this.filterParameters(request);
+        params.put ("ENVIRONMENT", Cocoon.version());
+        params.put ("XSP-VERSION", XSPProcessor.version());
 
         try {
             Object resource = getResource(context, request, response, document, path, browser);
