@@ -83,7 +83,9 @@
   
    <map:match pattern="profile.html">
     <map:generate type="profiler"/>
-    <map:transform src="profile2page.xsl">
+    <!-- The type for this transform is set to xalan, because it causes an
+         ArrayIndexOutOfBoundsException with xsltc (filed as bug 19770) -->
+    <map:transform type="xalan" src="profile2page.xsl">
      <map:parameter name="use-request-parameters" value="true"/>
     </map:transform>
     <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
