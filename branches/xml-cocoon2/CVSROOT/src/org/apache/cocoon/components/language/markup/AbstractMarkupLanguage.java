@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
@@ -34,10 +35,10 @@ import trax.Templates;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.AbstractNamedComponent;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -50,11 +51,10 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-12 16:43:15 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:43:15 $
  */
 public abstract class AbstractMarkupLanguage
-    extends AbstractNamedComponent
-    implements MarkupLanguage, Composer
+     implements MarkupLanguage, Composer, Configurable
 {
     /**
     * The supported language table
@@ -84,7 +84,7 @@ public abstract class AbstractMarkupLanguage
     *
     * @param manager The sitemap-specified component manager
     */
-    public void setComponentManager(ComponentManager manager) {
+    public void compose(ComponentManager manager) {
         this.manager = manager;
     }
 
@@ -107,8 +107,8 @@ public abstract class AbstractMarkupLanguage
     */
     protected void setParameters(Parameters params) throws Exception
     {
-        this.uri = getRequiredParameter(params, "uri");
-        this.prefix = getRequiredParameter(params, "prefix");
+        this.uri = params.getParameter("uri",null);
+        this.prefix = params.getParameter("prefix", null);
     }
 
     /**
@@ -118,20 +118,20 @@ public abstract class AbstractMarkupLanguage
     * @param conf The language configuration
     * @exception ConfigurationException If an error occurs loading logichseets
     */
-    protected void setAdditionalConfiguration(Configuration conf)
+    public void configure(Configuration conf)
         throws ConfigurationException
     {
         try {
-            Enumeration l = conf.getConfigurations("target-language");
-            while (l.hasMoreElements()) {
-                Configuration lc = (Configuration) l.nextElement();
+            Iterator l = conf.getChildren("target-language");
+            while (l.hasNext()) {
+                Configuration lc = (Configuration) l.next();
 
                 LanguageDescriptor language = new LanguageDescriptor();
                 language.setName(lc.getAttribute("name"));
 
                 Parameters lcp = Parameters.fromConfiguration(lc);
                 String logicsheetLocation =
-                	        getRequiredParameter(lcp, "core-logicsheet");
+                	        lcp.getParameter("core-logicsheet",null);
 
                 URL logicsheetURL = NetUtils.getURL(logicsheetLocation);
                 String logicsheetName = logicsheetURL.toExternalForm();
@@ -142,14 +142,14 @@ public abstract class AbstractMarkupLanguage
                 this.logicsheetCache.store(logicsheetName, entry);
                 language.setLogicsheet(logicsheetName);
 
-                Enumeration n = lc.getConfigurations("builtin-logicsheet");
-                while (n.hasMoreElements()) {
-                    Configuration nc = (Configuration) n.nextElement();
+                Iterator n = lc.getChildren("builtin-logicsheet");
+                while (n.hasNext()) {
+                    Configuration nc = (Configuration) n.next();
                     Parameters ncp = Parameters.fromConfiguration(nc);
 
-                    String namedLogicsheetPrefix = getRequiredParameter(ncp, "prefix");
-                    String namedLogicsheetUri = getRequiredParameter(ncp, "uri");
-                    String namedLogicsheetLocation = getRequiredParameter(ncp, "href");
+                    String namedLogicsheetPrefix = ncp.getParameter("prefix", null);
+                    String namedLogicsheetUri = ncp.getParameter("uri", null);
+                    String namedLogicsheetLocation = ncp.getParameter("href", null);
 
                     // FIXME: This is repetitive; add method for both cases
                     URL namedLogicsheetURL = NetUtils.getURL(namedLogicsheetLocation);
@@ -173,7 +173,7 @@ public abstract class AbstractMarkupLanguage
         } catch (Exception e) {
             // FIXME (SSA) Better error handling
             e.printStackTrace();
-            throw new ConfigurationException(e.getMessage(), conf);
+            throw new ConfigurationException(e.getMessage());
         }
     }
 
@@ -267,7 +267,7 @@ public abstract class AbstractMarkupLanguage
         InputSource input, String filename, ProgrammingLanguage programmingLanguage,
         EntityResolver resolver
     ) throws Exception {
-        String languageName = programmingLanguage.getName();
+        String languageName = programmingLanguage.getLanguageName();
         LanguageDescriptor language =
             (LanguageDescriptor) this.languages.get(languageName);
 

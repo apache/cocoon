@@ -20,9 +20,10 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
@@ -66,7 +67,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  * 
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-06 21:25:32 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-19 14:44:36 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -84,8 +85,8 @@ implements Transformer, Composer {
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setComponentManager(ComponentManager manager) {
-        this.store = (Store) manager.getComponent("store");
+    public void compose(ComponentManager manager) {
+        this.store = (Store) manager.lookup(Roles.STORE);
     }
     
     /**

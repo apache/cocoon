@@ -20,7 +20,7 @@ import org.apache.avalon.ConfigurationException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 16:15:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:44:13 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
@@ -32,40 +32,40 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
     /** 
      * Set the configurations for this serializer. 
      */
-    public void setConfiguration(Configuration conf) 
+    public void configure(Configuration conf) 
       throws ConfigurationException {
 
         format = new OutputFormat();
         format.setPreserveSpace(true);
 
-        Configuration encoding = conf.getConfiguration("encoding");
+        Configuration encoding = conf.getChild("encoding");
         if (encoding != null) {
             format.setEncoding(encoding.getValue());
         }
 
-        Configuration doctypePublic = conf.getConfiguration("doctype-public");
-        Configuration doctypeSystem = conf.getConfiguration("doctype-system");
+        Configuration doctypePublic = conf.getChild("doctype-public");
+        Configuration doctypeSystem = conf.getChild("doctype-system");
         if (doctypeSystem != null) {
             format.setDoctype((doctypePublic != null) ? doctypePublic.getValue() : null, doctypeSystem.getValue());
         }
 
-        Configuration indent = conf.getConfiguration("indent");
+        Configuration indent = conf.getChild("indent");
         if (indent != null) {
             format.setIndenting(true);
             format.setIndent(indent.getValueAsInt());
         }
 
-        Configuration preserveSpace = conf.getConfiguration("preserve-space");
+        Configuration preserveSpace = conf.getChild("preserve-space");
         if (preserveSpace != null) {
             format.setPreserveSpace(preserveSpace.getValueAsBoolean());
         }
 
-        Configuration declaration = conf.getConfiguration("xml-declaration");
+        Configuration declaration = conf.getChild("xml-declaration");
         if (declaration != null) {
             format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
         }
         
-        Configuration lineWidth = conf.getConfiguration("line-width");
+        Configuration lineWidth = conf.getChild("line-width");
         if (lineWidth != null) {
             format.setLineWidth(lineWidth.getValueAsInt());
         }        

@@ -3,60 +3,63 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <component role="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component role="store"  class="org.apache.cocoon.components.store.MemoryStore"/>
+  <component role="org.apache.cocoon.components.parser.Parser" class="org.apache.cocoon.components.parser.XercesParser"/>
+  <component role="org.apache.cocoon.components.store.Store"  class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component role="factory" class="org.apache.avalon.NamedComponentManagerImpl">
-    <component-type name="programming-language">
-      <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
-        <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
-        <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
-        <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-      </component-instance>
-    </component-type>
-
-    <component-type name="markup-language">
-      <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
-        <parameter name="prefix" value="xsp"/>
-        <parameter name="uri" value="http://apache.org/xsp"/>
-  
-        <target-language name="java">
-          <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
-
-          <builtin-logicsheet>
-            <parameter name="prefix" value="xsp-request"/>
-            <parameter name="uri" value="http://apache.org/xsp/request"/>
-            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
-          </builtin-logicsheet>
-
-          <builtin-logicsheet>
-            <parameter name="prefix" value="xsp-response"/>
-            <parameter name="uri" value="http://apache.org/xsp/response"/>
-            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
-          </builtin-logicsheet>
-        </target-language>
-      </component-instance>
-
-      <component-instance name="sitemap" class="org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage">
-        <parameter name="prefix" value="map"/>
-        <parameter name="uri" value="http://apache.org/cocoon/sitemap/1.0"/>
-  
-        <target-language name="java">
-          <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
-        </target-language>
-      </component-instance>
-    </component-type>
+  <component role="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector" class="org.apache.cocoon.CocoonComponentSelector">
+    <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
+      <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
+      <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
+      <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+    </component-instance>
   </component>
 
-  <component role="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
+  <component role="org.apache.cocoon.components.classloader.ClassLoaderManager" class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+
+  <component role="org.apache.cocoon.components.language.markup.MarkupLanguageSelector" class="org.apache.cocoon.CocoonComponentSelector">
+    <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
+      <parameter name="prefix" value="xsp"/>
+      <parameter name="uri" value="http://apache.org/xsp"/>
+
+      <target-language name="java">
+        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-request"/>
+          <parameter name="uri" value="http://apache.org/xsp/request"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+        </builtin-logicsheet>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-response"/>
+          <parameter name="uri" value="http://apache.org/xsp/response"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
+        </builtin-logicsheet>
+      </target-language>
+    </component-instance>
+
+    <component-instance name="sitemap" class="org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage">
+      <parameter name="prefix" value="map"/>
+      <parameter name="uri" value="http://apache.org/cocoon/sitemap/1.0"/>
+
+      <target-language name="java">
+        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
+      </target-language>
+    </component-instance>
+  </component>
+
+  <component role="org.apache.cocoon.components.language.generator.ProgramGenerator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
     <parameter name="auto-reload" value="true"/>
   </component>
 
   <!-- these components are the image encoders for the SVG serializer -->
-  <component role="jpegencoder" class="org.apache.cocoon.components.image.JPEGEncoder"/>
+  <component role="org.apache.cocoon.components.image.ImageEncoderSelector" class="org.apache.cocoon.CocoonComponentSelector">
+    <component-instance name="jpegencoder" class="org.apache.cocoon.components.image.JPEGEncoder"/>
+    <!--<component-instance name="pngencoder" class="org.apache.cocoon.components.image.PNGEncoder"/>-->
+  </component>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <component role="sitemap-component-pool-controller" class="org.apache.cocoon.util.ComponentPoolController"/>
+  <component role="org.apache.avalon.util.pool.PoolController" class="org.apache.cocoon.util.ComponentPoolController"/>
 
   <sitemap file="sitemap.xmap"/> 
 </cocoon>

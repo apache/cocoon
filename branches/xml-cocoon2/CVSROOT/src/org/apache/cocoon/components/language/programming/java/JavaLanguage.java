@@ -13,12 +13,13 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
@@ -29,7 +30,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-25 15:00:29 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-19 14:43:40 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
 
@@ -73,9 +74,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
   protected void setParameters(Parameters params) throws Exception {
     super.setParameters(params);
 
-    String compilerClass = params.getParameter("class-loader", null);
+    String compilerClass = params.getParameter("class-loader", "org.apache.cocoon.components.classloader.ClassLoaderManagerImpl");
     if (compilerClass != null) {
-      this.classLoaderManager = (ClassLoaderManager) ClassUtils.newInstance(compilerClass);
+        this.classLoaderManager = (ClassLoaderManager) ClassUtils.newInstance(compilerClass);
     }
   }
 
@@ -86,12 +87,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
    *
    * @param manager The global component manager
    */
-  public void setComponentManager(ComponentManager manager) {
-    super.setComponentManager(manager);
+  public void compose(ComponentManager manager) {
+    super.compose(manager);
 
     if (this.classLoaderManager == null) {
       this.classLoaderManager =
-        (ClassLoaderManager) this.manager.getComponent("class-loader");
+        (ClassLoaderManager) this.manager.lookup(Roles.CLASS_LOADER);
     }
   }
 
@@ -245,7 +246,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
 
     return buffer.toString();
   }
-  
+
   private String expandDirs(String d) {
     File dir = new File(d);
     File[] files = dir.listFiles(new JavaArchiveFilter());

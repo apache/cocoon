@@ -20,13 +20,14 @@ import org.apache.avalon.util.pool.PoolController;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
+import org.apache.cocoon.Roles;
 
 /** 
  * This class holds a sitemap component which is not specially marked as having 
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:43 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:22 $
  */
 public class PoolableComponentHolder extends DefaultComponentHolder implements ObjectFactory {
 
@@ -55,7 +56,7 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
         } catch (Exception e) {
             this.clazz = null;
         }
-        PoolController pc = (PoolController)super.manager.getComponent ("sitemap-component-pool-controller");
+        PoolController pc = (PoolController)super.manager.lookup (Roles.POOL_CONTROLLER);
         this.pool = new ComponentPool (this, pc, amount, DEFAULT_AMOUNT);
     }
 

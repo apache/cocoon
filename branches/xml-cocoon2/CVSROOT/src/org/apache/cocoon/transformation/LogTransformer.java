@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 
@@ -45,7 +45,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-07 20:37:56 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:44:34 $
  *
  */
 public class LogTransformer extends AbstractTransformer {

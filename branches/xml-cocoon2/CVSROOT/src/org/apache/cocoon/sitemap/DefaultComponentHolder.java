@@ -21,7 +21,7 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:42 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:18 $
  */
 public class DefaultComponentHolder implements ComponentHolder {
 
@@ -48,10 +48,10 @@ public class DefaultComponentHolder implements ComponentHolder {
     public Component get() throws Exception {
         Component comp = (Component) ClassUtils.newInstance (this.className);
         if (comp instanceof Composer) {
-            ((Composer) comp).setComponentManager (this.manager);
+            ((Composer) comp).compose (this.manager);
         } 
         if (comp instanceof Configurable) {
-            ((Configurable) comp).setConfiguration (this.configuration);
+            ((Configurable) comp).configure (this.configuration);
         }
         return comp;
     }

@@ -18,7 +18,7 @@ import org.apache.avalon.Composer;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-13 04:08:00 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:36 $
  */
 public class ComponentFactory implements ObjectFactory {
 	/** The class which this <code>ComponentFactory</code>
@@ -49,11 +49,11 @@ public class ComponentFactory implements ObjectFactory {
 		Poolable comp = (Poolable)componentClass.newInstance();
 		
 		if ( comp instanceof Configurable ) {
-			((Configurable)comp).setConfiguration(this.conf);
+			((Configurable)comp).configure(this.conf);
 		}
 
 		if ( comp instanceof Composer) {
-			((Composer)comp).setComponentManager(this.manager);
+			((Composer)comp).compose(this.manager);
 		}
 
 		return comp;

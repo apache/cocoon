@@ -7,6 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import java.util.Iterator;
 import java.util.Enumeration;
 
 import org.xml.sax.SAXException;
@@ -17,7 +18,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:45 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:50 $
  */
 public class RequestGenerator extends ServletGenerator {
 
@@ -87,9 +88,9 @@ public class RequestGenerator extends ServletGenerator {
         this.data("  ");
         this.start("configurationParameters",attr);
         this.data("\n");
-        Enumeration confparams=super.parameters.getParameterNames();
-        while (confparams.hasMoreElements()) {
-            String parameter=(String)confparams.nextElement();
+        Iterator confparams=super.parameters.getParameterNames();
+        while (confparams.hasNext()) {
+            String parameter=(String)confparams.next();
             this.attribute(attr,"name",parameter);
             this.data("    ");
             this.start("parameter",attr);

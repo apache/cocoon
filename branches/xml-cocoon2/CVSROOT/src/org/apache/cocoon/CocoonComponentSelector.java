@@ -11,9 +11,9 @@ package org.apache.cocoon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
-import java.util.Iterator;
 
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
@@ -25,16 +25,14 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.util.ComponentPoolController;
-import org.apache.cocoon.CocoonComponentSelector;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:37 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-19 14:42:34 $
  */
-public class DefaultComponentManager implements ComponentManager {
+public class CocoonComponentSelector implements ComponentSelector, Composer {
     /** Hashmap of all components which this ComponentManager knows about.
      */
     private Map components;
@@ -54,10 +52,13 @@ public class DefaultComponentManager implements ComponentManager {
     /** Component pools. */
     private Map pools;
 
+        /** Parent Component Manager */
+    private ComponentManager manager;
+
 
     /** Construct a new default component manager.
      */
-    public DefaultComponentManager() {
+    public CocoonComponentSelector() {
         // Setup the maps.
         components = Collections.synchronizedMap(new HashMap());
         threadSafeInstances = Collections.synchronizedMap(new HashMap());
@@ -66,24 +67,32 @@ public class DefaultComponentManager implements ComponentManager {
         instances = Collections.synchronizedMap(new HashMap());
     }
 
+    /** Implement Composer interface
+     */
+    public void compose(ComponentManager manager) {
+        if (this.manager == null) {
+            this.manager = manager;
+        }
+    }
+
     /** Return an instance of a component.
      */
-    public Component lookup( String role ) throws
+    public Component select( Object hint ) throws
         ComponentNotFoundException, ComponentNotAccessibleException {
 
         Component component;
 
-        if ( role == null ) {
+        if ( hint == null ) {
             throw new ComponentNotFoundException("Attempted to retrieve component will null roll.");
         }
 
         // Retrieve the class of the requested component.
-        Class componentClass = (Class)this.components.get(role);
+        Class componentClass = (Class)this.components.get(hint);
 
         if ( componentClass == null ) {
-            component = (Component)this.instances.get(role);
+            component = (Component)this.instances.get(hint);
             if ( component == null ) {
-                throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
+                throw new ComponentNotFoundException("Could not find component for hint '" + hint.toString() + "'.");
             } else {
                 // we found an individual instance of a component.
                 return component;
@@ -92,7 +101,7 @@ public class DefaultComponentManager implements ComponentManager {
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
             throw new ComponentNotAccessibleException(
-                "Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.",
+                "Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.",
                 null
             );
         }
@@ -176,7 +185,7 @@ public class DefaultComponentManager implements ComponentManager {
         if ( pool == null ) {
             try {
                 pool = new ComponentPool(
-                    new ComponentFactory(componentClass, (Configuration)configurations.get(componentClass), this),
+                    new ComponentFactory(componentClass, (Configuration)configurations.get(componentClass), this.manager),
                     new ComponentPoolController()
                     );
             } catch (Exception e) {
@@ -220,49 +229,27 @@ public class DefaultComponentManager implements ComponentManager {
         }
 
         if ( c instanceof Composer ) {
-            ((Composer)c).compose(this);
+            ((Composer)c).compose(this.manager);
         }
     }
 
     /** Add a new component to the manager.
-     * @param role the role name for the new component.
+     * @param hint the hint for the new component.
      * @param component the class of this component.
      * @param Configuration the configuration for this component.
      */
-    public void addComponent(String role, Class component, Configuration config) {
-        if (component.equals(CocoonComponentSelector.class)) {
-            CocoonComponentSelector selector = new CocoonComponentSelector();
-            Iterator instances = config.getChildren("component-instance");
-
-            selector.compose(this);
-
-            while (instances.hasNext()) {
-                Configuration current = (Configuration) instances.next();
-                Object hint = current.getAttribute("name");
-                String className = (String) current.getAttribute("class");
-
-                try {
-                    selector.addComponent(hint, ClassUtils.loadClass(className), current);
-                } catch (Exception e) {
-                    throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.");
-                }
-            }
-
-            this.addComponentInstance(role, selector);
-            return;
-        }
-
-        this.components.put(role,component);
+    public void addComponent(Object hint, Class component, Configuration config) {
+        this.components.put(hint,component);
         if ( config != null ) {
             this.configurations.put(component,config);
         }
-      }
+    }
 
     /** Add a static instance of a component to the manager.
-     * @param role the role name for the component.
+     * @param hint the hint name for the component.
      * @param instance the instance of the component.
      */
-    public void addComponentInstance(String role, Object instance) {
-        this.instances.put(role,instance);
+    public void addComponentInstance(Object hint, Object instance) {
+        this.instances.put(hint,instance);
     }
 }

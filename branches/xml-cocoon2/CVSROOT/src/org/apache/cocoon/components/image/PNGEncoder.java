@@ -31,7 +31,7 @@ public class PNGEncoder implements ImageEncoder, Configurable {
     /** Whether to encode the alpha channel (default: yes) */
     private boolean alpha;
 
-    public void setConfiguration(Configuration conf) throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
 		// Using the passed Configuration, generate a far more friendly Parameters object.
 		Parameters p = Parameters.fromConfiguration(conf);
 		compression = p.getParameterAsInteger("compression", 7);

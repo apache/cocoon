@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
@@ -26,7 +27,6 @@ import org.apache.avalon.Modifiable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.SAXConfigurationBuilder;
 
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Environment;
@@ -34,6 +34,7 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.DefaultComponentManager;
+import org.apache.cocoon.xml.SAXConfigurationBuilder;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -42,7 +43,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.31 $ $Date: 2000-10-13 04:08:01 $
+ * @version CVS $Revision: 1.4.2.32 $ $Date: 2000-10-19 14:42:29 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -88,18 +89,18 @@ public class Cocoon
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
         try {
-            this.componentManager.addComponent("parser", ClassUtils.loadClass(parser),null);
+            this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser),null);
         } catch ( Exception e ) {
-            throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage(),null);
+            throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage());
         }
- 		this.componentManager.addComponentInstance("cocoon", this);
- 		
+        this.componentManager.addComponentInstance(Roles.COCOON, this);
+         
         String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
         try {
-			trax.Processor.setPlatformDefaultProcessor(processor);
-            this.components.put("processor", ClassUtils.loadClass(parser));
+        trax.Processor.setPlatformDefaultProcessor(processor);
+            this.components.put(Roles.PROCESSOR, ClassUtils.loadClass(processor));
         } catch (Exception e) {
-            throw new ConfigurationException("Error creating processor (" + processor + ")", null);
+            throw new ConfigurationException("Error creating processor (" + processor + ")");
         }
     }
     
@@ -120,14 +121,14 @@ public class Cocoon
             throw new FileNotFoundException(configurationFile.toString());
         }
             
-        Parser p = (Parser) this.getComponent("parser");
+        Parser p = (Parser) this.lookup(Roles.PARSER);
         SAXConfigurationBuilder b = new SAXConfigurationBuilder();
         p.setContentHandler(b);
         String path = this.configurationFile.getPath();
         InputSource is = new InputSource(new FileReader(path));
         is.setSystemId(path);
         p.parse(is);
-        this.setConfiguration(b.getConfiguration());
+        this.configure(b.getConfiguration());
         this.root = this.configurationFile.getParentFile().toURL();
     }
 
@@ -158,55 +159,55 @@ public class Cocoon
     /**
      * Configure this <code>Cocoon</code> instance.
      */
-    public void setConfiguration(Configuration conf)
+    public void configure(Configuration conf)
     throws ConfigurationException {
     
         this.configuration = conf;
         
         if (!"cocoon".equals(conf.getName())) {
-            throw new ConfigurationException("Invalid configuration file", conf);
+            throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
         if (!CONF_VERSION.equals(conf.getAttribute("version"))) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '" 
-                + CONF_VERSION + "'.", conf);
+                + CONF_VERSION + "'."/*, conf*/);
         }
             
         // Set components
-        Enumeration e = conf.getConfigurations("component");
-        while (e.hasMoreElements()) {
-            Configuration co = (Configuration) e.nextElement();
+        Iterator e = conf.getChildren("component");
+        while (e.hasNext()) {
+            Configuration co = (Configuration) e.next();
             String role = co.getAttribute("role");
             String className = co.getAttribute("class");
             try {
                 componentManager.addComponent(role,ClassUtils.loadClass(className),co);
             } catch ( Exception ex ) {
                 throw new ConfigurationException("Could not get class " + className
-                    + " for role " + role + ": " + ex.getMessage(),
-                    (Configuration)e
+                    + " for role " + role + ": " + ex.getMessage()/*,
+                    (Configuration)e*/
                 );
             }
         }
 
         // Create the sitemap
-        Configuration sconf = conf.getConfiguration("sitemap");
+        Configuration sconf = conf.getChild("sitemap");
         if (sconf == null) {
-            throw new ConfigurationException("No sitemap configuration", conf);
+            throw new ConfigurationException("No sitemap configuration");
         }
         this.sitemapManager = new Manager(null);
-        this.sitemapManager.setComponentManager(this);
-        this.sitemapManager.setConfiguration(conf);
+        this.sitemapManager.compose(this);
+        this.sitemapManager.configure(conf);
         this.sitemapFileName = sconf.getAttribute("file");
         if (this.sitemapFileName == null) {
-            throw new ConfigurationException("No sitemap file name", conf);
+            throw new ConfigurationException("No sitemap file name\n" + conf.toString());
         }
     }
 
     /**
      * Get the <code>Component</code> associated with the given role.
      */
-    public Component getComponent(String role)
+    public Component lookup(String role)
     throws ComponentNotFoundException, ComponentNotAccessibleException {
-        return this.componentManager.getComponent(role);
+        return this.componentManager.lookup(role);
     }
     
     /**
@@ -227,15 +228,15 @@ public class Cocoon
 
   /**
    * Sets required system properties .
-   */	
+   */    
     protected void setSystemProperties()
-	{
-	  java.util.Properties props = new java.util.Properties();
+    {
+      java.util.Properties props = new java.util.Properties();
 
       // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
       // to locate the SAX2 driver.
-	  props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-	  
+      props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
+      
       java.util.Properties systemProps = System.getProperties();
       Enumeration propEnum = props.propertyNames();
       while(propEnum.hasMoreElements())
@@ -245,5 +246,5 @@ public class Cocoon
           systemProps.put(prop, props.getProperty(prop));
       }
       System.setProperties(systemProps);
-	}
+    }
 }

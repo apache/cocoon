@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:43 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:21 $
  */
 public class Manager implements Configurable, Composer {
 
@@ -52,11 +52,11 @@ public class Manager implements Configurable, Composer {
         this.parentSitemapComponentManager = sitemapComponentManager;
     }
 
-    public void setConfiguration (Configuration conf) {
+    public void configure (Configuration conf) {
         this.conf = conf;
     }
 
-    public void setComponentManager (ComponentManager manager) {
+    public void compose (ComponentManager manager) {
         this.manager = manager;
     }
 
@@ -77,8 +77,8 @@ public class Manager implements Configurable, Composer {
             }
         } else {
             sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
-            if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager(this.manager);
-            if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration(this.conf); 
+            if (sitemapHandler instanceof Composer) sitemapHandler.compose(this.manager);
+            if (sitemapHandler instanceof Configurable) sitemapHandler.configure(this.conf); 
             sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(environment); 
         }

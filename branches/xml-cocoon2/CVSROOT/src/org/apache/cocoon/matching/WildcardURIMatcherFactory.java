@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-10-06 21:25:29 $ 
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-10-19 14:44:01 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -73,7 +73,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
             return result.append (sourcePattern[j])
                          .append ("};").toString();
         } catch (NullPointerException pe) {
-            throw new ConfigurationException (pe.getMessage(), null);
+            throw new ConfigurationException (pe.getMessage());
         }
     }
 

@@ -20,6 +20,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.Roles;
 
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
@@ -31,7 +32,7 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-13 04:14:42 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-19 14:44:19 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
 
@@ -62,11 +63,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     /** the sitemaps base path */ 
     private String basePath;
 
-    public void setComponentManager (ComponentManager manager) {
+    public void compose (ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void setConfiguration (Configuration conf) {
+    public void configure (Configuration conf) {
         this.conf = conf;
     }
 
@@ -147,11 +148,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         String programmingLanguage = "java";
 
         try {
-            ProgramGenerator programGenerator = (ProgramGenerator) this.manager.getComponent("program-generator");
+            ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
             smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
-            if (smap instanceof Composer) smap.setComponentManager(this.manager);
-            if (smap instanceof Configurable) smap.setConfiguration(this.conf);
+            if (smap instanceof Composer) smap.compose(this.manager);
+            if (smap instanceof Configurable) smap.configure(this.conf);
             this.sitemap = smap;
         } catch (Exception e) {
             this.exception = e;

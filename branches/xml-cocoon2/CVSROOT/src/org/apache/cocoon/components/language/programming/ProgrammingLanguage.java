@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.NamedComponent;
+import org.apache.avalon.Component;
 
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -15,9 +15,9 @@ import org.apache.cocoon.components.language.LanguageException;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:30 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:36 $
  */
-public interface ProgrammingLanguage extends NamedComponent {
+public interface ProgrammingLanguage extends Component {
   /**
    * Return the programming language's source file extension
    *
@@ -75,4 +75,18 @@ public interface ProgrammingLanguage extends NamedComponent {
    * @return The escaped string
    */
   public String quoteString(String constant);
+
+  /**
+   * Set Language Name
+   *
+   * @param name The name of the language
+   */
+  public void setLanguageName(String name);
+
+  /**
+   * Get Language Name
+   *
+   * @return The name of the language
+   */
+  public String getLanguageName();
 }

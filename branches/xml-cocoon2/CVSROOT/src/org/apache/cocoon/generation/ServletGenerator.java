@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Cocoon;
 
@@ -24,7 +24,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-06 21:25:29 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-19 14:43:51 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {

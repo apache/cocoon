@@ -21,11 +21,12 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.NamedComponentManager;
+import org.apache.avalon.ComponentSelector;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Roles;
 
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.store.FilesystemStore;
@@ -49,7 +50,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-12 16:43:13 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-19 14:43:08 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -63,23 +64,27 @@ public class ProgramGeneratorImpl
   /** The component manager */
   protected ComponentManager manager;
 
-  /** The named component manager */
-  protected NamedComponentManager factory;
+  /** The markup language component selector */
+  protected ComponentSelector markupSelector;
+
+  /** The programming language component selector */
+  protected ComponentSelector languageSelector;
 
   /** The working directory */
   protected String workDir;
 
   /**
    * Set the global component manager. This method also sets the
-   * <code>NamedComponentManager</code> used as language factory for both
+   * <code>ComponentSelector</code> used as language factory for both
    * markup and programming languages.
    *
    * @param manager The global component manager
    */
-  public void setComponentManager(ComponentManager manager) {
+  public void compose(ComponentManager manager) {
     this.manager = manager;
-    this.factory = (NamedComponentManager) this.manager.getComponent("factory");
-    this.workDir = ((Cocoon) this.manager.getComponent("cocoon")).getWorkDir();
+    this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
+    this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
+    this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
   }
 
   /**
@@ -89,7 +94,7 @@ public class ProgramGeneratorImpl
    * @param conf The configuration information
    * @exception ConfigurationException Not thrown here
    */
-  public void setConfiguration(Configuration conf)
+  public void configure(Configuration conf)
     throws ConfigurationException
   {
     Parameters params = Parameters.fromConfiguration(conf);
@@ -114,17 +119,19 @@ public class ProgramGeneratorImpl
   ) throws Exception {
     // Get markup and programming languages
     MarkupLanguage markupLanguage = (MarkupLanguage)
-      this.factory.getComponent("markup-language", markupLanguageName);
+      this.markupSelector.select(markupLanguageName);
 
     ProgrammingLanguage programmingLanguage = (ProgrammingLanguage)
-      this.factory.getComponent("programming-language", programmingLanguageName);
+      this.languageSelector.select(programmingLanguageName);
+
+    programmingLanguage.setLanguageName(programmingLanguageName);
 
     if (markupLanguage instanceof Composer) {
-        ((Composer) markupLanguage).setComponentManager(this.manager);
+        ((Composer) markupLanguage).compose(this.manager);
     }
 
     if (programmingLanguage instanceof Composer) {
-        ((Composer) programmingLanguage).setComponentManager(this.manager);
+        ((Composer) programmingLanguage).compose(this.manager);
     }
 
     // Create filesystem store

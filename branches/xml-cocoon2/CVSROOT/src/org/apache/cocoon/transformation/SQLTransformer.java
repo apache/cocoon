@@ -19,7 +19,7 @@ import java.util.Vector;
 import java.util.Map;
 import java.util.Enumeration;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -38,7 +38,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-07 20:15:53 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-19 14:44:34 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer {

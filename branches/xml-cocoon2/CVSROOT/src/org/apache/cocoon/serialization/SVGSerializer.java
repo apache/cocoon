@@ -57,33 +57,34 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
     /** 
      * Set the configurations for this serializer. 
      */
-    public void setConfiguration(Configuration conf) throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
         this.config = conf;
 
         // First, get a DOM parser for the DOM Builder to work with.
-        super.factory= (Parser) this.manager.getComponent("parser");
+        super.factory= (Parser) this.manager.lookup(Roles.PARSER);
 
         // What image encoder do I use?
-        String enc = this.config.getConfiguration("encoder").getValue();
+        String enc = this.config.getChild("encoder").getValue();
         if (enc == null) {
-            throw new ConfigurationException("No Image Encoder specified.", conf);
+            throw new ConfigurationException("No Image Encoder specified."/*, conf*/);
         }
         
         try {
-            this.encoder = (ImageEncoder) this.manager.getComponent(enc);
+	    ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
+            this.encoder = (ImageEncoder) selector.select(enc);
         } catch (ComponentNotFoundException e) {
             throw new ConfigurationException("The ImageEncoder '" 
-                + enc + "' cannot be found. Check your component configuration in the sitemap", conf);
+                + enc + "' cannot be found. Check your component configuration in the sitemap"/*, conf*/);
         }
         
         // Configure the encoder
         if (this.encoder instanceof Configurable) {
-            ((Configurable)this.encoder).setConfiguration(conf);
+            ((Configurable)this.encoder).configure(conf);
         }
         // Transparent or a solid colour background?
-        this.transparent = this.config.getConfiguration("transparent").getValueAsBoolean(false);
+        this.transparent = this.config.getChild("transparent").getValueAsBoolean(false);
         if (!transparent) {
-            String bg = this.config.getConfiguration("background").getValue("#FFFFFF").trim();
+            String bg = this.config.getChild("background").getValue("#FFFFFF").trim();
             if (bg.startsWith("#")) {
                 bg = bg.substring(1);
             }
@@ -91,7 +92,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             try {
                 this.backgroundColour = new Color(Integer.parseInt(bg, 16));
             } catch (NumberFormatException e) {
-                throw new ConfigurationException(bg + " is not a valid color.", conf);
+                throw new ConfigurationException(bg + " is not a valid color."/*, conf*/);
             }
         }
     }
@@ -100,7 +101,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setComponentManager(ComponentManager manager) {
+    public void compose(ComponentManager manager) {
         this.manager = manager;
     }
 

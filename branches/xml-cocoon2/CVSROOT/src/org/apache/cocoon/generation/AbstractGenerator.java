@@ -9,7 +9,7 @@ package org.apache.cocoon.generation;
 
 import java.util.Map;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
 
@@ -19,7 +19,7 @@ import org.xml.sax.EntityResolver;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:36 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 14:43:46 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
 implements Generator {

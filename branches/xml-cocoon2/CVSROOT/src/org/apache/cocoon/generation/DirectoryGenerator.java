@@ -20,7 +20,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 /**
  * Generates an XML directory listing.
@@ -55,7 +55,7 @@ import org.apache.avalon.utils.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-09-29 01:04:02 $ */
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-19 14:43:47 $ */
  
 public class DirectoryGenerator extends ComposerGenerator {
 

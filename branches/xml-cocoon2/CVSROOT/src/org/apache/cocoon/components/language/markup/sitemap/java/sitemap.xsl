@@ -50,8 +50,7 @@
     import org.apache.avalon.Configurable;
     import org.apache.avalon.Configuration;
     import org.apache.avalon.ConfigurationException;
-    import org.apache.avalon.SAXConfigurationBuilder;
-    import org.apache.avalon.utils.Parameters;
+    import org.apache.avalon.Parameters;
 
     import org.apache.cocoon.Cocoon;
     import org.apache.cocoon.ProcessingException;
@@ -62,6 +61,7 @@
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.Manager;
+    import org.apache.cocoon.xml.SAXConfigurationBuilder;
 
     import org.xml.sax.SAXException;
     import org.xml.sax.helpers.AttributesImpl;
@@ -70,7 +70,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.48 $ $Date: 2000-10-13 04:14:33 $
+     * @version CVS $Revision: 1.1.2.49 $ $Date: 2000-10-19 14:43:23 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -183,14 +183,14 @@
        * Pass a &lt;code&gt;Configuration&lt;/code&gt; instance to this
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
-      public void setConfiguration(Configuration conf) throws ConfigurationException {
+      public void configure(Configuration conf) throws ConfigurationException {
         SAXConfigurationBuilder confBuilder = new SAXConfigurationBuilder ();
         Configuration cconf = null;
         AttributesImpl attr = new AttributesImpl();
 
         this.sitemapManager = new Manager(super.sitemapComponentManager);
-        this.sitemapManager.setComponentManager(this.manager);
-        this.sitemapManager.setConfiguration(conf);
+        this.sitemapManager.compose(this.manager);
+        this.sitemapManager.configure(conf);
         try {
           <!-- configure all components -->
           /* Configure special ErrorNotifier and LinkTransformer */
@@ -251,7 +251,7 @@
 
         /* catch any exception thrown by a component during configuration */
         } catch (Exception e) {
-          throw new ConfigurationException (e.toString(), cconf);
+          throw new ConfigurationException (e.toString()/*, cconf*/);
         }
       }
 
@@ -419,7 +419,7 @@
           matcher_<xsl:value-of select="$matcher-name2"/>
         </xsl:when>
         <xsl:otherwise>
-          ((Matcher)((ComponentHolder)super.sitemapComponentManager.getComponent("matcher:<xsl:value-of select="$matcher-type"/>")).get()).match
+          ((Matcher)((ComponentHolder)super.sitemapComponentManager.lookup("matcher:<xsl:value-of select="$matcher-type"/>")).get()).match
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -495,7 +495,7 @@
             selector_<xsl:value-of select="$selector-name2"/>
           </xsl:when>
           <xsl:otherwise>
-            ((Selector)((ComponentHolder)super.sitemapComponentManager.getComponent("selector:<xsl:value-of select="$selector-type"/>")).get()).select
+            ((Selector)((ComponentHolder)super.sitemapComponentManager.lookup("selector:<xsl:value-of select="$selector-type"/>")).get()).select
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -530,7 +530,7 @@
 
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)((ComponentHolder)super.sitemapComponentManager.getComponent("action:<xsl:value-of select="$selector-type"/>")).get()).act
+      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$selector-type"/>")).get()).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->

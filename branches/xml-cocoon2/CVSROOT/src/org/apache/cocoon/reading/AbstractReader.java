@@ -10,14 +10,14 @@ package org.apache.cocoon.reading;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.xml.sax.EntityResolver;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-02 21:12:38 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:44:07 $
  */
 public abstract class AbstractReader implements Reader {
     /** The current <code>EntityResolver</code>. */

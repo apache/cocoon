@@ -16,7 +16,7 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -33,7 +33,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-10-13 04:14:43 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-10-19 14:44:23 $
  */
 public class ResourcePipeline implements Composer {
     private ComponentHolder generator;
@@ -62,7 +62,7 @@ public class ResourcePipeline implements Composer {
         this.sitemapComponentManager = sitemapComponentManager;
     }
 
-    public void setComponentManager (ComponentManager manager) {
+    public void compose (ComponentManager manager) {
         this.manager = manager;
     }
 
@@ -77,7 +77,7 @@ public class ResourcePipeline implements Composer {
         if (this.generator != null) {
             throw new ProcessingException ("Generator already set. You can only select one Generator (" + role + ")");
         }
-        this.generator = (ComponentHolder)sitemapComponentManager.getComponent(role);
+        this.generator = (ComponentHolder)sitemapComponentManager.lookup(role);
         this.generatorSource = source;
         this.generatorParam = param;
     }
@@ -92,7 +92,7 @@ public class ResourcePipeline implements Composer {
         if (this.reader != null) {
             throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
         }
-        this.reader = (ComponentHolder)sitemapComponentManager.getComponent(role);
+        this.reader = (ComponentHolder)sitemapComponentManager.lookup(role);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
@@ -108,7 +108,7 @@ public class ResourcePipeline implements Composer {
         if (this.serializer != null) {
             throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
         }
-        this.serializer = (ComponentHolder)sitemapComponentManager.getComponent(role);
+        this.serializer = (ComponentHolder)sitemapComponentManager.lookup(role);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
@@ -116,7 +116,7 @@ public class ResourcePipeline implements Composer {
 
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
-        this.transformers.add ((ComponentHolder)sitemapComponentManager.getComponent(role));
+        this.transformers.add ((ComponentHolder)sitemapComponentManager.lookup(role));
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }

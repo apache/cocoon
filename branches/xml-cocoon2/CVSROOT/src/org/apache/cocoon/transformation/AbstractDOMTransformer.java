@@ -14,9 +14,10 @@ import org.apache.cocoon.xml.dom.DOMFactory;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.Roles;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 /**
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based
@@ -59,7 +60,7 @@ public abstract class AbstractDOMTransformer extends DOMBuilder
 	public void setComponentManager(ComponentManager manager) {
 		this.manager = manager;
 		// Get a parser and use it as a DOM factory
-		Parser p = (Parser)manager.getComponent("parser");
+		Parser p = (Parser)manager.lookup(Roles.PARSER);
 		super.factory = (DOMFactory)p;
 	}
 

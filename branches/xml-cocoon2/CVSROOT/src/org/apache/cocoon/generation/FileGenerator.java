@@ -11,13 +11,14 @@ import org.apache.avalon.Poolable;
 import java.io.IOException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-08 21:05:51 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-19 14:43:48 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable {
 
@@ -26,7 +27,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable {
      */
     public void generate()
     throws IOException, SAXException {
-        Parser parser=(Parser)this.manager.getComponent("parser");
+        Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
         parser.setContentHandler(this.contentHandler);
         parser.setLexicalHandler(this.lexicalHandler);
         parser.parse(super.resolver.resolveEntity(null,this.source));

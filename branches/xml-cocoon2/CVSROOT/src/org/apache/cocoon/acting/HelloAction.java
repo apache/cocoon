@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
@@ -23,7 +23,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:56:38 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:52 $
  */
 public class HelloAction implements Action {
     /**

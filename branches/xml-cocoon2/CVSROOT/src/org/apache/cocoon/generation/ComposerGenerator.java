@@ -15,7 +15,7 @@ import org.apache.cocoon.Cocoon;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-28 16:20:18 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:47 $
  */
 public abstract class ComposerGenerator extends AbstractGenerator
 implements Composer {
@@ -27,7 +27,7 @@ implements Composer {
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setComponentManager(ComponentManager manager) {
+    public void compose(ComponentManager manager) {
         this.manager=manager;
     }
 }

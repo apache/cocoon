@@ -9,7 +9,7 @@
 package org.apache.cocoon.components.image;
 
 import org.apache.avalon.*;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.awt.image.*;
@@ -28,7 +28,7 @@ public class JAIJPEGEncoder implements ImageEncoder, Configurable {
     /** The quality level. The default is 0.75 (high quality) */
     private float quality;
 
-    public void setConfiguration(Configuration conf) throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
 		// Using the passed Configuration, generate a far more friendly Parameters object.
 		Parameters p = Parameters.fromConfiguration(conf);
 		quality = p.getParameterAsFloat("quality", 0.75f);

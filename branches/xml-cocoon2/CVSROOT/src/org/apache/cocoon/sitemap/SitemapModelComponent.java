@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.SAXException;
@@ -21,7 +21,7 @@ import org.xml.sax.EntityResolver;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-02 21:12:39 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:24 $
  */
 public interface SitemapModelComponent extends Component {
 

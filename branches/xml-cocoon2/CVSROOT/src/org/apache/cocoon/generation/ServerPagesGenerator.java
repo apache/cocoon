@@ -27,13 +27,14 @@ import java.io.IOException;
 import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:37:52 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 14:43:50 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -50,12 +51,12 @@ public class ServerPagesGenerator
    *
    * @param manager The global component manager
    */
-  public void setComponentManager(ComponentManager manager) {
-    super.setComponentManager(manager);
+  public void compose(ComponentManager manager) {
+    super.compose(manager);
 
     if (programGenerator == null) {
       programGenerator = (ProgramGenerator)
-        this.manager.getComponent("program-generator");
+        this.manager.lookup(Roles.PROGRAM_GENERATOR);
     }
   }
 
@@ -125,7 +126,7 @@ public class ServerPagesGenerator
 
     // Delegate XML production to loaded generator
     if (generator instanceof Composer) {
-      ((Composer) generator).setComponentManager(this.manager);
+      ((Composer) generator).compose(this.manager);
     }
 
     generator.setContentHandler(this);

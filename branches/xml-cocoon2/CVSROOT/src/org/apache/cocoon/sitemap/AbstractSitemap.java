@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-13 04:14:41 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-19 14:44:17 $
  */
 public abstract class AbstractSitemap implements Sitemap {
 
@@ -59,7 +59,7 @@ public abstract class AbstractSitemap implements Sitemap {
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setComponentManager(ComponentManager manager) {
+    public void compose(ComponentManager manager) {
         this.manager = manager;
     }
 

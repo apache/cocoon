@@ -25,9 +25,10 @@ import org.xml.sax.ContentHandler;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -42,7 +43,7 @@ import org.apache.xpath.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-12 16:44:07 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:44:35 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -90,7 +91,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
     }
     */
 
-    public void setComponentManager(ComponentManager manager) {
+    public void compose(ComponentManager manager) {
         this.manager = manager;
     }
 
@@ -202,7 +203,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             }
         } else if (parse.equals("xml")) {
             if (debug) { System.err.println("Parse type is XML"); }
-            Parser parser = (Parser)manager.getComponent("parser");
+            Parser parser = (Parser)manager.lookup(Roles.PARSER);
             InputSource input;
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);

@@ -9,7 +9,7 @@
 package org.apache.cocoon.components.image;
 
 import org.apache.avalon.*;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
@@ -29,7 +29,7 @@ public class JAIPNGEncoder implements ImageEncoder, Configurable {
     private boolean interlaced;
     private boolean alpha;
 
-    public void setConfiguration(Configuration conf) throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
 		// Using the passed Configuration, generate a far more friendly Parameters object.
 		Parameters p = Parameters.fromConfiguration(conf);
 		interlaced = p.getParameterAsBoolean("interlaced", true);

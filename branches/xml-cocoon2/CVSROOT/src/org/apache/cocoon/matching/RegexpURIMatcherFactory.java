@@ -20,7 +20,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-06 21:25:29 $ 
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-19 14:44:00 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
@@ -58,7 +58,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
               .append("));");
             return sb.toString();
         } catch (RESyntaxException rse) {
-            throw new ConfigurationException (rse.getMessage(), null);
+            throw new ConfigurationException (rse.getMessage());
         }
     }
 

@@ -19,9 +19,10 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Poolable;
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -39,7 +40,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-13 04:18:09 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-10-19 14:44:37 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable {
@@ -78,8 +79,8 @@ implements Transformer, Composer, Poolable {
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setComponentManager(ComponentManager manager) {
-        this.store = (Store) manager.getComponent("store");
+    public void compose(ComponentManager manager) {
+        this.store = (Store) manager.lookup(Roles.STORE);
     }
 
     /**

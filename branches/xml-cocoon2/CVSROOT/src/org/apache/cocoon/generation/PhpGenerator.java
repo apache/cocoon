@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-21 17:37:52 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-19 14:43:49 $
  */
 public class PhpGenerator extends ServletGenerator {
 
@@ -125,7 +125,7 @@ public class PhpGenerator extends ServletGenerator {
             new Thread(php).start();
 
             // pipe the results into the parser
-            Parser parser=(Parser)this.manager.getComponent("parser");
+            Parser parser=(Parser)this.manager.getComponent("org.apache.cocoon.components.parser.Parser");
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(new InputSource(input));

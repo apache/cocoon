@@ -9,13 +9,14 @@ package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
 
-import org.apache.avalon.utils.Parameters;
+import org.apache.avalon.Parameters;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -25,7 +26,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-19 00:27:14 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-19 14:43:36 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -57,7 +58,7 @@ public abstract class CompiledProgrammingLanguage
     if (compilerClass == null) {
       throw new LanguageException(
         "Missing 'compiler' parameter for compiled language '" +
-	this.getName() + "'"
+	this.getLanguageName() + "'"
       );
     }
     this.compilerClass = ClassUtils.loadClass(compilerClass);
@@ -70,9 +71,9 @@ public abstract class CompiledProgrammingLanguage
    *
    * @param manager The global component manager
    */
-  public void setComponentManager(ComponentManager manager) {
+  public void compose(ComponentManager manager) {
     this.manager = manager;
-    this.classpath = ((Cocoon) this.manager.getComponent("cocoon")).getClasspath();
+    this.classpath = ((Cocoon) this.manager.lookup(Roles.COCOON)).getClasspath();
   }
 
   /**
