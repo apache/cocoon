@@ -17,9 +17,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 03:41:49 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 05:45:18 $
  */
-public abstract class FileGenerator extends ComposerGenerator {
+public class FileGenerator extends ComposerGenerator {
 
     /**
      * Generate XML data.

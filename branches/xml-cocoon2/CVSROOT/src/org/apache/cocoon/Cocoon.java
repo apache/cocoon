@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.arch.Component;
+import org.apache.arch.Composer;
 import org.apache.arch.ComponentManager;
 import org.apache.arch.ComponentNotFoundException;
 import org.apache.arch.ComponentNotAccessibleException;
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.4 $ $Date: 2000-02-27 03:43:24 $
+ * @version CVS $Revision: 1.4.2.5 $ $Date: 2000-02-27 05:45:17 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -93,16 +94,21 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         if (role==null) throw new ComponentNotFoundException("Null role");
         if (role.equals("cocoon")) return(this);
         Class c=(Class)this.components.get(role);
-        if (c==null) throw new ComponentNotFoundException("Can't find "+role);
+        if (c==null)
+            throw new ComponentNotFoundException("Can't find component "+role);
         try {
             Component comp=(Component)c.newInstance();
             if (comp instanceof Configurable) {
                 Configuration conf=(Configuration)this.configurations.get(role);
                 if (conf!=null) ((Configurable)comp).setConfiguration(conf);
             }
+            if (comp instanceof Composer)
+                ((Composer)comp).setComponentManager(this);
             return(comp);
         } catch (Exception e) {
-            throw new ComponentNotAccessibleException("Can't access "+role, e);
+            throw new ComponentNotAccessibleException("Can't access class "+
+                        c.getName()+" with role "+role+" due to a "+
+                        e.getClass().getName()+"("+e.getMessage()+")",e);
         }
     }
 

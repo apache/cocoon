@@ -15,7 +15,7 @@ import org.apache.cocoon.Request;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:08 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 05:45:19 $
  */
 public class CocoonServletRequest implements Request {
     
@@ -27,12 +27,12 @@ public class CocoonServletRequest implements Request {
     /**
      * Create a new instance of this <code>CocoonServletRequest</code>
      */
-    protected CocoonServletRequest(HttpServletRequest req, String uri) {
+    protected CocoonServletRequest(HttpServletRequest r, String u) {
         super();
-        if ((request==null)||(uri==null))
+        if ((r==null)||(u==null))
             throw new IllegalArgumentException("Null parameter specified");
-        this.request=req;
-        this.uri=uri;
+        this.request=r;
+        this.uri=u;
     }
 
     /**

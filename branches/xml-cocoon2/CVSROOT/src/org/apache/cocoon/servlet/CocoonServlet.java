@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.arch.config.ConfigurationException;
+import org.apache.arch.ComponentNotAccessibleException;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.SAXException;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 03:42:11 $
+ * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-27 05:45:19 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -83,12 +84,12 @@ public class CocoonServlet extends HttpServlet {
 
         // Check if cocoon was initialized
         if (this.cocoon==null) {
-            res.setContentType("text/html");
             res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
+            res.setContentType("text/html");
             out.println("<html><head>");
-            out.println("<title>Cocoon: Not initialized</title>");
+            out.println("<title>Cocoon Version 2.0: Not initialized</title>");
             out.println("<body>");
-            out.println("<center><h1>Cocoon: Not initialized</h1></center>");
+            out.println("<center><h1>Cocoon 2.0: Not initialized</h1></center>");
             out.println("<hr>");
             out.print("Try to <a href=\"");
             out.print(req.getScheme()+"://"+req.getServerName()+":");
@@ -101,6 +102,12 @@ public class CocoonServlet extends HttpServlet {
                 Exception nested=((SAXException)this.exception).getException();
                 out.println("<hr>");
                 this.printException(out,nested);
+            } else if (exception instanceof ComponentNotAccessibleException) {
+                out.println("Component not accessible<br>");
+                Exception nested=this.exception;
+                nested=((ComponentNotAccessibleException)nested).getException();
+                out.println("<hr>");
+                this.printException(out,nested);
             }
             out.println("<hr></body></html>");
             out.flush();
@@ -109,21 +116,40 @@ public class CocoonServlet extends HttpServlet {
         // We got it... Process the request
         String uri=req.getPathInfo();
         if (uri!=null) try {
+            // Strip the leading '/' character
+            if ((uri.length()>0)&&(uri.charAt(0)=='/')) uri=uri.substring(1);
             CocoonServletRequest request=new CocoonServletRequest(req,uri);
             CocoonServletResponse response=new CocoonServletResponse(res);
-            if (!this.cocoon.process(request,response,out))
-                res.sendError(res.SC_NOT_FOUND);
-        } catch (Exception e) {
+            if (!this.cocoon.process(request,response,out)) {
+            res.setStatus(res.SC_NOT_FOUND);
             res.setContentType("text/html");
-            res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
             out.println("<html><head>");
-            out.println("<title>Cocoon: Exception</title>");
+            out.println("<title>Cocoon Version 2.0: Not Found</title>");
             out.println("<body>");
-            out.println("<center><h1>Cocoon: Exception</h1></center>");
+            out.println("<center><h1>Cocoon 2.0: Not Found</h1></center>");
+            out.println("<hr>");
+            out.print("The requested URI \""+req.getRequestURI());
+            out.print("\" was not found.");
+            out.println("<!-- PATH_INFO=\""+req.getPathInfo()+"\" -->");
+            out.println("<hr></body></html>");
+            }
+        } catch (Exception e) {
+            res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
+            res.setContentType("text/html");
+            out.println("<html><head>");
+            out.println("<title>Cocoon Version 2.0: Exception</title>");
+            out.println("<body>");
+            out.println("<center><h1>Cocoon 2.0: Exception</h1></center>");
             out.println("<hr>");
             this.printException(out,e);
             if (exception instanceof SAXException) {
                 Exception nested=((SAXException)this.exception).getException();
+                out.println("<hr>");
+                this.printException(out,nested);
+            } else if (exception instanceof ComponentNotAccessibleException) {
+                out.println("Component not accessible<br>");
+                Exception nested=this.exception;
+                nested=((ComponentNotAccessibleException)nested).getException();
                 out.println("<hr>");
                 this.printException(out,nested);
             }
@@ -131,9 +157,9 @@ public class CocoonServlet extends HttpServlet {
         } else {
             res.setContentType("text/html");
             out.println("<html><head>");
-            out.println("<title>Cocoon: Version 2.0</title>");
+            out.println("<title>Cocoon Version 2.0</title>");
             out.println("<body>");
-            out.println("<center><h1>Cocoon: Version 2.0</h1></center>");
+            out.println("<center><h1>Cocoon 2.0: Version 2.0</h1></center>");
             out.println("<hr>");
             if (reloaded) out.println("Configurations reloaded.<br>");
             out.println("Ready to process requests...");

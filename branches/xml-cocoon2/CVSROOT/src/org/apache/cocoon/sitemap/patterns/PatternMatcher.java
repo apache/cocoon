@@ -24,7 +24,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:10 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 05:45:20 $
  */
 public class PatternMatcher {
 
@@ -58,7 +58,9 @@ public class PatternMatcher {
      * Match the specified <code>String</code> against the configured pattern.
      */
     public boolean match(String data) {
-        if ((data==null)||(this.sourcePattern==null)) return(false);
+        if (data==null) throw new NullPointerException("Null data");
+        if (this.sourcePattern==null)
+            throw new IllegalStateException("Null internals");
         return(this.matchPattern(data.toCharArray(),this.sourcePattern));
     }
 
@@ -186,9 +188,10 @@ public class PatternMatcher {
 
             // Check if we reached the end of the expression
             if(expr[end]==MATCH_END) {
-                // If also the data buffer is finished we have a match
-                if(off+end-exprpos!=buff.length) return(false);
-                else return(true);
+                // If the data buffer is finished we have a match
+                if(off+end-exprpos==buff.length) return(true);
+                // Otherwise there is no match
+                return(true);
             }
 
             // Set the current data buffer position to the first character

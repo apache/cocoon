@@ -19,7 +19,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:10 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 05:45:20 $
  */
 public class PatternTranslator extends PatternMatcher {
 
@@ -66,12 +66,13 @@ public class PatternTranslator extends PatternMatcher {
      * <code>String</code> is returned.
      */
     public String translate(String data) {
-        if (!super.match(data)) return(null);
+        if (data==null) throw new NullPointerException("Null data");
         if (this.identityTranslation) return(data);
-        if ((this.targetPattern!=null) ||
-            (super.sourcePattern==null) ||
-            (data==null)) return(null);
+        if ((this.targetPattern==null) || (super.sourcePattern==null))
+            throw new IllegalStateException("Null internals");
+        if (!super.match(data)) throw new IllegalArgumentException("No match");
         char x[]=data.toCharArray();
+        
         return(this.translatePattern(x,super.sourcePattern,this.targetPattern));
     }
 
@@ -163,9 +164,11 @@ public class PatternTranslator extends PatternMatcher {
 
             // Check if we reached the end of the expression
             if(expr[end]==MATCH_END) {
-                // If also the data buffer is finished we have a match
-                if(off+end-exprpos!=buff.length) return(null);
-                else return(new String(rslt,0,rsltpos));
+                // If the data buffer is finished we have a match
+                if(off+end-exprpos==buff.length)
+                    return(new String(rslt,0,rsltpos));
+                // Otherwise return the null string
+                return(null);
             }
 
             // Set the current data buffer position to the first character

@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:09 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 05:45:19 $
  */
 public class GenericProcessor implements Composer, Configurable, Processor {
 
@@ -96,7 +96,7 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         c=conf.getConfiguration("serializer");
         if (c==null)
             throw new ConfigurationException("Serializer not specified",conf);
-        this.generator="serializer:"+c.getAttribute("name");
+        this.serializer="serializer:"+c.getAttribute("name");
         // Set up the filters vetctor
         Enumeration e=conf.getConfigurations("filter");
         while (e.hasMoreElements()) {
@@ -116,10 +116,11 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         if (!this.matcher.match(req.getUri())) return(false);
         String src=null;
         if (this.targetTranslator!=null) {
-            if ((src=this.targetTranslator.translate(req.getUri()))!=null)
+            if ((src=this.targetTranslator.translate(req.getUri()))==null)
                 throw new ProcessingException("Error translating \""+
                                               req.getUri()+"\"");
         }
+if (this.serializer==null) throw new NullPointerException("SER");
         Serializer s=(Serializer)this.manager.getComponent(this.serializer);
         s.setup(req,res,src,null);
         s.setOutputStream(out);
@@ -131,6 +132,7 @@ public class GenericProcessor implements Composer, Configurable, Processor {
             f.setConsumer(current);
             current=f;
         }
+if (this.generator==null) throw new NullPointerException("GEN");
         Generator g=(Generator)this.manager.getComponent(this.generator);
         g.setConsumer(current);
         g.setup(req,res,src,null);

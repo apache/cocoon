@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:07 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 05:45:18 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -60,6 +60,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startDocument()
     throws SAXException {
+        super.response.setContentType("text/xml");
         this.print("<?xml version=\"1.0\"?>\n");
     }
 
