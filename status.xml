@@ -209,7 +209,7 @@
      Flow preserves global variables on sitemap reload.
    </action>
    <action dev="SW" type="add">
-     CForms block: Implementation of the CForm template language using JX macros,
+     Forms block: Implementation of the CForm template language using JX macros,
      allowing smart page layout that depends on the widgets state and value.
    </action>
    <action dev="AG" type="remove">
@@ -274,7 +274,8 @@
      with '/', while servletPath always has no '/' at the end.
    </action>
    <action dev="AG" type="fix" fixes-bug="31134" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
-     JXPathMetaModule incorrectly checks for null parameter (can't happen) instead of empty string.
+     JXPathMetaModule incorrectly checks for null parameter (can't happen)
+     instead of empty string.
    </action>
    <action dev="VG" type="fix">
      Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
@@ -1054,7 +1055,7 @@
      and the unused CarSelectorHandler class.
    </action>
    <action dev="SW" type="update">
-     Serializers now can optionnaly implement the SitemapModelComponent interface, meaning then can
+     Serializers now can optionally implement the SitemapModelComponent interface, meaning then can
      be given a "src" attribute and parameters using &lt;map:parameter&gt;.
    </action>
    <action dev="SW" type="update">
