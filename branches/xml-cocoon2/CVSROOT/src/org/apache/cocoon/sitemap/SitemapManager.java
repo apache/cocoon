@@ -12,8 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException; 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.HashMap;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
@@ -32,21 +32,18 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-29 20:33:42 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-08-31 16:02:20 $
  */
 public class SitemapManager implements Configurable, Composer {
 
     /** The vectors of sub sitemaps */
-    private Hashtable sitemaps = new Hashtable();
+    private HashMap sitemaps = new HashMap();
 
     /** The configuration */
     private Configuration conf = null;
 
     /** The component manager */
     private ComponentManager manager = null;
-
-    public SitemapManager () {
-    }
 
     public void setConfiguration (Configuration conf) {
         this.conf = conf;
@@ -83,15 +80,13 @@ public class SitemapManager implements Configurable, Composer {
         return sitemapHandler.process(environment);
     }
 
-    public boolean hasChanged () {
+    public boolean hasChanged() {
         SitemapHandler sitemapHandler = null;
-        Enumeration enum = sitemaps.elements();
-        while (enum.hasMoreElements()) {
-            sitemapHandler = (SitemapHandler) enum.nextElement ();
-            if (sitemapHandler != null) {
-                if (sitemapHandler.hasChanged()) {
-                    return true;
-                }
+        Iterator iter = sitemaps.values().iterator();
+        while (iter.hasNext()) {
+            sitemapHandler = (SitemapHandler) iter.next();
+            if ((sitemapHandler != null) && (sitemapHandler.hasChanged())) {
+                return true;
             }
         }
         return false;
