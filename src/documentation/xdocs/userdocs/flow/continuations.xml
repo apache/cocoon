@@ -35,13 +35,13 @@ function calculator()
   var a, b, operator;
 
   sendPageAndWait("getA.html");
-  a = request.getParameter("a");
+  a = cocoon.request.get("a");
 
   sendPageAndWait("getB.html");
-  b = request.getParameter("b");
+  b = cocoon.request.get("b");
 
   sendPageAndWait("getOperator.html");
-  operator = request.getParameter("op");
+  operator = cocoon.request.get("op");
 
   try {
     if (operator == "plus")
