@@ -53,7 +53,12 @@ package org.apache.cocoon.woody.binding;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.Source;
 
 /**
  * InsertNodeJXPathBindingBuilder provides a helper class for the Factory 
@@ -79,16 +84,30 @@ public class InsertNodeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
             
         try {
-            // TODO have src attribute to point to extermal template in stead of 
-            // inline definition through nested elements.
-            // This will require to ask Assistant for parser 
-            // (from component-manager)!
-            DocumentFragment domTemplate =
-                bindingElm.getOwnerDocument().createDocumentFragment();
-            NodeList nested = bindingElm.getChildNodes();
-            int size = nested.getLength();
-            for (int i = 0; i < size; i++) {
-                domTemplate.appendChild(nested.item(i).cloneNode(true));
+            DocumentFragment domTemplate = null;
+
+            String src = bindingElm.getAttribute("src");
+            if (!src.equals("")) {
+                ServiceManager manager = assistant.getServiceManager();
+                SourceResolver sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+                Source source = null;
+                try {
+                    source = sourceResolver.resolveURI(src);
+                    Document document = SourceUtil.toDOM(source);
+                    domTemplate = document.createDocumentFragment();
+                    domTemplate.appendChild(document.getDocumentElement());
+                } finally {
+                    if (source != null)
+                        sourceResolver.release(source);
+                    manager.release(sourceResolver);
+                }
+            } else {
+                domTemplate = bindingElm.getOwnerDocument().createDocumentFragment();
+                NodeList nested = bindingElm.getChildNodes();
+                int size = nested.getLength();
+                for (int i = 0; i < size; i++) {
+                    domTemplate.appendChild(nested.item(i).cloneNode(true));
+                }
             }
 
             return new InsertNodeJXPathBinding(domTemplate);
