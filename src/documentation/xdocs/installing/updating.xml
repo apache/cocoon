@@ -180,10 +180,10 @@
  <map:components>
       ...
   <map:pipes default="caching">
-     <map:pipe name="caching"
-                   src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
-     <map:pipe name="noncaching"
-                   src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+   <map:pipe name="caching"
+    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
+   <map:pipe name="noncaching"
+    src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
   </map:pipes>
  </map:components>
    ...
@@ -194,15 +194,15 @@
      </p>
      <source><![CDATA[
 <map:sitemap>
-   ...
-  <map:pipelines>
-     <map:pipeline type="noncaching">
-           <map:match pattern="welcome">
+  ...
+ <map:pipelines>
+  <map:pipeline type="noncaching">
+   <map:match pattern="welcome">
                   ...
-           </map:match>
+   </map:match>
             ..
-     </map:pipeline>
-  </map:pipelines>
+  </map:pipeline>
+ </map:pipelines>
 </map:sitemap>
      ]]></source>
      <p>This is similar to choosing the type of a generator or any other sitemap
