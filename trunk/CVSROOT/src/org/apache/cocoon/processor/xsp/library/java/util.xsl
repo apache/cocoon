@@ -60,9 +60,7 @@
 >
   <xsl:template match="xsp:page">
     <xsp:page>
-      <xsl:copy>
-        <xsl:apply-templates select="@*"/>
-      </xsl:copy>
+      <xsl:apply-templates select="@*"/>
 
       <xsp:structure>
         <xsp:include>java.net.URL</xsp:include>
@@ -105,7 +103,7 @@
       } catch (Exception e) {
         xspCurrentNode.appendChild(
           document.createTextNode(
-            "{Unable to include: '" + __name + "'}"
+            "{" + __name + "}"
           )
         );
       }

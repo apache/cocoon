@@ -38,9 +38,7 @@
 
 <xsl:template match="xsp:page">
 	<xsp:page>
-		<xsl:copy>
-			<xsl:apply-templates select="@*"/>
-		</xsl:copy>
+		<xsl:apply-templates select="@*"/>
 		<xsp:structure>
 			<xsp:include>org.apache.cocoon.processor.xsp.library.sql.XSPSQLLibrary</xsp:include>
 		</xsp:structure>
