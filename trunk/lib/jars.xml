@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.70 2003/07/26 13:26:47 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.71 2003/07/29 02:07:32 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -430,7 +430,7 @@
    the XSL recommendation and then turns it into a PDF document.
   </description>
   <used-by>FOP serializer (fop block)</used-by>
-  <lib>fop/lib/fop-0.20.5rc3a.jar</lib>
+  <lib>fop/lib/fop-0.20.5.jar</lib>
   <homepage>http://xml.apache.org/fop/</homepage>
  </file>
 
