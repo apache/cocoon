@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.4 2004/04/05 12:34:23 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.5 2004/06/04 12:54:53 vgritsenko Exp $ -->
 
 <samples name="Error Handling Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -54,6 +54,12 @@
    <sample name="NullPointerException" href="exception/exception?exception=nullPointer">
     Generate RuntimeException.
    </sample>
+   <note>
+     Since Cocoon does not process java.lang.Error (and derived objects),
+     behavior of this sample will depend on behavior of servlet engine.
+     In case of Jetty and Tomcat, they will show empty page and print
+     Error's stacktrace to the console.
+   </note>
    <sample name="Error" href="exception/exception?exception=error">
     Generate Error.
    </sample>
