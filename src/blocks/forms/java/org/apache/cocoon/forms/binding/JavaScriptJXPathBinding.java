@@ -31,7 +31,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.2 2004/03/24 01:32:45 joerg Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
@@ -111,7 +111,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             }
         } else {
             if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("[Javascript Binding] - saveForm: No javascript code avaliable. <wb:javascript id=" + this.getId() + ">");
+                this.getLogger().info("[Javascript Binding] - saveForm: No code avaliable on the javascript binding with id \"" + this.getId() + "\"");
             }
         }
     }

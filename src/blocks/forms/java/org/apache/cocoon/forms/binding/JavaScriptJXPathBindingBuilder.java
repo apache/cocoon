@@ -26,20 +26,20 @@ import org.w3c.dom.Element;
  * <p>
  * The syntax for this binding is as follows :
  * <pre>
- *   &lt;wb:javascript id="foo" path="@foo"&gt;
- *     &lt;wb:load-form&gt;
+ *   &lt;fb:javascript id="foo" path="@foo"&gt;
+ *     &lt;fb:load-form&gt;
  *       var appValue = jxpathPointer.getValue();
  *       var formValue = doLoadConversion(appValue);
  *       widget.setValue(formValue);
- *     &lt;/wb:load-form&gt;
- *     &lt;wb:save-form&gt;
+ *     &lt;/fb:load-form&gt;
+ *     &lt;fb:save-form&gt;
  *       var formValue = widget.getValue();
  *       var appValue = doSaveConversion(formValue);
  *       jxpathPointer.setValue(appValue);
- *     &lt;/wb:save-form&gt;
- *   &lt;/wb:javascript&gt;
+ *     &lt;/fb:save-form&gt;
+ *   &lt;/fb:javascript&gt;
  * </pre>
- * This example is rather trivial and could be replaced by a simple &lt;wb:value&gt;, but
+ * This example is rather trivial and could be replaced by a simple &lt;fb:value&gt;, but
  * it shows the available variables in the script:
  * <ul>
  * <li><code>widget</code>: the widget identified by the "id" attribute,
@@ -47,12 +47,12 @@ import org.w3c.dom.Element;
  * <li><code>jxpathContext</code> (not shown): the JXPath context corresponding to the "path" attribute
  * </ul>
  * <b>Notes:</b><ul>
- * <li>The &lt;wb:save-form&gt; snippet should be ommitted if the "direction" attribute is set to "load".</li>
- * <li>The &lt;wb:load-form&gt; snippet should be ommitted if the "direction" attribute is set to "save".</li>
+ * <li>The &lt;fb:save-form&gt; snippet should be ommitted if the "direction" attribute is set to "load".</li>
+ * <li>The &lt;fb:load-form&gt; snippet should be ommitted if the "direction" attribute is set to "save".</li>
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.2 2004/03/24 01:32:45 joerg Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
