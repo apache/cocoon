@@ -897,7 +897,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/db-ojb-1.0.0.jar</lib>
+    <lib>ojb/lib/db-ojb-1.0.1.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
