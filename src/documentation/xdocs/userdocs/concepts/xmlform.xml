@@ -10,12 +10,16 @@
     </authors>
   </header>
   <body>
-    <s1 title="Notice">
-      <p>This document is based on components included in the current Cocoon 2.1
-      distribution. If you do not have this version, you can obtain it from
-      the <link href="../../index.html">Apache Cocoon</link> web site. Be sure
+    <s1 title="Notices">
+      <p>This document is based on components included in the current un-released Cocoon 2.1
+      distribution. Be sure
       to look at the WARNING document that accompanies such pre-release versions.
       </p>
+      <fixme author="volunteer">
+        This document is not really a conceptual document for Cocoon
+        "forms" frameworks, as it describes one particular implementation.
+        There are now various different solutions.
+      </fixme>
     </s1>
 
     <s1 title="Introduction">
