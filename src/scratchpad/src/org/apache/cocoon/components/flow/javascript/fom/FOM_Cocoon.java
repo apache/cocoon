@@ -49,9 +49,12 @@
 
 */
 package org.apache.cocoon.components.flow.javascript.fom;
+
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.flow.ContinuationsManager;
@@ -63,13 +66,20 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+
 /**
- * Implementation of FOM (Flow Object Model)
+ * Implementation of FOM (Flow Object Model).
+ *
+ * @since 2.1 
+ * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
+ * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
+ * @version CVS $Id: FOM_Cocoon.java,v 1.7 2003/06/30 19:11:10 reinhard Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -120,6 +130,7 @@ public class FOM_Cocoon extends ScriptableObject {
         this.interpreter = null;
     }
 
+
     private void forwardTo(String uri, Object bizData,
                            Continuation continuation) 
         throws Exception {
@@ -132,8 +143,14 @@ public class FOM_Cocoon extends ScriptableObject {
                                               lastContinuation,
                                               0);
         }
-        interpreter.forwardTo(getParentScope(), this, "cocoon://"+
-                              environment.getURIPrefix() + uri,
+        
+        String redUri = uri;
+        
+        if(! uri.startsWith( "cocoon://" ) ) {
+            redUri = "cocoon://" + this.environment.getURIPrefix() + uri;
+        }
+        
+        interpreter.forwardTo(getParentScope(), this, redUri,
                               bizData, wk, environment);
     }
 
@@ -179,12 +196,64 @@ public class FOM_Cocoon extends ScriptableObject {
     }
     
 */
-  
-    public Object jsFunction_getComponent(String id) {
-        // what is this?
-        return null;
+
+    /**
+     * Access components.
+     * 
+     * TODO: Do we want to restrict the access of sitemap components? (RP)
+     * TODO: Do we want to raise an error or return null? (RP)
+     */  
+    public Object jsFunction_getComponent( String id ) { 
+        Object o = null;
+        try {
+		  o = this.componentManager.lookup( id );
+		} catch (ComponentException e) {
+          o = null; 
+		}
+        return o;
+    }
+    
+    /**
+     * Release pooled components.
+     * 
+     * @param component - an <code>Object</code> that is an instance 
+     * of <code>org.apache.avalon.framework.component.Component</code>
+     */
+    public void jsFunction_releaseComponent( Object component ) 
+      throws JavaScriptException {
+        try {
+            this.componentManager.release( (Component) component );
+        } catch( ClassCastException cce ) {
+            throw new JavaScriptException( "Only components can be released!" );
+        } catch( Exception e ) {
+            throw new JavaScriptException( "Error during release of component occurred!" + e.getMessage() ); 
+        }
     }
 
+    /**
+     * Load the script file specified as argument.
+     *
+     * @param filename a <code>String</code> value
+     * @return an <code>Object</code> value
+     * @exception JavaScriptException if an error occurs
+     */
+    public Object jsFunction_load( String filename ) 
+        throws JavaScriptException {
+        org.mozilla.javascript.Context cx = 
+            org.mozilla.javascript.Context.getCurrentContext();
+        try {
+            Scriptable scope = getParentScope();
+            Script script = interpreter.compileScript( cx, 
+                                                       environment,
+                                                       filename );
+            return script.exec( cx, scope );
+        } catch( JavaScriptException e ) {
+            throw e;
+        } catch( Exception e ) {
+            throw new JavaScriptException( e );
+        }
+    }    
+        
     public static class FOM_Request extends ScriptableObject {
 
         Request request;
@@ -372,7 +441,7 @@ public class FOM_Cocoon extends ScriptableObject {
         public void jsFunction_addCookie(Object cookie) 
             throws JavaScriptException {
             if (!(cookie instanceof FOM_Cookie)) {
-                throw new JavaScriptException("expected a Cookie instead of "+cookie);
+                throw new JavaScriptException("expected a Cookie instead of " + cookie);
             }
             FOM_Cookie fom_cookie = (FOM_Cookie)cookie;
             response.addCookie(fom_cookie.cookie);
@@ -568,11 +637,9 @@ public class FOM_Cocoon extends ScriptableObject {
             return null;
         }
         Map objectModel = environment.getObjectModel();
-        request = 
-            new FOM_Request(ObjectModelHelper.getRequest(objectModel));
+        request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
         request.setParentScope(getParentScope());
-        request.setPrototype(getClassPrototype(getParentScope(),
-                                               "FOM_Request"));
+        request.setPrototype(getClassPrototype(getParentScope(), "FOM_Request"));
         return request;
     }
 
@@ -588,8 +655,7 @@ public class FOM_Cocoon extends ScriptableObject {
         response = 
             new FOM_Response(ObjectModelHelper.getResponse(objectModel));
         response.setParentScope(getParentScope());
-        response.setPrototype(getClassPrototype(this,
-                                               "FOM_Response"));
+        response.setPrototype(getClassPrototype(this, "FOM_Response"));
         return response;
     }
 
@@ -627,8 +693,7 @@ public class FOM_Cocoon extends ScriptableObject {
         session = 
             new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
         session.setParentScope(getParentScope());
-        session.setPrototype(getClassPrototype(this,
-                                               "FOM_Session"));
+        session.setPrototype(getClassPrototype(this, "FOM_Session"));
         return session;
     }
 
