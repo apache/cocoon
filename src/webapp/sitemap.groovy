@@ -35,6 +35,10 @@ class Sitemap extends Pipeline {
             read "resources/images/" + m.group(1) + ".gif", "image/gif", []
         } else if (m = (uri =~ "styles/(.*)\.css")) {
             read "resources/styles/" + m.group(1) + ".css", "text/css", []
+        } else if (m = (uri == "sitemap.groovy")) {
+            generate "file", "sitemap.xmap", []
+            transform "trax", "sitemap.xslt", [] 
+            serialize "text", []
         } else {
             return false;
         }

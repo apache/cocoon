@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<!-- CVS $Id$ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:pipeline>
+    
+    <map:match pattern="">
+      <map:generate type="file" src="welcome.xml"/>
+      <map:transform type="trax" src="welcome.xslt"/>
+      <map:serialize type="xml">
+        <map:parameter name="encoding" value="UTF-8"/>
+      </map:serialize>
+    </map:match>
+    
+    <map:match pattern="(.*)\.html">
+      <map:generate type="file" src="{1}.xml"/>
+      <map:transform type="trax" src="welcome.xslt"/>
+      <map:serialize type="xml">
+        <map:parameter name="encoding" value="UTF-8"/>
+      </map:serialize>
+    </map:match>
+    
+    <map:match pattern="styles/(.*)\.css">
+      <map:read src="{1}" mime-type="text/css"/>
+    </map:match>
+    
+    <map:match pattern="images/(.*)\.gif">
+      <map:read src="{1}" mime-type="image/gif"/>
+    </map:match>
+    
+  </map:pipeline>
+
+</map:sitemap>

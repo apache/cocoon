@@ -24,7 +24,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractXMLProducer.java,v 1.1 2004/07/23 08:47:20 ugo Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractXMLProducer
 implements XMLProducer {
@@ -68,14 +68,5 @@ implements XMLProducer {
      */
     public void setLexicalHandler(LexicalHandler handler) {
         this.lexicalHandler = handler;
-    }
-
-    /**
-     * Recycle the producer by removing references
-     */
-    public void recycle() {
-        this.xmlConsumer = null;
-        this.contentHandler = null;
-        this.lexicalHandler = null;
     }
 }
