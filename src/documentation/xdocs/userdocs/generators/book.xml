@@ -43,7 +43,6 @@
     <menu-item label="Fragment Extractor Generator" href="extractor-generator.html"/>
     <menu-item label="HTML Generator" href="html-generator.html"/>
     <menu-item label="JSP Generator" href="jsp-generator.html"/>
-    <menu-item label="Php Generator" href="php-generator.html"/>
     <menu-item label="Profile Generator" href="profile-generator.html"/>
     <menu-item label="Script Generator" href="script-generator.html"/>
     <menu-item label="Search Generator" href="search-generator.html"/>
