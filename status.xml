@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.267 2004/03/09 07:39:26 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.268 2004/03/09 10:57:37 reinhard Exp $:-->
 
 <status>
  <developers>
@@ -206,11 +206,37 @@
     </action>
    </actions>
   </todo>
-
-
+  
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="RP" type="update">
+     Apples use the new CocoonForms classes
+   </action> 
+   <action dev="RP" type="update">
+     Petstore samples use the new CocoonForms names
+   </action>
+   <action dev="RP" type="add">
+     New Ant task ("woody2CocoonForms-renaming") that updates namespaces, sitemap components and
+     flowscript functions (details see tools/target/upgrade-build.xml)
+   </action>
+   <action dev="RP" type="update">
+     Renaming Woody to CocoonForms
+      - The Woody block (src/blocks/woody) has moved into the new Cocoon Forms 
+        block (src/blocks/forms).
+      - new namespaces:
+           * from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+             to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+           * from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
+             to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+           * from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+             to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+           * from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+             to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"     
+      - Java packages moved from org.apache.cocoon.woody to 
+        org.apache.cocoon.forms
+      - Petstore and Apples examples have been renamed
+   </action> 
    <action dev="AG" type="update">
      Updated Velocity engine to 1.4-rc1
    </action>
