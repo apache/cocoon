@@ -21,6 +21,7 @@ The JXTemplate Generator is a page template processor that allows you to inject 
          src="org.apache.cocoon.generation.JXTemplateGenerator"/&gt;
 &lt;/map:generators&gt;
 </source>
+  <p/>
          </s1>
          <s1 title="Expression Languages">
   <p>
@@ -38,16 +39,16 @@ The JXTemplate Generator supports two embedded expression languages: <link href=
 from a Flowscript. In addition the following implicit objects are available as
 both JXPath and Jexl variables in a template:</p>
 <dl>
-<dt><link href="../../apidocs/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code> request</code></dt>
+<dt><link href="../../../api/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code> request</code></dt>
 <dd><br/>The current Cocoon request<br/></dd>
  
-<dt><br/><link href="../../apidocs/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code> response</code></dt>
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code> response</code></dt>
 <dd><br/>The Cocoon response associated with the current request<br/></dd>
  
-<dt><br/><link href="../../apidocs/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code> session</code></dt>
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code> session</code></dt>
 <dd><br/>The Cocoon session associated with the current request<br/></dd>
  
-<dt><br/><link href="../../apidocs/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code> context</code></dt>
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code> context</code></dt>
 <dd><br/>The Cocoon context associated with the current request<br/></dd>
  
 <dt><br/><code>org.apache.avalon.framework.parameter.Parameter[]</code><code> parameters</code></dt>
@@ -90,6 +91,7 @@ http://apache.org/cocoon/templates/jx/1.0
        body
    &lt;/t:template&gt;
 </source>
+ <p/>
 </s2>
 <s2 title ="import"/>
 <p>The <code>import</code> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <code>import</code> tag:</p><source>
@@ -111,6 +113,7 @@ The value of greeting is ${greeting}
 &lt;set var="greeting" value="Hello #{user}"/&gt;
 The value of greeting is #{$greeting}
 </source>
+ <p/>
 </s2>
 <s2 title ="if">
 <p>The <code>if</code> tag allows the conditional execution of its body 
@@ -126,12 +129,14 @@ according to value of its <code>test</code> attribute:</p>
   Your cart is empty
 &lt;/if&gt;
 </source>
+<p/>
 <p>JXPath Example:</p>
 <source>
 &lt;if test="#{cart/numberOfItems = 0}"&gt;
   Your cart is empty
 &lt;/if&gt;
 </source>
+ <p/>
 </s2>
 <s2 title ="choose">
 <p>The <code>choose</code> tag performs conditional block execution by its 
@@ -161,6 +166,7 @@ tag is evaluated, if present:</p>
   &lt;/otherwise&gt;
 &lt;/choose&gt;
 </source>
+ <p/>
 <p>JXPath Example:</p>
 <source>
 &lt;choose&gt;
@@ -172,6 +178,7 @@ tag is evaluated, if present:</p>
   &lt;/otherwise&gt;
 &lt;/choose&gt;
 </source>
+ <p/>
 </s2>
 <s2 title="out">
 <p>The <code>out</code> tag evaluates an expression and outputs 
@@ -187,6 +194,7 @@ the result of the evaluation:</p>
 <source>
 &lt;out value="#{cart/numberOfItems}"&gt;
 </source>
+ <p/>
 </s2>
 <s2 title="forEach">
 <p>The <code>forEach</code> tag allows you to iterate over a collection 
@@ -216,12 +224,14 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
    &lt;td&gt;${item.productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
+ <p/>
 <p>JXPath Example:</p>
 <source>
 &lt;forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
    &lt;td&gt;#{./productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
+ <p/>
 </s2>
 <s2 title="macro"> 
 <p>The <code>macro</code> tag allows you define a new custom tag.</p><source>

@@ -98,31 +98,31 @@
     <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
-    <em>Property</em> [<link href="#request">Request</link>] request
+    <em>Property</em> [<link href="#request">Request</link>] <code>request</code>
     </p>
     </s3>
     <s3 title="response">
     <p>The current Cocoon response:</p>
     <p>
-    <em>Property</em> [<link href="#response">Response</link>] response
+    <em>Property</em> [<link href="#response">Response</link>] <code>response</code>
     </p>
     </s3>
     <s3 title="session">
     <p>The current Cocoon session:</p>
     <p>
-    <em>Property</em> [<link href="#session">Session</link>] session
+    <em>Property</em> [<link href="#session">Session</link>] <code>session</code>
     </p>
     </s3>
     <s3 title="context">
     <p>The current Cocoon application context:</p>
     <p>
-    <em>Property</em> [<link href="#context">Context</link>] context
+    <em>Property</em> [<link href="#context">Context</link>] <code>context</code>
     </p>
     </s3>
     <s3 title="log">
     <p>A reference to the current logger:</p>
     <p>
-    <em>Property</em> [<link href="#log">Log</link>] log
+    <em>Property</em> [<link href="#log">Log</link>] <code>log</code>
     </p>
     </s3>
 
