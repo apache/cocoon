@@ -59,19 +59,15 @@ import java.io.IOException;
  * This element contains the name of the containing Sheet
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPName.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPName.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPName
-    extends BaseElementProcessor
-{
+public class EPName extends BaseElementProcessor {
     private String _name;
 
     /**
      * constructor
      */
-
-    public EPName()
-    {
+    public EPName() {
         super(null);
         _name = null;
     }
@@ -79,11 +75,8 @@ public class EPName
     /**
      * @return the name of the spreadsheet (may be empty)
      */
-
-    public String getName()
-    {
-        if (_name == null)
-        {
+    public String getName() {
+        if (_name == null) {
             _name = getData();
         }
         return _name;
@@ -91,13 +84,9 @@ public class EPName
 
     /**
      * give the sheet its name
-     *
      * @exception IOException
      */
-
-    public void endProcessing()
-        throws IOException
-    {
+    public void endProcessing() throws IOException {
         getSheet().renameSheet(getName());
     }
-}   // end public class EPName
+} // end public class EPName

@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
- * @version CVS $Id: ElementProcessorSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: ElementProcessorSerializer.java,v 1.3 2004/01/31 08:50:45 antonio Exp $
  */
 public abstract class ElementProcessorSerializer
     extends AbstractLogEnabled implements Serializer, Composable
@@ -98,8 +98,7 @@ public abstract class ElementProcessorSerializer
      * Constructor
      */
 
-    public ElementProcessorSerializer()
-    {
+    public ElementProcessorSerializer() {
         _output_stream = null;
         _open_elements = new Stack();
         _locator       = null;
@@ -127,15 +126,14 @@ public abstract class ElementProcessorSerializer
      */
 
     protected abstract void doPreInitialization(ElementProcessor processor)
-	throws SAXException;
+	    throws SAXException;
 
     /**
      * @return the output stream
      */
 
-    protected OutputStream getOutputStream()
-    {
-	return _output_stream;
+    protected OutputStream getOutputStream() {
+        return _output_stream;
     }
 
     /**
@@ -148,14 +146,11 @@ public abstract class ElementProcessorSerializer
      */
 
     protected SAXException SAXExceptionFactory(final String message,
-                                               final Exception e)
-    {
+                       final Exception e) {
         StringBuffer message_buffer = new StringBuffer();
 
-        message_buffer.append((message == null) ? ""
-                                                : message);
-        if (_locator != null)
-        {
+        message_buffer.append((message == null) ? "" : message);
+        if (_locator != null) {
             message_buffer.append("; System id: \"");
             message_buffer.append(_locator.getSystemId());
             message_buffer.append("\"; public id: \"");
@@ -167,12 +162,9 @@ public abstract class ElementProcessorSerializer
         }
         SAXException rval = null;
 
-        if (e != null)
-        {
+        if (e != null) {
             rval = new SAXException(message_buffer.toString(), e);
-        }
-        else
-        {
+        } else {
             rval = new SAXException(message_buffer.toString());
         }
         return rval;
@@ -186,22 +178,18 @@ public abstract class ElementProcessorSerializer
      * @return new SAXException
      */
 
-    protected SAXException SAXExceptionFactory(final String message)
-    {
+    protected SAXException SAXExceptionFactory(final String message) {
         return SAXExceptionFactory(message, null);
     }
 
-    private ElementProcessor getCurrentElementProcessor()
-    {
+    private ElementProcessor getCurrentElementProcessor() {
         return _open_elements.empty() ? null
-                                      : ( ElementProcessor ) _open_elements
-                                          .peek();
+                              : (ElementProcessor) _open_elements.peek();
     }
 
     private char [] cleanupArray(final char [] array, final int start,
-                                 final int length)
-    {
-        char[] output = new char[ length ];
+                         final int length) {
+        char[] output = new char[length];
 
         System.arraycopy(array, start, output, 0, length);
         return output;
@@ -217,8 +205,7 @@ public abstract class ElementProcessorSerializer
      *            be written
      */
 
-    public void setOutputStream(final OutputStream out)
-    {
+    public void setOutputStream(final OutputStream out) {
         _output_stream = out;
     }
 
@@ -228,8 +215,7 @@ public abstract class ElementProcessorSerializer
      * @return false
      */
 
-    public boolean shouldSetContentLength()
-    {
+    public boolean shouldSetContentLength() {
         return _should_set_content_length;
     }
 
@@ -246,24 +232,21 @@ public abstract class ElementProcessorSerializer
      */
 
     public void comment(final char [] ignored_ch, final int ignored_start,
-                        final int ignored_length)
-    {
+                    final int ignored_length) {
     }
 
     /**
      * Report the end of a CDATA section. We don't really care.
      */
 
-    public void endCDATA()
-    {
+    public void endCDATA() {
     }
 
     /**
      * Report the end of DTD declarations. We don't really care.
      */
 
-    public void endDTD()
-    {
+    public void endDTD() {
     }
 
     /**
@@ -272,16 +255,14 @@ public abstract class ElementProcessorSerializer
      * @param ignored_name
      */
 
-    public void endEntity(final String ignored_name)
-    {
+    public void endEntity(final String ignored_name) {
     }
 
     /**
      * Report the start of a CDATA section. We don't really care.
      */
 
-    public void startCDATA()
-    {
+    public void startCDATA() {
     }
 
     /**
@@ -294,9 +275,7 @@ public abstract class ElementProcessorSerializer
      */
 
     public void startDTD(final String ignored_name,
-                         final String ignored_publicId,
-                         final String ignored_systemId)
-    {
+             final String ignored_publicId, final String ignored_systemId) {
     }
 
     /**
@@ -306,8 +285,7 @@ public abstract class ElementProcessorSerializer
      * @param ignored_name
      */
 
-    public void startEntity(final String ignored_name)
-    {
+    public void startEntity(final String ignored_name) {
     }
 
     /* **********  END  implementation of LexicalHandler ********** */
@@ -325,18 +303,12 @@ public abstract class ElementProcessorSerializer
      */
 
     public void characters(final char [] ch, final int start,
-                           final int length)
-        throws SAXException
-    {
-        try
-        {
+           final int length) throws SAXException {
+        try {
             getCurrentElementProcessor().acceptCharacters(cleanupArray(ch,
                     start, length));
-        }
-        catch (Exception e)
-        {
-            throw SAXExceptionFactory("could not process characters event",
-                                      e);
+        } catch (Exception e) {
+            throw SAXExceptionFactory("could not process characters event", e);
         }
     }
 
@@ -351,17 +323,12 @@ public abstract class ElementProcessorSerializer
      */
 
     public void endElement(final String ignored_namespaceURI,
-                           final String ignored_localName,
-                           final String ignored_qName)
-        throws SAXException
-    {
-        try
-        {
+            final String ignored_localName, final String ignored_qName)
+            throws SAXException {
+        try {
             getCurrentElementProcessor().endProcessing();
             _open_elements.pop();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw SAXExceptionFactory("could not process endElement event",
                                       e);
         }
@@ -373,8 +340,7 @@ public abstract class ElementProcessorSerializer
      * @param ignored_prefix
      */
 
-    public void endPrefixMapping(final String ignored_prefix)
-    {
+    public void endPrefixMapping(final String ignored_prefix) {
     }
 
     /**
@@ -390,16 +356,11 @@ public abstract class ElementProcessorSerializer
      */
 
     public void ignorableWhitespace(final char [] ch, final int start,
-                                    final int length)
-        throws SAXException
-    {
-        try
-        {
+                    final int length) throws SAXException {
+        try {
             getCurrentElementProcessor()
                 .acceptWhitespaceCharacters(cleanupArray(ch, start, length));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw SAXExceptionFactory(
                 "could not process ignorableWhitespace event", e);
         }
@@ -414,8 +375,7 @@ public abstract class ElementProcessorSerializer
      */
 
     public void processingInstruction(final String ignored_target,
-                                      final String ignored_data)
-    {
+                                      final String ignored_data) {
     }
 
     /**
@@ -425,8 +385,7 @@ public abstract class ElementProcessorSerializer
      * @param locator the Locator object
      */
 
-    public void setDocumentLocator(final Locator locator)
-    {
+    public void setDocumentLocator(final Locator locator) {
         _locator = locator;
     }
 
@@ -436,17 +395,14 @@ public abstract class ElementProcessorSerializer
      * @param ignored_name
      */
 
-    public void skippedEntity(final String ignored_name)
-    {
+    public void skippedEntity(final String ignored_name) {
     }
 
     /**
      * Receive notification of the beginning of a document.
      */
 
-    public void startDocument()
-    {
-
+    public void startDocument() {
         // nothing to do; should be ready as soon as we were
         // constructed
     }
@@ -464,47 +420,34 @@ public abstract class ElementProcessorSerializer
      */
 
     public void startElement(final String namespaceURI,
-                             final String localName, final String qName,
-                             final Attributes atts)
-        throws SAXException
-    {
+            final String localName, final String qName, final Attributes atts)
+            throws SAXException {
         String name = "";
 
-        if ((localName != null) && (localName.length() != 0))
-        {
+        if ((localName != null) && (localName.length() != 0)) {
             name = localName;
-        }
-        else if ((qName != null) && (qName.length() != 0))
-        {
+        } else if ((qName != null) && (qName.length() != 0)) {
             name = qName;
         }
         ElementProcessor processor;
 
-        try
-        {
+        try {
             processor =
                 getElementProcessorFactory().createElementProcessor(name);
-        }
-        catch (CannotCreateElementProcessorException e)
-        {
+        } catch (CannotCreateElementProcessorException e) {
             throw SAXExceptionFactory("could not process startElement event",
                                       e);
         }
-	doPreInitialization(processor);
-        Attribute[] attributes = (atts == null) ? new Attribute[ 0 ]
-                                                : new Attribute[ atts.getLength() ];
+        doPreInitialization(processor);
+        Attribute[] attributes = (atts == null) ? new Attribute[0]
+                                                : new Attribute[atts.getLength()];
 
-        for (int j = 0; j < attributes.length; j++)
-        {
-            attributes[ j ] = new Attribute(atts.getQName(j),
-                                            atts.getValue(j));
+        for (int j = 0; j < attributes.length; j++) {
+            attributes[j] = new Attribute(atts.getQName(j), atts.getValue(j));
         }
-        try
-        {
+        try {
             processor.initialize(attributes, getCurrentElementProcessor());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw SAXExceptionFactory("Exception processing startElement", e);
         }
         _open_elements.push(processor);
@@ -519,9 +462,7 @@ public abstract class ElementProcessorSerializer
      */
 
     public void startPrefixMapping(final String ignored_prefix,
-                                   final String ignored_uri)
-    {
+                                   final String ignored_uri) {
     }
-
     /* **********  END  implementation of ContentHandler ********** */
 }   // end public abstract class ElementProcessorSerializer

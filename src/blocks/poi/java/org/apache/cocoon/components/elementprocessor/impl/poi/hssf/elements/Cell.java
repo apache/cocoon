@@ -65,12 +65,11 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
  * internal representation of a Cell
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Cell.java,v 1.6 2003/09/30 20:08:53 joerg Exp $
+ * @version CVS $Id: Cell.java,v 1.7 2004/01/31 08:50:39 antonio Exp $
  */
 // package scope
 
 class Cell {
-
     private HSSFCell _cell;
 
     // original CellType value

@@ -60,7 +60,7 @@ import java.io.IOException;
  * internal representation of a Row
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Row.java,v 1.3 2003/07/01 23:43:21 joerg Exp $
+ * @version CVS $Id: Row.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
 
 // package scope
@@ -71,10 +71,8 @@ class Row {
 
     /**
      * Constructor Row
-     *
      * @param row
      */
-
     Row(final HSSFRow row, final Sheet sheet) {
         _row = row;
         _sheet = sheet;
@@ -82,54 +80,45 @@ class Row {
 
     /**
      * set a row's height
-     *
      * @param points the height, in points
-     *
      * @exception IOException if any arguments are illegal
      */
-
     void setHeight(final double points) throws IOException {
         if (!isValid(points)) {
             throw new IOException("points " + points + " is out of range");
         }
-        _row.setHeight((short)(points * 20));
+        _row.setHeight((short) (points * 20));
     }
 
     /**
      * get the row height of a specified row
-     *
      * @return row height in 1/20 of a point
      */
-
     short getHeight() {
         return _row.getHeight();
     }
 
     /**
      * create a cell in a specific column, with a specific type
-     *
      * @param column the column number for the cell
-     * @param cellType the cell type, being an enum from the CellType
-     *                 class
-     *
+     * @param cellType the cell type, being an enum from the CellType class
      * @return a new Cell object
-     *
      * @exception IOException
      */
-
     Cell createCell(final int column, final int cellType) throws IOException {
-        if ((column < 0) || (column > Short.MAX_VALUE)) {
+        if (column < 0 || column > Short.MAX_VALUE) {
             throw new IOException("Illegal column value: " + column);
         }
         HSSFCell hssfCell = _row.createCell((short)column);
         hssfCell.setCellType(CellType.convertCellType(cellType));
 
         Cell cell = new Cell(hssfCell, cellType);
-        cell.setStyle(_sheet.getCellStyleForRegion(_row.getRowNum(), (short)column));
+        cell.setStyle(_sheet.getCellStyleForRegion(_row.getRowNum(),
+                (short)column));
         return cell;
     }
 
     private boolean isValid(double points) {
         return ((points >= 0) && (points <= (((double)Short.MAX_VALUE) / 20)));
     }
-}   // end package scope class Row
+} // end package scope class Row

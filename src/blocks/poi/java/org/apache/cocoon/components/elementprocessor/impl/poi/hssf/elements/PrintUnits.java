@@ -60,74 +60,54 @@ import java.io.IOException;
  * a simpler way to deal with them.GTK type codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: PrintUnits.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: PrintUnits.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class PrintUnits
-{
-    private static final String        _cm                = "cm";
-    private static final String        _in                = "in";
-    private static final String        _mm                = "mm";
-    private static final String        _points            = "points";
-    public static final int            PRINT_UNITS_CM     = 0;
-    public static final int            PRINT_UNITS_IN     = 1;
-    public static final int            PRINT_UNITS_MM     = 2;
-    public static final int            PRINT_UNITS_POINTS = 3;
-    private static final NumericResult _null_result       =
+public class PrintUnits {
+    private static final String _cm = "cm";
+    private static final String _in = "in";
+    private static final String _mm = "mm";
+    private static final String _points = "points";
+    public static final int PRINT_UNITS_CM = 0;
+    public static final int PRINT_UNITS_IN = 1;
+    public static final int PRINT_UNITS_MM = 2;
+    public static final int PRINT_UNITS_POINTS = 3;
+    private static final NumericResult _null_result =
         new NumericResult(new IOException("print units cannot be null"));
-    private static final NumericResult _cm_result         =
+    private static final NumericResult _cm_result =
         new NumericResult(new Integer(PRINT_UNITS_CM));
-    private static final NumericResult _in_result         =
+    private static final NumericResult _in_result =
         new NumericResult(new Integer(PRINT_UNITS_IN));
-    private static final NumericResult _mm_result         =
+    private static final NumericResult _mm_result =
         new NumericResult(new Integer(PRINT_UNITS_MM));
-    private static final NumericResult _points_result     =
+    private static final NumericResult _points_result =
         new NumericResult(new Integer(PRINT_UNITS_POINTS));
 
-    private PrintUnits()
-    {
-    }
+    private PrintUnits() {}
 
     /**
      * convert a string into a NumericResult
-     *
      * @param value the string describing the print units
-     *
-     * @return a NumericResult containing either one of the public
-     *         enumeration values, or an appropriate IOException
+     * @return a NumericResult containing either one of the public enumeration
+     *             values, or an appropriate IOException
      */
+    public static NumericResult extractPrintUnits(final String value) {
+        NumericResult rval = null;
+        String input = (value == null) ? null : value.trim();
 
-    public static NumericResult extractPrintUnits(final String value)
-    {
-        NumericResult rval  = null;
-        String        input = (value == null) ? null
-                                              : value.trim();
-
-        if (input == null)
-        {
+        if (input == null) {
             rval = _null_result;
-        }
-        else if (input.equalsIgnoreCase(_cm))
-        {
+        } else if (input.equalsIgnoreCase(_cm)) {
             rval = _cm_result;
-        }
-        else if (input.equalsIgnoreCase(_in))
-        {
+        } else if (input.equalsIgnoreCase(_in)) {
             rval = _in_result;
-        }
-        else if (input.equalsIgnoreCase(_mm))
-        {
+        } else if (input.equalsIgnoreCase(_mm)) {
             rval = _mm_result;
-        }
-        else if (input.equalsIgnoreCase(_points))
-        {
+        } else if (input.equalsIgnoreCase(_points)) {
             rval = _points_result;
-        }
-        else
-        {
-            rval = new NumericResult(
-                new IOException(
-                    "\"" + input + "\" is not a valid print unit"));
+        } else {
+            rval = new NumericResult(new IOException(
+                        "\"" + input + "\" is not a valid print unit"));
         }
         return rval;
     }
-}   // end public class PrintUnits
+} // end public class PrintUnits

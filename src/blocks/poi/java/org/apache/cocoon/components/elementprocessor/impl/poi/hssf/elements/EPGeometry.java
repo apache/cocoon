@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 
@@ -66,60 +64,44 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPGeometry.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPGeometry.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPGeometry
-    extends BaseElementProcessor
-{
-    private static final String _width_attribute  = "Width";
+public class EPGeometry extends BaseElementProcessor {
+    private static final String _width_attribute = "Width";
     private static final String _height_attribute = "Height";
-    private NumericResult       _width;
-    private NumericResult       _height;
+    private NumericResult _width;
+    private NumericResult _height;
 
     /**
      * constructor
      */
-
-    public EPGeometry()
-    {
+    public EPGeometry() {
         super(null);
-        _width  = null;
+        _width = null;
         _height = null;
     }
 
     /**
      * @return height
-     *
      * @exception IOException
      */
-
-    int getHeight()
-        throws IOException
-    {
-        if (_height == null)
-        {
-            _height =
-                NumericConverter
-                    .extractPositiveInteger(getValue(_height_attribute));
+    int getHeight() throws IOException {
+        if (_height == null) {
+            _height = NumericConverter.extractPositiveInteger(
+                    getValue(_height_attribute));
         }
         return _height.intValue();
     }
 
     /**
      * @return width
-     *
      * @exception IOException
      */
-
-    int getWidth()
-        throws IOException
-    {
-        if (_width == null)
-        {
-            _width =
-                NumericConverter
-                    .extractPositiveInteger(getValue(_width_attribute));
+    int getWidth() throws IOException {
+        if (_width == null) {
+            _width = NumericConverter.extractPositiveInteger(
+                    getValue(_width_attribute));
         }
         return _width.intValue();
     }
-}   // end public class EPGeometry
+} // end public class EPGeometry

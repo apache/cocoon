@@ -57,7 +57,7 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: BooleanConverter.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: BooleanConverter.java,v 1.3 2004/01/31 08:50:43 antonio Exp $
  */
 public class BooleanConverter
 {
@@ -74,8 +74,7 @@ public class BooleanConverter
     private static final BooleanResult _false_result   =
         new BooleanResult(false);
 
-    private BooleanConverter()
-    {
+    private BooleanConverter() {
     }
 
     /**
@@ -89,37 +88,28 @@ public class BooleanConverter
      *         with the value;
      */
 
-    public static BooleanResult extractBoolean(final String value)
-    {
-        String        input  = (value == null) ? ""
-                                               : value.trim();
+    public static BooleanResult extractBoolean(final String value) {
+        String input  = (value == null) ? "" : value.trim();
         BooleanResult result = null;
 
-        for (int k = 0; k < _true_values.length; k++)
-        {
-            if (_true_values[ k ].equalsIgnoreCase(input))
-            {
+        for (int k = 0; k < _true_values.length; k++) {
+            if (_true_values[k].equalsIgnoreCase(input)) {
                 result = _true_result;
                 break;
             }
         }
-        if (result == null)
-        {
-            for (int k = 0; k < _false_values.length; k++)
-            {
-                if (_false_values[ k ].equalsIgnoreCase(input))
-                {
+        if (result == null) {
+            for (int k = 0; k < _false_values.length; k++) {
+                if (_false_values[k].equalsIgnoreCase(input)) {
                     result = _false_result;
                     break;
                 }
             }
         }
-        if (result == null)
-        {
+        if (result == null) {
             result = new BooleanResult(
                 new IOException("\"" + input + "\" is not a boolean value"));
         }
         return result;
     }
 }   // end public class BooleanConverter
-

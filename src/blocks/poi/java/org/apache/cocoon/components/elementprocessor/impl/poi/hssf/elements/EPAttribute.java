@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * No-op implementation of ElementProcessor to handle the "Attribute" tag
  *
@@ -61,18 +59,14 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Attribute has no attributes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPAttribute.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPAttribute.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPAttribute
-    extends BaseElementProcessor
-{
+public class EPAttribute extends BaseElementProcessor {
 
     /**
      * constructor
      */
-
-    public EPAttribute()
-    {
+    public EPAttribute() {
         super(null);
     }
 }   // end public class EPAttribute

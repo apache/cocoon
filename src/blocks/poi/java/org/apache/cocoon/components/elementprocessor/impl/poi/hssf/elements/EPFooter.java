@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * No-op implementation of ElementProcessor to handle the "Footer" tag
  *
@@ -62,41 +60,33 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPFooter.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPFooter.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPFooter
-    extends BaseElementProcessor
-{
-    private String              _left;
-    private String              _middle;
-    private String              _right;
-    private static final String _left_attribute   = "Left";
+public class EPFooter extends BaseElementProcessor {
+    private String _left;
+    private String _middle;
+    private String _right;
+    private static final String _left_attribute = "Left";
     private static final String _middle_attribute = "Middle";
-    private static final String _right_attribute  = "Right";
+    private static final String _right_attribute = "Right";
 
     /**
      * constructor
      */
-
-    public EPFooter()
-    {
+    public EPFooter() {
         super(null);
-        _left   = null;
+        _left = null;
         _middle = null;
-        _right  = null;
+        _right = null;
     }
 
     /**
      * @return the left string
      */
-
-    public String getLeft()
-    {
-        if (_left == null)
-        {
+    public String getLeft() {
+        if (_left == null) {
             _left = getValue(_left_attribute);
-            if (_left == null)
-            {
+            if (_left == null) {
                 _left = "";
             }
         }
@@ -106,14 +96,10 @@ public class EPFooter
     /**
      * @return the middle string
      */
-
-    public String getMiddle()
-    {
-        if (_middle == null)
-        {
+    public String getMiddle() {
+        if (_middle == null) {
             _middle = getValue(_middle_attribute);
-            if (_middle == null)
-            {
+            if (_middle == null) {
                 _middle = "";
             }
         }
@@ -123,17 +109,13 @@ public class EPFooter
     /**
      * @return the right string
      */
-
-    public String getRight()
-    {
-        if (_right == null)
-        {
+    public String getRight() {
+        if (_right == null) {
             _right = getValue(_right_attribute);
-            if (_right == null)
-            {
+            if (_right == null) {
                 _right = "";
             }
         }
         return _right;
     }
-}   // end public class EPFooter
+} // end public class EPFooter

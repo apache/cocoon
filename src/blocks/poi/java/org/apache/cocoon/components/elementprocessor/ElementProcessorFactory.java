@@ -50,19 +50,17 @@
 */
 package org.apache.cocoon.components.elementprocessor;
 
-
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Create instances of specific ElementProcessor implementations to
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: ElementProcessorFactory.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
+ * @version CVS $Id: ElementProcessorFactory.java,v 1.3 2004/01/31 08:50:43 antonio Exp $
  */
-public interface ElementProcessorFactory
-                    extends org.apache.avalon.framework.component.Component
+public interface ElementProcessorFactory extends Component
 {
-
     String ROLE = ElementProcessorFactory.class.getName();
 
     /**

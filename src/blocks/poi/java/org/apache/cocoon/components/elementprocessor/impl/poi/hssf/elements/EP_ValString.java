@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * No-op implementation of ElementProcessor to handle the "val-string"
  * tag
@@ -62,18 +60,14 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_ValString.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EP_ValString.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EP_ValString
-    extends BaseElementProcessor
-{
+public class EP_ValString extends BaseElementProcessor {
 
     /**
      * constructor
      */
-
-    public EP_ValString()
-    {
+    public EP_ValString() {
         super(null);
     }
 }   // end public class EP_ValString

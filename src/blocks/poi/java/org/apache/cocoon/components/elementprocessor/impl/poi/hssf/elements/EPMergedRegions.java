@@ -51,22 +51,19 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * No-op implementation of ElementProcessor to handle the "MergedRegions" tag
  * This element has no attributes and contains a string.
  *
  * @author Danny Mui (danny@muibros.com)
+ * @version CVS $Id: EPMergedRegions.java,v 1.3 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPMergedRegions extends BaseElementProcessor
-{
+public class EPMergedRegions extends BaseElementProcessor {
 
     /**
      * constructor
      */
-    public EPMergedRegions()
-    {
-        super(null);        
+    public EPMergedRegions() {
+        super(null);
     }
-}   // end public class EPMergedRegions
+} // end public class EPMergedRegions

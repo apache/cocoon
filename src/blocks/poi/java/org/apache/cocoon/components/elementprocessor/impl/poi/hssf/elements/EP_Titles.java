@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.BooleanConverter;
 import org.apache.cocoon.components.elementprocessor.types.BooleanResult;
 
@@ -66,20 +64,16 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Titles.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EP_Titles.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EP_Titles
-    extends BaseElementProcessor
-{
+public class EP_Titles extends BaseElementProcessor {
     private static final String _value_attribute = "value";
     private BooleanResult       _value;
 
     /**
      * constructor
      */
-
-    public EP_Titles()
-    {
+    public EP_Titles() {
         super(null);
         _value = null;
     }
@@ -89,12 +83,8 @@ public class EP_Titles
      *
      * @exception IOException if the value is malformed or missing
      */
-
-    public boolean getValue()
-        throws IOException
-    {
-        if (_value == null)
-        {
+    public boolean getValue() throws IOException {
+        if (_value == null) {
             _value =
                 BooleanConverter.extractBoolean(getValue(_value_attribute));
         }

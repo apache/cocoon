@@ -60,18 +60,16 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: NumericConverter.java,v 1.4 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: NumericConverter.java,v 1.5 2004/01/31 08:50:43 antonio Exp $
  */
 public class NumericConverter
 {
     private static final Validator _non_negative_validator = new Validator()
     {
-        public IOException validate(final Number number)
-        {
+        public IOException validate(final Number number) {
             IOException e = null;
 
-            if (number.intValue() < 0)
-            {
+            if (number.intValue() < 0) {
                 e = new IOException("\"" + number.intValue()
                                     + "\" is not a non-negative integer");
             }
@@ -80,12 +78,10 @@ public class NumericConverter
     };
     private static final Validator _positive_validator = new Validator()
     {
-        public IOException validate(final Number number)
-        {
+        public IOException validate(final Number number) {
             IOException e = null;
 
-            if (number.intValue() < 1)
-            {
+            if (number.intValue() < 1) {
                 e = new IOException("\"" + number.intValue()
                                     + "\" is not a positive integer");
             }
@@ -93,8 +89,7 @@ public class NumericConverter
         }
     };
 
-    private NumericConverter()
-    {
+    private NumericConverter() {
     }
 
     /**
@@ -106,8 +101,7 @@ public class NumericConverter
      *         with the value;
      */
 
-    public static NumericResult extractDouble(final String value)
-    {
+    public static NumericResult extractDouble(final String value) {
         return extractDouble(value, null);
     }
 
@@ -124,32 +118,23 @@ public class NumericConverter
      */
 
     public static NumericResult extractDouble(final String value,
-                                              final Validator validator)
-    {
-        String        input  = (value == null) ? ""
-                                               : value.trim();
+                final Validator validator) {
+        String input  = (value == null) ? "" : value.trim();
         NumericResult result = null;
 
-        try
-        {
-            Number      number    = new Double(input);
+        try {
+            Number number = new Double(input);
             IOException exception = null;
 
-            if (validator != null)
-            {
+            if (validator != null) {
                 exception = validator.validate(number);
             }
-            if (exception == null)
-            {
+            if (exception == null) {
                 result = new NumericResult(number);
-            }
-            else
-            {
+            } else {
                 result = new NumericResult(exception);
             }
-        }
-        catch (NumberFormatException ignored)
-        {
+        } catch (NumberFormatException ignored) {
             result = new NumericResult(
                 new CascadingIOException(
                     "\"" + input + "\" does not represent a double value", ignored));
@@ -166,8 +151,7 @@ public class NumericConverter
      *         with the value;
      */
 
-    public static NumericResult extractInteger(final String value)
-    {
+    public static NumericResult extractInteger(final String value) {
         return extractInteger(value, null);
     }
 
@@ -184,32 +168,23 @@ public class NumericConverter
      */
 
     public static NumericResult extractInteger(final String value,
-                                               final Validator validator)
-    {
-        String        input  = (value == null) ? ""
-                                               : value.trim();
+            final Validator validator) {
+        String input  = (value == null) ? "" : value.trim();
         NumericResult result = null;
 
-        try
-        {
+        try {
             Number      number    = new Integer(input);
             IOException exception = null;
 
-            if (validator != null)
-            {
+            if (validator != null) {
                 exception = validator.validate(number);
             }
-            if (exception == null)
-            {
+            if (exception == null) {
                 result = new NumericResult(number);
-            }
-            else
-            {
+            } else {
                 result = new NumericResult(exception);
             }
-        }
-        catch (NumberFormatException ignored)
-        {
+        } catch (NumberFormatException ignored) {
             result = new NumericResult(
                 new CascadingIOException(
                     "\"" + input + "\" does not represent an integer value", ignored));
@@ -228,8 +203,7 @@ public class NumericConverter
      *         with the value;
      */
 
-    public static NumericResult extractPositiveInteger(final String value)
-    {
+    public static NumericResult extractPositiveInteger(final String value) {
         return extractInteger(value, _positive_validator);
     }
 
@@ -244,8 +218,7 @@ public class NumericConverter
      *         with the value;
      */
 
-    public static NumericResult extractNonNegativeInteger(final String value)
-    {
+    public static NumericResult extractNonNegativeInteger(final String value) {
         return extractInteger(value, _non_negative_validator);
     }
 }   // end public class NumericConverter

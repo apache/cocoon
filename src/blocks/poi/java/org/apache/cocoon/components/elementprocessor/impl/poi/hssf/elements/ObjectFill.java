@@ -55,40 +55,30 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * ObjectFill codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: ObjectFill.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: ObjectFill.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class ObjectFill
-{
-    public static final int OBJECT_FILL_LINE  = 1;
+public class ObjectFill {
+    public static final int OBJECT_FILL_LINE = 1;
     public static final int OBJECT_FILL_ARROW = 2;
-    public static final int OBJECT_FILL_BOX   = 101;
-    public static final int OBJECT_FILL_OVAL  = 102;
+    public static final int OBJECT_FILL_BOX = 101;
+    public static final int OBJECT_FILL_OVAL = 102;
 
-    private ObjectFill()
-    {
-    }
+    private ObjectFill() { /*VOID */}
 
     /**
      * Is this a valid direction?
-     *
      * @param val value to be checked
-     *
      * @return true if valid, false otherwise
      */
-
-    public static boolean isValid(final int val)
-    {
-        switch (val)
-        {
-
+    public static boolean isValid(final int val) {
+        switch (val) {
             case OBJECT_FILL_LINE :
             case OBJECT_FILL_ARROW :
             case OBJECT_FILL_BOX :
             case OBJECT_FILL_OVAL :
                 return true;
-
             default :
                 return false;
         }
     }
-}   // end public class ObjectFill
+} // end public class ObjectFill

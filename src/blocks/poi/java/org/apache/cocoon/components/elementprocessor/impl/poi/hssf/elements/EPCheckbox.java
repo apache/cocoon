@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
@@ -68,70 +66,52 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPCheckbox.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPCheckbox.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPCheckbox
-    extends BaseElementProcessor
-{
-    private String                 _input;
-    private NumericResult          _value;
-    private String                 _object_bound;
-    private Offsets                _object_offset;
-    private Anchors                _object_anchor_type;
-    private NumericResult          _direction;
-    private static final String    _input_attribute              = "Input";
-    private static final String    _value_attribute              = "Value";
-    private static final String    _object_bound_attribute       =
-        "ObjectBound";
-    private static final String    _object_offset_attribute      =
-        "ObjectOffset";
-    private static final String    _object_anchor_type_attribute =
+public class EPCheckbox extends BaseElementProcessor {
+    private String _input;
+    private NumericResult _value;
+    private String _object_bound;
+    private Offsets _object_offset;
+    private Anchors _object_anchor_type;
+    private NumericResult _direction;
+    private static final String _input_attribute = "Input";
+    private static final String _value_attribute = "Value";
+    private static final String _object_bound_attribute = "ObjectBound";
+    private static final String _object_offset_attribute = "ObjectOffset";
+    private static final String _object_anchor_type_attribute =
         "ObjectAnchorType";
-    private static final String    _direction_attribute          =
-        "Direction";
-    private static final Validator _direction_validator          =
-        new Validator()
-    {
-        public IOException validate(final Number number)
-        {
+    private static final String _direction_attribute = "Direction";
+    private static final Validator _direction_validator = new Validator() {
+        public IOException validate(final Number number) {
             return Direction.isValid(number.intValue()) ? null
-                                                        : new IOException(
-                                                            "\"" + number
-                                                            + "\" is not a legal value");
+                : new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
     /**
      * constructor
      */
-
-    public EPCheckbox()
-    {
+    public EPCheckbox() {
         super(null);
-        _input              = null;
-        _value              = null;
-        _object_bound       = null;
-        _object_offset      = null;
+        _input = null;
+        _value = null;
+        _object_bound = null;
+        _object_offset = null;
         _object_anchor_type = null;
-        _direction          = null;
+        _direction = null;
     }
 
     /**
      * @return input
-     *
      * @exception IOException
      */
-
-    public String getInput()
-        throws IOException
-    {
-        if (_input == null)
-        {
+    public String getInput() throws IOException {
+        if (_input == null) {
             _input = getValue(_input_attribute);
-            if (_input == null)
-            {
+            if (_input == null) {
                 throw new IOException("missing " + _input_attribute
-                                      + " attribute");
+                        + " attribute");
             }
         }
         return _input;
@@ -139,15 +119,10 @@ public class EPCheckbox
 
     /**
      * @return value
-     *
      * @exception IOException
      */
-
-    public int getValue()
-        throws IOException
-    {
-        if (_value == null)
-        {
+    public int getValue() throws IOException {
+        if (_value == null) {
             _value =
                 NumericConverter.extractInteger(getValue(_value_attribute));
         }
@@ -156,20 +131,14 @@ public class EPCheckbox
 
     /**
      * @return object_bound
-     *
      * @exception IOException
      */
-
-    public String getObjectBound()
-        throws IOException
-    {
-        if (_object_bound == null)
-        {
+    public String getObjectBound() throws IOException {
+        if (_object_bound == null) {
             _object_bound = getValue(_object_bound_attribute);
-            if (_object_bound == null)
-            {
-                throw new IOException("missing " + _object_bound_attribute
-                                      + " attribute");
+            if (_object_bound == null) {
+                throw new IOException(
+                    "missing " + _object_bound_attribute + " attribute");
             }
         }
         return _object_bound;
@@ -177,15 +146,10 @@ public class EPCheckbox
 
     /**
      * @return offsets
-     *
      * @exception IOException
      */
-
-    public Offsets getOffsets()
-        throws IOException
-    {
-        if (_object_offset == null)
-        {
+    public Offsets getOffsets() throws IOException {
+        if (_object_offset == null) {
             _object_offset = new Offsets(getValue(_object_offset_attribute));
         }
         return _object_offset;
@@ -193,15 +157,10 @@ public class EPCheckbox
 
     /**
      * @return anchors
-     *
      * @exception IOException
      */
-
-    public Anchors getAnchors()
-        throws IOException
-    {
-        if (_object_anchor_type == null)
-        {
+    public Anchors getAnchors() throws IOException {
+        if (_object_anchor_type == null) {
             _object_anchor_type =
                 new Anchors(getValue(_object_anchor_type_attribute));
         }
@@ -210,18 +169,15 @@ public class EPCheckbox
 
     /**
      * @return direction as a public member of Direction
-     *
      * @exception IOException
      */
-
-    public int getDirection()
-        throws IOException
-    {
-        if (_direction == null)
-        {
-            _direction = NumericConverter.extractInteger(
-                getValue(_direction_attribute), _direction_validator);
+    public int getDirection() throws IOException {
+        if (_direction == null) {
+            _direction =
+                NumericConverter.extractInteger(
+                    getValue(_direction_attribute),
+                    _direction_validator);
         }
         return _direction.intValue();
     }
-}   // end public class EPCheckbox
+} // end public class EPCheckbox

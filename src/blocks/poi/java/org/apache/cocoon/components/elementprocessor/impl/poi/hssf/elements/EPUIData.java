@@ -65,41 +65,30 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPUIData.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPUIData.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPUIData
-    extends BaseElementProcessor
-{
-    private NumericResult       _selected_tab;
+public class EPUIData extends BaseElementProcessor {
+    private NumericResult _selected_tab;
     private static final String _selected_tab_attribute = "SelectedTab";
 
     /**
      * constructor
      */
-
-    public EPUIData()
-    {
+    public EPUIData() {
         super(null);
         _selected_tab = null;
     }
 
     /**
      * Get the selected tab
-     *
      * @return the number of the currently selected sheet (tab)
-     *
-     * @exception IOException if the value is missing or incorrectly
-     *            written
+     * @exception IOException if the value is missing or incorrectly written
      */
-
-    public int getSelectedTab()
-        throws IOException
-    {
-        if (_selected_tab == null)
-        {
-            _selected_tab = NumericConverter
-                .extractNonNegativeInteger(getValue(_selected_tab_attribute));
+    public int getSelectedTab() throws IOException {
+        if (_selected_tab == null) {
+            _selected_tab = NumericConverter.extractNonNegativeInteger(
+                    getValue(_selected_tab_attribute));
         }
         return _selected_tab.intValue();
     }
-}   // end public class EPUIData
+} // end public class EPUIData

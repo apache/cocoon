@@ -57,7 +57,7 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Direction codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Direction.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: Direction.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
 public class Direction
 {
@@ -67,8 +67,7 @@ public class Direction
     public static final int DIRECTION_DOWN_RIGHT = 16;
     public static final int DIRECTION_DOWN_LEFT  = 17;
 
-    private Direction()
-    {
+    private Direction() {
     }
 
     /**
@@ -79,18 +78,14 @@ public class Direction
      * @return true if valid, false otherwise
      */
 
-    public static boolean isValid(final int val)
-    {
-        switch (val)
-        {
-
+    public static boolean isValid(final int val) {
+        switch (val) {
             case DIRECTION_UNKNOWN :
             case DIRECTION_UP_RIGHT :
             case DIRECTION_UP_LEFT :
             case DIRECTION_DOWN_RIGHT :
             case DIRECTION_DOWN_LEFT :
                 return true;
-
             default :
                 return false;
         }

@@ -61,18 +61,14 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * will be, as the gnumeric code indicates that it is a kludge
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPSheetName.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPSheetName.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPSheetName
-    extends BaseElementProcessor
-{
+public class EPSheetName extends BaseElementProcessor {
 
     /**
      * constructor
      */
-
-    public EPSheetName()
-    {
+    public EPSheetName() {
         super(null);
     }
-}   // end public class EPSheetName
+} // end public class EPSheetName

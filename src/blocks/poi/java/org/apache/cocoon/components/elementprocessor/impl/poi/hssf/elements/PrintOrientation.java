@@ -60,61 +60,42 @@ import java.io.IOException;
  * print orientation, and a simpler way to deal with them.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: PrintOrientation.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: PrintOrientation.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class PrintOrientation
-{
-    private static final String        _landscape                  =
-        "landscape";
-    private static final String        _portrait                   =
-        "portrait";
-    public static final int            PRINT_ORIENTATION_LANDSCAPE = 0;
-    public static final int            PRINT_ORIENTATION_PORTRAIT  = 1;
-    private static final NumericResult _null_result                =
-        new NumericResult(
-            new IOException("print orientation cannot be null"));
-    private static final NumericResult _landscape_result           =
+public class PrintOrientation {
+    private static final String _landscape = "landscape";
+    private static final String _portrait = "portrait";
+    public static final int PRINT_ORIENTATION_LANDSCAPE = 0;
+    public static final int PRINT_ORIENTATION_PORTRAIT = 1;
+    private static final NumericResult _null_result =
+        new NumericResult(new IOException("print orientation cannot be null"));
+    private static final NumericResult _landscape_result =
         new NumericResult(new Integer(PRINT_ORIENTATION_LANDSCAPE));
-    private static final NumericResult _portrait_result            =
+    private static final NumericResult _portrait_result =
         new NumericResult(new Integer(PRINT_ORIENTATION_PORTRAIT));
 
-    private PrintOrientation()
-    {
-    }
+    private PrintOrientation() {}
 
     /**
      * convert a string into a NumericResult
-     *
      * @param value the string describing the print orientation
-     *
-     * @return a NumericResult containing either one of the public
-     *         enumeration values, or an appropriate IOException
+     * @return a NumericResult containing either one of the public enumeration
+     *             values, or an appropriate IOException
      */
+    public static NumericResult extractPrintOrientation(final String value) {
+        NumericResult rval = null;
+        String input = (value == null) ? null : value.trim();
 
-    public static NumericResult extractPrintOrientation(final String value)
-    {
-        NumericResult rval  = null;
-        String        input = (value == null) ? null
-                                              : value.trim();
-
-        if (input == null)
-        {
+        if (input == null) {
             rval = _null_result;
-        }
-        else if (input.equalsIgnoreCase(_landscape))
-        {
+        } else if (input.equalsIgnoreCase(_landscape)) {
             rval = _landscape_result;
-        }
-        else if (input.equalsIgnoreCase(_portrait))
-        {
+        } else if (input.equalsIgnoreCase(_portrait)) {
             rval = _portrait_result;
-        }
-        else
-        {
-            rval = new NumericResult(
-                new IOException(
-                    "\"" + input + "\" is not a valid print orientation"));
+        } else {
+            rval = new NumericResult( new IOException(
+                        "\"" + input + "\" is not a valid print orientation"));
         }
         return rval;
     }
-}   // end public class PrintOrientation
+} // end public class PrintOrientation

@@ -63,27 +63,24 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPStyles.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPStyles.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPStyles
-    extends BaseElementProcessor
-{
+public class EPStyles extends BaseElementProcessor {
     private Hashtable colors;
+
     /**
      * constructor
      */
-
-    public EPStyles()
-    {
+    public EPStyles() {
         super(null);
         colors = HSSFColor.getTripletHash();
     }
 
     /**
-     *  @return an instance of Hashtable created by HSSFColor.getTripletHash()
-     *  @see org.apache.poi.hssf.util.HSSFColor#getTripletHash()
+     * @return an instance of Hashtable created by HSSFColor.getTripletHash()
+     * @see org.apache.poi.hssf.util.HSSFColor#getTripletHash()
      */
     public Hashtable getColorHash() {
         return colors;
     }
-}   // end public class EPStyles
+} // end public class EPStyles

@@ -56,18 +56,15 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * don't recognize
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Default_.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EP_Default_.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EP_Default_
-    extends BaseElementProcessor
-{
+public class EP_Default_ extends BaseElementProcessor {
 
     /**
      * constructor
      */
 
-    public EP_Default_()
-    {
+    public EP_Default_() {
         super(null);
     }
 }   // end public class EP_Default_

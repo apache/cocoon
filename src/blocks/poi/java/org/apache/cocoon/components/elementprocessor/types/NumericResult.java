@@ -59,7 +59,7 @@ import java.io.IOException;
  * numeric converter
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: NumericResult.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: NumericResult.java,v 1.4 2004/01/31 08:50:43 antonio Exp $
  */
 public class NumericResult
 {
@@ -72,8 +72,7 @@ public class NumericResult
      * @param value the numeric value
      */
 
-    public NumericResult(final Number value)
-    {
+    public NumericResult(final Number value) {
         this();
         _value = value;
     }
@@ -84,14 +83,12 @@ public class NumericResult
      * @param exception the exception to be thrown
      */
 
-    public NumericResult(final IOException exception)
-    {
+    public NumericResult(final IOException exception) {
         this();
         _exception = exception;
     }
 
-    private NumericResult()
-    {
+    private NumericResult() {
         _value     = null;
         _exception = null;
     }
@@ -105,9 +102,7 @@ public class NumericResult
      *            number
      */
 
-    public int intValue()
-        throws IOException
-    {
+    public int intValue() throws IOException {
         return value().intValue();
     }
 
@@ -120,17 +115,12 @@ public class NumericResult
      *            number
      */
 
-    public double doubleValue()
-        throws IOException
-    {
+    public double doubleValue() throws IOException {
         return value().doubleValue();
     }
 
-    private Number value()
-        throws IOException
-    {
-        if (_exception != null)
-        {
+    private Number value() throws IOException {
+        if (_exception != null) {
             throw _exception;
         }
         return _value;

@@ -63,38 +63,28 @@ import java.io.IOException;
  * containing sheet. The value is contained in the data.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPMaxCol.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPMaxCol.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPMaxCol
-    extends BaseElementProcessor
-{
+public class EPMaxCol extends BaseElementProcessor {
     private NumericResult _max_col;
 
     /**
      * constructor
      */
-
-    public EPMaxCol()
-    {
+    public EPMaxCol() {
         super(null);
         _max_col = null;
     }
 
     /**
      * get the maximum column for the containing sheet
-     *
      * @return maximum column number
-     *
      * @exception IOException if the data is malformed
      */
-
-    public int getMaxCol()
-        throws IOException
-    {
-        if (_max_col == null)
-        {
+    public int getMaxCol() throws IOException {
+        if (_max_col == null) {
             _max_col = NumericConverter.extractPositiveInteger(getData());
         }
         return _max_col.intValue();
     }
-}   // end public class EPMaxCol
+} // end public class EPMaxCol

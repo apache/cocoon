@@ -62,80 +62,62 @@ import java.io.IOException;
  * with all that information in an easily digested form.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: VerticalAlignment.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: VerticalAlignment.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class VerticalAlignment
-{
-    private int                    _alignment;
-    private static final int       _top       = 1;
-    private static final int       _bottom    = 2;
-    private static final int       _center    = 4;
-    private static final int       _justify   = 8;
-    private static final Validator _validator = new Validator()
-    {
-        public IOException validate(final Number number)
-        {
+public class VerticalAlignment {
+    private int _alignment;
+    private static final int _top = 1;
+    private static final int _bottom = 2;
+    private static final int _center = 4;
+    private static final int _justify = 8;
+    private static final Validator _validator = new Validator() {
+        public IOException validate(final Number number) {
             int value = number.intValue();
 
-            return ((value >= 0) && (value <= 15)) ? null
-                                                   : new IOException(
-                                                       "\"" + number
-                                                       + "\" is out of range");
+            return (value >= 0 && value <= 15) ? null
+                : new IOException("\"" + number + "\" is out of range");
         }
     };
 
     /**
      * Create a VerticalAlignment object
-     *
      * @param value the string containing the vertical alignment data
-     *
      * @exception IOException if the data is malformed
      */
-
-    public VerticalAlignment(final String value)
-        throws IOException
-    {
-        _alignment = NumericConverter.extractInteger(value,
-                _validator).intValue();
+    public VerticalAlignment(final String value) throws IOException {
+        _alignment =
+            NumericConverter.extractInteger(value, _validator).intValue();
     }
 
     /**
      * @return true if top bit is set
      */
-
-    public boolean isTop()
-    {
+    public boolean isTop() {
         return (_alignment & _top) == _top;
     }
 
     /**
      * @return true if bottom bit is set
      */
-
-    public boolean isBottom()
-    {
+    public boolean isBottom() {
         return (_alignment & _bottom) == _bottom;
     }
 
     /**
      * @return true if center bit is set
      */
-
-    public boolean isCenter()
-    {
+    public boolean isCenter() {
         return (_alignment & _center) == _center;
     }
 
     /**
      * @return true if justify bit is set
      */
-
-    public boolean isJustify()
-    {
+    public boolean isJustify() {
         return (_alignment & _justify) == _justify;
     }
-    
+
     public short getCode() {
         return (short)_alignment;
     }
-}   // end public class VerticalAlignment
+} // end public class VerticalAlignment

@@ -64,38 +64,28 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPZoom.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPZoom.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPZoom
-    extends BaseElementProcessor
-{
+public class EPZoom extends BaseElementProcessor {
     private NumericResult _zoom;
 
     /**
      * constructor
      */
-
-    public EPZoom()
-    {
+    public EPZoom() {
         super(null);
         _zoom = null;
     }
 
     /**
      * get the most recently used zoom factor
-     *
      * @return zoom factor
-     *
      * @exception IOException if the data is malformed
      */
-
-    public double getZoom()
-        throws IOException
-    {
-        if (_zoom == null)
-        {
+    public double getZoom() throws IOException {
+        if (_zoom == null) {
             _zoom = NumericConverter.extractDouble(getData());
         }
         return _zoom.doubleValue();
     }
-}   // end public class EPZoom
+} // end public class EPZoom

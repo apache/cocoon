@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import java.io.IOException;
 
 /**
@@ -63,19 +61,15 @@ import java.io.IOException;
  * content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPContent.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPContent.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPContent
-    extends BaseElementProcessor
-{
+public class EPContent extends BaseElementProcessor {
     private String _content;
 
     /**
      * constructor
      */
-
-    public EPContent()
-    {
+    public EPContent() {
         super(null);
         _content = null;
     }
@@ -83,31 +77,24 @@ public class EPContent
     /**
      * @return content
      */
-
-    public String getContent()
-    {
-        if (_content == null)
-        {
-		try {
-            		_content = getData();
-		} catch (NullPointerException ignored) {
-			//ignore npe	
-		} 
+    public String getContent() {
+        if (_content == null) {
+            try {
+                _content = getData();
+            } catch (NullPointerException ignored) {
+                //ignore npe
+            }
         }
         return _content;
     }
 
     /**
      * end processing -- pass their content up to their cell
-     *
      * @exception IOException
      */
-
-    public void endProcessing()
-        throws IOException
-    {
+    public void endProcessing() throws IOException {
         String thecontent = getContent();
         if (thecontent != null && !thecontent.trim().equals(""))
             getCell().setContent(getContent());
     }
-}   // end public class EPContent
+} // end public class EPContent

@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import java.io.IOException;
 
 import java.util.StringTokenizer;
@@ -62,10 +60,9 @@ import java.util.StringTokenizer;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: ColorCode.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: ColorCode.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class ColorCode
-{
+public class ColorCode {
     private static final int _red             = 0;
     private static final int _green           = 1;
     private static final int _blue            = 2;
@@ -81,36 +78,25 @@ public class ColorCode
      * @exception IOException if the string is badly formed
      */
 
-    public ColorCode(final String value)
-        throws IOException
-    {
+    public ColorCode(final String value) throws IOException {
         rgbstring = value;
-        if (value == null)
-        {
+        if (value == null) {
             throw new IOException("cannot process a null color code");
         }
         StringTokenizer tokenizer = new StringTokenizer(value.trim(), ":");
 
-        if (tokenizer.countTokens() != _component_count)
-        {
+        if (tokenizer.countTokens() != _component_count) {
             throw new IOException("color code must have exactly "
-                                  + _component_count
-                                  + " components, no more, no less");
+                      + _component_count + " components, no more, no less");
         }
-        for (int j = 0; j < _component_count; j++)
-        {
-            try
-            {
-                _components[ j ] = Integer.parseInt(tokenizer.nextToken(),
-                                                    16);
-            }
-            catch (Exception e)
-            {
+        for (int j = 0; j < _component_count; j++) {
+            try {
+                _components[j] = Integer.parseInt(tokenizer.nextToken(), 16);
+            } catch (Exception e) {
                 throw new IOException("cannot parse component #" + j + " ("
                                       + e.getMessage() + ")");
             }
-            if ((_components[ j ] < 0) || (_components[ j ] > 65535))
-            {
+            if (_components[j] < 0 || _components[j] > 65535) {
                 throw new IOException("Component #" + j + " is out of range");
             }
         }
@@ -120,27 +106,24 @@ public class ColorCode
      * @return red component
      */
 
-    public int getRed()
-    {
-        return _components[ _red ];
+    public int getRed() {
+        return _components[_red];
     }
 
     /**
      * @return green component
      */
 
-    public int getGreen()
-    {
-        return _components[ _green ];
+    public int getGreen() {
+        return _components[_green];
     }
 
     /**
      * @return blue component
      */
 
-    public int getBlue()
-    {
-        return _components[ _blue ];
+    public int getBlue() {
+        return _components[_blue];
     }
     
     public String toString() {

@@ -54,7 +54,7 @@ package org.apache.cocoon.components.elementprocessor;
  * Exception to be thrown when an ElementProcessor cannot be created.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: CannotCreateElementProcessorException.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
+ * @version CVS $Id: CannotCreateElementProcessorException.java,v 1.3 2004/01/31 08:50:43 antonio Exp $
  */
 public class CannotCreateElementProcessorException
         extends Exception
@@ -72,8 +72,7 @@ public class CannotCreateElementProcessorException
     public CannotCreateElementProcessorException(final String reason)
     {
         _element_name = null;
-        _reason       = (reason == null) ? ""
-                : reason;
+        _reason = (reason == null) ? "" : reason;
     }
 
     public void setElementName(final String name)
@@ -96,8 +95,7 @@ public class CannotCreateElementProcessorException
         buffer.append("Could not create ElementProcessor for element ");
         buffer.append(_element_name);
         buffer.append(" ");
-        if (_reason.length() != 0)
-        {
+        if (_reason.length() != 0) {
             buffer.append("(").append(_reason).append(")");
         }
         return buffer.toString();

@@ -58,7 +58,7 @@ import java.io.IOException;
  * boolean converter
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: BooleanResult.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: BooleanResult.java,v 1.3 2004/01/31 08:50:43 antonio Exp $
  */
 public class BooleanResult
 {
@@ -72,8 +72,7 @@ public class BooleanResult
      * @param value the boolean value
      */
 
-    BooleanResult(final boolean value)
-    {
+    BooleanResult(final boolean value) {
         this();
         _value = value;
     }
@@ -85,14 +84,12 @@ public class BooleanResult
      * @param exception the exception to be thrown
      */
 
-    BooleanResult(final IOException exception)
-    {
+    BooleanResult(final IOException exception) {
         this();
         _exception = exception;
     }
 
-    private BooleanResult()
-    {
+    private BooleanResult() {
         _value     = false;
         _exception = null;
     }
@@ -106,14 +103,10 @@ public class BooleanResult
      *            value
      */
 
-    public boolean booleanValue()
-        throws IOException
-    {
-        if (_exception != null)
-        {
+    public boolean booleanValue() throws IOException {
+        if (_exception != null) {
             throw _exception;
         }
         return _value;
     }
 }   // end public class BooleanResult
-

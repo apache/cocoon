@@ -51,17 +51,17 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.components.elementprocessor.*;
-import org.apache.cocoon.components.elementprocessor.types.*;
-import org.apache.cocoon.components.elementprocessor.impl.poi.POIFSElementProcessor;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import java.util.*;
-
-import java.io.IOException;
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.components.elementprocessor.ElementProcessor;
+import org.apache.cocoon.components.elementprocessor.impl.poi.POIFSElementProcessor;
+import org.apache.cocoon.components.elementprocessor.types.Attribute;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**
  * The BaseElementProcessor class provides default behavior for
@@ -74,7 +74,7 @@ import java.io.IOException;
  * no overrides will be a no-op ElementProcessor.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: BaseElementProcessor.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: BaseElementProcessor.java,v 1.3 2004/01/31 08:50:39 antonio Exp $
  */
 public abstract class BaseElementProcessor extends AbstractLogEnabled
      implements POIFSElementProcessor
@@ -94,17 +94,14 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      *                           generate them.
      */
 
-    protected BaseElementProcessor(final Attribute [] implied_attributes)
-    {
+    protected BaseElementProcessor(final Attribute [] implied_attributes) {
         _attributes = new HashMap();
         _filesystem = null;
         _parent     = null;
         _data       = new StringBuffer();
 
-        if (implied_attributes != null)
-        {
-            for (int k = 0; k < implied_attributes.length; k++)
-            {
+        if (implied_attributes != null) {
+            for (int k = 0; k < implied_attributes.length; k++) {
                 _attributes.put(implied_attributes[ k ].getName(),
                                 implied_attributes[ k ]);
             }
@@ -116,8 +113,7 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      *         empty, but never null
      */
 
-    protected Iterator getAttributes()
-    {
+    protected Iterator getAttributes() {
         return _attributes.values().iterator();
     }
 
@@ -130,13 +126,11 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      *         the attribute doesn't exist
      */
 
-    protected String getValue(final String name)
-    {
+    protected String getValue(final String name) {
         String    value = null;
         Attribute attr  = ( Attribute ) _attributes.get(name);
 
-        if (attr != null)
-        {
+        if (attr != null) {
             value = attr.getValue();
         }
         return value;
@@ -146,8 +140,7 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @return the POIFSFileSystem object
      */
 
-    protected POIFSFileSystem getFilesystem()
-    {
+    protected POIFSFileSystem getFilesystem() {
         return _filesystem;
     }
 
@@ -156,8 +149,7 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @return the parent ElementProcessor; may be null
      */
 
-    protected ElementProcessor getParent()
-    {
+    protected ElementProcessor getParent() {
         return _parent;
     }
 
@@ -171,17 +163,13 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      *         ancestor exists
      */
 
-    protected ElementProcessor getAncestor(final Class theclass)
-    {
-	ElementProcessor parent = getParent();
-	if ((parent == null) || parent.getClass().equals(theclass))
-	{
-	    return parent;
-	}
-	else
-	{
-	    return ((BaseElementProcessor)parent).getAncestor(theclass);
-	}
+    protected ElementProcessor getAncestor(final Class theclass) {
+    	ElementProcessor parent = getParent();
+    	if (parent == null || parent.getClass().equals(theclass)) {
+    	    return parent;
+    	} else {
+    	    return ((BaseElementProcessor)parent).getAncestor(theclass);
+    	}
     }
 
     /**
@@ -189,8 +177,7 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      *         characters, collected so far
      */
 
-    protected String getData()
-    {
+    protected String getData() {
         return _data.toString().trim();
     }
 
@@ -203,19 +190,13 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @exception IOException if the workbook is missing
      */
 
-    protected Workbook getWorkbook()
-        throws IOException
-    {
-        if (_parent == null)
-        {
-
+    protected Workbook getWorkbook() throws IOException {
+        if (_parent != null) {
+            return _parent.getWorkbook();
+        } else {
             // hit the end of the containment hierarchy without
             // finding it. This Is Bad
             throw new IOException("Cannot find the workbook object");
-        }
-        else
-        {
-            return _parent.getWorkbook();
         }
     }
 
@@ -228,19 +209,13 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @exception IOException if the sheet is missing
      */
 
-    protected Sheet getSheet()
-        throws IOException
-    {
-        if (_parent == null)
-        {
-
+    protected Sheet getSheet() throws IOException {
+        if (_parent != null) {
+            return _parent.getSheet();
+        } else {
             // hit the end of the containment hierarchy without
             // finding it. This Is Bad
             throw new IOException("Cannot find the sheet object");
-        }
-        else
-        {
-            return _parent.getSheet();
         }
     }
 
@@ -253,19 +228,13 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @exception IOException if the cell is missing
      */
 
-    protected Cell getCell()
-        throws IOException
-    {
-        if (_parent == null)
-        {
-
+    protected Cell getCell() throws IOException {
+        if (_parent != null) {
+            return _parent.getCell();
+        } else {
             // hit the end of the containment hierarchy without
             // finding it. This Is Bad
             throw new IOException("Cannot find the cell object");
-        }
-        else
-        {
-            return _parent.getCell();
         }
     }
 
@@ -317,25 +286,18 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      */
 
     public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
-        try
-        {
+                           final ElementProcessor parent) throws IOException {
+        try {
             _parent = ( BaseElementProcessor ) parent;
-        }
-        catch (ClassCastException ignored)
-        {
+        } catch (ClassCastException ignored) {
             throw new CascadingIOException(
                 "parent is not compatible with this serializer", ignored);
         }
 
         // can't trust the guarantee -- an overriding implementation
         // may have screwed this up
-        if (attributes != null)
-        {
-            for (int k = 0; k < attributes.length; k++)
-            {
+        if (attributes != null) {
+            for (int k = 0; k < attributes.length; k++) {
                 _attributes.put(attributes[ k ].getName(), attributes[ k ]);
             }
         }
@@ -358,10 +320,8 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @param data the character data
      */
 
-    public void acceptCharacters(final char [] data)
-    {
-        if (data != null)
-        {
+    public void acceptCharacters(final char [] data) {
+        if (data != null) {
             _data.append(data);
         }
     }
@@ -383,10 +343,8 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @param data the whitespace characters
      */
 
-    public void acceptWhitespaceCharacters(final char [] data)
-    {
-        if (data != null)
-        {
+    public void acceptWhitespaceCharacters(final char [] data) {
+        if (data != null) {
             _data.append(data);
         }
     }
@@ -406,9 +364,7 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @exception IOException
      */
 
-    public void endProcessing()
-        throws IOException
-    {
+    public void endProcessing() throws IOException {
         _filesystem = null;
         _parent     = null;
     }
@@ -422,11 +378,9 @@ public abstract class BaseElementProcessor extends AbstractLogEnabled
      * @param fs the POIFSFileSystem instance
      */
 
-    public void setFilesystem(POIFSFileSystem fs)
-    {
-	_filesystem = fs;
+    public void setFilesystem(POIFSFileSystem fs) {
+        _filesystem = fs;
     }
-
 
     /* **********  END  implementation of POIFSElementProcessor ********** */
 }   // end package scope abstract class BaseElementProcessor
