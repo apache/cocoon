@@ -7,43 +7,39 @@
   What is it?
   -----------
 
-  Apache Cocoon is an XML publishing framework that raises the usage of
-  XML and XSLT technologies for server applications to a new
-  level. Designed for performance and scalability around pipelined SAX
-  processing, Cocoon offers a flexible environment based on the separation
-  of concerns between content, logic and style. A centralized
-  configuration system and sophisticated caching top this all off and help
-  you to create, deploy and maintain rock-solid XML server applications.
+  Apache Cocoon is a web development framework built around the concept
+  of separation of concerns (that is: allowing people to do their job
+  without having to step on each other toes) and component-oriented web 
+  RAD.
 
-  Cocoon interacts with most data sources, including: filesystems, RDBMS,
-  LDAP, native XML databases, and network-based data sources. It adapts
-  content delivery to the capabilities of different devices like HTML,
-  WML, PDF, SVG, RTF just to name a few. Cocoon currently runs as a Servlet
-  or from a powerful commandline interface. The chosen design of an
-  abstracted environment gives you the freedom to implement your own
-  concrete environment to suit your required functionality.
+  Cocoon implements these concepts around the notion of 'component
+  pipelines' modelled after the 'process chain' concept where each 
+  worker specializes on a particular operation. This makes it possible
+  to use a Lego(tm)-like approach in building web solutions where
+  these components can be hooked together into pipelines without
+  requiring further programming.
 
+  We like to think at Cocoon as "web glue" for your web application
+  development needs. But most important, a glue that can keep 
+  concerns separate and allow parallel evolution of the two sides, 
+  improving development pace and reducing the chance of conflicts.
 
-
-  Where is it?
-  ------------
-
-  The home page for the Apache Cocoon project can be found in the Apache XML 
-  Project web site (http://cocoon.apache.org/). There you also find 
-  information on how to download the latest release as well as all the other 
-  information you might need regarding this project.
 
 
 
   Requirements
   ------------
 
+  Cocoon has been designed to interoperate side-by-side with your J2EE
+  existing solutions or give them new functionality without requiring 
+  any change in the existing infrastructure.
+
   Cocoon is implemented both as a Java servlet and a Java command line
   application. The following requirements exist for installing it:
 
    o  A Java 1.3 or later compatible virtual machine for your operating system.
 
-   o  Server API 2.2 compatible Servlet Engine.
+   o  Server API 2.2 compatible Servlet Engine or J2EE Application Server. 
       [optional for command line operation]
 
 
@@ -52,7 +48,8 @@
   Installation Instructions and Documentation
   -------------------------------------------
 
-  Read the INSTALL files in this directory for the installation instructions.
+  Read the INSTALL.txt file in this directory for the installation 
+  instructions.
 
   The documentation available as of the date of this release is
   included in the "docs/" directory.
@@ -66,13 +63,27 @@
   Licensing and legal issues
   --------------------------
 
-  For legal and licensing issues, please read the LICENSE files in the /legal
+  Cocoon is licensed under the Apache Software License, a license 
+  of the BSD family and contains software which is compatible with 
+  the BSD licensing style.
+
+  For more information, please read the LICENSE files in the /legal
   directory.
 
 
 
 
+  Credits
+  -------
+
+  For more information on credits and due reference to included software, 
+  please read the CREDITS.txt file in this directory.
+
+
+
   Thanks for using Apache Cocoon.
+
+
 
 
 
