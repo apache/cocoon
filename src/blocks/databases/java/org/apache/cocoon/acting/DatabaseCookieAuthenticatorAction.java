@@ -20,7 +20,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
