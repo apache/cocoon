@@ -69,6 +69,8 @@ import java.util.*;
  *
  * <p>Using the methods {@link #getSize} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
+ * 
+ * @version $Id: Repeater.java,v 1.18 2004/02/11 10:43:30 antonio Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;

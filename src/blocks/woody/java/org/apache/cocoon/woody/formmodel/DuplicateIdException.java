@@ -54,7 +54,9 @@ package org.apache.cocoon.woody.formmodel;
  * This exception is thrown by WidgetDefinitions that contain other WidgetDefinitions,
  * such as the {@link FormDefinition} or the {@link RepeaterDefinition}, in case
  * one tries to add a WidgetDefinition that has the same id as another,
- * previously added, WidgetDefinition..
+ * previously added, WidgetDefinition.
+ * 
+ * @version $Id: DuplicateIdException.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
  */
 public class DuplicateIdException extends Exception {
     public DuplicateIdException(String message) {

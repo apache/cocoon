@@ -54,8 +54,8 @@ import java.util.Iterator;
 /**
  * Interface to be implemented by Widgets which contain other widgets.
  *
- * CVS $Id: ContainerWidget.java,v 1.5 2004/01/29 16:36:17 coliver Exp $
  * @author Timothy Larson
+ * @version $Id: ContainerWidget.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
  */
 public interface ContainerWidget extends Widget {
     

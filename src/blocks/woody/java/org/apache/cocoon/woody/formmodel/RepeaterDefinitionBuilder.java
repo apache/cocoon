@@ -56,6 +56,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link RepeaterDefinition}s.
+ * 
+ * @version $Id: RepeaterDefinitionBuilder.java,v 1.9 2004/02/11 10:43:30 antonio Exp $
  */
 public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

@@ -58,6 +58,8 @@ import org.xml.sax.SAXException;
  * A string in an XMLizable form.
  *
  * Will produce exactly one characters call, no start/endDocument calls.
+ * 
+ * @version $Id: StringMessage.java,v 1.2 2004/02/11 10:43:32 antonio Exp $
  */
 public class StringMessage implements XMLizable {
     private char[] ch;

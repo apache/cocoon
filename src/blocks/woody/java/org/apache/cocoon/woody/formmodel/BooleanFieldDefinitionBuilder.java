@@ -57,6 +57,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link BooleanFieldDefinition}s.
+ * 
+ * @version $Id: BooleanFieldDefinitionBuilder.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
  */
 public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

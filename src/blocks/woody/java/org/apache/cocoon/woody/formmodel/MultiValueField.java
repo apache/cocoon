@@ -78,6 +78,8 @@ import java.util.Locale;
  * always return true, and this in return has an influence on the kind of validation rules that
  * can be used with the Datatype (see {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
  * description for more information).
+ * 
+ * @version $Id: MultiValueField.java,v 1.16 2004/02/11 10:43:30 antonio Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;

@@ -61,6 +61,8 @@ import java.util.Map;
 /**
  * Helper class for the Definition implementation of widgets containing
  * other widgets.
+ * 
+ * @version $Id: ContainerDefinitionDelegate.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class ContainerDefinitionDelegate {
     private List widgetDefinitions = new ArrayList();

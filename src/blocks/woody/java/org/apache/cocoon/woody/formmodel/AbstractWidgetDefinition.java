@@ -64,6 +64,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
+ * 
+ * @version $Id: AbstractWidgetDefinition.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;

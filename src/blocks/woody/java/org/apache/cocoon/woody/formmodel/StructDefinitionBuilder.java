@@ -57,8 +57,8 @@ import org.apache.cocoon.woody.util.DomHelper;
 /**
  * Builds {StructDefinition}s.
  *
- * CVS $Id: StructDefinitionBuilder.java,v 1.2 2004/02/04 17:25:57 sylvain Exp $
  * @author Timothy Larson
+ * @version $Id: StructDefinitionBuilder.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

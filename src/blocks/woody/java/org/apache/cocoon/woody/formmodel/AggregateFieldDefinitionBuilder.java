@@ -64,6 +64,8 @@ import java.util.HashSet;
 
 /**
  * Builds {@link AggregateFieldDefinition}s.
+ * 
+ * @version $Id: AggregateFieldDefinitionBuilder.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
  */
 public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

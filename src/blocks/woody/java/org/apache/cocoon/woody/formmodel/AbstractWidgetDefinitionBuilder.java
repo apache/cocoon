@@ -77,6 +77,8 @@ import org.w3c.dom.NodeList;
 /**
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
+ * 
+ * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.11 2004/02/11 10:43:30 antonio Exp $
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;

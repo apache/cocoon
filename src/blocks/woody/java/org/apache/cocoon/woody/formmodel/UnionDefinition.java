@@ -54,8 +54,8 @@ package org.apache.cocoon.woody.formmodel;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Union} widget.
  *
- * CVS $Id: UnionDefinition.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
+ * @version $Id: UnionDefinition.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class UnionDefinition extends AbstractContainerDefinition {
     private String caseWidgetId;

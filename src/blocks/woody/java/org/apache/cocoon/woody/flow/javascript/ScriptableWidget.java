@@ -63,6 +63,10 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
+/**
+ * @version $Id: ScriptableWidget.java,v 1.6 2004/02/11 10:43:32 antonio Exp $
+ * 
+ */
 public class ScriptableWidget extends ScriptableObject {
 
     Widget delegate;

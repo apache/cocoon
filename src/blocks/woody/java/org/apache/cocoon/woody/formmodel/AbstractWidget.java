@@ -66,6 +66,8 @@ import org.xml.sax.SAXException;
 /**
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
+ * 
+ * @version $Id: AbstractWidget.java,v 1.10 2004/02/11 10:43:30 antonio Exp $
  */
 public abstract class AbstractWidget implements Widget {
     private String location;

@@ -65,8 +65,8 @@ import org.xml.sax.SAXException;
 /**
  * Helper class for the implementation of widgets containing other widgets.
  *
- * CVS $Id: ContainerDelegate.java,v 1.3 2004/01/06 12:36:07 joerg Exp $
  * @author Timothy Larson
+ * @version $Id: ContainerDelegate.java,v 1.4 2004/02/11 10:43:30 antonio Exp $
  */
 public class ContainerDelegate {
 //    private WidgetDefinition definition;

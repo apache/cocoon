@@ -9,6 +9,7 @@ package org.apache.cocoon.woody.samples.bindings;
 
 /**
  * LenientNotOKBean
+ * @version $Id: LenientNotOKBean.java,v 1.2 2004/02/11 10:43:32 antonio Exp $
  */
 public class LenientNotOKBean extends LenientBaseBean{
 

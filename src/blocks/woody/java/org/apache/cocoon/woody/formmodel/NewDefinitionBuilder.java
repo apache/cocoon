@@ -55,8 +55,8 @@ import org.w3c.dom.Element;
 /**
  * Builds {NewDefinition}s.
  *
- * CVS $Id: NewDefinitionBuilder.java,v 1.1 2003/12/29 06:14:49 tim Exp $
  * @author Timothy Larson
+ * @version $Id: NewDefinitionBuilder.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
  */
 public class NewDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

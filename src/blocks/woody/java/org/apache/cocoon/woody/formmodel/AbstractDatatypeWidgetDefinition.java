@@ -63,6 +63,8 @@ import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
+ * 
+ * @version $Id: AbstractDatatypeWidgetDefinition.java,v 1.7 2004/02/11 10:43:30 antonio Exp $
  */
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;

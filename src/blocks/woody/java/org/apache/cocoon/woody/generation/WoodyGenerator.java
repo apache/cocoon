@@ -77,6 +77,8 @@ import org.xml.sax.SAXException;
  * generator as a sitemap parameter called "attribute-name".</li>
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
+ * 
+ * @version $Id: WoodyGenerator.java,v 1.7 2004/02/11 10:43:32 antonio Exp $
  */
 public class WoodyGenerator extends AbstractGenerator {
     

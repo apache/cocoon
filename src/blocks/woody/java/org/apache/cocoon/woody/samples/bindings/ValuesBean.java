@@ -7,6 +7,7 @@ package org.apache.cocoon.woody.samples.bindings;
 
 /**
  * ValuesBean used in the 01values test.
+ * @version $Id: ValuesBean.java,v 1.2 2004/02/11 10:43:32 antonio Exp $
  */
 public class ValuesBean {
     private String simple = "Simple";

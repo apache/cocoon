@@ -56,6 +56,8 @@ import java.util.Date;
 
 /**
  * Sample bean used in the form2 binding demo.
+ * 
+ * @version $Id: Form2Bean.java,v 1.5 2004/02/11 10:43:32 antonio Exp $
  */
 public class Form2Bean {
     private String email;

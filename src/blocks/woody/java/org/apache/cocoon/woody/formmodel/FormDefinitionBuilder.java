@@ -56,6 +56,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link FormDefinition}s.
+ * 
+ * @version $Id: FormDefinitionBuilder.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
  */
 public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
