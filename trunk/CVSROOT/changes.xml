@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.87 2000-07-05 03:55:40 balld Exp $
+  $Id: changes.xml,v 1.88 2000-07-06 03:43:03 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,10 +16,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add" due-to="Brian Millett" due-to-email="bpm@ec-group.com">
+   added connection pool (and turbine) to sql logicsheet
+  </action>
   <action dev="DB" type="fix">
    added support for site-absolute links in xinclude processor
   </action>
-  <action dev="DB" type="fix" due-to-"Ulrich Mayring" due-to-email="ulim@denic.de">
+  <action dev="DB" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
    fixed stupid bug in absolute href support in xinclude processor. also now set system ids on included xml resources.
   </action>
 
