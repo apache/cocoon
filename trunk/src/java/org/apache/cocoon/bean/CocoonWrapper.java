@@ -94,7 +94,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.2 2003/08/27 19:18:18 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.3 2003/08/28 19:21:00 upayavira Exp $
  */
 public class CocoonWrapper {
 
@@ -133,20 +133,6 @@ public class CocoonWrapper {
         // @todo@ when does the logger get initialised? uv
         // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
         setLogLevel("ERROR");
-
-        if (contextDir.equals("")) {
-            String error =
-                "Careful, you must specify a configuration file when using the -c/--contextDir argument";
-            log.fatalError(error);
-            throw new ProcessingException(error);
-        }
-
-        if (workDir.equals("")) {
-            String error =
-                "Careful, you must specify a destination dir when using the -w/--workDir argument";
-            log.fatalError(error);
-            throw new ProcessingException(error);
-        }
 
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");

@@ -87,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.12 2003/08/27 19:18:18 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.13 2003/08/28 19:21:00 upayavira Exp $
  */
 public class Main {
 
@@ -163,7 +163,10 @@ public class Main {
     private static final String NODE_LOAD_CLASS = "load-class";
     private static final String NODE_DEFAULT_FILENAME = "default-filename";
 
-
+    private static final String NODE_INCLUDE = "include";
+    private static final String NODE_EXCLUDE = "exclude";
+    private static final String ATTR_INCLUDE_EXCLUDE_PATTERN = "pattern";
+    
     private static final String NODE_URI = "uri";
     private static final String ATTR_URI_TYPE = "type";
     private static final String ATTR_URI_SOURCEPREFIX = "src-prefix";
@@ -501,6 +504,14 @@ public class Main {
                     } else if (nodeName.equals(NODE_DEFAULT_FILENAME)) {
                         cocoon.setDefaultFilename(getNodeValue(node));
 
+                    } else if (nodeName.equals(NODE_INCLUDE)) {
+                        String pattern = Main.parseIncludeExcludeNode(cocoon, node, NODE_INCLUDE);
+                        cocoon.addIncludePattern(pattern);
+
+                    } else if (nodeName.equals(NODE_EXCLUDE)) {
+                        String pattern = Main.parseIncludeExcludeNode(cocoon, node, NODE_EXCLUDE);
+                        cocoon.addExcludePattern(pattern);
+
                     } else if (nodeName.equals(NODE_URI)) {
                         Main.parseURINode(cocoon, node, destDir);
 
@@ -551,6 +562,19 @@ public class Main {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength()!=0) {
             throw new IllegalArgumentException("Unexpected children of <" + NODE_BROKEN_LINKS + "> node");
+        }
+    }
+
+    private static String parseIncludeExcludeNode(CocoonBean cocoon, Node node, final String NODE_TYPE) throws IllegalArgumentException {
+        NodeList nodes = node.getChildNodes();
+        if (nodes.getLength() != 0) {
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_INCLUDE + "> node");
+        }
+
+        if (Main.hasAttribute(node, ATTR_INCLUDE_EXCLUDE_PATTERN)) {
+            return Main.getAttributeValue(node, ATTR_INCLUDE_EXCLUDE_PATTERN);
+        } else {
+            throw new IllegalArgumentException("Expected a "+ATTR_INCLUDE_EXCLUDE_PATTERN+" attribute for <"+NODE_TYPE+"> node");
         }
     }
 
