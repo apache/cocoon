@@ -117,7 +117,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.3 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.4 2003/09/23 22:46:44 vgritsenko Exp $
  */
 public class XPathDirectoryGenerator extends DirectoryGenerator {
 
@@ -143,17 +143,17 @@ public class XPathDirectoryGenerator extends DirectoryGenerator {
         // See if an XPath was specified
         this.xpath = par.getParameter("xpath", null);
         this.cacheKeyParList.add(this.xpath);
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Applying XPath: " + this.xpath
-                                   + " to directory " + this.source);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Applying XPath: " + this.xpath +
+                              " to directory " + this.source);
         }
         String xmlFilesPattern = null;
         try {
             xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
             this.cacheKeyParList.add(xmlFilesPattern);
             this.xmlRE = new RE(xmlFilesPattern);
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("pattern for XML files: " + xmlFilesPattern);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("pattern for XML files: " + xmlFilesPattern);
             }
         } catch (RESyntaxException rese) {
             throw new ProcessingException("Syntax error in regexp pattern '"
@@ -189,7 +189,7 @@ public class XPathDirectoryGenerator extends DirectoryGenerator {
     protected void startNode(String nodeName, File path) throws SAXException {
         super.startNode(nodeName, path);
         if (this.xpath != null && path.isFile() && this.isXML(path)) {
-            this.performXPathQuery(path);
+            performXPathQuery(path);
         }
     }
 
@@ -210,19 +210,23 @@ public class XPathDirectoryGenerator extends DirectoryGenerator {
      */
     protected void performXPathQuery(File xmlFile) throws SAXException {
         this.doc = null;
+        Source source = null;
         try {
-            Source source = resolver.resolveURI(xmlFile.toURL().toExternalForm());
+            source = resolver.resolveURI(xmlFile.toURL().toExternalForm());
             this.doc = this.parser.parseDocument(SourceUtil.getInputSource(source));
         } catch (SAXException e) {
-            this.getLogger().error("Warning:" + xmlFile.getName()
-                                   + " is not a valid XML file. Ignoring.", e);
+            getLogger().error("Warning:" + xmlFile.getName() +
+                              " is not a valid XML file. Ignoring.", e);
         } catch (ProcessingException e) {
-            this.getLogger().error("Warning: Problem while reading the file "
-                                   + xmlFile.getName() + ". Ignoring.", e);
+            getLogger().error("Warning: Problem while reading the file " +
+                              xmlFile.getName() + ". Ignoring.", e);
         } catch (IOException e) {
-            this.getLogger().error("Warning: Problem while reading the file "
-                                   + xmlFile.getName() + ". Ignoring.", e);
+            getLogger().error("Warning: Problem while reading the file " +
+                              xmlFile.getName() + ". Ignoring.", e);
+        } finally {
+            resolver.release(source);
         }
+
         if (doc != null) {
             NodeList nl = this.processor.selectNodeList(this.doc.getDocumentElement(), this.xpath);
             AttributesImpl attributes = new AttributesImpl();

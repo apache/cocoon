@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.8 2003/09/22 20:10:47 upayavira Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.9 2003/09/23 22:46:44 vgritsenko Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -442,19 +442,22 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
             } catch (SourceException se) {
                 throw SourceUtil.handle(se);
             } finally {
-                if (url != null)
+                if (url != null) {
                     resolver.release(url);
+                }
             }
         }
 
         public boolean isLoopInclusion(String uri) {
-            if (uri.equals(this.href))
+            if (uri.equals(this.href)) {
                 return true;
+            }
 
             XIncludePipe parent = getParent();
             while (parent != null) {
-                if (uri.equals(parent.getHref()))
+                if (uri.equals(parent.getHref())) {
                     return true;
+                }
                 parent = parent.getParent();
             }
             return false;
