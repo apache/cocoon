@@ -34,9 +34,10 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-14 15:35:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-14 16:35:40 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     /** Hashmap of all components which this ComponentManager knows about.
      */
     private Map components;
