@@ -21,6 +21,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.cocoon.kernel.logging.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,7 +29,7 @@ import org.xml.sax.SAXException;
  * log entries and outputting them.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.7 $)
+ * @version 1.0 (CVS $Revision: 1.8 $)
  */
 public abstract class AbstractLogger extends Logger {
 

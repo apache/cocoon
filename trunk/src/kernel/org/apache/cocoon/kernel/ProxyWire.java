@@ -25,6 +25,8 @@ import org.apache.cocoon.kernel.composition.Composer;
 import org.apache.cocoon.kernel.composition.Wire;
 import org.apache.cocoon.kernel.composition.WiringException;
 import org.apache.cocoon.kernel.composition.Wirings;
+import org.apache.cocoon.kernel.logging.Logger;
+import org.apache.cocoon.kernel.logging.Logging;
 import org.apache.cocoon.kernel.resolution.Resolver;
 
 /**
@@ -50,7 +52,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * this planned new feature.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.8 $)
+ * @version 1.0 (CVS $Revision: 1.9 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
@@ -92,7 +94,7 @@ public final class ProxyWire implements InvocationHandler {
      * the interface role specified in this constructor, and all the interfaces
      * implemented by the original object.</p>
      *
-     * @param composer the {@link Composer} where acquisition, release and/or
+     * @param c the {@link Composer} where acquisition, release and/or
      *                 disposal of proxied component instances will occur.
      * @param role an interface {@link Class} to which the {@link Wire}
      *             returned by {@link #getWire()} <b>must</b> be castable to.
@@ -100,15 +102,17 @@ public final class ProxyWire implements InvocationHandler {
      *          where the proxied component is deployed.
      * @param r The {@link Resolver} providing resolution in the context of the
      *          block instance requesting the component instance.
+     * @param l The {@link Logger} to provide to the component if it implements
+     *          the {@link Logging} interface.
      * @throws WiringException if an error occurred acquiring the original
      *                              object or creating the {@link Wire}.
      * @throws NullPointerException if any of the parameters were <b>null</b>.
      */
-    public ProxyWire(Composer composer, Class role, Wirings w, Resolver r)
+    public ProxyWire(Composer c, Class role, Wirings w, Resolver r, Logger l)
     throws WiringException {
         ProxyWire.initialize();
 
-        ClassLoader loader = composer.getClass().getClassLoader();
+        ClassLoader loader = c.getClass().getClassLoader();
 
         /* Check that the requested role is actually an interface */
         if (!role.isInterface()) {
@@ -125,14 +129,15 @@ public final class ProxyWire implements InvocationHandler {
         /* Acquire and check that the instance implements the given role */
         Object instance = null;
         try {
-            instance = composer.acquire();
+            instance = c.acquire();
+            if (instance instanceof Logging) ((Logging)instance).logger(l);
         } catch (Throwable t) {
             throw new WiringException("Unable to acquire component", t);
         }
 
         if (!role.isAssignableFrom(instance.getClass())) {
             /* Remember to release components with wrong interfaces */
-            composer.release(instance);
+            c.release(instance);
             throw new WiringException("Acquired object instance \""
                                       + instance.getClass().getName()
                                       + "\" does not implement the "
@@ -142,8 +147,8 @@ public final class ProxyWire implements InvocationHandler {
 
         try {
             /* Create the proxy instance */
-            Class c[] = new Class[] { Wire.class, role };
-            this.wire = (Wire)Proxy.newProxyInstance(loader, c, this);
+            Class classes[] = new Class[] { Wire.class, role };
+            this.wire = (Wire)Proxy.newProxyInstance(loader, classes, this);
 
             /* Contextualize the instance with the wire */
             if (instance instanceof Component) {
@@ -151,11 +156,11 @@ public final class ProxyWire implements InvocationHandler {
             }
 
             /* Record the original composer and instance */
-            this.composer = composer;
+            this.composer = c;
             this.instance = instance;
         } catch (Throwable t) {
             /* Something bad happened releasing, release the instance */
-            composer.release(instance);
+            c.release(instance);
             throw new WiringException("Unable to create wrapper for "
                                       + "composed component instance", t);
         }

@@ -26,10 +26,13 @@ import org.apache.cocoon.kernel.composition.Lifecycle;
 import org.apache.cocoon.kernel.composition.Wire;
 import org.apache.cocoon.kernel.composition.WiringException;
 import org.apache.cocoon.kernel.composition.Wirings;
+import org.apache.cocoon.kernel.composition.WiringsWrapper;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Instance;
 import org.apache.cocoon.kernel.identification.BlockDescriptor;
 import org.apache.cocoon.kernel.identification.Descriptor;
+import org.apache.cocoon.kernel.logging.Logger;
+import org.apache.cocoon.kernel.logging.Logging;
 import org.apache.cocoon.kernel.resolution.CompoundResolver;
 import org.apache.cocoon.kernel.resolution.Resolver;
 import org.apache.cocoon.kernel.resolution.Resource;
@@ -37,7 +40,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.8 $)
+ * @version 1.0 (CVS $Revision: 1.9 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -58,6 +61,9 @@ public class DeployedWirings implements Wirings, Lifecycle {
     
     /** <p>The {@link Resolver} for resources accessible by wired blocks.</p> */
     private CompoundResolver pubresolver = new CompoundResolver();
+    
+    /** <p>The {@link Logger} instance to provide to new instances.</p> */
+    private Logger logger = new Logger();
 
     /* ====================================================================== */
 
@@ -70,13 +76,13 @@ public class DeployedWirings implements Wirings, Lifecycle {
      * @param deployer the {@link KernelDeployer} deploying this instance.
      * @throws DeploymentException if this instance can not be created.
      */
-    public DeployedWirings(DeployableInstance instance, KernelDeployer deployer)
+    public DeployedWirings(DeployableInstance i, KernelDeployer d, Logger l)
     throws DeploymentException {
-        this.instance = instance;
-        this.deployer = deployer;
+        this.instance = i;
+        this.deployer = d;
 
         /* Retrieve all we need from our instance regarding composers */
-        LoadedBlock block = (LoadedBlock) instance.block();
+        LoadedBlock block = (LoadedBlock) i.block();
         BlockDescriptor descriptor = (BlockDescriptor) block.descriptor();
         String composer = descriptor.providedComposer();
         String component = descriptor.providedClass();
@@ -102,6 +108,9 @@ public class DeployedWirings implements Wirings, Lifecycle {
             } else {
                 this.composer = (Composer) clazz.newInstance();
             }
+            if (this.composer instanceof Logging) {
+                ((Logging)this.composer).logger(this.logger);
+            }
         } catch (Throwable t) {
             if (t instanceof InvocationTargetException)
                 if (t.getCause() != null) t = t.getCause();
@@ -109,7 +118,7 @@ public class DeployedWirings implements Wirings, Lifecycle {
             else composer = "composer  class \"" + composer + "\"";
             throw new DeploymentException("Cannot create " + composer
                                           + " instance for block \""
-                                          + instance + "\"", t);
+                                          + i + "\"", t);
         }
 
         /* Allocate the table of resource prefixes against wiring names */
@@ -159,7 +168,10 @@ public class DeployedWirings implements Wirings, Lifecycle {
         if (this.composer == null) {
             throw new WiringException("Block does not provide components");
         }
-        return(new ProxyWire(this.composer, role, this, resolver).getWire());
+        WiringsWrapper wrapper = new WiringsWrapper(this);
+        ProxyWire wire = new ProxyWire(this.composer, role, wrapper, resolver,
+                                       this.logger);
+        return((wire).getWire());
     }
 
     /* ====================================================================== */

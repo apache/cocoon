@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.kernel.startup;
+package org.apache.cocoon.kernel.logging;
 
 /**
  * <p>The {@link Logger} represents the root class for all core loggers of
@@ -22,7 +22,7 @@ package org.apache.cocoon.kernel.startup;
  * <p>This implementation never logs.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.1 $)
  */
 public class Logger {
 

@@ -36,13 +36,13 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
  * <p>.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class KernelServlet implements Servlet {
 
     protected static KernelServlet instance = null;
 
-    private Logger logger = null;
+    private ServletLogger logger = null;
     private Wirings wirings = null;
     private ServletConfig config = null;
     private KernelDeployer deployer = null;
@@ -146,7 +146,7 @@ public class KernelServlet implements Servlet {
         return("Apache Cocoon Kernel Servlet");
     }
     
-    public Logger getLogger() {
+    public ServletLogger getLogger() {
         return(this.logger);
     }
 

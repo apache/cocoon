@@ -23,7 +23,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
  * {@link Wirings} interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class WiringsWrapper implements Wirings {
 

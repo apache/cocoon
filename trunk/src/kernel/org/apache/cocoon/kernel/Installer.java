@@ -37,7 +37,7 @@ import org.apache.cocoon.kernel.identification.ParsedIdentifier;
  * deploying each block in the correct order.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public class Installer {
 

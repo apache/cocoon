@@ -35,16 +35,17 @@ import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.identification.DescriptorBuilder;
 import org.apache.cocoon.kernel.identification.IdentificationException;
 import org.apache.cocoon.kernel.identification.Identifier;
-import org.apache.cocoon.kernel.startup.Logger;
+import org.apache.cocoon.kernel.logging.Logger;
+import org.apache.cocoon.kernel.logging.Logging;
 
 /**
  * <p>A {@link KernelDeployer} is a simple implementation of the {@link Deployer}
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.9 $)
+ * @version 1.0 (CVS $Revision: 1.10 $)
  */
-public class KernelDeployer implements Deployer {
+public class KernelDeployer implements Deployer, Logging {
 
     /** <p>The XML configuration namespace.</p> */
     public static final String NAMESPACE = 
@@ -250,7 +251,7 @@ public class KernelDeployer implements Deployer {
         }
 
         /* Deploy the sucker (finally) */
-        DeployedWirings deployed = new DeployedWirings(deployable, this);
+        DeployedWirings deployed = new DeployedWirings(deployable, this, log);
         try {
             deployed.init();
         } catch (Throwable t) {

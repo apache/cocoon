@@ -39,7 +39,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * in every method returning a {@link Block}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public class BlockLoader extends HashLibrary implements Loader {
 
@@ -188,7 +188,7 @@ public class BlockLoader extends HashLibrary implements Loader {
      * {@link #addURL(URL)} method.</p>
      *
      * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-     * @version 1.0 (CVS $Revision: 1.6 $)
+     * @version 1.0 (CVS $Revision: 1.7 $)
      */
     private static final class RootClassLoader extends URLClassLoader {
 

@@ -22,7 +22,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class KernelLoader {
 
@@ -34,7 +34,7 @@ public class KernelLoader {
         }
 
         /* Create a logger for startup operations */
-        Logger logger = new ConsoleLogger();
+        ConsoleLogger logger = new ConsoleLogger();
 
         try {
             /* Now let's create our core deployer */

@@ -58,7 +58,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * is returned to the original {@link Composer}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public interface Component {
 
