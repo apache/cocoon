@@ -160,7 +160,22 @@ The following goals were identified as engineering constraints:
     <doctype-system map:value="http://www.w3.org/TR/REC-html40/loose.dtd"/>
     <preserve-space map:value="true"/>
     <encoding map:value="UTF-8"/>
-    <indent map:value="1"/>
+    <indent>1</indent>
+    <colors>
+     <foreground map:value="white"/>
+     <borders>
+      <left map:value="blue"/>
+      <right>red</right>
+     </borders>
+     <text>black</text>
+     <lines>>
+      <left map:value="cyan"/>
+      <right>orange</right>
+     </lines>
+     <background>green</background>
+    </colors>
+    <map:param name="foo" value="bar"/>
+    <map:param name="baz">foobar</map:param>
     <line-width map:value="120"/>
    </map:serializer>
 
