@@ -34,10 +34,10 @@ public class HttpEnvironment implements Environment {
      * and HttpServletResponse objects
      */
     public HttpEnvironment (HttpServletRequest req, HttpServletResponse res) {
-        this.req = new HttpRequest (req);
-        this.res = new HttpResponse (res);
-        this.uri = this.req.getRequestURI(true);
+        this.uri = req.getRequestURI();
         this.view = req.getHeader("cocoon-view");
+        this.req = new HttpRequest (req, this);
+        this.res = new HttpResponse (res);
     }
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri

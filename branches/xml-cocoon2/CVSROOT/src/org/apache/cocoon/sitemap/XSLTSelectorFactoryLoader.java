@@ -7,6 +7,8 @@
  *****************************************************************************/ 
 package org.apache.cocoon.sitemap; 
 
+import java.util.Hashtable;
+
 import org.apache.cocoon.selection.SelectorFactory;
 
 import org.w3c.dom.DocumentFragment;
@@ -17,15 +19,31 @@ import org.w3c.dom.DocumentFragment;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:14 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:20:00 $ 
  */ 
 
 public class XSLTSelectorFactoryLoader {
 
-    public String getSource (String selectorFactoryClassname, String test, DocumentFragment conf) 
+    Hashtable obj = new Hashtable ();
+
+    public String getSource (String level, String selectorFactoryClassname, String test, 
+            String prefix, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
-        Class cl = this.getClass().getClassLoader().loadClass(selectorFactoryClassname);
-        SelectorFactory factory = (SelectorFactory) cl.newInstance();
-        return factory.generate (test, conf);
+        SelectorFactory factory = null;
+/*
+        SelectorFactory factory = (SelectorFactory ) obj.get(selectorFactoryClassname);
+        if (factory == null) {
+*/
+            Class cl = this.getClass().getClassLoader().loadClass(selectorFactoryClassname);
+            factory = (SelectorFactory) cl.newInstance();
+/*
+            obj.put (selectorFactoryClassname, factory);
+        }
+*/
+        if ("class".equals(level)) {
+            return factory.generateClassLevel (test, prefix, conf);
+        } else {
+            return factory.generateMethodLevel (test, prefix, conf);
+        } 
     }
 }

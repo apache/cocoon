@@ -7,6 +7,8 @@
  *****************************************************************************/ 
 package org.apache.cocoon.sitemap; 
 
+import java.util.Hashtable;
+
 import org.apache.cocoon.matching.MatcherFactory;
 
 import org.w3c.dom.DocumentFragment;
@@ -17,15 +19,31 @@ import org.w3c.dom.DocumentFragment;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-17 21:06:14 $ 
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-19 22:20:00 $ 
  */ 
 
 public class XSLTMatcherFactoryLoader {
 
-    public String getSource (String matcherFactoryClassname, String pattern, DocumentFragment conf) 
+    Hashtable obj = new Hashtable ();
+
+    public String getSource (String level, String matcherFactoryClassname, String pattern, 
+        String prefix, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
-        Class cl = this.getClass().getClassLoader().loadClass(matcherFactoryClassname);
-        MatcherFactory factory = (MatcherFactory) cl.newInstance();
-        return factory.generate (pattern, conf);
+        MatcherFactory factory = null;
+/*
+        MatcherFactory factory = (MatcherFactory) obj.get(matcherFactoryClassname);
+        if (factory == null) {
+*/
+            Class cl = this.getClass().getClassLoader().loadClass(matcherFactoryClassname);
+            factory = (MatcherFactory) cl.newInstance();
+/*
+            obj.put (matcherFactoryClassname, factory);
+        }
+*/
+        if ("class".equals(level)) {
+            return factory.generateClassLevel (pattern, prefix, conf);
+        } else {
+            return factory.generateMethodLevel (pattern, prefix, conf);
+        } 
     }
 }

@@ -17,7 +17,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:12 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:19:55 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {
@@ -33,29 +33,40 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
     protected int[] sourcePattern=null;
 
     /**
-     * Generates the matcher method source code
+     * Generates the matcher method level source code
      */
-    public String generate (String pattern, DocumentFragment conf) 
+    public String generateMethodLevel (String prefix, String pattern, DocumentFragment conf) 
+    throws PatternException {
+        StringBuffer result = new StringBuffer();
+        return result.append ("Stack stack = new Stack();")
+                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), ")
+                     .append(prefix).append("_expr))")
+                     .append ("return (Map) stack;")
+                     .append ("else return null;").toString();
+    }
+
+    /**
+     * Generates the matcher class level source code
+     */
+    public String generateClassLevel (String prefix, String pattern, DocumentFragment conf) 
     throws PatternException {
         StringBuffer result = new StringBuffer();
         this.setPattern (pattern);
    
-        result.append ("Stack stack = new Stack();");
-        result.append ("/* pattern=\""+pattern+"\" */");
-        result.append ("int expr[] = {");
+        result.append ("/* pattern=\""+pattern+"\" */")
+              .append ("int expr[] = {");
 
         int j = sourcePattern.length-1;
         char c;
         for (int i = 0; i < j; i++) {
-            result.append (sourcePattern[i]);
-            result.append (',');
+            result.append (sourcePattern[i])
+                  .append (',');
         }
-        result.append (sourcePattern[j]);
-        result.append ("};");
-        result.append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), expr))");
-        result.append ("return (Map) stack;");
-        result.append ("else return null;");
-        return result.toString();
+        return result.append (sourcePattern[j])
+                     .append ("};")
+                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), expr))")
+                     .append ("return (Map) stack;")
+                     .append ("else return null;").toString();
     }
 
     /**
@@ -142,7 +153,8 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
             if (argv.length<1) return;
             System.out.println("Matching Expr.    \""+argv[0]+"\"");
             WildcardURIMatcherFactory wm = new WildcardURIMatcherFactory();
-            System.out.println(wm.generate (argv[0], null));
+            System.out.println(wm.generateClassLevel ("", argv[0], null));
+            System.out.println(wm.generateMethodLevel ("", argv[0], null));
         } catch (Exception e) {
             System.out.println(e.getClass().getName());
             System.out.println(e.getMessage());

@@ -14,11 +14,16 @@ import org.w3c.dom.DocumentFragment;
  * agains the requesting user-agent
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:12 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:19:57 $ 
  */ 
 
 public class BrowserSelectorFactory implements SelectorFactory {
-    public String generate (String test_expression, DocumentFragment conf) {
+
+    public String generateClassLevel (String test, String prefix, DocumentFragment conf) throws Exception {
+        return "";
+    }
+
+    public String generateMethodLevel (String test, String prefix, DocumentFragment conf) throws Exception {
         return "return true;";
     }
 }

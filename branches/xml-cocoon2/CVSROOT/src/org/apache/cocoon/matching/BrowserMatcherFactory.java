@@ -10,19 +10,51 @@ package org.apache.cocoon.matching;
 import java.util.Stack;
 
 import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.traversal.TreeWalker;
+import org.w3c.dom.traversal.NodeFilter;
+
+import org.apache.xerces.dom.TreeWalkerImpl;
  
 /** 
  * This class generates source code which matches a specific browser pattern
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-18 22:56:19 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-19 22:19:53 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {
-    public String generate (String test_expression, DocumentFragment conf) {
+    public String generateMethodLevel (String prefix, String test_expression, DocumentFragment conf) throws Exception {
         StringBuffer sb = new StringBuffer();
-        sb.append("return null;");
-        return (sb.toString());
+        TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
+        Node node = null;
+        Node nodea = null;
+        NamedNodeMap nm = null;
+
+        sb.append ("/*\n");
+        while ((node = tw.nextNode()) != null) {
+            sb.append("name=")
+              .append(node.getNodeName())
+              .append(" type=")
+              .append(node.getNodeType())
+              .append(" value="+node.getNodeValue()+"\n");
+            nm = node.getAttributes();
+            if (nm != null) {
+                int i = nm.getLength();
+                for (int j = 0; j < i; j++) {
+                    nodea = nm.item(j);
+                    sb.append("name="+nodea.getNodeName())
+                      .append(" type="+nodea.getNodeType())
+                      .append(" value="+nodea.getNodeValue()+"\n");
+                }
+            }
+        }
+        return sb.append("*/\nreturn null;").toString();
+    }
+
+    public String generateClassLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
+        return "";
     }
 }

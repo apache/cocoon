@@ -31,16 +31,16 @@ public class HttpRequest implements HttpServletRequest {
     /** The real HttpServletRequest object */
     private HttpServletRequest req = null;
 
+    /** The HttpEnvironment object */
+    private HttpEnvironment env = null;
+
     /**
      * Creates a HttpServletRequest based on a real HttpServletRequest object
      */
-    protected HttpRequest (HttpServletRequest req) {
+    protected HttpRequest (HttpServletRequest req, HttpEnvironment env) {
         super ();
         this.req = req;
-    }
-
-    protected String getRequestURI(boolean dummy) {
-        return this.req.getRequestURI();
+        this.env = env;
     }
 
     /* The HttpServletRequest interface methods */
@@ -109,9 +109,8 @@ public class HttpRequest implements HttpServletRequest {
         return this.req.getRequestedSessionId();
     }
 
-    public String getRequestURI() throws IllegalStateException {
-        throw new IllegalStateException ("you must call the getUri() from the Environment");
-        //return this.req.getRequestURI();
+    public String getRequestURI() {
+        return this.env.getUri();
     }
 
     public String getServletPath() {

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.8 2000-06-19 20:29:00 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.9 2000-07-19 22:19:46 giacomo Exp $
 -->
 
 
@@ -22,6 +22,10 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Write URLHandler for the protocols defined in the sitemap, e.g. class://. cvs://
+  </action>
+
   <action context="code" assigned-to="BL">
    Make Cocoon 2 Avalon-aware using the Component api from Avalon.
   </action>

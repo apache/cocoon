@@ -18,9 +18,10 @@ import org.w3c.dom.DocumentFragment;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:13 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:19:58 $ 
  */ 
 
 public interface SelectorFactory {
-    public String generate (String test, DocumentFragment conf) throws Exception;
+    public String generateClassLevel (String test, String prefix, DocumentFragment conf) throws Exception;
+    public String generateMethodLevel (String test, String prefix, DocumentFragment conf) throws Exception;
 }
