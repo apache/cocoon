@@ -74,7 +74,7 @@ public interface BeanListener {
      * @param message        A reason why the link was not generated
      */
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t);
-    public void brokenLinkFound(String uri, List parentURIs, String message, Throwable t);
+    public void brokenLinkFound(Target target, Throwable t);
     
     /**
      * Signals completion of the generation process. This method can

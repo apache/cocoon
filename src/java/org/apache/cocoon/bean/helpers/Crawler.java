@@ -56,7 +56,11 @@ public class Crawler {
                 Target existingTarget = (Target)stillNotVisited.get(targetString);
                 existingTarget.addReferringURI(target.getReferringURI());
             }
+        } else {
+            Target visitedTarget = (Target)visitedAlready.get(targetString);
+            visitedTarget.addReferringURI(target.getReferringURI());
         }
+        
         return false;
     }
 
