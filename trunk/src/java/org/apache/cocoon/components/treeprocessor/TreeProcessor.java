@@ -59,8 +59,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -78,7 +76,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -95,7 +92,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.20 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.21 2003/10/30 11:30:12 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -614,4 +611,10 @@ public class TreeProcessor
         return this.environmentHelper;
     }
 
+    /**
+     * Return the environment helper
+     */
+    public EnvironmentHelper getEnvironmentHelper() {
+        return this.environmentHelper;
+    }
 }

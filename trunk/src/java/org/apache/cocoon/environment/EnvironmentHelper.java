@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.6 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.7 2003/10/30 11:30:12 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -87,7 +87,7 @@ implements SourceResolver, Serviceable, Disposable {
     /** The service manager */
     protected ServiceManager manager;
     
-    /** The current prefix to strip off from the request uri */
+    /** The complete prefix */
     protected String prefix;
 
      /** The Context path */
@@ -96,8 +96,11 @@ implements SourceResolver, Serviceable, Disposable {
     /** The root context path */
     protected String rootContext;
 
+    /** The last prefix, which is stripped off from the request uri */
+    protected String lastPrefix;
+    
     /** The environment information */
-    private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+    protected static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
 
     /**
      * Constructor
@@ -188,19 +191,17 @@ implements SourceResolver, Serviceable, Disposable {
     
     public void changeContext(Environment env) 
     throws ProcessingException {
-        if ( this.prefix != null ) {
-            String uris = env.getURIPrefix() + '/' + env.getURI();
-            if (!uris.startsWith(this.prefix)) {
+        if ( this.lastPrefix != null ) {
+            String uris = env.getURI();
+            if (!uris.startsWith(this.lastPrefix)) {
                 String message = "The current URI (" + uris +
-                                 ") doesn't start with given prefix (" + prefix + ")";
-                getLogger().error(message);
+                                 ") doesn't start with given prefix (" + this.lastPrefix + ")";
                 throw new ProcessingException(message);
             }      
             // we don't need to check for slash at the beginning
             // of uris - the prefix always ends with a slash!
-            final int l = this.prefix.length();
-            uris = uris.substring(l);
-            env.setURI(this.prefix, uris);
+            final int l = this.lastPrefix.length();
+            env.setURI(this.prefix, uris.substring(l));
         }
     }
     
@@ -216,6 +217,7 @@ implements SourceResolver, Serviceable, Disposable {
         }
         int l = newPrefix.length();
         if (l >= 1) {
+            this.lastPrefix = newPrefix;
             if ( this.prefix == null ) {
                 this.prefix = "";
             }
@@ -224,6 +226,7 @@ implements SourceResolver, Serviceable, Disposable {
             // check for a slash at the beginning to avoid problems with subsitemaps
             if ( buffer.charAt(buffer.length()-1) != '/') {
                 buffer.append('/');
+                this.lastPrefix = this.lastPrefix + '/';
             }
             this.prefix = buffer.toString();
         }

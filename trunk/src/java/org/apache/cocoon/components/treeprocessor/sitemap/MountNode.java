@@ -70,7 +70,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.8 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.9 2003/10/30 11:30:12 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Serviceable {
 
@@ -114,9 +114,8 @@ public class MountNode extends AbstractProcessingNode implements Serviceable {
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
-        String oldContext   = env.getContext();
         try {
-            env.changeContext(resolvedPrefix, resolvedSource);
+            processor.getEnvironmentHelper().changeContext(env);
 
             if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
@@ -133,7 +132,7 @@ public class MountNode extends AbstractProcessingNode implements Serviceable {
             }
         } finally {
             // Restore context
-			env.setContext(oldPrefix, oldURI, oldContext);
+			env.setURI(oldPrefix, oldURI);
 
             // Recompose pipelines which may have been recomposed by subsitemap
             context.recompose(this.manager);
