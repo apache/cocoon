@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -171,10 +171,10 @@ public class SQLTransformer
 
     /** Encoding we use for CLOB field */
 	protected String clobEncoding;
-	
+
     /** The default encoding for xml */
     protected String xmlDefaultEncoding;
-    
+
     /**
      * Constructor
      */
@@ -182,7 +182,7 @@ public class SQLTransformer
         this.format = new Properties();
         this.format.put(OutputKeys.METHOD, "text");
         this.format.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        this.namespaceURI = NAMESPACE;
+        this.defaultNamespaceURI = NAMESPACE;
     }
 
     /** The connection used by all top level queries */
@@ -866,7 +866,7 @@ public class SQLTransformer
         protected HashMap outParametersNames = null;
 
         /** Handling of case of column names in results */
-        protected String columnCase; 
+        protected String columnCase;
 
         protected Query( SQLTransformer transformer, int query_index ) {
             this.transformer = transformer;
@@ -1127,7 +1127,7 @@ public class SQLTransformer
         protected String getColumnValue( int i ) throws SQLException {
 			int numberOfChar = 1024;
             String retval;
-			
+
 			if (rs.getMetaData().getColumnType(i) == java.sql.Types.DOUBLE) {
             retval = SQLTransformer.getStringValue( rs.getBigDecimal( i ) );
 			} else if (rs.getMetaData().getColumnType(i) == java.sql.Types.CLOB) {
@@ -1145,7 +1145,7 @@ public class SQLTransformer
 				}
 				retval = buffer.toString();
 			} else {
-                retval = SQLTransformer.getStringValue( rs.getObject( i ) );                
+                retval = SQLTransformer.getStringValue( rs.getObject( i ) );
 			}
             return retval;
         }
@@ -1211,12 +1211,12 @@ public class SQLTransformer
                 if ( value.length() > 0 && value.charAt(0) == '<') {
                     try {
                         String  stripped = value;
-                
-                        // Strip off the XML Declaration if there is one!                
+
+                        // Strip off the XML Declaration if there is one!
                         if( stripped.startsWith( "<?xml " ) ) {
                             stripped = stripped.substring( stripped.indexOf( "?>" ) + 2 );
                         }
-                
+
                         if (transformer.parser == null) {
                             transformer.parser = (SAXParser)manager.lookup(SAXParser.ROLE);
                         }

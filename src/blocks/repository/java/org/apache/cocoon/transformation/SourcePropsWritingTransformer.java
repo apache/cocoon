@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This transformer allows you to set and remove properties on an InspectableSource.
- * 
+ *
 * <p>Input XML document example:</p>
  * <pre>
  * &lt;page&gt;
@@ -50,12 +50,12 @@ import org.xml.sax.SAXException;
  *   ...
  * &lt;/page&gt;
  * </pre>
- * 
+ *
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.5 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SourcePropsWritingTransformer
-    extends AbstractSAXTransformer {
+        extends AbstractSAXTransformer {
 
     public static final String SPWT_URI = "http://apache.org/cocoon/propwrite/1.0";
 
@@ -73,13 +73,13 @@ public class SourcePropsWritingTransformer
     private static final int STATE_REMOVE    = 4;
 
     private int state;
-    
+
     /**
      * Constructor
      * Set the namespace
      */
     public SourcePropsWritingTransformer() {
-        this.namespaceURI = SPWT_URI;
+        this.defaultNamespaceURI = SPWT_URI;
     }
 
     public void recycle() {
@@ -223,7 +223,7 @@ public class SourcePropsWritingTransformer
             this.state = STATE_PATCH;
             this.stack.push(this.endRecording());
             this.stack.push(REMOVE_ELEMENT);
-            
+
         // default
         } else {
             super.endTransformingElement(uri, name, raw);
@@ -234,7 +234,7 @@ public class SourcePropsWritingTransformer
         }
     }
 
-    private void setProperty(String src, Element element) 
+    private void setProperty(String src, Element element)
     throws ProcessingException, IOException, SAXException {
         if (src != null && element != null) {
             try {
@@ -254,10 +254,10 @@ public class SourcePropsWritingTransformer
             this.getLogger().error("Error setting properties on "+src);
         }
     }
-    
-    private void removeProperty(String src, Element element) 
-    throws ProcessingException, IOException, SAXException { 
-        
+
+    private void removeProperty(String src, Element element)
+    throws ProcessingException, IOException, SAXException {
+
         if (src != null && element != null) {
             try {
                 Source source = this.resolver.resolveURI(src);
