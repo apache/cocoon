@@ -25,7 +25,7 @@ import org.apache.cocoon.generation.ComposerGenerator;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @created 31 July 2000
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-31 16:02:20 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-29 01:05:18 $
  */
  
 public class ErrorNotifier extends ComposerGenerator {
@@ -35,20 +35,14 @@ public class ErrorNotifier extends ComposerGenerator {
      */
     private Notification notification = null;
 
-    //nicola_ken:should it be deprecated?
-    
-    // (SM) deprecated what?
-
     /**
      * Set the Exception to report.
      *
      * @param exception The Exception to report
      */
     public void setException(Throwable throwable) {
-
         notification = new Notification(this, throwable);
-
-        notification.setTitle("Error in the Cocoon 2 pipeline >X==<");
+        notification.setTitle("Error creating the resource");
     }
 
     /**
@@ -57,10 +51,8 @@ public class ErrorNotifier extends ComposerGenerator {
      * @param exception The Exception to report
      */
     public void setNotification(Object o) {
-
         notification = new Notification(this, o);
-
-        notification.setTitle("Error in the Cocoon 2 pipeline )X==(");
+        notification.setTitle("Error creating the resource");
     }
 
     /**

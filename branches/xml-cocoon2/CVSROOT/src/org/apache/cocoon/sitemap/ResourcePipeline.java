@@ -32,7 +32,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-09-10 19:57:45 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-09-29 01:05:19 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -117,10 +117,11 @@ public class ResourcePipeline implements Composer {
 
     public boolean process (Environment environment)
                             throws ProcessingException, IOException, SAXException {
-        String mime_type=null;
+        String mime_type = null;
+
         if (generator == null) {
             if (reader != null) {
-                reader.setup ((EntityResolver)environment, environment.getObjectModel(), readerSource, readerParam);
+                reader.setup ((EntityResolver) environment, environment.getObjectModel(), readerSource, readerParam);
                 mime_type = this.reader.getMimeType();
                 if (mime_type != null) {
                     environment.setContentType (mime_type);
@@ -140,13 +141,13 @@ public class ResourcePipeline implements Composer {
                 throw new ProcessingException ("Serializer not specified");
             }
 
-            generator.setup ((EntityResolver)environment, environment.getObjectModel(), generatorSource, generatorParam);
+            generator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
             Transformer transformer = null;
             XMLProducer producer = generator;
             int i = transformers.size();
             for (int j=0; j < i; j++) {
                 transformer = (Transformer) transformers.elementAt (j);
-                transformer.setup ((EntityResolver)environment, environment.getObjectModel(),
+                transformer.setup ((EntityResolver) environment, environment.getObjectModel(),
                                (String)transformerSources.elementAt (j),
                                (Parameters)transformerParams.elementAt (j));
                 producer.setConsumer (transformer);
