@@ -53,7 +53,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-05-24 22:35:09 $ */
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-05-24 23:08:58 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
