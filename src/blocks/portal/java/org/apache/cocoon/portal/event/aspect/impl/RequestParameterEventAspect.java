@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.event.aspect.impl;
 
+import java.util.StringTokenizer;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -67,21 +69,14 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RequestParameterEventAspect.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
+ * @version CVS $Id: RequestParameterEventAspect.java,v 1.3 2003/05/28 13:47:29 cziegeler Exp $
  */
 public class RequestParameterEventAspect
 	extends AbstractLogEnabled
 	implements EventAspect, ThreadSafe {
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
-	 */
-	public void process(EventAspectContext context, PortalService service) {
-        final Parameters config = context.getAspectParameters();
-        // FIXME Configure more than one parameter name
-        final String requestParameterName = config.getParameter("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
-        final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
-        String[] values = request.getParameterValues( requestParameterName );
+    protected void process(EventAspectContext context, Request request, String parameterName) {
+        String[] values = request.getParameterValues( parameterName );
         if ( values != null ) {
             final Publisher publisher = context.getEventPublisher();
             for(int i=0; i<values.length; i++) {
@@ -91,6 +86,28 @@ public class RequestParameterEventAspect
                     publisher.publish(e);
                 }
             }
+        }
+    }
+    
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+	 */
+	public void process(EventAspectContext context, PortalService service) {
+        final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
+        final Parameters config = context.getAspectParameters();
+        final String requestParameterNames = config.getParameter("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
+        boolean processedDefault = false;
+        
+        StringTokenizer tokenizer = new StringTokenizer(requestParameterNames, ", ");
+        while ( tokenizer.hasMoreTokens() ) {
+            final String currentName = tokenizer.nextToken();
+            this.process(context, request, currentName);
+            if ( LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME.equals(currentName) ) {
+                processedDefault = true;
+            }
+        }
+        if ( !processedDefault ) {
+            this.process( context, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
         }
         context.invokeNext( service );        
 	}

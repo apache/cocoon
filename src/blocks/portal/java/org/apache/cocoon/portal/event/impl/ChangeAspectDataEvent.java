@@ -52,21 +52,26 @@ package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.aspect.Aspectalizable;
 import org.apache.cocoon.portal.event.ActionEvent;
+import org.apache.cocoon.portal.event.ComparableEvent;
+import org.apache.cocoon.portal.event.RequestEvent;
 
 /**
  * This events set the aspect data for an {@link Aspectalizable} object
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ChangeAspectDataEvent.java,v 1.3 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: ChangeAspectDataEvent.java,v 1.4 2003/05/28 13:47:30 cziegeler Exp $
  */
 public class ChangeAspectDataEvent
     extends AbstractActionEvent
-    implements ActionEvent {
+    implements ActionEvent, RequestEvent, ComparableEvent {
 
     protected String aspectName;
     
     protected Object data;
+    
+    protected String requestParameterName;
+    
     
     public ChangeAspectDataEvent(Aspectalizable target, String aspectName, Object data) {
         super(target);
@@ -99,4 +104,29 @@ public class ChangeAspectDataEvent
     public Aspectalizable getAspectalizable() {
         return (Aspectalizable)this.target;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.RequestEvent#getRequestParameterName()
+     */
+    public String getRequestParameterName() {
+        return this.requestParameterName;
+    }
+
+    public void setRequestParameterName(String value) {
+        this.requestParameterName = value;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.ComparableEvent#equalsEvent(org.apache.cocoon.portal.event.ComparableEvent)
+     */
+    public boolean equalsEvent(ComparableEvent event) {
+        if ( event instanceof ChangeAspectDataEvent ) {
+            ChangeAspectDataEvent other = (ChangeAspectDataEvent)event;
+            return (this.getTarget().equals(other.getTarget())
+                     && this.getAspectName().equals(other.getAspectName()));
+        }
+
+        return false;
+    }
+
 }
