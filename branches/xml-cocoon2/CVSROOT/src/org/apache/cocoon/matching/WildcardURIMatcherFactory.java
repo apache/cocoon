@@ -19,7 +19,7 @@ import org.w3c.dom.traversal.NodeIterator;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-10-30 23:02:44 $ 
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-11-05 10:11:07 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -51,7 +51,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      */
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
-        return "          ArrayList list = new ArrayList();\n   if (WildcardURIMatcher.match (list, ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT))\n					.getRequestURI(), pattern)) {\n	      return list;\n	  } else {\n	      return null;\n	  }\n";
+        return "          ArrayList list = new ArrayList();\n   if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT))\n					.getRequestURI(), pattern)) {\n	      return list;\n	  } else {\n	      return null;\n	  }\n";
     }
 
     /**
