@@ -136,6 +136,7 @@
   <input-modules>
     <component-instance logger="core.modules.input" name="global"           class="org.apache.cocoon.components.modules.input.GlobalInputModule"/>
     <component-instance logger="core.modules.input" name="request"          class="org.apache.cocoon.components.modules.input.RequestModule"/>
+    <component-instance logger="core.modules.input" name="baselink"         class="org.apache.cocoon.components.modules.input.BaseLinkModule" />
     <component-instance logger="core.modules.input" name="session"          class="org.apache.cocoon.components.modules.input.SessionModule"/>
     <component-instance logger="core.modules.input" name="request-param"    class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
     <component-instance logger="core.modules.input" name="raw-request-param" class="org.apache.cocoon.components.modules.input.RawRequestParameterModule"/>
