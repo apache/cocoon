@@ -38,7 +38,5 @@
     <menu-item label="JXTemplate" href="jxtemplate.html"/>
     <menu-item label="JPath" href="jpath.html"/>
     <menu-item label="Velocity" href="velocity.html"/> 
-    <menu-item label="JXForms" href="jxforms.html"/>
-    <menu-item label="Woody" href="woody.html"/>
   </menu>
 </book>
