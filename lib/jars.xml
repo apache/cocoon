@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.185 2004/03/09 07:39:26 antonio Exp $
+    | CVS $Id: jars.xml,v 1.186 2004/03/09 10:17:07 reinhard Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -855,16 +855,16 @@
     <description>
       An expression language interpreter.
     </description>
-    <used-by>Woody block</used-by>
-    <lib>woody/lib/xreporter-expression-20030725.jar</lib>
+    <used-by>Cocoon Forms block</used-by>
+    <lib>forms/lib/xreporter-expression-20030725.jar</lib>
     <homepage>http://xreporter.cocoondev.org</homepage>
   </file>
 
   <file>
     <title>ORO</title>
     <description>Perl5 compatible regular expression engine</description>
-    <used-by>Woody block</used-by>
-    <lib>woody/lib/jakarta-oro-2.0.8.jar</lib>
+    <used-by>Cocoon Forms block</used-by>
+    <lib>forms/lib/jakarta-oro-2.0.8.jar</lib>
     <homepage>http://jakarta.apache.org/oro</homepage>
   </file>
 
@@ -1070,4 +1070,13 @@
     <lib>portal/lib/pluto-20040121.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
+  <file>
+    <title>EHCache</title>
+    <description>
+      EHCache is a pure Java, in-process cache.
+    </description>
+    <used-by>scratchpad</used-by>
+    <lib>scratchpad/lib/ehcache-0.7.jar</lib>
+    <homepage>http://opensource.thoughtworks.com/projects/ehcache.html</homepage>
+  </file>  
 </jars>
