@@ -115,8 +115,6 @@
   </target>
 
   <target name="init-tasks" depends="init">
-    <echo>+-------------------------------------------------------------------------------+</echo>
-    <echo>Setting up customized ant tasks...</echo>
 
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
@@ -156,7 +154,6 @@
            nowarn="on"
            compiler="${compiler}"/>
 
-    <echo>... done.</echo>
   </target>
   
 <!-- === Preparation Targets =================================================== -->
