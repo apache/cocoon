@@ -19,7 +19,7 @@ import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.instructions.*;
+import org.apache.cocoon.template.jxtg.instruction.*;
 import org.apache.cocoon.template.jxtg.script.event.*;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
