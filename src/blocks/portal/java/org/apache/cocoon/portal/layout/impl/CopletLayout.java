@@ -15,8 +15,11 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
+import java.util.Map;
+
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.AbstractLayout;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
  * A coplet layout holds a coplet.
@@ -25,7 +28,7 @@ import org.apache.cocoon.portal.layout.AbstractLayout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletLayout.java,v 1.4 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public final class CopletLayout extends AbstractLayout {
     
@@ -39,4 +42,30 @@ public final class CopletLayout extends AbstractLayout {
         return this.copletInstanceData;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        CopletLayout clone = (CopletLayout)super.clone();
+        
+        this.copletInstanceData = null;
+        
+        return clone;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.Layout#copy(java.util.Map)
+     */
+    public Layout copy(Map copletInstanceDatas) {
+        CopletLayout clone = (CopletLayout)super.copy(copletInstanceDatas);
+        if (copletInstanceDatas == null) {
+            clone.copletInstanceData = this.copletInstanceData;
+        } else {
+            if ( this.copletInstanceData != null ) {
+                clone.copletInstanceData = (CopletInstanceData)copletInstanceDatas.get(this.copletInstanceData.getId());
+            }
+            
+        }
+        return clone;
+    }
 }

@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.layout.AbstractLayout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameLayout.java,v 1.3 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class FrameLayout extends AbstractLayout {
     
@@ -46,4 +46,15 @@ public class FrameLayout extends AbstractLayout {
         this.source = source;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        FrameLayout clone = (FrameLayout)super.clone();
+        
+        clone.source = this.source;
+        
+        return clone;
+    }
+    
 }
