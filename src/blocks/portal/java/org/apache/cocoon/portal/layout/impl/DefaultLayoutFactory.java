@@ -85,6 +85,7 @@ import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -92,7 +93,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.8 2003/05/26 14:03:48 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.9 2003/05/27 09:15:07 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -205,7 +206,15 @@ public class DefaultLayoutFactory
         layout.setDescription( layoutDescription );
         layout.setAspectDataHandler((AspectDataHandler)o[1]);
 
-        // TODO - register this at the profile manager
+        ProfileManager profileManager = null;
+        try {
+            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+            profileManager.register(layout);
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Unable to lookup profile manager.", ce);
+        } finally {
+            this.manager.release( profileManager );
+        }
         return layout;
     }
     
@@ -288,7 +297,6 @@ public class DefaultLayoutFactory
     public void remove(Layout layout) 
     throws ProcessingException {
         if ( layout != null ) {
-            // TODO - unregister
             if ( layout instanceof CompositeLayout ) {
                 Iterator itemIterator = ((CompositeLayout)layout).getItems().iterator();
                 while ( itemIterator.hasNext() ) {
@@ -310,6 +318,15 @@ public class DefaultLayoutFactory
                 } finally {
                     this.manager.release( (Component)factory );
                 }
+            }
+            ProfileManager profileManager = null;
+            try {
+                profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+                profileManager.unregister(layout);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Unable to lookup profile manager.", ce);
+            } finally {
+                this.manager.release( profileManager );
             }
         }
     }
