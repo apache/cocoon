@@ -1,4 +1,4 @@
-/*-- $Id: AbstractLogger.java,v 1.1 2000-03-17 16:46:02 stefano Exp $ --
+/*-- $Id: AbstractLogger.java,v 1.2 2000-03-30 00:36:11 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ package org.apache.cocoon.logger;
  * capabilities.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 2000-03-17 16:46:02 $
+ * @version $Revision: 1.2 $ $Date: 2000-03-30 00:36:11 $
  */
 
 public abstract class AbstractLogger implements Logger {
@@ -72,19 +72,19 @@ public abstract class AbstractLogger implements Logger {
     }
 
     public void log(String message, int level) {
-        if (level >= loglevel) {
+        if (level <= loglevel) {
             log(message);
         }
     }
 
     public void log(Exception exception, String message, int level) {
-        if (level >= loglevel) {
+        if (level <= loglevel) {
             log(exception, message);
         }
     }
 
     public void log(Object originator, String message, int level) {
-        if (level >= loglevel) {
+        if (level <= loglevel) {
             StringBuffer b = new StringBuffer();
             b.append("[");
             b.append(originator.getClass().getName());
@@ -97,7 +97,7 @@ public abstract class AbstractLogger implements Logger {
     }
 
     public void log(Object originator, Exception exception, String message, int level) {
-        if (level >= loglevel) {
+        if (level <= loglevel) {
             StringBuffer b = new StringBuffer();
             b.append("[");
             b.append(originator.getClass().getName());
