@@ -26,7 +26,7 @@
         <table id="main-panel">
           <tr>
             <!-- THE SIDE BAR -->
-            <td id="side-bar">
+            <td id="side-bar" valign="top">
               <xsl:apply-templates select="document($stylebook.project)"/>
             </td>
             <!-- THE CONTENT PANEL -->
