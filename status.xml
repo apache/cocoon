@@ -203,6 +203,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated rhino to 1.5r4-20040629T1232
+   </action>
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
    </action>
