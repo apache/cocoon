@@ -6,20 +6,20 @@
  <xsl:template match="/">
   <html>
    <head>
-    <title>Apache Cocoon 2.0a4</title>
+    <title>Apache Cocoon @version@</title>
    </head>
    <body bgcolor="#ffffff" link="#0086b2" vlink="#00698c" alink="#743e75">
     <p align="center"><font size="+0" face="arial,helvetica,sanserif" color="#000000">The Apache Software Foundation is proud to present...</font></p>
 
     <p align="center"><img border="0" src="images/cocoon.gif"/></p>
 
-    <p align="center"><font size="+0" face="arial,helvetica,sanserif" color="#000000"><b>version 2.0a4</b></font></p>
+    <p align="center"><font size="+0" face="arial,helvetica,sanserif" color="#000000"><b>version @version@</b></font></p>
 
     <xsl:apply-templates/>
 
     <p align="center">
      <font size="-1">
-      Copyright &#169; 1999-2000 <a href="http://www.apache.org">The Apache Software Foundation</a>.<br/>
+      Copyright &#169; @year@ <a href="http://www.apache.org">The Apache Software Foundation</a>.<br/>
       All rights reserved.
      </font>
     </p>

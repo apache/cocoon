@@ -2,27 +2,27 @@
 <!DOCTYPE document SYSTEM "dtd/document-v10.dtd">
 <document> 
   <header> 
-	 <title>Cocoon 2a4</title>
+	 <title>Cocoon @version@</title>
 	 <subtitle>What happens if a http request arrives</subtitle> 
 	 <version>0.1</version> 
 	 <type>Technical Document</type> 
 	 <authors><person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
 	 </authors> 
 	 <abstract>This document tries to explain Cocoon 2 (based on the version
-		2a4) technically. We do this by describing what happens if somebody types in
-		the URL of a simple Cocoon page.</abstract> 
-  </header> 
-  <body> 
-	 <s1 title="Introduction"> 
-		<s2 title="Goal"> 
-		  <p>This document tries to explain Cocoon 2 (based on the version 2a4)
+		@version@) technically. We do this by describing what happens if somebody types in
+		the URL of a simple Cocoon page.</abstract>
+  </header>
+  <body>
+	 <s1 title="Introduction">
+		<s2 title="Goal">
+		  <p>This document tries to explain Cocoon 2 (based on the version @version@)
 			 technically. We do this by describing what happens if somebody types in the URL
 			 of a simple Cocoon page.</p> 
 		</s2> 
 		<s2 title="Intended public"> 
 		  <p>The reader should have a knowledge of:</p> 
 		  <ul> 
-			 <li>the Java 2 platform</li> 
+			 <li>the Java 2 platform</li>
 			 <li>the javax.servlet extensions</li> 
 			 <li>XML</li> 
 			 <li>HTTP</li> 
@@ -32,13 +32,13 @@
 	 <s1 title="The configuration assumptions"> 
 		<p>The sequence of events described in this document, depends on some
 		  assumptions with regard to the configuration of Cocoon. That's what's described
-		  here.</p> 
-		<s2 title="sitemap.xmap"> 
+		  here.</p>
+		<s2 title="sitemap.xmap">
 		  <p>The task of the sitemap is to define the pipelines that Cocoon will
-			 apply to URI's called in one's browser.</p> 
+			 apply to URI's called in one's browser.</p>
 		  <p>This is the minimal sitemap that is necessary. The lines here are
 			 included in the standard sitemap.xmap that comes with the distribution of
-			 Cocoon 2a4.</p> 
+			 Cocoon @version@.</p>
 		  <p>The sitemap is defined in <code>${cocoon}/sitemap.xmap</code>.</p> 
 		  <source><![CDATA[ 
           <?xml version="1.0"?>
@@ -91,9 +91,9 @@
 		</s2> 
 		<s2 title="cocoon.xconf"> 
 		  <p><code>cocoon.xconf</code> is the file that defines the
-			 <link href="avalon.html">Avalon</link> Components.</p> 
+			 <link href="avalon.html">Avalon</link> Components.</p>
 		  <p>For our study, we need the standard <code>cocoon.xconf</code> file
-			 of Cocoon 2a4.</p> 
+			 of Cocoon @version@.</p>
 		  <p>It can be found in <code>${cocoon}/cocoon.xconf</code>.</p> 
 		  <source><![CDATA[
 <?xml version="1.0"?>

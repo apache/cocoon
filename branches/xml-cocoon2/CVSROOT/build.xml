@@ -113,8 +113,8 @@ by the main ones.
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
 
-    <property name="debug"          value="on"/>
-    <property name="optimize"       value="off"/>
+    <property name="debug"          value="off"/>
+    <property name="optimize"       value="on"/>
     <property name="deprecation"    value="off"/>
    <property name="build.compiler" value="classic"/>
     <property name="target.vm"      value="1.2"/>
@@ -138,6 +138,7 @@ by the main ones.
     <property name="build.src"      value="${build.dir}/src"/>
     <property name="build.dest"     value="${build.dir}/classes"/>
     <property name="build.docs"     value="${build.dir}/docs"/>
+    <property name="build.xdocs"    value="${build.dir}/xdocs"/>
     <property name="build.docs.printer" value="${build.dir}/printer-docs"/>
     <property name="build.war"      value="${build.dir}/webapp"/>
     <property name="build.javadocs" value="${build.dir}/javadocs"/>
@@ -375,14 +376,34 @@ by the main ones.
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
   <target name="prepare-docs" depends="init">
-    <copy todir="${build.docs}/images">
-      <fileset dir="${docs.dir}/images"/>
-    </copy>
-    <copy file="changes.xml" tofile="${docs.dir}/changes.xml" filtering="on"/>
-    <copy file="todo.xml"    tofile="${docs.dir}/todo.xml"/>
+    <mkdir dir="${build.xdocs}"/>
 
-    <replace file="${docs.dir}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
-    <replace file="${docs.dir}/todo.xml"    token="./xdocs/dtd/" value="dtd/"/>
+    <!-- make filtered copy of XML docs -->
+    <copy todir="${build.xdocs}" filtering="on">
+      <fileset dir="${docs.dir}">
+        <exclude name="*.gif"/>
+        <exclude name="*.png"/>
+        <exclude name="*.jpg"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.xdocs}" filtering="off">
+      <fileset dir="${docs.dir}/images">
+        <include name="*.gif"/>
+        <include name="*.png"/>
+        <include name="*.jpg"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.docs}/images" filtering="off">
+      <fileset dir="${build.xdocs}/images"/>
+    </copy>
+
+    <copy file="changes.xml" tofile="${build.xdocs}/changes.xml" filtering="on"/>
+    <copy file="todo.xml"    tofile="${build.xdocs}/todo.xml"/>
+
+    <replace file="${build.xdocs}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
+    <replace file="${build.xdocs}/todo.xml"    token="./xdocs/dtd/" value="dtd/"/>
   </target>
 
   <!-- =================================================================== -->
@@ -390,10 +411,10 @@ by the main ones.
   <!-- =================================================================== -->
   <target name="docs" depends="prepare-docs" description="Generates the documentation">
     <mkdir dir="${build.docs}"/>
-    <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${build.xdocs}/docs-book.xml" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
-      <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+      <arg line="targetDirectory=${build.docs} ${build.xdocs}/book.xml ${browser.skin}"/>
     </java>
   </target>
 
@@ -402,10 +423,10 @@ by the main ones.
   <!-- =================================================================== -->
   <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
-    <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${build.xdocs}/docs-book.xml" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
-      <arg line="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
+      <arg line="targetDirectory=${build.docs.printer} ${build.xdocs}/book.xml ${printer.skin}"/>
     </java>
   </target>
 
@@ -414,10 +435,10 @@ by the main ones.
   <!-- =================================================================== -->
   <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
-    <copy file="${docs.dir}/site-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
+    <copy file="${build.xdocs}/site-book.xml" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
-      <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
+      <arg line="targetDirectory=${site} ${build.xdocs}/book.xml ${browser.skin}"/>
     </java>
   </target>
 
