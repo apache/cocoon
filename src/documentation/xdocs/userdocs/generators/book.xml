@@ -20,7 +20,6 @@
     <menu-item label="Server Pages Generator" href="serverpages-generator.html"/>
     <menu-item label="Status Generator" href="status-generator.html"/>
     <menu-item label="Stream Generator" href="stream-generator.html"/>
-    <menu-item label="Web Service Proxy Generator" href="wsproxy-generator.html"/>
     <menu-item label="XPath Directory Generator" href="xpathdirectory-generator.html"/>
   </menu>
   <menu label="Optional">
@@ -32,7 +31,8 @@
     <menu-item label="Script Generator" href="script-generator.html"/>
     <menu-item label="Search Generator" href="search-generator.html"/>
     <menu-item label="Velocity Generator" href="velocity-generator.html"/>
-    <menu-item label="XML:DB Generator" href="xmldb-generator.html"/>
+    <menu-item label="Web Service Proxy Generator" href="wsproxy-generator.html"/>
     <menu-item label="XML:DB Collection Generator" href="xmldbcollection-generator.html"/>
+    <menu-item label="XML:DB Generator" href="xmldb-generator.html"/>
   </menu>
 </book>
