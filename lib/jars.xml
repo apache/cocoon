@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.73 2003/07/31 03:23:53 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.74 2003/08/04 01:54:49 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -376,7 +376,7 @@
       HTTP standards and recommendations.
     </description>
     <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
-    <lib>core/commons-httpclient-2.0-beta2.jar</lib>
+    <lib>core/commons-httpclient-2.0-rc1.jar</lib>
     <lib>optional/commons-logging-1.0.3.jar</lib>
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
