@@ -1,10 +1,10 @@
-This wiki document is a self-describing test of the Cocoon Chaperon wiki grammar. Reading what follows should tell you if the tests are successful.
+This wiki document is a self-describing test of the Cocoon Chaperon cwiki grammar. Comparing what follows should show you that the tests are successful.
 
-The document in the Cocoon Samples is at: src/blocks/chaperon/samples/wikitest/selftest.txt
+The document in the Cocoon Samples is at: src/blocks/chaperon/samples/wiki/selftest.txt
 
-The document in the Cocoon Wiki is at: http://wiki.cocoondev.org/Wiki.jsp?page=ChaperonTestPage
+The document in the JSPWiki is at: http://www.jspwiki.org/Wiki.jsp?page=ChaperonTestPage
 
-Both documents should be synchronised, so as to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax used by the Cocoon wiki.
+Both documents should be synchronised, so as to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax.
 
 In the Cocoon Samples, the "content", "parser-output" and "xdoc" views can be used to check the various stages of parsing and conversion.
 
@@ -27,7 +27,6 @@ Currently this test shows the following problems:
 * Can't have a list item with no text
 * Can't have a line consisting of a single space
 * ;term:ex not supported
-
 
 -- 1. HEADINGS --
 
@@ -115,9 +114,9 @@ Test 4.4 The block of text that follows should be shown in the source code style
 
 Test 5.1 Here is a link to this same page: [wikitest.html]
 
-Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org]
+Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org/]
 
-Test 5.3 A link to another wiki page [Text formating rules|rules].
+Test 5.3 A link to another wiki page [Text formatting rules|TextFormattingRules].
 
 -- 6. MISCELLANEOUS --
 
