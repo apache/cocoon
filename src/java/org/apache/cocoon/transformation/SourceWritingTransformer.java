@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,10 +48,10 @@ import org.xml.sax.SAXException;
 /**
  * @cocoon.sitemap.component.documentation
  * This transformer allows you to output to a ModifiableSource.
- * 
+ *
  * @cocoon.sitemap.component.name   write-source
  * @cocoon.sitemap.component.logger sitemap.transformer.write-source
- * 
+ *
  * This transformer allows you to output to a ModifiableSource.
  *
  * <p>Definition:</p>
@@ -84,11 +84,11 @@ import org.xml.sax.SAXException;
  *     &lt;source:reinsert&gt;[Optional] The XPath (relative to &lt;source:replace/&gt;) to backup the overwritten node to&lt;/source:reinsert&gt; - eg: "foo/versions" or "/doc/versions/foo". NOTE: If specified and a node is replaced, all children of this replaced node will be reinserted at the given path.
  *     &lt;source:fragment&gt;The XML Fragment to be written&lt;/source:fragment&gt; - eg: "&lt;foo&gt;&lt;bar id="dogcow"/&gt;&lt;/foo&gt;" or "&lt;foo/&gt;&lt;bar&gt;&lt;dogcow/&gt;&lt;bar/&gt;" etc.
  * &lt;source:insert&gt;
- * 
+ *
  * &lt;source:delete &gt; - deletes an existing asset.
  *     &lt;source:source&gt;The System ID of the asset to be deleted&lt;/source:source&gt; - eg: "docs/blah.xml" or "context://blah.xml" etc.
  *     &lt;source:path&gt;[Ignored] XPath to specify how your content is wrapped&lt;/source:path&gt;
- *     &lt;source:fragment&gt;[Ignored]The XML Fragment to be written&lt;/source:fragment&gt; 
+ *     &lt;source:fragment&gt;[Ignored]The XML Fragment to be written&lt;/source:fragment&gt;
  * &lt;source:delete&gt;
  * </pre>
  *
@@ -222,14 +222,14 @@ import org.xml.sax.SAXException;
  * reinsert a replaced node at a given path in the new fragment.
  *
  * <b>
- * TODO: Use the serializer instead of the XMLUtils for inserting of fragments
+ * TODO: Use the serializer instead of the XMLUtils for inserting of fragments<br/>
  * TODO: Add a &lt;source:before/&gt; tag.
  * </b>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.12 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.13 2004/06/18 14:17:59 vgritsenko Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer
@@ -283,7 +283,7 @@ public class SourceWritingTransformer
 
     /** The XPath processor */
     protected XPathProcessor xpathProcessor;
-    
+
     /**
      * Constructor.
      * Sets the namespace.
@@ -298,7 +298,7 @@ public class SourceWritingTransformer
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
-        super.configure( configuration );
+        super.configure(configuration);
         this.configuredSerializerName = configuration.getChild(SERIALIZER_ATTRIBUTE).getValue(DEFAULT_SERIALIZER);
     }
 
@@ -309,7 +309,9 @@ public class SourceWritingTransformer
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        this.configuredSerializerName = par.getParameter(SERIALIZER_ATTRIBUTE, this.configuredSerializerName);
+
+        this.configuredSerializerName = par.getParameter(SERIALIZER_ATTRIBUTE,
+                                                         this.configuredSerializerName);
         this.state = STATE_OUTSIDE;
     }
 
@@ -329,11 +331,12 @@ public class SourceWritingTransformer
     public void startTransformingElement(String uri, String name, String raw, Attributes attr)
     throws SAXException, IOException, ProcessingException {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("BEGIN startTransformingElement uri=" + uri +
+            getLogger().debug("Start transforming element. uri=" + uri +
                               ", name=" + name + ", raw=" + raw + ", attr=" + attr);
         }
+
         // Element: insert
-        if (this.state == STATE_OUTSIDE 
+        if (this.state == STATE_OUTSIDE
             && (name.equals(INSERT_ELEMENT) || name.equals(WRITE_ELEMENT))) {
 
             this.state = (name.equals(INSERT_ELEMENT) ? STATE_INSERT : STATE_WRITE);
@@ -391,10 +394,6 @@ public class SourceWritingTransformer
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("END startTransformingElement");
-        }
     }
 
 
@@ -412,10 +411,10 @@ public class SourceWritingTransformer
     public void endTransformingElement(String uri, String name, String raw)
     throws SAXException, IOException, ProcessingException {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("BEGIN endTransformingElement uri=" + uri +
-                              ", name=" + name +
-                              ", raw=" + raw);
+            getLogger().debug("End transforming element. uri=" + uri +
+                              ", name=" + name + ", raw=" + raw);
         }
+
         if ((name.equals(INSERT_ELEMENT) && this.state == STATE_INSERT)
             || (name.equals(WRITE_ELEMENT) && this.state == STATE_WRITE)) {
 
@@ -471,9 +470,9 @@ public class SourceWritingTransformer
                     this.stack.pop();
                 }
             } while ( !tag.equals("END"));
-            
+
             this.deleteSource(sourceName);
-            this.state = STATE_OUTSIDE;                       
+            this.state = STATE_OUTSIDE;
         // Element: file
         } else if (name.equals(SOURCE_ELEMENT) && this.state == STATE_FILE) {
             this.state = this.parent_state;
@@ -507,10 +506,6 @@ public class SourceWritingTransformer
         // default
         } else {
             super.endTransformingElement(uri, name, raw);
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("END endTransformingElement");
         }
     }
 
@@ -582,14 +577,15 @@ public class SourceWritingTransformer
     throws SAXException, IOException, ProcessingException {
         // no sync req
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("BEGIN insertFragment systemID="+systemID+
-                              ", path="+path+
-                              ", replace="+replacePath+
-                              ", create="+create+
-                              ", overwrite="+overwrite+
-                              ", reinsert="+reinsertPath+
-                              ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
+            getLogger().debug("Insert fragment. systemID=" + systemID +
+                              ", path=" + path +
+                              ", replace=" + replacePath +
+                              ", create=" + create +
+                              ", overwrite=" + overwrite +
+                              ", reinsert=" + reinsertPath +
+                              ", fragment=" + (fragment == null? "null": XMLUtils.serializeNode(fragment)));
         }
+
         // test parameter
         if (systemID == null) {
             throw new ProcessingException("insertFragment: systemID is required.");
@@ -771,18 +767,15 @@ public class SourceWritingTransformer
         if (!failed) { action = (exists) ? ACTION_OVER : ACTION_NEW; }
 
         this.reportResult(localSerializer, tagname, message, target, result, action);
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("END insertFragment");
-        }
     }
 
-    private void reportResult(String localSerializer, 
-                                String tagname, 
-                                String message, 
-                                String target, 
-                                String result, 
-                                String action) throws SAXException {
+    private void reportResult(String localSerializer,
+                                String tagname,
+                                String message,
+                                String target,
+                                String result,
+                                String action)
+    throws SAXException {
         sendStartElementEvent(RESULT_ELEMENT);
             sendStartElementEvent(EXECUTION_ELEMENT);
                 sendTextEvent(result);
@@ -806,10 +799,10 @@ public class SourceWritingTransformer
             }
         sendEndElementEvent(RESULT_ELEMENT);
     }
-    
-    
+
+
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
@@ -820,10 +813,9 @@ public class SourceWritingTransformer
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             this.manager.release(this.xpathProcessor);
             this.xpathProcessor = null;
         }
     }
-
 }
