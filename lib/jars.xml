@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.217 2004/05/18 09:23:32 unico Exp $
+    | CVS $Id: jars.xml,v 1.218 2004/05/25 14:07:15 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -533,15 +533,6 @@
     <used-by>DELI (deli block)</used-by>
     <lib>deli/lib/icu4j.jar</lib>
     <homepage>http://oss.software.ibm.com/icu4j/index.html</homepage>
-  </file>
-
-
-  <file>
-    <title>JISP</title>
-    <description>Java Indexed Serialization Package</description>
-    <used-by>JISP file storage</used-by>
-    <lib>core/jisp-2.5.1.jar</lib>
-    <homepage>http://www.coyotegulch.com/jisp/</homepage>
   </file>
 
   <file>
