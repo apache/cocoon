@@ -35,7 +35,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *
- * @version CVS $Id: DefaultVariableResolverFactory.java,v 1.3 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultVariableResolverFactory 
     extends AbstractLogEnabled
@@ -60,9 +60,8 @@ public class DefaultVariableResolverFactory
     throws PatternException {
         if ( this.needsResolve( expression ) ) {
             return new PreparedVariableResolver( expression, this.manager, this.context);
-        } else {
-            return new NOPVariableResolver( expression );
         }
+        return new NOPVariableResolver( expression );
     }
 
     public void release(VariableResolver resolver) {

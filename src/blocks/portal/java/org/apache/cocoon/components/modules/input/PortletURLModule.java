@@ -124,16 +124,15 @@ public class PortletURLModule extends AbstractInputModule implements ThreadSafe 
                 } 
             }
             return url.toString();
+        }
+        if (name.startsWith(PREFIX_RENDER)) {
+            return name.substring(PREFIX_RENDER.length());
+        } else if (name.startsWith(PREFIX_RESOURCE)) {
+            return name.substring(PREFIX_RESOURCE.length());
+        } else if (name.startsWith(PREFIX_ACTION)) {
+            return name.substring(PREFIX_ACTION.length());
         } else {
-            if (name.startsWith(PREFIX_RENDER)) {
-                return name.substring(PREFIX_RENDER.length());
-            } else if (name.startsWith(PREFIX_RESOURCE)) {
-                return name.substring(PREFIX_RESOURCE.length());
-            } else if (name.startsWith(PREFIX_ACTION)) {
-                return name.substring(PREFIX_ACTION.length());
-            } else {
-                throw new IllegalArgumentException("Invalid attribute name '" + name + "' for '" + getClass().getName() + "'");
-            }
+            throw new IllegalArgumentException("Invalid attribute name '" + name + "' for '" + getClass().getName() + "'");
         }
     }
 

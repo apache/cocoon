@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -45,9 +44,6 @@ extends AbstractModule {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            // are we running inside a coplet?
-            final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-            
             int pos = name.indexOf('/');
             String path;
             if ( pos == -1 ) {
