@@ -17,16 +17,60 @@
 
 <!-- CVS $Id$ -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   
   <xsl:template match="/">
 class Sitemap extends Pipeline {
   
     boolean setup(environment) {
         uri = environment.uri
-        ...
+        <xsl:apply-templates/>
     }
 }    
+  </xsl:template>
+  
+  <xsl:template match="map:match[position() = 1]">
+    if (m = (uri =~ "<xsl:value-of select="@pattern"/>")) {
+      <xsl:apply-templates select="map:generate|map:transform|map:serialize|map:read"/>
+    }
+  </xsl:template>
+  
+  <xsl:template match="map:match">
+    else if (m = (uri =~ "<xsl:value-of select="@pattern"/>")) {
+      <xsl:apply-templates select="map:generate|map:transform|map:serialize|map:read"/>
+    }
+  </xsl:template>
+
+  <xsl:template match="map:generate">
+    generate "<xsl:value-of select="@type"/>", "<xsl:value-of select="@src"/>",
+    [ <xsl:apply-templates select="map:parameter"/> ];
+  </xsl:template>
+
+  <xsl:template match="map:transform">
+    transform "<xsl:value-of select="@type"/>", "<xsl:value-of select="@src"/>",
+    [ <xsl:apply-templates select="map:parameter"/> ];
+  </xsl:template>
+
+  <xsl:template match="map:serialize">
+    serialize "<xsl:value-of select="@type"/>",
+    [ <xsl:apply-templates select="map:parameter"/> ];
+  </xsl:template>
+
+  <xsl:template match="map:read">
+    <xsl:variable name="type">
+      <xsl:choose>
+        <xsl:when test="@type"><xsl:value-of select="@type"/></xsl:when>
+        <xsl:otherwise>resource</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    read "<xsl:value-of select="$type"/>", "<xsl:value-of select="@src"/>",
+    [ "mime-type": "<xsl:value-of select="@mime-type"/>", <xsl:apply-templates select="map:parameter"/> ];
+  </xsl:template>
+  
+  <xsl:template match="map:parameter">
+    "<xsl:value-of select="@name"/>": "<xsl:value-of select="@value"/>",
   </xsl:template>
   
 </xsl:stylesheet>
