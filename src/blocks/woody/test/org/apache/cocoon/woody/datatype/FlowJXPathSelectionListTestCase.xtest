@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <testcase>
  <annotation>
-  Test Cases: Woody Flow Model Selection List
+  Test Cases: Woody Dynamic Selection List
  </annotation>
 
  <logkit>
@@ -34,14 +34,6 @@
   <role name="org.apache.cocoon.woody.expression.ExpressionManager"
     shorthand="woody-expression"
     default-class="org.apache.cocoon.woody.expression.DefaultExpressionManager"/>
-
-  <role name="org.apache.excalibur.xmlizer.XMLizer"
-        shorthand="xmlizer"
-        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
-
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
 
  </roles>
 
