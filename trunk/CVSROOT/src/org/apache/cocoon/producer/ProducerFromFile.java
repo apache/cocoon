@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.10 2000-11-20 01:43:59 greenrd Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.11 2001-03-08 11:04:07 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * based on its tranlated path.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-11-20 01:43:59 $
+ * @version $Revision: 1.11 $ $Date: 2001-03-08 11:04:07 $
  */
 
 public class ProducerFromFile extends AbstractProducer implements Status, Cacheable {
@@ -74,7 +74,7 @@ public class ProducerFromFile extends AbstractProducer implements Status, Cachea
 
     public Document getDocument(HttpServletRequest request) throws Exception {
         String file = Utils.getBasename(request, this.context);
-        this.monitor.watch(Utils.encode(request), new File(file));
+        this.monitor.watch(Utils.encode(request, false, false), new File(file));
         return parser.parse(new InputSource(file));
     }    
 
@@ -87,7 +87,7 @@ public class ProducerFromFile extends AbstractProducer implements Status, Cachea
     }
     
     public boolean hasChanged(Object context) {
-        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context));
+        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context, false, false));
     }
 
     public boolean isCacheable(HttpServletRequest request) {

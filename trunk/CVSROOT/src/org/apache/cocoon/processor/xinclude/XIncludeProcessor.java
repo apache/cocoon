@@ -102,7 +102,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.21 $ $Date: 2001-02-16 19:57:24 $ $Author: greenrd $
+ * @version CVS $Revision: 1.22 $ $Date: 2001-03-08 11:04:08 $ $Author: greenrd $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status, Cacheable {
 
@@ -148,7 +148,7 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 		/** I would have thought that the monitor would return false if the
 		    key has no resources being monitored, but it doesn't. I think
 		    that might should change, but we'll work around it for now. **/
-		Object key = Utils.encode((HttpServletRequest)object);
+		Object key = Utils.encode((HttpServletRequest)object, false, false);
 		if (monitored_table.containsKey(key)) {
 			return monitor.hasChanged(key);
 		}
@@ -212,7 +212,7 @@ class XIncludeProcessorWorker {
 		debug = processor.debug;
 		this.document = document;
 		request = (HttpServletRequest)parameters.get("request");
-		monitor_key = Utils.encode(request);
+		monitor_key = Utils.encode(request, false, false);
 		String basepath = Utils.getBasepath(request,context);
 		current_xmlbase = new File(basepath);
 	}

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.217 2001-03-08 10:52:39 greenrd Exp $ 
+  $Id: changes.xml,v 1.218 2001-03-08 11:04:07 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Caching memory wastage fixes for XIncludeProcessor and ProducerFromFile (identical to the XSLTProcessor
+   bug fix in a previous version). These bugs could theoretically have caused OutOfMemoryErrors, so
+   upgrading is strongly recommended!
+  </action>
   <action dev="RDG" type="update" due-to="Phillipe Lavoie" 
   due-to-email="philippe.lavoie@cactus.ca">
    Upgraded Ant from version 1.1 to version 1.3 and rewrote build.xml to use new syntax.
