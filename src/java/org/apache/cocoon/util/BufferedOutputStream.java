@@ -60,7 +60,7 @@ import java.io.OutputStream;
  * the output stream.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BufferedOutputStream.java,v 1.1 2003/03/09 00:09:42 pier Exp $
+ * @version CVS $Id: BufferedOutputStream.java,v 1.2 2003/09/02 16:54:48 bruno Exp $
  * @since   2.1
  */
 public final class BufferedOutputStream extends FilterOutputStream {
@@ -71,7 +71,7 @@ public final class BufferedOutputStream extends FilterOutputStream {
     
     /**
      * Creates a new buffered output stream to write data to the 
-     * specified underlying output stream with a default 512-byte 
+     * specified underlying output stream with a default 8192-byte
      * buffer size.
      *
      * @param   out   the underlying output stream.
