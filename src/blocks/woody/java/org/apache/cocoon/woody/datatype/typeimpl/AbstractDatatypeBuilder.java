@@ -51,11 +51,18 @@
 package org.apache.cocoon.woody.datatype.typeimpl;
 
 import org.apache.cocoon.woody.datatype.*;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.apache.cocoon.woody.Constants;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
@@ -68,11 +75,56 @@ import java.io.IOException;
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
  */
-public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Composable {
+public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Composable, Configurable {
     protected ComponentManager componentManager;
+    private SimpleServiceSelector convertorBuilders;
+    private String defaultConvertorHint;
+    private Convertor plainConvertor;
 
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.componentManager = componentManager;
+    }
+
+    public void configure(Configuration configuration) throws ConfigurationException {
+        convertorBuilders = new SimpleServiceSelector("convertor", ConvertorBuilder.class);
+        Configuration convertorsConf = configuration.getChild("convertors");
+        convertorBuilders.configure(convertorsConf);
+        defaultConvertorHint = convertorsConf.getAttribute("default");
+
+        String plainConvertorHint = convertorsConf.getAttribute("plain");
+        ConvertorBuilder plainConvertorBuilder;
+        try {
+            plainConvertorBuilder = (ConvertorBuilder)convertorBuilders.select(plainConvertorHint);
+        } catch (ServiceException e) {
+            throw new ConfigurationException("Convertor defined in plain attribute unavailable.", e);
+        }
+
+        try {
+            plainConvertor = plainConvertorBuilder.build(null);
+        } catch (Exception e) {
+            throw new ConfigurationException("Error create plain convertor.", e);
+        }
+    }
+
+    public void buildConvertor(Element datatypeEl, AbstractDatatype datatype) throws Exception {
+        Element convertorEl = DomHelper.getChildElement(datatypeEl, Constants.WD_NS, "convertor", false);
+        Convertor convertor = buildConvertor(convertorEl);
+        datatype.setConvertor(convertor);
+    }
+
+    public Convertor buildConvertor(Element convertorEl) throws Exception {
+        String type = null;
+        // convertor configuration is allowed to be null, so check that it is not null
+        if (convertorEl != null)
+            type = convertorEl.getAttribute("type");
+        if (type == null || type.equals(""))
+            type = defaultConvertorHint;
+        ConvertorBuilder convertorBuilder = (ConvertorBuilder)convertorBuilders.select(type);
+        return convertorBuilder.build(convertorEl);
+    }
+
+    public Convertor getPlainConvertor() {
+        return plainConvertor;
     }
 
     protected Source resolve(String src) throws ComponentException, IOException {

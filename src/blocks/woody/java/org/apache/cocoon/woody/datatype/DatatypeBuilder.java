@@ -51,6 +51,7 @@
 package org.apache.cocoon.woody.datatype;
 
 import org.w3c.dom.Element;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 
 /**
  * Implementations of this class build a Datatype from an XML description
@@ -63,4 +64,8 @@ import org.w3c.dom.Element;
  */
 public interface DatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception;
+
+    public Convertor getPlainConvertor();
+
+    public Convertor buildConvertor(Element convertorEl) throws Exception;
 }

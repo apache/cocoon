@@ -50,28 +50,11 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import java.util.Locale;
-
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation
  * for strings.
  */
 public class StringType extends AbstractDatatype {
-    public Object convertFromString(String value) {
-        return value;
-    }
-
-    public Object convertFromStringLocalized(String value, Locale locale) {
-        return value;
-    }
-
-    public String convertToString(Object value) {
-        return (String)value;
-    }
-
-    public String convertToStringLocalized(Object value, Locale locale) {
-        return (String)value;
-    }
 
     public Class getTypeClass() {
         return String.class;

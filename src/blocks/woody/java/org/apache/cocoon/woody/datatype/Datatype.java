@@ -51,6 +51,7 @@
 package org.apache.cocoon.woody.datatype;
 
 import org.outerj.expression.ExpressionContext;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 
 import java.util.Locale;
 
@@ -70,14 +71,23 @@ import java.util.Locale;
  * an array of objects. See also {@link #isArrayType}.
  */
 public interface Datatype {
-    public Object convertFromString(String value);
-    public Object convertFromStringLocalized(String value, Locale locale);
-    public String convertToString(Object value);
-    public String convertToStringLocalized(Object value, Locale locale);
-    // TODO validate moet wellicht ook nog een context meekrijgen
+    /**
+     * Converts a string to an object of this datatype. Returns null if this
+     * fails. This method uses the same {@link Convertor} as returned by the
+     * {@link #getConvertor} method.
+     */
+    public Object convertFromString(String value, Locale locale);
 
     /**
-     * Returns null if validation is successful, otherwise returns the failmessage key.
+     * Converts an object of this datatype to a string representation.
+     * This method uses the same {@link Convertor} as returned by the
+     * {@link #getConvertor} method.
+     */
+    public String convertToString(Object value, Locale locale);
+
+    /**
+     * Returns null if validation is successful, otherwise returns a
+     * {@link ValidationError} instance.
      *
      * @param value an Object of the correct type for this datatype (see {@link #getTypeClass}, or
      * if {@link #isArrayType} returns true, an array of objects of that type.
@@ -111,4 +121,21 @@ public interface Datatype {
      * required.
      */
     public boolean isArrayType();
+
+    /**
+     * Returns the convertor used by this datatype.
+     */
+    public Convertor getConvertor();
+
+    /**
+     * Returns the "plain convertor". This is convertor that should have a locale-independent
+     * string encoding, and guarantees perfect roundtripping. It is used if a value of this
+     * datatype needs to be stored but not displayed to the user.
+     */
+    public Convertor getPlainConvertor();
+
+    /**
+     * Returns the factory that built this datatype.
+     */
+    public DatatypeBuilder getBuilder();
 }

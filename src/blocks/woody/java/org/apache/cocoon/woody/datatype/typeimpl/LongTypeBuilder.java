@@ -60,13 +60,10 @@ public class LongTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {
         LongType type = new LongType();
         type.setArrayType(arrayType);
+        type.setBuilder(this);
 
         buildValidationRules(datatypeElement, type, datatypeManager);
-
-        // TODO number formatting patterns
-
-        // TODO default value
-
+        buildConvertor(datatypeElement, type);
         buildSelectionList(datatypeElement, type);
 
         return type;
