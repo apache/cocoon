@@ -79,8 +79,8 @@
 			<map:match pattern="*.xml">
 				<map:generate src="resources/{1}.xml" label="source"/>
 				<map:transform type="rfc" label="generic"/>
-				<map:transform src="stylesheets/proper.xsl" type="xalan"/>
-				<map:transform src="stylesheets/pretty.xsl" type="xalan"/>
+				<map:transform src="stylesheets/proper.xsl"/>
+				<map:transform src="stylesheets/pretty.xsl"/>
 				<map:serialize type="xml"/>
 			</map:match>
 		</map:pipeline>

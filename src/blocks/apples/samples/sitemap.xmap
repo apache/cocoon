@@ -18,13 +18,13 @@
 <!--+
     | Apples block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.11 2004/05/11 14:18:15 bruno Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   
   <map:components>
-    <map:transformers default="xalan">
+    <map:transformers default="xslt">
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="forms">
           <catalogue id="other" name="OtherMessages" location="messages"/>
