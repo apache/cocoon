@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.6 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.7 2003/04/15 13:10:27 giacomo Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -117,21 +117,21 @@ implements SourceResolver
     }
 
     /** Create the ComponentManager with a Classloader */
-    public CocoonComponentManager( final ClassLoader loader ) {
+    public CocoonComponentManager(final ClassLoader loader) {
         super( null, loader );
-		if ( null == rootManager ) rootManager = this;
+        rootManager = this;
     }
 
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
-    public CocoonComponentManager( final ComponentManager manager, final ClassLoader loader ) {
-        super(manager, loader);
-		if ( null == rootManager ) rootManager = this;
+    public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
+        super( manager, loader );
+        if (rootManager != manager) rootManager = this;
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
-        super(manager);
-		if ( null == rootManager ) rootManager = this;
+        super( manager);
+        if (rootManager != manager) rootManager = this;
     }
 
     /**
