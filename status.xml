@@ -452,7 +452,7 @@
    </action>
    <action dev="AG" type="update">
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
-     POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1,
+     POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1, nekohtml to 0.9.3,
      hsqldb to 1.7.2, jcs to 1.1-dev-20040811, quartz to 1.4.2, asm to 1.4.3,
      asm-util to 1.4.3 and groovy to 1.0-beta6
    </action>
@@ -483,7 +483,12 @@
      Still in the scratchpad area at the time of this writing, added a
      CachedSource proxy subclass for Sources that implement TraversableSource and
      InspectableSource (for instance WebDAVSource).
-   </action> 
+   </action>
+   <action dev="UV" type="add">
+     Added a NekoHTMLGenerator to HTML block. This is a simpler HTML parser than
+     JTidy, which preserves more of the original HTML, primarily just balancing
+     closing tags.
+   </action>
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
      Added support for stripping root elements in the CIncludeTransformer.
    </action>
