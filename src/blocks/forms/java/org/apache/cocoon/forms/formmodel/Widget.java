@@ -152,22 +152,10 @@ public interface Widget {
     public void setProcessRequests(boolean processRequests);
 
     /**
-     * Returns whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget.
-     */
-    public boolean getProcessMyRequests();
-
-    /**
      * Controls whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
     public void setProcessMyRequests(boolean processMyRequests);
-
-    /**
-     * Returns whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for children of this widget.
-     */
-    public boolean getProcessChildRequests();
 
     /**
      * Controls whether {@link #readFromRequest(FormContext formContext)}

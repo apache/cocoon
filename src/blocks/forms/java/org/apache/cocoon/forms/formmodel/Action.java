@@ -45,7 +45,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     public void readFromRequest(final FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+        if (!getCombinedState().isAcceptingInputs())
             return;
 
         Form form = getForm();

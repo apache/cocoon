@@ -84,9 +84,6 @@ public class Union extends AbstractContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
-            return;
-
         // Ensure the case widget has read its value
         this.caseWidget.readFromRequest(formContext);
 
@@ -95,8 +92,7 @@ public class Union extends AbstractContainerWidget {
         String newValue = (String)getValue();
         if (newValue != null && !newValue.equals("")) {
 
-            if (getProcessMyRequests() == false
-                || (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue))) {
+            if (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue)) {
                 // If submitted by the case widget and its value has changed, read the values
                 // for the previous case value. This allows to keep any already entered values
                 // despite the case change.
@@ -106,18 +102,16 @@ public class Union extends AbstractContainerWidget {
                 widget = getChild(newValue);
             }
 
-            if (getProcessChildRequests() == true && widget != null) {
+            if (widget != null && !getCombinedState().isAcceptingInputs()) {
                 widget.readFromRequest(formContext);
             }
         }
-        if(getProcessMyRequests() == true) {
-            this.caseValue = newValue;
-        }
+        this.caseValue = newValue;
     }
 
     // TODO: Simplify this logic.
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         Widget widget;

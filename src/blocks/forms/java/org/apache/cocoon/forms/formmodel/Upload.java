@@ -73,7 +73,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+        if (!getCombinedState().isAcceptingInputs())
             return;
 
         Object obj = formContext.getRequest().get(getRequestParameterName());
@@ -106,7 +106,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (this.part == null) {
