@@ -38,7 +38,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 25, 2002
- * @version CVS $Id: ContinueNode.java,v 1.5 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ContinueNode.java,v 1.6 2004/05/25 13:48:12 cziegeler Exp $
  */
 public class ContinueNode
         extends AbstractProcessingNode
@@ -111,7 +111,7 @@ public class ContinueNode
         Interpreter interpreter = (Interpreter)selector.select(language);
 
         try {
-            interpreter.handleContinuation(contId, params, PipelinesNode.getRedirector(env));
+            interpreter.handleContinuation(contId, params, context.getRedirector());
         } finally {
             selector.release((Component)interpreter);
         }
