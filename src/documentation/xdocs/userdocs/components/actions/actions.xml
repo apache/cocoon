@@ -19,7 +19,7 @@
     </s1>
     <s1 title="Overview">
       <p>See the concepts document
-        <link href="../concepts/actions.html">Creating and Using Actions</link>.
+        <link href="../../user/advanced/actions.html">Creating and Using Actions</link>.
       </p>
     </s1>
     <s1 title="The Actions in Apache Cocoon">

@@ -183,7 +183,7 @@
 		</p>
 		<p>
 		  For the flexible input and output handling, the modular database
-		  actions rely on <link href="../concepts/modules.html">modules</link>.
+		  actions rely on <link href="../../concepts/modules.html">modules</link>.
 		  Have a look at those before proceeding.
 		</p>
         <p>
@@ -283,7 +283,7 @@
 			<code>mode</code> elements, this can be overridden. Any component
 			that implements the <code>InputModule</code> interface can be used
 			to obtain values. How to make such modules known to Apache Cocoon
-			is described  <link href="../concepts/modules.html">elsewhere</link>. 
+			is described  <link href="../../concepts/modules.html">elsewhere</link>. 
 		  </p>
 		  <p>
 			Beside using different input modules, their parameters can be set

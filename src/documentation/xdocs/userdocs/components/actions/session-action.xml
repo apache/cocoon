@@ -18,7 +18,7 @@
     is controlled by a parameter named 'action'.
    </p>
    <p>For more information on session handling and session contexts
-      have a look at the <link href="../../developing/webapps/session.html">Session Context documentation</link>.</p>
+      have a look at the <link href="../../advanced/session/contexts.html">Session Context documentation</link>.</p>
    <s2 title="Creating a Session">
      <p>
       To create a session (if it not already exists) simply add the

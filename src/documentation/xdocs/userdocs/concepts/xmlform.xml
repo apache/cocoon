@@ -14,7 +14,7 @@
       <note>
         This document is out of date. XMLForm is not supported anymore starting from
         the Cocoon 2.1 release. Alternatively, you can use <link
-          href="../flow/jxforms.html">JXForms</link>, which is conceptually the
+          href="../advanced/flow/jxforms.html">JXForms</link>, which is conceptually the
         same but offers a more robust implementation. Another emerging form
         framework is <link
           href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link>.

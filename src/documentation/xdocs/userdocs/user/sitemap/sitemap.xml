@@ -320,7 +320,7 @@
       An <link href="#interface-action"><code>Action</code></link> is a sitemap component
       that manipulates runtime parameters based on request and application state.
       An Action's result is available in the sitemap as map of name/value pairs.
-      Detailed information on actions may be found in <link href="actions.html">the Actions
+      Detailed information on actions may be found in <link href="../advanced/actions.html">the Actions
       section</link>.
      </p>
      <source>
@@ -379,7 +379,7 @@
    <s2 title="The &lt;map:action-sets&gt;">
     <p>
      The <code>&lt;map:action-set&gt;</code> element is used to arrange actions in
-     groups (See <link href="actions.html">the Actions section</link> for details).
+     groups (See <link href="../advanced/actions.html">the Actions section</link> for details).
     </p>
 
     <source>
@@ -490,7 +490,7 @@
       Without the use of Actions this would make the sitemap almost incomprehensible.
     </p>
     <p>See also 
-      <link href="actions.html">Creating And Using Actions</link>
+      <link href="../advanced/actions.html">Creating And Using Actions</link>
     </p>
    </s2>
    <s2 title="Generating">
