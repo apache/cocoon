@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  * <p>An aggregated {@link SourceValidity} for multiple sources.</p>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MultiSourceValidity extends AbstractAggregatedValidity
                                  implements SourceValidity {
@@ -160,7 +160,7 @@ public class MultiSourceValidity extends AbstractAggregatedValidity
 
             /* Check the validity status */
             SourceValidity validity = (SourceValidity) validities.get(i);
-            switch(validity.isValid()) {
+            switch (validity.isValid()) {
 
                 /* The current source is valid: just continue to next source */
                 case SourceValidity.VALID:
@@ -173,24 +173,30 @@ public class MultiSourceValidity extends AbstractAggregatedValidity
                 /* The source validity is not known: check with the new source */
                 case SourceValidity.UNKNOWN:
                     /* We have no resolver: definitely don't know */
-                    if (resolver == null) return 0;
+                    if (resolver == null) {
+                        return SourceValidity.UNKNOWN;
+                    }
 
                     /* Check the new source by asking to the resolver */
                     Source newSrc = null;
                     int newValidity = SourceValidity.INVALID;
                     try {
-                        newSrc = resolver.resolveURI((String) uris.get(i));
+                        newSrc = resolver.resolveURI((String) this.uris.get(i));
                         newValidity = validity.isValid(newSrc.getValidity());
                     } catch(IOException ioe) {
                         /* Swallow the IOException, but set the new validity */
                         newValidity = SourceValidity.INVALID;
                     } finally {
                         /* Make sure that the source is released */
-                        if (newSrc != null) resolver.release(newSrc);
+                        if (newSrc != null) {
+                            resolver.release(newSrc);
+                        }
                     }
 
                     /* If the source is still valid, go to the next one */
-                    if (newValidity == SourceValidity.VALID) break;
+                    if (newValidity == SourceValidity.VALID) {
+                        break;
+                    }
 
                     /* The source is not valid (or unknown), we invalidate the lot */
                     return SourceValidity.INVALID;
@@ -202,6 +208,6 @@ public class MultiSourceValidity extends AbstractAggregatedValidity
         }
 
         /* All items checked successfully */
-        return 1;
+        return SourceValidity.VALID;
     }
 }
