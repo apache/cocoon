@@ -1,4 +1,4 @@
-/*-- $Id: XTTransformer.java,v 1.2 2000-01-08 13:03:45 stefano Exp $ -- 
+/*-- $Id: XTTransformer.java,v 1.3 2000-01-09 23:46:14 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This class implements the processor interface for the
- * James Calrk's XT XSLT processor using it's DOM API.
+ * James Clark's XT XSLT processor using it's DOM API.
  *
  * @author <a href="mailto:zvi@usa.net?cc=zvia@netmanage.co.il">Zvi Avraham</a>
  */

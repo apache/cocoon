@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.2 2000-01-08 13:03:45 stefano Exp $ -- 
+/*-- $Id: XSLTProcessor.java,v 1.3 2000-01-09 23:46:13 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000-01-08 13:03:45 $
+ * @version $Revision: 1.3 $ $Date: 2000-01-09 23:46:13 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -88,48 +88,77 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
     }
 
     public Document process(Document document, Dictionary parameters) throws Exception {
+        
+        Document sheet = (Document) parameters.get("stylesheet");
+        if (sheet != null) return sheet;
+
+        HttpServletRequest request = (HttpServletRequest) parameters.get("request");
+        String path = (String) parameters.get("path");
+        String browser = (String) parameters.get("browser");
+        
         try {
-            Document stylesheet = getStylesheet(document, parameters);
+            URL resource = getResource(document, path, browser);
+            Document stylesheet = getStylesheet(resource, document, request);
             Document result = this.parser.createEmptyDocument();
-            
-            // FIXME: the line below uses null systemIDs because there is no
-            // clean way to have access to this information. We are waiting for
-            // the sitemap code to be started before changing these.
-            return transformer.transform(document, null, stylesheet, null, result);
+            return transformer.transform(document, null, stylesheet, resource.toString(), result);
         } catch (PINotFoundException e) {
             return document;
         }
     }
 
-    /**
-     * Get the stylesheet associated with the given document, based 
-     * on the environment and request parameters. This method
-     * uses the object storage system to store preparsed stylesheets
-     * in memory to be able to speed the transformation of those
-     * files that changed the origin but left the stylesheet unchanged.
-     */
-    private Document getStylesheet(Document document, Dictionary parameters) throws ProcessorException {
-
-        Object resource = null;
+    private URL getResource(Document document, String path, String browser) throws ProcessorException {
         
-        Document sheet = (Document) parameters.get("stylesheet");
-        if (sheet != null) {
-            return sheet;
-        }
+        URL resource = null;
         
-        HttpServletRequest request = (HttpServletRequest) parameters.get("request");
-
-        try {
-            Hashtable links = getStylesheetsForBrowsers(document, (String) parameters.get("path"));
-            resource = links.get(parameters.get("browser"));
-
-            if (resource == null) {
-                resource = links.get(DEFAULT_BROWSER);
-                if (resource == null) {
-                    throw new PINotFoundException("No stylesheet is associated to the processed document.");
+        Enumeration pis = Utils.getAllPIs(document, STYLESHEET_PI).elements();
+        while (pis.hasMoreElements()) {
+            Hashtable attributes = Utils.getPIPseudoAttributes((ProcessingInstruction) pis.nextElement());
+            
+            String type = (String) attributes.get("type");
+            if ((type != null) && (type.equals("text/xsl"))) {
+                String url = (String) attributes.get("href");
+                if (url != null) {
+                    URL local = null;
+                    
+                    try {
+                        if (url.indexOf("://") < 0) {
+                            local = new URL("file:///" + path + url);
+                        } else {
+                            local = new URL(url);
+                        }
+                    } catch (MalformedURLException e) {
+                        throw new ProcessorException("Could not associate stylesheet to document: " 
+                            + url + " is a malformed URL.");
+                    }
+                
+                    String media = (String) attributes.get("media");
+                    
+                    if (media == null) {
+                        resource = local;
+                        if (browser == null) break;
+                    } else if (browser != null) {
+                        if (media.equals(browser)) {
+                            resource = local;
+                            break;
+                        }
+                    }
                 }
             }
+        }
 
+        if (resource == null) {
+            throw new ProcessorException("Could not assiciate stylesheet to document: "
+                + " no matching stylesheet for: " + browser);
+        } else {
+            return resource;
+        }
+    }
+     
+    private Document getStylesheet(URL resource, Document document, HttpServletRequest request) throws ProcessorException {
+
+        try {
+            Document sheet;
+            
             if (this.hasChanged(request)) {
                 sheet = getDocument(resource);
                 this.store.hold(resource, sheet);
@@ -145,60 +174,19 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
             }
             
             return sheet;
-            
-        } catch (MalformedURLException e) {
-            throw new ProcessorException("Could not associate stylesheet to document: " 
-                + resource + " is a malformed URL.");
         } catch (Exception e) {
             throw new ProcessorException("Could not associate stylesheet to document: " 
                 + " error reading " + resource + ": " + e.getMessage());
         }
     }
 
-    private Document getDocument(Object resource) throws Exception {
+    private Document getDocument(URL resource) throws Exception {
         InputSource input = new InputSource();
-        if (resource instanceof File) {
-            input.setCharacterStream(new FileReader((File) resource));
-        } else if (resource instanceof URL) {
-            input.setCharacterStream(new InputStreamReader(((URL) resource).openStream()));
-        } else {
-            throw new ProcessorException("Could not handle resource: " + resource);
-        }
-        
+        input.setSystemId(resource.toString());
+        input.setCharacterStream(new InputStreamReader(resource.openStream()));
         return this.parser.parse(input);
     }
     
-    private Hashtable getStylesheetsForBrowsers(Document document, String path) throws MalformedURLException {
-        Hashtable links = new Hashtable();
-
-        Enumeration pis = Utils.getAllPIs(document, STYLESHEET_PI).elements();
-        while (pis.hasMoreElements()) {
-            Hashtable attributes = Utils.getPIPseudoAttributes((ProcessingInstruction) pis.nextElement());
-            
-            String type = (String) attributes.get("type");
-            if ((type != null) && (type.equals("text/xsl"))) {
-                String url = (String) attributes.get("href");
-                Object resource;
-                if (url != null) {
-                    if (url.indexOf("://") < 0) {
-                        resource = new File(path + url);
-                    } else {
-                        resource = new URL(url);
-                    }
-                
-                    String browser = (String) attributes.get("media");
-                    if (browser != null) {
-                        links.put(browser, resource);
-                    } else {
-                        links.put(DEFAULT_BROWSER, resource);
-                    }
-                }
-            }
-        }
-
-        return links;
-    }
-
     public boolean hasChanged(Object context) {
         return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context, true));
     }

@@ -1,4 +1,4 @@
-/*-- $Id: AbstractProducer.java,v 1.5 1999-12-16 11:45:07 stefano Exp $ -- 
+/*-- $Id: AbstractProducer.java,v 1.6 2000-01-09 23:46:14 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * seen as a transparent "mediator" between stream and DOM realms.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-16 11:45:07 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-09 23:46:14 $
  */
 
 public abstract class AbstractProducer extends AbstractActor implements Producer, Defaults {
@@ -91,6 +91,7 @@ public abstract class AbstractProducer extends AbstractActor implements Producer
     public Document getDocument(HttpServletRequest request) throws Exception {
         Parser parser = (Parser) director.getActor("parser");
         org.xml.sax.InputSource input = new org.xml.sax.InputSource();
+        input.setSystemId(this.getPath(request));
         input.setCharacterStream(getStream(request));
         return parser.parse(input);
     }
