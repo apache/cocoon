@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.21 2001-04-04 20:56:36 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.22 2001-04-07 17:31:43 giacomo Exp $
 -->
 
 
@@ -24,6 +24,11 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Make the evaluation/application of logicsheets in the XSP system reliable
+   and usable without hassle to the logicsheet programmer
+  </action>
+
   <action context="code">
    Complete the cocoon.xconf file and put descriptions into it
   </action>
