@@ -31,40 +31,55 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  *
- * @version SVN $Id:$
+ * @version SVN $Id$
  * @since 2.2
  */
 public class CoreUtil {
 
+    /** The callback to the real environment */
+    protected final Core.BootstrapEnvironment env;
+
+    /** "legacy" support: create an avalon context */
+    protected final DefaultContext appContext = new DefaultContext();
+    
+    /** The settings */
+    protected final Settings settings;
+
+    public CoreUtil(Core.BootstrapEnvironment e) 
+    throws Exception {
+        this.env = e;
+
+        // create settings
+        this.settings = Core.createSettings(this.env);
+
+        this.createRootServiceManager();
+    }
+
     /**
      * Bootstrap Cocoon Service Manager
      */
-    public static ServiceManager createRootServiceManager(Core.BootstrapEnvironment env) 
+    public ServiceManager createRootServiceManager() 
     throws Exception {
-        // "legacy" support: create an avalon context
-        final DefaultContext appContext = new DefaultContext();
 
-        // create settings
-        final Settings s = Core.createSettings(env);
         
-        if (s.isInitClassloader()) {
+        if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly
             // (see javax.xml.parsers.FactoryFinder.findClassLoader())
             try {
-                Thread.currentThread().setContextClassLoader(env.getInitClassLoader());
+                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
             } catch (Exception e) {
                 // ignore this
             }
         }
 
-        appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, env.getEnvironmentContext());
+        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.env.getEnvironmentContext());
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
-        final String workDirParam = s.getWorkDirectory();
+        final String workDirParam = this.settings.getWorkDirectory();
         File workDir;
         if (workDirParam != null) {
-            if (env.getContextPath() == null) {
+            if (this.env.getContextPath() == null) {
                 // No context path : consider work-directory as absolute
                 workDir = new File(workDirParam);
             } else {
@@ -75,18 +90,15 @@ public class CoreUtil {
                     workDir = workDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    workDir = new File(env.getContextPath(), workDirParam);
+                    workDir = new File(this.env.getContextPath(), workDirParam);
                 }
             }
         } else {
-            // TODO:
-            workDir = null;
-            //workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
-            workDir = new File(workDir, "cocoon-files");
+            workDir = new File("cocoon-files");
         }
         workDir.mkdirs();
-        appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
-        s.setWorkDirectory(workDir.getAbsolutePath());
+        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
+        this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // TODO we should move the following into the bootstrap env
         String contextURL;
@@ -143,7 +155,7 @@ public class CoreUtil {
             }
         }
 
-        final String uploadDirParam = s.getUploadDirectory();
+        final String uploadDirParam = this.settings.getUploadDirectory();
         File uploadDir;
         if (uploadDirParam != null) {
             if (env.getContextPath() == null) {
@@ -170,9 +182,9 @@ public class CoreUtil {
         }
         uploadDir.mkdirs();
         appContext.put(Constants.CONTEXT_UPLOAD_DIR, uploadDir);
-        s.setUploadDirectory(uploadDir.getAbsolutePath());
+        this.settings.setUploadDirectory(uploadDir.getAbsolutePath());
 
-        String cacheDirParam = s.getCacheDirectory();
+        String cacheDirParam = this.settings.getCacheDirectory();
         File cacheDir;
         if (cacheDirParam != null) {
             if (env.getContextPath() == null) {
@@ -203,13 +215,13 @@ public class CoreUtil {
         }
         cacheDir.mkdirs();
         appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
-        s.setCacheDirectory(cacheDir.getAbsolutePath());
+        this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         // create new Core
-        final Core cocoon = new Core(s);
+        final Core cocoon = new Core(this.settings);
         
         // create parent service manager
-        final ServiceManager parent = getParentServiceManager(s);
+        final ServiceManager parent = this.getParentServiceManager();
 
         return new RootServiceManager(parent, cocoon);
     }
@@ -222,8 +234,8 @@ public class CoreUtil {
      *
      * @return the parent service manager, or <code>null</code>.
      */
-    protected static ServiceManager getParentServiceManager(Settings s) {
-        String parentServiceManagerClass = s.getParentServiceManagerClassName();
+    protected ServiceManager getParentServiceManager() {
+        String parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
         String parentServiceManagerInitParam = null;
         if (parentServiceManagerClass != null) {
             int dividerPos = parentServiceManagerClass.indexOf('/');

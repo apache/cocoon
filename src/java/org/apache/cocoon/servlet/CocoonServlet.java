@@ -1336,7 +1336,11 @@ public class CocoonServlet extends HttpServlet {
          */
         public void configure(Settings settings) {
             // fill from the servlet parameters
-            SettingsHelper.fill(settings, this.config);                
+            SettingsHelper.fill(settings, this.config);
+            if ( settings.getWorkDirectory() == null ) {
+                final File workDir = (File)this.config.getServletContext().getAttribute("javax.servlet.context.tempdir");
+                settings.setWorkDirectory(workDir.getAbsolutePath());
+            }
         }
 
         /**
