@@ -125,6 +125,7 @@
           <include name="**/*.meta"/>
           <include name="**/*.deps"/>
           <include name="org/apache/cocoon/cocoon.roles"/>
+          <include name="org/apache/cocoon/components/treeprocessor/sitemap2xconf.xsl" />
         </fileset>
       </copy>
   </target>
