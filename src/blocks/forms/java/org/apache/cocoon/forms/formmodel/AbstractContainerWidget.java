@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -28,7 +29,7 @@ import org.xml.sax.SAXException;
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
  * @author Timothy Larson
- * @version $Id: AbstractContainerWidget.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     protected ContainerDelegate widgets;
@@ -71,7 +72,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element) throws SAXException {
         if (getId() == null || getId().equals("")) {
-            contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, XMLUtils.EMPTY_ATTRIBUTES);
         } else {
             AttributesImpl attrs = new AttributesImpl();
             attrs.addCDATAAttribute("id", getFullyQualifiedId());

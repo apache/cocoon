@@ -30,6 +30,7 @@ import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -40,7 +41,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version CVS $Id: Form.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -305,10 +306,10 @@ public class Form extends AbstractContainerWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl formAttrs = new AttributesImpl();
         formAttrs.addCDATAAttribute("id", definition.getId());
-        contentHandler.startElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL, XMLUtils.EMPTY_ATTRIBUTES);
         definition.generateLabel(contentHandler);
 
-        contentHandler.startElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL, XMLUtils.EMPTY_ATTRIBUTES);
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();

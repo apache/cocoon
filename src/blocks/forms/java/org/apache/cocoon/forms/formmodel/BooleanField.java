@@ -20,6 +20,7 @@ import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -36,7 +37,7 @@ import java.util.Locale;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: BooleanField.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -85,7 +86,7 @@ public class BooleanField extends AbstractWidget {
         contentHandler.startElement(Constants.INSTANCE_NS, BOOLEAN_FIELD_EL, Constants.INSTANCE_PREFIX_COLON + BOOLEAN_FIELD_EL, fieldAttrs);
 
         // value element
-        contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
         String stringValue = String.valueOf(value != null && value.booleanValue() == true? "true": "false");
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);

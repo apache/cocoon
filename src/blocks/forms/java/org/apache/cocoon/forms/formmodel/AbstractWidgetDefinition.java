@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.validation.WidgetValidator;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -30,7 +31,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
@@ -123,7 +124,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
                 String name = (String)entry.getKey();
                 
                 // Enclose the data into a "wi:{name}" element
-                contentHandler.startElement(Constants.INSTANCE_NS, name, Constants.INSTANCE_PREFIX_COLON + name, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, name, Constants.INSTANCE_PREFIX_COLON + name, XMLUtils.EMPTY_ATTRIBUTES);
 
                 ((XMLizable)entry.getValue()).toSAX(contentHandler);
 

@@ -17,10 +17,10 @@ package org.apache.cocoon.forms.transformation;
 
 import java.util.LinkedList;
 
-import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -35,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the XMLPipe to match the structure of the data being transformed.
  *
  * @author Timothy Larson
- * @version $Id: EffectPipe.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version $Id: EffectPipe.java,v 1.2 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -68,7 +68,7 @@ public class EffectPipe extends AbstractXMLPipe {
         public boolean mine;
 
         public Element() {
-            prefix = null; uri = null; loc = null; raw = null; attrs = Constants.EMPTY_ATTRS; mine = true;
+            prefix = null; uri = null; loc = null; raw = null; attrs = XMLUtils.EMPTY_ATTRIBUTES; mine = true;
         }
 
         public Element(String prefix, String uri) {
@@ -80,9 +80,9 @@ public class EffectPipe extends AbstractXMLPipe {
             this.uri = uri;
             this.loc = loc;
             this.raw = raw;
-            this.attrs = Constants.EMPTY_ATTRS;
+            this.attrs = XMLUtils.EMPTY_ATTRIBUTES;
             if (attrs == null) {
-                this.attrs = Constants.EMPTY_ATTRS;
+                this.attrs = XMLUtils.EMPTY_ATTRIBUTES;
                 mine = true;
             } else {
                 this.attrs = attrs;
@@ -93,7 +93,7 @@ public class EffectPipe extends AbstractXMLPipe {
         public void addAttributes(Attributes attrs) {
             if (attrs != null) {
                 if (mine == true) {
-                    if (this.attrs == Constants.EMPTY_ATTRS) {
+                    if (this.attrs == XMLUtils.EMPTY_ATTRIBUTES) {
                         this.attrs = attrs;
                         mine = false;
                     } else {
@@ -108,7 +108,7 @@ public class EffectPipe extends AbstractXMLPipe {
         }
 
         public void addAttribute(String uri, String loc, String raw, String type, String value) {
-            if (!mine || attrs == Constants.EMPTY_ATTRS) {
+            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
                 attrs = new AttributesImpl(attrs);
                 mine = true;
             }
@@ -116,7 +116,7 @@ public class EffectPipe extends AbstractXMLPipe {
         }
 
         public void addAttribute(String prefix, String uri, String loc, String value) {
-            if (!mine || attrs == Constants.EMPTY_ATTRS) {
+            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
                 attrs = new AttributesImpl(attrs);
                 mine = true;
             }
@@ -124,7 +124,7 @@ public class EffectPipe extends AbstractXMLPipe {
         }
 
         public void addAttribute(String loc, String value) {
-            if (!mine || attrs == Constants.EMPTY_ATTRS) {
+            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
                 attrs = new AttributesImpl(attrs);
                 mine = true;
             }
@@ -224,7 +224,7 @@ public class EffectPipe extends AbstractXMLPipe {
 
         public void startElement() throws SAXException {
             if (element.attrs == null) {
-                element.attrs = Constants.EMPTY_ATTRS;
+                element.attrs = XMLUtils.EMPTY_ATTRIBUTES;
             }
             super.startElement(element.uri, element.loc, element.raw, element.attrs);
             elements.addFirst(element);

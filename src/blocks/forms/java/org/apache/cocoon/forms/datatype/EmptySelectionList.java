@@ -20,13 +20,14 @@ import java.util.Locale;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: EmptySelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: EmptySelectionList.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class EmptySelectionList implements SelectionList {
     private String text;
@@ -49,7 +50,7 @@ public class EmptySelectionList implements SelectionList {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // Start wi:selection list
-        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
 
         // Start wi:item
         AttributesImpl itemAttrs = new AttributesImpl();
@@ -57,13 +58,13 @@ public class EmptySelectionList implements SelectionList {
         contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
 
         // Start wi:label
-        contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
         if (this.text != null) {
 
             if (i18n) {
                 contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
         
-                contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, XMLUtils.EMPTY_ATTRIBUTES);
                 contentHandler.characters(this.text.toCharArray(), 0, this.text.length());
                 contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
     

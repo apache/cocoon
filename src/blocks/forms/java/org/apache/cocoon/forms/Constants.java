@@ -15,13 +15,10 @@
  */
 package org.apache.cocoon.forms;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 /**
  * Various constants used in the form framework.
  * 
- * @version $Id: Constants.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
+ * @version $Id: Constants.java,v 1.4 2004/03/09 13:17:27 cziegeler Exp $
  */
 public final class Constants {
 // TODO : see this later
@@ -53,5 +50,4 @@ public final class Constants {
     /** I18n catalogue containing the built-in messages. */
     public static final String I18N_CATALOGUE = "forms";
 
-    public static final Attributes EMPTY_ATTRS = new AttributesImpl();
 }

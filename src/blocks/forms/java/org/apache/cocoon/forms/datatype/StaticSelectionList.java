@@ -21,6 +21,7 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.Locale;
  * cached as part of this object. In contrast, the {@link DynamicSelectionList}
  * will retrieve its content from its source each time it's needed.
  * 
- * @version $Id: StaticSelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version $Id: StaticSelectionList.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */
@@ -52,7 +53,7 @@ public class StaticSelectionList implements SelectionList {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         Convertor.FormatCache formatCache = new DefaultFormatCache();
-        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
         Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
             SelectionListItem item = (SelectionListItem)itemIt.next();
@@ -100,7 +101,7 @@ public class StaticSelectionList implements SelectionList {
             }
             itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
-            contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
             if (label != null) {
                 label.toSAX(contentHandler);
             } else {

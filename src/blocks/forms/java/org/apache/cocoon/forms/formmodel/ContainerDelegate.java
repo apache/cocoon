@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -31,7 +32,7 @@ import org.xml.sax.SAXException;
  * Helper class for the implementation of widgets containing other widgets.
  *
  * @author Timothy Larson
- * @version $Id: ContainerDelegate.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: ContainerDelegate.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class ContainerDelegate {
 //    private WidgetDefinition definition;
@@ -95,7 +96,7 @@ public class ContainerDelegate {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        contentHandler.startElement(Constants.INSTANCE_NS, WIDGETS_EL, Constants.INSTANCE_PREFIX_COLON + WIDGETS_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, WIDGETS_EL, Constants.INSTANCE_PREFIX_COLON + WIDGETS_EL, XMLUtils.EMPTY_ATTRIBUTES);
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();

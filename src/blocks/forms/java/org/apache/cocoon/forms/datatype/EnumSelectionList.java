@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -50,7 +51,7 @@ import org.xml.sax.SAXException;
  * <p>If you don't want an initial null value, add a nullable="false"
  * attribute to the wd:selection-list element.
  * 
- * @version CVS $Id: EnumSelectionList.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: EnumSelectionList.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
@@ -86,7 +87,7 @@ public class EnumSelectionList implements SelectionList {
         Locale locale)
         throws SAXException {
         try {
-            contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
             Field fields[] = clazz.getDeclaredFields();
             // Create void element
             if (nullable) {
@@ -104,9 +105,9 @@ public class EnumSelectionList implements SelectionList {
                     AttributesImpl itemAttrs = new AttributesImpl();
                     itemAttrs.addCDATAAttribute("value", stringValue);
                     contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
-                    contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     // TODO: make i18n element optional
-                    contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
                     contentHandler.endElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL);
                     contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
