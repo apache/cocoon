@@ -34,7 +34,7 @@ export CLASSPATH
 OLD_ANT_HOME="$ANT_HOME"
 export ANT_HOME=tools
 OLD_ANT_OPTS="$ANT_OPTS"
-export ANT_OPTS="-Djava.endorsed.dirs=lib/endorsed"
+export ANT_OPTS="-Xms32M -Xmx512M -Djava.endorsed.dirs=lib/endorsed"
 
 "$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
 
