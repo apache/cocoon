@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.38 2000-11-20 01:43:53 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.39 2000-11-20 18:36:00 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,6 +67,8 @@ import org.apache.cocoon.formatter.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
 import org.apache.cocoon.interpreter.*;
+import org.apache.cocoon.response.HttpServletResponseFacade;
+import org.apache.cocoon.response.RedirectException;
 
 /**
  * The Cocoon publishing engine.
@@ -75,7 +77,7 @@ import org.apache.cocoon.interpreter.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.38 $ $Date: 2000-11-20 01:43:53 $
+ * @version $Revision: 1.39 $ $Date: 2000-11-20 18:36:00 $
  */
 
 public class Engine implements Defaults {
@@ -292,6 +294,8 @@ public class Engine implements Defaults {
             System.setErr(stream);
         }
 
+        response = new HttpServletResponseFacade (response);
+
         Page page = null;
 
         boolean lock = false;
@@ -461,6 +465,9 @@ public class Engine implements Defaults {
             if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
             if (PROFILE) profiler.finishEvent (requestMarker, WHOLE_REQUEST);
 
+        } catch (RedirectException ex) {
+            // Do nothing - this is used to immediately stop Cocoon processing
+            // to fix a redirect bug on some servlet engines, e.g. Tomcat.
         } finally {
             // if there is a lock make sure it is released,
             // otherwise this page could never be served

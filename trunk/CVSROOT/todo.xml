@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.47 2000-11-14 18:42:36 greenrd Exp $
+  $Id: todo.xml,v 1.48 2000-11-20 18:35:56 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -22,9 +22,6 @@
   <action context="code">
    Track down cause of OutOfMemoryError.
   </action>
-  <action context="docs" assigned-to="RDG">
-   Contribution / patch management system (will be primitive!)
-  </action>
   <action context="code">
    Work out how to integrate inline XSP docs (such as inline esql docs)
    into the build docs procedure. This will fix a dead link which leads
@@ -32,12 +29,6 @@
   </action>
   <action context="docs" assigned-to="RDG">
    Fix dead links in docs.
-  </action>
-  <action context="code" assigned-to="RDG">
-   Workaround redirect problem with Tomcat and IE and Cocoon
-   (code written; just needs to be merged in.) I marked this high-priority
-   because the only known workarounds are stop using Tomcat 3.1 or stop using
-   IE(!) - both of which are unacceptable.
   </action>
  </actions>
 
