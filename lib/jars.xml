@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.228 2004/06/18 07:10:45 antonio Exp $
+    | CVS $Id: jars.xml,v 1.229 2004/06/27 01:14:17 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -462,7 +462,7 @@
      The Logging package is an ultra-thin bridge between different logging libraries.
     </description>
     <used-by>Jakarta Commons HttpClient, Chaperon</used-by>
-    <lib>optional/commons-logging-1.0.4.jar</lib>
+    <lib>core/commons-logging-1.0.4.jar</lib>
     <homepage>http://jakarta.apache.org/commons/logging/</homepage>
   </file>
 
