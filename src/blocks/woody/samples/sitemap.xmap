@@ -197,7 +197,6 @@
          <map:parameter name="function" value="form2bean"/>
          <map:parameter name="form-definition" value="forms/form2_model.xml"/>
          <map:parameter name="attribute-name" value="form2"/>
-         <map:parameter name="documentURI" value="forms/form2_data.xml"/>
          <map:parameter name="bindingURI" value="forms/form2_bind_bean.xml"/>
        </map:call>
      </map:match>
