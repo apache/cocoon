@@ -37,7 +37,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public abstract class AbstractDescriptor extends ParsedIdentifier
 implements Descriptor {
@@ -156,15 +156,15 @@ implements Descriptor {
             /* Check access and store */
             String access = (this.isInterface() ? "public" : "private");
             access = current.getStringAttribute("access", access);
-            if ("protected".equals(access)) {
+            if ("public".equals(access)) {
+                /* Public libraries available to interfaces and implems */
+                publiclibs.add(url);
+            } else if ("protected".equals(access)) {
                 /* Protected libraries available to interfaces and implems */
                 protectedlibs.add(url);
             } else if (("private".equals(access)) && (!this.isInterface())) {
                 /* Private libraries available to implementations only */
                 privatelibs.add(url);
-            } else if (("public".equals(access)) && (this.isInterface())) {
-                /* Public libraries available to interfaces only */
-                publiclibs.add(url);
             } else {
                 /* Problems with library access */
                 StringBuffer message = new StringBuffer(512);
