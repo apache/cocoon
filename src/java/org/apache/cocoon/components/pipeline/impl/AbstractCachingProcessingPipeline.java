@@ -164,21 +164,23 @@ public abstract class AbstractCachingProcessingPipeline
     throws ProcessingException {
         if (this.toCacheKey == null && this.cachedResponse == null) {
             return super.processXMLPipeline(environment);
+        }
 
-        } else if (this.cachedResponse != null
-                && this.completeResponseIsCached) {
+        if (this.cachedResponse != null && this.completeResponseIsCached) {
 
             // Allow for 304 (not modified) responses in dynamic content
-            if (super.checkIfModified(environment, this.cachedLastModified)) {
+            if (checkIfModified(environment, this.cachedLastModified)) {
                 return true;
             }
 
-            // set mime-type
-            if ( this.cachedResponse.getContentType() != null ) {
+            // Set mime-type
+            if (this.cachedResponse.getContentType() != null) {
                 environment.setContentType(this.cachedResponse.getContentType());
             } else {
-                this.setMimeTypeForSerializer(environment);
+                setMimeTypeForSerializer(environment);
             }
+
+            // Write response out
             try {
                 final OutputStream outputStream = environment.getOutputStream(0);
                 final byte[] content = this.cachedResponse.getResponse();
@@ -190,7 +192,7 @@ public abstract class AbstractCachingProcessingPipeline
                 handleException(e);
             }
         } else {
-            this.setMimeTypeForSerializer(environment);
+            setMimeTypeForSerializer(environment);
             if (getLogger().isDebugEnabled() && this.toCacheKey != null) {
                 getLogger().debug("processXMLPipeline: caching content for further" +
                                   " requests of '" + environment.getURI() +
@@ -201,45 +203,51 @@ public abstract class AbstractCachingProcessingPipeline
                 OutputStream os = null;
 
                 if (this.cacheCompleteResponse && this.toCacheKey != null) {
-                    os = new CachingOutputStream(
-                            environment.getOutputStream(this.outputBufferSize));
+                    os = new CachingOutputStream(environment.getOutputStream(this.outputBufferSize));
                 }
+
                 if (super.serializer != super.lastConsumer) {
                     if (os == null) {
                         os = environment.getOutputStream(this.outputBufferSize);
                     }
+
                     // internal processing
                     if (this.xmlDeserializer != null) {
-                        this.xmlDeserializer.deserialize(this.cachedResponse);
+                        this.xmlDeserializer.deserialize(this.cachedResponse.getResponse());
                     } else {
                         this.generator.generate();
                     }
+
                 } else {
                     if (this.serializer.shouldSetContentLength()) {
                         if (os == null) {
                             os = environment.getOutputStream(0);
                         }
-                        // set the output stream
+
+                        // Set the output stream
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         this.serializer.setOutputStream(baos);
 
-                        // execute the pipeline:
-                        if ( this.xmlDeserializer != null ) {
-                            this.xmlDeserializer.deserialize(this.cachedResponse);
+                        // Execute the pipeline
+                        if (this.xmlDeserializer != null) {
+                            this.xmlDeserializer.deserialize(this.cachedResponse.getResponse());
                         } else {
                             this.generator.generate();
                         }
+
                         environment.setContentLength(baos.size());
                         baos.writeTo(os);
                     } else {
                         if (os == null) {
                             os = environment.getOutputStream(this.outputBufferSize);
                         }
-                        // set the output stream
+
+                        // Set the output stream
                         this.serializer.setOutputStream(os);
-                        // execute the pipeline:
+
+                        // Execute the pipeline
                         if (this.xmlDeserializer != null) {
-                            this.xmlDeserializer.deserialize(this.cachedResponse);
+                            this.xmlDeserializer.deserialize(this.cachedResponse.getResponse());
                         } else {
                             this.generator.generate();
                         }
@@ -622,8 +630,8 @@ public abstract class AbstractCachingProcessingPipeline
      */
     protected void connectPipeline(Environment   environment)
     throws ProcessingException {
-        if ( this.toCacheKey == null && this.cachedResponse == null) {
-            super.connectPipeline( environment );
+        if (this.toCacheKey == null && this.cachedResponse == null) {
+            super.connectPipeline(environment);
             return;
         } else if (this.completeResponseIsCached) {
             // do nothing
