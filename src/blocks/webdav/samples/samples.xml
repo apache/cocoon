@@ -6,8 +6,8 @@
   </group>
 
   <group name="Documentation">
-    <sample name="WebDAV" href="./">
-      Not yet available - How to How to build a poor men's CMS with Cocoon and WebDAV
+    <sample name="WebDAV" href="http://wiki.cocoondev.org/Wiki.jsp?page=WebDAVBlock">
+      How to How to build a poor men's CMS with Cocoon and WebDAV
     </sample>
     <sample name="Setting up mod_dav" href="http://httpd.apache.org/docs-2.0/mod/mod_dav.html">
       How to setup the Apache Web server as a WebDAV server
@@ -53,6 +53,9 @@
       how to integrate other editors.
     </sample>
     -->
+    <sample name="Flow sample" href="flowsample/repo/">
+      Sample using flow
+    </sample>
   </group>
 
   <group name="Serving WebDAV">
