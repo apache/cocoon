@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.10 2001-03-01 16:05:37 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.11 2001-03-01 17:19:06 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.10 $ $Date: 2001-03-01 16:05:37 $
+ * @version $Revision: 1.11 $ $Date: 2001-03-01 17:19:06 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -133,7 +133,7 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
 	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
 	    driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
 
-            if (FOP_VERSION_NO > 0.15) {
+            if (FOP_VERSION_NO > 0.15 || FOP_VERSION_NO == UNKNOWN_VERSION) {
                 // We use reflection here to avoid compile-time errors
                 // This translates at runtime to
                 //driver.setOutputStream (stream);
@@ -149,7 +149,7 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
                     .invoke (driver, new Object [] {pw});
             }
 
-	    if (FOP_VERSION_NO > 0.13) {
+	    if (FOP_VERSION_NO > 0.13 || FOP_VERSION_NO == UNKNOWN_VERSION) {
   	        driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
 	        driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
 
