@@ -30,7 +30,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-11-10 22:38:56 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-07 00:13:05 $
  */
 public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
 
@@ -40,7 +40,7 @@ public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recycl
     protected ContentHandler documentHandler=null;
 
     /**
-     * Create a new <code>DocumentHandlerWrapper</code> instance.
+     * Create a new <code>ContentHandlerWrapper</code> instance.
      */
     public ContentHandlerWrapper() {
         super();
