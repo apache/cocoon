@@ -45,6 +45,10 @@
 */
 package org.apache.cocoon.components.flow;
 
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -60,18 +64,15 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-import org.apache.excalibur.source.SourceUtil;
 
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Map;
+import org.apache.excalibur.source.SourceUtil;
 
 /**
  * Abstract superclass for various scripting languages used by Cocoon
@@ -82,7 +83,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.12 2004/01/14 06:39:55 coliver Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.13 2004/01/15 00:36:18 joerg Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Serviceable, Contextualizable, Interpreter,
