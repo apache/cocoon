@@ -32,7 +32,7 @@ import org.apache.cocoon.bean.BeanListener;
  * with file destination.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OutputStreamListener.java,v 1.7 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: OutputStreamListener.java,v 1.8 2004/05/10 12:28:27 sylvain Exp $
  */
 public class OutputStreamListener implements BeanListener {
 
@@ -193,6 +193,7 @@ public class OutputStreamListener implements BeanListener {
     }
 
     private void close() {
-        writer.close();
+        // Flush the writer, but don't close the underlying stream.
+        writer.flush();
     }
 }
