@@ -58,7 +58,7 @@ extends AbstractLogEnabled
 implements Source, XMLizable {
 
     /** validities for the internal pipeline */
-    private SourceValidity sourceValidity;
+    private SitemapSourceValidity validity;
 
     /** The system id */
     private final String systemId;
@@ -80,9 +80,6 @@ implements Source, XMLizable {
 
     /** The redirect <code>Source</code> */
     private Source redirectSource;
-
-    /** Redirect validity */
-    private SourceValidity redirectValidity;
 
     /** The <code>SAXException</code> if unable to get resource */
     private SAXException exception;
@@ -141,6 +138,9 @@ implements Source, XMLizable {
         }
 
         this.systemId = info.systemId;
+
+        // create a new validity holder
+        this.validity = new SitemapSourceValidity();
 
         // initialize
         this.init();
@@ -235,10 +235,7 @@ implements Source, XMLizable {
      *  <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        if (this.redirectSource != null) {
-            return this.redirectValidity;
-        }
-        return this.sourceValidity;
+        return this.validity;
     }
 
     /**
@@ -278,7 +275,7 @@ implements Source, XMLizable {
                                                  this.environment);
                 try {
                     this.pipelineDescription.processingPipeline.prepareInternal(this.environment);
-                    this.sourceValidity = this.pipelineDescription.processingPipeline.getValidityForEventPipeline();
+                    this.validity.set(this.pipelineDescription.processingPipeline.getValidityForEventPipeline());
                     final String eventPipelineKey = this.pipelineDescription.processingPipeline.getKeyForEventPipeline();
                     this.mimeType = this.environment.getContentType();
 
@@ -306,7 +303,7 @@ implements Source, XMLizable {
                     this.sourceResolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
                 }
                 this.redirectSource = this.sourceResolver.resolveURI(redirectURL);
-                this.redirectValidity = this.redirectSource.getValidity();
+                this.validity.set(this.redirectSource.getValidity());
                 this.mimeType = this.redirectSource.getMimeType();
             }
         } catch (SAXException e) {
@@ -384,8 +381,8 @@ implements Source, XMLizable {
             this.sourceResolver.release(this.redirectSource);
             this.redirectSource = null;
         }
-        this.sourceValidity = null;
-        this.redirectValidity = null;
+
+        this.validity.set(null);
 
         this.environment.reset();
         this.exception = null;
@@ -396,6 +393,7 @@ implements Source, XMLizable {
      * Recyclable
      */
     public void recycle() {
+        this.validity = new SitemapSourceValidity();
         this.reset();
         if ( this.sourceResolver != null ) {
             this.manager.release( this.sourceResolver );
@@ -430,4 +428,31 @@ implements Source, XMLizable {
         return java.util.Collections.EMPTY_LIST.iterator();
     }
 
+    /**
+     * A simple SourceValidity protecting callers from resets.
+     */
+    private static final class SitemapSourceValidity implements SourceValidity {
+
+        private SourceValidity nested_validity = null;
+
+        private SitemapSourceValidity() {
+            super();
+        }
+
+        private void set(SourceValidity validity) {
+            this.nested_validity = validity;
+        }
+
+        public int isValid() {
+            return(this.nested_validity != null?
+                   this.nested_validity.isValid():
+                   SourceValidity.INVALID);
+        }
+
+        public int isValid(SourceValidity validity) {
+            return(this.nested_validity != null?
+                   this.nested_validity.isValid(validity):
+                   SourceValidity.INVALID);
+        }
+    }
 }
