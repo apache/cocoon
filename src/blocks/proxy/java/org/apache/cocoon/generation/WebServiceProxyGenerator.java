@@ -106,7 +106,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.5 2003/12/15 07:47:42 tony Exp $
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.6 2003/12/15 07:49:56 tony Exp $
  */
 public class WebServiceProxyGenerator extends ServiceableGenerator {
 
@@ -231,9 +231,9 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
             
             // sometimes the querystring is null here...
             if (null == urlQryString) {
-            	method.setQueryString(submitQryString);
+                method.setQueryString(submitQryString);
             } else {
-				method.setQueryString(urlQryString + "&" + submitQryString);	
+                method.setQueryString(urlQryString + "&" + submitQryString);	
             }
             
         } // if there are submit parameters
