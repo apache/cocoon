@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<root>
+  <forEach>one</forEach>
+  <forEach>two</forEach>
+  <forEach>three</forEach>
+</root>
