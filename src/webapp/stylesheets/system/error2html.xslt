@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.14 2004/02/02 16:10:41 stevenn Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.15 2004/02/18 17:29:00 joerg Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -28,6 +28,7 @@
         <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
       </head>
       <body>
+      	<xsl:apply-templates select="." mode="onload"/>
         <h1><xsl:value-of select="$pageTitle"/></h1>
 
         <p class="message">
@@ -88,14 +89,24 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="error:notify" mode="onload">
+  	<xsl:attribute name="onload">
+  	  <xsl:for-each select="error:extra[contains(@error:description,'stacktrace')]">
+  	  	<xsl:text>toggle('</xsl:text>
+  	  	<xsl:value-of select="@error:description"/>
+  	  	<xsl:text>');</xsl:text>
+  	  </xsl:for-each>
+  	</xsl:attribute>
+  </xsl:template>
+
   <xsl:template match="error:extra">
     <xsl:choose>
      <xsl:when test="contains(@error:description,'stacktrace')">
       <p class="stacktrace">
        <span class="description"><xsl:value-of select="@error:description"/></span>
-       <span class="switch" id="{@error:description}-switch" onclick="toggle('{@error:description}')">[show]</span>
-       <pre id="{@error:description}" style="display: none">
-         <xsl:value-of select="translate(.,'&#13;',' ')"/>
+       <span class="switch" id="{@error:description}-switch" onclick="toggle('{@error:description}')">[hide]</span>
+       <pre id="{@error:description}">
+         <xsl:value-of select="translate(.,'&#13;','')"/>
        </pre>
       </p>
      </xsl:when>
