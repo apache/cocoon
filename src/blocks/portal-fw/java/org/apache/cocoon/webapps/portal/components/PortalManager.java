@@ -95,7 +95,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.7 2003/06/18 12:36:45 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.8 2003/07/30 10:25:37 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -963,11 +963,21 @@ extends AbstractSessionComponent {
                 // LOAD COPLETS
                 List[] copletContents;
 
-                copletContents = (List[])context.getAttribute(PortalConstants.ATTRIBUTE_COPLET_REPOSITORY);
-                if (copletContents == null) {
+                List[] temp = (List[])context.getAttribute(PortalConstants.ATTRIBUTE_COPLET_REPOSITORY);
+                if (temp != null) {
+                    copletContents = new List[temp.length];
+                    for (int i = 0; i < temp.length; i++) {
+                        if (temp[i] == null) {
+                            copletContents[i] = null;
+                        } else {
+                            copletContents[i] = new ArrayList(temp[i]);
+                        }
+                    }
+                } else {
                     copletContents = new List[PortalConstants.MAX_COLUMNS+2];
                     context.setAttribute(PortalConstants.ATTRIBUTE_COPLET_REPOSITORY, copletContents);
                 }
+
                 if (copletContents[0] == null) {
                     copletContents[0] = new ArrayList(1);
                 } else {
