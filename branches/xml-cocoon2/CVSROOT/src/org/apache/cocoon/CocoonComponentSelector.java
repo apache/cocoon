@@ -34,7 +34,7 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-14 16:35:40 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-17 19:59:13 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -96,13 +96,11 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
         Class componentClass = (Class)this.components.get(hint);
 
         if ( componentClass == null ) {
-            log.debug("componentClass is null");
             component = (Component)this.instances.get(hint);
             if ( component == null ) {
                 log.error("Could not find component for hint '" + hint.toString() + "'.");
                 throw new ComponentNotFoundException("Could not find component for hint '" + hint.toString() + "'.");
             } else {
-                log.debug("Found Component for hint '" + hint.toString() + "'.");
                 // we found an individual instance of a component.
                 return component;
             }
@@ -125,11 +123,13 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
+                log.error("Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
+                log.error("Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -143,11 +143,13 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
+                log.error("Could not instantiate component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
+                log.error("Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -171,11 +173,13 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
+                log.error("Could not access component", e);
                 throw new ComponentNotAccessibleException(
                     "Failed to instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
+                log.error("Could not access component", e);
                 throw new ComponentNotAccessibleException(
                     "Could not access component " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -200,6 +204,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
                     new ComponentPoolController()
                     );
             } catch (Exception e) {
+                log.error("Could not create pool for component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not create pool for component " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -212,6 +217,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
         try {
             component = (Component)pool.get();
         } catch ( Exception e ) {
+            log.error("Could not retrieve component ", e);
             throw new ComponentNotAccessibleException(
                 "Could not retrieve component " + componentClass.getName() + " due to a " +
                 e.getClass().getName() + ": " + e.getMessage(),
@@ -232,6 +238,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
                     (Configuration)this.configurations.get(c.getClass())
                 );
             } catch (ConfigurationException e) {
+                log.error("Could not configure component " + c.getClass().getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not configure component " + c.getClass().getName() + ".",
                     e

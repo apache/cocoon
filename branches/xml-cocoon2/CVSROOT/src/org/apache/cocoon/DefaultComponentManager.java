@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-14 15:35:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-17 19:59:13 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -80,7 +80,7 @@ public class DefaultComponentManager implements ComponentManager {
         Component component;
 
         if ( role == null ) {
-        log.debug("Attempted to retrieve a component with a null Role");
+            log.error("Attempted to retrieve a component with a null Role");
             throw new ComponentNotFoundException("Attempted to retrieve component will null roll.");
         }
 
@@ -88,13 +88,11 @@ public class DefaultComponentManager implements ComponentManager {
         Class componentClass = (Class)this.components.get(role);
 
         if ( componentClass == null ) {
-        log.debug("componentClass for " + role + " is null");
             component = (Component)this.instances.get(role);
             if ( component == null ) {
                 log.error(role + " could not be found");
                 throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
             } else {
-                log.debug(role + " instance was found");
                 // we found an individual instance of a component.
                 return component;
             }
@@ -110,13 +108,10 @@ public class DefaultComponentManager implements ComponentManager {
 
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
-            log.debug(role + " is ThreadSafe");
             component = getThreadsafeComponent(componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
-            log.debug(role + " is Poolable");
             component = getPooledComponent(componentClass);
         } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
-            log.debug(role + " is SingleThreaded");
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
@@ -137,7 +132,6 @@ public class DefaultComponentManager implements ComponentManager {
             /* The component doesn't implement any of the Avalon marker
              * classes, treat as normal.
              */
-            log.debug(role + " is a normal Component");
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
@@ -171,11 +165,13 @@ public class DefaultComponentManager implements ComponentManager {
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
+                log.error("Failed to instantiate component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Failed to instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
+                log.error("Could not access component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access component " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -200,6 +196,7 @@ public class DefaultComponentManager implements ComponentManager {
                     new ComponentPoolController()
                     );
             } catch (Exception e) {
+                log.error("Could not create pool for component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not create pool for component " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -212,6 +209,7 @@ public class DefaultComponentManager implements ComponentManager {
         try {
             component = (Component)pool.get();
         } catch ( Exception e ) {
+            log.error("Could not retrieve component " + componentClass.getName(), e);
             throw new ComponentNotAccessibleException(
                 "Could not retrieve component " + componentClass.getName() + " due to a " +
                 e.getClass().getName() + ": " + e.getMessage(),
@@ -232,6 +230,7 @@ public class DefaultComponentManager implements ComponentManager {
                     (Configuration)this.configurations.get(c.getClass())
                 );
             } catch (ConfigurationException e) {
+                log.error("Could not configure component " + c.getClass().getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not configure component " + c.getClass().getName() + ".",
                     e
@@ -261,8 +260,6 @@ public class DefaultComponentManager implements ComponentManager {
                 Configuration current = (Configuration) instances.next();
                 Object hint = current.getAttribute("name");
                 String className = (String) current.getAttribute("class");
-                log.debug("Adding new Component " + className +
-                          " for hint: " + hint);
             try {
                     selector.addComponent(hint, ClassUtils.loadClass(className), current);
                 } catch (Exception e) {
