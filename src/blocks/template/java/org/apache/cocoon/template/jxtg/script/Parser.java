@@ -214,7 +214,7 @@ public class Parser implements ContentHandler, LexicalHandler {
         if (JXTemplateGenerator.NS.equals(namespaceURI)) {
             Constructor constructor = (Constructor) instructions.get(localName);
             if (constructor == null) {
-                throw new SAXParseException("unrecognized tag: " + localName,
+                throw new SAXParseException("unrecognized instruction: " + localName,
                         locator, null);
             }
 
