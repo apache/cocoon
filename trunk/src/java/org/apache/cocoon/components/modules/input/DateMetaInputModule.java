@@ -67,7 +67,7 @@ import java.util.Map;
  * "input-module" holds InputModule to obtain the string from.
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: DateMetaInputModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: DateMetaInputModule.java,v 1.2 2003/03/24 14:33:58 stefano Exp $
  */
 public class DateMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -169,7 +169,7 @@ public class DateMetaInputModule extends AbstractMetaModule implements ThreadSaf
         // done reading configuration
         // setup modules and read values
         Iterator enum = getNames(objectModel,
-                                 this.input, this.defaultInput, this.inputConf,
+                                 this.input, this.defaultInput, inputConfig,
                                  null, inputName, mConf);
         return enum;
      }

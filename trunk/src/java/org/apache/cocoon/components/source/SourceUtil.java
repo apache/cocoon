@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.4 2003/03/24 14:33:54 stefano Exp $
  */
 public final class SourceUtil {
 
@@ -174,9 +174,6 @@ public final class SourceUtil {
                               Parameters       typeParameters,
                               boolean         filterDocumentEvent)
     throws SAXException, IOException, ProcessingException {
-		ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
-        
-        
         // Test for url rewriting
         if (typeParameters != null
             && typeParameters.getParameter(URLRewriter.PARAMETER_MODE, null) != null) {
