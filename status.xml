@@ -439,6 +439,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="32620" due-to="Micah Dubinko" due-to-email="mdubinko@snapbridge.com">
+     Tiny typo in AbstractTextSerializer
+   </action>
    <action dev="RG" type="fix" fixes-bug="32645">
      Modified PortletURLProviderImpl.toString() to create a copy of itself and register that with the event.
    </action>
