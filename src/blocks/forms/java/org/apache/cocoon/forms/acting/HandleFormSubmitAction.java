@@ -83,9 +83,8 @@ public class HandleFormSubmitAction extends AbstractFormsAction implements Actio
 
             if (finished) {
                 return Collections.EMPTY_MAP;
-            } else {
-                return null;
             }
+            return null;
         } finally {
             resolver.release(source);
         }
