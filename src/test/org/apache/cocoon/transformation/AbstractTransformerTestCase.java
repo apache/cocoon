@@ -55,6 +55,11 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -70,6 +75,7 @@ import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -80,7 +86,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.3 2003/04/09 11:12:20 stephan Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
@@ -142,8 +148,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
      */
     public final void testTransformer() {
 
-        try {
-
         ComponentSelector selector = null;
         Transformer transformer = null;
         SourceResolver resolver = null;
@@ -164,6 +168,8 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 
             TestStep test;
             int count = 0;
+
+            getLogger().debug("Count of test steps: "+teststeps.size());
 
             for (Enumeration e = teststeps.elements(); e.hasMoreElements(); ) {
                 test = (TestStep) e.nextElement();
@@ -229,9 +235,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
                 assertTrue("Test if assertion type is correct",
                            (test.assertiontype>=EQUAL) &&
                            (test.assertiontype<=NOTIDENTICAL));
-
-                // NEVER USED!
-                //NodeList childs = assertiondocument.getDocumentElement().getChildNodes();
 
                 switch (test.assertiontype) {
                     case EQUAL :
@@ -309,11 +312,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             if (parser!=null)
                 this.manager.release((Component) parser);
         }
-
-        } catch (Exception excep)
-        {
-          excep.printStackTrace();
-        }
     }
 
     /**
@@ -323,6 +321,25 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
      * @return Diff object describing differences in documents
      */
     public final Diff compareXML(Document control, Document test) {
+
+        /*TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
+        try
+        {
+          javax.xml.transform.Transformer serializer = factory.newTransformer();
+          System.out.println("Control document:");
+          serializer.transform(new DOMSource(control), new StreamResult(System.out));
+          System.out.println();
+
+          serializer = factory.newTransformer();
+          System.out.println("Test document:");
+          serializer.transform(new DOMSource(test), new StreamResult(System.out));
+          System.out.println();
+        } 
+        catch (TransformerException te)
+        {
+          te.printStackTrace();
+        }*/
+
         return new Diff(control, test);
     }
 
