@@ -723,12 +723,14 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
     protected StringBuffer buildList(Configuration[] values, int begin) throws ConfigurationException {
         StringBuffer buffer = new StringBuffer();
         int length = values.length;
+        boolean prependComma = begin > 0;
         for (int i = 0; i < length; i++) {
-            if (begin > 0) {
+            if (prependComma) {
                 buffer.append(", ");
+            } else {
+                prependComma = true;
             }
             buffer.append(values[i].getAttribute("dbcol"));
-            begin++;
         }
         return buffer;
     }
