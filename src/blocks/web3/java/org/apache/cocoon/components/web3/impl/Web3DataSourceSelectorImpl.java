@@ -41,7 +41,7 @@ import EDU.oswego.cs.dl.util.concurrent.Mutex;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.7 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Web3DataSourceSelectorImpl
     extends AbstractLogEnabled
@@ -141,10 +141,10 @@ public class Web3DataSourceSelectorImpl
             Web3DataSourceSelectorImpl.lock.acquire();
             String sid = null;
             Web3DataSource pool;
-            for (Enumeration enum = Web3DataSourceSelectorImpl.pools.keys();
-                enum.hasMoreElements();
+            for (Enumeration enumeration = Web3DataSourceSelectorImpl.pools.keys();
+                enumeration.hasMoreElements();
                 ) {
-                sid = (String) enum.nextElement();
+                sid = (String) enumeration.nextElement();
                 pool =
                     (Web3DataSource) Web3DataSourceSelectorImpl.pools.get(sid);
                 pool.dispose();

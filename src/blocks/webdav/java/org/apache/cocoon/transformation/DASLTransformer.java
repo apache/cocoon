@@ -219,14 +219,14 @@ public class DASLTransformer extends AbstractSAXTransformer {
                 throw new SAXException("The server don't support the SEARCH method");
             }
             searchMethod.execute(state, conn);
-            Enumeration enum = searchMethod.getAllResponseURLs();
+            Enumeration enumeration = searchMethod.getAllResponseURLs();
             this.contentHandler.startElement(
                 DASL_QUERY_NS,
                 RESULT_ROOT_TAG,
                 PREFIX + ":" + RESULT_ROOT_TAG,
                 new AttributesImpl());
-            while (enum.hasMoreElements()) {
-                String path = (String) enum.nextElement();
+            while (enumeration.hasMoreElements()) {
+                String path = (String) enumeration.nextElement();
                 Enumeration properties = searchMethod.getResponseProperties(path);
                 AttributesImpl attr = new AttributesImpl();
                 attr.addAttribute(DASL_QUERY_NS, PATH_NODE_NAME, PREFIX + ":" + PATH_NODE_NAME, "CDATA",path);

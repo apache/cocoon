@@ -236,8 +236,8 @@ implements CacheableProcessingComponent  {
             StringBuffer buff = new StringBuffer();
             Set sort1 = new TreeSet();
             Set sort2 = new TreeSet();
-            Enumeration enum = request.getParameterNames();
-            while (enum.hasMoreElements()) sort1.add(enum.nextElement());
+            Enumeration enumeration = request.getParameterNames();
+            while (enumeration.hasMoreElements()) sort1.add(enumeration.nextElement());
 
             /* Declare how many parameters we have */
             if (sort1.size() > Character.MAX_VALUE) {

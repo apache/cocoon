@@ -127,9 +127,9 @@ public final class CharsetFactory {
             mtch = mtch.substring(2, mtch.lastIndexOf('/') + 1) + "cs_";
     
             ZipFile zip = new ZipFile(file);
-            Enumeration enum = zip.entries();
-            while (enum.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry)enum.nextElement();
+            Enumeration enumeration = zip.entries();
+            while (enumeration.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry)enumeration.nextElement();
                 String name = entry.getName();
                 if ((! name.startsWith(mtch)) ||
                     (! name.endsWith(".class"))) continue;
