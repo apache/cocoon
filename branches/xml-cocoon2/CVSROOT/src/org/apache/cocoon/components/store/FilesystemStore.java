@@ -152,26 +152,6 @@ public class FilesystemStore extends AbstractLoggable implements Store, ThreadSa
   protected File fileFromKey(Object key) {
     String name = key.toString();
     return IOUtils.createFile(this.directoryFile, name);
-/*
-    name = IOUtils.getFullFilename(new File(name));
-
-    String path = IOUtils.normalizedFilename(IOUtils.pathComponent(name));
-    String filename = name.substring(name.lastIndexOf(File.separatorChar));
-
-    String extension = null;
-    int extensionPosition = filename.lastIndexOf(".");
-    if (extensionPosition >= 0) {
-      extension = filename.substring(extensionPosition + 1);
-      filename = filename.substring(0, extensionPosition);
-    }
-
-    filename = IOUtils.normalizedFilename(filename);
-
-    if (extension != null) {
-      filename += "." + extension;
-    }
-
-    return new File(this.directoryPath + path + File.separator + filename);*/
   }
 
   public String getString(Object key) throws IOException {
