@@ -87,9 +87,7 @@
                 <ft:widget id="visa"/>
                 <ft:widget id="ipaddress"/>
                 <ft:widget id="altbirthdate"/>
-                <ft:widget id="birthdate">
-                  <fi:styling type="date" format="dd/MM/yyyy"/>
-                </ft:widget>
+                <ft:widget id="birthdate"/>
                 <ft:widget id="dieselprice"/>
               </fi:items>
             </fi:group>
@@ -115,9 +113,7 @@
                   <td><ft:widget id="phone"/></td>
                   <td><ft:widget id="email"/></td>
                   <td>
-                    <ft:widget id="birthdate">
-                      <fi:styling type="date" format="dd/MM/yyyy"/>
-                    </ft:widget>
+                    <ft:widget id="birthdate"/>
                   </td>
                   <td><ft:widget id="select"/></td>
                 </tr>
