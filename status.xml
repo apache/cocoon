@@ -199,6 +199,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="ATC" type="update">
+     Deprecated the PHP block since the PHP servlet the generator depends on
+	 never worked properly. Explicitly excluded the PHP block from blocks.properties.
+   </action>
    <action dev="VG" type="fix" fixes-bug="27176" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
      XSP Block: Add space="strip" attribute support for &lt;xsp:page&gt;
      element. When present, all extra whitespace from XSP source is stripped.
