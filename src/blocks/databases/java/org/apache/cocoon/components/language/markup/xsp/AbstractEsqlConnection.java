@@ -59,7 +59,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.1 2003/03/20 21:51:43 tcurdt Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.2 2003/05/01 13:03:50 tcurdt Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -159,49 +159,65 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
      */
     public AbstractEsqlQuery createQuery(final String type, final String queryString) throws SQLException {
         AbstractEsqlQuery query;
-        if ("".equals(type) || "auto".equalsIgnoreCase(type)) {
-            String url = getURL();
 
-            if (url.startsWith("jdbc:postgresql:")) {
-                query = new PostgresEsqlQuery(getConnection(),queryString);
+        Connection connection = getConnection();
+
+        if ("".equals(type) || "auto".equalsIgnoreCase(type)) {
+            String database = connection.getMetaData().getDatabaseProductName().toLowerCase();
+
+            if (database.indexOf("postgresql") > -1) {
+                query = new PostgresEsqlQuery(connection,queryString);
             }
-            else if (url.startsWith("jdbc:mysql:")) {
-                query = new MysqlEsqlQuery(getConnection(),queryString);
+            else if (database.indexOf("mysql") > -1) {
+                query = new MysqlEsqlQuery(connection,queryString);
             }
-            else if (url.startsWith("jdbc:sybase:")) {
-                query = new SybaseEsqlQuery(getConnection(),queryString);
+            else if (database.indexOf("anywhere") > -1 || database.indexOf("sqlserver") > -1) {
+                query = new SybaseEsqlQuery(connection,queryString);
             }
-            else if (url.startsWith("jdbc:oracle:")) {
-                query = new OracleEsqlQuery(getConnection(),queryString);
+            else if (database.indexOf("oracle") > -1) {
+                query = new OracleEsqlQuery(connection,queryString);
             }
-            else if (url.startsWith("jdbc:pervasive:")) {
-                query = new PervasiveEsqlQuery(getConnection(),queryString);
+            else if (database.indexOf("pervasive") > -1) {
+                query = new PervasiveEsqlQuery(connection,queryString);
+            }
+            else if (database.indexOf("hsql") > -1) {
+                query = new JdbcEsqlQuery(getConnection(),queryString);
             }
             else {
-                getLogger().warn("Cannot guess database type from jdbc url: " + String.valueOf(url) +" - Defaulting to JDBC");
-                query = new JdbcEsqlQuery(getConnection(),queryString);
+                getLogger().warn("Unrecognized database: \"" + String.valueOf(database) + "\"");
+
+                // temp start
+                String message = "The database detection method has changed.\nIf your database "+
+                                 "is not being recognized (anymore) you can either fix it in the Cocoon2EsqlConnection class, "+
+                                 " file it to bugzilla, report it to cocoon-dev or to me (tcurdt.at.apache.org) directly.\n" +
+                                 " Only be sure to include the database string \"" + String.valueOf(database) + "\" in your post.";
+                getLogger().error( message );
+                throw new SQLException( message );
+                // temp stop
+
+                //query = new JdbcEsqlQuery(getConnection(),queryString);
             }
         }
         else if ("sybase".equalsIgnoreCase(type)) {
-            query = new SybaseEsqlQuery(getConnection(),queryString);
+            query = new SybaseEsqlQuery(connection,queryString);
         }
         else if ("postgresql".equalsIgnoreCase(type)) {
-            query = new PostgresEsqlQuery(getConnection(),queryString);
+            query = new PostgresEsqlQuery(connection,queryString);
         }
         else if ("postgresql-old".equalsIgnoreCase(type)) {
-            query = new PostgresOldEsqlQuery(getConnection(),queryString);
+            query = new PostgresOldEsqlQuery(connection,queryString);
         }
         else if ("mysql".equalsIgnoreCase(type)) {
-            query = new MysqlEsqlQuery(getConnection(),queryString);
+            query = new MysqlEsqlQuery(connection,queryString);
         }
         else if ("oracle".equalsIgnoreCase(type)) {
-            query = new OracleEsqlQuery(getConnection(),queryString);
+            query = new OracleEsqlQuery(connection,queryString);
         }
         else if ("pervasive".equalsIgnoreCase(type)) {
-            query = new PervasiveEsqlQuery(getConnection(),queryString);
+            query = new PervasiveEsqlQuery(connection,queryString);
         }
         else if ("jdbc".equalsIgnoreCase(type)) {
-            query = new JdbcEsqlQuery(getConnection(),queryString);
+            query = new JdbcEsqlQuery(connection,queryString);
         }
         else {
             getLogger().error("Unknown database type: " + String.valueOf(type));
