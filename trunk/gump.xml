@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.30 2003/04/01 22:00:09 stefano Exp $
+  CVS $Id: gump.xml,v 1.31 2003/04/02 10:51:14 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -61,7 +61,7 @@
     
     <depend project="jing"/>
     <depend project="jstyle"/>
-    <!--depend project="pizza"/-->
+    <depend project="pizza"/>
     <depend project="junit"/>
     <depend project="eclipse-jtd"/>
 
