@@ -80,14 +80,13 @@ import org.apache.cocoon.portal.event.Register;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber;
-import org.apache.cocoon.portal.event.subscriber.impl.SizingEventSubscriber;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.8 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.9 2003/05/26 13:18:19 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -155,7 +154,6 @@ public class DefaultEventManager
 
         // FIXME (CZ,HIGH) : Make this configurable
         this.subscribe(new DefaultChangeAspectDataEventSubscriber(this.manager));
-        this.subscribe(new SizingEventSubscriber(this.manager));
     }
 
     public void publish( final Event event ) {

@@ -48,66 +48,81 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.subscriber.impl;
+package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.portal.coplet.status.SizingStatus;
-import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
-import org.apache.cocoon.portal.event.impl.*;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.cocoon.portal.layout.AbstractLayout;
+import org.apache.cocoon.portal.layout.CompositeLayout;
+import org.apache.cocoon.portal.layout.Item;
+
 
 /**
- *
+ * A composite layout is a layout that contains other layouts.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingEventSubscriber.java,v 1.1 2003/05/26 09:52:59 cziegeler Exp $
+ * @version CVS $Id: CompositeLayoutImpl.java,v 1.1 2003/05/26 13:18:19 cziegeler Exp $
  */
-public final class SizingEventSubscriber implements Subscriber {
+public class CompositeLayoutImpl 
+    extends AbstractLayout
+    implements CompositeLayout {
 
-    private ComponentManager manager;
+	protected List items = new ArrayList();
 
-    public SizingEventSubscriber(ComponentManager manager) {
-        this.manager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * Constructor
      */
-    public Class getEventType() {
-        return SizingStatusEvent.class;
+    public CompositeLayoutImpl() {}
+    
+	/**
+	 * Add indexed item to the itemList.
+	 * @param index, index for the position inside the list
+	 * @param item, item to add
+	 */
+	public final void addItem(int index, Item item) {
+		items.add(index, item);
+        item.setParent(this);
+	}
+
+	/**
+	 * Add Item to the ItemList.
+	 * @param item, item to add
+	 */
+	public final void addItem(Item item) {
+		items.add(item);
+		item.setParent(this);
+	}
+
+	/**
+	 * Get Item from the ItemList.
+	 * @return Item
+	 */
+	public final Item getItem(int index) {
+		return (Item) items.get(index);
+	}
+
+	/**
+	 * Get the ItemList.
+	 * @return items
+	 */
+	public final List getItems() {
+		return items;
+	}
+
+	/**
+	 * Get size of ItemList.
+	 * @return size
+	 */
+	public final int getSize() {
+		return items.size();
+	}
+    
+    public final void removeItem(Item item) {
+        this.items.remove(item);
+        item.setParent(null);
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event event) {
-        SizingStatusEvent statusEvent = (SizingStatusEvent) event;
-        SizingStatus target = statusEvent.getStatus();
-        ProfileManager profileManager = null;
-        try {
-            profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-            target = new SizingStatus();
-            statusEvent.getCopletInstanceData().setAspectData("size", target);
-        } catch (ComponentException ce) {
-            // ignore
-        } finally {
-            this.manager.release(profileManager);
-        }
-        
-        int action = statusEvent.getAction();
-
-        target.setStatus(action);
-    }
-
+    
 }

@@ -51,37 +51,16 @@
 package org.apache.cocoon.portal.coplet.status;
 
 /**
- *
+ * Constants for sizing
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingStatus.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: SizingStatus.java,v 1.3 2003/05/26 13:18:20 cziegeler Exp $
  */
 public final class SizingStatus {
 
-    public final static int STATUS_MINIMIZED = 0;
-    public final static int STATUS_MAXIMIZED = 1;
+    public final static Integer STATUS_MINIMIZED = new Integer(0);
+    public final static Integer STATUS_MAXIMIZED = new Integer(1);
 
-    protected int status;
-    
-    public SizingStatus() {
-        this.status = STATUS_MAXIMIZED;
-    }
-    
-    /**
-     * Returns the status.
-     * @return int
-     */
-    public int getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the status.
-     * @param status The status to set
-     */
-    public void setStatus(int status) {
-        this.status = status;
-    }
-    
 }

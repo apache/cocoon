@@ -51,41 +51,36 @@
 package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.status.SizingStatus;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * This class realizes a link event created by the EventLinkTransformer.
+ *  
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SizingStatusEvent.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: CopletLinkEvent.java,v 1.1 2003/05/26 13:18:19 cziegeler Exp $
  */
-public final class SizingStatusEvent 
-    extends CopletStatusEvent {
-
-    public static final int WINDOW_MINIMIZING  = 0;
-    public static final int WINDOW_MAXIMIZING  = 1;
-
-    // FIXME Do we want configurable parameter names?
-    public static String URI_PARAMETER = "sizing-event";
+public class CopletLinkEvent
+extends AbstractActionEvent
+implements CopletInstanceEvent {
     
-    private int action;
+    /**
+     * The link to be handled by this event.
+     */
+    protected String link;
     
-    private SizingStatus status;
-    
-    public SizingStatusEvent(CopletInstanceData target, 
-                              int action, 
-                              SizingStatus status) {
-        this.coplet = target;
-        this.action = action;
-        this.status = status;
-    }
-
-    public int getAction() {
-        return this.action;
+    /**
+     * Creates a new LinkEvent.
+     */
+    public CopletLinkEvent(CopletInstanceData target, String link) {
+        super(target);
+        this.link = link;
     }
     
-    public SizingStatus getStatus() {
-        return this.status;
+    /**
+     * Gets this event's link.
+     */
+    public String getLink() {
+        return this.link;
     }
 }
