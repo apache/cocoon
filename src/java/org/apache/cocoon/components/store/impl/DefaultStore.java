@@ -76,7 +76,7 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.5 2003/08/12 15:50:40 vgritsenko Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.6 2003/08/12 16:01:01 vgritsenko Exp $
  */
 public class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
@@ -194,8 +194,6 @@ public class DefaultStore extends AbstractJispFilesystemStore
             getLogger().debug("Disposing");
 
             if (super.m_Index != null) {
-                System.out.println("-------------- DISPOSING --------------");
-                super.m_Index.dumpTree(System.out);
                 super.m_Index.close();
             }
 
