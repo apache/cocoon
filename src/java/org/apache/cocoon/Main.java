@@ -87,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.10 2003/07/19 12:40:44 joerg Exp $
+ * @version CVS $Id: Main.java,v 1.11 2003/07/21 09:37:40 jefft Exp $
  */
 public class Main {
 
@@ -379,7 +379,9 @@ public class Main {
 
         long duration = System.currentTimeMillis() - startTimeMillis;
         System.out.println("Total time: " + (duration / 60000) + " minutes " + (duration % 60000)/1000 + " seconds");
-        System.exit(0);
+
+        int exitCode = (brokenLinks.size() == 0 ? 0 : 1);
+        System.exit(exitCode);
     }
 
     private static boolean yesno(String in) {
@@ -692,6 +694,7 @@ public class Main {
         }
 
         public void brokenLinkFound(String uri, String message) {
+            this.print("X [0] "+uri+"\tBROKEN: "+message);
             brokenLinks.add(uri + "\t" + message);
         }
 
@@ -739,21 +742,9 @@ public class Main {
                 this.print("Could not create broken link file: " + brokenLinkReportFile);
             }
         }
+
         private void print(String message) {
-            int screenWidth = 67;
-            int messageWidth = screenWidth - 6;
-
-            int messageLength = message.length(), currentStart = -messageWidth, currentEnd = 0;
-            do {
-                currentStart += messageWidth;
-                currentEnd   += messageWidth;
-
-                if (currentEnd>messageLength) {
-                    currentEnd=messageLength;
-                }
-
-                System.out.println(message.substring(currentStart, currentEnd));
-            } while(currentEnd < messageLength);
+            System.out.println(message);
         }
     }
 }
