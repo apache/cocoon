@@ -72,10 +72,10 @@ public class Invoker {
                 TextEvent text = (TextEvent) ev;
                 Iterator iter = text.getSubstitutions().iterator();
                 while (iter.hasNext()) {
-                    Object subst = iter.next();
+                    Subst subst = (Subst)iter.next();
                     char[] chars;
-                    if (subst instanceof char[]) {
-                        chars = (char[]) subst;
+                    if (subst instanceof Literal) {
+                        chars = ((Literal)subst).getCharArray();
                     } else {
                         JXTExpression expr = (JXTExpression) subst;
                         try {
@@ -707,8 +707,8 @@ public class Invoker {
         while (iter.hasNext()) {
             Object subst = iter.next();
             char[] chars;
-            if (subst instanceof char[]) {
-                chars = (char[]) subst;
+            if (subst instanceof Literal) {
+                chars = ((Literal) subst).getCharArray();
             } else {
                 JXTExpression expr = (JXTExpression) subst;
                 try {

@@ -15,19 +15,18 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
-import java.util.List;
-
+import org.apache.cocoon.template.jxtg.expression.Substitutions;
 
 public class SubstituteAttribute extends AttributeEvent {
     public SubstituteAttribute(String namespaceURI, String localName,
-            String raw, String type, List substs) {
+            String raw, String type, Substitutions substs) {
         super(namespaceURI, localName, raw, type);
         this.substitutions = substs;
     }
 
-    public List getSubstitutions() {
+    public Substitutions getSubstitutions() {
         return substitutions;
     }
 
-    private final List substitutions;
+    private final Substitutions substitutions;
 }

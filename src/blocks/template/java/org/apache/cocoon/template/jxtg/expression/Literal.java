@@ -15,14 +15,27 @@
  */
 package org.apache.cocoon.template.jxtg.expression;
 
+/*
+  From efficiency reasons it might be better to split this class in
+  two, one that represent attribute content that are strings and one
+  for Character content that are handled as char arrays. Here the
+  content is stored as a char array as there in most cases will be
+  much more content in elements than in attributes, so it is better to
+  avoid copying there. 
+*/
+
 public class Literal extends Subst {
     public Literal(String val) {
-        this.value = val;
+        this.value = val.toCharArray();
     }
 
     public String getValue() {
+        return new String(this.value);
+    }
+
+    public char[] getCharArray() {
         return value;
     }
 
-    private final String value;
+    private final char[] value;
 }

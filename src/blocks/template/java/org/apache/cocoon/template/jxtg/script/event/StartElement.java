@@ -15,18 +15,13 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
-import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.expression.Literal;
+import org.apache.cocoon.template.jxtg.expression.Substitutions;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class StartElement extends Event {
@@ -37,7 +32,6 @@ public class StartElement extends Event {
         this.localName = localName;
         this.raw = raw;
         this.qname = "{" + namespaceURI + "}" + localName;
-        StringBuffer buf = new StringBuffer();
         int len = attrs.getLength();
         for (int i = 0; i < len; i++) {
             String uri = attrs.getURI(i);
@@ -45,90 +39,12 @@ public class StartElement extends Event {
             String qname = attrs.getQName(i);
             String type = attrs.getType(i);
             String value = attrs.getValue(i);
-            StringReader in = new StringReader(value);
-            int ch;
-            buf.setLength(0);
-            boolean inExpr = false;
-            List substEvents = new LinkedList();
-            boolean xpath = false;
-            try {
-                top: while ((ch = in.read()) != -1) {
-                    char c = (char) ch;
-                    processChar: while (true) {
-                        if (inExpr) {
-                            if (c == '\\') {
-                                ch = in.read();
-                                buf.append(ch == -1 ? '\\' : (char) ch);
-                            } else if (c == '}') {
-                                String str = buf.toString();
-                                JXTExpression compiledExpression;
-                                try {
-                                    compiledExpression = JXTExpression.compile(str,
-                                            xpath);
-                                } catch (Exception exc) {
-                                    throw new SAXParseException(exc
-                                            .getMessage(), location, exc);
-                                } catch (Error err) {
-                                    throw new SAXParseException(err
-                                            .getMessage(), location,
-                                            new ErrorHolder(err));
-                                }
-                                substEvents.add(compiledExpression);
-                                buf.setLength(0);
-                                inExpr = false;
-                            } else {
-                                buf.append(c);
-                            }
-                        } else if (c == '$' || c == '#') {
-                            ch = in.read();
-                            if (ch == '{') {
-                                if (buf.length() > 0) {
-                                    substEvents
-                                            .add(new Literal(buf.toString()));
-                                    buf.setLength(0);
-                                }
-                                inExpr = true;
-                                xpath = c == '#';
-                                continue top;
-                            }
-                            buf.append(c);
-                            if (ch != -1) {
-                                c = (char) ch;
-                                continue processChar;
-                            }
-                        } else {
-                            buf.append(c);
-                        }
-                        break;
-                    }
-                }
-            } catch (IOException ignored) {
-                ignored.printStackTrace();
-            }
-            if (inExpr) {
-                // unclosed #{} or ${}
-                String msg = "Unterminated " + (xpath ? "#" : "$") + "{";
-                throw new SAXParseException(msg, location, null);
-            }
-            if (buf.length() > 0) {
-                if (substEvents.size() == 0) {
-                    getAttributeEvents().add(
-                            new CopyAttribute(uri, local, qname, type, value));
-                } else {
-                    substEvents.add(new Literal(buf.toString()));
-                    getAttributeEvents().add(
-                            new SubstituteAttribute(uri, local, qname, type,
-                                    substEvents));
-                }
+            Substitutions substitutions = new Substitutions(getLocation(), value);
+            if (substitutions.hasSubstitutions()) {
+                getAttributeEvents().add(new SubstituteAttribute(uri, local, qname, type,
+                                                                 substitutions));
             } else {
-                if (substEvents.size() > 0) {
-                    getAttributeEvents().add(
-                            new SubstituteAttribute(uri, local, qname, type,
-                                    substEvents));
-                } else {
-                    getAttributeEvents().add(
-                            new CopyAttribute(uri, local, qname, type, ""));
-                }
+                getAttributeEvents().add(new CopyAttribute(uri, local, qname, type, value));
             }
         }
         this.attributes = new AttributesImpl(attrs);
