@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.9 2000-03-04 02:36:22 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.10 2000-04-08 00:54:58 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-03-04 02:36:22 $
+ * @version $Revision: 1.10 $ $Date: 2000-04-08 00:54:58 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -98,9 +98,11 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
 
         Hashtable params = new Hashtable();
         Enumeration enum = request.getParameterNames();
-        while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
-            params.put(name, request.getParameter(name));
+        if (enum != null) {
+            while (enum.hasMoreElements()) {
+                String name = (String) enum.nextElement();
+                params.put(name, request.getParameter(name));
+            }
         }
 
         try {
