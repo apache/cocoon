@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.74 2000-05-16 20:03:01 balld Exp $
+  $Id: changes.xml,v 1.75 2000-05-18 21:43:42 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,8 +16,16 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   fixed xpath position() problem that caused the slideshow example to behave strangely. Weird.
+  </action>
+  <action dev="SM" type="fix" due-to="Kevin Burton" due-to-email="burton@relativity.yi.org">
+   fixed a problem with memory store sweeping idle time declared as seconds
+   and used as milliseconds which caused heavy CPU usage for undetectable
+   misconfiguration.
+  </action>
   <action dev="DB" type="fix">
-  	fixed bug in SQL taglib when doc-element was missing
+   fixed bug in SQL taglib when doc-element was missing
   </action>
   <action dev="DB" type="fix" due-to="Giacomo Pati" due-to-email="Giacomo.Pati@pwr.ch">
    fixed bug in SQL taglib's count rows query
