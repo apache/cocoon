@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-16 16:16:56 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-21 09:05:41 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -173,7 +173,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
             log.error("Error compiling sitemap", e);
             this.exception = e;
 		} catch (Throwable t) {
-			log.error("Error compiling sitemap, caught " + t.getClass().getName() + ": " + t.getMessage());
+			log.error("Error compiling sitemap", t);
         } finally {
             this.regeneration = null;
             this.environment = null;
