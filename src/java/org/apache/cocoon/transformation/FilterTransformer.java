@@ -1,36 +1,36 @@
 /*
-
+ 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
-
+ 
  Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
-
+ 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
-
+ 
  1. Redistributions of  source code must  retain the above copyright  notice,
     this list of conditions and the following disclaimer.
-
+ 
  2. Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-
+ 
  3. The end-user documentation included with the redistribution, if any, must
     include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
-
+ 
  4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
-
+ 
  5. Products  derived from this software may not  be called "Apache", nor may
     "Apache" appear  in their name,  without prior written permission  of the
     Apache Software Foundation.
-
+ 
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
@@ -41,13 +41,13 @@
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+ 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
-
-*/
+ 
+ */
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -81,12 +81,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: FilterTransformer.java,v 1.3 2003/12/10 18:54:30 huber Exp $
  */
 public class FilterTransformer
 extends AbstractTransformer
 implements CacheableProcessingComponent {
-
+    
     private static final String ELEMENT = "element-name";
     private static final String COUNT = "count";
     private static final String BLOCKNR = "blocknr";
@@ -94,7 +94,7 @@ implements CacheableProcessingComponent {
     private static final String BLOCKID = "id";
     private static final int DEFAULT_COUNT = 10;
     private static final int DEFAULT_BLOCK = 1;
-
+    
     protected int counter;
     protected int count;
     protected int blocknr;
@@ -103,12 +103,12 @@ implements CacheableProcessingComponent {
     protected String parentName;
     protected boolean skip;
     protected boolean foundIt;
-
+    
     /** BEGIN SitemapComponent methods **/
     public void setup(SourceResolver resolver,
-                      Map objectModel,
-                      String source,
-                      Parameters parameters)
+    Map objectModel,
+    String source,
+    Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         this.counter=0;
         this.currentBlocknr=0;
@@ -120,10 +120,10 @@ implements CacheableProcessingComponent {
         this.blocknr = parameters.getParameterAsInteger(BLOCKNR, DEFAULT_BLOCK);
         if (this.elementName == null || this.elementName.equals("") || this.count == 0)  {
             throw new ProcessingException("FilterTransformer: both "+ ELEMENT + " and " +
-                          COUNT + " parameters need to be specified");
+            COUNT + " parameters need to be specified");
         }
     }
-
+    
     /**
      * Generate the unique key.
      * This key must be unique inside the space of this component.
@@ -135,7 +135,7 @@ implements CacheableProcessingComponent {
     public java.io.Serializable getKey() {
         return this.elementName + '<' + this.count + '>' + this.blocknr;
     }
-
+    
     /**
      * Generate the validity object.
      * Before this method can be invoked the generateKey() method
@@ -147,7 +147,7 @@ implements CacheableProcessingComponent {
     public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
-
+    
     /** BEGIN SAX ContentHandler handlers **/
     public void startElement(String uri, String name, String raw, Attributes attributes)
     throws SAXException {
@@ -166,7 +166,12 @@ implements CacheableProcessingComponent {
                 if (this.counter < this.count)  {
                     super.contentHandler.startElement(uri, BLOCK, BLOCK, attr);
                 } else  {
-                    super.contentHandler.endElement(uri, BLOCK, BLOCK);
+                    // fix Bugzilla Bug 13904, check if counter == 1
+                    // in this case there is no startElement( uri, BLOCK, BLOCK)
+                    // written, yet
+                    if (this.counter > 1) {
+                        super.contentHandler.endElement(uri, BLOCK, BLOCK);
+                    }
                     super.contentHandler.startElement(uri, BLOCK, BLOCK, attr);
                 }
             }
@@ -177,7 +182,7 @@ implements CacheableProcessingComponent {
             super.contentHandler.startElement(uri,name,raw,attributes);
         }
     }
-
+    
     public void endElement(String uri,String name,String raw)
     throws SAXException  {
         if (this.foundIt && name.equals(this.parentName)) {
@@ -193,49 +198,49 @@ implements CacheableProcessingComponent {
             super.contentHandler.endElement(uri,name,raw);
         }
     }
-
+    
     public void characters(char c[], int start, int len)
     throws SAXException {
         if (!this.skip)  {
             super.contentHandler.characters(c,start,len);
         }
     }
-
+    
     public void processingInstruction(String target, String data)
     throws SAXException {
         if (!this.skip)  {
             super.contentHandler.processingInstruction(target, data);
         }
     }
-
+    
     public void startEntity(String name)
     throws SAXException {
         if (!this.skip)  {
             super.lexicalHandler.startEntity(name);
         }
     }
-
+    
     public void endEntity(String name)
     throws SAXException {
         if (!this.skip)  {
             super.lexicalHandler.endEntity( name);
         }
     }
-
+    
     public void startCDATA()
     throws SAXException {
         if (!this.skip)  {
             super.lexicalHandler.startCDATA();
         }
     }
-
+    
     public void endCDATA()
     throws SAXException {
         if (!this.skip)  {
             super.lexicalHandler.endCDATA();
         }
     }
-
+    
     public void comment(char ch[], int start, int len)
     throws SAXException {
         if (!this.skip)  {
