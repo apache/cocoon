@@ -319,6 +319,10 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="31564" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
+     XSP - JXPath logicsheet: Allow use relative contexts in &lt;jxpath:for-each&gt;.
+           Add a new tag &lt;jpath:set-lenient lenient="true|false"&gt;
+   </action>
    <action dev="AG" type="update">
      Updated commons-httpclient to 2.0.2
    </action>
