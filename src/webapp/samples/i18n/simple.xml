@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root xmlns:i18n="http://apache.org/cocoon/i18n/2.1" i18n:attr="language" language="language">
+<document xmlns:i18n="http://apache.org/cocoon/i18n/2.1" i18n:attr="language" language="language">
 	<title>
 		<i18n:text>titletext</i18n:text>
 	</title>
@@ -11,7 +11,7 @@
 			<i18n:text i18n:key="doclink"/>
 			<i18n:param>
 				<link>
-					<href>http://cocoon.apache.org/userdocs/transformers/i18n-transformer.html</href>
+					<href>http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html</href>
 					<title>Cocoon 2 Web Site</title>
 				</link>
 			</i18n:param>
@@ -63,4 +63,4 @@
 			<i18n:text>copyright</i18n:text>
 		</copyright>
 	</bottom>
-</root>
+</document>
