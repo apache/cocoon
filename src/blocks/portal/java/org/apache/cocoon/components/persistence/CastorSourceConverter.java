@@ -92,7 +92,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.2 2003/10/20 13:36:41 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.3 2003/12/10 17:02:04 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -122,7 +122,7 @@ public class CastorSourceConverter
         Writer writer = new OutputStreamWriter(stream);
 		try {
 			Marshaller marshaller = new Marshaller( writer );
-			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(parameters.get("profiletype"))));
+			marshaller.setMapping((Mapping)this.mappings.get(parameters.get("profiletype")));
 			marshaller.marshal(object);
 			writer.close();
 		} catch (MappingException e) {
