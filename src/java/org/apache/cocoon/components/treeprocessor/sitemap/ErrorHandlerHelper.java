@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceable {
 
@@ -46,7 +46,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceabl
         this.manager = manager;
     }
 
-    public boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env)
+    public boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env, InvokeContext originalContext)
     throws Exception {
 		Map objectModel = env.getObjectModel();
   	
@@ -81,6 +81,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceabl
 			errorContext = new InvokeContext();
 			errorContext.enableLogging(getLogger());
 			errorContext.service(this.manager);
+            errorContext.setRedirector(originalContext.getRedirector());
 			
 			nodeSuccessful = node.invoke(env, errorContext);
         } catch (Exception subEx) {
@@ -94,10 +95,9 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceabl
         }
         
         if (nodeSuccessful) {
-        	return true;
-        } else {
-			throw ex;
+            return true;
         }
+        throw ex;
     }
 }
 
