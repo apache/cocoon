@@ -15,8 +15,12 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: minimal.itext.xml,v 1.4 2004/04/22 12:26:00 vgritsenko Exp $ -->
+<!-- CVS $Id$ -->
+
+<!-- The DTD is not available at this address anymore, this breaks samples, removed for now 
 <!DOCTYPE ITEXT SYSTEM "http://www.lowagie.com/iText/itext.dtd">
+-->
+
 <itext creationdate="Fri May 23 9:30:00 CEST 2003" producer="tcurdt@cocoon.org">
 	<paragraph font="unknown" size="18.0" align="Center">
                 Congratulations!
