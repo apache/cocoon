@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 2000-04-24 20:39:25 $
+ * @version $Revision: 1.3 $ $Date: 2000-04-28 19:18:45 $
  */
 
 public class XSPSQLLibrary {
@@ -79,11 +79,6 @@ public class XSPSQLLibrary {
       String id_attribute_column,
       Integer max_rows,
       Integer skip_rows,
-      String error_element,
-      String error_message_attribute,
-      String error_stacktrace_attribute,
-      String error_message_text,
-      String query_creator_name,
       String count_attribute,
       String query_attribute,
       String skip_rows_attribute,
@@ -104,12 +99,6 @@ public class XSPSQLLibrary {
         boolean create_row_elements = true;
         if (row_element_name.equals("")) {
             create_row_elements = false;
-        }
-        if (max_rows.equals("")) {
-            max_rows = new Integer(-1);
-        }
-        if (skip_rows.equals("")) {
-            skip_rows = new Integer(0);
         }
         boolean create_id_attribute = true;
         if (id_attribute.equals("")) {
@@ -209,7 +198,7 @@ public class XSPSQLLibrary {
                     row_node.appendChild(column_element);
                 }
                 if (create_row_elements) results_node.appendChild(row_node);
-                if (count-skip_rows.intValue() == max_rows.intValue()-1) break;
+                if (max_rows.intValue() != -1 && count-skip_rows.intValue() == max_rows.intValue()-1) break;
                 count++;
             }
             rs.close();

@@ -109,31 +109,6 @@
 			<xsl:with-param name="content" select="sql:skip-rows"/>
 		</xsl:call-template>
 	</xsl:variable>
-	<xsl:variable name="error-element">
-		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:error-element"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="error-message-attribute">
-		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:error-message-attribute"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="error-stacktrace-attribute">
-		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:error-stacktrace-attribute"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="error-message-text">
-		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:error-message-text"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="query-creator-name">
-		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:query-creator-name"/>
-		</xsl:call-template>
-	</xsl:variable>
 	<xsl:variable name="count-attribute">
 		<xsl:call-template name="get-nested-content">
 			<xsl:with-param name="content" select="sql:count-attribute"/>
@@ -171,7 +146,7 @@
 	</xsl:variable>
 	<xsp:logic>
 		{
-		Integer max_rows = new Integer(0);
+		Integer max_rows = new Integer(-1);
 		String max_rows_string = String.valueOf(<xsl:copy-of select="$max-rows"/>);
 		try {
 			max_rows = new Integer(max_rows_string);
@@ -197,11 +172,6 @@
 			String.valueOf(<xsl:copy-of select="$id-attribute-column"/>),
 			max_rows,
 			skip_rows,
-			String.valueOf(<xsl:copy-of select="$error-element"/>),
-			String.valueOf(<xsl:copy-of select="$error-message-attribute"/>),
-			String.valueOf(<xsl:copy-of select="$error-stacktrace-attribute"/>),
-			String.valueOf(<xsl:copy-of select="$error-message-text"/>),
-			String.valueOf(<xsl:copy-of select="$query-creator-name"/>),
 			String.valueOf(<xsl:copy-of select="$count-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$query-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$skip-rows-attribute"/>),
