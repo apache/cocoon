@@ -29,10 +29,10 @@ import javax.xml.parsers.DocumentBuilder;
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-12 14:17:30 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 16:59:47 $
  */
 public class JaxpParser extends AbstractXMLProducer
-implements Parser, ErrorHandler, ThreadSafe {
+implements Parser, ErrorHandler {
 
     final SAXParserFactory factory = SAXParserFactory.newInstance();
     final DocumentBuilderFactory docfactory = DocumentBuilderFactory.newInstance();
@@ -72,7 +72,7 @@ implements Parser, ErrorHandler, ThreadSafe {
      */
     public Document newDocument() {
         DocumentBuilder builder = null;
-        
+
         try {
             builder = this.docfactory.newDocumentBuilder();
         } catch (ParserConfigurationException pce) {
