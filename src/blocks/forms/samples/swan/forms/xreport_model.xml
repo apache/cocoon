@@ -122,78 +122,78 @@
           <fd:label>Type</fd:label>
           <fd:widgets>
 
-            <fd:struct id="column">
+            <fd:group id="column">
               <fd:label>Column</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="field-class"/>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="columns">
+            <fd:group id="columns">
               <fd:label>Columns</fd:label>
               <fd:widgets>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
             <fd:new id="database-class"/>
 
-            <fd:struct id="dialect">
+            <fd:group id="dialect">
               <fd:label>Dialect</fd:label>
               <fd:widgets>
                 <fd:new id="types-class"/>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
             <fd:new id="flow-class"/>
 
-            <fd:struct id="interaction">
+            <fd:group id="interaction">
               <fd:label>Interaction</fd:label>
               <fd:widgets>
                 <fd:new id="label-class"/>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="link">
+            <fd:group id="link">
               <fd:label>link</fd:label>
               <fd:widgets>
                 <fd:new id="title-class"/>
                 <fd:new id="report-id-elem-class"/>
                 <fd:new id="link-parameter-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="links">
+            <fd:group id="links">
               <fd:label>Links</fd:label>
               <fd:widgets>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
             <fd:new id="output-class"/>
 
             <fd:new id="step-parameter-class"/>
 
-            <fd:struct id="sql">
+            <fd:group id="sql">
               <fd:label>Sql</fd:label>
               <fd:widgets>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="step">
+            <fd:group id="step">
               <fd:label>Step</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="subreport">
+            <fd:group id="subreport">
               <fd:label>Subreport</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
@@ -204,28 +204,28 @@
                 <fd:new id="subreport-parameter-class"/>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="subreports">
+            <fd:group id="subreports">
               <fd:label>Subreports</fd:label>
               <fd:widgets>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="title">
+            <fd:group id="title">
               <fd:label>Title</fd:label>
               <fd:widgets>
                 <fd:new id="title-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="type">
+            <fd:group id="type">
               <fd:label>Type</fd:label>
               <fd:widgets>
                 <fd:new id="base-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
           </fd:widgets>
 
@@ -270,12 +270,12 @@
 
     <fd:class id="database-class">
       <fd:widgets>
-        <fd:struct id="database">
+        <fd:group id="database">
           <fd:label>Database</fd:label>
           <fd:widgets>
             <fd:new id="sql-class"/>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 
@@ -422,12 +422,12 @@
 
     <fd:class id="output-class">
       <fd:widgets>
-        <fd:struct id="output">
+        <fd:group id="output">
           <fd:label>Output</fd:label>
           <fd:widgets>
             <fd:new id="database-class"/>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 
@@ -468,12 +468,12 @@
 
     <fd:class id="sql-class">
       <fd:widgets>
-        <fd:struct id="sql">
+        <fd:group id="sql">
           <fd:label>Sql</fd:label>
           <fd:widgets>
             <fd:new id="dialect-class"/>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 
@@ -488,26 +488,26 @@
 
     <fd:class id="step-class">
       <fd:widgets>
-        <fd:struct id="step">
+        <fd:group id="step">
           <fd:label>Step</fd:label>
           <fd:widgets>
             <fd:new id="id-class"/>
             <fd:new id="interaction-class"/>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 
     <fd:class id="step-parameter-class">
       <fd:widgets>
-        <fd:struct id="step-parameter">
+        <fd:group id="step-parameter">
           <fd:label>Parameter</fd:label>
           <fd:widgets>
             <fd:new id="id-class"/>
             <fd:new id="required-class"/>
             <fd:new id="datatype-id-class"/>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 

@@ -18,45 +18,7 @@
   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 
-  <!--
-    CVS $Id$
-  -->
-
-  <style type="text/css">
-    li {
-      list-style-type: none
-    }
-
-    /* The actions buttons, placed on the right */
-    .actions {
-      float: right;
-      padding-top: 0.2em;
-    }
-
-    /* A "section" contains stuff, related actions and substuff */
-    div.section {
-      padding-top: 0.4em;
-      padding-bottom: 0.4em;
-      padding-left: 0.4em;
-      border: 1px dotted black;
-      mmargin-top: 0.4em;
-      margin-bottom: -1px;
-    }
-
-    /* Indent sub-sections (recursively) */
-    div.section div.section {
-      margin-left: 3em;
-      border-right: none;
-    }
-
-    /* Change bg color depending on nesting depth */
-    div.section div.section { background-color: #F0F0F0; }
-    div.section div.section div.section { background-color: #E0E0E0; }
-    div.section div.section div.section div.section { background-color: #D0D0D0; }
-    div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
-  </style>
-
-  <title>Sitemap Editor</title>
+  <title>Swan Cocoon Sitemap Editor</title>
 
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
@@ -149,34 +111,34 @@
           </ft:case>
 
           <ft:case id="call">
-            <ft:struct id="call">
+            <ft:group id="call">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="ocontinuation-class"/>
                     <ft:new id="oresource-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="ocontinuation-class"/>
                     <ft:new id="oresource-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="continuation-class"/>
                     <ft:new id="resource-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="components">
-            <ft:struct id="components">
+            <ft:group id="components">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
                 </ft:when>
@@ -185,11 +147,11 @@
                 <ft:when value="edit">
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="views">
-            <ft:struct id="views">
+            <ft:group id="views">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
                 </ft:when>
@@ -198,11 +160,11 @@
                 <ft:when value="edit">
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="resources">
-            <ft:struct id="resources">
+            <ft:group id="resources">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
                 </ft:when>
@@ -211,11 +173,11 @@
                 <ft:when value="edit">
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="flow">
-            <ft:struct id="flow">
+            <ft:group id="flow">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
                 </ft:when>
@@ -224,111 +186,111 @@
                 <ft:when value="edit">
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="generate">
-            <ft:struct id="generate">
+            <ft:group id="generate">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="osrc-class"/>
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="osrc-class"/>
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="src-class"/>
                     <ft:new id="type-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="match">
-            <ft:struct id="match">
+            <ft:group id="match">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="opattern-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="opattern-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="pattern-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="parameter">
-            <ft:struct id="parameter">
+            <ft:group id="parameter">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="oname-class"/>
                     <ft:new id="ovalue-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="oname-class"/>
                     <ft:new id="ovalue-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="name-class"/>
                     <ft:new id="value-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="pipeline">
-            <ft:struct id="pipeline">
+            <ft:group id="pipeline">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="type-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="pipelines">
-            <ft:struct id="pipelines">
+            <ft:group id="pipelines">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
                   <!-- Nothing -->
@@ -340,109 +302,109 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="read">
-            <ft:struct id="read">
+            <ft:group id="read">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
                     <ft:new id="osrc-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
                     <ft:new id="osrc-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="type-class"/>
                     <ft:new id="src-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="redirect-to">
-            <ft:struct id="redirect-to">
+            <ft:group id="redirect-to">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="ouri-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="ouri-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="uri-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="serialize">
-            <ft:struct id="serialize">
+            <ft:group id="serialize">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="type-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="transform">
-            <ft:struct id="transform">
+            <ft:group id="transform">
               <ft:choose path="../../view-selector">
                 <ft:when value="fold">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
                     <ft:new id="osrc-class"/>
-                  </ft:struct>
+                  </ft:group>
                 </ft:when>
                 <ft:when value="view">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="otype-class"/>
                     <ft:new id="osrc-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
                 <ft:when value="edit">
-                  <ft:struct id="stuff">
+                  <ft:group id="stuff">
                     <ft:new id="type-class"/>
                     <ft:new id="src-class"/>
-                  </ft:struct>
+                  </ft:group>
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
         </ft:union>
@@ -467,26 +429,26 @@
       <ft:class id="view-selector-class">
         <ft:choose path="view-selector">
           <ft:when value="fold">
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/img/view.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/img/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="view">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/img/fold.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/img/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="edit">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/img/fold.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/img/view.gif"/></ft:widget>
           </ft:when>
         </ft:choose>
       </ft:class>
 
       <ft:class id="item-row-class">
         <span class="actions">
-          <ft:widget id="up"><fi:styling type="image" src="resources/move_up.gif"/></ft:widget>
-          <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
-          <ft:widget id="add"><fi:styling type="image" src="resources/new.gif"/></ft:widget>
-          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
+          <ft:widget id="up"><fi:styling type="image" src="resources/img/move_up.gif"/></ft:widget>
+          <ft:widget id="down"><fi:styling type="image" src="resources/img/move_down.gif"/></ft:widget>
+          <ft:widget id="add"><fi:styling type="image" src="resources/img/new.gif"/></ft:widget>
+          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/img/delete.gif"/></ft:widget>
         </span>
         <ft:new id="view-selector-class"/>
         <ft:new id="type-selector-class"/>
@@ -494,7 +456,7 @@
       </ft:class>
 
       <ft:class id="items-class">
-        <ft:widget id="addItem"><fi:styling type="image" src="resources/new_child.gif"/></ft:widget>
+        <ft:widget id="addItem"><fi:styling type="image" src="resources/img/new_child.gif"/></ft:widget>
         <ft:repeater-size id="items"/>
         <ft:repeater-widget id="items">
           <div class="section"><ft:new id="item-row-class"/></div>

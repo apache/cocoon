@@ -187,168 +187,168 @@
           <fd:label>Type</fd:label>
           <fd:widgets>
 
-            <fd:struct id="components">
+            <fd:group id="components">
               <fd:label>Components</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="views">
+            <fd:group id="views">
               <fd:label>Views</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="resources">
+            <fd:group id="resources">
               <fd:label>Resources</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="flow">
+            <fd:group id="flow">
               <fd:label>Flow</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="pipelines">
+            <fd:group id="pipelines">
               <fd:label>Pipelines</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="pipeline">
+            <fd:group id="pipeline">
               <fd:label>Pipeline</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="type-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="match">
+            <fd:group id="match">
               <fd:label>Match</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="pattern-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="generate">
+            <fd:group id="generate">
               <fd:label>Generate</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="type-class"/>
                     <fd:new id="src-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="transform">
+            <fd:group id="transform">
               <fd:label>Transform</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="type-class"/>
                     <fd:new id="src-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="serialize">
+            <fd:group id="serialize">
               <fd:label>Serialize</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="type-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="call">
+            <fd:group id="call">
               <fd:label>Call</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="continuation-class"/>
                     <fd:new id="resource-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="read">
+            <fd:group id="read">
               <fd:label>Read</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="type-class"/>
                     <fd:new id="src-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="redirect-to">
+            <fd:group id="redirect-to">
               <fd:label>Redirect To</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="uri-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="parameter">
+            <fd:group id="parameter">
               <fd:label>Parameter</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="name-class"/>
                     <fd:new id="value-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
           </fd:widgets>
 

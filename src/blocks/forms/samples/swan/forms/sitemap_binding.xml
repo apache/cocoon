@@ -34,13 +34,13 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="call" path=".">
       <fb:insert-node><map:call/>
 </fb:insert-node>
-      <fb:struct id="call" path="map:call">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="call" path="map:call">
+        <fb:group id="stuff" path=".">
           <fb:value id="continuation" path="@continuation"/>
           <fb:value id="resource" path="@resource"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -48,8 +48,8 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="components" path=".">
       <fb:insert-node><map:components/>
 </fb:insert-node>
-      <fb:struct id="components" path="map:components">
-      </fb:struct>
+      <fb:group id="components" path="map:components">
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -57,8 +57,8 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="views" path=".">
       <fb:insert-node><map:views/>
 </fb:insert-node>
-      <fb:struct id="views" path="map:views">
-      </fb:struct>
+      <fb:group id="views" path="map:views">
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -66,8 +66,8 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="resources" path=".">
       <fb:insert-node><map:resources/>
 </fb:insert-node>
-      <fb:struct id="resources" path="map:resources">
-      </fb:struct>
+      <fb:group id="resources" path="map:resources">
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -75,8 +75,8 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="flow" path=".">
       <fb:insert-node><map:flow/>
 </fb:insert-node>
-      <fb:struct id="flow" path="map:flow">
-      </fb:struct>
+      <fb:group id="flow" path="map:flow">
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -84,13 +84,13 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="generate" path=".">
       <fb:insert-node><map:generate/>
 </fb:insert-node>
-      <fb:struct id="generate" path="map:generate">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="generate" path="map:generate">
+        <fb:group id="stuff" path=".">
           <fb:value id="type" path="@type"/>
           <fb:value id="src" path="@src"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -98,12 +98,12 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="match" path=".">
       <fb:insert-node><map:match/>
 </fb:insert-node>
-      <fb:struct id="match" path="map:match">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="match" path="map:match">
+        <fb:group id="stuff" path=".">
           <fb:value id="pattern" path="@pattern"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -111,12 +111,12 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="parameter" path=".">
       <fb:insert-node><map:parameter/>
 </fb:insert-node>
-      <fb:struct id="parameter" path="map:parameter">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="parameter" path="map:parameter">
+        <fb:group id="stuff" path=".">
           <fb:value id="name" path="@name"/>
           <fb:value id="value" path="@value"/>
-        </fb:struct>
-      </fb:struct>
+        </fb:group>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -124,12 +124,12 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="pipeline" path=".">
       <fb:insert-node><map:pipeline/>
 </fb:insert-node>
-      <fb:struct id="pipeline" path="map:pipeline">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="pipeline" path="map:pipeline">
+        <fb:group id="stuff" path=".">
           <fb:value id="type" path="@type"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -137,9 +137,9 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="pipelines" path=".">
       <fb:insert-node><map:pipelines/>
 </fb:insert-node>
-      <fb:struct id="pipelines" path="map:pipelines">
+      <fb:group id="pipelines" path="map:pipelines">
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -147,16 +147,16 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="read" path=".">
       <fb:insert-node><map:read/>
 </fb:insert-node>
-      <fb:struct id="read" path="map:read">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="read" path="map:read">
+        <fb:group id="stuff" path=".">
           <fb:new id="type-class"/>
           <fb:new id="src-class"/>
           <fb:insert-node>
   <fd:widgets/>
   </fb:insert-node>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -164,15 +164,15 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="redirect-to" path=".">
       <fb:insert-node><map:redirect-to/>
 </fb:insert-node>
-      <fb:struct id="redirect-to" path="map:redirect-to">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="redirect-to" path="map:redirect-to">
+        <fb:group id="stuff" path=".">
           <fb:new id="uri-class"/>
           <fb:insert-node>
   <fd:widgets/>
   </fb:insert-node>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -180,12 +180,12 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="serialize" path=".">
       <fb:insert-node><map:serialize/>
 </fb:insert-node>
-      <fb:struct id="serialize" path="map:serialize">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="serialize" path="map:serialize">
+        <fb:group id="stuff" path=".">
           <fb:value id="type" path="@type"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -193,13 +193,13 @@ Binding for example CForms sitemap editor GUI.
     <fb:case id="transform" path=".">
       <fb:insert-node><map:transform/>
 </fb:insert-node>
-      <fb:struct id="transform" path="map:transform">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="transform" path="map:transform">
+        <fb:group id="stuff" path=".">
           <fb:value id="type" path="@type"/>
           <fb:value id="src" path="@src"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 

@@ -49,9 +49,9 @@ Binding for example CForms form model GUI.
   </fb:class>
 
   <fb:class id="database-class">
-    <fb:struct id="database" path="database">
+    <fb:group id="database" path="database">
       <fb:new id="sql-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
 
   <fb:class id="datatype-id-class">
@@ -120,9 +120,9 @@ Binding for example CForms form model GUI.
   </fb:class>
 
   <fb:class id="output-class">
-    <fb:struct id="output" path="output">
+    <fb:group id="output" path="output">
       <fb:new id="database-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
 
   <fb:class id="required-class">
@@ -132,9 +132,9 @@ Binding for example CForms form model GUI.
   </fb:class>
 
   <fb:class id="sql-class">
-    <fb:struct id="sql" path="sql">
+    <fb:group id="sql" path="sql">
       <fb:new id="dialect-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
 
   <fb:class id="sql-parameter-class">
@@ -144,20 +144,20 @@ Binding for example CForms form model GUI.
   <fb:class id="step-class">
     <fb:insert-node><step/>
 </fb:insert-node>
-    <fb:struct id="step" path="step">
+    <fb:group id="step" path="step">
       <fb:new id="id-class"/>
       <fb:new id="interaction-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
 
   <fb:class id="step-parameter-class">
     <fb:insert-node><parameter/>
 </fb:insert-node>
-    <fb:struct id="step-parameter" path="parameter">
+    <fb:group id="step-parameter" path="parameter">
       <fb:new id="id-class"/>
       <fb:new id="required-class"/>
       <fb:new id="datatype-id-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
 
   <fb:class id="view-selector-class">
