@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for CForms's FlowModelSelectionList datatype.
- * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.5 2004/04/26 21:29:50 bruno Exp $
  */
 public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
 
@@ -97,8 +97,8 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
         Map flowContextObject = new HashMap();
         flowContextObject.put("beans", beans);
         Request request = new MockRequest();
-        request.setAttribute(FlowHelper.CONTEXT_OBJECT, flowContextObject);
         Map objectModel = new HashMap();
+        FlowHelper.setContextObject(objectModel, flowContextObject);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
@@ -128,8 +128,8 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
         Map flowContextObject = new HashMap();
         flowContextObject.put("beans", beans);
         Request request = new MockRequest();
-        request.setAttribute(FlowHelper.CONTEXT_OBJECT, flowContextObject);
         Map objectModel = new HashMap();
+        FlowHelper.setContextObject(objectModel, flowContextObject);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
