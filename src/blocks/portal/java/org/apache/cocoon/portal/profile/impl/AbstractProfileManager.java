@@ -66,9 +66,9 @@ public abstract class AbstractProfileManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles(String)
      */
-    public void saveUserProfiles() {
+    public void saveUserProfiles(String layoutKey) {
         // overwrite in subclass
     }
 
@@ -142,47 +142,25 @@ public abstract class AbstractProfileManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#setEntryLayout(org.apache.cocoon.portal.layout.Layout)
-     */
-    public void setEntryLayout(Layout object) {
-        String layoutKey = this.getDefaultLayoutKey();
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            if ( object == null ) {
-                service.removeTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-            } else {
-                service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
-            }
-        } catch (ServiceException e) {
-            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getEntryLayout()
-     */
-    public Layout getEntryLayout() {
-        String layoutKey = this.getDefaultLayoutKey();
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            return (Layout)service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-        } catch (ServiceException e) {
-            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         Configuration child = configuration.getChild("default-layout-key");
         // get configured default LayoutKey
         this.defaultLayoutKey = child.getValue("portal");
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#copyProfile(java.lang.String)
+     */
+    public Layout copyProfile(String layoutKey) {
+        throw new RuntimeException("Copy profile is not implemented.");
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#storeProfile(org.apache.cocoon.portal.layout.Layout, java.lang.String)
+     */
+    public void storeProfile(Layout rootLayout, String layoutKey) {
+        throw new RuntimeException("Store profile is not implemented.");
     }
 }

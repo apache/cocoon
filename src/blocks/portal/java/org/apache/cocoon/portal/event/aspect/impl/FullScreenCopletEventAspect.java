@@ -35,14 +35,13 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.6 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FullScreenCopletEventAspect
 	extends AbstractLogEnabled
@@ -110,12 +109,11 @@ public class FullScreenCopletEventAspect
         PortalService portalService = null;
         try {
             portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
-            ProfileManager pm = portalService.getComponentManager().getProfileManager();
-            final Layout old = pm.getEntryLayout();
+            final Layout old = portalService.getEntryLayout(null);
             if ( old != null && old instanceof CopletLayout) {
                 ((CopletLayout)old).getCopletInstanceData().setAspectData("fullScreen", Boolean.FALSE);
             }
-            pm.setEntryLayout( startingLayout );
+            portalService.setEntryLayout( null, startingLayout );
             if ( startingLayout != null && startingLayout instanceof CopletLayout) {
                 ((CopletLayout)startingLayout).getCopletInstanceData().setAspectData("fullScreen", Boolean.TRUE);
             }
@@ -147,6 +145,7 @@ public class FullScreenCopletEventAspect
                 eventManager = (EventManager) this.manager.lookup( EventManager.ROLE );
                 eventManager.getRegister().unsubscribe( this );
             } catch (Exception ignore) {
+                // ignore this here
             } finally {
                 this.manager.release( eventManager );
             }

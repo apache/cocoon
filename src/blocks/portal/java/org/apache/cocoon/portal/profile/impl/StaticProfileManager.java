@@ -66,10 +66,6 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
             if (layoutKey == null) {
-                Layout l = getEntryLayout();
-                if (null != l) {
-                    return l;
-                }
                 layoutKey = getDefaultLayoutKey();
             }
 
@@ -325,13 +321,6 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
      */
     public void unregister(Layout layout) {
-        // nothing to do
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
-     */
-    public void saveUserProfiles() {
         // nothing to do
     }
 
