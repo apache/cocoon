@@ -79,7 +79,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.5 2003/07/09 07:42:22 cziegeler Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.6 2003/08/01 12:45:05 cziegeler Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -125,10 +125,15 @@ public class ParanoidCocoonServlet extends HttpServlet {
         
 		// Always set the context classloader. JAXP uses it to find a ParserFactory,
 		// and thus fails if it's not set to the webapp classloader.
-		Thread.currentThread().setContextClassLoader(this.classloader);
+        final ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.classloader);
         
-		// Inlitialize the actual servlet
-		this.initServlet();
+            // Inlitialize the actual servlet
+            this.initServlet();
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
         
 	}
 	
@@ -242,10 +247,15 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 * Service the request by delegating the call to the real servlet
 	 */
 	public void service(ServletRequest request, ServletResponse response)
-	  throws ServletException, IOException {
+    throws ServletException, IOException {
 
-		Thread.currentThread().setContextClassLoader(this.classloader);
-		this.servlet.service(request, response);
+        final ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+		    Thread.currentThread().setContextClassLoader(this.classloader);
+		    this.servlet.service(request, response);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);    
+        }
 	}
     
 	/**
