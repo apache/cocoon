@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.9 2003/03/27 17:55:45 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.10 2003/04/25 08:35:02 stephan Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -75,23 +75,6 @@
   <group name="Flowscript">
    <sample name="Examples" href="flow/">
     Examples of Cocoon's control flow of Web pages.
-   </sample>
-  </group>
-  
-  <group name="XMLForm: Form Handling and Web Services">
-    <sample name="Documentation" href="xmlform/overview.html">
-    Introduction to Cocoon's form handling framework,
-    which provides W3C XForms based markup, Schematron instance validation,
-    and automated binding to JavaBeans and DOM instances. 
-    Also shows that XMLForm based applications are readily available as Web Services (REST style).  
-   </sample>
-    <sample name="Example" href="xmlform/wizard">
-    Presents a sophisticated form handling demo ...
-    multi-page wizard with two-way navigation.
-   </sample>
-    <sample name="WSDL" href="xmlform/UsageFeedbackService/WSDL">
-	Example WSDL descriptor for the same application, 
-	exposed as a Web Service.     
    </sample>
   </group>
   
