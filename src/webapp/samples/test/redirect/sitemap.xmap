@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:flow language="javascript">
+    <map:script src="flow.js"/>
+  </map:flow>
+
+  <map:pipelines>
+    
+    <map:pipeline internal-only="true">
+    
+      <map:match pattern="read">
+        <map:read src="sitemap.xmap"/>
+      </map:match>
+    
+    </map:pipeline>
+    
+    <map:pipeline>
+      
+      <map:match pattern="redirect-to-from-sitemap">
+        <map:redirect-to uri="explain-test.html"/>
+      </map:match>
+      
+      <map:match pattern="redirect-to-from-flow">
+        <map:call function="redirectTo"/>
+      </map:match>
+      
+      <map:match pattern="send-status">
+        <map:call function="sendStatus"/>
+      </map:match>
+      
+      <map:match pattern="send-page">
+        <map:call function="sendPage"/>
+      </map:match>
+      
+      <map:match pattern="donothing-from-flow">
+        <map:call function="doNothing"/>
+      </map:match>
+      
+      <map:match pattern="donothing-from-sitemap"/>
+      
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
