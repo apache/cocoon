@@ -77,7 +77,7 @@ implements Disposable {
     throws Exception {
 
         Object previousPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
-        env.setAttribute(COCOON_PASS_THROUGH,Boolean.valueOf(passThrough));
+        env.setAttribute(COCOON_PASS_THROUGH,new Boolean(passThrough));
         
         final Map objectModel = env.getObjectModel();
 
