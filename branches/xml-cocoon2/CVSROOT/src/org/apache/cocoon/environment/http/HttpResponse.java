@@ -169,5 +169,11 @@ public class HttpResponse implements HttpServletResponse {
     public Locale getLocale() {
         return this.res.getLocale();
     }
+
+    public void resetBuffer() {
+        //FIXME(DIMS): Uncomment the next line when we
+        //             switch to Servlet 2.3
+        //this.res.resetBuffer();
+    }
 }
 
