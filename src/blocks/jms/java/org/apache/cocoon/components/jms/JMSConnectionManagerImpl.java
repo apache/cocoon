@@ -251,7 +251,7 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
         private final String m_connectionFactory;
         private final String m_username;
         private final String m_password;
-        private Properties m_jndiProperties;
+        private Properties m_jndiProperties = new Properties();
 
         private ConnectionConfiguration(String name, Parameters parameters, int type) 
         throws ConfigurationException {
@@ -265,13 +265,9 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
                 String[] names = parameters.getNames();
                 for (int i = 0; i < names.length; i++) {
                     if (names[i].startsWith(JNDI_PROPERTY_PREFIX)) {
-                        if (m_jndiProperties == null) {
-                            m_jndiProperties = new Properties();
-                        }
                         m_jndiProperties.put(names[i], parameters.getParameter(names[i]));
                     }
                 }
-                
             }
             catch (ParameterException e) {
                 throw new ConfigurationException(e.getLocalizedMessage());
