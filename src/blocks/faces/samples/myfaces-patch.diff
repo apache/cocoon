@@ -73,26 +73,3 @@ diff -u -u -r1.28 JspViewHandlerImpl.java
      }
  
  }
-Index: src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java
-===================================================================
-RCS file: /cvsroot/myfaces/myfaces/src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java,v
-retrieving revision 1.40
-diff -u -u -r1.40 LifecycleImpl.java
---- src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java	25 Aug 2004 13:54:02 -0000	1.40
-+++ src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java	16 Sep 2004 18:57:15 -0000
-@@ -316,6 +316,7 @@
-                                    log, "RequestServletPath is null, cannot determine viewId of current page.");
- 
-             //TODO: JSF Spec 2.2.1 - what do they mean by "if the default ViewHandler implementation is used..." ?
-+            /*
-             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
-             DebugUtils.assertError(suffix.charAt(0) == '.',
-@@ -330,6 +331,7 @@
-             {
-                 viewId = viewId.substring(0, dot) + suffix;
-             }
-+            */
-         }
- 
-         return viewId;
