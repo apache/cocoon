@@ -70,21 +70,6 @@
   <!-- Create docs -->
   <target name="docs" depends="prepare-docs, validate-xdocs, docs_done" unless="docs.notrequired" description="Builds the documentation">
     <mkdir dir="${build.docs}"/>
-<!--
-    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
-      <arg value="-c."/>
-      <arg value="-d../docs"/>
-      <arg value="-w../temp/docs"/>
-      <arg value="-b../brokenlinks.txt"/>
-      <arg value="-k./logkit.xconf"/>
-      <arg value="-u${build.docs.loglevel}"/>
-      <arg value="-V"/>
-      <arg value="index.html"/>
-      <classpath>
-        <path refid="documentation.classpath"/>
-      </classpath>
-    </java>
--->    
 
     <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
       <arg value="-u${build.docs.loglevel}"/>
@@ -94,7 +79,6 @@
         <path refid="documentation.classpath"/>
       </classpath>
     </java>
-
   </target>
 
   <!-- Prepares the printer-docs -->
