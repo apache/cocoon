@@ -62,7 +62,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
@@ -77,13 +76,8 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.LockableSource;
-import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.VersionableSource;
-import org.apache.cocoon.components.source.helpers.GroupSourcePermission;
-import org.apache.cocoon.components.source.helpers.PrincipalSourcePermission;
-import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourceLock;
-import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.MoveableSource;
@@ -110,9 +104,7 @@ import org.apache.slide.lock.Lock;
 import org.apache.slide.lock.NodeLock;
 import org.apache.slide.macro.Macro;
 import org.apache.slide.security.AccessDeniedException;
-import org.apache.slide.security.NodePermission;
 import org.apache.slide.security.Security;
-import org.apache.slide.structure.GroupNode;
 import org.apache.slide.structure.ObjectNode;
 import org.apache.slide.structure.ObjectNotFoundException;
 import org.apache.slide.structure.Structure;
@@ -125,11 +117,11 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.12 2003/12/10 17:22:47 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.13 2003/12/14 15:25:02 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
-           MoveableSource, RestrictableSource, LockableSource, InspectableSource, 
+           MoveableSource, LockableSource, InspectableSource, 
            VersionableSource {
 
     /* framework objects */
@@ -152,15 +144,14 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     private String m_scheme = "slide";
     private String m_path;
     private String m_scope;
-    // uri = scope + path;
     private String m_uri;
     
     private ObjectNode m_node;
     private NodeRevisionNumber m_version;
     private NodeRevisionDescriptors m_descriptors;
     private NodeRevisionDescriptor m_descriptor;
-
-    private SourceCredential m_credential;
+    
+    private String m_principal;
     private SourceValidity m_validity;
 
     private SlideSourceOutputStream m_outputStream;
@@ -181,13 +172,13 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                        String scheme, 
                        String scope,
                        String path,
-                       SourceCredential sourcecredential, 
+                       String principal, 
                        String version) {
 
         m_nat = nat;
         m_scheme = scheme;
-        m_path = path;
         m_scope = scope;
+        m_path = path;
         if (path.equals("/")) {
             m_uri = scope;
         }
@@ -197,7 +188,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             m_uri = scope + path;
         }
-        m_credential = sourcecredential;
+        m_principal = principal;
         if (version != null) {
             m_version = new NodeRevisionNumber(version);
         }
@@ -227,7 +218,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
     public void initialize() throws SourceException {
         
-        CredentialsToken credentials = new CredentialsToken(m_credential.getPrincipal());
+        CredentialsToken credentials = new CredentialsToken(m_principal);
         m_slideToken = new SlideTokenImpl(credentials);
         
         m_config = m_nat.getNamespaceConfig();
@@ -271,16 +262,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         catch (SlideException e) {
             throw new SourceException("Failure during source initialization.",e);
         }
-//        catch (ObjectLockedException e) {
-//            throw new SourceException("Object is locked.",e);
-//        } 
-//        catch (LinkedObjectNotFoundException e) {
-//            throw new SourceException("Linked object not found.",e);
-//        } 
-//        catch (ServiceAccessException e) {
-//            throw new SourceException("Low level service access exception.",e);
-//        }
-
     }
 
     /**
@@ -308,7 +289,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @return System identifier for the source.
      */
     public String getURI() {
-        return m_scheme + "://" + m_credential.getPrincipal() + "@" + m_nat.getName() + m_path;
+        return m_scheme + "://" + m_principal + "@" + m_nat.getName() + m_path;
     }
 
     /**
@@ -499,7 +480,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     private Source getChildByPath(String path) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_credential,null);
+        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null);
         child.enableLogging(getLogger());
         child.contextualize(m_context);
         child.service(m_manager);
@@ -549,7 +530,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             parentPath = m_path.substring(0,index);
         }
-        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_credential,null);
+        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null);
         parent.enableLogging(getLogger());
         parent.contextualize(m_context);
         parent.service(m_manager);
@@ -624,7 +605,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                 }
 
             } catch (ObjectNotFoundException e) {
-
+                
                 // Todo : Check to see if parent exists
                 SubjectNode subject = new SubjectNode();
 
@@ -821,19 +802,16 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      *
      * @throws SourceException If an exception occurs during this operation
      */
-    public void setSourceProperty(SourceProperty sourceproperty)
+    public void setSourceProperty(SourceProperty property)
       throws SourceException {
-        getLogger().debug("Set source property");
         try {
-            m_descriptor.setProperty(sourceproperty.getName(),
-                                           sourceproperty.getNamespace(),
-                                           sourceproperty.getValueAsString());
-
-            // Last modification date
+            m_descriptor.setProperty(property.getName(),
+                                     property.getNamespace(),
+                                     property.getValueAsString());
             m_descriptor.setLastModified(new Date());
 
             m_nat.begin();
-            m_content.store(m_slideToken,m_uri,m_descriptor, null);
+            m_content.store(m_slideToken,m_uri,m_descriptor,null);
             m_nat.commit();
         } catch (Exception se) {
             try {
@@ -913,714 +891,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             throw new SourceException("Could not remove property", se);
         }
     }
-
-    // ---------------------------------------------------- RestrictableSource
-    
-    /**
-     * Get the current credential for the source
-     *
-     * @return Return the current used credential;
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public SourceCredential getSourceCredential() throws SourceException {
-        return m_credential;
-    }
-
-    /**
-     * Set the credential for the source
-     *
-     * @param sourcecredential The credential, which should be used.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public void setSourceCredential(SourceCredential credential) throws SourceException {
-        
-        if (credential == null 
-            || credential.getPrincipal() == null 
-            || credential.getPrincipal().length() <= 0) {
-            return;
-        }
-        m_credential = credential;
-        m_slideToken = new SlideTokenImpl(new CredentialsToken(m_credential.getPrincipal()));
-    }
-
-    /**
-     * Add a permission to this source
-     *
-     * @param sourcepermission Permission, which should be set
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void addSourcePermission(SourcePermission permission) throws SourceException {
-
-        String subject = null;
-
-        if (permission instanceof PrincipalSourcePermission) {
-            subject = m_config.getUsersPath()+"/"+
-                      ((PrincipalSourcePermission) permission).getPrincipal();
-
-            // Test if principal exists
-            try {
-                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
-                
-                if (!(objectnode instanceof SubjectNode)) {
-                    throw new SourceException("Principal '"+
-                                              ((PrincipalSourcePermission) permission).getPrincipal()+
-                                              "' doesn't exists");
-                }
-            } catch (SlideException se) {
-                throw new SourceException("Could not retrieve object for principal '"+
-                                          ((PrincipalSourcePermission) permission).getPrincipal()+
-                                          "'", se);
-            }
-
-        } else if (permission instanceof GroupSourcePermission) {
-            subject = m_config.getUsersPath()+"/"+((GroupSourcePermission) permission).getGroup();
-
-            // Test if group exists
-            try {
-                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
-
-                if (!(objectnode instanceof GroupNode)) {
-                    throw new SourceException("Group '"+
-                                              ((GroupSourcePermission) permission).getGroup()+
-                                              "' doesn't exists");
-                }
-            } catch (SlideException se) {
-                throw new SourceException("Could not retrieve object for group '"+
-                                          ((GroupSourcePermission) permission).getGroup()+
-                                          "'", se);
-            }
-
-            subject = "+"+subject; // Additional '+' to expand the group
-        } else {
-            throw new SourceException("Does't support category of permission");
-        }
-
-        boolean negative = permission.isNegative();
-        boolean inheritable = permission.isInheritable();
-
-        if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
-            addPermission(subject,"/",negative,inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
-            addPermission(subject, 
-                          m_config.getReadObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject, 
-                          m_config.getReadLocksAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getReadRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getReadRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
-            addPermission(subject, 
-                          m_config.getReadObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
-            addPermission(subject, 
-                          m_config.getReadLocksAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
-            addPermission(subject,
-                          m_config.getReadRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
-            addPermission(subject,
-                          m_config.getReadRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
-            addPermission(subject, 
-                          m_config.getCreateObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject, 
-                          m_config.getRemoveObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject, 
-                          m_config.getLockObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getCreateRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getModifyRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getRemoveRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getCreateRevisionContentAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getModifyRevisionContentAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getRemoveRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
-            addPermission(subject, 
-                          m_config.getCreateObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
-            addPermission(subject, 
-                          m_config.getRemoveObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
-            addPermission(subject, 
-                          m_config.getLockObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
-            addPermission(subject,
-                          m_config.getCreateRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
-            addPermission(subject,
-                          m_config.getModifyRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
-            addPermission(subject,
-                          m_config.getRemoveRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
-            addPermission(subject,
-                          m_config.getCreateRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
-            addPermission(subject,
-                          m_config.getModifyRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
-            addPermission(subject,
-                          m_config.getRemoveRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
-            addPermission(subject,
-                          m_config.getReadPermissionsAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
-            addPermission(subject,
-                          m_config.getGrantPermissionAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          m_config.getRevokePermissionAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
-            addPermission(subject,
-                          m_config.getGrantPermissionAction().getUri(),
-                          negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
-            addPermission(subject,
-                          m_config.getRevokePermissionAction().getUri(),
-                          negative, inheritable);
-        }
-    }
-
-    /**
-     * Add permission to the list of permissions.
-     *
-     * @param subject Subject of the permission.
-     * @param action Action for the subject.
-     * @param negative If the permission, should be allowed or denied.
-     * @param inheritable If the permission is inheritable.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    private void addPermission(String subject, String action,
-                               boolean negative,
-                               boolean inheritable) throws SourceException {
-        try {
-            NodePermission permission = new NodePermission(
-                m_uri,subject,action,inheritable,negative);
-            m_nat.begin();
-            m_security.grantPermission(m_slideToken, permission);
-            m_descriptor.setLastModified(new Date());
-            m_content.store(m_slideToken, m_uri,m_descriptor,null);
-            m_nat.commit(); 
-        } catch (Exception se) {
-            try {
-                m_nat.rollback();
-            } catch (Exception rbe) {
-                getLogger().error("Rollback failed for granting permission", rbe);
-            }   
-            throw new SourceException("Couldn't grant permission", se);
-        }
-    }
-
-    /**
-     * Remove a permission from this source
-     *
-     * @param sourcepermission Permission, which should be removed
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void removeSourcePermission(SourcePermission permission) throws SourceException {
-
-        String subject = null;
-
-        if (permission instanceof PrincipalSourcePermission) {
-            subject = m_config.getUsersPath()+"/"+
-                     ((PrincipalSourcePermission) permission).getPrincipal();
-
-            // Test if principal exists
-            try {
-                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
-
-                if (!(objectnode instanceof SubjectNode)) {
-                    throw new SourceException("Principal '"+
-                                              ((PrincipalSourcePermission) permission).getPrincipal()+
-                                              "' doesn't exists");
-                }
-            } catch (SlideException se) {
-                throw new SourceException("Could not retrieve object for principal '"+
-                                          ((PrincipalSourcePermission) permission).getPrincipal()+
-                                          "'", se);
-            }
-
-        } else if (permission instanceof GroupSourcePermission) {
-            subject = m_config.getUsersPath()+"/"+
-                      ((GroupSourcePermission) permission).getGroup();
-
-            // Test if group exists
-            try {
-                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
-
-                if ( !(objectnode instanceof GroupNode)) {
-                    throw new SourceException("Group '"+
-                                              ((GroupSourcePermission) permission).getGroup()+
-                                              "' doesn't exists");
-                }
-            } catch (SlideException se) {
-                throw new SourceException("Could not retrieve object for group '"+
-                                          ((GroupSourcePermission) permission).getGroup()+
-                                          "'", se);
-            }
-
-            subject = "+"+subject; // Additional '+' to expand the group
-        } else {
-            throw new SourceException("Does't support category of permission");
-        }
-
-        boolean negative = permission.isNegative();
-        boolean inheritable = permission.isInheritable();
-
-        if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
-            removePermission(subject, "/", negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
-            removePermission(subject, m_config.getReadObjectAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject, m_config.getReadLocksAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getReadRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getReadRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
-            removePermission(subject, m_config.getReadObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
-            removePermission(subject, m_config.getReadLocksAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
-            removePermission(subject,
-                             m_config.getReadRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
-            removePermission(subject,
-                             m_config.getReadRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
-            removePermission(subject,
-                             m_config.getCreateObjectAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getRemoveObjectAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject, m_config.getLockObjectAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getCreateRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getModifyRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getRemoveRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getCreateRevisionContentAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getModifyRevisionContentAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getRemoveRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
-            removePermission(subject,
-                             m_config.getCreateObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
-            removePermission(subject,
-                             m_config.getRemoveObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
-            removePermission(subject, m_config.getLockObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
-            removePermission(subject,
-                             m_config.getCreateRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
-            removePermission(subject,
-                             m_config.getModifyRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
-            removePermission(subject,
-                             m_config.getRemoveRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
-            removePermission(subject,
-                             m_config.getCreateRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
-            removePermission(subject,
-                             m_config.getModifyRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
-            removePermission(subject,
-                             m_config.getRemoveRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
-            removePermission(subject,
-                             m_config.getReadPermissionsAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
-            removePermission(subject,
-                             m_config.getGrantPermissionAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             m_config.getRevokePermissionAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
-            removePermission(subject,
-                             m_config.getGrantPermissionAction().getUri(),
-                             negative, inheritable);
-        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
-            removePermission(subject,
-                             m_config.getRevokePermissionAction().getUri(),
-                             negative, inheritable);
-        }
-    }
-
-    /**
-     * Remove a permission from the list of permissions.
-     *
-     * @param subject Subject of the permission.
-     * @param action Action for the subject.
-     * @param negative If the permission, should be allowed or denied.
-     * @param inheritable If the permission is inheritable.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    private void removePermission(String subject, String action,
-                                  boolean negative,
-                                  boolean inheritable)
-                                    throws SourceException {
-        try {
-            NodePermission permission = new NodePermission(m_uri, subject, action,
-                                                       inheritable, negative);
-
-            m_nat.begin();
-            this.m_security.revokePermission(this.m_slideToken, permission);
-
-            // Last modification date
-            m_descriptor.setLastModified(new Date());
-
-            m_content.store(m_slideToken, m_uri,
-                          m_descriptor, null);
-            m_nat.commit();
-        } catch (Exception se) {
-            try {
-                m_nat.rollback();
-            } catch (Exception rbe) {
-                getLogger().error("Rollback failed for removing permission", rbe);
-            }
-            throw new SourceException("Couldn't remove permission", se);
-        }
-    }
-
-    /**
-     * Returns a list of the existing permissions.
-     * Based on the implementation of org.apache.slide.webdav.util.PropertyHelper .
-     *
-     * @return Array of SourcePermission
-     *
-     * @throws SourceException If an exception occurs.
-     **/
-    public SourcePermission[] getSourcePermissions() throws SourceException {
-        try {
-
-            ObjectNode current = m_node;
-            m_security.checkCredentials(m_slideToken, current, m_config.getReadPermissionsAction());
-
-            String userspath = m_config.getUsersPath();
-
-            // read
-            String readObjectUri = m_config.getReadObjectAction().getUri();
-            String readRevisionMetadataUri = m_config.getReadRevisionMetadataAction().getUri();
-            String readRevisionContentUri = m_config.getReadRevisionContentAction().getUri();
-
-            // write
-            String createObjectUri = m_config.getCreateObjectAction().getUri();
-            String removeObjectUri = m_config.getRemoveObjectAction().getUri();
-            String lockObjectUri = m_config.getLockObjectAction().getUri();
-            String readLocksUri = m_config.getReadLocksAction().getUri();
-            String createRevisionMetadataUri = m_config.getCreateRevisionMetadataAction().getUri();
-            String modifyRevisionMetadataUri = m_config.getModifyRevisionMetadataAction().getUri();
-            String removeRevisionMetadataUri = m_config.getRemoveRevisionMetadataAction().getUri();
-            String createRevisionContentUri = m_config.getCreateRevisionContentAction().getUri();
-            String modifyRevisionContentUri = m_config.getModifyRevisionContentAction().getUri();
-            String removeRevisionContentUri = m_config.getRemoveRevisionContentAction().getUri();
-
-            // read-acl
-            String readPermissionsUri = m_config.getReadPermissionsAction().getUri();
-
-            // write-acl
-            String grantPermissionUri = m_config.getGrantPermissionAction().getUri();
-            String revokePermissionUri = m_config.getRevokePermissionAction().getUri();
-
-            boolean inheritedPermissions = false;
-            
-            Vector permissions = new Vector();
-            ArrayList sourcepermissions = new ArrayList();
-
-            while (current!=null) {
-                try {
-                    // put all permissions in a list
-                    permissions.clear();
-                    Enumeration aclList = m_security.enumeratePermissions(m_slideToken,current);
-
-                    while (aclList.hasMoreElements()) {
-                        NodePermission permission = (NodePermission) aclList.nextElement();
-
-                        // if we are processing inheritedPermissions (from parent and up)
-                        // then the permission should be inheritable
-                        if (inheritedPermissions &&
-                            !permission.isInheritable()) {
-                            // continue with next permission
-                            continue;
-                        }
-                        permissions.add(permission);
-                    }
-
-                    // start combining and writing the permissions
-                    while (permissions.size()>0) {
-                        NodePermission permission = (NodePermission) permissions.get(0);
-
-                        permissions.remove(0);
-
-                        String principal = permission.getSubjectUri();
-                        boolean negative = permission.isNegative();
-
-                        String action = permission.getActionUri();
-
-                        // read
-                        boolean isReadObject = readObjectUri.startsWith(action);
-                        boolean isReadLocks = readLocksUri.startsWith(action);
-                        boolean isReadRevisionMetadata = readRevisionMetadataUri.startsWith(action);
-                        boolean isReadRevisionContent = readRevisionContentUri.startsWith(action);
-
-                        // write
-                        boolean isCreateObject = createObjectUri.startsWith(action);
-                        boolean isRemoveObject = removeObjectUri.startsWith(action);
-                        boolean isLockObject = lockObjectUri.startsWith(action);
-                        boolean isCreateRevisionMetadata = createRevisionMetadataUri.startsWith(action);
-                        boolean isModifyRevisionMetadata = modifyRevisionMetadataUri.startsWith(action);
-                        boolean isRemoveRevisionMetadata = removeRevisionMetadataUri.startsWith(action);
-                        boolean isCreateRevisionContent = createRevisionContentUri.startsWith(action);
-                        boolean isModifyRevisionContent = modifyRevisionContentUri.startsWith(action);
-                        boolean isRemoveRevisionContent = removeRevisionContentUri.startsWith(action);
-
-                        // read-acl
-                        boolean isReadPermissions = readPermissionsUri.startsWith(action);
-
-                        // write-acl
-                        boolean isGrantPermission = grantPermissionUri.startsWith(action);
-                        boolean isRevokePermission = revokePermissionUri.startsWith(action);
-
-                        // check the other permissions to combine them
-                        // (if they are for the same principal/negative)
-                        for (int i = 0; i<permissions.size(); i++) {
-                            NodePermission otherPermission = (NodePermission) permissions.get(i);
-
-                            if (principal.equals(otherPermission.getSubjectUri()) &&
-                                (negative==otherPermission.isNegative())) {
-                                permissions.remove(i);
-                                i--; // because we removed the current one
-
-                                action = otherPermission.getActionUri();
-
-                                // read
-                                isReadObject |= readObjectUri.startsWith(action);
-                                isReadLocks |= readLocksUri.startsWith(action);
-                                isReadRevisionMetadata |= readRevisionMetadataUri.startsWith(action);
-                                isReadRevisionContent |= readRevisionContentUri.startsWith(action);
-
-                                // write
-                                isCreateObject |= createObjectUri.startsWith(action);
-                                isRemoveObject |= removeObjectUri.startsWith(action);
-                                isLockObject |= lockObjectUri.startsWith(action);
-                                isCreateRevisionMetadata |= createRevisionMetadataUri.startsWith(action);
-                                isModifyRevisionMetadata |= modifyRevisionMetadataUri.startsWith(action);
-                                isRemoveRevisionMetadata |= removeRevisionMetadataUri.startsWith(action);
-                                isCreateRevisionContent |= createRevisionContentUri.startsWith(action);
-                                isModifyRevisionContent |= modifyRevisionContentUri.startsWith(action);
-                                isRemoveRevisionContent |= removeRevisionContentUri.startsWith(action);
-
-                                // read-acl
-                                isReadPermissions |= readPermissionsUri.startsWith(action);
-
-                                // write-acl
-                                isGrantPermission |= grantPermissionUri.startsWith(action);
-                                isRevokePermission |= revokePermissionUri.startsWith(action);
-                            }
-                        }
-
-                        // WebDAV privileges
-                        boolean isRead = isReadObject && isReadLocks &&
-                                         isReadRevisionMetadata &&
-                                         isReadRevisionContent;
-
-                        boolean isWrite = isCreateObject && isRemoveObject &&
-                                          isLockObject &&
-                                          isCreateRevisionMetadata &&
-                                          isModifyRevisionMetadata &&
-                                          isRemoveRevisionMetadata &&
-                                          isCreateRevisionContent &&
-                                          isModifyRevisionContent &&
-                                          isRemoveRevisionContent;
-
-                        boolean isReadAcl = isReadPermissions;
-
-                        boolean isWriteAcl = isGrantPermission &&
-                                             isRevokePermission;
-
-                        boolean isAll = isRead && isWrite && isReadAcl &&
-                                        isWriteAcl;
-
-                        SourcePermission sourcepermission = null;
-
-                        if (principal.equals("~")) {
-                            sourcepermission = new PrincipalSourcePermission(PrincipalSourcePermission.PRINCIPAL_SELF,
-                                null, inheritedPermissions, negative);
-                        } else if (principal.equals("nobody")) {
-                            sourcepermission = new PrincipalSourcePermission(PrincipalSourcePermission.PRINCIPAL_GUEST,
-                                null, inheritedPermissions, negative);
-                        } else if (principal.equals(userspath)) {
-                            sourcepermission = new PrincipalSourcePermission(PrincipalSourcePermission.PRINCIPAL_ALL,
-                                null, inheritedPermissions, negative);
-                        } else if (principal.startsWith(userspath+"/")) {
-                            sourcepermission = new PrincipalSourcePermission(principal.substring(userspath.length()+
-                                1), null, inheritedPermissions, negative);
-                        } else if (principal.startsWith("+"+userspath+"/")) {
-                            sourcepermission = new GroupSourcePermission(principal.substring(userspath.length()+
-                                2), null, inheritedPermissions, negative);
-                        } else {
-                            sourcepermission = new PrincipalSourcePermission(principal,
-                                null, inheritedPermissions, negative);
-                        }
-
-                        if (isAll) {
-                            sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_ALL);
-                        } else {
-                            if (isRead) {
-                                sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ);
-                            } else {
-                                if (isReadObject) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ_SOURCE);
-                                }
-                                if (isReadLocks) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ_LOCKS);
-                                }
-                                if (isReadRevisionMetadata) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ_PROPERTY);
-                                }
-                                if (isReadRevisionContent) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ_CONTENT);
-                                }
-                            }
-                            if (isWrite) {
-                                sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_WRITE);
-                            } else {
-                                if (isCreateObject) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_CREATE_SOURCE);
-                                }
-                                if (isRemoveObject) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_REMOVE_SOURCE);
-                                }
-                                if (isLockObject) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_LOCK_SOURCE);
-                                }
-                                if (isCreateRevisionMetadata) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_CREATE_PROPERTY);
-                                }
-                                if (isModifyRevisionMetadata) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_MODIFY_PROPERTY);
-                                }
-                                if (isRemoveRevisionMetadata) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_REMOVE_PROPERTY);
-                                }
-                                if (isCreateRevisionContent) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_CREATE_CONTENT);
-                                }
-                                if (isModifyRevisionContent) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_MODIFY_CONTENT);
-                                }
-                                if (isRemoveRevisionContent) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_REMOVE_CONTENT);
-                                }
-                            }
-                            if (isReadAcl) {
-                                sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_READ_ACL);
-                            }
-                            if (isWriteAcl) {
-                                sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_WRITE_ACL);
-                            } else {
-                                if (isGrantPermission) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_GRANT_PERMISSION);
-                                }
-                                if (isRevokePermission) {
-                                    sourcepermission.setPrivilege(SourcePermission.PRIVILEGE_REVOKE_PERMISSION);
-                                }
-                            }
-                        }
-
-                        sourcepermissions.add(sourcepermission);
-                    }
-                } catch (SlideException se) {
-                    throw new SourceException("Exception eccurs while retrieveing source permission",se);
-                }
-
-                inheritedPermissions = true;
-
-                try {
-                    current = m_structure.getParent(m_slideToken, current);
-                } catch (SlideException e) {
-                    break;
-                }
-            }
-
-            return (SourcePermission[]) permissions.toArray(new SourcePermission[permissions.size()]);
-
-        } catch (SlideException se) {
-            throw new SourceException("Exception eccurs while retrieveing source permission",se);
-        }
-    }
     
     // ---------------------------------------------------- LockableSource
     
@@ -1642,22 +912,22 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      *
      * @throws SourceException If an exception occurs.
      */
-    public Enumeration getSourceLocks() throws SourceException {
+    public SourceLock[] getSourceLocks() throws SourceException {
         try {
-            Vector sourcelocks = new Vector();
+            List result = new ArrayList();
 
             NodeLock lock;
             Enumeration locks = m_lock.enumerateLocks(m_slideToken,m_uri, false);
             while (locks.hasMoreElements()) {
                 lock = (NodeLock) locks.nextElement();
-                sourcelocks.addElement(new SourceLock(lock.getSubjectUri(),
-                                                      lock.getTypeUri(),
-                                                      lock.getExpirationDate(),
-                                                      lock.isInheritable(),
-                                                      lock.isExclusive()));
+                result.add(new SourceLock(lock.getSubjectUri(),
+                                          lock.getTypeUri(),
+                                          lock.getExpirationDate(),
+                                          lock.isInheritable(),
+                                          lock.isExclusive()));
             }
 
-            return sourcelocks.elements();
+            return (SourceLock[]) result.toArray(new SourceLock[result.size()]);
         } catch (SlideException se) {
             throw new SourceException("Could not retrieve locks", se);
         }
@@ -1673,7 +943,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @throws SourceException If an exception occurs.
      */
     public boolean isVersioned() throws SourceException {
-        return this.m_descriptors.hasRevisions();
+        if (m_descriptors != null) {
+            return m_descriptors.hasRevisions();
+        }
+        return false;
     }
 
     /**
@@ -1691,13 +964,13 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
 
     /**
-     * Sets the wanted revision of the source
-     *
+     * Not implemented.
+     * 
      * @param sourcerevision The revision, which should be used.
      *
      * @throws SourceException If an exception occurs.
      */
-    public void setSourceRevision(String sourcerevision) throws SourceException {
+    public void setSourceRevision(String revision) throws SourceException {
         // [UH] this method is wrong. different versions should be obtained
         // by creating a new source
         throw new SourceException("method not implemented");
@@ -1705,23 +978,26 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
     /**
      * Get the current branch of the revision from the source
-     *
+     * 
      * @return The branch of the revision
      *
      * @throws SourceException If an exception occurs.
      */
     public String getSourceRevisionBranch() throws SourceException {
-        return m_descriptor.getBranchName();
+        if (m_descriptor != null) { 
+            return m_descriptor.getBranchName();
+        }
+        return null;
     }
 
     /**
-     * Sets the wanted branch of the revision from the source
-     *
-     * @param sourcerevisionbranch The branch, which should be used.
+     * Not implemented.
+     * 
+     * @param branch The branch, which should be used.
      *
      * @throws SourceException If an exception occurs.
      */
-    public void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException {
+    public void setSourceRevisionBranch(String branch) throws SourceException {
         // [UH] this method is wrong. different versions should be obtained
         // by creating a new source
         throw new SourceException("method not implemented");
@@ -1735,7 +1011,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @throws SourceException If an exception occurs.
      */
     public String getLatestSourceRevision() throws SourceException {
-        return m_descriptors.getLatestRevision().toString();
+        if (m_descriptors != null) {
+            return m_descriptors.getLatestRevision().toString();
+        }
+        return null;
     }
 
 }
