@@ -70,7 +70,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.5 2003/10/15 21:02:24 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.6 2003/10/24 13:36:40 vgritsenko Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -80,9 +80,9 @@ public final class PipelinesNode extends SimpleParentProcessingNode
 
     private ComponentManager manager;
     
-	private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
+    private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
-	private ProcessingNode errorHandler;
+    private ProcessingNode errorHandler;
 
     /**
      * Constructor
@@ -96,22 +96,19 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;
-        errorHandlerHelper.compose(manager);
+        this.errorHandlerHelper.compose(manager);
     }
 
-	public void enableLogging(Logger logger)
-	{
-		super.enableLogging(logger);
-		errorHandlerHelper.enableLogging(logger);
-	}
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.errorHandlerHelper.enableLogging(logger);
+    }
 
-	public void setErrorHandler(ProcessingNode node)
-	{
-		errorHandler = node;
-	}
+    public void setErrorHandler(ProcessingNode node) {
+        this.errorHandler = node;
+    }
     
-    public void setChildren(ProcessingNode[] nodes)
-    {
+    public void setChildren(ProcessingNode[] nodes) {
         // Mark the last pipeline so that it can throw a ResourceNotFoundException
         ((PipelineNode)nodes[nodes.length - 1]).setLast(true);
 
@@ -128,8 +125,8 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * redirector, if any, are restored before return.
      */
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-	
+    throws Exception {
+    
         // Perform any common invoke functionality 
         super.invoke(env, context);
 
@@ -138,7 +135,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
 
         // Build a redirector
         ForwardRedirector redirector = new ForwardRedirector(env);
-        this.setupLogger(redirector);
+        setupLogger(redirector);
 
         Map objectModel = env.getObjectModel();
 
@@ -154,18 +151,17 @@ public final class PipelinesNode extends SimpleParentProcessingNode
 
             return invokeNodes(this.children, env, context);
         } catch (Exception ex) {
-			if (errorHandler != null) {
-				// Invoke pipelines handler
-				return errorHandlerHelper.invokeErrorHandler(errorHandler, ex, env);
-			} else {
-				// No handler : propagate
-				throw ex;
-			}
+            if (this.errorHandler != null) {
+                // Invoke pipelines handler
+                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env);
+            } else {
+                // No handler : propagate
+                throw ex;
+            }
         } finally {
             // Restore old redirector and resolver
             env.setAttribute(REDIRECTOR_ATTR, oldRedirector);
             objectModel.put(OBJECT_SOURCE_RESOLVER, oldResolver);
-
         }
     }
 
@@ -176,5 +172,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         if (this.manager instanceof Disposable) {
             ((Disposable)this.manager).dispose();
         }
+        this.manager = null;
     }
 }

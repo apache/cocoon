@@ -69,7 +69,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.3 2003/08/16 20:38:30 sylvain Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.4 2003/10/24 13:36:40 vgritsenko Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
     protected String functionName;
@@ -147,8 +147,9 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         List params = null;
 
         // Resolve parameters
-        if (parameters != null)
+        if (parameters != null) {
             params = resolveList(parameters, manager, context, env.getObjectModel());
+        }
 
         String continuation;
         if (continuationResolver != null) {
@@ -174,8 +175,9 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         if (functionNameResolver != null) {
             // Need to resolve the function name at runtime
             name = functionNameResolver.resolve(context, env.getObjectModel());
-        } else
+        } else {
             name = functionName;
+        }
 
         if (name != null) {
             interpreter.callFunction(name, params, env);
