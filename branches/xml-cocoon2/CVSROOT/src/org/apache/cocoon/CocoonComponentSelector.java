@@ -28,10 +28,13 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.util.ComponentPoolController;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-10 22:38:52 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-14 15:35:31 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer {
     /** Hashmap of all components which this ComponentManager knows about.
@@ -84,23 +87,28 @@ public class CocoonComponentSelector implements ComponentSelector, Composer {
         Component component;
 
         if ( hint == null ) {
-            throw new ComponentNotFoundException("Attempted to retrieve component will null roll.");
+            log.error("Attempted to retrieve component with null hint.");
+            throw new ComponentNotFoundException("Attempted to retrieve component with null hint.");
         }
 
         // Retrieve the class of the requested component.
         Class componentClass = (Class)this.components.get(hint);
 
         if ( componentClass == null ) {
+            log.debug("componentClass is null");
             component = (Component)this.instances.get(hint);
             if ( component == null ) {
+                log.error("Could not find component for hint '" + hint.toString() + "'.");
                 throw new ComponentNotFoundException("Could not find component for hint '" + hint.toString() + "'.");
             } else {
+                log.debug("Found Component for hint '" + hint.toString() + "'.");
                 // we found an individual instance of a component.
                 return component;
             }
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
+            log.error("Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.");
             throw new ComponentNotAccessibleException(
                 "Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.",
                 null

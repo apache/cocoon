@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-10 22:38:52 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-14 15:35:31 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -80,7 +80,7 @@ public class DefaultComponentManager implements ComponentManager {
         Component component;
 
         if ( role == null ) {
-	    log.debug("Attempted to retrieve a component with a null Role");
+        log.debug("Attempted to retrieve a component with a null Role");
             throw new ComponentNotFoundException("Attempted to retrieve component will null roll.");
         }
 
@@ -88,20 +88,20 @@ public class DefaultComponentManager implements ComponentManager {
         Class componentClass = (Class)this.components.get(role);
 
         if ( componentClass == null ) {
-	    log.debug("componentClass for " + role + " is null");
+        log.debug("componentClass for " + role + " is null");
             component = (Component)this.instances.get(role);
             if ( component == null ) {
-	        log.error(role + " could not be found");
+                log.error(role + " could not be found");
                 throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
             } else {
-	        log.error(role + " instance was found");
+                log.debug(role + " instance was found");
                 // we found an individual instance of a component.
                 return component;
             }
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
-	    log.error("The object found is not a Component");
+            log.error("The object found is not a Component");
             throw new ComponentNotAccessibleException(
                 "Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.",
                 null
@@ -110,23 +110,23 @@ public class DefaultComponentManager implements ComponentManager {
 
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
-	    log.debug(role + " is ThreadSafe");
+            log.debug(role + " is ThreadSafe");
             component = getThreadsafeComponent(componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
-	    log.debug(role + " is Poolable");
+            log.debug(role + " is Poolable");
             component = getPooledComponent(componentClass);
         } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
-	    log.debug(role + " is SingleThreaded");
+            log.debug(role + " is SingleThreaded");
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-	        log.error("Could not create new instance of SingleThreaded " + role, e);
+                log.error("Could not create new instance of SingleThreaded " + role, e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-	        log.error("Could not access class " + componentClass.getName(), e);
+                log.error("Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -137,17 +137,17 @@ public class DefaultComponentManager implements ComponentManager {
             /* The component doesn't implement any of the Avalon marker
              * classes, treat as normal.
              */
-	    log.debug(role + " is a normal Component");
+            log.debug(role + " is a normal Component");
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-	        log.error("Could not create new instance of class " + componentClass.getName(), e);
+                log.error("Could not create new instance of class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-	        log.error("Could not access class " + componentClass.getName(), e);
+                log.error("Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -261,12 +261,12 @@ public class DefaultComponentManager implements ComponentManager {
                 Configuration current = (Configuration) instances.next();
                 Object hint = current.getAttribute("name");
                 String className = (String) current.getAttribute("class");
-		log.debug("Adding new Component " + className +
-		              " for hint: " + hint);
-	        try {
+                log.debug("Adding new Component " + className +
+                          " for hint: " + hint);
+            try {
                     selector.addComponent(hint, ClassUtils.loadClass(className), current);
                 } catch (Exception e) {
-		    log.error("The component instance for \"" + hint + "\" has an invalid class name.", e);
+                    log.error("The component instance for \"" + hint + "\" has an invalid class name.", e);
                     throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.");
                 }
             }
