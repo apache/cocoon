@@ -1,4 +1,4 @@
-/*-- $Id: XSPPage.java,v 1.6 2000-04-06 06:11:50 ricardo Exp $ -- 
+/*-- $Id: XSPPage.java,v 1.7 2000-09-17 14:31:28 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.6 $ $Date: 2000-04-06 06:11:50 $
+ * @version $Revision: 1.7 $ $Date: 2000-09-17 14:31:28 $
  */
 public abstract class XSPPage extends AbstractProducer {
   protected Parser xspParser;
@@ -141,7 +141,14 @@ public abstract class XSPPage extends AbstractProducer {
 
     // Already a node? Use it verbatim
     if (v instanceof Node) {
-      return XSPUtil.cloneNode((Node) v, factory);
+      Node node = (Node) v;
+      // Don't bother cloning node unless necessary
+      if (node.getOwnerDocument () == factory) {
+        return node;
+      }
+      else {
+        return XSPUtil.cloneNode(node, factory);
+      }
     }
 
     // Array: recurse over each element

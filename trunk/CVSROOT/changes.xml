@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.111 2000-09-16 23:02:29 greenrd Exp $
+  $Id: changes.xml,v 1.112 2000-09-17 14:31:28 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Changed XSPPage to only clone nodes where necessary, enhancing performance
+   for complex pages.
+  </action>
   <action dev="RDG" type="fix">
    Changed &lt;xsp:pi&gt; back to use target= instead of name= in order
    not to break existing users' code (which there is a lot of!).
@@ -74,13 +78,13 @@
    Patched the cookie XSP taglib and the LDAP processor.
   </action>
   <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
-   Make Cocoon run better under heavy load.
+   Implemented blocking in Engine to make Cocoon run better under heavy load.
   </action>
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
    Added Solaris8 and improved Win2k installation case documentation.
   </action>
   <action dev="DB" type="fix">
-   Made XSP SQL processor to array to string conversion when using a Format object on a text column
+   Made XSP SQL processor do array to string conversion when using a Format object on a text column
   </action>
   <action dev="DB" type="update">
    Brought XInclude processor into conformance (mostly) with the 2000-07-17 version of the working draft.
@@ -89,7 +93,7 @@
    Fixed problem with unresolved SystemID URIs that cause problems with latest Xerces.
   </action>
   <action dev="SM" type="update">
-   Updated latest Xerces and Xalan.
+   Updated to latest Xerces and Xalan.
   </action>
   <action dev="SM" type="add" due-to="Jeremy Quinn" due-to-email="sharkbait@mac.com">
    Included FP form-handling taglib for XSP.
