@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
@@ -43,7 +44,29 @@ import org.xml.sax.SAXException;
 public class PortalGenerator 
 extends ServiceableGenerator {
 
-	/* (non-Javadoc)
+    /** The portal service. */
+    protected PortalService portalService;
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.portalService);
+            this.portalService = null;
+        }
+        super.dispose();
+    }
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+    }
+
+    /* (non-Javadoc)
 	 * @see org.apache.cocoon.generation.Generator#generate()
 	 */
 	public void generate()
@@ -51,17 +74,9 @@ extends ServiceableGenerator {
         // start the portal rendering
         // 1. event processing
         // 2. rendering
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            PortalManager pm = service.getComponentManager().getPortalManager();
-            pm.process();
-            pm.showPortal(this.xmlConsumer, this.parameters);
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
-        }
+        PortalManager pm = this.portalService.getComponentManager().getPortalManager();
+        pm.process();
+        pm.showPortal(this.xmlConsumer, this.parameters);
 	}
 
     /* (non-Javadoc)
@@ -74,20 +89,9 @@ extends ServiceableGenerator {
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        // instantiate the portal service for this request
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            
-            // This is a fix: if we don't use the link service here, we get
-            // in some rare cases a wrong uri!
-            service.getComponentManager().getLinkService().getRefreshLinkURI();
-            
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
-        }
+        // This is a fix: if we don't use the link service here, we get
+        // in some rare cases a wrong uri!
+        this.portalService.getComponentManager().getLinkService().getRefreshLinkURI();
     }
 
 }

@@ -33,6 +33,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalManager;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
@@ -54,7 +55,11 @@ public class DefaultPortalComponentManager
     extends AbstractLogEnabled
     implements PortalComponentManager, Serviceable, Disposable, ThreadSafe, Configurable {
 
+    /** The avalon component manager */
     protected ServiceManager manager;
+
+    /** The portal service */
+    protected PortalService portalService;
 
     protected String profileManagerRole;
     protected ProfileManager profileManager;
@@ -78,6 +83,18 @@ public class DefaultPortalComponentManager
 
     protected String portalManagerRole;
     protected PortalManager portalManager;
+
+    /**
+     * Create a new portal component manager. Each portal has a own
+     * component manager that manages all central components for this
+     * portal.
+     * This implementation stores the portal service (a global singleton)
+     * to pass it to the other components (TODO).
+     * @param service The portal service.
+     */
+    public DefaultPortalComponentManager(final PortalService service) {
+        this.portalService = service;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -122,7 +139,7 @@ public class DefaultPortalComponentManager
             try {
                 this.eventManager = (EventManager)this.manager.lookup( this.eventManagerRole );
             } catch (ServiceException e) {
-                throw new CascadingRuntimeException("Unable to lookup event manager with role " + EventManager.ROLE, e);
+                throw new CascadingRuntimeException("Unable to lookup event manager with role " + this.eventManagerRole, e);
             }
         }
         return this.eventManager;
@@ -217,7 +234,7 @@ public class DefaultPortalComponentManager
             try {
                 this.layoutFactory = (LayoutFactory)this.manager.lookup( this.layoutFactoryRole);
             } catch (ServiceException e) {
-                throw new CascadingRuntimeException("Unable to lookup layout factory with role " + this.copletFactoryRole, e);
+                throw new CascadingRuntimeException("Unable to lookup layout factory with role " + this.layoutFactoryRole, e);
             }
         }
         return this.layoutFactory;
@@ -232,7 +249,7 @@ public class DefaultPortalComponentManager
             try {
                 this.portalManager = (PortalManager)this.manager.lookup( this.portalManagerRole);
             } catch (ServiceException e) {
-                throw new CascadingRuntimeException("Unable to lookup portal manager with role " + this.copletFactoryRole, e);
+                throw new CascadingRuntimeException("Unable to lookup portal manager with role " + this.portalManagerRole, e);
             }
         }
         return this.portalManager;

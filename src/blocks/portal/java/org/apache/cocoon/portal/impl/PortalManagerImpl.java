@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.impl;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -39,25 +40,41 @@ import org.xml.sax.SAXException;
  */
 public class PortalManagerImpl
 	extends AbstractLogEnabled
-	implements PortalManager, Serviceable, ThreadSafe {
+	implements PortalManager, Serviceable, Disposable, ThreadSafe {
 
+    /** The service manager */
     protected ServiceManager manager;
-        
-    /* (non-Javadoc)
+
+    /** The portal service */
+    protected PortalService portalService;
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
+     */
+    public void service(ServiceManager serviceManager)
+    throws ServiceException {
+        this.manager = serviceManager;
+        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.portalService);
+            this.portalService = null;
+            this.manager = null;
+        }
+    }
+
+    /**
      * @see org.apache.cocoon.portal.PortalManager#process()
      */
     public void process()
     throws ProcessingException {
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            EventManager eventManager = service.getComponentManager().getEventManager();
-            eventManager.processEvents();
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
-        }
+        EventManager eventManager = this.portalService.getComponentManager().getEventManager();
+        eventManager.processEvents();
     }
 
 	/**
@@ -65,33 +82,16 @@ public class PortalManagerImpl
 	 */
 	public void showPortal(ContentHandler contentHandler, Parameters parameters) 
     throws SAXException {
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            // first check for a full screen layout
-            Layout portalLayout = service.getEntryLayout(null);
-            if ( portalLayout == null ) {
-                portalLayout = service.getComponentManager().getProfileManager().getPortalLayout(null, null);
-            }
-
-            Renderer portalLayoutRenderer = service.getComponentManager().getRenderer( portalLayout.getRendererName());       
-
-            contentHandler.startDocument();
-            portalLayoutRenderer.toSAX(portalLayout, service, contentHandler);
-            contentHandler.endDocument();
-        } catch (ServiceException ce) {
-            throw new SAXException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
+        // first check for a full screen layout
+        Layout portalLayout = this.portalService.getEntryLayout(null);
+        if ( portalLayout == null ) {
+            portalLayout = this.portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
         }
-	}
 
-	/**
-	 * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
-	 */
-	public void service(ServiceManager serviceManager)
-    throws ServiceException {
-        this.manager = serviceManager;
-	}
+        Renderer portalLayoutRenderer = this.portalService.getComponentManager().getRenderer( portalLayout.getRendererName());       
 
+        contentHandler.startDocument();
+        portalLayoutRenderer.toSAX(portalLayout, this.portalService, contentHandler);
+        contentHandler.endDocument();
+	}
 }

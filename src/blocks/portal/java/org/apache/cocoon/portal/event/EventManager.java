@@ -33,7 +33,7 @@ import org.apache.cocoon.ProcessingException;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author Mauro Talevi
  * 
- * @version CVS $Id: EventManager.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface EventManager extends Component {
  
