@@ -78,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.1 2003/03/09 00:08:52 pier Exp $
+ * @version CVS $Id: GeneratorSelector.java,v 1.2 2003/08/04 03:19:22 joerg Exp $
  */
 public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
 
@@ -138,7 +138,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         try {
             this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
         } catch (ComponentException cme) {
-            throw new ComponentException("GeneratorSelector", cme);
+            throw new ComponentException(ClassLoaderManager.ROLE, "GeneratorSelector", cme);
         }
 
         try {
