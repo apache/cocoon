@@ -56,7 +56,7 @@ import org.apache.fop.render.Renderer;
  * Apache FOP Renderer factory.
  * When given a MIME type, find a Renderer which supports that MIME type.
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: RendererFactory.java,v 1.1 2003/03/09 00:03:50 pier Exp $
+ * @version CVS $Id: RendererFactory.java,v 1.2 2004/01/19 09:27:26 antonio Exp $
  */
 public interface RendererFactory {
 
@@ -65,5 +65,5 @@ public interface RendererFactory {
    * @param mimeType The MIME type of the destination format
    * @return A suitable renderer, or <code>null> if one cannot be found
    */
-  Renderer createRenderer(String mimeType) ;
+  Renderer createRenderer(String mimeType);
 }
