@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                              xmlns:fb="http://apache.org/cocoon/forms/1.0#binding">
+                              xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+                              xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
 
 <xsl:template match="node()|@*">
   <xsl:copy>
@@ -29,10 +30,12 @@
     <xsl:if test="@unique-row-id and @unique-path and
                     not(fb:unique-row | fb:identity)">
       <fb:identity>
-        <fb:value id="{@unique-row-id}" path="{@unique-path}"/>
+        <fb:value id="{@unique-row-id}" path="{@unique-path}">
+          <xsl:apply-templates select="fd:convertor"/>
+        </fb:value>
       </fb:identity>
     </xsl:if>
-    <xsl:apply-templates select="node()"/>
+    <xsl:apply-templates select="node()[not(self::fd:convertor)]"/>
   </xsl:copy>
 </xsl:template>
 
