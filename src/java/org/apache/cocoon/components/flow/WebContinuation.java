@@ -198,6 +198,16 @@ public class WebContinuation extends AbstractLogEnabled
     }
 
     /**
+     * Returns the string identifier of the interpreter to which
+     * this <code>WebContinuation</code> is bound.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getInterpreterId() {
+        return interpreterId;
+    }
+
+    /**
      * Returns the last time this
      * <code>WebContinuation</code> was accessed.
      *
