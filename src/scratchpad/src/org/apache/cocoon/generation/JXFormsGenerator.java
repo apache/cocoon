@@ -104,7 +104,9 @@ public class JXFormsGenerator extends ComposerGenerator {
             }
         };
 
-    final static String NS = 
+    private static final Locator NULL_LOCATOR = new LocatorImpl();
+
+    public final static String NS = 
         "http://apache.org/cocoon/jxforms/1.0";
 
     // Non XForms elements
@@ -198,6 +200,18 @@ public class JXFormsGenerator extends ComposerGenerator {
             return ptr.getNode();
         }
 
+        Pointer getPointer(JXPathContext root, JXPathContext current) {
+            JXPathContext ctx = current;
+            if (absolute) {
+                ctx = root;
+            }
+            Pointer ptr = jxpath.getPointer(ctx, string);
+            if (ptr == null) {
+                return null;
+            }
+            return ptr;
+        }
+
         Iterator iteratePointers(JXPathContext root, JXPathContext current) {
             JXPathContext ctx = current;
             if (absolute) {
@@ -241,8 +255,9 @@ public class JXFormsGenerator extends ComposerGenerator {
     static class Event {
         final Locator location;
         Event next;
-        Event(Locator location) {
-            this.location = new LocatorImpl(location);
+        Event(Locator locator) {
+            this.location = 
+                locator == null ? NULL_LOCATOR : new LocatorImpl(locator);
         }
 
         public String locationString() {
@@ -1332,11 +1347,11 @@ public class JXFormsGenerator extends ComposerGenerator {
                         value = ptr.getNode();
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(),
-                                                        ev.location,
-                                                        exc);
+                                                    ev.location,
+                                                    exc);
                     }
                     JXPathContext localJXPathContext = 
-                        jxpathContextFactory.newContext(null, value);
+                        currentContext.getRelativeContext(ptr);
                     String path = "";
                     if (contextPath != null) {
                         path = contextPath + "/."; 
@@ -1362,16 +1377,16 @@ public class JXFormsGenerator extends ComposerGenerator {
                                       startElement.attributes);
                 final XPathExpr ref = startGroup.ref;
                 if (ref != null) {
-                    Object value;
+                    Pointer ptr;
                     try {
-                        value = ref.getNode(rootContext, currentContext);
+                        ptr = ref.getPointer(rootContext, currentContext);
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(),
                                                     ev.location,
                                                     exc);
                     }
                     JXPathContext localJXPathContext = 
-                        jxpathContextFactory.newContext(null, value);
+                        currentContext.getRelativeContext(ptr);
                     String path;
                     if (ref.absolute) {
                         path = ref.string;
@@ -1427,7 +1442,7 @@ public class JXFormsGenerator extends ComposerGenerator {
                                                         exc);
                     }
                     JXPathContext localJXPathContext = 
-                        jxpathContextFactory.newContext(null, value);
+                        currentContext.getRelativeContext(ptr);
                     AttributesImpl attrs = new AttributesImpl();
                     attrs.addAttribute(null, REF, REF, "CDATA",
                                        ptr.asPath());
