@@ -229,6 +229,13 @@
      accepts application/xhtml+xml and HTML otherwise; potentially do
      automatic i18n according to the accept-language header.
    </action>
+   <action dev="NKB" type="add">
+     New @pass-through attribute for the sitemap mount node.
+     If true, processing will resume in the base sitemap just after the mount node
+     if the mounted sitemap has not already generated output (usually if no match 
+     is found). Previous behaviour was always to throw a ResourceNotFoundException.
+     The attribute defaults to "false" for backwards compatibility.
+   </action>
    <action dev="CZ" type="add">
      Portal block: New Group Based Profile Manager.
    </action>

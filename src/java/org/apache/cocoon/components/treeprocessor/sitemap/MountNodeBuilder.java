@@ -40,7 +40,8 @@ public class MountNodeBuilder extends AbstractProcessingNodeBuilder implements T
             VariableResolverFactory.getResolver(config.getAttribute("uri-prefix"), manager),
             VariableResolverFactory.getResolver(config.getAttribute("src"), manager),
             this.treeBuilder.getProcessor().getWrappingProcessor(),
-            config.getAttributeAsBoolean("check-reload", true)
+            config.getAttributeAsBoolean("check-reload", true),
+            config.getAttributeAsBoolean("pass-through", false)
         );
         return (this.treeBuilder.setupNode(node, config));
     }
