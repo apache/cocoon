@@ -74,7 +74,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.2 2003/12/30 04:30:57 crossley Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -109,7 +109,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
         String continuationId = config.getAttribute(CONTINUATION_ATTR, null);
         
         if (functionName == null && continuationId == null) {
-            String msg = "<map:call> must have either a 'resource', a 'function' " +                "or a 'continuation' attribute!";
+            String msg = "<map:call> must have either a 'resource', a 'function' " + "or a 'continuation' attribute!";
             throw new ConfigurationException(msg);
         }
         
