@@ -8,12 +8,13 @@ function form1(form) {
     model.cowheight = 4;
     model.number1 = 1;
     model.number2 = 3;
+    model.birthdate = new Date();
     
     model.contacts[0].firstname = "Jules";
     model.contacts[1].firstname =  "Lucien";
     model.contacts[2].firstname = "Chris";
     model.drinks = ["Jupiler", "Coca Cola"];
-    
+
     form.show("form1-display-pipeline", function(form) {
         print("submitId="+form.getSubmitId());
         switch(form.getSubmitId()) {
@@ -37,7 +38,7 @@ function form1(form) {
         return false;
     });
     print("visa="+model.visa);
-    sendPage("form1-success-pipeline");
+    cocoon.sendPage("form1-success-pipeline");
     form.finish();
 
 }
