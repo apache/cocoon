@@ -64,8 +64,8 @@ import org.apache.commons.jxpath.JXPathContext;
 
 /**
  * Additional to the inherited functionality from its superclass ExceptionSelector,
- * this selector allows to define xpath expressions to evaluate supplemental information 
- * given in the thrown exception. 
+ * this selector allows to define xpath expressions to evaluate supplemental information
+ * given in the thrown exception.
  * The configuration of this selector allows to map not only exceptions but also
  * xpath expressions to symbolic names that are used in the &lt;map:when> alternatives.
  * <p>
@@ -76,7 +76,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *       &lt;xpath name="PasswordWrong" test="authCode=10"/>
  *       &lt;xpath name="PasswordExpired" test="errorCode=11"/>
  *       &lt;xpath name="AccessForbidden" test="errorCode&gt;11"/>
- *     &lt;/exception>	
+ *     &lt;/exception>
  *   &lt;/map:selector>
  * </pre>
  * This example shows several features :
@@ -86,68 +86,73 @@ import org.apache.commons.jxpath.JXPathContext;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @since 2.1
- * @version CVS $Id: XPathExceptionSelector.java,v 1.3 2003/05/07 12:06:42 vgritsenko Exp $
+ * @version CVS $Id: XPathExceptionSelector.java,v 1.4 2003/05/08 10:13:02 stephan Exp $
  */
+public class XPathExceptionSelector extends ExceptionSelector
+  implements Configurable {
 
-public class XPathExceptionSelector extends ExceptionSelector implements Configurable {
-
-	private Map exception2XPath = new HashMap();
+    private Map exception2XPath = new HashMap();
 
     public void configure(Configuration conf) throws ConfigurationException {
 
         super.configure(conf);
-        
+
         Configuration[] children = conf.getChildren("exception");
-		Configuration[] xPathChildren;
+        Configuration[] xPathChildren;
 
-        for (int i = 0; i < children.length; i++) {
-           // Check if there are XPath-Expressions configured
-			xPathChildren = children[i].getChildren("xpath");
-			Map xPathMap = new HashMap();
-			for (int j = 0; j < xPathChildren.length; j++) {
-				Configuration xPathChild = xPathChildren[j];
+        for (int i = 0; i<children.length; i++) {
+            // Check if there are XPath-Expressions configured
+            xPathChildren = children[i].getChildren("xpath");
+            Map xPathMap = new HashMap();
 
-				String xPathName = xPathChild.getAttribute("name");
-				CompiledExpression xPath = JXPathContext.compile(xPathChild.getAttribute("test"));
-				
-				xPathMap.put(xPath, xPathName);
-			}
-			if (xPathMap.size() > 0)
-				// store xpath - config if there is some
-				exception2XPath.put(children[i].getAttribute("name", null), xPathMap);
+            for (int j = 0; j<xPathChildren.length; j++) {
+                Configuration xPathChild = xPathChildren[j];
+
+                String xPathName = xPathChild.getAttribute("name");
+                CompiledExpression xPath = JXPathContext.compile(xPathChild.getAttribute("test"));
+
+                xPathMap.put(xPath, xPathName);
+            }
+            if (xPathMap.size()>0) {
+                // store xpath - config if there is some
+                exception2XPath.put(children[i].getAttribute("name", null),
+                                    xPathMap);
+            }
         }
     }
 
     /**
      * Compute the exception type, given the configuration and the exception stored in the object model.
-     * 
-     * @see org.apache.cocoon.environment.ObjectModelHelper#getThrowable(java.util.Map)
      */
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
-        
-        // get exception from super class
-        FindResult selectorContext = (FindResult)super.getSelectorContext(objectModel, parameters);
-        
-        if (selectorContext != null) {
-			String exceptionName = selectorContext.getName();
-			Throwable t = selectorContext.getThrowable();
 
-	        Map xPathMap = (Map) exception2XPath.get(exceptionName);
-			if (xPathMap != null) {
-				// create a context for the thrown exception
-				JXPathContext context = JXPathContext.newContext(t);
-				
-				for (Iterator iterator = xPathMap.entrySet().iterator(); iterator.hasNext();) {
-		            Entry entry = (Entry) iterator.next();
-		            if (((CompiledExpression) entry.getKey()).getValue(context).equals(Boolean.TRUE)) {
-						// set the configured name if the expression is succesfull
-						selectorContext.setName((String)entry.getValue());
-						return selectorContext;
-		            }
-		        }
-			}
-		}
-        
+        // get exception from super class
+        FindResult selectorContext = (FindResult) super.getSelectorContext(objectModel,
+                                         parameters);
+
+        if (selectorContext!=null) {
+            String exceptionName = selectorContext.getName();
+            Throwable t = selectorContext.getThrowable();
+
+            Map xPathMap = (Map) exception2XPath.get(exceptionName);
+
+            if (xPathMap!=null) {
+                // create a context for the thrown exception
+                JXPathContext context = JXPathContext.newContext(t);
+
+                for (Iterator iterator = xPathMap.entrySet().iterator();
+                    iterator.hasNext(); ) {
+                    Entry entry = (Entry) iterator.next();
+
+                    if (((CompiledExpression) entry.getKey()).getValue(context).equals(Boolean.TRUE)) {
+                        // set the configured name if the expression is succesfull
+                        selectorContext.setName((String) entry.getValue());
+                        return selectorContext;
+                    }
+                }
+            }
+        }
+
         return selectorContext;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<map:components>
+
 		<map:selectors default="browser">
 			<map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector">
 				<exception name="application" class="org.apache.cocoon.samples.errorhandling.ApplicationException">
@@ -13,7 +13,9 @@
 				<exception class="java.lang.Throwable" unroll="true"/>
 			</map:selector>
 		</map:selectors>
+
 	</map:components>
+
 	<map:pipelines>
 		<map:pipeline>
 			<map:match pattern="main">
@@ -21,8 +23,10 @@
 				<map:serialize/>
 			</map:match>
 		</map:pipeline>
+
 		<map:pipeline>
 			<map:mount uri-prefix="exception" src="exception/"/>
+
 			<map:handle-errors>
 				<map:select type="exception">
 					<map:when test="resourceNotFound">
@@ -31,10 +35,13 @@
 					</map:when>
 				</map:select>
 			</map:handle-errors>
+
 		</map:pipeline>
+
 		<map:handle-errors>
 			<map:generate src="generalerror.htm"/>
 			<map:serialize/>
 		</map:handle-errors>
+
 	</map:pipelines>
 </map:sitemap>
