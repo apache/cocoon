@@ -18,10 +18,10 @@
    of its properties.
   </sample>
  </group>
- 
+
  <group name="XML-ized web sites">
   <sample name="java.apache.org" url="sites/java.apache.org/news-page.xml">
-   This page shows a much more complex example that shows how powerful 
+   This page shows a much more complex example that shows how powerful
    is the style separation and how powerful XML+XSL can be even for
    static web publishing.
   </sample>
@@ -35,7 +35,7 @@
    This page shows the power of XSP technology with Java logic. In this page
    logic and content are mixed.
   </sample>
-  
+
   <sample name="First XSP Page (pure content version)" url="xsp/clean-page.xml?message=Hello%20World!">
    This page generates the exact same output, but it's created by XSL-transforming
    a pure-content page into an XSP page, thus providing a complete separation
@@ -50,7 +50,7 @@
    namespace-driven element libraries instead of applying directly an XSLT
    logicsheet. This allows easier reuse of what is usually called a "tag library"
    to create equivalent functionalities of other logic-free tag-driven
-   dynamic content generation technologies (such as, for example, 
+   dynamic content generation technologies (such as, for example,
    Allaire's ColdFusion or Ricoh's PIA).
   </sample>
 
@@ -59,38 +59,38 @@
    XML processing instructions to trigger Java logic execution.
   </sample>
 
-  <sample name="DCP using ECMAScript" url="dcp/ecmascript/sample-page.xml">
+  <!--<sample name="DCP using ECMAScript" url="dcp/ecmascript/sample-page.xml">
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger ECMAScript logic execution.
-  </sample>
-  
+  </sample>-->
+
   <sample name="Special Producer" url="dummy.xml?producer=dummy">
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger ECMAScript logic execution.
   </sample>
  </group>
- 
+
  <group name="Formatting Object Rendering">
   <sample name="Simple FO Example" url="fo/test-fo.xml">
    This page shows some potentials of the XSL Formatting Object specifications
    tranformed into PDF (we suggest you to install Adobe Acrobat Reader as your
    browser plugin for smoother integration)
   </sample>
-  
+
   <sample name="More complex FO + SVG Example" url="fo/test2-fo.xml">
    This page shows higher potentials of the XSL Formatting Object specifications
    when mixed with other graphic outline specification such as SVG (Scalable
    Vector Graphics). Both are interpreted by FOP and rendered into PDF as
    area and vector graphics.
   </sample>
-    
+
   <sample name="Novel FO formatting" url="fo/darkness-novel.xml">
    In this example, part of Joseph Conrad's "The Heart of Darkness" novel
    is taken from its orginal style-free XML format and rendered into PDF
    using an XML->FO stylesheet.
   </sample>
  </group>
- 
+
  <group name="New media for your web site">
   <sample name="VRML" url="vrml/hello.xml">
    In this example, we show how Cocoon is able to generate virtual reality
@@ -100,8 +100,8 @@
   <sample name="Web and WAP" url="wap/example-portfolio.xml">
    In this example, we show how Cocoon is able to understand which browser
    is requesting the page and applies a different stylesheet to the same
-   XML page to render on the different clients. This page is formatted in 
-   WML (Wireless Markup Language) if the Nokia Wap Toolkit 1.2 browser (which 
+   XML page to render on the different clients. This page is formatted in
+   WML (Wireless Markup Language) if the Nokia Wap Toolkit 1.2 browser (which
    you could get for free from <a href="http://www.nokia.com">Nokia</a>)
    requests this page. Look into the example source to change this for your
    favorite WAP browser/cell-phone/PDA.
@@ -110,7 +110,7 @@
   <sample name="VoxML" url="vml/hello-page.xml">
    This page has the same exact source file as the hello world example, but
    the stylesheet formats it using the VoxML language. You page has been tested
-   with the Motorola VoxML SDK which you get for free from 
+   with the Motorola VoxML SDK which you get for free from
    <a href="http://www.motorola.com">Motorola</a>.
   </sample>
  </group>
