@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -130,7 +131,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.1 2003/10/23 07:55:49 gcasper Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.2 2003/10/24 08:47:33 cziegeler Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -198,7 +199,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 		}
         
         String[] params = par.getNames();
-        this.prefixResolver = new XPathPrefixResolver();
+        this.prefixResolver = new XPathPrefixResolver(this.getLogger());
         for (int i = 0; i < params.length; i++) {
             if (params[i].startsWith("xmlns:")) {
             	String paramValue = par.getParameter(params[i], "");
@@ -304,8 +305,11 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     	
     	private Map params;
 
-        public XPathPrefixResolver() {
+        private Logger logger;
+        
+        public XPathPrefixResolver(Logger logger) {
         	this.params = new HashMap();
+            this.logger = logger;
         }
 
         /**
@@ -314,12 +318,12 @@ public class XPathTraversableGenerator extends TraversableGenerator {
          * @see org.apache.excalibur.xml.xpath.PrefixResolver#prefixToNamespace(java.lang.String)
          */
         public String prefixToNamespace(String prefix) {
-        	if (getLogger().isDebugEnabled()) {
-        		getLogger().debug("prefix: " + prefix);
+        	if (this.logger.isDebugEnabled()) {
+                this.logger.debug("prefix: " + prefix);
         	}
         	if (this.params.containsKey(prefix)) {
-        		if(getLogger().isDebugEnabled()) {
-        			getLogger().debug("prefix; " + prefix + " - namespace: " + this.params.get(prefix));
+        		if(this.logger.isDebugEnabled()) {
+                    this.logger.debug("prefix; " + prefix + " - namespace: " + this.params.get(prefix));
         		}
         		return (String) this.params.get(prefix);
         	}
