@@ -94,7 +94,9 @@
 						transcoder. The <code>type</code> argument specifies the type of
 						data to convert the <code>value</code> to. In this example the
 						string "#00FF00" is converted to a <code>Color</code> object, which
-						is passed to the transcoder as the background colour to use.
+						is passed to the transcoder as the background colour to
+						use.
+					</p>
 					<p>
 						For a list of the parameters available for each transcoder, refer to
 						the Batik API docs.
