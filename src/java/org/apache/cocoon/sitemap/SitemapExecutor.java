@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.1 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: SitemapExecutor.java,v 1.2 2004/06/09 13:43:04 cziegeler Exp $
  */
 public interface SitemapExecutor {
     
@@ -50,4 +50,21 @@ public interface SitemapExecutor {
                      Parameters       resolvedParams )
     throws Exception;
     
+    
+    /**
+     * Push map of information on the context stack.
+     * @param context The execution context
+     * @param key A key that can be used to identify this map (can be null)
+     * @param variables The variables as key/value pairs
+     * @return The variables that are used in the sitemap. The executor can
+     *         modify the set of available variables by returning a different
+     *         map.
+     */
+    Map pushVariables(ExecutionContext context, String key, Map variables);
+    
+    /**
+     * Pop a map of information from the context stack.
+     * @param context The execution context
+     */
+    void popVariables(ExecutionContext context);
 }

@@ -30,7 +30,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.1 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: DefaultExecutor.java,v 1.2 2004/06/09 13:43:04 cziegeler Exp $
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
@@ -50,4 +50,17 @@ public class DefaultExecutor
                 resolvedSource, resolvedParams);        
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables()
+     */
+    public void popVariables(ExecutionContext context) {
+        // nothing to do
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(java.lang.String, java.util.Map)
+     */
+    public Map pushVariables(ExecutionContext context, String key, Map variables) {
+        return variables;
+    }
 }

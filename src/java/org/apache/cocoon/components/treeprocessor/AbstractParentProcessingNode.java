@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.5 2004/06/09 13:43:04 cziegeler Exp $
  */
 
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
@@ -49,6 +49,7 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
         Map currentMap)
       throws Exception {
 
+        currentMap = this.executor.pushVariables(this, currentName, currentMap);
         context.pushMap(currentName,currentMap);
 
         try {
@@ -58,8 +59,8 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
                     return true;
                 }
             }
-        }
-        finally {
+        } finally {
+            this.executor.popVariables(this);
             // No success
             context.popMap();
         }
