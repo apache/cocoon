@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletPortalManager.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
@@ -213,10 +213,6 @@ public class PortletPortalManager
                 final ServletRequestImpl req = (ServletRequestImpl) objectModel.get("portlet-request");
                 final ServletResponseImpl res= (ServletResponseImpl)objectModel.get("portlet-response");
                 this.portletContainer.processPortletAction(actionWindow, req.getRequest(actionWindow), res);
-
-                final String redirectURL = res.getRedirectURL();
-                HttpServletResponse response = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-                response.sendRedirect(redirectURL);
             } catch (Exception ignore) {
                 this.getLogger().error("Error during processing of portlet action.", ignore);
             }
