@@ -591,4 +591,31 @@ public class GroupBasedProfileManager
         return key;
     }
     
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#storeProfile(org.apache.cocoon.portal.layout.Layout, java.lang.String)
+     */
+    public void storeProfile(Layout rootLayout, String layoutKey) {
+        PortalService service = null;
+
+        try {
+            UserProfile oldProfile = this.getUserProfile(null);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            if ( null == layoutKey ) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
+            // FIXME for now we just copy the root profile, except the root layout
+            UserProfile newProfile = new UserProfile();
+            newProfile.setCopletBaseDatas(oldProfile.getCopletBaseDatas());
+            newProfile.setCopletDatas(oldProfile.getCopletDatas());
+            newProfile.setCopletInstanceDatas(oldProfile.getCopletInstanceDatas());
+            newProfile.setRootLayout(rootLayout);
+            
+            this.storeUserProfile(layoutKey, service, newProfile);
+        } catch (Exception ce) {
+            throw new CascadingRuntimeException("Exception during loading of profile.", ce);
+        } finally {
+            this.manager.release(service);
+        }
+    }
 }
