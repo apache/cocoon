@@ -66,7 +66,7 @@ import org.apache.excalibur.source.SourceValidity;
  * An aggregated validity for multiple sources.
  * 
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: MultiSourceValidity.java,v 1.1 2003/08/01 17:21:15 sylvain Exp $
+ * @version CVS $Id: MultiSourceValidity.java,v 1.2 2003/08/13 20:58:04 gcasper Exp $
  */
 public class MultiSourceValidity implements SourceValidity{
 
@@ -117,11 +117,6 @@ public class MultiSourceValidity implements SourceValidity{
     }
 
     public int isValid(SourceValidity newValidity) {
-        if (System.currentTimeMillis() <= expiry) {
-            return 1;
-        }
-        expiry = System.currentTimeMillis() + delay;
-
         if (data == null || !isClosed) {
             return -1;
         }
