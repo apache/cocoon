@@ -63,7 +63,7 @@
   </note>
  </s1>
 
- <s1 title="Installing Cocoon 2">
+ <s1 title="Installing Cocoon2">
   <p>
    Being Cocoon a servlet, you should be able to install it on every compliant
    servlet engine by associating the "org.apache.cocoon.servlet.CocoonServlet" 
@@ -163,58 +163,38 @@ servlet.cocoon.initArgs=configurations=[path-to-cocoon]/conf/cocoon.xconf</sourc
 	  or another web server,  you will most probably have to edit the
 	  configuration of that server as well.</note> 
 	<p>
-	  First, create the directory path <code>[path-to-Cocoon2]/WEB-INF/lib</code>.
-	  Copy all jar archives from <code>[path-to-Cocoon2]/lib</code>
-	  to <code>[path-to-Cocoon2]/WEB-INF/lib</code>.  Copy cocoon.jar to
-	  <code>[path-to-Cocoon2]/WEB-INF/lib</code>, as well.  Note that because
-	  all of these jars are in the lib subdirectory of the WEB-INF directory,
-	  Tomcat will automatically handle the loading of these classes, and they
-	  don't need to be placed in the classpath.
+	  First copy all jar archives from <code>[path-to-Cocoon2]/lib</code>
+	  to <code>[path-to-Tomcat]/lib</code> except ant.jar, servlet_2_2.jar 
+          and stylebook-1.0-b2.jar.  
+          Copy <code>[path-to-Cocoon2]/build/cocoon.jar</code> to
+	  <code>[path-to-Tomcat]/lib</code>, as well.  Note that if you are running 
+          Tomcat on a Windows operating system you have to adjust the classpath to 
+          include all jar files copied so far in the 
+          <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. On unix like operating 
+          systems Tomcat will automatically handle the loading of these classes, and 
+          they don't need to be placed in a classpath. If you use a newer version of Tomcat 
+          (i.e. current CVS version) that requires jaxp.jar and parser.jar instead 
+          of xml.jar make sure parser.jar comes last in the classpath (on unix OS 
+          simply rename it to zparser.jar).
 	</p>
-	<p>Create a new context for the Cocoon2 servlet to run within by appending a
-	  new Context node to <code>[path-to-Tomcat]/conf/server.xml</code>.  The new
-	  Context should look like the following:
+	<p>Copy <code>[path-to-Cocoon]/build/cocoon.war</code> to 
+          <code>[path-to-Tomcat]/webapps</code>.  The new Context for Cocoon2 will be 
+          created out of the cocoon.war file as soon as you restart Tomcat.
 	</p>
-	<source><![CDATA[
-	[...]
-	  <Context path="/cocoon" docBase="[path-to-Cocoon2]" debug="0" reloadable="true" > 
-	  </Context>]]></source>
-	<note>FIXME: Oddly enough, the docBase doesn't appear to do anything for Cocoon2 at this time,
-	  and the base appears to be determined based off of the location of the Cocoon2 configuration
-	  file.</note>
-	<p>Tomcat looks in the path pointed to by docBase for a WEB-INF directory and will load
-	  the web application information from that directory from the web.xml file.
-	</p>
-	<p>Now, create the file <code>[path-to-Cocoon2]/WEB-INF/web.xml</code>.
-	  It should contain the following:</p>
-	<source><![CDATA[
-	  <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
-	  "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
-	  <web-app>
-	    <servlet>
-	      <servlet-name>cocoon</servlet-name>
-	      <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
-	      <init-param>
-	        <param-name>configurations</param-name>
-	        <param-value>[path-to-Cocoon2]/conf/cocoon.xconf</param-value>
-	      </init-param>
-	    </servlet>
-	    <servlet-mapping>
-	      <servlet-name>cocoon</servlet-name>
-	      <url-pattern>/</url-pattern>
-	    </servlet-mapping>
-	  </web-app>]]></source>
 	<p>Finally, restart Tomcat, point your
 	  browser to the following URI...
-	</p>.
+	</p>
 
-	<source>http://localhost/cocoon/hello</source>
+	<source>http://localhost:8080/cocoon/hello</source>
 	
 	<p>
 	  ... and say "Hello!" to Cocoon2.
 	</p>
-	
+	<p>Use the following URI to browse the samples...
+	</p>
+
+	<source>http://localhost:8080/cocoon/samples/</source>
+		
       </s2>
     </s1>
 </body>

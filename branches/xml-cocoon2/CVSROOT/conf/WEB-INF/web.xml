@@ -17,7 +17,12 @@
   <init-param>
    <param-name>configurations</param-name>
    <!-- CHANGE PATH BELOW -->
-   <param-value>../webapps/cocoon2/cocoon.xconf</param-value>
+   <param-value>/cocoon.xconf</param-value>
   </init-param>
  </servlet>
+ <servlet-mapping>
+  <servlet-name>Cocoon2</servlet-name>
+  <url-pattern>/</url-pattern>
+ </servlet-mapping>
 </web-app>
+

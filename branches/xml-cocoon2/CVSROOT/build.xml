@@ -93,6 +93,7 @@ project, no less and no more.
 These are the meaningful targets for this build file:
 
  - package [default] -> creates ./build/cocoon.jar
+ - war -> creates ./build/cocoon.war
  - docs -> generates the HTML documentation in ./build/docs
  - javadocs -> generates the API documentation in ./build/javadocs
  - dist-zip -> generates the Cocoon distribution
@@ -142,6 +143,8 @@ These are the meaningful targets for this build file:
     <property name="build.dest" value="./build/classes"/>
     <property name="build.docs" value="./build/docs"/>
     <property name="build.javadocs" value="./build/javadocs"/>
+    <property name="build.war" value="./build/war"/>
+    <property name="build.war.samples" value="./build/war/samples"/>
 
     <property name="dist.root" value="./dist"/>
     <property name="dist.dir" value="${dist.root}/${name}-${version}"/>
@@ -172,6 +175,7 @@ These are the meaningful targets for this build file:
     <echo message="   javadocs --> generates the API documentation (java 1.2 only)"/>
     <echo message="   dist-zip --> generates the Cocoon distribution as .zip"/>
     <echo message="   dist-tgz --> generates the Cocoon distribution as .tar.gz"/>
+    <echo message="   war      --> generates the cocoon.war file"/>
     <echo message="   clean    --> cleans up the directory"/>
     <echo message="   site     --> generates the Cocoon web site"/>
     <echo message=""/>
@@ -186,6 +190,21 @@ These are the meaningful targets for this build file:
   <!-- =================================================================== -->
   <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the war file                                                -->
+  <!-- =================================================================== -->
+  <target name="war" depends="prepare">
+    <mkdir dir="${build.war}"/>
+    <mkdir dir="${build.war.samples}"/>
+    <copydir src="${conf.dir}" dest="${build.war}" filtering="on"/>
+    <copydir src="${samples.dir}" dest="${build.war.samples}" filtering="on"/>
+    <delete file="${build.dir}/${name}.war"/>
+    <jar jarfile="${build.dir}/${name}.war"
+         basedir="${build.war}"
+         includes="**"/>
+    <deltree dir="${build.war}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -213,13 +232,19 @@ These are the meaningful targets for this build file:
   </target>
 
   <!-- =================================================================== -->
-  <!-- Creates the class package                                           -->
+  <!-- Creates the jar file                                                -->
   <!-- =================================================================== -->
-  <target name="package" depends="compile">
+  <target name="jar" depends="compile">
     <jar jarfile="${build.dir}/${name}.jar"
          basedir="${build.dest}"
          manifest="${build.src}/Manifest.mf"
          includes="org/**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the class package                                           -->
+  <!-- =================================================================== -->
+  <target name="package" depends="jar,war">
   </target>
 
   <!-- =================================================================== -->
