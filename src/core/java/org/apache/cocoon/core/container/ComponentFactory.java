@@ -16,8 +16,10 @@
  */
 package org.apache.cocoon.core.container;
 
+import java.lang.reflect.Method;
+
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.LogEnabled;
@@ -25,6 +27,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Factory for Avalon based components.
@@ -33,11 +36,8 @@ import org.apache.avalon.framework.service.ServiceManager;
  */
 public class ComponentFactory {
     
-    /** The class which this <code>ComponentFactory</code>
-     * should create.
-     */
-    private final Class componentClass;
-
+    private final ServiceInfo serviceInfo;
+    
     /** The Context for the component
      */
     private final Context context;
@@ -46,10 +46,6 @@ public class ComponentFactory {
      */
     private final ServiceManager serviceManager;
     
-    /** The configuration for this component.
-     */
-    private final Configuration configuration;
-
     /** The parameters for this component
      */
     private Parameters parameters;
@@ -69,20 +65,18 @@ public class ComponentFactory {
      * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
      *
      */
-    public ComponentFactory( final Class componentClass,
-                             final Configuration configuration,
-                             final ServiceManager serviceManager,
+    public ComponentFactory( final ServiceManager serviceManager,
                              final Context context,
                              final Logger logger,
                              final LoggerManager loggerManager,
-                             final RoleManager roleManager) {
-        this.componentClass = componentClass;
-        this.configuration = configuration;
+                             final RoleManager roleManager,
+                             final ServiceInfo info) {
         this.serviceManager = serviceManager;
         this.context = context;
         this.logger = logger;
         this.loggerManager = loggerManager;
         this.roleManager = roleManager;
+        this.serviceInfo = info;
     }
 
     /**
@@ -90,18 +84,18 @@ public class ComponentFactory {
      */
     public Object newInstance()
     throws Exception {
-        final Object component = this.componentClass.newInstance();
+        final Object component = this.serviceInfo.getServiceClass().newInstance();
 
         if( this.logger.isDebugEnabled() ) {
             this.logger.debug( "ComponentFactory creating new instance of " +
-                    this.componentClass.getName() + "." );
+                    this.serviceInfo.getServiceClass().getName() + "." );
         }
 
         if ( component instanceof LogEnabled ) {
-            if( null == this.configuration ) {
+            if( this.serviceInfo.getConfiguration() != null ) {
                 ContainerUtil.enableLogging( component, this.logger );
             } else {
-                final String logger = this.configuration.getAttribute( "logger", null );
+                final String logger = this.serviceInfo.getConfiguration().getAttribute( "logger", null );
                 if( null == logger ) {
                     this.logger.debug( "no logger attribute available, using standard logger" );
                     ContainerUtil.enableLogging( component, this.logger );
@@ -120,16 +114,21 @@ public class ComponentFactory {
             ((CocoonServiceSelector)component).setRoleManager(this.roleManager);
         }
         
-        ContainerUtil.configure( component, this.configuration );
+        ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 
         if( component instanceof Parameterizable ) {
             if ( this.parameters == null ) {
-                this.parameters = Parameters.fromConfiguration( this.configuration );
+                this.parameters = Parameters.fromConfiguration( this.serviceInfo.getConfiguration() );
             }
             ContainerUtil.parameterize( component, this.parameters );
         }
 
         ContainerUtil.initialize( component );
+
+        final Method method = this.serviceInfo.getInitMethod();
+        if ( method != null ) {
+            method.invoke(component, null);
+        }
 
         ContainerUtil.start( component );
 
@@ -137,7 +136,7 @@ public class ComponentFactory {
     }
 
     public Class getCreatedClass() {
-        return this.componentClass;
+        return this.serviceInfo.getServiceClass();
     }
 
     /**
@@ -147,11 +146,41 @@ public class ComponentFactory {
     throws Exception {
         if( this.logger.isDebugEnabled() ) {
             this.logger.debug( "ComponentFactory decommissioning instance of " +
-                    this.componentClass.getName() + "." );
+                    this.serviceInfo.getServiceClass().getName() + "." );
         }
 
         ContainerUtil.stop( component );
         ContainerUtil.dispose( component );
+
+        final Method method = this.serviceInfo.getDestroyMethod();
+        if ( method != null ) {
+            method.invoke(component, null);
+        }
     }
 
+    /**
+     * Handle service specific methods for getting it out of the pool
+     */
+    public void exitingPool( final Object component )
+    throws Exception {
+        final Method method = this.serviceInfo.getPoolOutMethod();
+        if ( method != null ) {
+            method.invoke(component, null);
+        }         
+    }
+
+    /**
+     * Handle service specific methods for putting it into the pool
+     */
+    public void enteringPool( final Object component )
+    throws Exception {
+        // Handle Recyclable objects
+        if( component instanceof Recyclable ) {
+            ( (Recyclable)component ).recycle();
+        }
+        final Method method = this.serviceInfo.getPoolInMethod();
+        if ( method != null ) {
+            method.invoke(component, null);
+        }         
+    }
 }
