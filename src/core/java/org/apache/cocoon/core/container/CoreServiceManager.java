@@ -69,6 +69,9 @@ public class CoreServiceManager
      */
     public static final Configuration EMPTY_CONFIGURATION = new DefaultConfiguration("-", "unknown location");
     
+    /** Parameter map for the context protocol */
+    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
+    
     /** The application context for components */
     protected Context context;
 
@@ -674,7 +677,7 @@ public class CoreServiceManager
             final String ending = includeStatement.getAttribute("postfix", null);
             Source directory = null;
             try {
-                directory = this.cachedSourceResolver.resolveURI(directoryURI, contextURI, null);
+                directory = this.cachedSourceResolver.resolveURI(directoryURI, contextURI, CONTEXT_PARAMETERS);
                 if ( directory instanceof TraversableSource ) {
                     final Iterator children = ((TraversableSource)directory).getChildren().iterator();
                     while ( children.hasNext() ) {

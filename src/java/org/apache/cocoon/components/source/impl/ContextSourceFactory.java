@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -30,11 +34,14 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.servlet.CocoonServlet;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
@@ -45,7 +52,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.8 2004/06/16 14:29:31 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class ContextSourceFactory
 extends AbstractLogEnabled
@@ -61,6 +68,9 @@ implements SourceFactory,
     /** The ServiceManager */
     protected ServiceManager manager;
 
+    /** Http servlet context - if available */
+    protected ServletContext servletContext;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -74,6 +84,11 @@ implements SourceFactory,
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException {
         this.envContext = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        try {
+            this.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        } catch (ContextException ignore) {
+            // in other environments (CLI etc.), we don't have a servlet context
+        }
     }
 
     /* (non-Javadoc)
@@ -110,13 +125,21 @@ implements SourceFactory,
             }
 
             if (u != null) {
-                return resolver.resolveURI(u.toExternalForm());
-                
-            } else {
-                String message = location + " could not be found. (possible context problem)";
-                getLogger().info(message);
-                throw new MalformedURLException(message);
-            }
+                Source source = resolver.resolveURI(u.toExternalForm());
+                if ( parameters != null 
+                     && BooleanUtils.toBoolean("force-traversable")
+                     && this.servletContext != null 
+                     && !(source instanceof TraversableSource) ) {
+                    final Set children = this.servletContext.getResourcePaths(path + '/');
+                    if ( children != null ) {
+                        source = new TraversableContextSource(source, children, this, path);
+                    }
+                }
+                return source;                
+            } 
+            final String message = location + " could not be found. (possible context problem)";
+            this.getLogger().info(message);
+            throw new MalformedURLException(message);
         } catch (ServiceException se) {
             throw new SourceException("Unable to lookup source resolver.", se);
         } finally {
@@ -139,8 +162,13 @@ implements SourceFactory,
             SourceResolver resolver = null;
             try {
                 resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-                resolver.release( source );
+                if ( source instanceof TraversableContextSource ) {
+                    resolver.release(((TraversableContextSource)source).wrappedSource);
+                } else {
+                    resolver.release( source );
+                }
             } catch (ServiceException ingore) {
+                // we ignore this
             } finally {
                 this.manager.release( resolver );
             }
