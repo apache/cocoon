@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.54 2003/04/28 12:41:42 bruno Exp $
+  CVS $Id: gump.xml,v 1.55 2003/05/01 12:49:34 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -867,7 +867,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/optional"/>
-    <jar name="jdtcore2.0.2.jar"/>
+    <jar name="jdtcore-2.1.0.jar"/>
   </project>
   
   <project name="spark">
