@@ -25,7 +25,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: ClassUtils.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id: ClassUtils.java,v 1.3 2004/06/20 23:46:54 antonio Exp $
  */
 public class ClassUtils {
 
@@ -82,6 +82,7 @@ public class ClassUtils {
      * Tests if a class implements a given interface
      *
      * @return true if class implements given interface.
+     * @deprecated Will be removed 2 versions after 2.1.5
      */
     public static boolean implementsInterface(String className, String iface) throws Exception {
         Class class1 = ClassUtils.loadClass (className);
@@ -93,6 +94,7 @@ public class ClassUtils {
      * Tests if a class implements a given interface
      *
      * @return true if class implements given interface.
+     * @deprecated Will be removed 2 versions after 2.1.5
      */
     public static boolean implementsInterface(Class class1, Class iface) {
         return iface.isAssignableFrom (class1);
@@ -107,6 +109,7 @@ public class ClassUtils {
      * @exception IOException IOError
      * @exception IllegalArgumentException The class was not loaded from a file
      * or directory
+     * @deprecated Will be removed 2 versions after 2.1.5
      */
     public static long lastModified(Class aClass)
         throws IOException, IllegalArgumentException  {
@@ -135,6 +138,7 @@ public class ClassUtils {
      * by the current classpath.
      *
      * @param aClass Name of the class.
+     * @deprecated Will be removed 2 versions after 2.1.5
      */
      public static String which(Class aClass) {
         String path = null;
