@@ -54,12 +54,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.avalon.excalibur.component.ComponentHandler;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.fortress.impl.handler.ComponentHandler;
+import org.apache.avalon.fortress.impl.handler.PoolableComponentHandler;
+import org.apache.avalon.fortress.impl.handler.ComponentFactory;
+import org.apache.avalon.excalibur.logger.LoggerManager;
 
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
@@ -69,6 +78,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServerPagesGenerator;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
+import org.apache.excalibur.mpool.ObjectFactory;
 
 /**
  * Allows actions to be written in XSP. This allows to use XSP to produce
@@ -104,45 +114,27 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.3 2003/10/15 18:10:46 cziegeler Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.4 2003/10/16 14:50:22 bloritsch Exp $
  */
 public class ServerPagesAction
         extends ConfigurableServiceableAction
-        implements Disposable, ThreadSafe {
+        implements Disposable,Contextualizable, Initializable, ThreadSafe {
 
     public static final String REDIRECTOR_OBJECT = "xsp-action:redirector";
     public static final String ACTION_RESULT_OBJECT = "xsp-action:result";
     public static final String ACTION_SUCCESS_OBJECT = "xsp-action:success";
 
-    ComponentHandler generatorHandler;
+    ComponentHandler m_generatorHandler;
+    Configuration m_conf;
+    private Context m_context;
 
     public void configure(Configuration conf)
       throws ConfigurationException {
-        try {
-            this.generatorHandler = ComponentHandler.getComponentHandler(
-                ServerPagesGenerator.class,
-                conf,
-                this.manager,
-                null, // Context
-                null,  // RoleManager
-                null,  // LogkitLoggerManager
-                null, // InstrumentManager
-                "N/A" // instrumentableName
-            );
-
-            this.generatorHandler.enableLogging(getLogger());
-            this.generatorHandler.initialize();
-
-        } catch(Exception e) {
-            throw new ConfigurationException("Cannot set up component handler", e);
-        }
+        m_conf = conf;
     }
 
     public void dispose() {
-        if (this.generatorHandler != null) {
-            this.generatorHandler.dispose();
-            this.generatorHandler = null;
-        }
+        ContainerUtil.dispose(m_generatorHandler);
     }
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel,
@@ -158,14 +150,12 @@ public class ServerPagesAction
         Object success = null;
 
         // Get a ServerPagesGenerator
-        ServerPagesGenerator generator = (ServerPagesGenerator)this.generatorHandler.get();
+        ServerPagesGenerator generator = (ServerPagesGenerator)this.m_generatorHandler.get();
 
         // Generator ouptut, if output-attribute was given
         XMLByteStreamCompiler compiler = null;
 
         try {
-            generator.enableLogging(getLogger());
-            generator.service(this.manager);
             generator.setup(resolver, objectModel, source, parameters);
 
             // Setup generator output
@@ -188,7 +178,7 @@ public class ServerPagesAction
 
         } finally {
             // Release generator
-            generatorHandler.put(generator);
+            m_generatorHandler.put(generator);
 
             // Clean up object model
             objectModel.remove(REDIRECTOR_OBJECT);
@@ -210,5 +200,31 @@ public class ServerPagesAction
         }
 
         return (success == Boolean.TRUE) ? resultMap : null;
+    }
+
+    public void initialize() throws Exception
+    {
+        ComponentFactory factory = new ComponentFactory(
+                ServerPagesGenerator.class,
+                m_conf,
+                manager, // ServiceManager
+                m_context, // Context
+                null, // LoggerManager
+                null ); // Extension Manager
+        m_generatorHandler = new PoolableComponentHandler();
+
+        DefaultServiceManager newManager = new DefaultServiceManager(manager);
+        newManager.put(ObjectFactory.class.getName(), factory);
+
+        ContainerUtil.enableLogging( m_generatorHandler, getLogger() );
+        ContainerUtil.contextualize( m_generatorHandler, m_context );
+        ContainerUtil.service(m_generatorHandler, newManager);
+        ContainerUtil.configure(m_generatorHandler, m_conf);
+        ContainerUtil.initialize(m_generatorHandler);
+    }
+
+    public void contextualize( Context context ) throws ContextException
+    {
+        m_context = context;
     }
 }

@@ -69,9 +69,9 @@ import java.util.Map;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.2 2003/05/16 07:04:56 cziegeler Exp $
+ * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.3 2003/10/16 14:50:22 bloritsch Exp $
  */
-public abstract class AbstractComplementaryConfigurableAction extends ConfigurableComposerAction {
+public abstract class AbstractComplementaryConfigurableAction extends ConfigurableServiceableAction {
     private static Map configurations = new HashMap();
 
     /**

@@ -74,33 +74,33 @@ import java.util.Map;
  *     &lt;map:parameter name="module" value="defaults"/&gt;
  *     &lt;map:parameter name="attribute" value="{1}"/&gt;
  *     &lt;map:parameter name="single-value" value="false"/&gt;
- * 
+ *
  *     &lt;!-- do something with the result: "{1}" --&gt;
- * 
+ *
  *   &lt;/map:act&gt;
- * </pre> 
- * The action invokes the 
+ * </pre>
+ * The action invokes the
  * {@link org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(String, Configuration, Map) getAttributeValues()}
  * method and returns all results numbered from "1". If no result exists,
  * "null" is returned and the nested block is skipped.
  * The name of the input module to use may be preconfigured when
  * declaring the action in your sitemap:
  * <pre>
- *     &lt;map:action name="inputmodule" 
- *                    src="org.apache.cocoon.acting.InputModuleAction" 
+ *     &lt;map:action name="inputmodule"
+ *                    src="org.apache.cocoon.acting.InputModuleAction"
  *                    logger="sitemap.action.inputmodule"&gt;
  *        &lt;module&gt;defaults&lt;/module&gt;
  *        &lt;single-value&gt;false&lt;/single-value&gt;
  *     &lt;/map:action&gt;
  * </pre>
- * 
- * 
+ *
+ *
  * @see org.apache.cocoon.components.modules.input.InputModule
- * 
+ *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.2 2003/08/15 15:54:15 haul Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.3 2003/10/16 14:50:22 bloritsch Exp $
  */
-public class InputModuleAction extends ConfigurableComposerAction {
+public class InputModuleAction extends ConfigurableServiceableAction {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
