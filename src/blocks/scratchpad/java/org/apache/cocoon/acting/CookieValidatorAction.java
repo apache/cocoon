@@ -16,8 +16,7 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.configuration.Configuration;
-
-import org.apache.cocoon.components.language.markup.xsp.XSPCookieHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: CookieValidatorAction.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class CookieValidatorAction extends AbstractValidatorAction {
@@ -45,7 +44,7 @@ public class CookieValidatorAction extends AbstractValidatorAction {
         // put required params into hash
         for (Iterator i = set.iterator(); i.hasNext();) {
             name = ((Configuration) i.next()).getAttribute("name", "").trim();
-            Object value = XSPCookieHelper.getCookie(objectModel, name, -1).getValue();
+            Object value = ObjectModelHelper.getCookie(objectModel, name, -1).getValue();
             params.put(name, value);
         }
         return params;

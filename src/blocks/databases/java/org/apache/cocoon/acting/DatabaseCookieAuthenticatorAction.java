@@ -264,7 +264,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                  *  but not the value, we exit immediately do
                  *  that authorization fails authomatically
                  */
-                cookie_value = getCookie(objectModel, cookie_name, -1).getValue();
+                cookie_value = ObjectModelHelper.getCookie(objectModel, cookie_name, -1).getValue();
 
                 if (cookie_value == null || cookie_value.trim().equals("")) {
                     // value is null
@@ -341,6 +341,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         map.put(session_param, o);
                     }
                 } catch (Exception e) {
+                    // ignore
                 }
             }
             return map;
@@ -348,59 +349,5 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
             getLogger().error("Exception: ", e);
         }
         return null;
-    }
-
-    /**
-     * Method used to return a cookie object based on the name or the index that was passed
-     *
-     * If both name and index of cookie to be extracted is passed in, name will take
-     * precedence. Basic thing followed is that, when name is passed, index should be -1 and
-     * when index is passed name should null
-     *
-     * @param objectModel
-     * @param cookieName Name of the cookie which is to be found and returned back
-     * @param cookieIndex Index of the cookie which is to be found and returned
-     * @return cookie object is returned
-     */
-    public static Cookie getCookie(Map objectModel,
-                                   String cookieName,
-                                   int cookieIndex)
-    {
-        boolean retrieveByName = false;
-        boolean retrieveByIndex = false;
-        boolean matchFound = false;
-
-        int count = 0;
-
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        Cookie currentCookie = null;
-
-        if (cookieName != null) {
-            retrieveByName = true;
-        } else if (cookieIndex >=0) {
-            retrieveByIndex =  true;
-        }
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && retrieveByName) {
-            for(count = 0; count < cookies.length; count++) {
-                currentCookie = cookies[count];
-                if (currentCookie.getName().equals(cookieName)) {
-                    matchFound = true;
-                    break;
-                }
-            }
-        } else if(cookies != null && retrieveByIndex) {
-            if(cookies.length > cookieIndex) {
-                currentCookie = cookies[cookieIndex];
-                matchFound = true;
-            }
-        }
-
-        if (matchFound)
-            return currentCookie;
-        else
-            return null;
-    }
-    
+    }    
 }
