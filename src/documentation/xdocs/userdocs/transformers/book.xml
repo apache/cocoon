@@ -35,7 +35,7 @@
     <menu-item label="Lexical Transformer" href="lexer-transformer.html"/>
     <menu-item label="Parser Transformer" href="parser-transformer.html"/>
     <menu-item label="Pattern Transformer" href="pattern-transformer.html"/>
-    <menu-item label="Session Transformer" href="../../advanced/session/contexts.html"/>
+    <menu-item label="Session Transformer" href="../../developing/webapps/contexts.html"/>
   </menu>
 
 </book>

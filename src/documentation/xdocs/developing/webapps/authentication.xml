@@ -720,7 +720,7 @@
         of the user belongs to the same session.</p>
       <p>The easiest way is to use the <em>encodeURL</em> transformer as the last transformation
         step in your pipeline. For more information about session handling, have a look in 
-        the <link href="../session/preface.html">chapter about sessions</link>.</p>
+        the <link href="session.html">chapter about sessions</link>.</p>
      </s2>
   </s1>
 </body>
