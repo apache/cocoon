@@ -89,7 +89,7 @@ import org.xml.sax.SAXException;
  * Testcase for action, generator and transformer components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.4 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.5 2003/07/18 20:57:02 stephan Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
@@ -268,6 +268,8 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         SAXParser parser = null;
         Source inputsource = null;
 
+        assertNotNull("Test for component manager", this.manager);
+
         Document document = null;
         try {
             selector = (ComponentSelector) this.manager.lookup(Transformer.ROLE+
@@ -351,6 +353,8 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         SourceResolver resolver = null;
         SAXParser parser = null;
         Source assertionsource = null;
+
+        assertNotNull("Test for component manager", this.manager);
 
         Document assertiondocument = null;
         try {
