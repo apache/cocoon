@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.14 2000-09-15 04:36:11 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.15 2000-09-15 05:07:35 balld Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
 	xmlns:esql="http://apache.org/cocoon/SQL/v2"
 	xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
-<xspdoc:title>The ESQL logicsheet</xspdoc:title>
+<xspdoc:title>the esql logicsheet</xspdoc:title>
 
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
@@ -100,6 +100,7 @@
 			<xsp:include>java.sql.ResultSetMetaData</xsp:include>
 			<xsp:include>java.sql.SQLException</xsp:include>
 			<xsp:include>java.text.SimpleDateFormat</xsp:include>
+			<xsp:include>java.text.DecimalFormat</xsp:include>
 			<xsp:include>org.apache.turbine.util.db.pool.DBBroker</xsp:include>
 			<xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
 		</xsp:structure>
@@ -289,6 +290,21 @@
 	</xsp:logic>
 </xsl:template>
 
+<xspdoc:desc>if the query has results, this element's children will be instantiated for each row in the result set</xspdoc:desc>
+<xsl:template match="esql:execute-query/esql:results">
+ <xsl:apply-templates/>
+</xsl:template>
+
+<xspdoc:desc>if the query has no results, this element's children will be instantiated once</xspdoc:desc>
+<xsl:template match="esql:execute-query/esql:no-results">
+ <xsl:apply-templates/>
+</xsl:template>
+
+<xspdoc:desc>if the query results in an error, this element's children will be instantiated once</xspdoc:desc>
+<xsl:template match="esql:execute-query/esql:error-results">
+ <xsl:apply-templates/>
+</xsl:template>
+
  <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-columns">
  <xsp:logic>
@@ -339,6 +355,50 @@
    <xsp:expr><xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:otherwise>
  </xsl:choose>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as true or false</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-boolean">
+ <xsp:expr><xsl:call-template name="get-resultset"/>.getBoolean(<xsl:call-template name="get-column"/>) ? "true" : "false"</xsp:expr>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as a double. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-double">
+ <xsl:choose>
+  <xsl:when test="@format">
+   <xsp:expr>new DecimalFormat("<xsl:value-of select="@format"/>").format(new Double(<xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)))</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as a float. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-float">
+ <xsl:choose>
+  <xsl:when test="@format">
+   <xsp:expr>new DecimalFormat("<xsl:value-of select="@format"/>").format(new Float(<xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)))</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as an integer</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-int">
+ <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getInt(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as a long</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-long">
+ <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getLong(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+ <xspdoc:desc>returns the value of the given column as a short</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-short">
+ <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. the fragment is parsed by the default xsp parser and the document element is returned. if a root attribute exists, its value is taken to be the name of an element to wrap around the contents of the fragment before parsing.</xspdoc:desc>
