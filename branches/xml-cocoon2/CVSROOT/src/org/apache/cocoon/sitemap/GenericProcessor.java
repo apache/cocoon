@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-02-28 18:43:21 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-03-28 22:18:24 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -143,7 +143,7 @@ implements Composer, Configurable, Processor, LinkResolver {
         t.setConsumer(s);
 
         XMLConsumer current=t;
-        for (int x=0; x<this.filters.size(); x++) {
+        for (int x=(this.filters.size()-1); x>=0; x--) {
             String k=(String)this.filters.elementAt(x);
             Filter f=(Filter)this.manager.getComponent(k);
             f.setup(req,res,src,(Parameters)this.filtersParam.elementAt(x));
