@@ -31,6 +31,20 @@
    <p>
      This is a list of known issues for Cocoon 2.1.5.
    </p>
+   <s2 title="Store">
+     <p>
+      Cocoon 2.1.5 uses different implementation of the store based on the
+      <link href="http://jakarta.apache.org/turbine/jcs">JCS</link>.
+      This new implementation currently does not allow storing of not serializable objects,
+      and it does not write out memory cache to the disk on shutdown. If you depend on
+      this functionality, you can keep 2.1.4 store configuration.
+     </p>
+     <p>
+      Cocoon 2.1.4 used MRUMemoryStore as store implementation and JISPStore as persistent
+      store implementation. JISPStore is known to corrupt storage file under some
+      conditions.
+     </p>
+   </s2>
    <s2 title="Logging Configuration">
      <p>
       Cocoon 2.1.5 uses a newer version of the Avalon Excalibur logging package
@@ -270,7 +284,7 @@
    <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
-    <p>To make upgrading easier, the class attributes of the store janitor 
+    <p>To make upgrading easier, the class attributes of the store janitor
        component have been removed in <em>cocoon.xconf</em> as the class names have changed.
        The <em>cache-transient</em> and <em>cache-persistent</em> components do
        not exist anymore, so any reference to them must be removed from cocoon.xconf.
@@ -322,7 +336,7 @@
          and the portal framework (sunSpot) are now blocks (session-fw, authentication-fw
          and portal-fw).
       </p>
-      <p>The <em>sunShine transformer</em> has been renamed to <em>session transformer</em>. 
+      <p>The <em>sunShine transformer</em> has been renamed to <em>session transformer</em>.
         All sitemap components starting with <em>sunrise-</em> have been changed to
         start now with <em>auth-</em>. The <em>sunrise-auth</em> action has been
         renamed to <em>auth-protect</em>.
