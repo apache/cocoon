@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-12-11 15:05:54 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-12-11 17:09:40 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe
@@ -90,11 +90,10 @@ public class ProgramGeneratorImpl
           this.manager = manager;
 
           try {
-              log.debug("Lookup " + Roles.MARKUP_LANGUAGE);
               this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
-          log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
+
               this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
-          log.debug("Lookup " + Roles.COCOON);
+
               this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
           } catch (Exception e) {
               log.warn("Could not lookup Component", e);

@@ -50,7 +50,7 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-11 15:05:55 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-11 17:09:43 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
@@ -524,11 +524,19 @@ public abstract class AbstractMarkupLanguage
          * @return Whether the cached logicsheet has changed
          */
         protected boolean hasChanged() {
+            boolean hasChanged = false;
+
             if (this.file == null) {
                 return false;
             }
 
-            return this.lastModified < this.file.lastModified();
+            try {
+                hasChanged = this.lastModified < this.file.lastModified();
+            } catch (SecurityException se) {
+                log.warn("SecurityException", se);
+            }
+
+            return hasChanged;
         }
     }
 

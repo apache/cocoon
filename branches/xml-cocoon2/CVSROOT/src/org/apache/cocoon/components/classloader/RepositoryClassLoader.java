@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-11 16:06:30 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-11 17:09:37 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -95,7 +95,7 @@ class RepositoryClassLoader extends ClassLoader {
         this.repositories.addElement(repository);
     } catch (SecurityException se) {
         log.debug("RepositoryClassLoader:SecurityException", se);
-        throw new IOException("Cannot access directory" + fullFilename);
+        throw new IOException("Cannot access directory");
     }
   }
 
