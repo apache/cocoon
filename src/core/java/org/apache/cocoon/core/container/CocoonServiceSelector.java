@@ -351,6 +351,10 @@ implements ServiceSelector, Serviceable, Configurable {
             handler.initialize();
             this.componentHandlers.put( key, handler );
 
+            if ( this.roleName != null && this.roleName.endsWith("Selector") ) {
+                final String role = this.roleName.substring(0, this.roleName.length()-8);
+                ((CocoonServiceManager)this.serviceManager).addComponentFromSelector(this, role, key);
+            }
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug(
                     "Adding " + component.getName() + " for key [" + key + "]" );

@@ -22,7 +22,6 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ConnectionResetException;
@@ -69,27 +68,23 @@ public abstract class AbstractProcessingPipeline
     protected Generator generator;
     protected Parameters generatorParam;
     protected String generatorSource;
-    protected ServiceSelector generatorSelector;
 
     // Transformer stuff
     protected ArrayList transformers = new ArrayList();
     protected ArrayList transformerParams = new ArrayList();
     protected ArrayList transformerSources = new ArrayList();
-    protected ArrayList transformerSelectors = new ArrayList();
 
     // Serializer stuff
     protected Serializer serializer;
     protected Parameters serializerParam;
     protected String serializerSource;
     protected String serializerMimeType;
-    protected ServiceSelector serializerSelector;
 
     // Reader stuff
     protected Reader reader;
     protected Parameters readerParam;
     protected String readerSource;
     protected String readerMimeType;
-    protected ServiceSelector readerSelector;
 
     /**
      * True when pipeline has been prepared.
@@ -210,12 +205,7 @@ public abstract class AbstractProcessingPipeline
                 "' at " + getLocation(param));
         }
         try {
-            this.generatorSelector = (ServiceSelector) this.newManager.lookup(Generator.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator selector failed at " +getLocation(param), ce);
-        }
-        try {
-            this.generator = (Generator) this.generatorSelector.select(role);
+            this.generator = (Generator) this.newManager.lookup(Generator.ROLE + '/' + role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator '" + role + "' failed at " + getLocation(param), ce);
         }
@@ -245,15 +235,8 @@ public abstract class AbstractProcessingPipeline
             throw new ProcessingException ("Must set a generator before adding transformer '" + role +
                 "' at " + getLocation(param));
         }
-        ServiceSelector selector = null;
         try {
-            selector = (ServiceSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer selector failed at " + getLocation(param), ce);
-        }
-        try {
-            this.transformers.add(selector.select(role));
-            this.transformerSelectors.add(selector);
+            this.transformers.add(this.newManager.lookup(Transformer.ROLE + '/' + role));
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
         }
@@ -283,12 +266,7 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.serializerSelector = (ServiceSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer selector failed at " + getLocation(param), ce);
-        }
-        try {
-            this.serializer = (Serializer)serializerSelector.select(role);
+            this.serializer = (Serializer)this.newManager.lookup(Serializer.ROLE + '/' + role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
         }
@@ -316,12 +294,7 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.readerSelector = (ServiceSelector) this.newManager.lookup(Reader.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of reader selector failed at " + getLocation(param), ce);
-        }
-        try {
-            this.reader = (Reader)readerSelector.select(role);
+            this.reader = (Reader)this.newManager.lookup(Reader.ROLE + '/' + role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader '"+role+"' failed at " + getLocation(param), ce);
         }
@@ -644,41 +617,31 @@ public abstract class AbstractProcessingPipeline
         this.prepared = false;
 
         // Release reader.
-        if (this.readerSelector != null) {
-            this.readerSelector.release(this.reader);
-            this.newManager.release(this.readerSelector);
-            this.readerSelector = null;
+        if (this.reader != null) {
+            this.newManager.release(this.reader);
             this.reader = null;
             this.readerParam = null;
         }
 
-        // Release generator.
-        if (this.generatorSelector != null) {
-            this.generatorSelector.release(this.generator);
-            this.newManager.release(this.generatorSelector);
-            this.generatorSelector = null;
+        if (this.generator != null) {
+            // Release generator.
+            this.newManager.release(this.generator);
             this.generator = null;
             this.generatorParam = null;
         }
 
         // Release transformers
-        int size = this.transformerSelectors.size();
+        int size = this.transformers.size();
         for (int i = 0; i < size; i++) {
-            final ServiceSelector selector =
-                    (ServiceSelector) this.transformerSelectors.get(i);
-            selector.release(this.transformers.get(i));
-            this.newManager.release(selector);
+            this.newManager.release(this.transformers.get(i));
         }
-        this.transformerSelectors.clear();
         this.transformers.clear();
         this.transformerParams.clear();
         this.transformerSources.clear();
 
         // Release serializer
-        if (this.serializerSelector != null) {
-            this.serializerSelector.release(this.serializer);
-            this.newManager.release(this.serializerSelector);
-            this.serializerSelector = null;
+        if (this.serializer != null) {
+            this.newManager.release(this.serializer);
             this.serializerParam = null;
         }
         this.serializer = null;
