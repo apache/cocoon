@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.components.jms.JMSConnectionImpl']">
+	<component class="org.apache.cocoon.components.jms.JMSConnectionImpl"
+               role="org.apache.cocoon.components.jms.JMSConnection/OpenJMS-demo" logger="core">
+       <!-- parameters to go with OpenJMS.sf.net demo on localhost -->
+       <parameter name="scheme" value="rmi"/>
+       <parameter name="host" value="localhost"/>
+       <parameter name="port" value="1099"/>
+       <parameter name="jndiname" value=""/>
+       <parameter name="context-factory" value="org.exolab.jms.jndi.InitialContextFactory"/>
+       <parameter name="topic-factory" value="JmsTopicConnectionFactory"/>
+       <parameter name="topic" value="topic1"/>
+       <parameter name="ack-mode" value="dups"/>
+    </component>
+</xconf>
