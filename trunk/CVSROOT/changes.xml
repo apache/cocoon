@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.200 2001-01-26 23:26:18 greenrd Exp $ 
+  $Id: changes.xml,v 1.201 2001-01-26 23:55:33 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="remove">
+   Removed DCP since it needed maintenance but no-one appears to be using it, and it is obsoleted
+   by XSP.
+  </action>
   <action dev="DB" type="add" due-to="Steffen Stundzig" due-to-email="steffen@smb-tec.com">
    Added SAXONTransformer
   </action>
@@ -107,7 +111,7 @@
   <action dev="RDG" type="add" due-to="Michele Bianchi" due-to-email="mic@pow2.com">
    Added installation instructions for Inprise Application Server and Dynamo.
   </action>
-  <action dev="RDG" type="fix">
+  <action dev="RDG" type="remove">
    Removed obsolete reference to ProducerFromRequest in EngineWrapper.java
   </action>
   <action dev="RDG" type="fix">

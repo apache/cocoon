@@ -26,7 +26,6 @@
   <page id="fp" label="FP Taglib" source="fptaglib.xml"/>
   <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
 <separator/>
-  <page id="dcp" label="DCP Processor" source="dcpprocessor.xml"/>
   <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
   <page id="sqltaglib" label="SQL Taglib" source="sqltaglib.xml"/>
 <separator/>

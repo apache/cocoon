@@ -220,16 +220,6 @@ public class DummyProducer
       it should really have been a Producer in the first place, instead of
       a Processor. This change has been made in Cocoon 2.
     </dd>
-    <dt>The DCP processor (Deprecated)</dt>
-    <dd>
-      Evaluates XML processing
-      instructions with multi-language (Java and EcmaScript) logic. This
-      processor allows you to do programmatic substitution and inclusion
-      eliminating the need for complex processing logic. See the <connect href="dcpprocessor.xml">DCP
-      user guide</connect> for more information. Note: This is deprecated -
-      users are advised to use the more powerful
-      <connect href="xsp-primer.xml">XSP processor</connect> instead.
-    </dd>
     <dt>The SQL processor (Deprecated)</dt>
     <dd>
       Evaluates simple tags

@@ -252,17 +252,10 @@ a Java 1.2 compatible JVM is required for this target.
              filtering="on"/>
   </target>
 
-  <target name="prepare-ecma" depends="init" if="fesi.present">
-    <copydir src="${src.dir}"
-             dest="${build.src}"
-             includes="**/ecmascript/**"
-             filtering="on"/>
-  </target>
-
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-saxon, prepare-ecma, prepare-ldap">
+  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-saxon, prepare-ldap">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
@@ -270,7 +263,7 @@ a Java 1.2 compatible JVM is required for this target.
     <!-- copy src files -->
     <copydir src="${src.dir}"
              dest="${build.src}"
-             excludes="**/parser/Sun*, **/XT*, **/SAXON*, **/ldap/**, **/ecmascript/**"
+             excludes="**/parser/Sun*, **/XT*, **/SAXON*, **/ldap/**"
              filtering="on"/>
   </target>
 

@@ -772,23 +772,6 @@
  </faq>
 </faqsection>
 
-<faqsection title="DCP">
- <faq id="faq-dcpecmascript">
-  <question>Why doesn't DCP work with EcmaScript any more?
-   Where do I find the class <code>FESI/jslib/JSObject</code>?</question>
-  <answer>
-   <p>Since Cocoon now ships with all the required packages and Fesi is a
-    very big package, we decided to make Ecmascript support for DCP optional.</p>
-   <p>So, you should turn on the language interpretation in the cocoon
-    configurations and place the <link href="http://home.worldcom.ch/jmlugrin/fesi/download.html">
-     FESI</link> package in your classpath.</p>
-   <note>the DCP processor should be considered deprecated and we do not guarantee
-    that will be supported in future versions. We highly suggest you to
-    transfor all of your DCP pages into XSP pages.</note>
-  </answer>
- </faq>
-</faqsection>
-
 <faqsection title="Performance">
  <faq id="faq-profiling">
   <question>Is there an easy way to see which parts of the Cocoon pipeline
