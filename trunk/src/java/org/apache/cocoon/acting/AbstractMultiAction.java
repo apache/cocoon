@@ -75,7 +75,7 @@ import java.lang.reflect.Method;
  * will call the method "doSave" of the MultiAction
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.3 2003/05/01 14:48:47 tcurdt Exp $
+ * @version CVS $Id: AbstractMultiAction.java,v 1.4 2003/05/06 09:47:23 stephan Exp $
  */
 public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
@@ -100,7 +100,7 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
                 String methodName = methods[i].getName();
                 if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
                     String actionName = removePrefix(methodName);
-                    methodIndex.put(methodName, methods[i]);
+                    methodIndex.put(actionName, methods[i]);
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("registered method \"" + methodName + "\" as action \"" + actionName + "\"");
                     }
@@ -119,17 +119,14 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
             Request req = ObjectModelHelper.getRequest(objectModel);
             if (req != null) {
                 // checking request for action method parameters
-                String actionName;
+                String name;
                 for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
-                    String name = (String) e.nextElement();
+                    name = (String) e.nextElement();
                     if (name.startsWith(ACTION_METHOD_PREFIX)) {
                         if (name.endsWith(".x") || name.endsWith(".y")) {
-                            actionName = name.substring(ACTION_METHOD_PREFIX.length(), name.length() - 2);
+                            name = name.substring(ACTION_METHOD_PREFIX.length(), name.length() - 2);
                         }
-                        else {
-                            actionName = name.substring(ACTION_METHOD_PREFIX.length());
-                        }
-                        actionMethod = removePrefix(actionName);
+                        actionMethod = removePrefix(name);
                         break;
                     }
                 }
