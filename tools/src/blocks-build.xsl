@@ -550,6 +550,23 @@
         </copy>
       </xsl:if>
 
+      <!-- if this block has a lib directory copy those too (deprecated) -->
+      <if>
+        <available type="dir" file="${{blocks}}/{$block-name}/lib"/>
+        <then>
+          <echo>
+          NOTICE: the preferred method of including library dependencies in your block
+          is by putting them in lib/optional and then declaring them in gump.xml.
+          </echo>
+          <copy filtering="off" todir="${{build.webapp.lib}}">
+            <fileset dir="${{blocks}}/{$block-name}/lib">
+              <include name="*.jar"/>
+              <exclude name="servlet*.jar"/>
+            </fileset>
+          </copy>
+        </then>
+      </if>
+
       <!-- Test if this block has global WEB-INF files -->
       <if>
         <available type="dir" file="${{blocks}}/{$block-name}/WEB-INF/"/>
@@ -586,6 +603,10 @@
             </xsl:for-each>
           </fileset>
         </xsl:if>
+        <!-- include the block/lib directory (deprecated) -->
+        <fileset dir="${{blocks}}/{$block-name}">
+          <include name="lib/*.jar"/>
+        </fileset>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
         <pathelement location="${{build.blocks}}/{$block-name}/dest"/>
         <pathelement location="${{build.blocks}}/{$block-name}/samples"/>
