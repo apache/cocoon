@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.7 2003/05/09 09:47:54 crossley Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.8 2003/06/04 22:45:07 joerg Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -35,12 +35,14 @@
     in WML (Wireless Markup Language) which is the markup language used
     in WAP-enabled agents (such as PDA or cell phones).
    </sample>
+   <sample name="CHTML" href="hello.chtml">
+    Or, as CHTML (Compact HTML), which is used by i-Mode compatible cell phones.
+   </sample>
    <sample name="SVG" href="hello.svg">
     Given the power of XSLT and the fact that many presentation languages are
     based on the XML syntax, it is possible to generate even vector graphics
-    from your content. Here is an example that renders to 
-    SVG (Scalable Vector Graphics). (You need an SVG plugin, or an SVG-capable
-    browser to see this.)
+    from your content. Here is an example that renders to  SVG (Scalable Vector
+    Graphics). (You need an SVG plugin, or an SVG-capable browser to see this.)
    </sample>   
    <sample name="Plain Text" href="hello.txt">
     Sometimes you don't need to be very fancy, so here is a plain text
@@ -84,7 +86,7 @@
     This drawing shows how a simple XML page can be presented in OpenOffice Draw file format.
    </sample>
   </group>
-  
+
   <group name="Hello World Web Service">
    <sample name="Web Service" href="hello.service">
     Here is a super-simple web service that says hi!
@@ -93,5 +95,5 @@
     And this is the corresponding WSDL descriptor.
    </sample>
   </group>
-   
+
 </samples>
