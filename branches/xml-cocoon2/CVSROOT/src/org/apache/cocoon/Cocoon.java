@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.5 $ $Date: 2000-02-27 05:45:17 $
+ * @version CVS $Revision: 1.4.2.6 $ $Date: 2000-05-24 23:15:01 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -86,6 +86,14 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         this.root=this.configurationFile.getParentFile().toURL();
     }
 
+    /**
+     * Set the cocoon root.
+     * @param root The new Cocoon root.
+     */
+    public void setRoot(URL root) {
+        this.root = root;
+    }
+ 
     /**
      * Get the <code>Component</code> associated with the given role.
      */
