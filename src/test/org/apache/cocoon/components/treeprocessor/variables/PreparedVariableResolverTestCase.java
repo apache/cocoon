@@ -30,7 +30,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * Test case for the nested variant of the PreparedVariableResolver
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.2 2004/04/03 20:41:26 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.3 2004/04/04 06:38:16 upayavira Exp $
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
@@ -171,6 +171,20 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         
         PreparedVariableResolver resolver = new PreparedVariableResolver(expr, manager);
         assertEquals("http://cocoon.apache.org", resolver.resolve(context, getObjectModel()));
+    }
+    
+    public void testColonBeginningTextContent() throws PatternException {
+        String expr = ":colon-starts-this";
+        
+        InvokeContext context = new InvokeContext(true);
+        context.enableLogging(new LogKitLogger(getLogger()));
+
+        Map sitemapElements;
+        sitemapElements = new HashMap();
+        context.pushMap("label", sitemapElements);
+        
+        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, manager);
+        assertEquals(":colon-starts-this", resolver.resolve(context, getObjectModel()));
     }
     
     public void testEscapedBraces() throws PatternException {
