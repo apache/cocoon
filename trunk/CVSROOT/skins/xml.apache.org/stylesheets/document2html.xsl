@@ -374,14 +374,10 @@
   <li>
    <strong><xsl:value-of select="."/></strong>
    <xsl:text> - </xsl:text>
-   <xsl:value-of select="following::dd"/>   
+   <xsl:apply-templates select="dd"/>   
   </li>
  </xsl:template>
  
- <xsl:template match="dd">
-  <!-- ignore since already used -->
- </xsl:template>
-
 <!-- ====================================================================== -->
 <!-- table section -->
 <!-- ====================================================================== -->
