@@ -1,6 +1,6 @@
 <!-- === Forrest Targets ================================================= -->
 
-  <target name="forrest" depends="prepare, forrest.init" description="Generates static HTML documentation">
+  <target name="forrest" depends="prepare, prepare-docs, forrest.init" description="Generates static HTML documentation">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
   </target>
 
