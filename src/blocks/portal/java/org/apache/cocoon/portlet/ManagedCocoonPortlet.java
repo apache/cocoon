@@ -641,6 +641,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             }
             res.setProperty("X-Cocoon-Time", timeString);
 
+            // FIXME: contentType is always null (see line 556)
             if (contentType != null && contentType.equals("text/html")) {
                 String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
                 boolean show = this.showTime;
