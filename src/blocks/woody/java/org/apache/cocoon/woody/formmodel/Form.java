@@ -142,7 +142,6 @@ public class Form extends AbstractWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl formAttrs = new AttributesImpl();
         formAttrs.addCDATAAttribute("id", definition.getId());
-
         contentHandler.startElement(Constants.WI_NS, FORM_EL, Constants.WI_PREFIX_COLON + FORM_EL, Constants.EMPTY_ATTRS);
         definition.generateLabel(contentHandler);
 

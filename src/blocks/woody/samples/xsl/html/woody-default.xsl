@@ -93,9 +93,9 @@
   </xsl:template>
 
   <xsl:template match="wi:button">
-    <button name="{@id}" value="selected" type="submit">
-      <xsl:copy-of select="wi:label/node()"/>
-    </button>
+    <input type="submit" name="{@id}">
+      <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
+    </input>
   </xsl:template>
 
   <xsl:template match="wi:multivaluefield">

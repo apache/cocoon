@@ -14,6 +14,7 @@
 
  <group name="Woody Samples">
   <sample name="Various" href="form1">This sample shows validation, event handling and various Woody features.</sample>
+  <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
 
   <sample name="Registration" href="registration">A simple registration form.</sample>
  </group>
