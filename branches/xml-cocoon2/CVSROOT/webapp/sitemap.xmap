@@ -41,13 +41,11 @@
     <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
    </map:serializer> 
-
-   <map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
+   <map:serializer name="svg2jpeg" mime-type="image/jpeg"     src="org.apache.cocoon.serialization.SVGSerializer">
     <encoder>jpegencoder</encoder>
     <transparent>false</transparent>
     <background>#FFFFFF</background>
    </map:serializer> 
-
   </map:serializers>
   
   <map:selectors default="browser">
