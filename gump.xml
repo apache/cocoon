@@ -861,8 +861,10 @@
 
     <library name="xreporter-expression"/>
     <library name="jakarta-oro"/>
-    <library name="neko"/>
-    <library name="daisy"/>    
+    <library name="nekohtml"/>
+    <library name="nekodtd"/>
+    <library name="daisy-util"/>
+    <library name="daisy-htmlcleaner"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
