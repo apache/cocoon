@@ -167,7 +167,7 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
     try {
       final InputStream sis = this.inputSource.getInputStream();
       if (sis == null) {
-        throw new ProcessingException("Source '"+this.inputSource.getURI()+"' not found");
+        throw new ProcessingException("Source '" + this.inputSource.getURI() + "' not found");
       }
 
       if (encoding != null) {
@@ -176,7 +176,7 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
         in = new InputStreamReader(sis);
       }
     } catch (SourceException se) {
-      throw new ProcessingException("Error during resolving of '"+this.source+"'.", se);
+      throw new ProcessingException("Error during resolving of '" + this.source + "'.", se);
     }
 
     LocatorImpl locator = new LocatorImpl();
@@ -222,6 +222,7 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
         break;
       }
     }
+    reader.close();
     contentHandler.endElement(URI, "text", "text");
     contentHandler.endPrefixMapping("");
     contentHandler.endDocument();
