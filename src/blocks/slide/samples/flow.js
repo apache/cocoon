@@ -13,7 +13,7 @@ var nat = slide.getNamespaceToken("cocoon");
 // is/should there be a simple way to share these? an input module?
 var principal;
 var namespace = "cocoon";
-var base = "/samples/slide";
+var base = "/samples/slide/";
 
 // ---------------------------------------------- utility functions
 
@@ -47,7 +47,7 @@ function login(path) {
   cocoon.session;
   var userid = "";
   while (principal == undefined) {
-    cocoon.sendPageAndWait("screens/login.html",{userid:userid,prefix:"/slide-samples"});
+    cocoon.sendPageAndWait("screens/login.html",{userid:userid,prefix:base});
     userid       = cocoon.request.getParameter("userid");
     var password = cocoon.request.getParameter("password");
     if (AdminHelper.login(nat,userid,password)) {
