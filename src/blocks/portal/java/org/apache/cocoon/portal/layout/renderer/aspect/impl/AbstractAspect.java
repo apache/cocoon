@@ -32,11 +32,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Base class for renderer aspects.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspect.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: AbstractAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
  */
 public abstract class AbstractAspect
     extends AbstractLogEnabled

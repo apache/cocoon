@@ -27,14 +27,33 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This renderer aspect tests, if a coplet is sizable and/or maxpageable.
+ * This renderer aspect tests, if a coplet is sizable and/or maxpageable and adds
+ * tags holding URIs for switching to currently inactive modes (i.e. maximize or
+ * minimize).
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;minimize-uri&gt;minimize-event&lt;/minimize-uri&gt;
+ *   &lt;!-- output from following renderers --&gt;
+ * 
+ * or
+ * 
+ *   &lt;maximize-uri&gt;maximize-event&lt;/maximize-uri&gt;
+ *   &lt;!-- processing stops here --&gt;
+ * 
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
  * 
  * TODO: make the names of the aspects to test configurable
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.8 2004/03/10 12:28:29 cziegeler Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.9 2004/04/25 20:09:34 haul Exp $
  */
 public class SizingAspect extends AbstractAspect {
 

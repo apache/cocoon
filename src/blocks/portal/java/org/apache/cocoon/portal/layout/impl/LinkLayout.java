@@ -19,12 +19,14 @@ import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
+ * A link layout references another layout to be used instead. The reference
+ * can be changed using events.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: LinkLayout.java,v 1.3 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: LinkLayout.java,v 1.4 2004/04/25 20:09:34 haul Exp $
  */
 public class LinkLayout extends AbstractLayout implements Layout {
 

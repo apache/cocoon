@@ -45,11 +45,38 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This aspect draws a portlet window for a JSR-168 implementation
+ * This aspect draws a portlet window for a JSR-168 implementation.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;window&gt;
+ *     &lt;title&gt;title&lt;/title&gt;
+ *     &lt;maximize-uri&gt;event&lt;/maximize-uri&gt;
+ *     &lt;minimize-uri&gt;event&lt;/minimize-uri&gt;
+ *     &lt;fullscreen-uri&gt;event&lt;/fullscreen-uri&gt;
+ *     &lt;edit-uri&gt;event&lt;/edit-uri&gt;
+ *     &lt;help-uri&gt;event&lt;/help-uri&gt;
+ *     &lt;view-uri&gt;event&lt;/view-uri&gt;
+ *     &lt;!-- output of following renderers --&gt;
+ *   &lt;/window&gt;
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
+ * 
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ * <tr><th>root-tag</th><td>Should a root tag surrounding the following output
+ *  be generated?</td><td></td><td>boolean</td><td><code>true</code></td></tr>
+ * <tr><th>tag-name</th><td>Name of the root tag if requested.
+ *  </td><td></td><td>String</td><td><code>"window"</code></td></tr>
+ * </tbody></table>
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowAspect.java,v 1.7 2004/03/16 15:56:43 cziegeler Exp $
+ * @version CVS $Id: PortletWindowAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
  */
 public final class PortletWindowAspect 
 extends AbstractAspect 

@@ -29,11 +29,22 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 
 /**
  * This chain holds all configured renderer aspects for one renderer.
- * 
+ *
+ * <h2>Configuration</h2>
+ * <table><tbody>
+ *  <tr><th>aspect</th>
+ *      <td>Multiple aspect renderer configurations. Required attribute
+ *          <code>type</code>. Nested configuration must contain parameters
+ *          for aspect rederer.
+ *      </td>
+ *      <td>req</td><td>Configuration</td><td><code>null</code></td>
+ *  </tr>
+ * </tbody></table>
+ *  
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectChain.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: RendererAspectChain.java,v 1.6 2004/04/25 20:09:34 haul Exp $
  */
 public final class RendererAspectChain {
     

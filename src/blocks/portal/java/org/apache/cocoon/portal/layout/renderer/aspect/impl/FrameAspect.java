@@ -29,11 +29,28 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Adds a cinclude tag for a FrameLayout's source to the resulting stream.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *  &lt;xy:z src="coplet://copletID"/&gt;
+ * </pre>
+ *
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.FrameLayout}</li>
+ * </ul>
+ *
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ * <tr><th>aspect-name</th><td></td><td></td><td>String</td><td><code>"frame"</code></td></tr>
+ * <tr><th>store</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
+ * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: FrameAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
  */
 public class FrameAspect extends AbstractCIncludeAspect {
 

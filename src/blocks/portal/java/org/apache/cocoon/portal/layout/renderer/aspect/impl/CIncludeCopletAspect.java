@@ -27,11 +27,25 @@ import org.xml.sax.SAXException;
 /**
  * This aspect streams a cinclude statement into the stream that
  * will include the coplet using the coplet protocol.
+ * 
+ * <h2>Resulting XML:</h2>
+ * <pre>
+ * &lt;content&gt;
+ *  &lt;xy:z src="coplet://copletID"/&gt;
+ * &lt;/content&gt;
+ * </pre>
+ * where <code>xy</code> is the CInclude namespace and <code>z</code> is
+ * the CInclude tagname.
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CIncludeCopletAspect.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: CIncludeCopletAspect.java,v 1.5 2004/04/25 20:09:34 haul Exp $
  */
 public class CIncludeCopletAspect 
     extends AbstractCIncludeAspect {

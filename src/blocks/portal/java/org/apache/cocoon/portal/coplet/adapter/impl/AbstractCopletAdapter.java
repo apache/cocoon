@@ -32,12 +32,35 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This is the adapter to use pipelines as coplets
+ * This is the abstract base adapter to use pipelines as coplets
+ * 
+ * <h2>Configuration</h2>
+ * <table><tbody>
+ * <tr>
+ *   <th>buffer</th>
+ *   <td>Shall the content of the coplet be buffered? If a coplet is
+ *       buffered, errors local to the coplet are caught and a not 
+ *       availability notice is delivered instead. Buffering does not
+ *       cache responses for subsequent requests.</td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>false</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>timeout</th>
+ *   <td>Max time in seconds content delivery may take. After a timeout,
+ *       a not availability notice is delivered. Setting a timeout automatically
+ *       turns on buffering.</td>
+ *   <td></td>
+ *   <td>int</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * </tbody></table>
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.10 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.11 2004/04/25 20:09:34 haul Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled

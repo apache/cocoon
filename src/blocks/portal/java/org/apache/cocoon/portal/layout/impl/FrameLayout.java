@@ -18,11 +18,14 @@ package org.apache.cocoon.portal.layout.impl;
 import org.apache.cocoon.portal.layout.AbstractLayout;
 
 /**
+ * A frame layout holds a source URI. The URI can be changed dynamically through
+ * events. The URI may contain any URI that can be resolved by the Cocoon 
+ * {@link org.apache.cocoon.environment.SourceResolver}.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameLayout.java,v 1.2 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: FrameLayout.java,v 1.3 2004/04/25 20:09:34 haul Exp $
  */
 public class FrameLayout extends AbstractLayout {
     

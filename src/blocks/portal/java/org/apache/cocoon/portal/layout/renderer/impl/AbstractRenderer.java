@@ -40,11 +40,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
+ * Base class for all renderers.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractRenderer.java,v 1.7 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: AbstractRenderer.java,v 1.8 2004/04/25 20:10:29 haul Exp $
  */
 public abstract class AbstractRenderer
     extends AbstractLogEnabled

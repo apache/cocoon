@@ -34,11 +34,37 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;composite&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." selected="true"&gt;
+ *       &lt;!-- output from processing layout --&gt;
+ *     &lt;/named-item&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *   &lt;/composite&gt;
+ * </pre>
+ *
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ * </ul>
+ *
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ *  <tr><th>store</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
+ *  <tr><th>aspect-name</th><td>Aspect holding the current tab state.</td><td>req</td><td>String</td><td><code>"tab"</code></td></tr>
+ *  <tr><th>tag-name</th><td>Name of the tag enclosing the following output.</td>
+ *      <td></td><td>String</td><td><code>"composite"</code></td></tr>
+ *  <tr><th>root-tag</th><td>Should a tag enclosing the following output be generated?</td>
+ *      <td></td><td>boolean</td><td><code>true</code></td></tr>
+ * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.13 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.14 2004/04/25 20:09:34 haul Exp $
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -77,7 +103,7 @@ public class TabContentAspect
                 if (j == selected) {
                     attributes.addCDATAAttribute("selected", "true");
                 } else {
-                    ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, "tab", new Integer(j));
+                    ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j));
                     attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event));
                 }
                 XMLUtils.startElement(handler, "named-item", attributes);

@@ -58,10 +58,70 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  *
+ * <h2>Configuration</h2>
+ * <table><tbody>
+ *  <tr><th>layouts</th>
+ *      <td>List of layouts.</td>
+ *      <td>req</td>
+ *      <td>Configuration</td>
+ *      <td><code>null</code></td>
+ * </tr>
+ * <tr>
+ *   <th>layouts/layout</th>
+ *   <td>Multiple configured layouts.
+ *   </td>
+ *   <td>req</td>
+ *   <td>Configuration</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/attribute::name</th>
+ *   <td>Unique layout name.</td>
+ *   <td>req</td>
+ *   <td>String</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/attribute::create-id</th>
+ *   <td></td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>false</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/renderers/attribute::default</th>
+ *   <td></td>
+ *   <td>req</td>
+ *   <td>String</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/renderers/renderer</th>
+ *   <td></td>
+ *   <td>req</td>
+ *   <td>Configuration</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/renderers/renderer/attribute::name</th>
+ *   <td></td>
+ *   <td>req</td>
+ *   <td>String</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * <tr>
+ *   <th>layouts/layout/aspects/aspect</th>
+ *   <td></td>
+ *   <td>req</td>
+ *   <td>String</td>
+ *   <td><code>null</code></td>
+ *  </tr>
+ * </tbody></table>
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.15 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.16 2004/04/25 20:09:34 haul Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled

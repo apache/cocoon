@@ -27,11 +27,33 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Create a title tag for a coplet as well as an optional enclosing tag.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *  &lt;window&gt;
+ *    &lt;title&gt;title&lt;/title&gt;
+ *  &lt;/window&gt;
+ * </pre>
+ * 
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
+ * 
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ *   <tr><th>root-tag</th><td>Should a tag enclosing the following output be generated?</td>
+ *      <td></td><td>boolean</td><td><code>true</code></td></tr>
+ *   <tr><th>tag-name</th><td>Name of tag enclosing follwoing output if requested.</td>
+ *      <td></td><td>String</td><td><code>"window"</code></td></tr>
+ * </tbody></table>
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: WindowAspect.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: WindowAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
  */
 public final class WindowAspect extends AbstractAspect {
 

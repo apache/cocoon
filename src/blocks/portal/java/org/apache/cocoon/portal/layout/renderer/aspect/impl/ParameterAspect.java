@@ -29,10 +29,32 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Add layout parameter to resulting XML stream so that they can be picked
+ * up later from a stylesheet for example. When passing parameters to the
+ * {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect}
+ * consider it's ability to set XSL parameters directly.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;parameter name1="value1" name2="value2" ... &gt;
+ *     &lt;!-- output from following renderers --&gt;
+ *   &lt;/parameter&gt;
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.Layout}</li>
+ * </ul> 
  *
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ * <tr><th>tag-name</th><td>Name of tag holding key-value pairs as attributes.</td>
+ *  <td></td><td>String</td><td><code>"parameter"</code></td></tr>
+ * </tbody></table> 
+ * 
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ParameterAspect.java,v 1.2 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: ParameterAspect.java,v 1.3 2004/04/25 20:09:34 haul Exp $
  */
 public final class ParameterAspect extends AbstractAspect {
 
