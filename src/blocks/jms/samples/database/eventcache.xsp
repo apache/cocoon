@@ -3,7 +3,7 @@
 <!--
     XSP event-based cache sample.
 
-    Cvs $Id: eventcache.xsp,v 1.1 2003/10/14 16:40:08 haul Exp $
+    Cvs $Id: eventcache.xsp,v 1.2 2004/02/09 01:54:10 ghoward Exp $
  -->
 
 
@@ -124,7 +124,7 @@
                 </li>
                 <li><a href="install?what=jms">install JMS database triggers with HSQLDB</a><br/>
                     For the JMS example triggers, you need to have setup a JMS system, e.g.
-                    <a href="openjms.sf.net">OpenJMS</a></li>
+                    <a href="http://openjms.sf.net">OpenJMS</a></li>
                 <li><a href="remove">uninstall database triggers</a></li>
             </ul>
         </para>
