@@ -36,6 +36,7 @@ public class Form2Bean {
     private int aNumber;
     private boolean choose;
     private Sex sex;
+    private Boolean enable;
 
     private Collection contacts = new ArrayList();
     private Collection drinks = new ArrayList();
@@ -119,6 +120,14 @@ public class Form2Bean {
 
     public void setChoose(boolean choose) {
         this.choose = choose;
+    }
+    
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 
     public Collection getDrinks() {
