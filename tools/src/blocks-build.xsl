@@ -170,7 +170,7 @@
           <include name="META-INF/**"/>
         </fileset>
       </jar>
-            <if>
+      <if>
         <istrue value="${{include.sources-in-jars}}"/>
         <then>
           <jar jarfile="${{build.blocks}}/@{{name}}-block.jar" update="true">
