@@ -77,7 +77,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.3 2003/07/10 11:40:57 cziegeler Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.4 2003/07/17 17:12:52 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -869,4 +869,5 @@ public class FOM_Cocoon extends ScriptableObject {
                                               result.getClassName()));
         return result;
     }
+
 }
