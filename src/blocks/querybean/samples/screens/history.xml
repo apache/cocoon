@@ -23,7 +23,7 @@
 	<title><i18n:text i18n:catalogue="local">history.page.title</i18n:text></title>
 	<content>
 		<jx:choose>
-			<jx:when test="${history.size()!=0}">
+			<jx:when test="${history != null &amp;&amp; history.size()!=0}">
 				<p class="history.title">
 					<i18n:text i18n:catalogue="local">history.queries.title</i18n:text>: 
 					<span class="history.count"><jx:out value="${history.size()}"/></span>
