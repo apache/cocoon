@@ -25,9 +25,10 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-14 11:08:08 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-16 00:25:06 $
  */
 public class IOUtils {
+
   /**
    * Create a URL from a location. This method supports the
    * <i>resource://</i> pseudo-protocol for loading resources
@@ -37,21 +38,13 @@ public class IOUtils {
    * @return The URL pointed to by the location
    * @exception MalformedURLException If the location is malformed
    */
-  public static URL getURL(String location)
-    throws MalformedURLException
-  {
+  public static URL getURL(String location) throws MalformedURLException {
     if (location.indexOf("://") < 0) {
-      // Absolute file location
-      File file = new File(location);
-
-      return new URL(
-        "file://" +
-	getFullFilename(file).replace(File.separatorChar, '/')
-      );
+      return (new File(location)).toURL();
     } else if (location.startsWith("resource://")) {
-      return ClassUtils.getClassLoader().getResource(
-        location.substring("resource://".length())
-      );
+      URL u = ClassUtils.getClassLoader().getResource(location.substring("resource://".length()));
+      if (u != null) return u;
+      else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
     } else {
       return new URL(location);
     }
