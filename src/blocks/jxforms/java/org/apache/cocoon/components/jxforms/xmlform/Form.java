@@ -76,7 +76,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.3 2003/07/19 20:18:49 coliver Exp $
+ * @version CVS $Id: Form.java,v 1.4 2003/09/02 09:13:51 sylvain Exp $
  */
 public class Form {
 
@@ -587,6 +587,11 @@ public class Form {
      * @return boolean
      */
     protected boolean filterDefaultRequestParameter(String paramName) {
+        // Forbid parameters containing parenthesis to avoid method-call injection
+        if (paramName.indexOf('(') != -1) {
+            return true;
+        }
+
         if (paramName.startsWith(Constants.ACTION_PARAM_PREFIX) ||
             paramName.startsWith(Constants.VIEW_PARAM)) {
             return true;
