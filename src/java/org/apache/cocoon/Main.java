@@ -87,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.9 2003/06/27 18:31:41 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.10 2003/07/19 12:40:44 joerg Exp $
  */
 public class Main {
 
@@ -492,12 +492,12 @@ public class Main {
                         cocoon.addTargets(Main.processURIFile(getNodeValue(node)), destDir);
 
                     } else {
-                        throw new IllegalArgumentException("Unknown element: " + nodeName);
+                        throw new IllegalArgumentException("Unknown element: <" + nodeName + ">");
                     }
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERROR: "+e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
 
         return destDir;
@@ -515,7 +515,7 @@ public class Main {
         }
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength()!=0) {
-            throw new IllegalArgumentException("Unexpected children of "+NODE_LOGGING+" node");
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_LOGGING + "> node");
         }
     }
 
@@ -534,14 +534,14 @@ public class Main {
         }
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength()!=0) {
-            throw new IllegalArgumentException("Unexpected children of "+NODE_LOGGING+" node");
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_BROKEN_LINKS + "> node");
         }
     }
 
     private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength() != 0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_LOGGING + "> node");
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_URI + "> node");
         }
 
         if (node.getAttributes().getLength() == 0) {
