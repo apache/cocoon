@@ -35,9 +35,9 @@ import org.xml.sax.SAXException;
  * Allows Servlets and JSPs to be used as a generator.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPGenerator.java,v 1.4 2004/04/24 01:57:19 joerg Exp $
+ * @version CVS $Id: JSPGenerator.java,v 1.5 2004/05/01 00:49:29 joerg Exp $
  */
-public class JSPGenerator extends ServiceableGenerator {
+public class JSPGenerator extends FileGenerator {
 
     /**
      * Generate XML data from JSPEngine output.
@@ -58,13 +58,11 @@ public class JSPGenerator extends ServiceableGenerator {
 
         JSPEngine engine = null;
         SAXParser parser = null;
-        Source inputSource = null;
         Source contextSource = null;
         try {
-            inputSource = this.resolver.resolveURI(this.source);
             contextSource = this.resolver.resolveURI("context:/");
 
-            String inputSourceURI = inputSource.getURI();
+            String inputSourceURI = this.inputSource.getURI();
             String contextSourceURI = contextSource.getURI();
 
             if (!inputSourceURI.startsWith(contextSourceURI)) {
@@ -104,7 +102,6 @@ public class JSPGenerator extends ServiceableGenerator {
         } finally {
             super.manager.release(parser);
             super.manager.release(engine);
-            this.resolver.release(inputSource);
             this.resolver.release(contextSource);
         }
     }
