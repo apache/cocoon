@@ -105,7 +105,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    protected AbstractComponentHandler getComponentHandler( final Class componentClass,
+    protected ComponentHandler getComponentHandler( final Class componentClass,
                                                     final Configuration configuration,
                                                     final ServiceManager serviceManager)
     throws Exception {

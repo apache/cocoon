@@ -133,12 +133,12 @@ public class XSPUtil {
     }
 
     public static String formEncode(String text) throws Exception {
-        return URLEncoder.encode(text);
+        return URLEncoder.encode(text, "utf-8");
     }
 
     // Shameless, ain't it?
     public static String formDecode(String s) throws Exception {
-        return URLDecoder.decode(s);
+        return URLDecoder.decode(s, "utf-8");
     }
 
     /* Logicsheet Utility Methods */

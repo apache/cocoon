@@ -19,7 +19,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.core.container.AbstractComponentHandler;
+import org.apache.cocoon.core.container.ComponentHandler;
 
 /**
  * This interface states the functionality of a program.
@@ -38,7 +38,7 @@ public interface Program {
     /**
      * Get ComponentHandler which holds instances of this program.
      */
-    AbstractComponentHandler getHandler(ServiceManager manager,
+    ComponentHandler getHandler(ServiceManager manager,
                                 Context context) throws Exception;
 
     /**

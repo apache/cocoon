@@ -24,6 +24,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
+import org.apache.cocoon.core.container.ComponentHandler;
 
 import java.io.File;
 import java.util.Collection;
@@ -61,9 +62,9 @@ public class PythonProgram extends AbstractLogEnabled implements Program {
         return file.toString();
     }
 
-    public AbstractComponentHandler getHandler(ServiceManager manager,
+    public ComponentHandler getHandler(ServiceManager manager,
                                        Context context)
-            throws Exception {
+    throws Exception {
 
         return AbstractComponentHandler.getComponentHandler(
                 clazz, config, manager, context, getLogger(), null, null);

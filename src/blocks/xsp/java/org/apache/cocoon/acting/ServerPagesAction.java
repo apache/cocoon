@@ -28,6 +28,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
+import org.apache.cocoon.core.container.ComponentHandler;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -79,7 +80,7 @@ public class ServerPagesAction
     public static final String ACTION_RESULT_OBJECT = "xsp-action:result";
     public static final String ACTION_SUCCESS_OBJECT = "xsp-action:success";
 
-    private AbstractComponentHandler generatorHandler;
+    private ComponentHandler generatorHandler;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
