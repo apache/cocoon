@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+ <title>Live Sites using Cocoon</title>
+ <authors>
+  <person name="Donald Ball" email="balld@webslingerZ.com"/>
+ </authors>
+ </header>
+ <body>
+ <ol>
+  <li><link href="http://www.zen.co.za/">http://www.zen.co.za/</link></li>
+  <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za/</link></li>
+  <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com/</link></li>
+  <li><link href="http://www.trilug.org/">http://www.trilug.org/</link></li>
+ </ol>
+ </body>
+</document>
