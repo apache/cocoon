@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.94 2003/07/18 14:46:30 gianugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.95 2003/07/20 03:33:42 crossley Exp $:-->
 <status>
 
   <developers>
@@ -163,6 +163,11 @@
     </action>
 
     <action context="code">
+      Lucene is writing info to stdout when searching.
+    </action>
+
+    <action context="code">
+<!-- FIXME: remove ... this already above -->
       For 2.1: Make a guide on how to upgrade Cocoon, and see how this can be eased.
     </action>
 
@@ -184,6 +189,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="DC" type="fix" fixes-bug="21557" due-to="Conal Tuohy" due-to-email="conal@nzetc.org">
+    Various fixes and enhancements to Lucene search. Propagate the lucene:*
+    elements to the result tree and add "elapsed-time" attribute, so now
+    possible to transform the results into a useful report about indexing.
+    Fix "incremental" indexing.
+  </action>
   <action dev="GR" type="add">
     Added CLOB support in SQLTransformer.
   </action>
