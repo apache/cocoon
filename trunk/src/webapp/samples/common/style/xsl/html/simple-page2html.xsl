@@ -26,31 +26,30 @@
 
   <xsl:template match="page">
    <html>
-     <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
-    <head>
-     <title>
-      <xsl:value-of select="title"/>
-     </title>
-    </head>
-    <body>
-      <xsl:call-template name="resources"/>
-      <xsl:apply-templates/>
-    </body>
+     <head>
+       <title><xsl:value-of select="title"/></title>
+       <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
+     </head>
+     <body>
+       <xsl:call-template name="resources"/>
+       <xsl:apply-templates/>
+     </body>
    </html>
   </xsl:template>
 
   <xsl:template name="resources">
     <div class="resources">
-      <table width="100%">
+      <table width="100%" cellpadding="3">
         <tbody>
           <tr>
-            <td>
+            <td width="90%">&#160;</td>
+            <td nowrap="nowrap">
               <a target="_blank" href="{concat($contextPath,$servletPath,'?cocoon-view=content')}">Content View</a>
             </td>
-            <td>
+            <td nowrap="nowrap">
               <a target="_blank" href="{concat($path,$view-source)}">Source</a>
             </td>
-            <td>
+            <td nowrap="nowrap">
               <a target="_blank" href="{concat($path,$sitemap)}">Sitemap</a>
             </td>
             <xsl:for-each select="resources/resource">
@@ -106,5 +105,4 @@
 
   <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
   <xsl:template match="text()" priority="-1"><xsl:value-of select="."/></xsl:template>
-
 </xsl:stylesheet>
