@@ -27,7 +27,7 @@ import org.apache.cocoon.bean.helpers.BeanConfigurator;
  * introspection (due to classpath issues).
  *  
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: AntDelegate.java,v 1.3 2004/04/30 12:55:55 upayavira Exp $
+ * @version CVS $Id$
  */
 public class AntDelegate {
 
@@ -39,7 +39,7 @@ public class AntDelegate {
 
         System.out.println(CocoonBean.getProlog());
 
-        if (cocoon.getTargetCount() ==0 && cocoon.isPrecompileOnly()) {
+        if (!cocoon.isPrecompileOnly() && cocoon.getTargetCount() ==0) {
             listener.messageGenerated("Please, specify at least one starting URI.");
             System.exit(1);
         }
