@@ -77,7 +77,7 @@ import org.apache.commons.cli.HelpFormatter;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.bean.CocoonBean;
-import org.apache.cocoon.bean.BeanListener;
+import org.apache.cocoon.bean.helpers.OutputStreamListener;
 
 /**
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
@@ -87,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.13 2003/08/28 19:21:00 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.14 2003/09/15 19:18:17 upayavira Exp $
  */
 public class Main {
 
@@ -174,9 +174,7 @@ public class Main {
     private static final String ATTR_URI_DESTURI = "dest";
 
     private static Options options;
-    private static List brokenLinks = new ArrayList();
-    private static String brokenLinkReportFile = null;
-    private static String brokenLinkReportType = "text";
+    private static OutputStreamListener listener;
 
     private static void setOptions() {
         options = new Options();
@@ -297,11 +295,9 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        long startTimeMillis = System.currentTimeMillis();
-
         Main.setOptions();
         CommandLine line = new PosixParser().parse( options, args );
-        CLIListener listener = new Main.CLIListener();
+        listener = new OutputStreamListener(System.out);
         CocoonBean cocoon = new CocoonBean();
         cocoon.addListener(listener);
 
@@ -369,7 +365,7 @@ public class Main {
             cocoon.setDefaultFilename(line.getOptionValue(DEFAULT_FILENAME_OPT));
         }
         if (line.hasOption(BROKEN_LINK_FILE_OPT)) {
-            brokenLinkReportFile = line.getOptionValue(BROKEN_LINK_FILE_OPT);
+            listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
         }
         if (line.hasOption(URI_FILE_OPT)) {
             cocoon.addTargets(processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
@@ -392,12 +388,10 @@ public class Main {
         cocoon.process();
         cocoon.dispose();
 
-        listener.outputBrokenLinks();
+        listener.complete();
 
-        long duration = System.currentTimeMillis() - startTimeMillis;
-        System.out.println("Total time: " + (duration / 60000) + " minutes " + (duration % 60000)/1000 + " seconds");
 
-        int exitCode = (brokenLinks.size() == 0 ? 0 : 1);
+        int exitCode = (listener.isSuccessful() ? 0 : 1);
         System.exit(exitCode);
     }
 
@@ -548,10 +542,10 @@ public class Main {
 
     private static void parseBrokenLinkNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_FILE)) {
-            brokenLinkReportFile = Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE);
+            listener.setReportFile(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE));
         }
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_TYPE)) {
-            brokenLinkReportType = Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE);
+            listener.setReportType(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE));
         }
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_GENERATE)) {
         cocoon.setBrokenLinkGenerate(Main.getBooleanAttributeValue(node, ATTR_BROKEN_LINK_GENERATE));
@@ -714,75 +708,5 @@ public class Main {
     private static void printVersion() {
         System.out.println(Constants.VERSION);
         System.exit(0);
-    }
-    public static class CLIListener implements BeanListener {
-        public void pageGenerated(String uri, int linksInPage, int pagesRemaining) {
-            if (linksInPage == -1) {
-                this.print("* " + uri);
-            } else {
-                this.print("* ["+linksInPage + "] "+uri);
-            }
-        }
-        public void messageGenerated(String msg) {
-            this.print(msg);
-        }
-
-        public void warningGenerated(String uri, String warning) {
-            this.print("Warning: "+warning + " when generating " + uri);
-        }
-
-        public void brokenLinkFound(String uri, String message) {
-            this.print("X [0] "+uri+"\tBROKEN: "+message);
-            brokenLinks.add(uri + "\t" + message);
-        }
-
-        public void outputBrokenLinks() {
-            if (brokenLinkReportFile == null) {
-                return;
-            } else if ("text".equalsIgnoreCase(brokenLinkReportType)) {
-                outputBrokenLinksAsText();
-            } else if ("xml".equalsIgnoreCase(brokenLinkReportType)) {
-                outputBrokenLinksAsXML();
-            }
-        }
-        private void outputBrokenLinksAsText() {
-            PrintWriter writer;
-            try {
-                writer =
-                        new PrintWriter(
-                                new FileWriter(new File(brokenLinkReportFile)),
-                                true);
-                for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
-                    writer.println((String) i.next());
-                }
-                writer.close();
-            } catch (IOException ioe) {
-                this.print("Broken link file does not exist: " + brokenLinkReportFile);
-            }
-        }
-        private void outputBrokenLinksAsXML() {
-            PrintWriter writer;
-            try {
-                writer =
-                        new PrintWriter(
-                                new FileWriter(new File(brokenLinkReportFile)),
-                                true);
-                writer.println("<broken-links>");
-                for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
-                    String linkMsg = (String) i.next();
-                    String uri = linkMsg.substring(0,linkMsg.indexOf('\t'));
-                    String msg = linkMsg.substring(linkMsg.indexOf('\t')+1);
-                    writer.println("  <link message=\"" + msg + "\">" + uri + "</link>");
-                }
-                writer.println("</broken-links>");
-                writer.close();
-            } catch (IOException ioe) {
-                this.print("Could not create broken link file: " + brokenLinkReportFile);
-            }
-        }
-
-        private void print(String message) {
-            System.out.println(message);
-        }
     }
 }

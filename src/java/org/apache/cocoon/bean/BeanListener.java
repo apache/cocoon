@@ -55,7 +55,7 @@ package org.apache.cocoon.bean;
  * as the bean makes progress through the links to be called.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanListener.java,v 1.1 2003/06/27 13:50:38 upayavira Exp $
+ * @version CVS $Id: BeanListener.java,v 1.2 2003/09/15 19:18:17 upayavira Exp $
  */
 public interface BeanListener {
 
@@ -65,8 +65,22 @@ public interface BeanListener {
      * @param linksInPage    Number of links found in this page
      * @param pagesRemaining Number of pages still to be generated
      */
-    public void pageGenerated(String uri, int linksInPage, int pagesRemaining);
-
+    public void pageGenerated(String sourceURI,
+                              String destinationURI, 
+                              int pageSize,
+                              int linksInPage, 
+                              int newLinksinPage, 
+                              int pagesRemaining, 
+                              int pageComplete, 
+                              long timeTaken);
+                              
+    /**
+     * Report a that was skipped because its URI matched an
+     * include/exclude pattern.
+     * @param msg            
+     */
+    public void pageSkipped(String uri);
+    
     /**
      * Report a general message about operation of the bean
      * @param msg            The message to be reported
@@ -86,5 +100,12 @@ public interface BeanListener {
      * @param uri            The URI that failed to be generated
      * @param message        A reason why the link was not generated
      */
-    public void brokenLinkFound(String uri, String message);
+    public void brokenLinkFound(String uri, String parentURI, String message, Throwable t);
+    
+    /**
+     * Signals completion of the generation process. This method can
+     * be used to write out reports, display time generation duration,
+     * etc.
+     */
+    public void complete();
 }
