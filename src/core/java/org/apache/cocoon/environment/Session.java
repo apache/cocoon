@@ -42,7 +42,7 @@ import java.util.Enumeration;
  * will not be directly visible in another.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Session.java,v 1.3 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  *
  */
 

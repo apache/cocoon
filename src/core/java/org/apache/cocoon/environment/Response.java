@@ -22,7 +22,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Response.java,v 1.3 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  *
  */
 

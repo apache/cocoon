@@ -51,7 +51,7 @@ package org.apache.cocoon.environment;
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cookie.java,v 1.4 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  *
  */
 
