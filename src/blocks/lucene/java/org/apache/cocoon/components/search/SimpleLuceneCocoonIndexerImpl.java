@@ -83,7 +83,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.4 2003/12/12 08:14:41 huber Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.5 2003/12/14 20:59:08 huber Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Composable, Disposable
@@ -216,8 +216,11 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             Iterator cocoonCrawlerIterator = cocoonCrawler.iterator();
             while (cocoonCrawlerIterator.hasNext()) {
                 URL crawl_url = (URL) cocoonCrawlerIterator.next();
-
-                if (!crawl_url.getHost().equals(base_url.getHost()) ||
+                // result of fix Bugzilla Bug 25270, in SimpleCocoonCrawlerImpl
+                // check if crawl_url is null
+                if (crawl_url == null) {
+                    continue;
+                } else if (!crawl_url.getHost().equals(base_url.getHost()) ||
                         crawl_url.getPort() != base_url.getPort()) {
 
                     // skip urls using different host, or port than host,
