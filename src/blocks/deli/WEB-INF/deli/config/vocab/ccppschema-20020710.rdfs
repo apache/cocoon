@@ -320,7 +320,7 @@
 
 	<rdf:Description rdf:ID="SoundOutputCapable">
 		<rdf:type rdf:resource="&ns-rdfs;Property"/>
-		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform "/>
+		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
       Description:  Indicates whether the device supports sound output
                     through an external speaker, headphone jack, or other
@@ -518,7 +518,7 @@
 	<rdf:Description rdf:ID="MexeClassmarks">
 		<rdf:type rdf:resource="&ns-rdfs;Property"/>
 		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"/>
-		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform "/>
+		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
 Description: List of MExE classmarks supported by the device. Value "1" means the MExE device supports WAP, value "2" means that MExE device supports Personal Java and value "3" means that MExE device supports MIDP applications.
       	Type:         Literal (bag)
@@ -639,7 +639,7 @@ Description: List of MExE classmarks supported by the device. Value "1" means th
 
 	<rdf:Description rdf:ID="SupportedBluetoothVersion">
 		<rdf:type rdf:resource="&ns-rdfs;Property"/>
-		<rdfs:domain rdf:resource="&ns-prf;NetworkCharacteristics "/>
+		<rdfs:domain rdf:resource="&ns-prf;NetworkCharacteristics"/>
 		<rdfs:comment>
       	Description: Supported Bluetooth version.
                 Type: 	 	Literal
