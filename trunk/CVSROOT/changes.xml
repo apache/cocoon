@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.138 2000-10-30 11:28:52 jeremy Exp $ 
+  $Id: changes.xml,v 1.139 2000-11-01 20:20:38 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -14,15 +14,17 @@
     <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
     <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
     <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
-    <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="JQ" type="fix" due-to="Konstantin Piroumian" due-to-email="KPiroumian@flagship.ru">
-   Fixed fp.xsl, to work better when mixed with other taglibs.
+  <action dev="RDG" type="update">
+   IMPORTANT: Made esql default to inner-method="false" since the
+   inner-method facility is not always needed and causes confusion.
   </action>
-  <action dev="JQ" type="fix">
-   Fixed fp.xsl, to hopefully allow use of config elements properly.
+  <action dev="RDG" type="update">
+   Cocoon now sets a Last-Modified HTTP header based on the time the
+   result was generated (either now or when the result was last changed
+   in the cache).
   </action>
   <action dev="RDG" type="fix" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
    Fixed XSPProcessor to pick up correct classpath and

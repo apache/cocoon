@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.41 2000-10-27 11:45:56 greenrd Exp $
+  $Id: todo.xml,v 1.42 2000-11-01 20:20:37 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,12 +16,6 @@
  </devs>
 
  <actions priority="high">
-  <action context="code">
-   Fix Tomcat bug (see cocoon-dev list).
-  </action>
-  <action context="code">
-   Make ESQL default to inner-method=false.
-  </action>
   <action context="code">
    Track down cause of OutOfMemoryError.
   </action>
