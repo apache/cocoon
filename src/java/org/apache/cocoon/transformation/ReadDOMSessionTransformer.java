@@ -57,6 +57,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -88,7 +89,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ReadDOMSessionTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: ReadDOMSessionTransformer.java,v 1.2 2003/10/08 12:43:52 bruno Exp $
  */
 public class ReadDOMSessionTransformer extends AbstractTransformer  {
 
@@ -174,7 +175,7 @@ public class ReadDOMSessionTransformer extends AbstractTransformer  {
             Object node = session.getAttribute(attributeName);
             if (node != null)  {
                 getLogger().debug("Start streaming");
-                XMLUtils.valueOf(super.xmlConsumer, node);
+                XMLUtils.valueOf(new IncludeXMLConsumer(super.xmlConsumer), node);
             } else {
                 getLogger().error("No attribute " + attributeName + " in session");
             }
