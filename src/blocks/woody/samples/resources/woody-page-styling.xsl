@@ -4,15 +4,14 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-  
+
   <xsl:template name="woody-page-head">
-    
+
     <!-- only woody_showTab is needed here. Assume woody-lib.js is loaded by the field-styling -->
   </xsl:template>
-  
-  <xsl:template name="woody-page-body">
-  </xsl:template>
-  
+
+  <xsl:template name="woody-page-body"/>
+
   <!--
     wi:group : default is to enclose items in a div
   -->
@@ -22,7 +21,7 @@
       <xsl:apply-templates mode="group-layout" select="."/>
     </div>
   </xsl:template>
-  
+
   <!--
     wi:group of type tabs
   -->
@@ -43,18 +42,18 @@
         <xsl:otherwise>0</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    
+
     <!-- copy the "state-widget" attribute for use in for-each -->
     <xsl:variable name="state-widget" select="wi:state/wi:*/@id"/>
-    
+
     <xsl:variable name="id" select="generate-id()"/>
     <div id="{$id}">
-    
+
       <!-- add an hidden input for the state -->
       <xsl:if test="$state-widget">
         <input type="hidden" name="{$state-widget}" value="{$active}"/>
       </xsl:if>
-    
+
       <!-- div containing the tabs -->
       <div class="woody-tabArea">
         <xsl:for-each select="wi:items/wi:*">
@@ -75,7 +74,7 @@
           </span>
         </xsl:for-each>
       </div>
-      
+
       <!-- a div for each of the items -->
       <xsl:for-each select="wi:items/wi:*">
         <div class="woody-tabContent" id="{$id}_items_{position() - 1}">
@@ -87,8 +86,8 @@
       </xsl:for-each>
     </div>
   </xsl:template>
-  
-  
+
+
   <!--
     wi:group of type choice : a popup is used instead of tabs
   -->
@@ -109,10 +108,10 @@
         <xsl:otherwise>0</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    
+
     <!-- copy the "state-widget" attribute for use in for-each -->
     <xsl:variable name="state-widget" select="wi:state/wi:*/@id"/>
-    
+
     <xsl:variable name="id" select="generate-id()"/>
     <fieldset id="{$id}">
       <legend>
@@ -141,7 +140,7 @@
           <span style="color:red; font-weight: bold">&#160;!&#160;</span>
         </xsl:if>
       </legend>
-      
+
       <!-- a div for each of the items -->
       <xsl:for-each select="wi:items/wi:*">
         <div id="{$id}_items_{position() - 1}">
@@ -153,7 +152,7 @@
       </xsl:for-each>
     </fieldset>
   </xsl:template>
-  
+
   <!--
     wi:group of type fieldset : enclose items in a fieldset frame
   -->
@@ -164,14 +163,14 @@
       <xsl:apply-templates mode="group-layout" select="."/>
     </fieldset>
   </xsl:template>
-  
+
   <!--
     Group items layout : default is no layout
   -->
   <xsl:template match="wi:group" mode="group-layout">
     <xsl:apply-templates select="wi:items/node()"/>
   </xsl:template>
-  
+
   <!--
     Columnized group items layout
   -->
@@ -182,7 +181,7 @@
       </tbody>
     </table>
   </xsl:template>
-  
+
   <!--
     Default column layout : label left and input right
   -->
