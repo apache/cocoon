@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.275 2004/03/12 03:31:40 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.276 2004/03/12 14:57:58 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="25437" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
+     ForwardEnvironmentWrapper delegates isResponseModified/setResponseIsNotModified to wrapped environment.
+   </action>
    <action dev="JH" type="update" fixes-bug="27600">
      CForms: Change the syntax for repeater row identity handling.
    </action>
