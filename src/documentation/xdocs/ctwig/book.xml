@@ -11,8 +11,8 @@
 		<menu-item label="Getting Started" href="ctwig-gettingstarted.html"/>
 		<menu-item label="Installing" href="ctwig-installing.html"/>
 		<menu-item label="Transformations" href="ctwig-transformations.html"/>
-		<menu-item label="Resources" href="ctwig-resources.html"/>
 		<menu-item label="Contributing" href="ctwig-contributing.html"/>
 		<menu-item label="OSX" href="ctwig-osx.html"/>
+        <external label="Cocoon Links" href="http://cocoon.apache.org/link/index.html"/>  
 	</menu>
 </book>
