@@ -62,6 +62,8 @@ import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
@@ -74,7 +76,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.5 2003/11/21 11:37:48 unico Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.6 2003/11/21 16:09:28 unico Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, Serviceable, Parameterizable, ThreadSafe {
@@ -94,6 +96,8 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
      * </p>
      */
     public static final String DEFAULT_PROPERTY_NAME = "result";
+    
+    private static final SourceValidity VALIDITY = new NOPValidity();
     
     private String propertynamespace;
     private String propertyname;
@@ -174,5 +178,12 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
         return this.propertynamespace.equals(namespace) && this.propertyname.equals(name);
     }
 
+    /**
+     * Returns NOPValidity
+     */
+    public SourceValidity getValidity(Source source) {
+        return VALIDITY;
+    }
+    
 }
 
