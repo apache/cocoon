@@ -58,9 +58,6 @@ public class DefaultThreadPool
     /** Should we wait for running jobs to terminate on shutdown ? */
     private boolean m_shutdownGraceful;
 
-    /** The priority of threads */
-    private int m_priority;
-
     /** The maximum queue size */
     private int m_queueSize;
 
@@ -140,7 +137,7 @@ public class DefaultThreadPool
      */
     public int getPriority(  )
     {
-        return m_priority;
+        return ((ThreadFactory)super.getThreadFactory()).getPriority();
     }
 
     /**
@@ -287,16 +284,6 @@ public class DefaultThreadPool
     void setName( String name )
     {
         m_name = name;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param priority The priority to set.
-     */
-    void setPriority( final int priority )
-    {
-        m_priority = priority;
     }
 
     /**
