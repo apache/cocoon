@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.62 2001-01-23 19:52:43 greenrd Exp $
+  $Id: todo.xml,v 1.63 2001-01-24 02:04:52 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -30,6 +30,10 @@
   </action>
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
+  </action>
+  <action context="design">
+   Need better exception-handling architecture - converting exceptions to strings
+   in taglibs may not be best solution.
   </action>
   <action context="samples" assigned-to="DB">
    Update xinclude samples for new spec.
