@@ -18,6 +18,8 @@ package org.apache.cocoon.components.xpointer.parser;
 /**
  * An implementation of interface CharStream, where the stream is assumed to
  * contain only ASCII characters (without unicode processing).
+ * 
+ * @version CVS $Id$
  */
 
 public class SimpleCharStream {
@@ -41,7 +43,7 @@ public class SimpleCharStream {
     protected int maxNextCharInd = 0;
     protected int inBuf = 0;
 
-    protected void ExpandBuff(boolean wrapAround) {
+    protected void expandBuff(boolean wrapAround) {
         char[] newbuffer = new char[bufsize + 2048];
         int newbufline[] = new int[bufsize + 2048];
         int newbufcolumn[] = new int[bufsize + 2048];
@@ -127,7 +129,7 @@ public class SimpleCharStream {
         tokenBegin = 0;
     }
 
-    protected void FillBuff() throws java.io.IOException {
+    protected void fillBuff() throws java.io.IOException {
         if (maxNextCharInd == available) {
             if (available == bufsize) {
                 if (tokenBegin > 2048) {
@@ -136,11 +138,11 @@ public class SimpleCharStream {
                 } else if (tokenBegin < 0)
                     bufpos = maxNextCharInd = 0;
                 else
-                    ExpandBuff(false);
+                    expandBuff(false);
             } else if (available > tokenBegin)
                 available = bufsize;
             else if ((tokenBegin - available) < 2048)
-                ExpandBuff(true);
+                expandBuff(true);
             else
                 available = tokenBegin;
         }
@@ -175,7 +177,7 @@ public class SimpleCharStream {
         return c;
     }
 
-    protected void UpdateLineColumn(char c) {
+    protected void updateLineColumn(char c) {
         column++;
 
         if (prevCharIsLF) {
@@ -219,11 +221,11 @@ public class SimpleCharStream {
         }
 
         if (++bufpos >= maxNextCharInd)
-            FillBuff();
+            fillBuff();
 
         char c = buffer[bufpos];
 
-        UpdateLineColumn(c);
+        updateLineColumn(c);
         return (c);
     }
 

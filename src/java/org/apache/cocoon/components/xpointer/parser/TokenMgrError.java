@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.components.xpointer.parser;
 
+/**
+ * @version CVS $Id$
+ *
+ */
 public class TokenMgrError extends Error {
     /*
      * Ordinals for various reasons why an Error of this type can be thrown.
@@ -107,7 +111,7 @@ public class TokenMgrError extends Error {
      *    curchar     : the offending character
      * Note: You can customize the lexical error message by modifying this method.
      */
-    protected static String LexicalError(
+    protected static String lexicalError(
         boolean EOFSeen,
         int lexState,
         int errorLine,
@@ -165,7 +169,7 @@ public class TokenMgrError extends Error {
         char curChar,
         int reason) {
         this(
-            LexicalError(
+            lexicalError(
                 EOFSeen,
                 lexState,
                 errorLine,
