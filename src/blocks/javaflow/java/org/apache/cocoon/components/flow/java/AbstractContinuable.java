@@ -17,6 +17,7 @@ package org.apache.cocoon.components.flow.java;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
@@ -31,7 +32,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.4 2004/05/04 11:54:35 cziegeler Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.5 2004/06/23 09:16:31 stephan Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
@@ -109,6 +110,10 @@ public abstract class AbstractContinuable implements Continuable {
     
     public Map getObjectModel() {
         return ContextHelper.getObjectModel(getContext().getAvalonContext());
+    }
+    
+    public Parameters getParameters() {
+    	return getContext().getParameters();
     }
 
     public void processPipelineTo(String uri, Object bizdata, OutputStream out) {

@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.Redirector;
 
@@ -27,7 +28,7 @@ import org.apache.cocoon.environment.Redirector;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ContinuationContext.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: ContinuationContext.java,v 1.2 2004/06/23 09:16:31 stephan Exp $
  */
 public class ContinuationContext {
 
@@ -38,6 +39,8 @@ public class ContinuationContext {
     private Context avalonContext;
     private ServiceManager manager;
     private Redirector redirector;
+    
+    private Parameters parameters;
 
     public ContinuationContext() {
     }
@@ -89,4 +92,12 @@ public class ContinuationContext {
     public Redirector getRedirector() {
         return redirector;
     }
+    
+	public Parameters getParameters() {
+		return parameters;
+	}
+	
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
 }
