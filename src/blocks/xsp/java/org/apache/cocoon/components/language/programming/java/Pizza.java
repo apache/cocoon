@@ -32,22 +32,19 @@ import java.io.PrintStream;
  * This class wraps the Pizza Java Compiler.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Pizza.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  */
 public class Pizza extends Javac {
 
     public final static String PIZZA_CLASS = "net.sf.pizzacompiler.compiler.Main";
 
     public Pizza() {
-        super(true);
-
         try {
             ClassUtils.loadClass(PIZZA_CLASS);
         } catch (ClassNotFoundException e) {
             Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon").error("No Pizza Java compiler found in your classpath. Make sure you added 'pizza.jar'", e);
             throw new RuntimeException("No Pizza Java compiler found in your classpath. Make sure you added 'pizza.jar'");
         }
-
         net.sf.pizzacompiler.compiler.Main.init();
     }
 
