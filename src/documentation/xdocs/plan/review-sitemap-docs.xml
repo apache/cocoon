@@ -77,7 +77,7 @@
         <li>- - Not relevant.</li>
         <li>* - Has issues, needs more work.</li>
       </ul>
-      <p>There are 315 entries.</p>
+      <p>There are 314 entries.</p>
 
     <s2 title="Actions">
       <table><!-- table: actions -->
@@ -595,15 +595,6 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/helpers/PreemptiveLoaderAction.html">PreemptiveLoaderAction</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>core</td>
-  <!-- C --><td>n</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/PropagatorAction.html">PropagatorAction</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
@@ -843,7 +834,7 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketContentGenerator.html">BasketContentGenerator</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketContentGenerator.html">BasketContentGenerator</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
@@ -852,7 +843,7 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketGenerator.html">BasketGenerator</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketGenerator.html">BasketGenerator</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
@@ -2533,7 +2524,7 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/portal/coplets/basket/BasketTransformer.html">BasketTransformer</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketTransformer.html">BasketTransformer</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
