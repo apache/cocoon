@@ -76,10 +76,15 @@
 			<dt>null-indicator</dt><dd>What do we do with null columns. default is to not print anything for null columns, not even a column tag. If this is set to "y" or "yes", we add a NULL="YES" attribute to the column and put an empty string inside.</dd>
 			<dt>id-attribute</dt><dd>What is the name of the attribute that uniquely identifies the rows? Default is ID. This is, of course, meaningless if row-element is set to an empty string.</dd>
 			<dt>id-attribute-column</dt><dd>Which column should we use for the id attribute value (think primary key column). Default is to use the offset of this row in the query's resultset.</dd>
-			<dt>max-rows</dt><dd>How many rows should we display</dd>
-			<dt>skip-rows</dt><dd>How many rows should we skip before starting to display rows</dd>
-			<dt>variable-left-delimiter</dt><dd>What string delimits variables in the query on the left side? Default is {@.</dd>
-			<dt>variable-right-delimiter</dt><dd>What string delimits variables in the query on the right side? Default is }.</dd>
+			<dt>max-rows-attribute</dt><dd>How many rows should we display</dd>
+			<dt>skip-rows-attribute</dt><dd>How many rows should we skip before starting to display rows</dd>
+			<dt>variable-left-delimiter</dt><dd>What string delimits variables in the query (HttpRequest.getParameter(name)) on the left side? Default is '{@'.</dd>
+			<dt>variable-right-delimiter</dt><dd>What string delimits variables in the query (HttpRequest.getParameter(name))on the right side? Default is '}'.</dd>
+                        <dt>session-variable-left-delimiter</dt><dd>What string delimits session-variables (HttpSession.getValue(name)) in the query on the left side? Default is '{@session.'.</dd>
+			<dt>session-variable-right-delimiter</dt><dd>What string delimits session-variables (HttpSession.getValue(name)) in the query on the right side? Default is '}'.</dd>
+                        <dt>update-rows-attribute</dt><dd>Simple query or are rows updated. Default is ''. For a update query use attribute 'update-rows-attribute="yes"'</dd>
+                        <dt>count-attribute</dt><dd>Add a attribute with the specified name to the doc-element which contains the row count of the query result. Default is '' (do not use this feature).</dd>
+                        <dt>query-attribute</dt><dd>Add a attribute with the specified name to the doc-element which contains the ULR encoded query string. Default is '' do not use this feature).</dd>
 		</dl>
 	</s1>
 
