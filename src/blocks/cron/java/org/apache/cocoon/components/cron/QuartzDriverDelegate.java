@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.components.cron;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.environment.Context;
 
 import org.quartz.Calendar;
 import org.quartz.CronTrigger;
@@ -90,7 +89,7 @@ public class QuartzDriverDelegate implements DriverDelegate {
             this.logger.debug("QuartzDriverDelegate: Removing transient data");
             map.remove(QuartzJobScheduler.DATA_MAP_LOGGER);
             map.remove(QuartzJobScheduler.DATA_MAP_MANAGER);
-            map.remove(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
+            map.remove(QuartzJobScheduler.DATA_MAP_CONTEXT);
         }
     }
 
@@ -105,7 +104,7 @@ public class QuartzDriverDelegate implements DriverDelegate {
                 this.logger.debug("QuartzDriverDelegate: Adding transient data");
                 map.put(QuartzJobScheduler.DATA_MAP_LOGGER, this.logger);
                 map.put(QuartzJobScheduler.DATA_MAP_MANAGER, this.manager);
-                map.put(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT, this.context);
+                map.put(QuartzJobScheduler.DATA_MAP_CONTEXT, this.context);
             }
         }
         return job;
