@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:23 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-12 17:53:12 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -129,16 +129,12 @@ public class ResourceReader extends AbstractReader implements Composer {
         }
 
         try {
-            byte[] buffer = new byte[(int)len];
-            is.read(buffer);
-            is.close();
-            
             String mimeType = this.getMimeType();
             if (mimeType != null) {
                 res.setContentType(mimeType);
             }
-            
-            res.setContentLength(buffer.length);
+
+            res.setContentLength((int) len);
             long expires = parameters.getParameterAsInteger("expires", -1);
 
             if (expires > 0) {
@@ -146,7 +142,15 @@ public class ResourceReader extends AbstractReader implements Composer {
             }
 
             res.setHeader("Accept-Ranges", "bytes");
-            out.write ( buffer );
+
+            byte[] buffer = new byte[8192];
+            int length = -1;
+
+            while ((length = is.read(buffer)) > -1) {
+                out.write(buffer, 0, length);
+            }
+            is.close();
+            out.flush();
         } catch (IOException ioe) {
             getLogger().debug("Received an IOException, assuming client severed connection on purpose");
         }

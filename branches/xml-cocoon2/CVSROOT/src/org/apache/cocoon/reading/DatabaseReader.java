@@ -213,11 +213,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
             throw new SQLException("The Blob is empty!");
         }
 
-        InputStream is = object.getBinaryStream();
-
-        byte[] bytes = new byte[(int) object.length()];
-        is.read(bytes);
-        is.close();
+        InputStream is = new BufferedInputStream(object.getBinaryStream());
 
         response.setContentLength((int) object.length());
         long expires = parameters.getParameterAsInteger("expires", -1);
@@ -227,6 +223,14 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         }
 
         response.setHeader("Accept-Ranges", "bytes");
-        out.write(bytes);
+
+        byte[] buffer = new byte[8192];
+        int length = -1;
+
+        while ((length = is.read(buffer)) > -1) {
+            out.write(buffer, 0, length);
+        }
+        is.close();
+        out.flush();
     }
 }
