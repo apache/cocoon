@@ -35,6 +35,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.util.ReferenceFieldHandler;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -65,17 +66,14 @@ public class CastorSourceConverter
         
     public static final String ROLE = CastorSourceConverter.class.getName();
 
-    public static final String PARAMETER_OBJECTMAP = "objectmap";
-    public static final String PARAMETER_PROFILETYPE = "profiletype";
-    
     private Map mappingSources = new HashMap();
     private ServiceManager manager;
     private Map mappings = new HashMap();
 
     public Object getObject(InputStream stream, Map parameters) throws ConverterException {
         try {
-            ReferenceFieldHandler.setObjectMap((Map)parameters.get(PARAMETER_OBJECTMAP));
-            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get(PARAMETER_PROFILETYPE)));
+            ReferenceFieldHandler.setObjectMap((Map)parameters.get(ProfileLS.PARAMETER_OBJECTMAP));
+            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)));
             Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
@@ -90,7 +88,7 @@ public class CastorSourceConverter
         Writer writer = new OutputStreamWriter(stream);
 		try {
 			Marshaller marshaller = new Marshaller( writer );
-			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(PARAMETER_PROFILETYPE)));
+			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)));
 			marshaller.marshal(object);
 			writer.close();
 		} catch (MappingException e) {

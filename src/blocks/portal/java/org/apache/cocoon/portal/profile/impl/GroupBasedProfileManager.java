@@ -17,22 +17,48 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.excalibur.source.SourceNotFoundException;
 
 /**
- * The profile manager using the authentication framework
+ * The profile manager using the authentication framework.
+ * This profile manager uses a group based approach:
+ * The coplet-base-data and the coplet-data are global, these are shared
+ * between all users.
+ * If the user has is own set of coplet-instance-datas/layouts these are
+ * loaded.
+ * If the user has not an own set, the group set is loaded - therefore
+ * each user has belong to exactly one group.
+ * In the case that the user does not belong to a group, a global
+ * profile is loaded.
+ * 
+ * This profile manager does not check for changes of the profile,
+ * which means for example once a global profile is loaded, it is
+ * used until Cocoon is restarted. (This will be changed later on)
+ * 
+ * THIS IS A WORK IN PROGRESS - IT'S NOT FINISHED/WORKING YET
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
@@ -41,7 +67,14 @@ import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 public class GroupBasedProfileManager 
     extends AbstractProfileManager { 
 
+    public static final String CATEGORY_GLOBAL = "global";
+    public static final String CATEGORY_GROUP  = "group";
+    public static final String CATEGORY_USER   = "user";
+    
     protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
+    
+    protected Map copletBaseDatas;
+    protected Map copletDatas;
     
     protected UserProfile getUserProfile(String layoutKey) {
         if ( layoutKey == null ) {
@@ -73,6 +106,29 @@ public class GroupBasedProfileManager
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
+        }
+    }
+
+    /**
+     * Prepares the object by using the specified factory.
+     */
+    protected void prepareObject(Object object, PortalService service)
+    throws ProcessingException {
+        if ( object != null ) {
+            if (object instanceof Layout) {
+                service.getComponentManager().getLayoutFactory().prepareLayout((Layout)object);
+            } else if (object instanceof Collection) {
+                final CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
+                final Iterator iterator = ((Collection)object).iterator();
+                while (iterator.hasNext()) {
+                    final Object o = iterator.next();
+                    if ( o instanceof CopletData ) {
+                        copletFactory.prepare((CopletData)o);
+                    } else if ( o instanceof CopletInstanceData) {
+                        copletFactory.prepare((CopletInstanceData)o);
+                    }
+                }
+            }
         }
     }
 
@@ -257,17 +313,40 @@ public class GroupBasedProfileManager
      * want to use a different authentication method just overwrite this
      * method.
      */
-    protected UserInfo getUserInfo() {
+    protected UserInfo getUserInfo(String portalName, String layoutKey) 
+    throws Exception {
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            final UserInfo info = new UserInfo();
-            info.setUserName(authManager.getState().getHandler().getUserId());
+            final UserInfo info = new UserInfo(portalName, layoutKey);
+
+            final RequestState state = authManager.getState();
+            final UserHandler handler = state.getHandler();
+
+            info.setUserName(handler.getUserId());
             try {
-                info.setGroup((String)authManager.getState().getHandler().getContext().getContextInfo().get("group"));
+                info.setGroup((String)handler.getContext().getContextInfo().get("group"));
             } catch (ProcessingException pe) {
                 // ignore this
             }
+
+            final ApplicationConfiguration ac = state.getApplicationConfiguration();        
+            if ( ac == null ) {
+                throw new ProcessingException("Configuration for portal not found in application configuration.");
+            }
+            final Configuration appConf = ac.getConfiguration("portal");
+            if ( appConf == null ) {
+                throw new ProcessingException("Configuration for portal not found in application configuration.");
+            }
+            final Configuration config = appConf.getChild("profiles");
+            final Configuration[] children = config.getChildren();
+            final Map configs = new HashMap();
+            if ( children != null ) {
+                for(int i=0; i < children.length; i++) {
+                    configs.put(children[i].getName(), children[i].getValue());
+                }
+            }
+            info.setConfigurations(configs);
             return info;    
         } catch (ServiceException ce) {
             // ignore this here
@@ -280,9 +359,189 @@ public class GroupBasedProfileManager
     /**
      * Load the profile
      */
-    protected UserProfile loadProfile(final String layoutKey, final PortalService service) {
+    protected UserProfile loadProfile(final String layoutKey, final PortalService service) 
+    throws Exception {
+        final UserInfo info = this.getUserInfo(service.getPortalName(), layoutKey);
+        ProfileLS loader = null;
+        try {
+            loader = (ProfileLS)this.manager.lookup( ProfileLS.ROLE );
         final UserProfile profile = new UserProfile();
         
+            // first "load" the global data
+            profile.setCopletBaseDatas( this.getGlobalBaseDatas(loader, info, service) );
+            profile.setCopletDatas( this.getGlobalDatas(loader, info, service) );
+            
+            // now load the user/group specific data
+            if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_USER) ) {
+                if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_GROUP)) {
+                    if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_GLOBAL) ) {
+                        throw new ProcessingException("No profile for copletinstancedatas found.");
+                    }
+                }
+            }
+
+            if ( !this.getLayout(loader, profile, info, service, CATEGORY_USER) ) {
+                if ( !this.getLayout(loader, profile, info, service, CATEGORY_GROUP)) {
+                    if ( !this.getLayout(loader, profile, info, service, CATEGORY_GLOBAL) ) {
+                        throw new ProcessingException("No profile for layout found.");
+                    }
+                }
+            }
+
         return profile;
+        } catch (ServiceException se) {
+            throw new CascadingRuntimeException("Unable to get component profilels.", se);
+        } finally {
+            this.manager.release( loader );
+        }
     }
+    
+    protected Map getGlobalBaseDatas(final ProfileLS     loader,
+                                     final UserInfo      info,
+                                     final PortalService service) 
+    throws Exception {
+        if ( this.copletBaseDatas == null ) {
+            synchronized ( this ) {
+                if ( this.copletBaseDatas == null ) {
+                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                            ProfileLS.PROFILETYPE_COPLETBASEDATA, 
+                            info, 
+                            true);
+                    final Map parameters = new HashMap();
+                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                                   ProfileLS.PROFILETYPE_COPLETBASEDATA);        
+
+                    this.copletBaseDatas = ((CopletBaseDataManager)(Map)loader.loadProfile(key, parameters)).getCopletBaseData();
+                    this.prepareObject(this.copletBaseDatas, service);
+                }
+            }
+        }
+        return this.copletBaseDatas;
+    }
+    
+    protected Map getGlobalDatas(final ProfileLS     loader,
+                                 final UserInfo      info,
+                                 final PortalService service) 
+    throws Exception {
+        if ( this.copletDatas == null ) {
+            synchronized ( this ) {
+                if ( this.copletDatas == null ) {
+                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                                                  ProfileLS.PROFILETYPE_COPLETDATA, 
+                                                  info, 
+                                                  true);
+                    final Map parameters = new HashMap();
+                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                                   ProfileLS.PROFILETYPE_COPLETDATA);        
+                    parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
+                                   this.copletBaseDatas);
+                    
+                    this.copletDatas = ((CopletDataManager)(Map)loader.loadProfile(key, parameters)).getCopletData();                    
+                    this.prepareObject(this.copletDatas, service);
+                }
+    }
+}
+        return this.copletDatas;
+    }
+
+    private boolean isSourceNotFoundException(Throwable t) {
+        while (t != null) {
+            if (t instanceof SourceNotFoundException) {
+                return true;
+            }
+            t = ExceptionUtils.getCause(t);
+        }
+        return false;
+    }
+
+    protected boolean getCopletInstanceDatas(final ProfileLS     loader,
+                                             final UserProfile   profile,
+                                             final UserInfo      info,
+                                             final PortalService service,
+                                             final String        category) 
+    throws Exception {
+        Map key = this.buildKey(category, 
+                                ProfileLS.PROFILETYPE_COPLETINSTANCEDATA, 
+                                info, 
+                                true);
+        Map parameters = new HashMap();
+        parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                       ProfileLS.PROFILETYPE_COPLETINSTANCEDATA);        
+        parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
+                       profile.getCopletDatas());
+
+        try {
+            CopletInstanceDataManager cidm = (CopletInstanceDataManager)loader.loadProfile(key, parameters);
+            profile.setCopletInstanceDatas(cidm.getCopletInstanceData());
+            this.prepareObject(profile.getCopletInstanceDatas(), service);
+            
+            return true;
+        } catch (Exception e) {
+            if (!isSourceNotFoundException(e)) {
+                throw e;
+            }
+            return false;
+        }
+    }
+
+    protected boolean getLayout(final ProfileLS     loader,
+                                final UserProfile   profile,
+                                final UserInfo      info,
+                                final PortalService service,
+                                final String        category) 
+    throws Exception {
+        final Map key = this.buildKey(category, 
+                                      ProfileLS.PROFILETYPE_LAYOUT,  
+                                      info, 
+                                      true);
+        final Map parameters = new HashMap();
+        parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                       ProfileLS.PROFILETYPE_LAYOUT);        
+        parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
+                       profile.getCopletInstanceDatas());
+        try {
+            Layout l = (Layout)loader.loadProfile(key, parameters);
+            this.prepareObject(l, service);
+            profile.setRootLayout(l);
+
+            return true;
+        } catch (Exception e) {
+            if (!isSourceNotFoundException(e)) {
+                throw e;
+            }
+            return false;
+        }
+    }
+
+    protected Map buildKey(String        category,
+                           String        profileType,
+                           UserInfo      info,
+                           boolean       load) {
+        final StringBuffer config = new StringBuffer(profileType);
+        config.append('-');
+        config.append(category);
+        config.append('-');
+        if ( load ) {
+            config.append("load");
+        } else {
+            config.append("save");            
+        }
+        final String uri = (String)info.getConfigurations().get(config.toString());
+
+        final Map key = new LinkedMap();
+        key.put("baseuri", uri);
+        key.put("separator", "?");
+        key.put("portal", info.getPortalName());
+        key.put("layout", info.getLayoutKey());
+        key.put("type", category);
+        if ( "group".equals(category) ) {
+            key.put("group", info.getGroup());
+        }
+        if ( "user".equals(category) ) {
+            key.put("user", info.getUserName());
+        }
+        
+        return key;
+    }
+    
 }
