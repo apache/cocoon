@@ -50,7 +50,7 @@ import org.mozilla.javascript.*;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyHandler.java,v 1.4 2003/05/01 09:32:34 coliver Exp $
+ * @version CVS $Id: ScriptablePropertyHandler.java,v 1.5 2003/10/10 10:48:25 cziegeler Exp $
  */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 
@@ -60,9 +60,9 @@ public class ScriptablePropertyHandler implements DynamicPropertyHandler {
             cx = Context.enter();
             Scriptable s = (Scriptable)obj;
             Object result = ScriptableObject.getProperty(s, propertyName);
-            if (result == ScriptableObject.NOT_FOUND) {
+            if (result == Scriptable.NOT_FOUND) {
                 result = ScriptableObject.getProperty(s, "get" + propertyName.substring(0, 1).toUpperCase() + (propertyName.length() > 1 ? propertyName.substring(1) : ""));
-                if (result != ScriptableObject.NOT_FOUND &&
+                if (result != Scriptable.NOT_FOUND &&
                     result instanceof Function) {
                     try {
                         result = ((Function)result).call(cx, 

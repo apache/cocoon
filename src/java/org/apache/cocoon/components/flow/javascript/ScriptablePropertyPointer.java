@@ -59,7 +59,7 @@ import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyPointer.java,v 1.3 2003/05/01 09:32:34 coliver Exp $
+ * @version CVS $Id: ScriptablePropertyPointer.java,v 1.4 2003/10/10 10:48:25 cziegeler Exp $
  */
 public class ScriptablePropertyPointer extends DynamicPropertyPointer {
 
@@ -98,7 +98,7 @@ public class ScriptablePropertyPointer extends DynamicPropertyPointer {
             if (value instanceof Scriptable) {
                 Object property = 
                     ScriptableObject.getProperty((Scriptable)value, index);
-                if (property != ScriptableObject.NOT_FOUND) { 
+                if (property != Scriptable.NOT_FOUND) { 
                     value = property; // hack?
                 } 
             } else {
