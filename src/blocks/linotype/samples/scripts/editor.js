@@ -1,5 +1,41 @@
 // -------------------------- global DOM nodes ------------------------------
+/*
+Nummer Node Type 
+1 Element 
+2 Attribute 
+3 Text
+4 CDATA 
+5 Entity-Referenz 
+6 Entity 
+7 Processing Instruction 
+8 Comment 
+9 Document 
+10 Document Type 
+11 Document Fragment 
+12 Notation
+*/
+NodeType={ 
+	 ELEMENT_NODE:0x01,
+	 ATTRIBUTE_NODE:0x02,
+	 TEXT_NODE:0x03,
+	 CDATA_NODE:0x04,
+	 ENTITY_REFERENZE_NODE:0x05,
+	 ENTITY_NODE:0x06,
+	 SCRIPT_NODE:0x07,
+	 COMMENT_NODE:0x08,
+	 DOCUMENT_NODE:0x09,
+	 DOCUMENT_FRAGMENT_NODE:0x0a,
+	 NOTATION_NODE:0x0b
+};
 
+Alternatives= {
+	blockquote: [ "quote", "code", "note", "fixme","first" ],
+	img: [ "inline", "floating-left", "floating-right" ],
+	p: [ "normal", "figure" ]
+}
+
+IE=(document.all)? true:false;
+PrefixImageSrc=(window.prefixImgSrc)? window.prefixImgSrc:"image-"; 
 var iframe;
 var editor;
 var editor_window;
@@ -19,7 +55,7 @@ var previousKey;
 var modified = false;
 
 var imageCounter = 0;
-var imageData = {};
+var imageData = new Array();
 
 var sourceMode = false;
 
@@ -27,31 +63,33 @@ var sourceMode = false;
 
 function start(e) {
     iframe = document.getElementById('edit');
-    editor_window = iframe.contentWindow;
-    editor = editor_window.document;
+	editor_window = (!IE)? iframe.contentWindow : document.frames.edit;
 
-    path = document.getElementById('path').firstChild;
-    formatblock = document.getElementById('formatblock');
-    formatblock.onchange = formatblockChange;
-    alternatives = document.getElementById('alternatives');
-    block_selector = document.getElementById('block_selector');
-    class_selector = document.getElementById('class_selector');
-    image_inputs = document.getElementById('image_inputs');
-    image_controls = document.getElementById('image_controls');
-
-    try {
-        editor.designMode = "on";
-        editor.execCommand("useCSS", false, true); // midas gets it backwards
-        editor.addEventListener("click", click, true);
-        editor.addEventListener("keypress", keypress, true);
-    } catch (e) {
-        alert("I'm sorry, but Linotype doesn't work on this browser: " + e);
-        return;
-    }
+	path = document.getElementById('path').firstChild;
+	formatblock = document.getElementById('formatblock');
+	formatblock.onchange = formatblockChange;
+	alternatives = document.getElementById('alternatives');
+	block_selector = document.getElementById('block_selector');
+	class_selector = document.getElementById('class_selector');
+	image_inputs = document.getElementById('image_inputs');
+	image_controls = document.getElementById('image_controls');
+	try {
+		editor_window.document.designMode="On";
+		editor = (IE) ? frames.edit.document : editor_window.document;
+		addEvent(editor,"click",click,true);
+		addEvent(editor,"keydown",keypress,true);
+		try {
+			editor.execCommand("useCSS", false, true); // midas gets it backwards
+		} catch(e){}
+	} catch (e) {
+		alert("I'm sorry, but Linotype doesn't work on this browser: " + e.name + " " + e.message);
+		return;
+	}
 
     divs = document.getElementsByTagName('div');
     for (var i = 0; i < divs.length; i++) {
-        if (divs[i].getAttribute("class") == "imagebutton") {
+		var nameclass=getClassName(divs[i]);
+		if (nameclass == "imagebutton") {
             divs[i].onmousedown = buttonDown;
             divs[i].onmouseup = buttonUp;
             divs[i].onmouseover = buttonOver;
@@ -65,6 +103,22 @@ function start(e) {
     document.getElementById("wysiwyg-checkbox").checked = true;
 
     window.status = "Welcome to Linotype";
+}
+
+function addEvent(obj,type,func,bol){
+	bol=bol||false;
+	if(IE) obj.attachEvent("on"+type.replace(/^on/g,""), func);
+	else obj.addEventListener(type.replace(/^on/g,""),func,bol);
+}
+function setClassAttribute(obj,value){
+	if(IE){
+		obj.className=value;
+	} else {
+		obj.setAttribute("class",value,false);
+	}
+}
+function getClassName(obj){
+	return (IE)?obj.className:obj.getAttribute("class");
 }
 
 function stop(e) {
@@ -98,8 +152,7 @@ function updateUI(force) {
         } else {
             path.nodeValue = "...";
         }
-        
-        if (target && (target.nodeType == target.TEXT_NODE)) {
+		if (target && (target.nodeType ==NodeType.TEXT_NODE)) { //remove  target.TEXT_NODE not in IE
             target = target.parentNode;
         }
         
@@ -116,7 +169,7 @@ function updateUI(force) {
             var parent = alternatives.parentNode;
             parent.removeChild(alternatives);
             alternatives = document.createElement('select');
-            var type = target.getAttribute("class");
+			var type = getClassName(target);
             for (i = 0; i < options.length; i++) {
                 var option = document.createElement('option');
                 option.setAttribute("value", options[i]);
@@ -139,17 +192,22 @@ function updateUI(force) {
 function wysiwyg(enabled) {
     if (enabled) {
         var text = serializeChildren(editor.body);
-        var source = document.createTextNode(text);
+		var source = editor.createTextNode(text);
         editor.body.innerHTML = "";
         editor.body.appendChild(source);
-        editor.body.setAttribute("class", "source");
+		setClassAttribute(editor.body, "source");
         sourceMode = true;
         updateUI(true);
     } else {
-        var source = editor.body.ownerDocument.createRange();
-        source.selectNodeContents(editor.body);
-        editor.body.innerHTML = resume(source.toString());
-        editor.body.setAttribute("class", "body");
+		if(IE) {
+			var source=editor.body.createTextRange();
+			editor.body.innerHTML=resume(source.text);
+		} else {
+	        var source = editor.body.ownerDocument.createRange();
+	        source.selectNodeContents(editor.body);
+	        editor.body.innerHTML = resume(source.toString());
+		}
+		setClassAttribute(editor.body,"body");
         reinstrumentImages(editor);
         sourceMode = false;
     }
@@ -166,7 +224,11 @@ function addImage() {
     activateImgInstrumentation(input, img);
 }
 
-function instrumentImages(editor) {
+function instrumentImages(edit) {
+	if(IE &&editor.readyState != "complete"){ 
+		setTimeout("instrumentImages()",100);
+		return;
+	}
     var imgs = detach(editor.getElementsByTagName('img'));
     for (var i = 0; i < imgs.length; i++) {
         instrumentImg(imgs[i], false);
@@ -174,33 +236,36 @@ function instrumentImages(editor) {
 }
 
 function reinstrumentImages(editor) {
-    imgs = detach(editor.getElementsByTagName('img'));
+	var imgs = detach(editor.getElementsByTagName('img'));
     for (var i = 0; i < imgs.length; i++) {
         reinstrumentImg(imgs[i]);
     }
 }
 
 function instrumentImg(img, template) {
-    var id = imageCounter++;
+	var systemtr=(img.src.indexOf('\\')!= -1)? '\\':"/";
+	var id=img.src.substring(img.src.lastIndexOf(systemtr)+1,img.src.lastIndexOf('.'));
+
+	if(template){ id="new";}
     var imgID = "image-" + id;
     var src = img.getAttribute("src");
-
-    img.setAttribute("id", imgID);
-    img.setAttribute("href", src);
+	img.setAttribute("id",imgID,true);
+	if(!IE){ img.setAttribute("href",src,false);}
+	img.setAttribute("ihref",src,false);
     setTemplate(img, template);
+	addEvent(img.parentNode,"DOMNodeRemoved",imageRemoved);
 
-    img.addEventListener("mousedown", imageDown, false);
-    img.parentNode.addEventListener("DOMNodeRemoved", imageRemoved, false);
-    
     imageData[imgID] = [src, src, false];
 
     var input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("id", imgID + "-input");
-    input.setAttribute("size", "1");
-    input.setAttribute("class", "image_browser");
-    input.addEventListener("click", inputChange, false);
-    input.addEventListener("change", inputChange, false);
+	
+	input.setAttribute("type","file",false);
+	input.setAttribute("id",imgID + "-input",false);
+	input.setAttribute("size", "1",false);
+	setClassAttribute(input,"image_browser");
+	addEvent(input,"click",inputChange);
+	if(IE){addEvent(input,"focus",inputChange);} //only for IE 5.1 compatibility
+	else{addEvent(input,"change",inputChange);}
     input.style.position = "absolute";
     input.style.visiblility = "hidden";
 
@@ -212,22 +277,30 @@ function instrumentImg(img, template) {
 function reinstrumentImg(img, id) {
     if (!id) {
         var src = img.getAttribute("src");
-        var id = src.substring(src.lastIndexOf('/'), src.lastIndexOf('.'));
+		var id = "image-"+src.substring(src.lastIndexOf('/')+1,src.lastIndexOf('.'));
     }
 
     var data = imageData[id];
-
-    img.setAttribute("id", id);
-    img.setAttribute("src", data[0]);
-    img.setAttribute("href", data[1]);
+	img.setAttribute("id",id,false);
+	img.setAttribute("src",data[0],false);
+	img.setAttribute("ihref",data[1],false);
     setTemplate(img, data[2]);
-
-    img.addEventListener("mousedown", imageDown, true);
+	//if(!IE){
+	//	img.setAttribute("href",data[1],false);
+		//addEvent(img,"mousedown",imageDown,true)
+	//}
 }
 
 function activateImgInstrumentation(input, img) {
-    input.style.left = (iframe.offsetLeft + img.x + 5) + "px";
-    input.style.top = (iframe.offsetTop + img.y + 5) + "px";
+	var ibutton= document.getElementById("insertimage");
+	var left=ibutton.offsetLeft;
+	var parent=ibutton.offsetParent;
+	while(parent){
+		left+=parent.offsetLeft;
+		parent=parent.offsetParent;
+	}
+	input.style.left=left+"px";
+	input.style.top=ibutton.offsetTop+"px";
     input.style.visibility = "visible";
 }
 
@@ -239,13 +312,12 @@ function deactivateImgInstrumentation(input) {
 // ----------------------- Event functions ---------------------------
 
 function keypress(e) {
-
+	var key,ch =0
     modified = true;
-
+	if(!e){e=edit.event;}
     updateUI();
-
-    var key = e.keyCode;
-    var ch = e.charCode;
+	key = e.keyCode;
+	if(!IE){ch = e.charCode;}
 
     //window.status = "[" + key + "," + ch + "," + e.shiftKey + "," + e.ctrlKey + "," + e.altKey + "," + e.metaKey + "]";
 
@@ -293,6 +365,7 @@ function click() {
 function formatblockChange() {
     var selection = formatblock.selectedIndex;
     var blockFormat = formatblock.options[selection].value;
+	var commandFormat=(IE)?"<"+blockFormat+">":blockFormat;
     if (selection == 0) {
         //var block = getOrigin().parentNode;
         //block.parentNode.replaceChild(block, block.firstChild);
@@ -300,7 +373,7 @@ function formatblockChange() {
         // <----------------- FIXME -----------------------
         
     } else {
-        editor.execCommand("formatblock", false, blockFormat);
+		editor.execCommand("formatblock", false, commandFormat);
     }
     updateUI();
     editor_window.focus();
@@ -310,7 +383,7 @@ function formatblockChange() {
 function alternativesChange() {
     var selection = alternatives.selectedIndex;
     var selectionClass = alternatives.options[selection].value;
-    alternativesTarget.setAttribute("class", selectionClass);
+	setClassAttribute(alternativesTarget,selectionClass);
 }
 
 function buttonClick() {
@@ -356,8 +429,8 @@ var activeRatio;
 
 function imageDown(e) {
     originalX = e.clientX;
-    editor_window.addEventListener("mousemove", doDrag, true);
-    editor_window.addEventListener("mouseup", endDrag, true);
+	addEvent(editor_window,"mousemove",doDrag,true);
+	addEvent(editor_window,"mouseup",endDrag,true);
     activeImage = this;
     activeRatio = activeImage.height / activeImage.width;
     originalWidth = activeImage.width;
@@ -368,7 +441,7 @@ function imageDown(e) {
 }
 
 function imageRemoved(e) {
-    var id = e.target.id;
+	var id = (IE)? window.event.srcElement.id:e.target.id;
     var input = document.getElementById(id + "-input");
     if (input) deactivateImgInstrumentation(input);
 }
@@ -387,24 +460,34 @@ function endDrag(e) {
 }
 
 function inputChange() {
-    var inputID = this.getAttribute("id");
-    var imgID = inputID.substring(0, inputID.indexOf("-input"));
-    var img = editor.getElementById(imgID);
-    if (this.value != "") {
-        var newImg = document.createElement("img");
-        img.parentNode.replaceChild(newImg, img);
-        var src = "file:///" + this.value;
-        var href = imgID + this.value.substring(this.value.lastIndexOf('.'));
-        imageData[imgID] = [src, href, false];
-        reinstrumentImg(newImg, imgID);
-        deactivateImgInstrumentation(this);
-        this.setAttribute("name", "save:" + href);
-    } else {
-        img.parentNode.removeChild(img);
-        // Note: this will trigger a DOMNodeRemoved event that we'll use
-        // to deactivate the image instrumentation (removing it causes
-        // mozilla to crash!!!).
-    }
+		var event=(IE)? window.event.srcElement:this;
+		var inputID = event.getAttribute("id");
+		var img=editor.getElementById("image-new");
+		var systemtr=(event.value.indexOf('\\')!= -1)? '\\':"/";
+		var imgID= "image-"+PrefixImageSrc+event.value.substring(event.value.lastIndexOf(systemtr)+1,event.value.lastIndexOf("."));
+		if (event.value != "") {
+			var newImg = editor.createElement("img");
+			var src = "file:///" + event.value;
+			var href = PrefixImageSrc+event.value.substring(event.value.lastIndexOf(systemtr)+1);
+			newImg.setAttribute("id",imgID,false);
+			newImg.setAttribute("ihref",href,false);
+			if(!IE)newImg.setAttribute("href",href,false);
+			newImg.setAttribute("src",src,false);
+			var doc =img.parentNode;
+			doc.replaceChild(newImg,img);
+        	imageData[imgID] = [src, href, false];
+			var nimgD=new Array();
+			imageData["image-new"][2]=false;
+			event.setAttribute("id",imgID+"-input",false);
+        	reinstrumentImg(newImg, imgID);
+			deactivateImgInstrumentation(event);
+			event.setAttribute("name","save:" + href,false);
+    	} else {
+			if(!IE) img.parentNode.removeChild(img);
+	        // Note: this will trigger a DOMNodeRemoved event that we'll use
+	        // to deactivate the image instrumentation (removing it causes
+	        // mozilla to crash!!!).
+    	}
 }
 
 // ----------------------- DOM functions ---------------------------
@@ -414,7 +497,7 @@ function getInnerHTML() {
 }
 
 function getContent() {
-    if (sourceMode) wysiwyg(false);
+	if (sourceMode){wysiwyg(false);}
     var content = '<html xmlns="http://www.w3.org/1999/xhtml"><body>';
     content += serializeChildren(editor.body);
     content += '</body></html>';
@@ -436,7 +519,7 @@ function serialize(node) {
 
     str += whitespaceBefore(node, getPreviousMeaningfulNode(node));
 
-    if (node.nodeType == node.TEXT_NODE) {
+	if (node.nodeType == NodeType.TEXT_NODE) {
         if (preserveWhitespace(node.parentNode) || isMeaningfulWhitespace(node)) {
             str += escape(trimNewlines(node.nodeValue));
         } else {
@@ -492,11 +575,35 @@ function getOrigin() {
     // ------------------------ WARNING: HOTSPOT! ---------------------------
     // since it's called for every keystroke, keep it as fast as possible!!!
     // ----------------------------------------------------------------------
-
-    var selection = editor_window.getSelection();
-
-    //window.status = selection.anchorNode + "," + selection.anchorOffset + " " + selection.focusNode + "," + selection.focusOffset;
-
+	var selection=(IE)? editor.selection.createRange():editor_window.getSelection();
+	if(IE){
+		if(editor.selection.type == "Control"){
+			 if(selection.length > 1) alert("Error too many obj");
+			 else return selection(0);
+		} else {
+			if(selection.parentElement().nodeType != NodeType.TEXT_NODE
+				&& editor_window.event){
+				var e=editor_window.event;
+				var nodes = selection.parentElement().childNodes;
+				if(nodes.length == 1) {return nodes[0];}
+				for(var co=0; co < nodes.length;co++){
+					if(!nodes[co].offsetTop && nodes[co].nextSibling){
+						if(nodes[co].nextSibling.offsetTop <= e.y 
+							&& nodes[co].nextSibling.offsetTop+ nodes[co].nextSibling.offsetHeight >= e.y
+							&& nodes[co].nextSibling.offsetLeft <= e.x) { 
+							return nodes[co];
+						}
+					} else if(nodes[co].offsetTop <= e.y 
+						&& nodes[co].offsetTop+ nodes[co].offsetHeight>= e.y) {
+						return nodes[co];
+					}
+				}
+				return nodes[nodes.length-1];
+			}
+		}
+		return selection.parentElement();
+	}
+	else{
     if (selection.anchorNode == selection.focusNode) {
         if (selection.anchorNode.nodeType != selection.anchorNode.TEXT_NODE) {
             var index = (selection.focusOffset == 0) ? 0 : selection.focusOffset - 1;
@@ -506,12 +613,13 @@ function getOrigin() {
 
     return selection.anchorNode;
 }
+}
 
 function getPreviousMeaningfulNode(node) {
     if (node) {
         var previous = node.previousSibling;
         if (previous) {
-            if (previous.nodeType == node.TEXT_NODE) {
+			if (previous.nodeType == NodeType.TEXT_NODE) {
                 if (!isWhitespace(previous.nodeValue)) {
                     return previous;
                 } else {
@@ -529,7 +637,7 @@ function getNextMeaningfulNode(node) {
     if (node) {
         var next = node.nextSibling;
         if (next) {
-            if (next.nodeType == node.TEXT_NODE) {
+			if (next.nodeType == NodeType.TEXT_NODE) {
                 if (!isWhitespace(next.nodeValue)) {
                     return next;
                 } else {
@@ -622,7 +730,7 @@ function detach(liveArray) {
 // ----------------------------- Semantic Functions -------------------------
 
 function isBlock(node) {
-    if (node && (node.nodeType == node.ELEMENT_NODE)) {
+	if (node && (node.nodeType == NodeType.ELEMENT_NODE)) {
         switch (node.nodeName.toLowerCase()) {
             case "p":
             case "blockquote":
@@ -643,7 +751,7 @@ function isBlock(node) {
 }
 
 function isInline(node) {
-    if (node && (node.nodeType == node.ELEMENT_NODE)) {
+	if (node && (node.nodeType == NodeType.ELEMENT_NODE)) {
         switch (node.nodeName.toLowerCase()) {
             case "b":
             case "i":
@@ -661,7 +769,7 @@ function isInline(node) {
 }
 
 function isMeaningfulWhitespace(node) {
-    if (node && (node.nodeType == node.TEXT_NODE)) {
+	if (node && (node.nodeType == NodeType.TEXT_NODE)) {
         return (isInline(node.nextSibling) || isInline(node.previousSibling));
     } else {
         return false;
@@ -679,15 +787,17 @@ function getBlockFormat(node) {
             default: return 0;
         }
     } else {
-        return undefined;
+		return "";
     }
 }
 
 function isTemplate(node) {
-    if (node && (node.nodeType == node.ELEMENT_NODE)) {
+	if (node && (node.nodeType == NodeType.ELEMENT_NODE)) {
         if (node.getAttribute("template") == "yes") {
             return true;
-        } else if (node.nodeName.toLowerCase() == "br") {
+		} else {
+			var name = node.nodeName.toLowerCase();
+			if (name == "br") {
             if (!node.nextSibling) {
                 return true;
             } else {
@@ -695,32 +805,31 @@ function isTemplate(node) {
             }
         }
     }
+	}
     return false;
 }
 
 function setTemplate(node, status) {
     var value = (status) ? "yes" : "no";
-    node.setAttribute("template", value);
+	node.setAttribute("template",value,false);
 }
 
 function getAlternatives(node) {
     if (node) {
-        switch (node.nodeName.toLowerCase()) {
-            case "blockquote": return [ "quote", "code", "note", "fixme" ];
-            case "img": return [ "inline", "floating-left", "floating-right" ];
-            case "p": return [ "normal", "figure" ];
-            default: return null;
+		var name = node.nodeName.toLowerCase();
+		if(Alternatives[name]) return Alternatives[name];
+		return null;
         }
     }
-}
 
 function getAttribute(node, at) {
     var nodeName = node.nodeName.toLowerCase();
-    var atName = at.name.toLowerCase();
+	var atName = (at.name)? at.name.toLowerCase():"";
 
-    if ((nodeName == "img") && (atName == "href")) {
-        return ' src="' + at.value + '"';
-    } else if ((atName == "class") || (atName == "href")) {
+	if (((nodeName == "img") && (atName == "ihref")) ) {
+		//return ' src="' + at.value + '"';
+		return "";
+	} else if (((atName == "class") && at.value!="") || (atName == "href")) {
         return " " + atName + '="' + at.value + '"';
     } else {
         return "";
@@ -730,14 +839,17 @@ function getAttribute(node, at) {
 function getHiddenAttributes(node) {
     var nodeName = node.nodeName.toLowerCase();
     if (nodeName == "img") {
-        return ' width="' + node.width + '" height="' + node.height + '"';
+		var ihref=node.getAttribute("ihref");
+		var src=ihref.substring(ihref.lastIndexOf('/')+1);
+		return ' src="'+src+'" width="' + node.width + '" height="' + node.height + '"';
+		//return ' src="'+src+'" id="'+node.id+'" width="' + node.width + '" height="' + node.height + '"';
     } else {
         return '';
     }
 } 
     
 function preserveWhitespace(node) {
-    return ((node.nodeName.toLowerCase() == "blockquote") && (node.getAttribute("class") == "code"));
+	return ((node.nodeName.toLowerCase() == "blockquote") && (getClassName(node) == "code"));
 }
 
 function whitespaceBefore(currentNode, precedingNode) {
