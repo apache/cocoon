@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.19 $ $Date: 2000-08-23 22:44:26 $
+ * @version CVS $Revision: 1.4.2.20 $ $Date: 2000-08-31 07:14:18 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor {
@@ -191,8 +191,7 @@ public class Cocoon
      * Queries the class to estimate its ergodic period termination.
      */
     public boolean modifiedSince(long date) {
-        return(date < this.configurationFile.lastModified() 
-            || sitemapManager.hasChanged());
+        return(date < this.configurationFile.lastModified());
     }
 
     /**
