@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.sax;
 
-import java.io.*;
+import java.util.HashMap;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Recyclable;
@@ -24,25 +24,41 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 15:32:29 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 12:13:26 $
  */
 
 public final class XMLByteStreamCompiler
 implements XMLSerializer, Component, Recyclable {
 
-    private CompiledXMLOutputStream out;
+    private HashMap map;
+    private int     count;
 
-    public XMLByteStreamCompiler()
-    throws IOException {
-        this.out = new CompiledXMLOutputStream();
+    /** The buffer for the compile xml byte stream. */
+    private byte buf[];
+
+    /** The number of valid bytes in the buffer. */
+    private int bufCount;
+
+    public XMLByteStreamCompiler() {
+        this.map = new HashMap();
+        this.initOutput();
+    }
+
+    private void initOutput() {
+        this.count = 0;
+        this.map.clear();
+        this.buf = new byte[2000];
+        this.buf[0] = (byte)'C';
+        this.buf[1] = (byte)'X';
+        this.buf[2] = (byte)'M';
+        this.buf[3] = (byte)'L';
+        this.buf[4] = (byte)1;
+        this.buf[5] = (byte)0;
+        this.bufCount = 6;
     }
 
     public void recycle() {
-        try {
-            this.out = new CompiledXMLOutputStream();
-        } catch (IOException ioe) {
-            throw new RuntimeException("IOException occured:" + ioe);
-        }
+        this.initOutput();
     }
 
     private static final int START_DOCUMENT         = 0;
@@ -58,108 +74,73 @@ implements XMLSerializer, Component, Recyclable {
 
 
     public Object getSAXFragment() {
-        return this.out.toByteArray();
+        byte newbuf[] = new byte[this.bufCount];
+        System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+        return newbuf;
     }
 
     public void startDocument() throws SAXException {
-        try {
-            out.writeEvent(START_DOCUMENT);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(START_DOCUMENT);
     }
 
     public void endDocument() throws SAXException {
-        try {
-            out.writeEvent(END_DOCUMENT);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
-
+        this.writeEvent(END_DOCUMENT);
     }
 
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri)
     throws SAXException {
-        try {
-            out.writeEvent(START_PREFIX_MAPPING);
-            out.writeString(prefix);
-            out.writeString(uri);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(START_PREFIX_MAPPING);
+        this.writeString(prefix);
+        this.writeString(uri);
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        try {
-           out.writeEvent(END_PREFIX_MAPPING);
-           out.writeString(prefix);
-       } catch (Exception e) {
-           throw new SAXException(e);
-       }
+       this.writeEvent(END_PREFIX_MAPPING);
+       this.writeString(prefix);
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
     throws SAXException {
-        try {
-            int length = atts.getLength();
-            out.writeEvent(START_ELEMENT);
-            out.writeAttributes(length);
-            for (int i = 0; i < length; i++) {
-                out.writeString(atts.getURI(i));
-                out.writeString(atts.getLocalName(i));
-                out.writeString(atts.getQName(i));
-                out.writeString(atts.getType(i));
-                out.writeString(atts.getValue(i));
-             }
-             out.writeString((namespaceURI == null ? "" : namespaceURI));
-             out.writeString(localName);
-             out.writeString(qName);
-         } catch (Exception e) {
-             throw new SAXException(e);
+        int length = atts.getLength();
+        this.writeEvent(START_ELEMENT);
+        this.writeAttributes(length);
+        for (int i = 0; i < length; i++) {
+            this.writeString(atts.getURI(i));
+            this.writeString(atts.getLocalName(i));
+            this.writeString(atts.getQName(i));
+            this.writeString(atts.getType(i));
+            this.writeString(atts.getValue(i));
          }
+         this.writeString((namespaceURI == null ? "" : namespaceURI));
+         this.writeString(localName);
+         this.writeString(qName);
      }
 
     public void endElement(String namespaceURI, String localName, String qName)
     throws SAXException {
-        try {
-            out.writeEvent(END_ELEMENT);
-            out.writeString((namespaceURI == null ? "" : namespaceURI));
-            out.writeString(localName);
-            out.writeString(qName);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(END_ELEMENT);
+        this.writeString((namespaceURI == null ? "" : namespaceURI));
+        this.writeString(localName);
+        this.writeString(qName);
     }
 
     public void characters(char[] ch, int start, int length)
     throws SAXException {
-        try {
-            out.writeEvent(CHARACTERS);
-            out.writeChars(ch, start, length);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(CHARACTERS);
+        this.writeChars(ch, start, length);
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length)
     throws SAXException {
-        try {
-            out.writeEvent(IGNORABLE_WHITESPACE);
-            out.writeChars(ch, start, length);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(IGNORABLE_WHITESPACE);
+        this.writeChars(ch, start, length);
     }
 
     public void processingInstruction(String target, String data)
     throws SAXException {
-        try {
-            out.writeEvent(PROCESSING_INSTRUCTION);
-            out.writeString(target);
-            out.writeString(data);
-        } catch (Exception e) {
-            throw new SAXException(e);
-        }
+        this.writeEvent(PROCESSING_INSTRUCTION);
+        this.writeString(target);
+        this.writeString(data);
     }
 
     public void setDocumentLocator(Locator locator) {
@@ -219,59 +200,96 @@ implements XMLSerializer, Component, Recyclable {
     public void comment(char ary[], int start, int length)
     throws SAXException {
         try {
-            out.writeEvent(COMMENT);
-            out.writeChars(ary, start, length);
+            this.writeEvent(COMMENT);
+            this.writeChars(ary, start, length);
        } catch (Exception e) {
             throw new SAXException(e);
        }
     }
 
-}
-
-
-
-class ErrorHandler implements org.xml.sax.ErrorHandler {
-
-    /** Warning. */
-    public void warning(SAXParseException ex) {
-            System.err.println("[Warning] "+
-                               getLocationString(ex)+": "+
-                               ex.getMessage());
+    public final void writeEvent(int event) throws SAXException {
+        this.write(event);
     }
 
-    /** Error. */
-    public void error(SAXParseException ex) {
-            System.err.println("[Error] "+
-                               getLocationString(ex)+": "+
-                               ex.getMessage());
+    public final void writeAttributes(int attributes) throws SAXException {
+        this.write((attributes >>> 8) & 0xFF);
+        this.write((attributes >>> 0) & 0xFF);
     }
 
-    /** Fatal error. */
-
-    public void fatalError(SAXParseException ex) throws SAXException {
-        System.err.println("[Fatal Error] "+
-
-                               getLocationString(ex)+": "+
-
-                               ex.getMessage());
-    }
-
-    /** Returns a string of the location. */
-    private String getLocationString(SAXParseException ex) {
-        StringBuffer str = new StringBuffer();
-        String systemId = ex.getSystemId();
-        if (systemId != null) {
-            int index = systemId.lastIndexOf('/');
-            if (index != -1)
-                systemId = systemId.substring(index + 1);
-            str.append(systemId);
+    public final void writeString(String str) throws SAXException {
+        Integer index = (Integer) map.get(str);
+        if (index == null) {
+            int length = str.length();
+            map.put(str, new Integer(count++));
+            if (length > (2 << 15)) throw new SAXException("String cannot be bigger than 32K");
+            this.writeChars(str.toCharArray(), 0, length);
+        } else {
+            int i = index.intValue();
+            this.write(((i >>> 8) & 0xFF) | 0x80);
+            this.write((i >>> 0) & 0xFF);
         }
-        str.append(':');
-        str.append(ex.getLineNumber());
-        str.append(':');
-        str.append(ex.getColumnNumber());
-
-        return str.toString();
     }
+
+    public final void writeChars(char[] ch, int start, int length) throws SAXException {
+        int utflen = 0;
+        int c, count = 0;
+
+        for (int i = 0; i < length; i++) {
+            c = ch[i + start];
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                utflen++;
+            } else if (c > 0x07FF) {
+                utflen += 3;
+            } else {
+                utflen += 2;
+            }
+        }
+
+        if (utflen > 65535) throw new SAXException("UTFDataFormatException");
+
+        byte[] bytearr = new byte[utflen+2];
+        bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
+        bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
+        for (int i = 0; i < length; i++) {
+            c = ch[i + start];
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                bytearr[count++] = (byte) c;
+            } else if (c > 0x07FF) {
+                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            } else {
+                bytearr[count++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            }
+        }
+
+        this.write(bytearr);
+    }
+
+    private void write(byte[] b) {
+        int len = b.length;
+        if (len == 0) return;
+        int newcount = this.bufCount + len;
+        if (newcount > this.buf.length) {
+            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
+            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+            this.buf = newbuf;
+        }
+        System.arraycopy(b, 0, this.buf, this.bufCount, len);
+        this.bufCount = newcount;
+    }
+
+    private void write(int b) {
+        int newcount = this.bufCount + 1;
+        if (newcount > this.buf.length) {
+            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
+            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+            this.buf = newbuf;
+        }
+        this.buf[this.bufCount] = (byte)b;
+        this.bufCount = newcount;
+    }
+
 }
 
