@@ -19,15 +19,15 @@
 
  <map:components>
 
-   <map:transformers default="xalan">
-     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-       <catalogues default="forms">
-         <catalogue id="other" name="OtherMessages" location="messages"/>
-         <catalogue id="forms" name="FormMessages" location="messages"/>
-       </catalogues>
-       <cache-at-startup>true</cache-at-startup>
-     </map:transformer>
-   </map:transformers>
+  <map:transformers default="xalan">
+    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <catalogues default="form">
+        <catalogue id="other" name="OtherMessages" location="context://samples/forms/messages"/>
+        <catalogue id="form" name="FormMessages" location="context://samples/forms/messages"/>
+      </catalogues>
+      <cache-at-startup>true</cache-at-startup>
+    </map:transformer>
+  </map:transformers>
 
  </map:components>
 
@@ -79,7 +79,7 @@
         -->
 
     <map:match pattern="jdo/forms/employee">
-        <map:call function="forms">
+        <map:call function="handleForm">
             <map:parameter name="function" value="employeeform_jdo"/>
             <map:parameter name="form-definition" value="forms/employee.xml"/>
             <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>            
