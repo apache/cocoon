@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.117 2000-09-28 01:52:32 balld Exp $
+  $Id: changes.xml,v 1.118 2000-09-29 04:25:19 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="update">
+   a doozy of a patch to esql - i made it so that you can execute queries either in their own special methods or inlined code - both on the same page even (can't imagine why you'd want to tho)
+  </action>
   <action dev="DB" type="update">
    a couple of bugs fixed in esql, plus i added the first bit of prepared statement support. nothing but strings yet, but it works.
   </action>

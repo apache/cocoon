@@ -12,7 +12,7 @@
 
 <page>
 
-<esql:execute-query>
+<esql:execute-query inner-method="no">
 <esql:driver>postgresql.Driver</esql:driver>
 <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
 <esql:username>test</esql:username>
@@ -23,7 +23,7 @@
  <id><esql:get-string column="id"/></id>
  <name><esql:get-string column="name"/></name>
  <employees>
- <esql:execute-query>
+ <esql:execute-query inner-method="no">
   <esql:query>select * from employee_table where department_id = <esql:get-string column="id" ancestor="1"/></esql:query>
   <esql:results>
    <employee>

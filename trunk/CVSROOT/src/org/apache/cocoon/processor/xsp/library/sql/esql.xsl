@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.16 2000-09-28 01:52:35 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.17 2000-09-29 04:25:19 balld Exp $-->
 <!--
 
  ============================================================================
@@ -121,7 +121,11 @@
                   int skip_rows;
                  }
 		</xsp:logic>
-                <xsl:apply-templates select=".//esql:execute-query" mode="generate-method"/>
+		<xsl:for-each select=".//esql:execute-query[not(@inner-method='no')]">
+		 <xsl:call-template name="generate-code">
+		  <xsl:with-param name="inner-method">yes</xsl:with-param>
+		 </xsl:call-template>
+		</xsl:for-each>
 		<xsl:apply-templates/>
 	</xsp:page>
 </xsl:template>
@@ -145,10 +149,20 @@
 
  <xspdoc:desc>indicates that a sql connection is going to be defined and one or more queries may be executed</xspdoc:desc>
 <xsl:template match="esql:execute-query">
- <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_esql_sessions,_esql_session);</xsp:logic>
+ <xsl:choose>
+  <xsl:when test="@inner-method='no'">
+   <xsl:call-template name="generate-code">
+    <xsl:with-param name="inner-method">no</xsl:with-param>
+   </xsl:call-template>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_esql_sessions,_esql_session);</xsp:logic>
+  </xsl:otherwise>
+ </xsl:choose>
 </xsl:template>
 
-<xsl:template match="esql:execute-query" mode="generate-method">
+<xsl:template name="generate-code">
+	<xsl:param name="inner-method"/>
 	<xsl:variable name="use-connection">
 		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="esql:use-connection"/>
@@ -195,6 +209,8 @@
 		</xsl:call-template>
 	</xsl:variable>
 	<xsp:logic>
+	 <xsl:choose>
+	  <xsl:when test="$inner-method='yes'">
 	 void _esql_execute_query_<xsl:value-of select="generate-id(.)"/>(
 	 HttpServletRequest request,
 	 HttpServletResponse response,
@@ -205,6 +221,11 @@
 	 HttpSession session,
 	 Stack _esql_sessions,
 	 EsqlSession _esql_session) throws Exception {
+	  </xsl:when>
+	  <xsl:when test="$inner-method='no'">
+	   {
+          </xsl:when>
+	 </xsl:choose>
 		if (_esql_session != null) {
 		 _esql_sessions.push(_esql_session);
 		}
@@ -271,9 +292,9 @@
 		 }
 		}
 	       }
-	       boolean _esql_results = false;
+	       boolean _esql_results_<xsl:value-of select="generate-id(.)"/> = false;
 	       while (_esql_session.resultset.next()) {
-		_esql_results = true;
+		_esql_results_<xsl:value-of select="generate-id(.)"/> = true;
 	        <xsl:apply-templates select="esql:results/*"/>
 		if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
 		 break;
@@ -286,7 +307,7 @@
 	       } else if (_esql_session.prepared_statement != null) {
 	         _esql_session.prepared_statement.close();
 	       }
-	       if (!_esql_results) {
+	       if (!_esql_results_<xsl:value-of select="generate-id(.)"/>) {
                 <xsl:apply-templates select="esql:no-results/*"/>
 	       }
 	       } catch (Exception _esql_exception) {
