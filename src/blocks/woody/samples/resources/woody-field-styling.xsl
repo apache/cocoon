@@ -82,6 +82,17 @@
   </xsl:template>
 
   <!--
+    Hidden wi:field : produce input with type='hidden'
+  -->
+  <xsl:template match="wi:field[wi:styling[@type='hidden']]" priority="2">
+    <input type="hidden" name="{@id}" id="{@id}" value="{wi:value}">
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      </xsl:if>
+    </input>
+  </xsl:template>
+
+  <!--
     wi:field with a selection list
     Rendering depends on the attributes of wi:styling :
     - if @list-type is "radio" : produce radio-buttons oriented according to @list-orientation
@@ -145,6 +156,22 @@
   </xsl:template>
   
   <!--
+    wi:field with a selection list and @type 'output'
+  -->
+  <xsl:template match="wi:field[wi:selection-list and wi:styling[@type='output']]" priority="2">
+    <xsl:variable name="value" select="wi:value"/>
+    <xsl:variable name="selected" select="wi:selection-list/wi:item[@value = $value]"/>
+    <xsl:choose>
+      <xsl:when test="$selected/wi:label">
+        <xsl:apply-templates select="$selected/wi:label"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$value"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!--
     wi:field with @type 'textarea'
   -->
   <xsl:template match="wi:field[wi:styling[@type='textarea']]">
@@ -161,7 +188,7 @@
   <!--
     wi:field with @type 'output' : rendered as text
   -->
-  <xsl:template match="wi:field[wi:styling[@type='output']]">
+  <xsl:template match="wi:field[wi:styling[@type='output']]" priority="1">
     <xsl:copy-of select="wi:value"/>
   </xsl:template>
 
@@ -297,7 +324,7 @@
     </span>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
-  
+
   <!--
     wi:upload
   -->
