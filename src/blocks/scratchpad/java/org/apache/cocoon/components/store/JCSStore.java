@@ -93,7 +93,10 @@ public class JCSStore extends AbstractReadWriteStore
      *      <code>group-name</code>: the group to be used as defined in the config file
      *    </li>
      *  </ul>
-     *
+     * 
+     * TODO: instead of loading properties from an external file we may want to
+     * specify them using parameters.
+     * 
      * @param params the configuration paramters
      * @exception  ParameterException
      */
@@ -101,6 +104,7 @@ public class JCSStore extends AbstractReadWriteStore
         // TODO - These are only values for testing:
         String configFile = params.getParameter("config-file", "context://WEB-INF/cache.ccf");
         m_region = params.getParameter("region-name", "indexedRegion1");
+        // FIXME: I don't think group-name is really required here
         m_group = params.getParameter("group-name", "indexedDiskCache");
 
         if (this.getLogger().isDebugEnabled()) {
@@ -188,10 +192,7 @@ public class JCSStore extends AbstractReadWriteStore
         
         if (getLogger().isDebugEnabled()) 
         {
-            getLogger().debug("store(): Store file with key: "
-                + key.toString());
-            getLogger().debug("store(): Store file with value: "
-                + value.toString());
+            getLogger().debug("Store object " + value + " with key "+ key);
         }
         
         //This test is not really pertinent here - we
@@ -204,7 +205,7 @@ public class JCSStore extends AbstractReadWriteStore
             } 
             catch (CacheException ce) 
             {
-                getLogger().error("store(..): Exception", ce);
+                getLogger().error("Failure storing object ", ce);
             }
         } 
         else 
@@ -215,15 +216,7 @@ public class JCSStore extends AbstractReadWriteStore
     
     /**
      * Frees some values of the data file.<br>
-     * TODO: implementation
-     */
-    public void free() 
-    {
-        // if we ever implement this, we should implement doFree()
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.store.impl.AbstractReadWriteStore#doFree()
+     * TODO: implementation?
      */
     protected void doFree() {
     }
@@ -236,7 +229,7 @@ public class JCSStore extends AbstractReadWriteStore
         
         if (getLogger().isDebugEnabled()) 
         {
-            getLogger().debug("clear(): Clearing the database ");
+            getLogger().debug("Clearing the store");
         }
         
         try 
@@ -248,7 +241,7 @@ public class JCSStore extends AbstractReadWriteStore
         } 
         catch (CacheException ce) 
         {
-            getLogger().error("store(..): Exception", ce);
+            getLogger().error("Failure clearing store", ce);
         }
     }
     
@@ -261,18 +254,17 @@ public class JCSStore extends AbstractReadWriteStore
     {
         if (getLogger().isDebugEnabled()) 
         {
-            getLogger().debug("remove(..) Remove item");
+            getLogger().debug("Removing item " + key);
         }
         
         try 
         {
-           m_JCS.remove(key); 
-        } 
-         //Need to revisit this exception - what happens
-         //if no match found for key  - is an exception thrown?
-        catch (CacheException ce) 
+           m_JCS.remove(key);
+        }
+        // if object for key does no exists exception is thrown
+        catch (CacheException ce)
         {
-            getLogger().error("remove(..): Exception", ce);
+            getLogger().error("Failure removing object", ce);
         }
     }
     
@@ -284,7 +276,7 @@ public class JCSStore extends AbstractReadWriteStore
      */
     protected boolean doContainsKey(Object key) 
     {
-         
+        
         //All we have available is a null check
         if (m_JCS.get(key) != null) {
             return true;
@@ -301,6 +293,8 @@ public class JCSStore extends AbstractReadWriteStore
      * needs to be passed in as a string in this way - we should
      * be able to retreive it.
      * FIX ME!!
+     * 
+     * UH: I think an empty String would be the correct value for the group?
      *
      * @return  Enumeration Object with all existing keys
      */
