@@ -98,7 +98,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -123,7 +123,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * The time the cocoon instance was created
      */
-    protected long creationTime = 0;
+    protected long creationTime;
 
     /**
      * The <code>Cocoon</code> instance
@@ -147,7 +147,8 @@ public class CocoonServlet extends HttpServlet {
     protected static final boolean ALLOW_RELOAD = false;
 
     /**
-     * Allow reloading of cocoon by specifying the <code>cocoon-reload=true</code> parameter with a request
+     * Allow reloading of cocoon by specifying the
+     * <code>cocoon-reload=true</code> parameter with a request
      */
     protected boolean allowReload;
 
@@ -264,18 +265,22 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore this
             }
         }
 
-        String value;
-
-        // FIXME (VG): We shouldn't have to specify these. Need to override
-        // jaxp implementation of weblogic before initializing logger.
-        // This piece of code is also required in the Cocoon class.
-        value = System.getProperty("javax.xml.parsers.SAXParserFactory");
-        if (value != null && value.startsWith("weblogic")) {
-            System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
-            System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+        try {
+            // FIXME (VG): We shouldn't have to specify these. Need to override
+            // jaxp implementation of weblogic before initializing logger.
+            // This piece of code is also required in the Cocoon class.
+            String value = System.getProperty("javax.xml.parsers.SAXParserFactory");
+            if (value != null && value.startsWith("weblogic")) {
+                System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
+                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+            }
+        } catch (Exception e) {
+            // Ignore security exception
+            System.out.println("CocoonServlet: Could not check system properties, got: " + e);
         }
 
         this.servletContext = conf.getServletContext();
@@ -307,13 +312,10 @@ public class CocoonServlet extends HttpServlet {
         this.workDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
-        // Init logger
-        initLogger();
-
         String path = this.servletContextPath;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("getRealPath for /: " + path);
-        }
+        // these two variables are just for debugging. We can't log at this point
+        // as the logger isn't initialized yet.
+        String debugPathOne = null, debugPathTwo = null;
         if (path == null) {
             // Try to figure out the path of the root from that of WEB-INF
             try {
@@ -321,15 +323,10 @@ public class CocoonServlet extends HttpServlet {
             } catch (MalformedURLException me) {
                 throw new ServletException("Unable to get resource 'WEB-INF'.", me);
             }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("getResource for /WEB-INF: " + path);
-            }
+            debugPathOne = path;
             path = path.substring(0, path.length() - "WEB-INF".length());
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Path for Root: " + path);
-            }
+            debugPathTwo = path;
         }
-
         try {
             if (path.indexOf(':') > 1) {
                 this.servletContextURL = path;
@@ -344,6 +341,22 @@ public class CocoonServlet extends HttpServlet {
                 this.servletContextURL = new File(path).toURL().toExternalForm();
             } catch (MalformedURLException ignored) {
                 throw new ServletException("Unable to determine servlet context URL.", me);
+            }
+        }
+        try {
+            this.appContext.put("context-root", new URL(this.servletContextURL));
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
+
+        // Init logger
+        initLogger();
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("getRealPath for /: " + this.servletContextPath);
+            if (this.servletContextPath == null) {
+                getLogger().debug("getResource for /WEB-INF: " + debugPathOne);
+                getLogger().debug("Path for Root: " + debugPathTwo);
             }
         }
 
@@ -445,7 +458,7 @@ public class CocoonServlet extends HttpServlet {
         // get allow reload parameter, default is true
         this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
-        value = conf.getInitParameter("show-time");
+        String value = conf.getInitParameter("show-time");
         this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
@@ -849,7 +862,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.log = this.loggerManager.getLoggerForCategory(accesslogger);
-        
+
         final String deprecationLevel = getInitParameter("forbidden-deprecation-level", "ERROR");
         Deprecation.setForbiddenLevel(Deprecation.LogLevel.getLevel(deprecationLevel));
     }
@@ -930,15 +943,16 @@ public class CocoonServlet extends HttpServlet {
     }
 
     /**
-     * Handle the "force-load" parameter.  This overcomes limits in
-     * many classpath issues.  One of the more notorious ones is a
-     * bug in WebSphere that does not load the URL handler for the
-     * "classloader://" protocol.  In order to overcome that bug,
-     * set "force-load" to "com.ibm.servlet.classloader.Handler".
+     * Handle the <code>load-class</code> parameter. This overcomes
+     * limits in many classpath issues. One of the more notorious
+     * ones is a bug in WebSphere that does not load the URL handler
+     * for the <code>classloader://</code> protocol. In order to
+     * overcome that bug, set <code>load-class</code> parameter to
+     * the <code>com.ibm.servlet.classloader.Handler</code> value.
      *
-     * If you need to force more than one class to load, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
+     * <p>If you need to load more than one class, then separate each
+     * entry with whitespace, a comma, or a semi-colon. Cocoon will
+     * strip any whitespace from the entry.</p>
      */
     private void forceLoad() {
         if (this.forceLoadParameter != null) {
@@ -949,12 +963,12 @@ public class CocoonServlet extends HttpServlet {
 
                 try {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Trying to load class: " + fqcn);
+                        getLogger().debug("Loading: " + fqcn);
                     }
                     ClassUtils.loadClass(fqcn).newInstance();
                 } catch (Exception e) {
                     if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Could not force-load class: " + fqcn, e);
+                        getLogger().warn("Could not load class: " + fqcn, e);
                     }
                     // Do not throw an exception, because it is not a fatal error.
                 }
@@ -986,7 +1000,7 @@ public class CocoonServlet extends HttpServlet {
                         value = StringUtils.replaceToken(value);
                     }
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("setting " + key + "=" + value);
+                        getLogger().debug("Setting " + key + "=" + value);
                     }
                     systemProps.setProperty(key, value);
                 } catch (Exception e) {
