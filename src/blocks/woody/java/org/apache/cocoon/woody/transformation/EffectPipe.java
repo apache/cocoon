@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * CVS $Id: EffectPipe.java,v 1.6 2004/01/11 19:47:53 vgritsenko Exp $
+ * CVS $Id: EffectPipe.java,v 1.7 2004/01/21 14:57:49 tim Exp $
  * @author Timothy Larson
  */
 public class EffectPipe extends AbstractXMLPipe {
@@ -205,11 +205,11 @@ public class EffectPipe extends AbstractXMLPipe {
         public Output() { elements = new LinkedList(); }
 
         public void startPrefixMapping() throws SAXException {
-            super.startPrefixMapping(prefix, uri);
+            super.startPrefixMapping(input.prefix, input.uri);
         }
 
         public void endPrefixMapping() throws SAXException {
-            super.endPrefixMapping(prefix);
+            super.endPrefixMapping(input.prefix);
         }
 
         public void element(String prefix, String uri, String loc, Attributes attrs) throws SAXException {
