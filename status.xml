@@ -202,6 +202,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="LG" type="add">
+     ContinuationsManager default implementation can now store continuations in user session. 
+     Continuations are not available outside user session and invalidated automatically 
+     when session gets invalidated by servlet container. This is a good security option for web applications. 
+   </action>
    <action dev="LG" type="add" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
     initial revision of new block: Cocoon Templates
    </action>
