@@ -144,6 +144,12 @@
     <input type="hidden" name="{@id}.size" value="{@size}"/>
   </xsl:template>
 
+  <xsl:template match="wi:form-template">
+    <form>
+      <xsl:apply-templates select="@*|node()"/>
+    </form>
+  </xsl:template>
+  
   <xsl:template match="wi:form">
     <table border="1">
       <xsl:for-each select="wi:children/*">
