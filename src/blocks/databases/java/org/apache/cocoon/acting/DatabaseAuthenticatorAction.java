@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.SourceResolver;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,7 +104,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.3 2003/05/01 16:03:38 tcurdt Exp $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -115,7 +115,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             Parameters parameters) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
-        Statement st = null;
+        PreparedStatement st = null;
         ResultSet rs = null;
 
         // read global parameter settings
@@ -149,16 +149,14 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
                 return null;
             }
 
-            String query = this.getAuthQuery (conf, req);
-            if (query == null) {
+            st = this.getAuthQuery (conn, conf, req);
+            if (st == null) {
                 getLogger ().debug ("DBAUTH: have not got query");
                 req.setAttribute("message", "The authenticator is misconfigured");
                 return null;
             }
 
-            getLogger ().debug ("DBAUTH: query is: " + query);
-            st = conn.createStatement ();
-            rs = st.executeQuery (query);
+            rs = st.executeQuery ();
 
             if (rs.next ()) {
                 getLogger ().debug ("DBAUTH: authorized successfully");
@@ -211,65 +209,70 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
         return null;
     }
 
-    private String getAuthQuery (Configuration conf, Request req) {
-        boolean first_constraint = true;
-        StringBuffer queryBuffer = new StringBuffer ("SELECT ");
-        StringBuffer queryBufferEnd = new StringBuffer ("");
-        String dbcol, request_param, request_value, nullstr;
-        boolean nullable = false;
-        Configuration table = conf.getChild ("table");
-        Configuration[] select = table.getChildren ("select");
+    private PreparedStatement getAuthQuery(Connection conn, Configuration conf, Request req) {
+        StringBuffer queryBuffer = new StringBuffer("SELECT ");
+        StringBuffer queryBufferEnd = new StringBuffer("");
+        Configuration table = conf.getChild("table");
+        Configuration[] columns = table.getChildren("select");
         try {
-            for (int i = 0; i < select.length; i ++) {
-                if (i != 0)
-                    queryBuffer.append (", ");
-                dbcol = select[i].getAttribute ("dbcol");
-                queryBuffer.append (dbcol);
-                try {
-                    request_param = select[i].getAttribute ("request-param");
-                    if (request_param == null ||
-                            request_param.trim().equals ("")) {
-                        continue;
+            Object[] constraintValues = new Object[columns.length];
+            int constraints = 0;
+            for (int i = 0; i < columns.length; i++) {
+                String dbcol = columns[i].getAttribute("dbcol");
+                boolean nullable = false;
+                queryBuffer.append(dbcol);
+
+                String requestParameter = columns[i].getAttribute("request-param", null);
+                if (requestParameter != null && requestParameter.trim() != "") {
+
+                    String nullstr = columns[i].getAttribute("nullable", null);
+                    if (nullstr != null) {
+                        nullstr = nullstr.trim();
+                        nullable = "yes".equals(nullstr) || "true".equals(nullstr);
                     }
-                } catch (Exception e) {
-                    continue;
-                }
-                try {
-                    nullstr = select[i].getAttribute ("nullable");
-                    if (nullstr != null) nullstr = nullstr.trim ();
-                    if ("yes".equals (nullstr) || "true".equals (nullstr)) {
-                        nullable = true;
-                    }
-                } catch (Exception e1) {
-                }
-                /* if there is a request parameter name,
-                 * but not the value, we exit immediately do
-                 * that authorization fails authomatically */
-                request_value = req.getParameter (
-                        request_param);
-                if (request_value == null || request_value.trim().equals ("")) {
-                    // value is null
-                    if (!nullable) {
-                        getLogger ().debug ("DBAUTH: request-param "
-                                + request_param + " does not exist");
+
+                    String constraintValue = req.getParameter(requestParameter);
+
+                    // if there is a request parameter name,
+                    // but not the value, we exit immediately do
+                    // that authorization fails authomatically
+                    if ((constraintValue == null || constraintValue.trim().equals("")) && !nullable) {
+                        getLogger().debug("DBAUTH: request-param " + requestParameter + " does not exist");
                         return null;
                     }
-                } else {
-                    if (!first_constraint)
-                        queryBufferEnd.append (" AND ");
-                    queryBufferEnd.append (dbcol).append("='").append(request_value).append("'");
-                    first_constraint = false;
+
+                    if (constraints > 0) {
+                        queryBufferEnd.append(" AND ");
+                    }
+
+                    queryBufferEnd.append(dbcol).append("= ?");
+                    constraintValues[constraints] = constraintValue;
+                    constraints++;
                 }
             }
-            queryBuffer.append (" FROM ");
-            queryBuffer.append (table.getAttribute ("name"));
-            if (!queryBufferEnd.toString ().trim ().equals (""))
-                queryBuffer.append (" WHERE ").append (queryBufferEnd.toString ());
-            return queryBuffer.toString ();
-        } catch (Exception e) {
-            getLogger ().debug ("DBAUTH: got exception: " + e);
-            return null;
+
+            queryBuffer.append(" FROM ");
+            queryBuffer.append(table.getAttribute("name"));
+            if (!queryBufferEnd.toString().trim().equals("")) {
+                queryBuffer.append(" WHERE ").append(queryBufferEnd.toString());
+            }
+
+            getLogger().debug("DBAUTH: query " + queryBuffer);
+
+            PreparedStatement st = conn.prepareStatement(queryBuffer.toString());
+
+            for(int i=0;i<constraints;i++) {
+                getLogger().debug("DBAUTH: parameter " + (i+1) + " = [" + String.valueOf(constraintValues[i]) + "]");
+                st.setObject(i+1,constraintValues[i]);
+            }
+
+            return st;
         }
+        catch (Exception e) {
+            getLogger().debug("DBAUTH: got exception: " + e);
+        }
+
+        return null;
     }
 
     private HashMap propagateParameters (Configuration conf, ResultSet rs,
