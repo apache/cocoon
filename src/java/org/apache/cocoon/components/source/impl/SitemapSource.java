@@ -50,34 +50,6 @@
 */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.EnvironmentStack;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-import org.apache.cocoon.xml.ContentHandlerWrapper;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceNotFoundException;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,12 +58,37 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+
 /**
  * Implementation of a {@link Source} that gets its content
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.11 2003/10/08 10:33:01 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.12 2003/10/08 20:18:34 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -304,17 +301,14 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
-            EnvironmentStack envStack = CocoonComponentManager.getCurrentEnvironmentStack();
-            int currentOffset = envStack.getOffset();
+            CocoonComponentManager.enterEnvironment(this.environment,
+                                                    this.manager,
+                                                    this.pipelineProcessor);
             try {
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
-                envStack.resetOffset(0);
+                
                 this.processingPipeline.process(this.environment);
             } finally {
                 CocoonComponentManager.leaveEnvironment();
-                envStack.resetOffset(currentOffset);
             }
             return new ByteArrayInputStream(os.toByteArray());
 
@@ -392,13 +386,10 @@ implements Source, XMLizable {
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {
 
-                EnvironmentStack envStack = CocoonComponentManager.getCurrentEnvironmentStack();
-                int currentOffset = envStack.getOffset();
+                CocoonComponentManager.enterEnvironment(this.environment,
+                                                        this.manager,
+                                                        this.pipelineProcessor);
                 try {
-                    CocoonComponentManager.enterEnvironment(this.environment,
-                                                            this.manager,
-                                                            this.pipelineProcessor);
-                    envStack.resetOffset(0);
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
                     final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
@@ -417,7 +408,6 @@ implements Source, XMLizable {
                     }
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
-                    envStack.resetOffset(currentOffset);
                 }
             } else {
                 if (redirectURL.indexOf(":") == -1) {
@@ -462,18 +452,15 @@ implements Source, XMLizable {
 	                consumer = new ContentHandlerWrapper(contentHandler);
 	            }
                 // We have to add an environment changer
-                // clean environment stack handling.
-                EnvironmentStack envStack = CocoonComponentManager.getCurrentEnvironmentStack();
-                int currentOffset = envStack.getOffset();
+                // for clean environment stack handling.
+                CocoonComponentManager.enterEnvironment(this.environment,
+                                                        this.manager,
+                                                        this.pipelineProcessor);
                 try {
-                    CocoonComponentManager.enterEnvironment(this.environment,
-                                                            this.manager,
-                                                            this.pipelineProcessor);
-                    envStack.resetOffset(0);
-                    this.processingPipeline.process(this.environment, new EnvironmentChanger(consumer, envStack));
+                    this.processingPipeline.process(this.environment,
+                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer)); 
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
-                    envStack.resetOffset(currentOffset);
                 }
             }
         } catch (SAXException e) {
@@ -543,151 +530,3 @@ implements Source, XMLizable {
 
 
 }
-
-
-/**
- * This class is an {@link XMLConsumer} that changes the current environment.
- * When a pipeline calls an internal pipeline, two environments are
- * established: one for the calling pipeline and one for the internal pipeline.
- * Now, if SAX events are send from the internal pipeline, they are
- * received by some component of the calling pipeline, so inbetween we
- * have to change the environment forth and back.
- */
-final class EnvironmentChanger
-implements XMLConsumer {
-
-    final XMLConsumer consumer;
-    final EnvironmentStack stack;
-    
-    EnvironmentChanger(XMLConsumer consumer, EnvironmentStack es) {
-        this.consumer = consumer;
-        this.stack = es;
-    }
-    
-    public void setDocumentLocator(Locator locator) {
-        this.stack.incOffset();
-        this.consumer.setDocumentLocator(locator);
-        this.stack.decOffset();
-    }
-
-    public void startDocument()
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startDocument();
-        this.stack.decOffset();
-    }
-
-    public void endDocument()
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endDocument();
-        this.stack.decOffset();
-    }
-
-    public void startPrefixMapping(String prefix, String uri)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startPrefixMapping(prefix, uri);
-        this.stack.decOffset();
-    }
-
-    public void endPrefixMapping(String prefix)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endPrefixMapping(prefix);
-        this.stack.decOffset();
-    }
-
-    public void startElement(String uri, String loc, String raw, Attributes a)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startElement(uri, loc, raw, a);
-        this.stack.decOffset();
-    }
-
-
-    public void endElement(String uri, String loc, String raw)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endElement(uri, loc, raw);
-        this.stack.decOffset();
-    }
-    
-    public void characters(char c[], int start, int len)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.characters(c, start, len);
-        this.stack.decOffset();
-    }
-
-    public void ignorableWhitespace(char c[], int start, int len)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.ignorableWhitespace(c, start, len);
-        this.stack.decOffset();
-    }
-
-    public void processingInstruction(String target, String data)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.processingInstruction(target, data);
-        this.stack.decOffset();
-    }
-
-    public void skippedEntity(String name)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.skippedEntity(name);
-        this.stack.decOffset();
-    }
-
-    public void startDTD(String name, String publicId, String systemId)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startDTD(name, publicId, systemId);
-        this.stack.decOffset();
-    }
-
-    public void endDTD()
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endDTD();
-        this.stack.decOffset();
-    }
-
-    public void startEntity(String name)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startEntity(name);
-        this.stack.decOffset();
-    }
-
-    public void endEntity(String name)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endEntity(name);
-        this.stack.decOffset();
-    }
-
-    public void startCDATA()
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.startCDATA();
-        this.stack.decOffset();
-    }
-
-    public void endCDATA()
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.endCDATA();
-        this.stack.decOffset();
-    }
-
-    public void comment(char ch[], int start, int len)
-    throws SAXException {
-        this.stack.incOffset();
-        this.consumer.comment(ch, start, len);
-        this.stack.decOffset();
-    }
-}
-

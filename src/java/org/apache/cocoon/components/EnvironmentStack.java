@@ -50,7 +50,11 @@
 */
 package org.apache.cocoon.components;
 
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.collections.ArrayStack;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 /**
  * The stack for the processing environment.
@@ -58,32 +62,25 @@ import org.apache.commons.collections.ArrayStack;
  * cocoon protocol.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.1 2003/03/09 00:08:46 pier Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.2 2003/10/08 20:18:34 cziegeler Exp $
  */
-public final class EnvironmentStack 
+final class EnvironmentStack 
     extends ArrayStack 
     implements Cloneable {
     
     int offset;
     
-    public Object getCurrent() {
-        return this.peek(this.offset);
+    Object getCurrent() {
+        return this.get(offset);
+        //return this.peek(this.offset);
     }
     
-    public void incOffset() {
-        this.offset++;
-    }
-    
-    public void decOffset() {
-        this.offset--;
-    }
-    
-    public void resetOffset(int value) {
-        this.offset = value;
-    }
-    
-    public int getOffset() {
+    int getOffset() {
         return this.offset;
+    }
+  
+    void setOffset(int value) {
+        this.offset = value;  
     }
     
     public Object clone() {
@@ -91,5 +88,160 @@ public final class EnvironmentStack
         old.offset = offset;
         return old;
     }
+    
+    XMLConsumer getEnvironmentAwareConsumerWrapper(XMLConsumer consumer, 
+                                                   int oldOffset) {
+        return new EnvironmentChanger(consumer, this, oldOffset, this.offset);
+    }
 }
 
+/**
+ * This class is an {@link XMLConsumer} that changes the current environment.
+ * When a pipeline calls an internal pipeline, two environments are
+ * established: one for the calling pipeline and one for the internal pipeline.
+ * Now, if SAX events are send from the internal pipeline, they are
+ * received by some component of the calling pipeline, so inbetween we
+ * have to change the environment forth and back.
+ */
+final class EnvironmentChanger
+implements XMLConsumer {
+
+    final XMLConsumer consumer;
+    final EnvironmentStack stack;
+    final int oldOffset;
+    final int newOffset;
+    
+    EnvironmentChanger(XMLConsumer consumer, EnvironmentStack es,
+                       int oldOffset, int newOffset) {
+        this.consumer = consumer;
+        this.stack = es;
+        this.oldOffset = oldOffset;
+        this.newOffset = newOffset;
+    }
+    
+    public void setDocumentLocator(Locator locator) {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.setDocumentLocator(locator);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startDocument()
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startDocument();
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void endDocument()
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endDocument();
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startPrefixMapping(prefix, uri);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endPrefixMapping(prefix);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startElement(String uri, String loc, String raw, Attributes a)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startElement(uri, loc, raw, a);
+        this.stack.setOffset(this.newOffset);
+    }
+
+
+    public void endElement(String uri, String loc, String raw)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endElement(uri, loc, raw);
+        this.stack.setOffset(this.newOffset);
+    }
+    
+    public void characters(char c[], int start, int len)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.characters(c, start, len);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void ignorableWhitespace(char c[], int start, int len)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.ignorableWhitespace(c, start, len);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void processingInstruction(String target, String data)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.processingInstruction(target, data);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void skippedEntity(String name)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.skippedEntity(name);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startDTD(String name, String publicId, String systemId)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startDTD(name, publicId, systemId);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void endDTD()
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endDTD();
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startEntity(String name)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startEntity(name);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void endEntity(String name)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endEntity(name);
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void startCDATA()
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.startCDATA();
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void endCDATA()
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.endCDATA();
+        this.stack.setOffset(this.newOffset);
+    }
+
+    public void comment(char ch[], int start, int len)
+    throws SAXException {
+        this.stack.setOffset(this.oldOffset);
+        this.consumer.comment(ch, start, len);
+        this.stack.setOffset(this.newOffset);
+    }
+}

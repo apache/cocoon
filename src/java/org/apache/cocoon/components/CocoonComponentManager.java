@@ -67,9 +67,11 @@ import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -85,7 +87,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.16 2003/08/04 03:19:22 joerg Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.17 2003/10/08 20:18:34 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -143,27 +145,31 @@ implements SourceResolver
      * parameters are not set!
      */
     public static void enterEnvironment(Environment      env,
-                                          ComponentManager manager,
-                                          Processor        processor) {
+                                        ComponentManager manager,
+                                        Processor        processor) {
         if ( null == env || null == manager || null == processor) {                                       	
             throw new RuntimeException("CocoonComponentManager.enterEnvironment: all parameters must be set: " + env + " - " + manager + " - " + processor);
         }
         
-		if (environmentStack.get() == null) {
-			environmentStack.set(new EnvironmentStack());
+        EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+		if (stack == null) {
+            stack = new EnvironmentStack();
+			environmentStack.set(stack);
 		}
-		final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-		stack.push(new Object[] {env, processor, manager});
-    
+		stack.push(new Object[] {env, processor, manager, new Integer(stack.getOffset())});
+        stack.setOffset(stack.size()-1);
+        
         env.setAttribute("CocoonComponentManager.processor", processor);
     }
 
     /**
-     * This hook must be called by the sitemap each time a sitemap is left
+     * This hook must be called by the sitemap each time a sitemap is left.
+     * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
      */
     public static void leaveEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         final Object[] objs = (Object[])stack.pop();
+        stack.setOffset(((Integer)objs[3]).intValue());
         if ( stack.isEmpty() ) {
             final Environment env = (Environment)objs[0];
             final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
@@ -177,9 +183,27 @@ implements SourceResolver
                 }
             }
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
+        } 
+    }
+    
+    public static void checkEnvironment(Logger logger) {
+        // TODO (CZ): This is only for testing - remove it later on
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if (stack != null && !stack.isEmpty() ) {
+            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");        
         }
     }
 
+    /**
+     * Create an environment aware xml consumer for the cocoon
+     * protocol
+     */
+    public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final Object[] objs = (Object[])stack.getCurrent();
+        return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[3]).intValue());
+    }
+    
     /**
      * This hook has to be called before a request is processed.
      * The hook is called by the Cocoon component and by the
@@ -233,13 +257,6 @@ implements SourceResolver
             return (Processor) ((Object[])stack.getCurrent())[1];
         }
         return null;
-    }
-
-    /**
-     * Return the current environment stack (for the cocoon: protocol)
-     */
-    public static EnvironmentStack getCurrentEnvironmentStack() {
-        return (EnvironmentStack)environmentStack.get();
     }
 
     /**
