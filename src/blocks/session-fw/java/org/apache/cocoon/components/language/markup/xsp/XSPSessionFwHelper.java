@@ -64,7 +64,7 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.3 2003/10/11 00:02:55 antonio Exp $
+ * @version CVS $Id: XSPSessionFwHelper.java,v 1.4 2003/10/21 07:52:02 cziegeler Exp $
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
@@ -77,7 +77,7 @@ public class XSPSessionFwHelper {
      * @param path The parameter path
      * @param defaultValue Value to substitute in absence of the required Fragment
     **/
-    public static Object getXML(ComponentManager cm, String context, String path) throws ProcessingException {
+    public static DocumentFragment getXML(ComponentManager cm, String context, String path) throws ProcessingException {
 
         SessionManager sessionManager = null;
         try {
@@ -85,11 +85,7 @@ public class XSPSessionFwHelper {
             sessionManager = (SessionManager)cm.lookup(SessionManager.ROLE);
             // Get the fragment
             DocumentFragment df = sessionManager.getContextFragment(context, path);
-            if ( df != null ) {
-                return df;
-            } else {
-                return "";
-            }
+            return df;
         } catch (ComponentException ce) {
             throw new ProcessingException("Error during lookup of SessionManager component.", ce);
         } finally {
