@@ -84,7 +84,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.10 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.11 2003/05/08 00:05:04 vgritsenko Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -269,21 +269,21 @@ public class JSCocoon extends ScriptableObject
     }
 
     /**
-       Set the Scope object in the session object of the current
-       user. This effectively means that at the next invocation from the
-       sitemap of a JavaScript function (using the &lt;map:call
-       function="..."&gt;), will obtain the same scope as the current
-       one.
-    */
+     * Set the Scope object in the session object of the current
+     * user. This effectively means that at the next invocation from the
+     * sitemap of a JavaScript function (using the &lt;map:call
+     * function="..."&gt;), will obtain the same scope as the current
+     * one.
+     */
     public void jsFunction_createSession()
     {
         interpreter.setSessionScope(environment, getParentScope());
     }
 
     /**
-       Remove the Scope object from the session object of the current
-       user.
-    */
+     * Remove the Scope object from the session object of the current
+     * user.
+     */
     public void jsFunction_removeSession()
     {
         interpreter.removeSessionScope(environment);
