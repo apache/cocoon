@@ -65,8 +65,16 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  * &lt;/entity-resolver&gt;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.5 2003/03/14 13:10:53 cziegeler Exp $
+ * @version CVS $Id: DefaultResolver.java,v 1.6 2003/10/27 01:46:58 ghoward Exp $
  * @since 2.1
+ * 
+ * TODO: what does DefaultEntityResolver lookup in service()?  Do I 
+ * need to overload that here to declare the dependencies?
+ * 
+ * @avalon.component
+ * @avalon.service type="org.apache.excalibur.xml.EntityResolver"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="entity-resolver"
  */
 public class DefaultResolver
   extends DefaultEntityResolver {
