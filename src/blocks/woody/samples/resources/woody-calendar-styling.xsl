@@ -26,9 +26,6 @@
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody-calendar.css"/>
   </xsl:template>
 
-  <!--+
-      | must be called in <body> 
-      +-->
   <xsl:template match="body" mode="woody-calendar">
     <div id="woody_calendarDiv"/>
   </xsl:template>
@@ -48,7 +45,7 @@
     </xsl:variable>
     
     <!-- regular input -->
-    <input id="{@id}" name="{@id}" value="{wi:value}">
+    <input id="{@id}" name="{@id}" value="{wi:value}" type="text">
       <xsl:apply-templates select="." mode="styling"/>
     </input>
     
