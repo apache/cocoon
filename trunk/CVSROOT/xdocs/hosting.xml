@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Hosting</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Cocoon Hosting">
+  <p>
+   Here is a list of sites that provide Cocoon web hosting, and which versions are
+   provided (if known). Version information may not be up-to-date on this list, so
+   always check with the site itself to make sure.
+  </p>
+
+  <p>
+   To add your site to this list - you must have cocoon up and running and be
+   accepting application forms! - send an email to cocoon-users@xml.apache.org.
+  </p>
+
+  <ul>
+   <li><link href="http://www.aoindustries.com/">AO Industries</link> - Cocoon 1.8.</li>
+   <li><link href="http://webartists.net/webhosting.html">Webartists</link> (German)</li>
+  </ul>
+
+ </s1>
+
+</body>
+</document>

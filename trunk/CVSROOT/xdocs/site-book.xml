@@ -35,6 +35,7 @@
   <todo id="todo" label="Todo" source="todo.xml"/>
 <separator/>
   <page id="livesites" label="Live Sites" source="livesites.xml"/>
+  <page id="hosting" label="Cocoon Hosting" source="hosting.xml"/>
 <separator/>
   <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
