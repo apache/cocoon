@@ -84,7 +84,7 @@ implements ServiceManager, Configurable {
             throw new ServiceException( role, message );
         }
 
-        AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( role );
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get( role );
 
         // Retrieve the instance of the requested component
         if ( handler == null ) {
@@ -226,8 +226,8 @@ implements ServiceManager, Configurable {
         //  will never be released by more than one thread, this method does not need any
         //  synchronization around the access to the map.
 
-        final AbstractComponentHandler handler =
-            (AbstractComponentHandler)this.componentMapping.get( component );
+        final ComponentHandler handler =
+            (ComponentHandler)this.componentMapping.get( component );
 
         if ( handler != null ) {
             // ThreadSafe components will always be using a ThreadSafeComponentHandler,
@@ -312,8 +312,8 @@ implements ServiceManager, Configurable {
         super.initialize();
 
         for( int i = 0; i < this.newComponentHandlers.size(); i++ ) {
-            final AbstractComponentHandler handler =
-                (AbstractComponentHandler)this.newComponentHandlers.get( i );
+            final ComponentHandler handler =
+                (ComponentHandler)this.newComponentHandlers.get( i );
             try {
                 handler.initialize();
             } catch( Exception e ) {
@@ -332,8 +332,8 @@ implements ServiceManager, Configurable {
 
         for( int i = 0; i < keys.size(); i++ ) {
             final Object key = keys.get( i );
-            final AbstractComponentHandler handler =
-                (AbstractComponentHandler)this.componentHandlers.get( key );
+            final ComponentHandler handler =
+                (ComponentHandler)this.componentHandlers.get( key );
 
             if( !this.newComponentHandlers.contains( handler ) ) {
                 try {
@@ -366,8 +366,8 @@ implements ServiceManager, Configurable {
                  iterator.hasNext(); ) {
                 final Object role = iterator.next();
 
-                final AbstractComponentHandler handler =
-                    (AbstractComponentHandler)componentHandlers.get( role );
+                final ComponentHandler handler =
+                    (ComponentHandler)componentHandlers.get( role );
 
                 if( forceDisposal || handler.canBeDisposed() ) {
                     if( forceDisposal && getLogger().isWarnEnabled() ) {
@@ -416,7 +416,7 @@ implements ServiceManager, Configurable {
                 this.getLogger().debug( "Attempting to get handler for role [" + role + "]" );
             }
 
-            final AbstractComponentHandler handler = this.getComponentHandler( component,
+            final ComponentHandler handler = this.getComponentHandler( component,
                                                                   configuration,
                                                                   this);
 

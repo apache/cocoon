@@ -22,6 +22,7 @@ import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
 import org.apache.cocoon.core.container.CocoonServiceSelector;
+import org.apache.cocoon.core.container.ComponentHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ extends CocoonServiceSelector  {
                              Object hint, Program generator)
     throws Exception {
         try {
-            final AbstractComponentHandler handler =
+            final ComponentHandler handler =
                     generator.getHandler(newManager, this.context );
             handler.initialize();
             this.componentHandlers.put(hint, handler);
@@ -116,7 +117,7 @@ extends CocoonServiceSelector  {
     }
 
     public void removeGenerator(Object hint) {
-        AbstractComponentHandler handler = (AbstractComponentHandler) this.componentHandlers.remove(hint);
+        ComponentHandler handler = (ComponentHandler) this.componentHandlers.remove(hint);
         if (handler != null) {
             handler.dispose();
             this.classManager.reinstantiate();

@@ -19,7 +19,6 @@ package org.apache.cocoon.core.container;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -83,7 +82,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 "You cannot select a component from a disposed service selector." );
         }
 
-        AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( key );
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get( key );
 
         // Retrieve the instance of the requested component
         if( null == handler ) {
@@ -152,7 +151,7 @@ implements ServiceSelector, Serviceable, Configurable {
         boolean exists = false;
 
         try {
-            AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( key );
+            ComponentHandler handler = (ComponentHandler)this.componentHandlers.get( key );
             exists = (handler != null);
         } catch( Throwable t ) {
             // We can safely ignore all exceptions
@@ -178,8 +177,8 @@ implements ServiceSelector, Serviceable, Configurable {
             this.parentSelector.release(component);
 
         } else {
-            final AbstractComponentHandler handler =
-                (AbstractComponentHandler)this.componentMapping.get( component );
+            final ComponentHandler handler =
+                (ComponentHandler)this.componentMapping.get( component );
     
             if( null == handler ) {
                 this.getLogger().warn( "Attempted to release a " + component.getClass().getName()
@@ -281,8 +280,8 @@ implements ServiceSelector, Serviceable, Configurable {
 
         for( int i = 0; i < keys.size(); i++ ) {
             final Object key = keys.get( i );
-            final AbstractComponentHandler handler =
-                (AbstractComponentHandler)this.componentHandlers.get( key );
+            final ComponentHandler handler =
+                (ComponentHandler)this.componentHandlers.get( key );
 
             try {
                 handler.initialize();
@@ -305,8 +304,8 @@ implements ServiceSelector, Serviceable, Configurable {
 
         while( keys.hasNext() ) {
             Object key = keys.next();
-            AbstractComponentHandler handler =
-                (AbstractComponentHandler)this.componentHandlers.get( key );
+            ComponentHandler handler =
+                (ComponentHandler)this.componentHandlers.get( key );
 
             handler.dispose();
 
@@ -330,15 +329,6 @@ implements ServiceSelector, Serviceable, Configurable {
         super.dispose();
     }
 
-    /**
-     * Makes the ComponentHandlers available to subclasses.
-     *
-     * @return A reference to the componentHandler Map.
-     */
-    protected Map getComponentHandlers() {
-        return this.componentHandlers;
-    }
-
     /** Add a new component to the manager.
      * @param key the key for the new component.
      * @param component the class of this component.
@@ -354,7 +344,7 @@ implements ServiceSelector, Serviceable, Configurable {
         }
 
         try {
-            final AbstractComponentHandler handler = getComponentHandler( component,
+            final ComponentHandler handler = getComponentHandler( component,
                                                                   configuration,
                                                                   this.serviceManager);
 
@@ -460,7 +450,5 @@ implements ServiceSelector, Serviceable, Configurable {
         }
         return this.componentMapping.containsKey( component );
     }
-
-    
 
 }

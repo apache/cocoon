@@ -32,7 +32,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @version CVS $Id: AbstractComponentHandler.java 55144 2004-10-20 12:26:09Z ugo $
  */
-public abstract class AbstractComponentHandler {
+public abstract class AbstractComponentHandler 
+implements ComponentHandler {
     
     private final Object referenceSemaphore = new Object();
     private int references = 0;
@@ -61,7 +62,7 @@ public abstract class AbstractComponentHandler {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    public static AbstractComponentHandler getComponentHandler( final Class componentClass,
+    public static ComponentHandler getComponentHandler( final Class componentClass,
                                                         final Configuration configuration,
                                                         final ServiceManager serviceManager,
                                                         final Context context,
@@ -217,15 +218,15 @@ public abstract class AbstractComponentHandler {
         return ( this.references == 0 );
     }
     
-    /**
-     * Dispose of the component handler and any associated Pools and Factories.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.ComponentHandler#dispose()
      */
     public void dispose() {
         this.disposed = true;
     }
     
-    /**
-     * Initialize this handler
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.ComponentHandler#initialize()
      */
     public void initialize() throws Exception {
         if( this.initialized ) {
