@@ -157,7 +157,7 @@ implements ServiceManager, Configurable {
                 component = handler.get();
                 
             } catch( final ServiceException ce ) {
-                // Rethrow instead of wrapping a ComponentException with another one
+                // Rethrow instead of wrapping a ServiceException with another one
                 throw ce;
             } catch( final Exception e ) {
                 final String message = "Could not access the Component";

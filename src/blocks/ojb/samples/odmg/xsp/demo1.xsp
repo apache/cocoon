@@ -49,7 +49,7 @@
 				try {
           odmgImpl = (OdmgImplementation)manager.lookup( OdmgImplementation.ROLE );
           impl = odmgImpl.getInstance( "personnel" );
-				} catch (ComponentException cme) {
+				} catch (ServiceException cme) {
 					getLogger().error("Could not look up the ODMG Implementation", cme);
 				} catch (ODMGException oe) {
 					getLogger().error("Failed to instantiate ODMG Implementation", oe);

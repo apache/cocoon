@@ -53,7 +53,7 @@
 
             bean.setId(((Integer)fid.getValue()).intValue());
             dao.retrieve(bean, factory);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Could not lookup JDO PersistanceManagerFactory", ce);
         } finally {
             if (factory != null) {

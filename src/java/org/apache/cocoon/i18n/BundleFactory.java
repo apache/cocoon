@@ -48,7 +48,7 @@ public interface BundleFactory {
      * @param bundleName    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     Bundle select(String base, String bundleName, String locale) throws Exception;
 
@@ -60,7 +60,7 @@ public interface BundleFactory {
      * @param bundleName    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     Bundle select(String base, String bundleName, Locale locale) throws Exception;
 
@@ -72,7 +72,7 @@ public interface BundleFactory {
      * @param bundleName    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     Bundle select(String[] directories, String bundleName, Locale locale) throws Exception;
 
@@ -83,7 +83,7 @@ public interface BundleFactory {
      * @param bundleName    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     Bundle select(String bundleName, String locale) throws Exception;
 
@@ -94,7 +94,7 @@ public interface BundleFactory {
      * @param bundleName    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     Bundle select(String bundleName, Locale locale) throws Exception;
 

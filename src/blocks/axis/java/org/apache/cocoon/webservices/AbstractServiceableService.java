@@ -60,7 +60,7 @@ public abstract class AbstractServiceableService
             setServiceManager();
 
         } catch (org.apache.avalon.framework.service.ServiceException e) {
-            throw new ServiceException("ComponentException generated", e);
+            throw new ServiceException("ServiceException generated", e);
         }
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractServiceableService
     /**
      * Helper method to extract the ServiceManager reference
      * from the context.
-     * @exception ComponentException if an error occurs
+     * @exception org.apache.avalon.framework.service.ServiceException if an error occurs
      */
     private void setServiceManager() throws org.apache.avalon.framework.service.ServiceException {
         service(

@@ -21,7 +21,7 @@
 
   <xsp:structure>
    <xsp:include>org.apache.avalon.framework.context.ContextException</xsp:include>
-   <xsp:include>org.apache.avalon.framework.component.ComponentException</xsp:include>
+   <xsp:include>org.apache.avalon.framework.service.ServiceException</xsp:include>
    <xsp:include>org.apache.cocoon.ProcessingException</xsp:include>
    <xsp:include>java.net.URL</xsp:include>
    <xsp:include>java.net.MalformedURLException</xsp:include>

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -168,9 +167,9 @@ public class XMLResourceBundleFactory
      * @param name    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String name, String locale) throws ComponentException {
+    public Bundle select(String name, String locale) throws Exception {
         return select(getDirectory(), name, locale);
     }
 
@@ -180,9 +179,9 @@ public class XMLResourceBundleFactory
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String name, Locale locale) throws ComponentException {
+    public Bundle select(String name, Locale locale) throws Exception {
         return select(getDirectory(), name, locale);
     }
 
@@ -194,9 +193,9 @@ public class XMLResourceBundleFactory
      * @param name    bundle name
      * @param localeName  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String directory, String name, String localeName) throws ComponentException {
+    public Bundle select(String directory, String name, String localeName) throws Exception {
         return select(directory, name, new Locale(localeName, localeName));
     }
 
@@ -208,9 +207,9 @@ public class XMLResourceBundleFactory
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String directory, String name, Locale locale) throws ComponentException {
+    public Bundle select(String directory, String name, Locale locale) throws Exception {
         String []directories = new String[1];
         directories[0] = directory;
         return select(directories, name, locale);
@@ -224,13 +223,13 @@ public class XMLResourceBundleFactory
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     Exception if a bundle is not found
      */
     public Bundle select(String[] directories, String name, Locale locale)
-            throws ComponentException {
+            throws Exception {
         Bundle bundle = _select(directories, 0, name, locale);
         if (bundle == null) {
-            throw new ComponentException(name, "Unable to locate resource: " + name);
+            throw new Exception("Unable to locate resource: " + name);
         }
         return bundle;
     }

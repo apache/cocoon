@@ -61,7 +61,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CopletModule.java,v 1.11 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CopletModule 
 implements InputModule, Serviceable, ThreadSafe {
@@ -120,7 +120,7 @@ implements InputModule, Serviceable, ThreadSafe {
             return value.toString();
             
         } catch (ServiceException e) {
-            throw new ConfigurationException("ComponentException ", e);
+            throw new ConfigurationException("ServiceException ", e);
         } finally {
             this.manager.release(portalService);
         }

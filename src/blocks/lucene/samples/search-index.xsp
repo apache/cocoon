@@ -21,7 +21,7 @@
 
   <xsp:structure>
     <xsp:include>org.apache.avalon.framework.context.ContextException</xsp:include>
-    <xsp:include>org.apache.avalon.framework.component.ComponentException</xsp:include>
+    <xsp:include>org.apache.avalon.framework.service.ServiceException</xsp:include>
     
     <xsp:include>org.apache.cocoon.ProcessingException</xsp:include>
     <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
@@ -72,9 +72,9 @@
         } else {
           throw new ProcessingException( "ProcessingException in search", pe );
         }
-      } catch (ComponentException ce) {
+      } catch (ServiceException ce) {
         // ignore ??
-        throw new ProcessingException( "ComponentException in search", ce );
+        throw new ProcessingException( "ServiceException in search", ce );
       } finally {
         if (lcs != null) {
           this.manager.release( lcs );

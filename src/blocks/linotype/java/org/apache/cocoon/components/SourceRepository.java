@@ -39,7 +39,7 @@ import org.apache.excalibur.source.TraversableSource;
 
 /**
  * @author stefano
- * @version CVS $Id: SourceRepository.java,v 1.5 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class SourceRepository {
     
@@ -68,7 +68,7 @@ public class SourceRepository {
             resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
             source = (TraversableSource) resolver.resolveURI(uri);
         } catch (ServiceException ce) {
-            throw new IOException("ComponentException");
+            throw new IOException("ServiceException");
         } finally {
             manager.release(resolver);
         }

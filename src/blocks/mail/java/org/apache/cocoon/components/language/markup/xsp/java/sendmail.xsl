@@ -98,7 +98,7 @@
         org.apache.cocoon.mail.MailSender _sendmail_mms = null;
        	try {
 	        _sendmail_mms = (org.apache.cocoon.mail.MailSender) this.manager.lookup(org.apache.cocoon.mail.MailSender.ROLE);
-        } catch (org.apache.avalon.framework.component.ComponentException e) {
+        } catch (org.apache.avalon.framework.service.ServiceException e) {
           throw new ProcessingException("Could not setup mail components.", e);
         }
 
