@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.15 2004/05/27 12:34:41 cziegeler Exp $
+  $Id: release.xml,v 1.16 2004/06/22 02:41:14 crossley Exp $
 -->
 
 <document>
@@ -34,7 +34,7 @@
  <s1 title="General tasks for a release">
   <ul>
    <li>We have many open
-    <link href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bugidtype=include&amp;product=Cocoon+2&amp;order=bugs.bug_id">
+    <link href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bugidtype=include&amp;product=Cocoon+2&amp;order=bugs.bug_id">
     bugs</link> in bugzilla. These must be reviewed
     and then solved (or declared invalid etc).</li>
    <li>Documentation updates (this area lacks most).

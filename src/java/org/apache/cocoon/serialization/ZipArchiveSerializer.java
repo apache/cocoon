@@ -67,7 +67,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.7 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.8 2004/06/22 02:41:14 crossley Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -139,7 +139,7 @@ public class ZipArchiveSerializer
         // OpenOffice documents, which have different mime type than "application/x-zip".
         // Problem is that constant returned here can not be overriden in the sitemap neither
         // when declaring serializer, nor when using it.
-        // Bug http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277 might be related to this issue.
+        // Bug http://issues.apache.org/bugzilla/show_bug.cgi?id=10277 might be related to this issue.
         // WAS HERE: Always return "application/x-zip" which is the default for Zip archives
         // return "application/x-zip";
         return null;

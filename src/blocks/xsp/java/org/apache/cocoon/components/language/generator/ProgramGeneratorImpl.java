@@ -50,7 +50,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.2 2004/06/22 02:41:15 crossley Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -437,7 +437,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
         if (code == null || code.length() == 0) {
             // FIXME(VG): Xalan with incremental-processing=true does not propagate exceptions
             // from working thread to main thread. See
-            // http://nagoya.apache.org/bugzilla/show_bug.cgi?id=8033
+            // http://issues.apache.org/bugzilla/show_bug.cgi?id=8033
             throw new ProcessingException("Failed to generate program code (this may happen " +
                     "if you use Xalan in incremental processing mode). " +
                     "Please check log file and/or console for errors.");

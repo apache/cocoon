@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: error2html.xslt,v 1.17 2004/03/06 02:25:41 antonio Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.18 2004/06/22 02:41:14 crossley Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -88,7 +88,7 @@
 
         <p>
           If you think you found a bug, please report it to
-          <a href="http://nagoya.apache.org/bugzilla/">Apache's Bugzilla</a>;
+          <a href="http://issues.apache.org/bugzilla/">Apache's Bugzilla</a>;
           a message will automatically be sent to the developer mailing list and you'll
           be kept in contact automatically with the further progress on that bug.
         </p>
