@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.125 2000-10-16 23:43:51 balld Exp $ 
+  $Id: changes.xml,v 1.126 2000-10-17 04:36:26 balld Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="update">
+   added code to esql logicsheet to deal with queries that return an update count
+  </action>
   <action dev="DB" type="fix">
    fixed esql logicsheet - stack and session should only declare once now even when interacting with other logicsheets
   </action>
