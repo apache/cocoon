@@ -78,7 +78,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.1 2003/03/09 00:09:46 pier Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.2 2003/03/12 15:11:15 cziegeler Exp $
  */
 public class XMLUtils{
 
@@ -226,8 +226,14 @@ public class XMLUtils{
             transformerHandler = ((SAXTransformerFactory)TransformerFactory.newInstance()).newTransformerHandler();
             transformerHandler.getTransformer().setOutputProperties(format);
             transformerHandler.setResult(new StreamResult(writer));
+            if ( node.getNodeType() != Node.DOCUMENT_NODE ) {
+                transformerHandler.startDocument();
+            } 
             DOMStreamer domStreamer = new DOMStreamer(transformerHandler, transformerHandler);
             domStreamer.stream(node);
+            if ( node.getNodeType() != Node.DOCUMENT_NODE ) {
+                transformerHandler.endDocument();
+            } 
             return writer.toString();
         } catch (javax.xml.transform.TransformerException local) {
             throw new ProcessingException("TransformerException: " + local, local);
