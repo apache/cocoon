@@ -150,7 +150,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.4 2003/06/06 12:21:55 vgritsenko Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.5 2003/07/29 12:32:18 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -375,22 +375,38 @@ implements Disposable, CacheableProcessingComponent {
                               + ", parameters=" + this.resourceParameters);
             }
             Source source = null;
+            
             try {
                 source = SourceUtil.getSource(resource, 
                                               this.configurationParameters, 
                                               this.resourceParameters,
                                               this.resolver);
-
-                SourceUtil.toSAX(source, this.xmlConsumer, this.configurationParameters, true);
-                
+                                              
+                XMLSerializer serializer = null;
+                XMLDeserializer deserializer = null;
+                try {
+                    if ( ignoreErrors ) {
+                        serializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
+                        deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+                        SourceUtil.toSAX(source, serializer, this.configurationParameters, true);
+                        deserializer.setConsumer( this.xmlConsumer );
+                        deserializer.deserialize( serializer.getSAXFragment() );
+                    } else {
+                        SourceUtil.toSAX(source, this.xmlConsumer, this.configurationParameters, true);
+                    }
+                } catch (ProcessingException pe) {
+                    if (!ignoreErrors) throw pe;
+                } catch (ComponentException ignore) {
+                } finally {
+                    this.manager.release( serializer );
+                    this.manager.release( deserializer );
+                }               
             } catch (SourceException se) {
                 if (!ignoreErrors) throw SourceUtil.handle(se);
             } catch (SAXException se) {
                 if (!ignoreErrors) throw se;
             } catch (IOException ioe) {
                 if (!ignoreErrors) throw ioe;
-            } catch (ProcessingException pe) {
-                if (!ignoreErrors) throw pe;
             } finally {
                 this.resolver.release(source);
             }
