@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.11 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.12 2004/02/06 12:14:51 unico Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -103,6 +103,8 @@ public class EnvironmentWrapper
 
     /** The stream to output to */
     protected OutputStream outputStream;
+    
+    protected String contentType;
 
     /**
      * Constructs an EnvironmentWrapper object from a Request
@@ -394,15 +396,14 @@ public class EnvironmentWrapper
      * Set the ContentType
      */
     public void setContentType(String contentType) {
-        // ignore this
+        this.contentType = contentType;
     }
 
     /**
      * Get the ContentType
      */
     public String getContentType() {
-        // ignore this
-        return null;
+        return this.contentType;
     }
 
     /**
