@@ -18,8 +18,11 @@ package org.apache.cocoon.util.log;
 import org.apache.avalon.framework.CascadingThrowable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
+import org.apache.log.Logger;
 import org.apache.log.format.Formatter;
 
 import java.io.StringWriter;
@@ -59,10 +62,9 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLCocoonLogFormatter.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: XMLCocoonLogFormatter.java,v 1.4 2004/03/28 10:27:20 antonio Exp $
  */
-public class XMLCocoonLogFormatter
-implements Formatter {
+public class XMLCocoonLogFormatter implements Formatter {
 
     protected final static String  TYPE_CLASS_STR       = "class";
     protected final static String  TYPE_CLASS_SHORT_STR = "short";
@@ -91,7 +93,6 @@ implements Formatter {
          "thread",   // 9
          "host"};   // 10
 
-    protected final static String EOL = System.getProperty("line.separator", "\n");
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
 
     protected int[] types;
@@ -104,54 +105,47 @@ implements Formatter {
      */
     public String format( final LogEvent event ) {
         final StringBuffer sb = new StringBuffer();
-        sb.append("<log-entry>").append(EOL);
+        sb.append("<log-entry>").append(SystemUtils.LINE_SEPARATOR);
         final String value = this.getRequestId(event.getContextMap());
         if (value != null) {
-            sb.append("<request-id>").append(value).append("</request-id>").append(EOL);
+            sb.append("<request-id>").append(value).append("</request-id>").append(SystemUtils.LINE_SEPARATOR);
         }
         for(int i = 0; i < this.types.length; i++) {
-
             switch(this.types[i]) {
-
                 case TYPE_REQUEST_URI:
                     sb.append("<uri>");
                     sb.append(this.getURI(event.getContextMap()));
-                    sb.append("</uri>").append(EOL);
+                    sb.append("</uri>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_CLASS:
                     sb.append("<class>");
-                    sb.append(this.getClass(TYPE_CLASS_STR));
-                    sb.append("</class>").append(EOL);
+                    sb.append(this.getClass(TYPE_CLASS));
+                    sb.append("</class>").append(SystemUtils.LINE_SEPARATOR);
                     break;
                 case TYPE_CLASS_SHORT:
                     sb.append("<class>");
-                    sb.append(this.getClass(TYPE_CLASS_SHORT_STR));
-                    sb.append("</class>").append(EOL);
+                    sb.append(this.getClass(TYPE_CLASS_SHORT));
+                    sb.append("</class>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_THREAD:
                     sb.append("<thread>");
                     sb.append(this.getThread(event.getContextMap()));
-                    sb.append("</thread>").append(EOL);
+                    sb.append("</thread>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_RELATIVE_TIME:
                     sb.append("<relative-time>");
                     sb.append(event.getRelativeTime());
-                    sb.append("</relative-time>").append(EOL);
+                    sb.append("</relative-time>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_TIME:
                     sb.append("<time>");
                     sb.append(dateFormatter.format(new Date(event.getTime())));
-                    sb.append("</time>").append(EOL);
+                    sb.append("</time>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_THROWABLE:
                     Throwable throwable = event.getThrowable();
                     if (throwable != null) {
-                        sb.append("<throwable><![CDATA[").append(EOL);
+                        sb.append("<throwable><![CDATA[").append(SystemUtils.LINE_SEPARATOR);
                         while (throwable != null) {
                             final StringWriter sw = new StringWriter();
                             throwable.printStackTrace( new java.io.PrintWriter( sw ) );
@@ -162,28 +156,24 @@ implements Formatter {
                                 throwable = null;
                             }
                         }
-                        sb.append(EOL).append("]]> </throwable>").append(EOL);
+                        sb.append(SystemUtils.LINE_SEPARATOR).append("]]> </throwable>").append(SystemUtils.LINE_SEPARATOR);
                     }
                     break;
-
                 case TYPE_MESSAGE:
-                    sb.append("<message><![CDATA[").append(EOL);
+                    sb.append("<message><![CDATA[").append(SystemUtils.LINE_SEPARATOR);
                     sb.append(event.getMessage());
-                    sb.append(EOL).append("]]> </message>").append(EOL);
+                    sb.append(SystemUtils.LINE_SEPARATOR).append("]]> </message>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_CATEGORY:
                     sb.append("<category>");
                     sb.append(event.getCategory());
-                    sb.append("</category>").append(EOL);
+                    sb.append("</category>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-
                 case TYPE_PRIORITY:
                     sb.append("<priority>");
                     sb.append(event.getPriority().getName());
-                    sb.append("</priority>").append(EOL);
+                    sb.append("</priority>").append(SystemUtils.LINE_SEPARATOR);
                     break;
-                
                 case TYPE_HOST:
                     sb.append("<host>");
                     sb.append(getHost(event.getContextMap()));
@@ -192,7 +182,7 @@ implements Formatter {
             }
         }
         sb.append("</log-entry>");
-        sb.append(EOL);
+        sb.append(SystemUtils.LINE_SEPARATOR);
         return sb.toString();
     }
 
@@ -213,13 +203,12 @@ implements Formatter {
                 }
             }
         }
-
         return result;
     }
 
     private String getHost(ContextMap ctxMap) {
         String result = "Unknown-host";
-        
+
         if (ctxMap != null) {
             Object context = ctxMap.get("objectModel");
             if (context != null && context instanceof Map) {
@@ -230,7 +219,6 @@ implements Formatter {
                 }
             }
         }
-        
         return result;
     }
     
@@ -243,16 +231,17 @@ implements Formatter {
         // Get URI from the the object model.
         if (ctxMap != null) {
             Object context = ctxMap.get("request-id");
-            if (context != null) result = context.toString();
+            if (context != null) {
+                result = context.toString();
+            }
         }
-
         return result;
     }
 
     /**
      * Finds the class that has called Logger.
      */
-    private String getClass(String format) {
+    private String getClass(int format) {
 
         Class[] stack = this.callStack.get();
 
@@ -264,13 +253,9 @@ implements Formatter {
                 String className = stack[i+1].getName();
 
                 // Handle optional format
-                if (TYPE_CLASS_SHORT_STR.equalsIgnoreCase(format))
-                {
-                    int pos = className.lastIndexOf('.');
-                    if (pos >= 0)
-                        className = className.substring(pos + 1);
+                if (format  == TYPE_CLASS_SHORT) {
+                    className = ClassUtils.getShortClassName(className);
                 }
-
                 return className;
             }
         }
@@ -297,31 +282,26 @@ implements Formatter {
      * @param type the string
      * @return the type-id
      */
-    protected int getTypeIdFor( final String type ) {
-        int index = 0;
-        boolean found = false;
-        while (!found && index < typeStrings.length) {
+    protected int getTypeIdFor(final String type) {
+        for (int index = 0; index < typeStrings.length; index++) {
             if (type.equalsIgnoreCase(typeStrings[index])) {
-                found = true;
-            } else {
-                index++;
+                return index;
             }
         }
-        if (found) return index;
         throw new IllegalArgumentException( "Unknown Type - " + type );
     }
 
     /**
      * Set the types from an array of strings.
      */
-    public void setTypes(String [] typeStrings) {
-        if (typeStrings == null) {
-            this.types = new int[0];
-        } else {
+    public void setTypes(String[] typeStrings) {
+        if (typeStrings != null) {
             this.types = new int[typeStrings.length];
-            for(int i = 0; i < typeStrings.length; i++) {
+            for (int i = 0; i < typeStrings.length; i++) {
                 this.types[i] = this.getTypeIdFor(typeStrings[i]);
             }
+        } else {
+            this.types = new int[0];
         }
     }
 
@@ -342,7 +322,7 @@ implements Formatter {
     }
 
     /** The class that we will search for in the call stack */
-    private Class loggerClass = org.apache.log.Logger.class;
+    private Class loggerClass = Logger.class;
     private CallStack callStack = new CallStack();
 
     /**
@@ -361,8 +341,7 @@ implements Formatter {
          *
          * @return current execution stack as an array of classes.
          */
-        public Class[] get()
-        {
+        public Class[] get() {
             return getClassContext();
         }
     }

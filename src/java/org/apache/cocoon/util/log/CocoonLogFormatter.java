@@ -20,10 +20,13 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.avalon.framework.ExceptionUtil;
+import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
+import org.apache.log.Logger;
 
 /**
  * An extended pattern formatter. New patterns are defined by this class are :
@@ -39,7 +42,7 @@ import org.apache.log.LogEvent;
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CocoonLogFormatter.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: CocoonLogFormatter.java,v 1.4 2004/03/28 10:27:20 antonio Exp $
  */
 public class CocoonLogFormatter extends ExtensiblePatternFormatter
 {
@@ -68,8 +71,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * SecurityManager class provides it as a protected method, so
      * change it to public through a new method !
      */
-    static public class CallStack extends SecurityManager
-    {
+    static public class CallStack extends SecurityManager {
         /**
          * Returns the current execution stack as an array of classes.
          * The length of the array is the number of methods on the execution
@@ -79,8 +81,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
          *
          * @return current execution stack as an array of classes.
          */
-        public Class[] get()
-        {
+        public Class[] get() {
             return getClassContext();
         }
     }
@@ -89,13 +90,13 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * The class that we will search for in the call stack
      * (Avalon logging abstraction)
      */
-    private Class logkitClass = org.apache.avalon.framework.logger.LogKitLogger.class;
+    private Class logkitClass = LogKitLogger.class;
 
     /**
      * The class that we will search for in the call stack
      * (LogKit logger)
      */
-    private Class loggerClass = org.apache.log.Logger.class;
+    private Class loggerClass = Logger.class;
 
     private CallStack callStack = new CallStack();
 
@@ -116,36 +117,32 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
 
         // Search for new patterns defined here, or else delegate
         // to the parent class
-        if (type.equalsIgnoreCase(TYPE_CLASS_STR))
+        if (type.equalsIgnoreCase(TYPE_CLASS_STR)) {
             return TYPE_CLASS;
-        else if (type.equalsIgnoreCase(TYPE_URI_STR))
+        } else if (type.equalsIgnoreCase(TYPE_URI_STR)) {
             return TYPE_URI;
-        else if (type.equalsIgnoreCase(TYPE_THREAD_STR))
+        } else if (type.equalsIgnoreCase(TYPE_THREAD_STR)) {
             return TYPE_THREAD;
-        else if (type.equalsIgnoreCase(TYPE_HOST_STR))
+        } else if (type.equalsIgnoreCase(TYPE_HOST_STR)) {
             return TYPE_HOST;
-        else
-            return super.getTypeIdFor( type );
+        } else {
+            return super.getTypeIdFor(type);
+        }
     }
 
     protected String formatPatternRun(LogEvent event, PatternRun run) {
-
         // Format new patterns defined here, or else delegate to
         // the parent class
         switch (run.m_type) {
             case TYPE_CLASS :
                 return getClass(run.m_format);
-
             case TYPE_URI :
                 return getURI(event.getContextMap());
-
             case TYPE_THREAD :
                 return getThread(event.getContextMap());
-            
             case TYPE_HOST :
                 return getHost(event.getContextMap());
         }
-
         return super.formatPatternRun(event, run);
     }
 
@@ -153,29 +150,21 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * Finds the class that has called Logger.
      */
     private String getClass(String format) {
-
         Class[] stack = this.callStack.get();
 
         // Traverse the call stack in reverse order until we find a Logger
-        for (int i = stack.length-1; i >= 0; i--) {
+        for (int i = stack.length - 1; i >= 0; i--) {
             if (this.logkitClass.isAssignableFrom(stack[i]) ||
-                this.loggerClass.isAssignableFrom(stack[i]))
-            {
+                this.loggerClass.isAssignableFrom(stack[i])) {
                 // Found : the caller is the previous stack element
                 String className = stack[i+1].getName();
-
                 // Handle optional format
-                if (TYPE_CLASS_SHORT_STR.equalsIgnoreCase(format))
-                {
-                    int pos = className.lastIndexOf('.');
-                    if (pos >= 0)
-                        className = className.substring(pos + 1);
+                if (TYPE_CLASS_SHORT_STR.equalsIgnoreCase(format)) {
+                    className = ClassUtils.getShortClassName(className);
                 }
-
                 return className;
             }
         }
-
         // No Logger found in call stack : can occur with AsyncLogTarget
         // where formatting takes place in a different thread.
         return "Unknown-class";
@@ -198,7 +187,6 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 }
             }
         }
-
         return result;
     }
 
@@ -219,7 +207,6 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 }
             }
         }
-
         return result;
     }
 
@@ -228,10 +215,11 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * Find the thread that is logged this event.
      */
     private String getThread(ContextMap ctxMap) {
-        if (ctxMap != null && ctxMap.get("threadName") != null)
+        if (ctxMap != null && ctxMap.get("threadName") != null) {
             return (String)ctxMap.get("threadName");
-        else
+        } else {
             return "Unknown-thread";
+        }
     }
 
     /**
@@ -245,9 +233,12 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * @param format ancilliary format parameter - allowed to be null
      * @return the formatted string
      */
-    protected String getStackTrace( final Throwable throwable, final String format )
-    {
-        return throwable == null ? null : ExceptionUtil.printStackTrace(throwable,m_stackDepth);
+    protected String getStackTrace(final Throwable throwable, final String format) {
+        if (throwable != null) {
+            return ExceptionUtil.printStackTrace(throwable, m_stackDepth);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -257,8 +248,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * @param format ancilliary format parameter - allowed to be null
      * @return the formatted string
      */
-    protected String getTime( final long time, final String format )
-    {
+    protected String getTime(final long time, final String format) {
         return this.dateFormatter.format(new Date());
     }
 }
