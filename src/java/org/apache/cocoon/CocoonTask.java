@@ -77,7 +77,7 @@ import org.w3c.dom.Node;
  * Ant task for running Cocoon. Allows for the embedding of Cocoon into 
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonTask.java,v 1.2 2003/10/14 22:27:16 joerg Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.3 2003/10/21 13:47:29 cziegeler Exp $
  */
 public class CocoonTask extends Task implements DynamicConfigurator {
 
@@ -232,6 +232,7 @@ public class CocoonTask extends Task implements DynamicConfigurator {
      * @throws BuildException if required parameters are missing
      */
     public void execute() throws BuildException {
+        // FIXME - This is never read
         int err= -1;
 
         if (cmdl.getClasspath() == null) {
