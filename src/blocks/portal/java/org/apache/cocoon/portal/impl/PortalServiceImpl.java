@@ -50,11 +50,12 @@
 */
 package org.apache.cocoon.portal.impl;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -66,153 +67,100 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.RequestLifecycleComponent;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.Constants;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.persistance.RequestDataStore;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
-import org.xml.sax.SAXException;
 
 /**
  * Default implementation of a portal service using a session to store
  * custom information.
  * 
- * TODO: Make this ThreadSafe
- * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.6 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.7 2003/08/20 07:34:36 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
     implements Composable,
-                RequestLifecycleComponent, 
+                ThreadSafe, 
                 PortalService, 
                 Contextualizable,
-                Recyclable,
                 Disposable,
                 Configurable {
 
     protected Context context;
     
-    protected Map objectModel;
-   
-    protected Map temporaryAttributes = new HashMap();
-    
     protected ComponentManager manager;
 
-    protected String portalName;
-
-    protected String attributePrefix;
-    
-    protected PortalComponentManager portalComponentManager;
-    
     protected Map portalComponentManagers = new HashMap();
+    
+    protected RequestDataStore dataStore;
+    
+    final protected String key = this.getClass().getName();
     
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.manager = componentManager;
+        this.dataStore = (RequestDataStore) this.manager.lookup(RequestDataStore.ROLE);
     }
 
-
-    public void setup(SourceResolver resolver, Map objectModel) throws ProcessingException, SAXException, IOException {
-        this.objectModel = objectModel;
-
-		Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-		if (context != null) {
-			String portalName = (String)context.get(Constants.PORTAL_NAME_KEY);
-			if (portalName != null) {
-                this.setPortalName(portalName);
-			}
-		}
+    protected PortalServiceInfo getInfo() {
+        PortalServiceInfo info = (PortalServiceInfo) this.dataStore.getRequestData(this.key);
+        if ( info == null ) {
+            info = new PortalServiceInfo();
+            info.setup(ContextHelper.getObjectModel(this.context), this.portalComponentManagers);
+            this.dataStore.setRequestData(this.key, info);
+        }
+        return info;
     }
-
+    
     public String getPortalName() {
-        return this.portalName;
+        return this.getInfo().getPortalName();
     }
 
     public void setPortalName(String value) {
-        this.portalName = value;
-        this.attributePrefix = this.getClass().getName() + '/' + this.portalName + '/';
-        this.portalComponentManager = (PortalComponentManager) this.portalComponentManagers.get(this.portalName);
-        if ( this.portalComponentManager == null ) {
-            throw new RuntimeException("Portal '"+this.portalName+"' is not configured.");
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
-     */
-    public void recycle() {
-        this.portalName = null;
-        this.temporaryAttributes.clear();
-        this.portalComponentManager = null;
+        this.getInfo().setPortalName(value);
     }
 
     public Object getAttribute(String key) {
-        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
-        if (session == null) {
-            return null;
-        }
-        return session.getAttribute( this.attributePrefix + key);
+        return this.getInfo().getAttribute(key);
     }
 
     public void setAttribute(String key, Object value) {
-        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession();
-        session.setAttribute( this.attributePrefix + key, value);
+        this.getInfo().setAttribute(key, value);
     }
 
     public void removeAttribute(String key) {
-        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
-        if ( session != null ) {
-            session.removeAttribute( this.attributePrefix + key);
-        }
+        this.getInfo().removeAttribute(key);
     }
 
     public Iterator getAttributeNames() {
-        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
-        if ( session != null ) {
-            List names = new ArrayList();
-            Enumeration e = session.getAttributeNames();
-            final int pos = this.attributePrefix.length() + 1;
-            if ( e != null ) {
-                while ( e.hasMoreElements() ) {
-                    final String name = (String)e.nextElement();
-                    if ( name.startsWith( this.attributePrefix )) {
-                        names.add( name.substring( pos ) );
-                    }
-                }
-            }
-            return names.iterator();
-        }
-        return Collections.EMPTY_MAP.keySet().iterator();
+        return this.getInfo().getAttributeNames();
     }
 
     public Object getTemporaryAttribute(String key) {
-        return this.temporaryAttributes.get( key );
+        return this.getInfo().getTemporaryAttribute(key);
     }
     
     public void setTemporaryAttribute(String key, Object value) {
-        this.temporaryAttributes.put( key, value );
+        this.getInfo().setTemporaryAttribute(key, value);
     }
     
     public void removeTemporaryAttribute(String key) {
-        this.temporaryAttributes.remove( key );
+        this.getInfo().removeTemporaryAttribute(key);
     }
     
     public Iterator getTemporaryAttributeNames() {
-        return this.temporaryAttributes.keySet().iterator();
+        return this.getInfo().getTemporaryAttributeNames();
     }
-
 
     /**
      * Return the component manager for the current portal
      */
     public PortalComponentManager getComponentManager() {
-        return this.portalComponentManager;
+        return this.getInfo().getComponentManager();
     }
 
     /* (non-Javadoc)
@@ -226,6 +174,11 @@ public class PortalServiceImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( (Component)this.dataStore );
+            this.manager = null;
+            this.dataStore = null;
+        }
         final Iterator i = this.portalComponentManagers.values().iterator();
         while ( i.hasNext() ) {
             ContainerUtil.dispose( i.next() );
