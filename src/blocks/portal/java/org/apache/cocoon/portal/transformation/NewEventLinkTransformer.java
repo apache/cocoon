@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.transformation;
 
-import java.util.Stack;
-
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.xml.sax.Attributes;
@@ -25,7 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * This transformer ist used to replace links (URIs) from elements
+ * This transformer is used to replace links (URIs) from elements
  * like &lt;a href="URI"&gt; or &lt;form action="URI"&gt; with portal
  * event uris. Therefore the transformer searches for &lt;eventlink&gt;
  * elements replaces the URI form the attribute which is specified within
@@ -78,19 +76,6 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * An attribute's name of EVENT_ELEMENT.
      */
     public static final String ELEMENT_ATTR = "element";
-
-    /**
-     * Used to store elements' name between startTransformingElement and endTransformingElement.
-     */
-    private Stack elementStack = new Stack();
-
-    /**
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
-     */
-    public void recycle() {
-        super.recycle();
-        this.elementStack.clear();
-    }
 
     /**
      * @see java.lang.Object#Object()
@@ -170,7 +155,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
         // if attribute found that contains a link
         if (link != null) {
-            CopletInstanceData cid = this.getCopletInstanceData();
+            CopletInstanceData cid = this.getCopletInstanceData(attributes.getValue("coplet"));
             // create event link
             CopletLinkEvent event = new CopletLinkEvent(cid, link);
             String eventLink = this.getPortalService().getComponentManager().getLinkService().getLinkURI(event);
@@ -204,7 +189,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
             newAttributes.setValue(index, eventLink);
         }
 
-        elementStack.push(elementName);
+        this.stack.push(elementName);
 
         contentHandler.startElement(
             "",
@@ -262,7 +247,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      */
     public void endTransformingElement(String uri, String name, String raw)
         throws SAXException {
-        String elementName = (String) elementStack.pop();
+        String elementName = (String) this.stack.pop();
         contentHandler.endElement("", elementName, elementName);
     }
 }
