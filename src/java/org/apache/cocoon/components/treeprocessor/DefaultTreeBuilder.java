@@ -69,15 +69,18 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.treeprocessor.variables.NOPVariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.excalibur.source.Source;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,7 +89,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.4 2003/09/10 17:43:02 proyal Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.5 2004/01/18 22:19:58 sylvain Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -502,10 +505,12 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         Configuration[] children = config.getChildren(this.parameterElement);
 
         if (children.length == 0) {
-            return null;
+            // Parameters are only the component's location
+            return Collections.singletonMap(new NOPVariableResolver(Constants.SITEMAP_PARAMETERS_LOCATION), new NOPVariableResolver(config.getLocation()));
         }
 
         Map params = new HashMap();
+        params.put(new NOPVariableResolver(Constants.SITEMAP_PARAMETERS_LOCATION), new NOPVariableResolver(config.getLocation()));
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             if (true) { // FIXME : check namespace
