@@ -75,7 +75,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * output data in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.8 2004/01/29 10:33:04 joerg Exp $
+ * @version CVS $Id: JSPReader.java,v 1.9 2004/01/30 01:01:23 joerg Exp $
  */
 public class JSPReader extends ServiceableReader implements Configurable {
 
@@ -149,7 +149,7 @@ public class JSPReader extends ServiceableReader implements Configurable {
 
             bytes = null;
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException while executing JSPEngine", e.getRootCause());
+            throw new ProcessingException("ServletException while executing JSPEngine", e);
         } catch (IOException e) {
             throw new ProcessingException("IOException JSPReader.generate()", e);
         } catch (ProcessingException e) {
