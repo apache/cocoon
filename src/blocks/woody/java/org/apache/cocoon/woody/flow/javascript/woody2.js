@@ -18,7 +18,7 @@
  * Implementation of the Woody/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.11 2004/03/09 13:54:25 reinhard Exp $
+ * @version CVS $Id: woody2.js,v 1.12 2004/03/18 14:01:44 joerg Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
