@@ -12,28 +12,28 @@
   </xsp:structure>
   
   <xsp:logic><![CDATA[
-    private static final String ATTR_NAME_COLOR = "navy";
+    private static final String ATTR_NAME_COLOR = "darkblue";
     private static final String ATTR_VALUE_COLOR = "navy";
     private static final String COMMENT_COLOR = "gray";
-    private static final String DELIMITER_COLOR = "navy";
+    private static final String DELIMITER_COLOR = "blue";
     private static final String ELEMENT_COLOR = "navy";
     private static final String ENTITY_REF_COLOR = "navy";
-    private static final String PI_DATA_COLOR = "navy";
+    private static final String PI_COLOR = "darkred";
     private static final String TEXT_COLOR = "black";
     private static final String CUSTOM_ELEMENT_COLOR = "green";
-    private static final String XSL_ELEMENT_COLOR = "navy";
+    private static final String XSL_ELEMENT_COLOR = "purple";
     private static final String XSP_ELEMENT_COLOR = "green";
     private static final String XSP_TEXT_COLOR = "red";
 
     protected Element colorize(Node node, Document factory) {
       Element element = factory.createElement("pre");
       DocumentFragment fragment = factory.createDocumentFragment();
-      element.appendChild(doColorize(node, factory, 0));
+      element.appendChild(doColorize(node, factory, 0, TEXT_COLOR));
       return element;
     }
 
     protected static DocumentFragment
-      doColorize(Node node, Document factory, int level)
+      doColorize(Node node, Document factory, int level, String textColor)
     {
       Element result = null;
       DocumentFragment fragment = factory.createDocumentFragment();
@@ -42,28 +42,18 @@
         case Node.CDATA_SECTION_NODE:
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("<"));
+          result.appendChild(factory.createTextNode("<![CDATA["));
           fragment.appendChild(result);
 
           result = factory.createElement("font");
-          result.setAttribute("color", ELEMENT_COLOR);
-          result.appendChild(factory.createTextNode("![CDATA["));
-          fragment.appendChild(result);
-
-          result = factory.createElement("font");
-          result.setAttribute("color", ATTR_VALUE_COLOR);
+          result.setAttribute("color", textColor);
           result.appendChild(factory.createTextNode(node.getNodeValue()));
-          fragment.appendChild(result);
-
-
-          result = factory.createElement("font");
-          result.setAttribute("color", ELEMENT_COLOR);
-          result.appendChild(factory.createTextNode("]]"));
           fragment.appendChild(result);
 
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("<"));
+          // I know the thing below is ugly, but man, nexted CDATA are a pain in the ass!
+          result.appendChild(factory.createTextNode("]]]]>&gt;<![CDATA["));
           fragment.appendChild(result);
 
           break;
@@ -122,16 +112,18 @@
           );
           fragment.appendChild(result);
 
-          String textColor = TEXT_COLOR;
           if (tagName.startsWith("xsp:")) {
             textColor = XSP_TEXT_COLOR;
+          } else {
+            textColor = TEXT_COLOR;
           }
+            
           result = factory.createElement("font");
           result.setAttribute("color", textColor);
 
           for (int i = 0; i < childCount; i++) {
             result.appendChild(
-              doColorize(nodeList.item(i), factory, level + 1)
+              doColorize(nodeList.item(i), factory, level + 1, textColor)
             );
           }
           fragment.appendChild(result);
@@ -162,7 +154,7 @@
   
           for (int i = 0; i < childCount; i++) {
             fragment.appendChild(
-              doColorize(nodeList.item(i), factory, level + 1)
+              doColorize(nodeList.item(i), factory, level + 1, textColor)
             );
           }
   
@@ -190,13 +182,8 @@
           fragment.appendChild(result);
   
           result = factory.createElement("font");
-          result.setAttribute("color", ATTR_NAME_COLOR);
-          result.appendChild(factory.createTextNode(pi.getTarget()));
-          fragment.appendChild(result);
-  
-          result = factory.createElement("font");
-          result.setAttribute("color", PI_DATA_COLOR);
-          result.appendChild(factory.createTextNode(" " + pi.getData()));
+          result.setAttribute("color", PI_COLOR);
+          result.appendChild(factory.createTextNode(pi.getTarget() + " " + pi.getData()));
           fragment.appendChild(result);
   
           result = factory.createElement("font");
@@ -236,7 +223,7 @@
         String resourcename = request.getParameter("url");
         
         if (filename != null) {
-          String filepath = XSPUtil.relativeFilename(filename, request);
+          String filepath = XSPUtil.relativeFilename(filename, request, (ServletContext) context);
 
           <h3 style="color:navy; text-align: center">
             <xsp:expr>filename</xsp:expr>
