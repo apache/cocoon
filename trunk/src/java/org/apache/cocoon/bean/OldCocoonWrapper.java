@@ -96,7 +96,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OldCocoonWrapper.java,v 1.1 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: OldCocoonWrapper.java,v 1.2 2003/10/19 17:20:23 cziegeler Exp $
  */
 public class OldCocoonWrapper {
 
@@ -175,6 +175,7 @@ public class OldCocoonWrapper {
             File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
+            appContext.put(Constants.CONTEXT_ROOT_URL, this.contextDir);
 
             loadClasses(classList);
 

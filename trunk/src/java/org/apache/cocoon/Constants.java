@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.9 2003/10/17 20:58:08 bloritsch Exp $
+ * @version CVS $Id: Constants.java,v 1.10 2003/10/19 17:20:23 cziegeler Exp $
  */
 public final class Constants {
 
@@ -301,6 +301,9 @@ public final class Constants {
      */
     public static final String CONTEXT_CONFIG_URL = "config-url";
 
+    /** Application root directory @since 2.2 */
+    public static final String CONTEXT_ROOT_URL = "root-url";
+    
     /**
      * Should descriptors be reloaded?
      *

@@ -129,7 +129,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.16 2003/09/16 01:51:05 ghoward Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.17 2003/10/19 17:20:23 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -370,7 +370,8 @@ public class CocoonServlet extends HttpServlet {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("URL for Root: " + this.servletContextURL);
         }
-
+        this.appContext.put(Constants.CONTEXT_ROOT_URL, this.servletContextURL);
+        
         this.forceLoadParameter = getInitParameter("load-class", null);
 
         this.forceSystemProperty = getInitParameter("force-property", null);
