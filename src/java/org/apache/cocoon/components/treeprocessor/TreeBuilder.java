@@ -26,14 +26,14 @@ import java.util.List;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.4 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public interface TreeBuilder extends Component {
 
-    void setProcessor(TreeProcessor processor);
+    void setProcessor(ConcreteTreeProcessor processor);
 
-    TreeProcessor getProcessor();
+    ConcreteTreeProcessor getProcessor();
 
     /**
      * Returns the language that is being built (e.g. "sitemap").

@@ -20,11 +20,11 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.environment.Redirector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,10 +45,12 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.5 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public class InvokeContext implements Recomposable, Disposable, LogEnabled {
+public class InvokeContext 
+extends AbstractLogEnabled
+implements Recomposable, Disposable {
 
     private List mapStack = new ArrayList();
     private HashMap nameToMap = new HashMap();
@@ -62,9 +64,6 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     /** The component manager that was used to get the pipelines */
     private ComponentManager pipelinesManager;
 
-    /** Logger that we will log any messages to */
-    private Logger logger;
-
     /** The name of the processing pipeline component */
     protected String processingPipelineName;
 
@@ -77,6 +76,9 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     /** The ProcessingPipeline used */
     protected ProcessingPipeline processingPipeline;
 
+    /** The redirector */
+    protected Redirector redirector;
+    
     /** The Selector for the processing pipeline */
     protected ComponentSelector pipelineSelector;
 
@@ -92,9 +94,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
      * Determines if the Pipeline been set for this context 
      */
     public boolean pipelineIsSet() {
-	if (this.processingPipeline != null)
-		return true;
-	return false;
+	    return (this.processingPipeline != null);
     }
 
     /**
@@ -102,15 +102,6 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
      */
     public InvokeContext(boolean isBuildingPipelineOnly) {
         this.isBuildingPipelineOnly = isBuildingPipelineOnly;
-    }
-
-    /**
-     * Provide component with a logger.
-     *
-     * @param logger the logger
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
     }
 
     /**
@@ -202,7 +193,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     public final void pushMap(String anchorName, Map map) {
         mapStack.add(map);
 
-        if (this.logger.isDebugEnabled()) {
+        if (this.getLogger().isDebugEnabled()) {
             dumpParameters();
         }
 
@@ -212,8 +203,8 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
                 mapToName.put(map,anchorName);
             }
             else {
-                if (this.logger.isErrorEnabled()) {
-                    this.logger.error("name [" + anchorName + "] clashes");
+                if (this.getLogger().isErrorEnabled()) {
+                    this.getLogger().error("name [" + anchorName + "] clashes");
                 }
             }
         }
@@ -222,8 +213,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     /**
      * Dumps all sitemap parameters to log
      */
-    protected void dumpParameters()
-    {
+    protected void dumpParameters() {
         if (!mapStack.isEmpty()) {
             StringBuffer sb = new StringBuffer();
 
@@ -248,7 +238,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
                 path = "../" + path;
             }
 
-            this.logger.debug(sb.toString());
+            this.getLogger().debug(sb.toString());
         }
 
     }
@@ -262,6 +252,24 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
         Object name = mapToName.get(map);
         mapToName.remove(map);
         nameToMap.remove(name);
+    }
+    
+    /**
+     * Set the redirector to be used by nodes that need it.
+     * 
+     * @param redirector the redirector
+     */
+    public void setRedirector(Redirector redirector) {
+        this.redirector = redirector;
+    }
+    
+    /**
+     * Get the redirector to be used by nodes that need it.
+     * 
+     * @return the redirector
+     */
+    public Redirector getRedirector() {
+        return this.redirector;
     }
     
     /**

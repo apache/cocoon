@@ -15,15 +15,15 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public abstract class AbstractProcessingNode extends AbstractLogEnabled implements ProcessingNode {
