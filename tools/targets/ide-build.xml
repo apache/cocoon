@@ -25,13 +25,13 @@
   <target name="eclipse-customized-project" depends="prepare" description="Generate the Eclipse customized project files (using local.block.properties)">
     <echo message="Building Eclipse Customized Project Files"/>
     <xslt in="${gump.descriptor}"
-            out="${build.temp}/blocks-eclipse.xml"
-            style="${tools}/ide/eclipse/blocks-classpath.xsl"/>
+          out="${build.temp}/blocks-eclipse.xml"
+          style="${tools}/ide/eclipse/blocks-classpath.xsl"/>
 
-      <ant antfile="${build.temp}/blocks-eclipse.xml"
-               inheritAll="true"
-               inheritRefs="false"
-               target="generate-customized-eclipse-project"/>
+    <ant antfile="${build.temp}/blocks-eclipse.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="generate-customized-eclipse-project"/>
   </target>
 
   <!-- Generate the Emacs JDE project file -->
