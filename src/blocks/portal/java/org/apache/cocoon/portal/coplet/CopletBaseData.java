@@ -53,25 +53,31 @@ package org.apache.cocoon.portal.coplet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exolab.castor.mapping.MapItem;
+
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseData.java,v 1.1 2003/05/07 06:22:29 cziegeler Exp $
+ * @version CVS $Id: CopletBaseData.java,v 1.2 2003/05/19 09:14:07 cziegeler Exp $
  */
-public final class CopletBaseData {
+public final class CopletBaseData
+// extending MapItem used for Castor map workaround 
+extends MapItem { 
 
-	private Map copletConfig;
+	private Map copletConfig = new HashMap();
 
 	private String name;
 
-	private String copletAdapterName;
+	private String copletAdapterName = null;
 
-	private String defaultRendererName;
+	private String defaultRendererName = null;
 
 	public CopletBaseData() {
-		this.copletConfig = new HashMap();
+		// used for Castor map workaround
+		this.setValue(this);
 	}
 
 	public String getName() {
@@ -80,6 +86,9 @@ public final class CopletBaseData {
 
 	public void setName(String name) {
 		this.name = name;
+
+		// used for Castor map workaround
+		this.setKey(name);
 	}
 
 	public String getCopletAdapterName() {

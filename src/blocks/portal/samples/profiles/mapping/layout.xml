@@ -39,12 +39,7 @@
         <map-to xml="column-layout" />
     </class>
 
-    <class name="org.apache.cocoon.portal.layout.impl.CopletLayout" auto-complete="false"
-           extends="org.apache.cocoon.portal.layout.AbstractLayout">
-        <map-to xml="coplet-layout" />
-    </class>
-    
-    <class name="org.apache.cocoon.portal.layout.impl.FrameLayout"
+   <class name="org.apache.cocoon.portal.layout.impl.FrameLayout"
            extends="org.apache.cocoon.portal.layout.AbstractLayout">
         <map-to xml="frame-layout" />
         <field name="source" type="java.lang.String" />
@@ -78,6 +73,13 @@
     <class name="org.apache.cocoon.portal.layout.impl.RowLayout"
            extends="org.apache.cocoon.portal.layout.impl.CompositeLayout">
         <map-to xml="row-layout" />
+    </class>
+
+    <class name="org.apache.cocoon.portal.layout.impl.CopletLayout" auto-complete="false"
+           extends="org.apache.cocoon.portal.layout.AbstractLayout">
+        <map-to xml="coplet-layout" />
+
+		<field name="copletInstanceData" type="java.lang.String" handler="org.apache.cocoon.portal.profile.impl.CopletInstanceDataReferenceFieldHandler"/>
     </class>
 
     <class name="org.apache.cocoon.portal.layout.impl.TabLayout"

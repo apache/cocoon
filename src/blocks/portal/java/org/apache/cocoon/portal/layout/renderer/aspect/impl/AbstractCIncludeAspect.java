@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCIncludeAspect.java,v 1.1 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: AbstractCIncludeAspect.java,v 1.2 2003/05/19 09:14:10 cziegeler Exp $
  */
 public abstract class AbstractCIncludeAspect 
     extends AbstractAspect {
@@ -81,7 +81,7 @@ public abstract class AbstractCIncludeAspect
         attributes.addCDATAAttribute("src", source);
         handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
         handler.endElement(NAMESPACE, ELEMENT, QELEMENT);
-        handler.endPrefixMapping(NAMESPACE);
+        handler.endPrefixMapping(PREFIX);
     }
 
 }

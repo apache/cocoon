@@ -48,86 +48,45 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.profile.impl;
 
-import org.exolab.castor.mapping.MapItem;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.cocoon.portal.coplet.CopletBaseData;
 
 /**
+ * Holds instances of CopletBaseData.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.2 2003/05/19 09:14:06 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataManager.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
  */
-public final class CopletInstanceData
-//	extending MapItem used for Castor map workaround 
-extends MapItem {
-
-	public final static int STATUS_MINIMIZED = 0;
-	public final static int STATUS_MAXIMIZED = 1;
-
-    private String copletId;
-    
-	private CopletData copletData;
-
-	protected int status = STATUS_MAXIMIZED;
+public class CopletBaseDataManager {
 
 	/**
-	 * Constructor
+	 * The coplet base data instances.
 	 */
-	public CopletInstanceData() {
-		// used for Castor map workaround
-		this.setValue(this);
+	private Map copletBaseData = new HashMap();
+	
+	/**
+	 * Gets all coplet base data.
+	 */
+	public Map getCopletBaseData() {
+		return this.copletBaseData;
 	}
 
 	/**
-	 * Returns the copletId.
-	 * @return String
+	 * Gets the specified coplet base data. 
 	 */
-	public String getCopletId() {
-		return copletId;
+	public CopletBaseData getCopletBaseData(String name) {
+		return (CopletBaseData)this.copletBaseData.get(name);
 	}
-
+	
 	/**
-	 * Sets the copletId.
-	 * @param copletId The copletId to set
+	 * Puts the specified coplet base data to the manager.
 	 */
-	public void setCopletId(String copletId) {
-		this.copletId = copletId;
-
-		// used for Castor map workaround
-		this.setKey(copletId);
-	}
-
-	/**
-	 * @return CopletData
-	 */
-	public CopletData getCopletData() {
-		return copletData;
-	}
-
-	/**
-	 * Sets the copletData.
-	 * @param copletData The copletData to set
-	 */
-	public void setCopletData(CopletData copletData) {
-		this.copletData = copletData;
-	}
-
-	/**
-	 * Returns the status.
-	 * @return int
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets the status.
-	 * @param status The status to set
-	 */
-	public void setStatus(int status) {
-		this.status = status;
+	public void putCopletBaseData(CopletBaseData data) {
+		this.copletBaseData.put(data.getName(), data);
 	}
 }

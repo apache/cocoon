@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<description>Coplet instance data mapping file</description>
+
+	<class name="org.apache.cocoon.portal.profile.impl.CopletInstanceDataManager">
+		<map-to xml="coplets" />
+
+		<field name="copletInstanceData" type="org.apache.cocoon.portal.coplet.CopletInstanceData" collection="map">
+			<bind-xml auto-naming="deriveByClass"/>
+		</field>
+	</class>
+
+	<class name="org.apache.cocoon.portal.coplet.CopletInstanceData">
+		<map-to xml="coplet-instance-data" />
+
+		<field name="copletId" type="java.lang.String">
+			<bind-xml name="id" node="attribute" />
+		</field>
+
+		<field name="status" type="java.lang.Integer">
+			<bind-xml name="status"/>
+		</field>
+
+		<field name="copletData" type="java.lang.String" handler="org.apache.cocoon.portal.profile.impl.CopletDataReferenceFieldHandler"/>
+	</class>
+</mapping>
+

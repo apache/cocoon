@@ -50,6 +50,14 @@
 */
 package org.apache.cocoon.components.persistance;
 
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -61,19 +69,22 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
-import org.exolab.castor.xml.UnmarshalHandler;
+import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.1 2003/05/07 06:22:30 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.2 2003/05/19 09:14:11 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -81,23 +92,38 @@ public class CastorSourceConverter
         
     public static final String ROLE = CastorSourceConverter.class.getName();
 
-    private String mappingSource;
+    private Map mappingSources = new HashMap();
     private ComponentManager manager;
-    private Mapping mapping;
+    private Map mappings = new HashMap();
 
-    public Object getObject(Source source) throws ConverterException {
+    public Object getObject(Source source, String name) throws ConverterException {
         try {
-            Unmarshaller unmarshaller = new Unmarshaller(mapping);
-            UnmarshalHandler handler = unmarshaller.createHandler();
-
-            SourceUtil.toSAX(source, Unmarshaller.getContentHandler(handler));
-            return handler.getObject();
+			InputStream stream = source.getInputStream();
+            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(name));
+            Object result = unmarshaller.unmarshal(new InputSource(stream));
+            stream.close();
+            return result;
         } catch (MappingException e) {
             throw new ConverterException("can't create Unmarshaller", e);
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         }
     }
+
+	public void storeObject(ModifiableSource source, String name, Object object) throws ConverterException {
+		try {
+			Writer writer = new OutputStreamWriter(source.getOutputStream());
+			Marshaller marshaller = new Marshaller(writer);
+			Mapping mapping = new Mapping();
+			marshaller.setMapping((Mapping)this.mappings.get(name));
+			marshaller.marshal(object);
+			writer.close();
+		} catch (MappingException e) {
+			throw new ConverterException("can't create Unmarshaller", e);
+		} catch (Exception e) {
+			throw new ConverterException(e.getMessage(), e);
+		}
+	}
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
@@ -110,7 +136,11 @@ public class CastorSourceConverter
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
-        mappingSource = config.getChild("mapping-source").getValue();
+    	Configuration[] children = config.getChildren("mapping-source");
+    	for (int i=0; i<children.length; i++) {
+    		Configuration mappingSource = children[i];
+    		this.mappingSources.put(mappingSource.getAttribute("source"), mappingSource.getValue());
+    	}
     }
 
     /* (non-Javadoc)
@@ -120,9 +150,21 @@ public class CastorSourceConverter
         SourceResolver resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
         Source source = null;
         try {
-            source = resolver.resolveURI(mappingSource);
-            mapping = new Mapping();
-            mapping.loadMapping(SourceUtil.getInputSource(source));
+			Entry entry;
+			String name;
+			String mappingSource;
+			Mapping mapping;
+			Iterator iterator = this.mappingSources.entrySet().iterator();
+        	while (iterator.hasNext()) {
+        		entry = (Map.Entry)iterator.next(); 
+        		name = (String)entry.getKey();
+        		mappingSource = (String)entry.getValue();
+        		
+				source = resolver.resolveURI(mappingSource);
+				mapping = new Mapping();
+				mapping.loadMapping(SourceUtil.getInputSource(source));
+				this.mappings.put(name, mapping);
+        	}
         } finally {
             if (source != null) {
                 resolver.release(source);
