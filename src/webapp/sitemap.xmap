@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.8 2003/03/28 13:40:24 nicolaken Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2003/03/30 12:48:33 ghoward Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -497,7 +497,9 @@
         | manipulate the error screen.
         +-->
     <map:handle-errors>
-      <map:transform src="stylesheets/system/error2html.xslt"/>
+      <map:transform src="stylesheets/system/error2html.xslt">
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+	  </map:transform>
       <map:serialize/>
     </map:handle-errors>
 

@@ -26,7 +26,7 @@
 
   <xsl:template match="page">
    <html>
-     <link rel="stylesheet" href="/styles/main.css" title="Default Style"/>
+     <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
     <head>
      <title>
       <xsl:value-of select="title"/>

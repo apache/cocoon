@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.4 2003/03/26 21:21:29 stefano Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.5 2003/03/30 12:48:32 ghoward Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:error="http://apache.org/cocoon/error/2.1">
+
+<xsl:param name="contextPath" select="string('/cocoon')"/>
 
 <xsl:template match="error:notify">
  <html>
@@ -12,14 +14,14 @@
    <title>
     <xsl:value-of select="error:title"/>
    </title>
-   <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+   <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    <style>
 		h1 { color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
 		p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
 		p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
 		p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
    </style>
-   <script src="/scripts/main.js" type="text/javascript"/>
+   <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
   </head>
   <body>
    <h1><xsl:value-of select="error:title"/></h1>
