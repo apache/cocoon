@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.7 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
 
@@ -77,6 +77,7 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
                 return true;
             }
         }
+
         return false;
     }
 }
