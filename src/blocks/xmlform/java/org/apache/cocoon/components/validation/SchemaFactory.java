@@ -53,56 +53,50 @@ package org.apache.cocoon.components.validation;
 import org.xml.sax.InputSource;
 
 /**
- * 
  * Responsible for creating new instances of Schemas
- * for different Schema languages
+ * for different Schema languages.
  *
  * @author  ivelin@apache.org
- * @version CVS $Id: SchemaFactory.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: SchemaFactory.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
  */
 public abstract class SchemaFactory {
 
-	public static String NAMESPACE_SCHEMATRON =
-		"http://www.ascc.net/xml/schematron";
+    public static String NAMESPACE_SCHEMATRON = "http://www.ascc.net/xml/schematron";
 
-	/** Creates a new instance of ValidatorFactory */
-	public SchemaFactory() {
-	}
+    /** Creates a new instance of ValidatorFactory */
+    public SchemaFactory() {
+    }
 
-	/**
-	 * This method creates an instance of a ValidatorFactory
-	 * using the JDK 1.3 META-INF/services mechanism.
-	 * The idea is borrowed from JARV
-	 * http://iso-relax.sourceforge.net/apiDoc/org/iso_relax/verifier/VerifierFactory.html
-	 *
-	 * @param ns the namespace of the schema language
-	 * @return ValidatorFactory
-	 * @throws InstantiationException when a factory could not be created
-	 */
-	public static SchemaFactory lookup(String ns)
-		throws InstantiationException {
-		// currently hardcoded implementation for Schematron
-		// until another schema validator is implemented
-		/* TODO: create SchematronValidatorFactory */
-		if (ns.equals(NAMESPACE_SCHEMATRON))
-			return new org
-				.apache
-				.cocoon
-				.components
-				.validation
-				.schematron
-				.SchematronFactory();
-		return null;
-	}
+    /**
+     * This method creates an instance of a ValidatorFactory
+     * using the JDK 1.3 META-INF/services mechanism.
+     * The idea is borrowed from JARV
+     * http://iso-relax.sourceforge.net/apiDoc/org/iso_relax/verifier/VerifierFactory.html
+     *
+     * @param ns the namespace of the schema language
+     * @return ValidatorFactory
+     * @throws InstantiationException when a factory could not be created
+     */
+    public static SchemaFactory lookup(String ns)
+      throws InstantiationException {
+        // currently hardcoded implementation for Schematron
+        // until another schema validator is implemented
 
-	/**
-	 * Loads and compiles a Schema instance
-	 *
-	 * @param InputSource the SAX input source containing the Schema document
-	 * @return Schema the compiled schema instance
-	 * @throws InstantiationException when the Schema could not be loaded or compiled
-	 */
-	public abstract Schema compileSchema(InputSource is)
-		throws InstantiationException;
+        /* TODO: create SchematronValidatorFactory */
 
+        if (ns.equals(NAMESPACE_SCHEMATRON)) {
+            return new org.apache.cocoon.components.validation.schematron.SchematronFactory();
+        }
+        return null;
+    }
+
+    /**
+     * Loads and compiles a Schema instance
+     *
+     * @param is         
+     * @return Schema the compiled schema instance
+     * @throws InstantiationException when the Schema could not be loaded or compiled
+     */
+    public abstract Schema compileSchema(InputSource is)
+      throws InstantiationException;
 }

@@ -1,66 +1,54 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2003/04/25 08:34:56 $
- *
- * ====================================================================
- * The Apache Software License, Version 1.1
- *
- *
- *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
- * reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Commons", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation and was
- * originally based on software copyright (c) 2001, Plotnix, Inc,
- * <http://www.plotnix.com/>.
- * For more information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- */
-package org.apache.cocoon.acting;
 
+ ============================================================================
+                   The Apache Software License, Version 1.1
+ ============================================================================
+
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without modifica-
+ tion, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of  source code must  retain the above copyright  notice,
+    this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+ 3. The end-user documentation included with the redistribution, if any, must
+    include  the following  acknowledgment:  "This product includes  software
+    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+    Alternately, this  acknowledgment may  appear in the software itself,  if
+    and wherever such third-party acknowledgments normally appear.
+
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
+    used to  endorse or promote  products derived from  this software without
+    prior written permission. For written permission, please contact
+    apache@apache.org.
+
+ 5. Products  derived from this software may not  be called "Apache", nor may
+    "Apache" appear  in their name,  without prior written permission  of the
+    Apache Software Foundation.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
+ APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
+ ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
+ (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
+*/
+package org.apache.cocoon.acting;
 
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -85,12 +73,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 /**
- *
  * This is the base action class for
- * xmlform handling
+ * xmlform handling.
  *
  * This action is Poolable which means that
  * subclasses of this class should not be
@@ -106,18 +91,15 @@ import java.util.Map;
  * Torsten Curdt.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
- * @version CVS $Id: AbstractXMLFormAction.java,v 1.1 2003/04/25 08:34:56 stephan Exp $
+ * @version CVS $Id: AbstractXMLFormAction.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
  */
 public abstract class AbstractXMLFormAction
-        extends ConfigurableComposerAction
-        implements Poolable, Recyclable,
-        FormListener
-{
+  extends ConfigurableComposerAction
+  implements Poolable, Recyclable, FormListener {
 
     public static final String OBJECT_MAP_NEXT_PAGE = "page";
 
     protected static final Map PREPARE_RESULT_CONTINUE = null;
-
 
     // action state objects
     private Redirector redirector_;
@@ -127,13 +109,11 @@ public abstract class AbstractXMLFormAction
     private String src_;
     private String command_;
 
-
     /**
      * The first method which is called
      * when an action is invoked.
      *
      * It is called before population.
-     *
      *
      * @return null if the Action is prepared to continue.
      * an objectModel map which will be immediately returned by the action.
@@ -141,7 +121,6 @@ public abstract class AbstractXMLFormAction
      * This method is a good place to handle buttons with Cancel
      * kind of semantics. For example
      * <pre>return page("input")</pre>
-     *
      */
     protected Map prepare() {
         // by default, assume that there is
@@ -159,14 +138,16 @@ public abstract class AbstractXMLFormAction
      * This method should not handle unchecked check boxes
      * when the form is session scope, which is the most common case.
      * It should only do so, if the form is request scoped.
+     *
+     * @param form       
      */
-    public void reset( Form form ) {
+    public void reset(Form form) {
         // Do Nothing by default
         return;
     }
 
     /**
-     * FormListener callback
+     * FormListener callback.
      *
      * Invoked during Form.populate();
      *
@@ -187,10 +168,12 @@ public abstract class AbstractXMLFormAction
      * this kind of domain specific validation
      * instead of using this method.
      *
+     * @param form       
+     * @param parameterName
      * @return false if the request parameter should not be filtered.
      * true otherwise.
      */
-    public boolean filterRequestParameter (Form form, String parameterName) {
+    public boolean filterRequestParameter(Form form, String parameterName) {
         // in this example we do not expect "custom" parameters
         return false;
     }
@@ -208,24 +191,25 @@ public abstract class AbstractXMLFormAction
      *
      * @return Form the form object this action works with
      */
-    protected Form getForm () {
-        Form form = Form.lookup( getObjectModel(), getFormId() );
+    protected Form getForm() {
+        Form form = Form.lookup(getObjectModel(), getFormId());
 
-        if (form != null) {
+        if (form!=null) {
             return form;
         } else {
             // create new form
-            form = new Form( getFormId(), getFormModel() );
+            form = new Form(getFormId(), getFormModel());
             Validator v = getFormValidator();
-            form.setValidator ( v );
-            form.save ( getObjectModel(), getFormScope() );
+
+            form.setValidator(v);
+            form.save(getObjectModel(), getFormScope());
             return form;
         }
     }
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters params)
-            throws Exception
-    {
+    public Map act(Redirector redirector, SourceResolver resolver,
+                   Map objectModel, String src,
+                   Parameters params) throws Exception {
         // populate action state objects
         redirector_ = redirector;
         resolver_ = resolver;
@@ -236,8 +220,9 @@ public abstract class AbstractXMLFormAction
         // ensure that there is a form available
         // through the rest of the flow
         Form form = getForm();
-        if (form == null) {
-            throw new IllegalStateException( "Action could not obtain the Form" );
+
+        if (form==null) {
+            throw new IllegalStateException("Action could not obtain the Form");
         }
 
         // find and save the action command
@@ -246,54 +231,55 @@ public abstract class AbstractXMLFormAction
         // call the subclass prepare()
         // give it a chance to get ready for action
         Map prepareResult = prepare();
-        if (prepareResult != null) {
+
+        if (prepareResult!=null) {
             return prepareResult;
         }
 
         // attache callback hooks to the form
         // in case the action subclasses are interested in
         // form events
-        getForm().addFormListener( this );
+        getForm().addFormListener(this);
         Map result = null;
 
         try {
             // populate form with request parameters
             // population is automatically followed by validation by default.
             // If this is not the desired behaviour, the Form class can be subclassed
-            form.populate( objectModel );
+            form.populate(objectModel);
 
             result = perform();
         } finally {
             // since the action may be recycled immediately after
             // the request. It is important that it's callback hooks
             // are removed from the Form.
-            getForm().removeFormListener( this );
+            getForm().removeFormListener(this);
         }
 
         return result;
     }
 
-
     /**
      * Get the command which was submitted with the form.
      * It is extracted from the standard cocoon-action-* request parameter
+     *
+     * @return
      */
-    public String getCommand()
-    {
+    public String getCommand() {
         return command_;
     }
 
     protected void findCommand() {
         command_ = null;
-        Enumeration enum = getRequest().getParameterNames ();
-        while (enum.hasMoreElements ())
-        {
-            String paramName = (String) enum.nextElement ();
+        Enumeration enum = getRequest().getParameterNames();
+
+        while (enum.hasMoreElements()) {
+            String paramName = (String) enum.nextElement();
+
             // search for the command
-            if ( paramName.startsWith ( Constants.ACTION_PARAM_PREFIX ) )
-            {
-                command_ =
-                        paramName.substring ( Constants.ACTION_PARAM_PREFIX.length(), paramName.length() );
+            if (paramName.startsWith(Constants.ACTION_PARAM_PREFIX)) {
+                command_ = paramName.substring(Constants.ACTION_PARAM_PREFIX.length(),
+                                               paramName.length());
             }
         }
     }
@@ -306,21 +292,21 @@ public abstract class AbstractXMLFormAction
      *
      */
     public String getFormView() {
-        return getForm().getFormView( getObjectModel() );
+        return getForm().getFormView(getObjectModel());
     }
-
 
     /**
      * Called to determine the exit point of an action.
      * The pageName is made available in the objectMap,
      * which can be then referenced in the pipeline
+
      * @param pageName logical name for a next page
      * @return Map a pipeline objectMap containing the pageName
-     *
      */
-    protected Map page( String pageName ) {
+    protected Map page(String pageName) {
         Map objectModel = new HashMap();
-        objectModel.put( OBJECT_MAP_NEXT_PAGE,  pageName );
+
+        objectModel.put(OBJECT_MAP_NEXT_PAGE, pageName);
         return objectModel;
     }
 
@@ -328,15 +314,15 @@ public abstract class AbstractXMLFormAction
      * Invoked after form population
      * unless a Cancel button was pressed,
      * in which case population is skipped and this method
-     * is invoked immediately
+     * is invoked immediately.
      *
      * Semanticly similar to Struts Action.perform()
      *
-     * Take appropriate action based on the command
+     * Take appropriate action based on the command.
      *
+     * @return
      */
-    public abstract Map perform ();
-
+    public abstract Map perform();
 
     protected SourceResolver getSourceResolver() {
         return resolver_;
@@ -350,7 +336,6 @@ public abstract class AbstractXMLFormAction
         return objectModel_;
     }
 
-
     protected Parameters getParameters() {
         return params_;
     }
@@ -360,17 +345,16 @@ public abstract class AbstractXMLFormAction
     }
 
     protected Request getRequest() {
-        return (Request) ( getObjectModel().get(ObjectModelHelper.REQUEST_OBJECT) );
+        return (Request) (getObjectModel().get(ObjectModelHelper.REQUEST_OBJECT));
     }
 
-    protected Session getSession( boolean shouldCreateNew ) {
-        return getRequest().getSession( shouldCreateNew );
+    protected Session getSession(boolean shouldCreateNew) {
+        return getRequest().getSession(shouldCreateNew);
     }
 
     protected Session getSession() {
-        return getSession( true );
+        return getSession(true);
     }
-
 
     /**
      * Extract action parameters and
@@ -381,67 +365,79 @@ public abstract class AbstractXMLFormAction
      *
      * Subclasses may override this method
      * to use custom validators
+     *
+     * @return
      */
     protected Validator getFormValidator() {
         try {
             // initialize the Validor with a schema file
-            String schNS = getParameters().getParameter("xmlform-validator-schema-ns", null);
-            String schDoc = getParameters().getParameter("xmlform-validator-schema", null);
+            String schNS = getParameters().getParameter("xmlform-validator-schema-ns",
+                                                        null);
+            String schDoc = getParameters().getParameter("xmlform-validator-schema",
+                                null);
 
             // if validator params are not specified, then
             // there is no validation by default
-            if (schNS == null || schDoc == null ) return null;
+            if ((schNS==null) || (schDoc==null)) {
+                return null;
+            }
 
-            Source schemaSrc = getSourceResolver().resolveURI( schDoc );
+            Source schemaSrc = getSourceResolver().resolveURI(schDoc);
+
             try {
                 InputSource is = SourceUtil.getInputSource(schemaSrc);
-                SchemaFactory schf = SchemaFactory.lookup ( schNS );
-                Schema sch = schf.compileSchema ( is );
+                SchemaFactory schf = SchemaFactory.lookup(schNS);
+                Schema sch = schf.compileSchema(is);
 
                 return sch.newValidator();
             } finally {
                 getSourceResolver().release(schemaSrc);
             }
-        } catch ( Exception e) {
+        } catch (Exception e) {
             // couldn't load the validator
-            throw new CascadingRuntimeException( " Failed loading validating schema ", e );
+            throw new CascadingRuntimeException(" Failed loading validating schema ",
+                                                e);
         }
     }
 
-
     /**
-     * Extract xmlform-model
-     * action parameter and
+     * Extract xmlform-model action parameter and
      * instantiate a new form model it.
-     *
      *
      * Subclasses may override this method
      * to use custom model instantiation technique
+     *
+     * @return
      */
     protected Object getFormModel() {
         try {
-            String modelClassName = getParameters().getParameter("xmlform-model", null);
-            Class modelClass = Class.forName ( modelClassName );
-            Object o = modelClass.newInstance ();
+            String modelClassName = getParameters().getParameter("xmlform-model",
+                                        null);
+            Class modelClass = Class.forName(modelClassName);
+            Object o = modelClass.newInstance();
+
             return o;
-        } catch ( Exception e) {
-            throw new CascadingRuntimeException( " Failed instantiating form model ", e );
+        } catch (Exception e) {
+            throw new CascadingRuntimeException(" Failed instantiating form model ",
+                                                e);
         }
     }
 
-
     protected String getFormId() {
         String formId = getParameters().getParameter("xmlform-id", null);
-        if (formId == null)
-            throw new RuntimeException( " xmlform-id not specified " );
-        else
+
+        if (formId==null) {
+            throw new RuntimeException(" xmlform-id not specified ");
+        } else {
             return formId;
+        }
     }
 
-
     protected String getFormScope() {
-        String formScope = getParameters().getParameter("xmlform-scope", null);
-        if ( formScope == null ) {
+        String formScope = getParameters().getParameter("xmlform-scope",
+                               null);
+
+        if (formScope==null) {
             // default to request scope
             formScope = Form.SCOPE_REQUEST;
         }
@@ -449,9 +445,8 @@ public abstract class AbstractXMLFormAction
         return formScope;
     }
 
-
     /**
-     *  Recycle this component.
+     * Recycle this component.
      */
     public void recycle() {
         redirector_ = null;

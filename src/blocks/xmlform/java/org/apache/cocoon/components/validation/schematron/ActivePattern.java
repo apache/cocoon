@@ -51,28 +51,27 @@
 package org.apache.cocoon.components.validation.schematron;
 
 /**
- * Represents a Schematron phase 
- * <active pattern="some"> element
+ * Represents a Schematron phase
+ * <active pattern="some"> element.
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: ActivePattern.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: ActivePattern.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public class ActivePattern {
 
-	private String pattern_;
+    private String pattern_;
 
-	/**
-	 * Returns the active pattern name
-	 */
-	public String getPattern() {
-		return pattern_;
-	}
+    /**
+     * Returns the active pattern name
+     */
+    public String getPattern() {
+        return pattern_;
+    }
 
-	/**
-	 * Sets the active pattern name
-	 */
-	public void setPattern(String pattern) {
-		pattern_ = pattern;
-	}
-
+    /**
+     * Sets the active pattern name
+     */
+    public void setPattern(String pattern) {
+        pattern_ = pattern;
+    }
 }

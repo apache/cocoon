@@ -55,7 +55,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Represents a Schematron phase element
+ * Represents a Schematron phase element.
  *
  * Example:
  * <phase id="basicValidation">
@@ -64,49 +64,47 @@ import java.util.List;
  *   <active pattern="attributePresence" />
  * </phase>
  *
- *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: Phase.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: Phase.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public class Phase {
 
-	private String id_;
-	private ArrayList active_ = new ArrayList();
+    private String id_;
+    private ArrayList active_ = new ArrayList();
 
-	/**
-	 * Returns the id of the phase
-	 */
-	public String getId() {
-		return id_;
-	}
+    /**
+     * Returns the id of the phase.
+     */
+    public String getId() {
+        return id_;
+    }
 
-	/**
-	 * Sets the id of the phase
-	 */
-	public void setId(String newId) {
-		id_ = newId;
-	}
+    /**
+     * Sets the id of the phase.
+     */
+    public void setId(String newId) {
+        id_ = newId;
+    }
 
-	/**
-	 * Returns the list of active patterns
-	 */
-	public List getActive() {
-		return active_;
-	}
+    /**
+     * Returns the list of active patterns.
+     */
+    public List getActive() {
+        return active_;
+    }
 
-	/**
-	 * Sets the list of active patterns
-	 */
-	public void setActive(Collection newActivePatterns) {
-		active_ = new ArrayList();
-		active_.addAll(newActivePatterns);
-	}
+    /**
+     * Sets the list of active patterns.
+     */
+    public void setActive(Collection newActivePatterns) {
+        active_ = new ArrayList();
+        active_.addAll(newActivePatterns);
+    }
 
-	/**
-	 * Add a pattern to the list of active patterns
-	 */
-	public void addActive(ActivePattern p) {
-		active_.add(p);
-	}
-
+    /**
+     * Add a pattern to the list of active patterns.
+     */
+    public void addActive(ActivePattern p) {
+        active_.add(p);
+    }
 }

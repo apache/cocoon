@@ -57,47 +57,42 @@ import java.util.List;
  * Created on Sat, April 6, 2002
  *
  * @author  ivelin@apache.org
- * @version CVS $Id: Validator.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: Validator.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
  */
 public interface Validator {
 
-  /**
-   * Validates an instance against a schema and returns a set of errors.
-   *
-   * Validator is not thread safe and is not re-entrant.
-   *
-   * @param instance The instance can be either a DOM node or a JavaBean.
-   * @return SortedSet of ValidityViolation(s). The set is sorted by
-   * ValidityViolation.getPath()
-   * 
-   * @throws RuntimeException if the validation process fails
-   * Should not happen in a normal environment.
-   */
-  List validate(Object instance);
+    /**
+     * Validates an instance against a schema and returns a set of errors.
+     *
+     * Validator is not thread safe and is not re-entrant.
+     *
+     * @param instance The instance can be either a DOM node or a JavaBean.
+     * @return SortedSet of ValidityViolation(s). The set is sorted by
+     * ValidityViolation.getPath()
+     *
+     */
+    List validate(Object instance);
 
-  /**
-   * This property can be used for partial document validation.
-   * The concept is borrowed from the Schematron schema
-   * Not all schemas support partial validation
-   */
-  String PROPERTY_PHASE = "http://xml.apache.org/cocoon/validator/phase";
+    /**
+     * This property can be used for partial document validation.
+     * The concept is borrowed from the Schematron schema
+     * Not all schemas support partial validation
+     */
+    String PROPERTY_PHASE = "http://xml.apache.org/cocoon/validator/phase";
 
-  /**
-   * @param property name
-   * @param value property value
-   * @throws IllegalArgumentException when the property is not supported
-   */
-  void setProperty(String property, Object value)
-                 throws IllegalArgumentException;
-  
-  /**
-   * @param property name
-   * @return the property value
-   * @throws IllegalArgumentException when the property is not supported
-   */
-  Object getProperty(String property)
-                 throws IllegalArgumentException;
-  
-                 
-                 
+    /**
+     * @param property name
+     * @param value property value
+     * @throws IllegalArgumentException when the property is not supported
+     */
+    void setProperty(String property,
+                     Object value) throws IllegalArgumentException;
+
+    /**
+     * @param property name
+     * @return the property value
+     * @throws IllegalArgumentException when the property is not supported
+     */
+    Object getProperty(String property) throws IllegalArgumentException;
+
 }

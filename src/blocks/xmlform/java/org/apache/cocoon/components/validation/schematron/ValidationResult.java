@@ -59,94 +59,100 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents the result of a Schematron validation process
- * 
+ * Represents the result of a Schematron validation process.
+ *
  * <validationResult>
  *   list of <pattern> elements with <rule> subelements
  * </validationResult>
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: ValidationResult.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: ValidationResult.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public class ValidationResult {
 
-	private ArrayList patterns_ = new ArrayList();
+    private ArrayList patterns_ = new ArrayList();
 
-	/**
-	 * Returns a list of the patterns which
-	 * contain rules that failed during validation
-	 */
-	public List getPattern() {
-		return patterns_;
-	}
+    /**
+     * Returns a list of the patterns which
+     * contain rules that failed during validation.
+     */
+    public List getPattern() {
+        return patterns_;
+    }
 
-	/**
-	 * Sets the list of the patterns which
-	 * contain rules that failed during validation
-	 */
-	public void setPattern(Collection newPatterns) {
-		patterns_ = new ArrayList();
-		patterns_.addAll(newPatterns);
-	}
+    /**
+     * Sets the list of the patterns which
+     * contain rules that failed during validation.
+     */
+    public void setPattern(Collection newPatterns) {
+        patterns_ = new ArrayList();
+        patterns_.addAll(newPatterns);
+    }
 
-	/**
-	 * Add a pattern to the list
-	 */
-	public void addPattern(Pattern p) {
-		patterns_.add(p);
-	}
+    /**
+     * Add a pattern to the list.
+     */
+    public void addPattern(Pattern p) {
+        patterns_.add(p);
+    }
 
-	public boolean isEmpty() {
-		return patterns_.isEmpty();
-	}
+    public boolean isEmpty() {
+        return patterns_.isEmpty();
+    }
 
-	/**
-	 * adds all errors to a sorted list
-	 * Key is XPath of each error location
-	 * @return SortedSet
-	 */
-	public List toList() {
+    /**
+     * Adds all errors to a sorted list.
+     * Key is XPath of each error location
+     * @return SortedSet
+     */
+    public List toList() {
 
-		if (isEmpty())
-			return null;
+        if (isEmpty()) {
+            return null;
+        }
 
-		List violations = new LinkedList();
+        List violations = new LinkedList();
 
-		Iterator piter = getPattern().iterator();
-		while (piter.hasNext()) {
-			Pattern pattern = (Pattern) piter.next();
-			// System.out.println("Pattern name: " + pattern.getName() + ", id: " + pattern.getId() );
-			Iterator ruleIter = pattern.getRule().iterator();
-			while (ruleIter.hasNext()) {
-				Rule rule = (Rule) ruleIter.next();
-				// System.out.println("    Rule name: " + rule.getContext() );
+        Iterator piter = getPattern().iterator();
 
-				Iterator assertIter = rule.getAssert().iterator();
-				while (assertIter.hasNext()) {
-					Assert assertion = (Assert) assertIter.next();
+        while (piter.hasNext()) {
+            Pattern pattern = (Pattern) piter.next();
+            // System.out.println("Pattern name: " + pattern.getName() + ", id: " + pattern.getId() );
+            Iterator ruleIter = pattern.getRule().iterator();
 
-					// add the next assert to the violations set
-					Violation v = new Violation();
-					v.setPath(rule.getContext());
-					v.setMessage(assertion.getMessage());
-					violations.add(v);
-					// System.out.println("        Assert test: " + assertion.getTest() + ", message: " + assertion.getMessage() );
-				}
+            while (ruleIter.hasNext()) {
+                Rule rule = (Rule) ruleIter.next();
+                // System.out.println("    Rule name: " + rule.getContext() );
 
-				Iterator reportIter = rule.getReport().iterator();
-				while (reportIter.hasNext()) {
-					Report report = (Report) reportIter.next();
+                Iterator assertIter = rule.getAssert().iterator();
 
-					// add the next report to the violations set
-					Violation v = new Violation();
-					v.setPath(rule.getContext());
-					v.setMessage(report.getMessage());
-					violations.add(v);
-					// System.out.println("        Report test: " + report.getTest() + ", message: " + report.getMessage() );
-				}
-			}
-		}
-		return violations;
-	}
+                while (assertIter.hasNext()) {
+                    Assert assertion = (Assert) assertIter.next();
 
+                    // add the next assert to the violations set
+                    Violation v = new Violation();
+
+                    v.setPath(rule.getContext());
+                    v.setMessage(assertion.getMessage());
+                    violations.add(v);
+                    // System.out.println("        Assert test: " + assertion.getTest() + ", message: " + assertion.getMessage() );
+                }
+
+                Iterator reportIter = rule.getReport().iterator();
+
+                while (reportIter.hasNext()) {
+                    Report report = (Report) reportIter.next();
+
+                    // add the next report to the violations set
+                    Violation v = new Violation();
+
+                    v.setPath(rule.getContext());
+                    v.setMessage(report.getMessage());
+                    violations.add(v);
+                    // System.out.println("        Report test: " + report.getTest() + ", message: " + report.getMessage() );
+                }
+            }
+        }
+        return violations;
+    }
 }

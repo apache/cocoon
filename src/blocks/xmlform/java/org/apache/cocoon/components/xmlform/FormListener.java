@@ -51,22 +51,18 @@
 package org.apache.cocoon.components.xmlform;
 
 /**
- * <p>
- *  Defines events fired by a Form object 
- *  
- * </p>
- *
+ * Defines events fired by a Form object.
  *
  * @author Ivelin Ivanov, ivelin@apache.org
- * @version CVS $Id: FormListener.java,v 1.1 2003/04/25 08:34:57 stephan Exp $
+ * @version CVS $Id: FormListener.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public interface FormListener {
 
     /**
-     * This method is called before 
+     * This method is called before
      * the form is populated with request parameters.
      *
-     * Semantically similar to that of the 
+     * Semantically similar to that of the
      * ActionForm.reset() in Struts
      *
      * Can be used for clearing checkbox fields,
@@ -76,15 +72,19 @@ public interface FormListener {
      * This method does nothing by default
      * Subclasses should override it to implement custom logic
      *
+     * @param form       
      */
     void reset(Form form);
-    
+
     /**
-     * filters custom request parameter
-     * not refering to the model
+     * Filters custom request parameter
+     * not refering to the model.
+     *
+     * @param form       
+     * @param parameterName
+     *
+     * @return
      */
     boolean filterRequestParameter(Form form, String parameterName);
-
 }
-
 
