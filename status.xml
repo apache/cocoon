@@ -206,6 +206,9 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="CZ" type="update">
+     Remove support for Excalibur instrumentation.
+   </action>
+   <action dev="CZ" type="update">
      Component, Composable, ComponentManager, ComponentSelector and ComponentException
      are no longer support: Serviceable, ServiceManager, ServiceSelector and ServiceException
      have to be used.
