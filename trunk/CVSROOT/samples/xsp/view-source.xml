@@ -5,7 +5,7 @@
 
 <!-- A quick'n'dirty XML colorizer -->
 
-<xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1">
+<xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core">
 
   <xsp:structure>
    <xsp:include>java.net.*</xsp:include>

@@ -178,7 +178,7 @@
 &lt;?cocoon-process type="xslt"?&gt;
 &lt;?xml-stylesheet href="sample.xsl" type="text/xsl"?&gt;
 
-&lt;xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1"&gt;
+&lt;xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core"&gt;
   &lt;page title="Time of Day"&gt;
   
     &lt;xsp:logic&gt;
@@ -252,7 +252,7 @@
           <code>&lt;xsp:page&gt;</code> root element:
         </p>
 
-        <source>&lt;xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1"&gt;</source>
+        <source>&lt;xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core"&gt;</source>
 
         <p>
           The <code>&lt;xsp:page&gt;</code> root element can specify
@@ -527,7 +527,7 @@
 
 &lt;xsp:page
   language="java"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:example="http://www.plenix.com/DTD/XSP/Example"
 &gt;
   &lt;page title="Time of Day"&gt;
@@ -572,7 +572,7 @@
       <source>&lt;?xml version="1.0"?&gt;
 &lt;xsl:stylesheet
   xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:example="http://www.plenix.com/DTD/XSP/Example"
 &gt;
   &lt;xsl:template match="xsp:page"&gt;
@@ -907,7 +907,7 @@ xspCurrentNode.appendChild(
   
           <p>
             At least the built-in XSP (currently,
-            <code>xmlns:xsp="http://apache.org/DTD/XSP/Layer1"</code>)
+            <code>xmlns:xsp="http://www.apache.org/1999/XSP/Core"</code>)
             library must be specified.
           </p>
   

@@ -55,8 +55,8 @@
 
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:util="http://apache.org/DTD/XSP/util"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:util="http://www.apache.org/1999/XSP/Util"
 >
   <xsl:template match="xsp:page">
     <xsp:page>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: lib-page.xml,v 1.2 2000-01-06 17:55:23 stefano Exp $ -->
+<!-- Version: $Id: lib-page.xml,v 1.3 2000-01-08 07:19:37 ricardo Exp $ -->
 
 <?cocoon-process type="xsp"?>
 
@@ -10,9 +10,9 @@
 
 <xsp:page 
   language="java"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:request="http://apache.org/DTD/XSP/request"
-  xmlns:util="http://apache.org/DTD/XSP/util"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:request="http://www.apache.org/1999/XSP/Request"
+  xmlns:util="http://www.apache.org/1999/XSP/Util"
 >
 
 <page>

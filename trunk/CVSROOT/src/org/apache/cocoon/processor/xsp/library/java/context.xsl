@@ -55,8 +55,8 @@
 
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:context="http://apache.org/DTD/XSP/context"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:context="http://www.apache.org/1999/XSP/Context"
 >
   <!-- *** ServletContext Templates *** -->
 

@@ -55,8 +55,8 @@
 
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:request="http://apache.org/DTD/XSP/request"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:request="http://www.apache.org/1999/XSP/Request"
 >
   <!-- *** ServletRequest Templates *** -->
 

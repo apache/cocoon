@@ -9,7 +9,7 @@
     <xsl:processing-instruction name="cocoon-process">type="xslt"</xsl:processing-instruction>
     <xsl:processing-instruction name="xml-stylesheet">href="page-html.xsl" type="text/xsl"</xsl:processing-instruction>
 
-    <xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1">
+    <xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core">
  
     <xsp:logic>
       static private int counter = 0; 

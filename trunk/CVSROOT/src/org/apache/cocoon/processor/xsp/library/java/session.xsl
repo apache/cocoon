@@ -55,8 +55,8 @@
 
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:session="http://apache.org/DTD/XSP/session"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:session="http://www.apache.org/1999/XSP/Session"
 >
   <!-- *** ServletResponse Templates *** -->
 
