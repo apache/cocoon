@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.365 2004/06/12 19:31:29 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.366 2004/06/16 14:32:32 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -201,11 +201,11 @@
    </actions>
   </todo>
 
-  <changes>
 
+  <changes>
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated quartx to 1.4
+     Updated quartz to 1.4
    </action>
    <action dev="CZ" type="add">
      Add configuration support for log4j.
