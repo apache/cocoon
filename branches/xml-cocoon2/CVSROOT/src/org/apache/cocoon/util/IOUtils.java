@@ -16,6 +16,10 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
+import java.text.Collator;
+import java.util.Locale;
+import java.util.Arrays;
+
 import org.apache.log.LogKit;
 
 /**
@@ -24,7 +28,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-27 16:14:04 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-02 16:34:41 $
  */
 public class IOUtils {
 
@@ -105,6 +109,35 @@ public class IOUtils {
     return object;
   }
 
+  /** 
+   * These are java keywords as specified at the following URL (sorted alphabetically).
+   * http://java.sun.com/docs/books/jls/second_edition/html/lexical.doc.html#229308
+   */     
+  static final String keywords[] = 
+  {
+      "abstract",  "boolean",     "break",    "byte",         "case",
+      "catch",     "char",        "class",    "const",        "continue",
+      "default",   "do",          "double",   "else",         "extends",
+      "final",     "finally",     "float",    "for",          "goto",
+      "if",        "implements",  "import",   "instanceof",   "int",
+      "interface", "long",        "native",   "new",          "package",  
+      "private",   "protected",   "public",   "return",       "short",
+      "static",    "strictfp",    "super",    "switch",       "synchronized", 
+      "this",      "throw",       "throws",   "transient",    "try",          
+      "void",      "volatile",    "while"
+  };
+
+  /** Collator for comparing the strings */
+  static final Collator englishCollator = Collator.getInstance(Locale.ENGLISH);
+
+  /**
+   * checks if the input string is a valid java keyword.
+   * @return boolean true/false
+   */
+  private static boolean isJavaKeyword(String keyword) {
+    return (Arrays.binarySearch(keywords, keyword, englishCollator) >= 0);
+  }
+        
   // **********************
   // File Methods
   // **********************
@@ -130,6 +163,8 @@ public class IOUtils {
       if (i > start) {
         buffer.append(File.separator);
       }
+    
+      boolean isJavaKeyword = isJavaKeyword(path[i]);
 
       char[] chars = path[i].toCharArray();
       if (chars.length < 1) buffer.append('_');
@@ -141,6 +176,9 @@ public class IOUtils {
           buffer.append('_');
         }
       }
+
+      if(isJavaKeyword)
+          buffer.append('$');
     }
 
     return buffer.toString();
