@@ -308,12 +308,18 @@ CHANGE HISTORY:
 
   <define name="linkRewriterTransformer.contents">
     <zeroOrMore>
-      <element name="input-module">
-        <ref name="anyAttribute"/>
-        <zeroOrMore>
-          <ref name="anyElement"/>
-        </zeroOrMore>
-      </element>
+      <choice>
+        <element name="link-attrs"><text/></element>
+        <element name="schemes"><text/></element>
+        <element name="exclude-schemes"><text/></element>
+        <element name="bad-link-str"><text/></element>
+        <element name="input-module">
+          <ref name="anyAttribute"/>
+          <zeroOrMore>
+            <ref name="anyElement"/>
+          </zeroOrMore>
+        </element>
+      </choice>
     </zeroOrMore>
   </define>
 
