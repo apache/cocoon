@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: sitemap.xmap,v 1.10 2004/05/06 11:09:42 cziegeler Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.11 2004/05/07 09:52:26 upayavira Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -101,14 +101,16 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
 
       <map:match pattern="content/baselink.xml">
         <map:generate type="jx" src="properties.xml">
-          <map:parameter name="(anything)" value="{baselink:}"/>
+          <map:parameter name="sitemapAsBase" value="{baselink:SitemapBaseLink}"/>
+          <map:parameter name="requestAsBase" value="{baselink:RequestBaseLink}"/>
         </map:generate>
 
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="BaseLink Input Module (BaseLinkModule)"/>
           <map:parameter name="description" value="Returns a relative path (../,
-            ../../, etc) linking to the base of the current request URI.  In
-            this demonstration, the request URI is {0} (an internal request not
+            ../../, etc) linking to either the base of the current request URI or the base
+            of the sitemap.
+            In this demonstration, the request URI is {0} (an internal request not
             equivalent to what the user sees)"/>
         </map:transform>
         <map:serialize />
