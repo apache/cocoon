@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 
 <xconf xpath="/cocoon" 
-       unless="component[@class='org.apache.cocoon.caching.impl.DefaultEventRegistryImpl']">
+       remove="/cocoon/component[@role='org.apache.cocoon.caching.EventRegistry']">
 
   <!-- The event registry which maps Cache events to Pipeline keys -->
+  <!--component role="org.apache.cocoon.caching.EventRegistry"
+             class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/-->
   <component role="org.apache.cocoon.caching.EventRegistry"
-             class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/>
+             class="org.apache.cocoon.caching.impl.StoreEventRegistryImpl"/>
 </xconf>
