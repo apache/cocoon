@@ -45,7 +45,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-07 20:22:33 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-07 20:37:56 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -72,7 +72,7 @@ public class LogTransformer extends AbstractTransformer {
         if (logfile == null) {
             String appends = parameters.getParameter("append", null);
             logfilename = parameters.getParameter("logfile", null);
-            if (appends != null && appends.equals ("yes")) {
+            if ("yes".equals(appends)) {
                 append = true;
             } else {
                 append = false;
@@ -177,7 +177,7 @@ public class LogTransformer extends AbstractTransformer {
      */
     public void characters(char ch[], int start, int len)
     throws SAXException {
-        log ("characters", new String(ch).substring(start, len));
+        log ("characters", new String(ch,start,len));
         if (super.contentHandler!=null)
             super.contentHandler.characters(ch,start,len);
     }
@@ -187,7 +187,7 @@ public class LogTransformer extends AbstractTransformer {
      */
     public void ignorableWhitespace(char ch[], int start, int len)
     throws SAXException {
-        log ("ignorableWhitespace", new String(ch).substring(start, len));
+        log ("ignorableWhitespace", new String(ch,start,len));
         if (super.contentHandler!=null)
             super.contentHandler.ignorableWhitespace(ch,start,len);
     }
@@ -277,7 +277,7 @@ public class LogTransformer extends AbstractTransformer {
      */
     public void comment(char ch[], int start, int len)
     throws SAXException {
-        log ("comment", new String(ch).substring(start, len));
+        log ("comment", new String(ch,start,len));
         if (super.lexicalHandler!=null)
             super.lexicalHandler.comment(ch,start,len);
     }
