@@ -24,7 +24,7 @@
         <p class="legal">Cocoon Documentation</p>
         <h1 class="title"><xsl:value-of select="document/header/title"/></h1>
         <xsl:apply-templates/>
-        <p class="legal">Copyright (c) @year@ <a href="http://xml.apache.org">The Apache Software Foundation.</a><br/>All rights reserved.</p>
+        <p class="legal">Copyright &#169; <xsl:value-of select="$copyright"/>.<br/>All rights reserved.</p>
       </body>
     </html>
    </xsl:if>
