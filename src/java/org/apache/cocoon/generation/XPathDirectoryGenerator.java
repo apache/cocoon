@@ -110,8 +110,8 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.8 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @author <a href="mailto:joerg@apache.org">J\u00F6rg Heinicke</a>
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.9 2004/05/07 21:13:50 joerg Exp $
  */
 public class XPathDirectoryGenerator
 extends DirectoryGenerator {
@@ -316,7 +316,7 @@ extends DirectoryGenerator {
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
      * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
-     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.8 2004/03/05 13:02:55 bdelacretaz Exp $
+     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.9 2004/05/07 21:13:50 joerg Exp $
      */
     private static class MappingInfo
     implements PrefixResolver {
