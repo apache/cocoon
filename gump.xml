@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.148 2004/05/04 17:25:09 bdelacretaz Exp $
+    | CVS $Id: gump.xml,v 1.149 2004/05/05 11:30:01 bdelacretaz Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1161,7 +1161,6 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="supersonic"/>
     <depend project="cocoon-block-batik"/>
     <depend project="cocoon-block-fop"/>
     <depend project="cocoon-block-forms"/>
