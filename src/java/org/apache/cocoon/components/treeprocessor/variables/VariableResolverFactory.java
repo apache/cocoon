@@ -16,8 +16,8 @@
 package org.apache.cocoon.components.treeprocessor.variables;
 
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -104,6 +104,14 @@ public class VariableResolverFactory {
      * @deprecated use the version with <code>ServiceManager</service>
      */
     public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
+        return getResolver(expression, new WrapperServiceManager(manager));
+    }
+
+    /**
+     * Get a resolver for a given expression. Chooses the most efficient implementation
+     * depending on <code>expression</code>.
+     */
+    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
         if (needsResolve(expression)) {
             VariableResolver resolver = new PreparedVariableResolver(expression, manager);
             List collector = (List)disposableCollector.get();
@@ -115,14 +123,5 @@ public class VariableResolverFactory {
         } else {
             return new NOPVariableResolver(expression);
         }
-    }
-
-
-    /**
-     * Get a resolver for a given expression. Chooses the most efficient implementation
-     * depending on <code>expression</code>.
-     */
-    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
-        return getResolver(expression, new WrapperComponentManager(manager));
     }
 }
