@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  * <li>Attribute direction="load|save|both": {@link #getCommonAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.4 2004/02/29 09:20:56 antonio Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.5 2004/03/02 06:54:01 antonio Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
@@ -131,11 +131,11 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             //throw an error if people are still using the old-style @read-only or @readonly
             if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
                 throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
-                        + "\nThe usage of the attribute @readonly has been depricated in favour of @direction.");
+                        + "\nThe usage of the attribute @readonly has been deprecated in favour of @direction.");
             }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
                 throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
-                        + "\nThe usage of the attribute @read-only has been depricated in favour of @direction.");
+                        + "\nThe usage of the attribute @read-only has been deprecated in favour of @direction.");
             }
 
             String direction = DomHelper.getAttribute(bindingElm, "direction", "both");
