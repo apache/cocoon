@@ -30,11 +30,12 @@ import org.xml.sax.SAXException;
 /**
  * This transformer extends transforms html actions
  * into events.
- * The transformer listens for the element a and form.
- * Current we only support POSing of forms.
+ * The transformer listens for the element a and form. Links
+ * that only contain an anchor are ignored.
+ * Current we only support POSTing of forms.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.4 2004/03/16 09:16:59 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.5 2004/03/26 09:36:30 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer 
 extends AbstractCopletTransformer {
@@ -63,11 +64,19 @@ extends AbstractCopletTransformer {
      */
     public void startElement(String uri, String name, String raw, Attributes attr)
     throws SAXException {
+        boolean processed = false;
         if ("a".equals(name) ) {
-            this.createAnchorEvent(uri, name, raw, attr);
+            final boolean isRemoteAnchor = this.isRemoteAnchor(name, attr);
+            this.stack.push(Boolean.valueOf(isRemoteAnchor));
+            if ( isRemoteAnchor ) {
+                this.createAnchorEvent(uri, name, raw, attr);
+                processed = true;
+            }
         } else if ("form".equals(name) ) {
             this.createFormEvent(uri, name, raw, attr);
-        } else {
+            processed = true;
+        }
+        if ( !processed ) {
             super.startElement(uri, name, raw, attr);
         }
     }
@@ -77,12 +86,24 @@ extends AbstractCopletTransformer {
      */
     public void endElement(String uri, String name, String raw)
     throws SAXException {
-        if ( "a".equals(name) || "form".equals(name) ) {
+        boolean processed = false;
+        if ( "a".equals(name) ) {
+            final Boolean isRemoteAnchor = (Boolean)this.stack.pop();
+            if ( isRemoteAnchor.booleanValue() ) {
+                this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
+                                            CopletTransformer.LINK_ELEM,
+                                            "coplet:" + CopletTransformer.LINK_ELEM);
+                this.xmlConsumer.endPrefixMapping("coplet");
+                processed = true;
+            }
+        } else if ( "form".equals(name) ) {
             this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
-                                        CopletTransformer.LINK_ELEM,
-                                        "coplet:" + CopletTransformer.LINK_ELEM);
+                    CopletTransformer.LINK_ELEM,
+                    "coplet:" + CopletTransformer.LINK_ELEM);
             this.xmlConsumer.endPrefixMapping("coplet");
-        } else {
+            processed = true;            
+        }
+        if ( !processed ) {
             super.endElement(uri, name, raw);
         }
     }
@@ -131,4 +152,28 @@ extends AbstractCopletTransformer {
         final String v = SourceUtil.absolutize(base, link);
         return v;
     }
+    
+        
+    /**
+     * Determine if the element is an url and if the url points to some
+     * remote source. 
+     * 
+     * @param name the name of the element
+     * @param attributes the attributes of the element
+     * @return true if the href url is an anchor pointing to a remote source
+     */
+    protected boolean isRemoteAnchor(String name, Attributes attributes) {
+        String link = attributes.getValue("href");
+            
+        // no empty link to current document 
+        if (link != null && link.trim().length() > 0) {
+            // check reference to document fragment
+            if (!link.trim().startsWith("#")) {
+                return true;
+            }
+        }
+          
+        return false;
+    }
+    
 }
