@@ -199,6 +199,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="ATC" type="remove">
+    Removed the PHP block.
+   </action>
    <action dev="CZ" type="update">
      Remove support for Excalibur instrumentation.
    </action>
