@@ -22,13 +22,13 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.1 $)
  */
-public class Main {
+public class KernelLoader {
 
     public static void main(String args[]) {
         if (args.length < 1) {
-            System.err.println("Usage: " + Main.class.getName() + " <blocks "
+            System.err.println("Usage: " + KernelLoader.class.getName() + " <blocks "
                                + "configuration> <deployment configuration>");
             System.exit(1);
         }

@@ -15,11 +15,15 @@
  */
 package org.apache.cocoon.kernel.startup;
 
+import java.io.IOException;
 import java.net.URL;
 
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.apache.cocoon.kernel.CoreWirings;
 import org.apache.cocoon.kernel.Installer;
@@ -29,21 +33,29 @@ import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 
 /**
- *
+ * <p>.</p>
+ * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.1 $)
  */
-public class Servlet extends HttpServlet {
+public class KernelServlet implements Servlet {
+
+    protected static KernelServlet instance = null;
 
     private Logger logger = null;
+    private Wirings wirings = null;
+    private ServletConfig config = null;
 
-    public void init()
+    public synchronized void init(ServletConfig config)
     throws ServletException {
+        if (KernelServlet.instance != null) {
+            throw new ServletException("Kernel cannot be initialized twice");
+        }
 
         /* Create a logger */
-        ServletContext ctxt = this.getServletContext();
-        String level = this.getInitParameter("log-level");
-        String temp = this.getInitParameter("log-trace");
+        ServletContext ctxt = config.getServletContext();
+        String level = config.getInitParameter("org.apache.cocoon.kernel.logging.level");
+        String temp = config.getInitParameter("org.apache.cocoon.kernel.logging.trace");
         boolean trace = ("true".equalsIgnoreCase(temp) ? true : false);
         if ("fatal".equalsIgnoreCase(level)) {
             this.logger = new ServletLogger(ServletLogger.FATAL, trace, ctxt);
@@ -60,8 +72,8 @@ public class Servlet extends HttpServlet {
         }
 
         /* Find our configurations */
-        String deplconf = this.getInitParameter("deployer-config");
-        String instconf = this.getInitParameter("installer-config");
+        String deplconf = config.getInitParameter("org.apache.cocoon.kernel.configuration.deployer");
+        String instconf = config.getInitParameter("org.apache.cocoon.kernel.configuration.installer");
         if (deplconf == null) {
             String message = "Parameter \"deployer-config\" not specified";
             logger.fatal(message);
@@ -77,18 +89,18 @@ public class Servlet extends HttpServlet {
         try {
             URL deplurl = ctxt.getResource(deplconf);
             if (deplurl == null) {
-            		String message = "Unable to find deployer configurations \""
-            					     + deplconf + "\"";
-            		logger.fatal(message);
-            		throw new ServletException(message);
+                    String message = "Unable to find deployer configurations \""
+                                     + deplconf + "\"";
+                    logger.fatal(message);
+                    throw new ServletException(message);
             }
             
             URL insturl = ctxt.getResource(instconf);
             if (insturl == null) {
-            		String message = "Unable to find installer configuration \""
-            						 + deplconf + "\"";
-            		logger.fatal(message);
-            		throw new ServletException(message);
+                    String message = "Unable to find installer configuration \""
+                                     + deplconf + "\"";
+                    logger.fatal(message);
+                    throw new ServletException(message);
             }
 
             Configuration conf = null;
@@ -103,19 +115,41 @@ public class Servlet extends HttpServlet {
             Installer installer = new Installer(deployer);
             conf = ConfigurationBuilder.parse(insturl);
             installer.process(conf);
-            
-            /* Store the current wirings as an application attribute */
-            String attribute = Wirings.class.getName();
-            ctxt.setAttribute(attribute, new CoreWirings(deployer));
+
+            /* Store the current kernel configuration */
+            this.config = config;
+            this.wirings = new CoreWirings(deployer);
+            KernelServlet.instance = this;
 
         } catch (Throwable throwable) {
             String message = "An error occurred initializing the kernel";
             logger.fatal(message, throwable);
-            throw new ServletException(message, throwable);
+            throw new ServletException(message);
         }
     }
 
     public void destroy() {
         this.logger.info("Kernel shutdown");
+    }
+
+    public void service(ServletRequest request, ServletResponse response)
+    throws ServletException, IOException {
+        throw new ServletException("Servlet non serviceable");
+    }
+
+    public ServletConfig getServletConfig() {
+        return(this.config);
+    }
+
+    public String getServletInfo() {
+        return("Apache Cocoon Kernel Servlet");
+    }
+    
+    public Logger getLogger() {
+        return(this.logger);
+    }
+
+    public Wirings getWirings() {
+        return(this.wirings);
     }
 }
