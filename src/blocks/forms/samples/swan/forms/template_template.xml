@@ -18,15 +18,45 @@
   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 
-    <!--
-      CVS $Id$
-    -->
+  <!--
+    CVS $Id$
+  -->
 
-    <!--
-    TODO: Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
-    -->
+  <style type="text/css">
+    li {
+      list-style-type: none
+    }
 
-  <title>Form Template Editor</title>
+    /* The actions buttons, placed on the right */
+    .actions {
+      float: right;
+      padding-top: 0.2em;
+    }
+
+    /* A "section" contains stuff, related actions and substuff */
+    div.section {
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
+      padding-left: 0.4em;
+      border: 1px dotted black;
+      mmargin-top: 0.4em;
+      margin-bottom: -1px;
+    }
+
+    /* Indent sub-sections (recursively) */
+    div.section div.section {
+      margin-left: 3em;
+      border-right: none;
+    }
+
+    /* Change bg color depending on nesting depth */
+    div.section div.section { background-color: #F0F0F0; }
+    div.section div.section div.section { background-color: #E0E0E0; }
+    div.section div.section div.section div.section { background-color: #D0D0D0; }
+    div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
+  </style>
+
+  <title>Swan Form Template Editor</title>
 
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
@@ -56,13 +86,19 @@
       <ft:class id="std-id-class">
         <ft:choose path="../../view-selector">
           <ft:when value="fold">
-            <ft:new id="output-id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:struct>
           </ft:when>
           <ft:when value="view">
-            <ft:new id="output-id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:struct>
           </ft:when>
           <ft:when value="edit">
-            <ft:new id="id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="id-class"/>
+            </ft:struct>
           </ft:when>
         </ft:choose>
       </ft:class>
@@ -70,13 +106,19 @@
       <ft:class id="std-label-class">
         <ft:choose path="../../view-selector">
           <ft:when value="fold">
-            <ft:new id="output-label-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-label-class"/>
+            </ft:struct>
           </ft:when>
           <ft:when value="view">
-            <ft:new id="output-label-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-label-class"/>
+            </ft:struct>
           </ft:when>
           <ft:when value="edit">
-            <ft:new id="label-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="label-class"/>
+            </ft:struct>
           </ft:when>
         </ft:choose>
       </ft:class>
@@ -84,11 +126,17 @@
       <ft:class id="std-items-class">
         <ft:choose path="../../view-selector">
           <ft:when value="fold">
+            <ft:struct id="stuff">
+            </ft:struct>
           </ft:when>
           <ft:when value="view">
+            <ft:struct id="stuff">
+            </ft:struct>
             <ft:new id="items-class"/>
           </ft:when>
           <ft:when value="edit">
+            <ft:struct id="stuff">
+            </ft:struct>
             <ft:new id="items-class"/>
           </ft:when>
         </ft:choose>
@@ -97,14 +145,20 @@
       <ft:class id="std-id-items-class">
         <ft:choose path="../../view-selector">
           <ft:when value="fold">
-            <ft:new id="output-id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:struct>
           </ft:when>
           <ft:when value="view">
-            <ft:new id="output-id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:struct>
             <ft:new id="items-class"/>
           </ft:when>
           <ft:when value="edit">
-            <ft:new id="id-class"/>
+            <ft:struct id="stuff">
+              <ft:new id="id-class"/>
+            </ft:struct>
             <ft:new id="items-class"/>
           </ft:when>
         </ft:choose>
@@ -251,42 +305,48 @@
         </ft:choose>
       </ft:class>
 
-          <!-- DEBUG -->
-          <!--
-          <fi:styling list-type="dropdown" submit-on-change="true"/>
-          -->
       <ft:class id="view-selector-class">
-        <ft:widget id="view-selector">
-          <fi:styling submit-on-change="true"/>
-        </ft:widget>
+        <ft:choose path="view-selector">
+          <ft:when value="fold">
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
+          </ft:when>
+          <ft:when value="view">
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="item-row-class">
+        <span class="actions">
+          <ft:widget id="up"><fi:styling type="image" src="resources/move_up.gif"/></ft:widget>
+          <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
+          <ft:widget id="add"><fi:styling type="image" src="resources/new.gif"/></ft:widget>
+          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
+        </span>
+        <ft:new id="view-selector-class"/>
+        <ft:new id="type-selector-class"/>
+        <ft:new id="union-class"/>
       </ft:class>
 
       <ft:class id="items-class">
+        <ft:widget id="addItem"><fi:styling type="image" src="resources/new_child.gif"/></ft:widget>
         <ft:repeater-size id="items"/>
-        <ul>
-          <ft:repeater-widget id="items">
-            <li>
-              <ft:new id="view-selector-class"/>
-              <ft:new id="type-selector-class"/>
-              <ft:new id="union-class"/>
-            </li>
-          </ft:repeater-widget>
-        </ul>
-        <ft:widget id="addItem"/>
-        <ft:widget id="removeItems"/><br/>
+        <ft:repeater-widget id="items">
+          <div class="section"><ft:new id="item-row-class"/></div>
+        </ft:repeater-widget>
       </ft:class>
 
-      <table border="3">
-        <tr>
-          <td>
-            <p>
-              <ft:new id="items-class"/>
-            </p>
-           <fi:validation-errors/>
-           <input type="submit"/>
-          </td>
-        </tr>
-      </table>
+      <p>
+        <ft:new id="items-class"/>
+      </p>
+      <ft:widget id="messages"/><br/>
+      <input type="submit"/>
 
     </ft:form-template>
   </content>

@@ -56,7 +56,7 @@
     div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
   </style>
 
-  <title>Form Model Editor</title>
+  <title>Swam Form Model Editor</title>
 
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
