@@ -7,7 +7,7 @@
 
     @author bdelacretaz@apache.org
 
-    $Id: samples-mime-types.xml,v 1.1 2004/02/07 11:14:42 bdelacretaz Exp $
+    $Id: samples-mime-types.xml,v 1.2 2004/02/07 11:55:07 bdelacretaz Exp $
  -->
 
 <project name="batik-samples-mime-types" default="batik-samples-mime-types">
@@ -18,6 +18,24 @@
 
     <target name="batik-samples-mime-types">
         <property name="baseUrl" value="${cocoon}/samples/batik"/>
+
+        <httpRequest href="${baseUrl}/hello.svg">
+            <match>
+                <header name="Content-type" value="image/svg+xml"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/hello.jpg">
+            <match>
+                <header name="Content-type" value="image/jpg"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/hello.png">
+            <match>
+                <header name="Content-type" value="image/png"/>
+            </match>
+        </httpRequest>
 
         <httpRequest href="${baseUrl}/batikLogo.svg">
             <match>
