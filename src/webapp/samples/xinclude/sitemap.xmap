@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.1 2003/05/20 12:02:50 bruno Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.2 2003/06/07 21:20:14 bruno Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -34,12 +34,9 @@
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="test.html">
-        <map:generate src="content/test.xml"/>
+      <map:match pattern="*.html">
+        <map:generate src="content/{1}.xml"/>
         <map:transform type="xinclude"/>
-        <map:transform type="log">
-          <map:parameter name="logfile" value="xinclude.txt"/>
-        </map:transform>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
           <map:parameter name="servletPath" value="{request:servletPath}"/>
@@ -50,9 +47,8 @@
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="loopinclusion.html">
-        <map:generate src="content/loopinclusion.xml"/>
-        <map:transform type="xinclude"/>
+      <map:match pattern="*.xml">
+        <map:generate src="content/{1}.xml"/>
         <map:serialize/>
       </map:match>
 
