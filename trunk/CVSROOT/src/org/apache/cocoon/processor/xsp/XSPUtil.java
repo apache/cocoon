@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.8 2000-01-12 19:24:30 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.9 2000-01-15 04:41:10 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.8 $ $Date: 2000-01-12 19:24:30 $
+ * @version $Revision: 1.9 $ $Date: 2000-01-15 04:41:10 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -362,8 +362,34 @@ public class XSPUtil {
     return buffer.toString();
   }
 
-  public static String formDecode(String text) throws Exception {
-    return URLDecoder.decode(text);
+  // Shameless, ain't it?
+  public static String formDecode(String s) throws Exception {
+    StringBuffer sb = new StringBuffer();
+    for(int i=0; i<s.length(); i++) {
+      char c = s.charAt(i);
+      switch (c) {
+        case '+':
+          sb.append(' ');
+          break;
+        case '%':
+          try {
+            sb.append((char)Integer.parseInt(
+            s.substring(i+1,i+3),16));
+          }
+          catch (NumberFormatException e) {
+            throw new IllegalArgumentException();
+          }
+          i += 2;
+          break;
+        default:
+          sb.append(c);
+          break;
+      }
+    }
+    // Undo conversion to external encoding
+    String result = sb.toString();
+    byte[] inputBytes = result.getBytes("8859_1");
+    return new String(inputBytes);
   }
 
   /* Library Utility Methods */

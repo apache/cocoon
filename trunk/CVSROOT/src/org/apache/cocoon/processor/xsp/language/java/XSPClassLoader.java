@@ -1,4 +1,4 @@
-/*-- $Id: XSPClassLoader.java,v 1.3 2000-01-03 01:42:51 stefano Exp $ --
+/*-- $Id: XSPClassLoader.java,v 1.4 2000-01-15 04:41:12 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,7 +55,7 @@ import java.io.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:51 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-15 04:41:12 $
  */
 public class XSPClassLoader extends ClassLoader {
   protected File repository;
@@ -80,7 +80,8 @@ public class XSPClassLoader extends ClassLoader {
         byte[] bits = loadClassData (name);
 
         if (bits == null) {
-          ClassLoader cl = getParent(); // Hmmm...
+          // ClassLoader cl = getParent();
+          ClassLoader cl = this.getClass().getClassLoader();
 
           if (cl != null)  {
             c = cl.loadClass (name);
