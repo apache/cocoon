@@ -60,7 +60,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.6 2003/05/22 06:54:52 cziegeler Exp $
+ * @version CVS $Id: Aspectalizable.java,v 1.7 2003/05/22 15:19:44 cziegeler Exp $
  */
 public interface Aspectalizable {
 
@@ -89,9 +89,9 @@ public interface Aspectalizable {
      * Return all persistent aspect datas 
      * @return A map of data objects, the keys are built by the aspect names
      */
-    Map getPersistentAspectDatas();
+    Map getPersistentAspectData();
 
-    void addPersistenAspectData(String aspectName, Object data);
+    void addPersistentAspectData(String aspectName, Object data);
     
     /**
      * Is this aspect supported

@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.aspect;
+package org.apache.cocoon.portal.event.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -66,7 +66,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventAspectChain.java,v 1.1 2003/05/07 06:22:25 cziegeler Exp $
+ * @version CVS $Id: EventAspectChain.java,v 1.1 2003/05/22 15:19:43 cziegeler Exp $
  */
 public final class EventAspectChain {
     

@@ -57,7 +57,7 @@ import org.apache.cocoon.ProcessingException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletFactory.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: CopletFactory.java,v 1.2 2003/05/22 15:19:45 cziegeler Exp $
  */
 public interface CopletFactory  {
     
@@ -70,7 +70,7 @@ public interface CopletFactory  {
     void prepare(CopletInstanceData copletInstanceData)
     throws ProcessingException;
     
-    CopletInstanceData newInstance(String name)
+    CopletInstanceData newInstance(CopletData copletData)
     throws ProcessingException;
     
 }

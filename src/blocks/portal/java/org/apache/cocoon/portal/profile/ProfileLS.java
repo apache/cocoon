@@ -50,17 +50,20 @@
 */
 package org.apache.cocoon.portal.profile;
 
+import java.util.Map;
+
 import org.apache.excalibur.source.SourceValidity;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: ProfileLS.java,v 1.2 2003/05/19 09:14:10 cziegeler Exp $
+ * @version CVS $Id: ProfileLS.java,v 1.3 2003/05/22 15:19:43 cziegeler Exp $
  */
 public interface ProfileLS {
-    Object loadProfile(Object key) throws Exception;  //TODO define ExceptionType later
-    void saveProfile(Object key, Object profile) throws Exception;  //TODO define ExceptionType later
-    SourceValidity getValidity(Object key);
+    Object loadProfile(Object key, Map map) throws Exception;  //TODO define ExceptionType later
+    void saveProfile(Object key, Map map, Object profile) throws Exception;  //TODO define ExceptionType later
+    SourceValidity getValidity(Object key, Map map);
 }

@@ -74,9 +74,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Publisher;
 import org.apache.cocoon.portal.event.Register;
 import org.apache.cocoon.portal.event.Subscriber;
-import org.apache.cocoon.portal.event.aspect.DefaultEventAspectContext;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.aspect.EventAspectChain;
 import org.apache.cocoon.portal.event.aspect.impl.SizingEventSubscriber;
 import org.apache.cocoon.portal.event.subscriber.impl.DefaultLayoutAspectDataEventSubscriber;
 import org.apache.cocoon.portal.event.subscriber.impl.DefaultLayoutEventSubscriber;
@@ -86,7 +84,7 @@ import org.apache.cocoon.portal.event.subscriber.impl.DefaultLayoutEventSubscrib
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.3 2003/05/19 14:10:12 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.4 2003/05/22 15:19:43 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled

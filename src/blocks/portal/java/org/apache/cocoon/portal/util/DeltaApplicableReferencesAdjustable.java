@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -48,101 +48,23 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.aspect;
-
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.EventConverter;
-import org.apache.cocoon.portal.event.Publisher;
+package org.apache.cocoon.portal.util;
 
 /**
+ * Interface for functionality of objects to be updated by a delta object 
+ * and where references to contained DeltaApplicable objects can be adjusted 
+ * if no delta has been applied to them.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: DefaultEventAspectContext.java,v 1.1 2003/05/07 06:22:25 cziegeler Exp $
+ * @version CVS $Id: DeltaApplicableReferencesAdjustable.java,v 1.1 2003/05/22 15:19:44 cziegeler Exp $
  */
-public final class DefaultEventAspectContext 
-    implements EventAspectContext {
-
-    private EventAspectChain chain;
-    
-    private Iterator iterator;
-    private Iterator configIterator;
-    private Parameters config;
-    
-    private Publisher publisher;
-    private Map objectModel;
-    private EventConverter converter;
-
-    public DefaultEventAspectContext(EventAspectChain chain) {
-        this.chain = chain;
-        this.iterator = chain.getIterator();
-        this.configIterator = chain.getConfigIterator();
-    }
-    
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#invokeNext(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-	 */
-	public void invokeNext(PortalService service) {
-		if (iterator.hasNext()) {
-            this.config = (Parameters) this.configIterator.next();
-            final EventAspect aspect = (EventAspect) iterator.next();
-            aspect.process( this, service );
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
-	 */
-	public Parameters getAspectParameters() {
-		return this.config;
-	}
-
-    /**
-     * Get the encoder
-     */
-    public EventConverter getEventConverter(){
-        return this.converter;
-    }
-    
-    /**
-     * Get the publisher
-     */
-    public Publisher getEventPublisher(){
-        return this.publisher;
-    }
-    
-    /**
-     * Get the object model
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
-    }
-
+public interface DeltaApplicableReferencesAdjustable 
+extends DeltaApplicable {
 	/**
-	 * @param converter
+	 * Updates the references to contained DeltaApplicable objects  
+     * if no delta has been applied to them.
+	 * @throws ClassCastException If the object is not of the expected type.
 	 */
-	public void setEventConverter(EventConverter converter) {
-		this.converter = converter;
-	}
-
-	/**
-	 * @param map
-	 */
-	public void setObjectModel(Map map) {
-		objectModel = map;
-	}
-
-	/**
-	 * @param publisher
-	 */
-	public void setEventPublisher(Publisher publisher) {
-		this.publisher = publisher;
-	}
-
+	public void adjustReferences(Object object);
 }
