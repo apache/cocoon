@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.profile;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.avalon.framework.component.Component;
@@ -30,7 +31,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.10 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface ProfileManager extends Component {
     
@@ -89,5 +90,15 @@ public interface ProfileManager extends Component {
      * Save the profile
      */
     void saveUserProfiles();
+    
+    /**
+     * Get all instances
+     */
+    Collection getCopletInstanceDatas();
+    
+    /**
+     * Get all coplets
+     */
+    Collection getCopletDatas();
     
 }

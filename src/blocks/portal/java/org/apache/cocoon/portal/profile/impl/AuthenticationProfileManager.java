@@ -115,7 +115,7 @@ public class AuthenticationProfileManager
             parameters.put("profiletype", "copletdata");
             parameters.put("objectmap", copletBaseDataManager.getCopletBaseData());
             copletDataManager = (CopletDataManager)this.getDeltaProfile(layoutKey, parameters, service, copletFactory, ((Boolean)result[1]).booleanValue());
-                    
+            service.setAttribute("CopletData:" + layoutKey, copletDataManager);        
         } finally {
             this.lock.releaseLocks();
         }
