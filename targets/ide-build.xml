@@ -15,10 +15,23 @@
   limitations under the License.
 -->
 <project name="ide">
-  
+
   <description>
     IDE targets
   </description>
+
+  <!-- Build the Eclipse customized project's files -->
+  <target name="eclipse-customized-project" depends="prepare" description="Generate the Eclipse customized project files (using local.block.properties)">
+    <echo message="Building Eclipse Customized Project Files"/>
+    <xslt in="${gump.descriptor}"
+            out="${build.temp}/blocks-eclipse.xml"
+            style="${tools}/ide/eclipse/blocks-classpath.xsl"/>
+
+      <ant antfile="${build.temp}/blocks-eclipse.xml"
+               inheritAll="true"
+               inheritRefs="false"
+               target="generate-customized-eclipse-project"/>
+  </target>
 
   <!-- Generate the Emacs JDE project file -->
   <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
@@ -73,7 +86,7 @@
       <!-- main libs -->
       <fileset dir="${lib}">
         <include name="core/*.jar"/>
-        <!-- Currently, we have no JVM dependent libraries       
+        <!-- Currently, we have no JVM dependent libraries
           <include name="core/jvm${target.vm}/*.jar"/>
         -->
         <include name="optional/*.jar"/>
@@ -87,7 +100,7 @@
       <!-- tools libs -->
       <fileset dir="${tools}/lib">
         <include name="*.jar"/>
-      </fileset>      
+      </fileset>
     </path>
 
     <!-- convert paths to properties -->
@@ -148,7 +161,7 @@
             tofile="${build.webapp}/WEB-INF/classes/org/apache/cocoon/cocoon.roles"
             overwrite="yes"/>
   </target>
-  
+
   <target name="eclipse-webapp-delete-jars" depends="prepare">
       <!-- delete all jars and class files, they are already included in the project -->
       <delete>

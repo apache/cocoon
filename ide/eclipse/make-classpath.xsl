@@ -17,16 +17,16 @@
 <!--
   Build the Eclipse .classpath file from a list of path items
   (see "eclipse-project" target in build.xml)
-  
+
   @author Sylvain Wallez
-  @version CVS $Id: make-classpath.xsl,v 1.3 2004/03/08 06:07:15 antonio Exp $
+  @version CVS $Id$
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:output indent="yes" method="xml"/>
   <xsl:param name="exportlib"/>
-  
+
   <xsl:strip-space elements="*"/>
 
   <xsl:template match="/data">
@@ -38,7 +38,7 @@
         <xsl:sort select="."/>
         <classpathentry kind="src" path="{.}"/>
       </xsl:for-each>
-          
+
       <!-- 2. libraries -->
       <xsl:for-each select="libs/item">
         <!-- alphabetical sorting, only file name -->
@@ -50,12 +50,15 @@
         <xsl:sort select="concat(substring-after(substring-after(substring-after(substring-after(., '/'), '/'), '/'), '/'),
                                                  substring-after(substring-after(substring-after(., '/'), '/'), '/'),
                                                                  substring-after(substring-after(., '/'), '/'))"/>
-        <classpathentry exported="{$exportlib}" kind="lib" path="{.}"/>
+            <!-- Remove duplicated library entries (diferent blocks can refer the same lib -->
+            <xsl:if test="not(node()) or not(preceding-sibling::node()[.=string(current())])">
+                <classpathentry exported="{$exportlib}" kind="lib" path="{.}"/>
+            </xsl:if>
       </xsl:for-each>
 
       <!-- 3. JRE runtime -->
       <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
-     
+
       <!-- 4. output directory
            Build in a separate dir since Eclipse is confused
            by classes compiled externally by Sun's Javac -->
