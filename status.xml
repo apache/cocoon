@@ -205,6 +205,14 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Component, Composable, ComponentManager, ComponentSelector and ComponentException
+     are no longer support: Serviceable, ServiceManager, ServiceSelector and ServiceException
+     have to be used.
+   </action>
+   <action dev="CZ" type="add">
+     Own implementation of Avalon based container.
+   </action>
    <action dev="TC" type="add" fixes-bug="30417">
      Added best-fit-while-keeping-aspect-ratio option to the ImageReader
    </action>
