@@ -5,7 +5,7 @@
   <xsl:template match="welcome">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
       <head>
-        <title>Welcome to Cocoon!</title>
+        <title>Welcome to Apache Cocoon!</title>
         <!-- 
              NOTE (SM): this meta tag reflects the *output* of the pipeline and not
              the encoding of this file. I agree it's sort of an hack and it should
@@ -19,13 +19,13 @@
         <link href="favicon.ico" rel="SHORTCUT ICON" />
       </head>
       <body>
-        <h1>Welcome to Cocoon!</h1>
+        <h1>Welcome to Apache Cocoon!</h1>
         <xsl:apply-templates/>
         <p class="copyright">
          Copyright © @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
         </p>
         <p class="block">
-          <a href="http://cocoon.apache.org/"><img src="images/powered.gif" alt="Powered by Cocoon"/></a>
+          <a href="http://cocoon.apache.org/"><img src="images/powered.gif" alt="Powered by Apache Cocoon"/></a>
         </p>
       </body>
     </html>
