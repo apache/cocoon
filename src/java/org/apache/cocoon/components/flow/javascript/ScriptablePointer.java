@@ -50,16 +50,15 @@ import java.util.Locale;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.apache.commons.jxpath.ri.model.beans.PropertyPointer;
-import org.apache.commons.jxpath.ri.model.beans.PropertyOwnerPointer;
 import org.apache.commons.jxpath.ri.model.dynamic.DynamicPointer;
 import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePointer.java,v 1.3 2003/05/01 09:32:34 coliver Exp $
+ * @version CVS $Id: ScriptablePointer.java,v 1.4 2003/05/04 20:24:47 cziegeler Exp $
  */
 public class ScriptablePointer extends DynamicPointer {
 
