@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.27 2003/04/17 11:31:32 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.28 2003/04/17 20:49:47 haul Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -768,4 +768,29 @@
   <homepage>http://jakarta.apache.org/commons/lang/</homepage>
  </file>
 
+ <file>
+  <title>Sun JavaMailTM API</title>
+  <description>"The JavaMailTM 1.3 API provides a set of abstract classes that
+model a mail system. The API provides a platform independent and protocol
+independent framework to build Java technology-based mail and messaging
+applications. The JavaMailTM API is implemented as a Java platform optional
+package and is also available as part of the Java 2 platform, Enterprise
+Edition. Sun provides a royalty-free reference implementation, in binary form,
+that developers will be able to use and ship."</description>
+  <used-by>mail block</used-by>
+  <lib>mail/lib/mail.jar</lib>
+  <homepage>http://java.sun.com/products/javamail/</homepage>
+ </file>
+ <file>
+
+  <title>Sun JavaBeansTM Activation Framework (JAF)</title>
+  <description>"With the JavaBeansTM Activation Framework standard extension,
+developers who use JavaTM technology can take advantage of standard services to
+determine the type of an arbitrary piece of data, encapsulate access to it,
+discover the operations available on it, and to instantiate the appropriate
+bean to perform said operation(s)."</description>
+  <used-by>mail block</used-by>
+  <lib>mail/lib/activation.jar</lib>
+  <homepage>http://java.sun.com/products/javabeans/glasgow/jaf.html</homepage>
+ </file>
 </jars>
