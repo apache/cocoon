@@ -18,6 +18,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   xmlns:col="http://apache.org/cocoon/collection/1.0" 
   xmlns:xi="http://www.w3.org/2001/XInclude" 
+  xmlns:DAV="DAV:"
   version="1.0">
 
   <xsl:import href="layout.xsl" />
@@ -60,16 +61,27 @@
             <xsl:for-each select="col:collection|col:resource">
               <tr>
                 <td align="left">&#xA0;&#xA0;
-                  <a href="{@name}"><xsl:value-of select="@name"/></a>
+                  <xsl:choose>
+                    <xsl:when test="$path != ''">
+                      <a href="{$base}/{$type}/{$path}/{@name}">
+                        <xsl:value-of select="@name"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <a href="{$base}/{$type}/{@name}">
+                        <xsl:value-of select="@name"/>
+                      </a>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
                 <td align="left">
-                  <xsl:value-of select="@mime-type"/>
+                  <xsl:value-of select="col:properties/DAV:getcontenttype"/>
                 </td>
                 <td align="left">
-                  <xsl:value-of select="@contentlength"/>
+                  <xsl:value-of select="col:properties/DAV:getcontentlength"/>
                 </td>
                 <td align="left">
-                  <xsl:value-of select="@date"/>
+                  <xsl:value-of select="col:properties/DAV:modificationdate"/>
                 </td>
                 <td align="right">
                   <form action="{$base}/delete" method="post">
@@ -107,18 +119,12 @@
           </font>
         </table>
       </xsl:when>
-      <xsl:when test="@mime-type='image/gif'">
-        <img src="../view/{$path}"/>
-      </xsl:when>
-      <xsl:when test="@mime-type='image/jpeg'">
-        <img src="../view/{$path}"/>
-      </xsl:when>
-      <xsl:when test="@mime-type='text/plain'">
+      <xsl:when test="col:properties/DAV:getcontenttype='text/plain'">
         <pre>
           <xi:include href="slide://{$principal}@{$namespace}/{$path}" parse="text"/>
         </pre>
       </xsl:when>
-      <xsl:when test="@mime-type='text/xml'">
+      <xsl:when test="col:properties/DAV:getcontenttype='text/xml'">
         <pre>
           <xi:include href="slide://{$principal}@{$namespace}/{$path}" parse="text"/>
         </pre>

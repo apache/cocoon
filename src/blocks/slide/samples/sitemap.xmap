@@ -117,6 +117,7 @@
          <map:parameter name="base" value="{global:base}"/>
          <map:parameter name="contextPath" value="{request:contextPath}"/>
        </map:transform>
+       <map:transform type="xinclude"/>
        <map:serialize type="html"/>
      </map:match>
      
@@ -161,6 +162,9 @@
      <map:match pattern="locks/**">
        <map:aggregate element="document" label="content">
          <map:part src="cocoon:/screens/locks/{1}" />
+         <map:part src="cocoon:/screens/privileges/{1}" />
+         <map:part src="cocoon:/screens/users/{1}" />
+         <map:part src="cocoon:/screens/roles/{1}" />
          <map:part src="cocoon:/description/{1}" />
        </map:aggregate>
        <map:transform src="styles/locks2html.xsl">
