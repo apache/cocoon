@@ -25,10 +25,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class RegexpURIMatcherTestCase extends SitemapComponentTestCase {
 
-    public RegexpURIMatcherTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

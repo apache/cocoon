@@ -25,13 +25,9 @@ import org.w3c.dom.Document;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TraxTransformerTestCase.java,v 1.6 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class TraxTransformerTestCase extends SitemapComponentTestCase {
-
-    public TraxTransformerTestCase(String name) {
-        super(name);
-    }
 
     public void testFunctionForXalan() throws Exception {
 

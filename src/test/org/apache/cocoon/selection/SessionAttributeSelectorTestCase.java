@@ -24,10 +24,6 @@ import org.apache.cocoon.environment.Session;
 
 public class SessionAttributeSelectorTestCase extends SitemapComponentTestCase {
 
-    public SessionAttributeSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

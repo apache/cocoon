@@ -29,14 +29,11 @@ import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

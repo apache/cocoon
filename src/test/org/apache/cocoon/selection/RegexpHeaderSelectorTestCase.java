@@ -30,10 +30,6 @@ public class RegexpHeaderSelectorTestCase extends SitemapComponentTestCase {
 
     private final String REGEXP_HEADER_SELECTOR = "regexp-header";
 
-    public RegexpHeaderSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

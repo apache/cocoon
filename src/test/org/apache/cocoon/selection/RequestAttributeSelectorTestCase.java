@@ -24,10 +24,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class RequestAttributeSelectorTestCase extends SitemapComponentTestCase {
 
-    public RequestAttributeSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

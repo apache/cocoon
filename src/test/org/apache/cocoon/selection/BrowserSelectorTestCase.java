@@ -24,10 +24,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class BrowserSelectorTestCase extends SitemapComponentTestCase {
 
-    public BrowserSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

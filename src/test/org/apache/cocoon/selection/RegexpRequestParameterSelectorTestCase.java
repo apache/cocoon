@@ -24,10 +24,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class RegexpRequestParameterSelectorTestCase extends SitemapComponentTestCase {
 
-    public RegexpRequestParameterSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

@@ -25,10 +25,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
 
-    public WildcardURIMatcherTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *
