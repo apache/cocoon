@@ -14,17 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- $Id$ -->
 <role-list>
-  <role name="org.apache.cocoon.ojb.broker.components.PBFactory"
-        shorthand="ojb-pb"
-        default-class="org.apache.cocoon.ojb.broker.components.PBFactoryImpl"/>
-
-  <role name="org.apache.cocoon.ojb.odmg.components.OdmgImplementation"
+  <role name="org.apache.cocoon.ojb.odmg.components.ODMG"
         shorthand="ojb-odmg"
-        default-class="org.apache.cocoon.ojb.odmg.components.OdmgImplementationImpl"/>
+        default-class="org.apache.cocoon.ojb.odmg.components.ODMGImpl"/>
 
-  <role name="org.apache.cocoon.ojb.jdo.components.JdoPMF"
+  <role name="org.apache.cocoon.ojb.jdo.components.JDO"
         shorthand="ojb-jdo"
-        default-class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl"/>
+        default-class="org.apache.cocoon.ojb.jdo.components.JDOImpl"/>
 </role-list>

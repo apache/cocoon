@@ -17,7 +17,7 @@ cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js")
 
 function employeeform_jdo(form) {
     // Get OJB factory
-    var factory = cocoon.getComponent(Packages.org.apache.cocoon.ojb.jdo.components.JdoPMF.ROLE);
+    var factory = cocoon.getComponent(Packages.org.apache.cocoon.ojb.jdo.components.JDO.ROLE);
 
     // Create a empty Bean
     var bean = new Packages.org.apache.cocoon.ojb.samples.bean.Employee();

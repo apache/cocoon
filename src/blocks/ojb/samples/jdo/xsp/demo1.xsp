@@ -24,54 +24,51 @@
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
 
-	<xsp:structure>
-		<xsp:include>javax.jdo.PersistenceManager</xsp:include>
-		<xsp:include>javax.jdo.Transaction</xsp:include>
-		<xsp:include>org.apache.cocoon.ojb.jdo.components.JdoPMF</xsp:include>
-		<xsp:include>javax.jdo.Transaction</xsp:include>
-		<xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
-	</xsp:structure>
+  <xsp:structure>
+    <xsp:include>javax.jdo.PersistenceManager</xsp:include>
+    <xsp:include>javax.jdo.Transaction</xsp:include>
+    <xsp:include>org.apache.cocoon.ojb.jdo.components.JDO</xsp:include>
+    <xsp:include>javax.jdo.Transaction</xsp:include>
+    <xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
+  </xsp:structure>
 
-	<xsp:init-page>
-		JdoPMF pmf = null;
-		PersistenceManager persistenceManager = null;
-		Department bean = new Department();
-		String s;
-	</xsp:init-page>
+  <page>
+    <content>
+      <title>Hello</title>
+      <para>This is my first Cocoon page with OJB!</para>
+      <xsp:logic>
+        JDO jdo = null;
+        try {
+          /* Get the PersistenceManager */
+          PersistenceManager persistenceManager = null;
+          try {
+            jdo = (JDO) manager.lookup(JDO.ROLE);
+            persistenceManager = jdo.getPersistenceManager();
+          } catch (ComponentException cme) {
+            getLogger().error("Could not look up the PersistenceManager", cme);
+          }
 
-	<page>
-		<content>
-			<title>Hello</title>
-			<para>This is my first Cocoon page with OJB!</para>
-			<xsp:logic>
-			try {
-				/* Get the PersistenceManager */
-				try {
-					pmf = (JdoPMF) manager.lookup(JdoPMF.ROLE);
-					persistenceManager = pmf.getPersistenceManager();
-				} catch (ServiceException cme) {
-					getLogger().error("Could not look up the PersistenceManager", cme);
-				}
-				<!-- Setting up the Bean -->
-				bean.setId(5);
-				bean.setName("JDO Development");
-				<!-- 2. Get current transaction -->
-				Transaction tx = persistenceManager.currentTransaction();
-				<!-- 3. Start a Transaction -->
-				tx.begin();
-				<!-- 4. now perform persistence operations. Store the new user -->
-				persistenceManager.makePersistent(bean);
-				<!-- 5. Commit the transaction  -->
-				tx.commit();
-                s = bean.getId() + " : " + bean.getName();
-			</xsp:logic>
-			<p> Inserted data: <xsp:expr>s</xsp:expr> </p>
-			<xsp:logic>
-			}
-			finally {
-				manager.release((Component)pmf);
-			}
-		</xsp:logic>
-		</content>
-	</page>
+          <!-- Setting up the Bean -->
+          Department bean = new Department();
+          bean.setId(5);
+          bean.setName("JDO Development");
+          <!-- 2. Get current transaction -->
+          Transaction tx = persistenceManager.currentTransaction();
+          <!-- 3. Start a Transaction -->
+          tx.begin();
+          <!-- 4. now perform persistence operations. Store the new user -->
+          persistenceManager.makePersistent(bean);
+          <!-- 5. Commit the transaction  -->
+          tx.commit();
+
+          <p>
+            Inserted data: <xsp:expr>bean.getId() + " : " + bean.getName()</xsp:expr>
+          </p>
+
+        } finally {
+          manager.release(jdo);
+        }
+      </xsp:logic>
+    </content>
+  </page>
 </xsp:page>
