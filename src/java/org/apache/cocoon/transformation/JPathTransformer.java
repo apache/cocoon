@@ -50,22 +50,21 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Flow;
-import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.regexp.RE;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * JPath Transformer.
@@ -89,7 +88,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: JPathTransformer.java,v 1.2 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: JPathTransformer.java,v 1.3 2003/05/07 11:27:59 cziegeler Exp $
  */
 public class JPathTransformer
 extends AbstractSAXTransformer implements Initializable {
