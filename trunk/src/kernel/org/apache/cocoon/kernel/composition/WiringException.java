@@ -20,9 +20,9 @@ package org.apache.cocoon.kernel.composition;
  * {@link Wire}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
-public class WiringException extends Exception {
+public class WiringException extends RuntimeException {
     /**
      * <p>Create a new {@link WiringException} instance.</p>
      */

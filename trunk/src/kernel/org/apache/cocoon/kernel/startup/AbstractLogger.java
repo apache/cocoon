@@ -18,6 +18,9 @@ package org.apache.cocoon.kernel.startup;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.xml.transform.TransformerException;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -25,7 +28,7 @@ import org.xml.sax.SAXException;
  * log entries and outputting them.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public abstract class AbstractLogger extends Logger {
 
@@ -256,8 +259,10 @@ public abstract class AbstractLogger extends Logger {
         Throwable causedby = null;
         if (throwable instanceof SAXException) {
             causedby = ((SAXException)throwable).getException();
+        } else if (throwable instanceof ServletException) {
+            causedby = ((ServletException)throwable).getRootCause();
         } else causedby = throwable.getCause();
-        
+
         /* Print the logging header and an explaination */
         buffer.append(header);
         buffer.append(cause ? "+ Caused by " : "Exception ");
@@ -268,17 +273,19 @@ public abstract class AbstractLogger extends Logger {
 
         /* Print the Throwable message */
         String message = throwable.getMessage();
-        if (message != null) {
-            /* Print the header for the message */
-            buffer.append(header);
-            
-            /* Widgeting, many checks, one buffer append call */
-            if (!cause) buffer.append("+--- ");
-            else buffer.append(causedby == null ? "  +--- "  : "| +--- ");
-
-            /* Print out the message */
-            buffer = this.out(buffer.append(message));
+        if (throwable instanceof TransformerException) {
+            message = ((TransformerException)throwable).getMessageAndLocation();
         }
+        if (message == null) message = "[Null Exception Message!]";
+        /* Print the header for the message */
+        buffer.append(header);
+            
+        /* Widgeting, many checks, one buffer append call */
+        if (!cause) buffer.append("+--- ");
+        else buffer.append(causedby == null ? "  +--- "  : "| +--- ");
+
+        /* Print out the message */
+        buffer = this.out(buffer.append(message));
 
         /* Analyze every single stack trace element */
         StackTraceElement trace[] = throwable.getStackTrace();

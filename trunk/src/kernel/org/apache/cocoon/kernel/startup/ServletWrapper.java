@@ -24,20 +24,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.cocoon.kernel.composition.Wire;
-import org.apache.cocoon.kernel.composition.Wirings;
 
 
 /**
  * <p>.</p> 
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class ServletWrapper implements Servlet {
 
+    private KernelServlet kernel = null;
     private Servlet servlet = null;
-    private Wirings wirings = null;
-    private Logger logger = null;
     private boolean expose = false;
 
     public void init(ServletConfig config)
@@ -54,21 +52,19 @@ public class ServletWrapper implements Servlet {
         this.expose = "true".equalsIgnoreCase(expose);
 
         /* Get a hold on the kernel servlet, its wirings and logger */
-        KernelServlet instance = KernelServlet.instance;
-        if (instance == null) {
+        this.kernel = KernelServlet.instance;
+        if (this.kernel == null) {
             throw new ServletException("Framework not initialized");
         }
-        this.wirings = instance.getWirings();
-        this.logger = instance.getLogger();
 
         /* Get a hold on the wrapped servlet and initialize it */
         try {
-            this.servlet = (Servlet) this.wirings.lookup(Servlet.class, inst);
+            this.servlet = (Servlet) this.kernel.getWirings().lookup(Servlet.class, inst);
             this.servlet.init(config);
         } catch (ServletException e) {
             throw (e);
         } catch (Throwable t) {
-            this.logger.fatal("Unable to access wrapped servlet", t);
+            this.kernel.getLogger().fatal("Unable to access wrapped servlet", t);
             throw new ServletException("Unable to access wrapped servlet");
         }
     }
@@ -81,9 +77,25 @@ public class ServletWrapper implements Servlet {
     public void service(ServletRequest request, ServletResponse response)
     throws ServletException, IOException {
         if (this.expose) {
-            request.setAttribute("org.apache.cocoon.kernel.wirings", wirings);
+            request.setAttribute("org.apache.cocoon.kernel.wirings.global",
+                                 this.kernel.getWirings());
         }
-        this.servlet.service(request, response);
+
+        try {
+            this.servlet.service(request, response);
+        } catch (ServletException exception) {
+            this.kernel.getLogger().error("Exception serviceing page", exception);
+            throw(exception);
+        } catch (java.io.IOException exception) {
+            this.kernel.getLogger().error("Exception serviceing page", exception);
+            throw(exception);
+        } catch (RuntimeException exception) {
+            this.kernel.getLogger().error("Exception serviceing page", exception);
+            throw(exception);
+        } catch (Throwable throwable) {
+            this.kernel.getLogger().error("Exception serviceing page", throwable);
+            throw(new ServletException("Whoha bessie"));
+        }
     }
 
     public ServletConfig getServletConfig() {

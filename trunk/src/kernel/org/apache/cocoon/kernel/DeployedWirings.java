@@ -38,7 +38,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -84,7 +84,7 @@ public class DeployedWirings implements Wirings, Lifecycle {
         ClassLoader loader = block.loader(Descriptor.ACCESS_PRIVATE);
 
         /* Attempt to find and create a composer instance */
-        try {
+        if ((composer != null) || (component != null)) try {
             /* If the composer was specified, we load the class */
             Class clazz = SimpleComposer.class;
             if (composer != null) clazz = loader.loadClass(composer);
@@ -157,6 +157,9 @@ public class DeployedWirings implements Wirings, Lifecycle {
      */
     protected Wire newWire(Class role, Resolver resolver)
     throws WiringException {
+        if (this.composer == null) {
+            throw new WiringException("Block does not provide components");
+        }
         return(new ProxyWire(this.composer, role, this, resolver).getWire());
     }
 
@@ -227,9 +230,9 @@ public class DeployedWirings implements Wirings, Lifecycle {
      */
     public void init()
     throws LifecycleException {
-        try {
-            this.composer.configure(this.instance.configuration());
+        if (this.composer != null) try {
             this.composer.contextualize(this); // TODO wrap this instance
+            this.composer.configure(this.instance.configuration());
         } catch (Throwable throwable) {
             throw new LifecycleException("Unable to configure or contextualize"
                                          + " composer instance", throwable);

@@ -28,7 +28,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * describe a &quot;solid&quot; implementation block descriptor.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public class BlockDescriptor extends AbstractDescriptor {
 
@@ -73,11 +73,11 @@ public class BlockDescriptor extends AbstractDescriptor {
         current = configuration.child(NAMESPACE, "provides");
         this.provision = current.getStringAttribute("class", null);
         this.composer = current.getStringAttribute("composer", null);
-        if ((this.provision == null) && (this.composer == null)) {
+        /*if ((this.provision == null) && (this.composer == null)) {
             throw new ConfigurationException("Descriptor does not provide "
                                              + "composer or component class "
                                              + "name", configuration);
-        }
+        }*/
     }
 
     /* ====================================================================== */

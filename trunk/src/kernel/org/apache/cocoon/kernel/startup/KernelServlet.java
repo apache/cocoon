@@ -36,7 +36,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
  * <p>.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class KernelServlet implements Servlet {
 
@@ -45,6 +45,7 @@ public class KernelServlet implements Servlet {
     private Logger logger = null;
     private Wirings wirings = null;
     private ServletConfig config = null;
+    private KernelDeployer deployer = null;
 
     public synchronized void init(ServletConfig config)
     throws ServletException {
@@ -106,20 +107,23 @@ public class KernelServlet implements Servlet {
             Configuration conf = null;
 
             /* Now let's create our core deployer */
-            KernelDeployer deployer = new KernelDeployer();
-            deployer.logger(logger);
+            this.deployer = new KernelDeployer();
+            this.deployer.logger(logger);
             conf = ConfigurationBuilder.parse(deplurl);
-            deployer.configure(conf);
+            this.deployer.configure(conf);
             
             /* Instantiate an installer and process deployment */
-            Installer installer = new Installer(deployer);
+            Installer installer = new Installer(this.deployer);
             conf = ConfigurationBuilder.parse(insturl);
             installer.process(conf);
 
             /* Store the current kernel configuration */
             this.config = config;
-            this.wirings = new CoreWirings(deployer);
+            this.wirings = new CoreWirings(this.deployer);
             KernelServlet.instance = this;
+            /* TODO: this doesn't get updated upon blocks changes */
+            ctxt.setAttribute("org.apache.cocoon.kernel.class.path",
+                              deployer.getCompilationClassPath());
 
         } catch (Throwable throwable) {
             String message = "An error occurred initializing the kernel";

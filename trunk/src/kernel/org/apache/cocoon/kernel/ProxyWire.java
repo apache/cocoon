@@ -16,6 +16,7 @@
 package org.apache.cocoon.kernel;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -49,7 +50,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * this planned new feature.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
@@ -211,8 +212,10 @@ public final class ProxyWire implements InvocationHandler {
         if (this.check(method, wired)) return(new Boolean(this.isConnected()));
 
         /* Invoke the method on the remote instance */
-        if (this.instance != null) {
+        if (this.instance != null) try {
             return(method.invoke(this.instance, arguments));
+        } catch (InvocationTargetException exception) {
+            throw exception.getCause();
         }
 
         /* Have we been released? */

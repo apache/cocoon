@@ -42,7 +42,7 @@ import org.apache.cocoon.kernel.startup.Logger;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.7 $)
+ * @version 1.0 (CVS $Revision: 1.8 $)
  */
 public class KernelDeployer implements Deployer {
 
@@ -345,4 +345,20 @@ public class KernelDeployer implements Deployer {
     protected DeployedWirings lookup(String name) {
         return((DeployedWirings)this.wiringsByName.get(name));
     }
+
+    /**
+     * <p>Return the compilation class path configured from all deployed
+     * blocks and localized for the current operating system.</p>
+     *
+     * @return a <b>non null</b> {@link String}.
+     */
+    public String getCompilationClassPath() {
+        try {
+            return(((BlockLoader)this.loader).getCompilationClassPath());
+        } catch (Throwable t) {
+            return("");
+        }
+    }
+
+
 }

@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.kernel;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -39,7 +41,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * in every method returning a {@link Block}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class BlockLoader extends HashLibrary implements Loader {
 
@@ -181,6 +183,28 @@ public class BlockLoader extends HashLibrary implements Loader {
         return(block);
     }
 
+    /**
+     * <p>Return the compilation class path configured from all deployed
+     * blocks and localized for the current operating system.</p>
+     *
+     * @return a <b>non null</b> {@link String}.
+     */
+    protected String getCompilationClassPath() {
+        URL urls[] = this.loader.getURLs();
+        StringBuffer buffer = new StringBuffer();
+        for (int x = 0; x < urls.length; x++) {
+            if ("file".equals(urls[x].getProtocol())) try {
+                String path = new File(urls[x].getPath()).getCanonicalPath();
+                buffer.append(System.getProperty("path.separator"));
+                buffer.append(path);
+            } catch (IOException exception) {
+                /* TODO: log this exception? */
+            }
+        }
+        if (buffer.length() > 0) buffer.deleteCharAt(0);
+        return(buffer.toString());
+    }
+
     /* ====================================================================== */
 
     /**
@@ -188,7 +212,7 @@ public class BlockLoader extends HashLibrary implements Loader {
      * {@link #addURL(URL)} method.</p>
      *
      * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-     * @version 1.0 (CVS $Revision: 1.4 $)
+     * @version 1.0 (CVS $Revision: 1.5 $)
      */
     private static final class RootClassLoader extends URLClassLoader {
 
