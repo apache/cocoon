@@ -42,7 +42,7 @@
       </source>
 
       <p>Copy the &#34;howto-xmlform-sch-report.xml,&#34; and place it in the
-      folder src\scratchpad\webapp\samples\xmlform\howto\schematron.</p>
+      folder src\blocks\scratchpad\samples\xmlform\howto\schematron.</p>
 
       <fixme author="DS">Sometimes it&#39;s useful to show the dtd for the
       schema.</fixme>

@@ -62,13 +62,33 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This component schedules jobs.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+ * @version CVS $Id: JobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
  *
  * @since 2.1.1
  */
 public interface JobScheduler {
     /** The role of a JobScheduler */
     String ROLE = JobScheduler.class.getName();
+
+    /**
+     * Schedule a periodic job.
+     * The job is started the first time when the period has passed. 
+     * Note that if a Job already has same name then it is overwritten.
+     *
+     * @param name the name of the job
+     * @param jobrole The Avalon components role name of the job itself
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     * @param params Additional Parameters to setup CronJob
+     * @param objects A Map with additional object to setup CronJob
+     */
+    void addPeriodicJob(String name, 
+                        String jobrole, 
+                        long period, 
+                        boolean canRunConcurrently,
+                        Parameters params, 
+                        Map objects)
+    throws CascadingException;
 
     /**
      * Schedule a time based job. Note that if a CronJob already has same name then it is overwritten.

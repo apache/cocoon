@@ -1,7 +1,7 @@
 <!-- === Compilation Targets =================================================== -->
 
   <!-- compiles everything -->
-  <target name="compile" depends="compile-core, compile-scratchpad, compile-deprecated, compile-tests"/>
+  <target name="compile" depends="compile-core, compile-deprecated, compile-tests"/>
 
   <!-- compiles the core -->
   <target name="compile-core" depends="prepare">
@@ -37,41 +37,6 @@
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
-  </target>
-
-  <!-- compiles the scratchpad -->
-  <target name="compile-scratchpad" depends="prepare" unless="unless.exclude.scratchpad">
-
-    <mkdir dir="${build.scratchpad.dest}"/>
-
-    <copy todir="${build.scratchpad.dest}">
-      <fileset dir="${scratchpad.src}">
-        <exclude name="**/*.java"/>
-        <exclude name="**/*.xroles"/>
-        <exclude name="**/*.xconf"/>
-      </fileset>
-    </copy>
-
-    <!-- compile mock classes -->
-    <mkdir dir="${build.mocks}"/>
-    <javac srcdir="${scratchpad.mocks}"
-           destdir="${build.mocks}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           nowarn="${compiler.nowarn}"
-           compiler="${compiler}"
-           classpathref="classpath"/>
-
-    <javac srcdir="${scratchpad.src}" 
-           destdir="${build.scratchpad.dest}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           compiler="${compiler}"
-           classpathref="scratchpad.classpath"/>
   </target>
 
   <!-- compiles deprecated code -->
@@ -125,7 +90,7 @@
 <!-- === Package Targets ======================================================= -->
 
   <!-- packages everything -->
-  <target name="package" depends="package-core, package-scratchpad, package-deprecated, package-testcase"/>
+  <target name="package" depends="package-core, package-deprecated, package-testcase"/>
 
   <!-- package the core -->
   <target name="package-core" depends="compile-core, block-roles">
@@ -133,13 +98,6 @@
       <fileset dir="${build.dest}">
          <exclude name="**/Manifest.mf"/>
       </fileset>
-    </jar>
-  </target>
-
-  <!-- package the scratchpad -->
-  <target name="package-scratchpad" depends="compile-scratchpad" unless="unless.exclude.scratchpad">
-    <jar jarfile="${build}/${name}-scratchpad.jar">
-      <fileset dir="${build.scratchpad.dest}"/>
     </jar>
   </target>
 

@@ -81,7 +81,7 @@ import org.quartz.simpl.RAMJobStore;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
  * @since 2.1.1
  */
 public class QuartzJobScheduler
@@ -142,6 +142,35 @@ public class QuartzJobScheduler
     /** Should we wait for running jobs to terminate on shutdown ? */
     private boolean m_shutdownGraceful;
 
+
+    /**
+     * Schedule a period job. Note that if a Job already has same name then it is overwritten.
+     *
+     * @param name the name of the job
+     * @param jobrole The Avalon components role name of the job itself
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     */
+    public void addPeriodicJob(String name, 
+                               String jobrole, 
+                               long period, 
+                               boolean canRunConcurrently,
+                               Parameters params, 
+                               Map objects)
+    throws CascadingException {
+        final JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(DATA_MAP_ROLE, jobrole);
+
+        final long ms = period * 1000;
+        final SimpleTrigger timeEntry = new SimpleTrigger(name, 
+                                                          DEFAULT_QUARTZ_JOB_GROUP,
+                                                          new Date(System.currentTimeMillis() + ms),
+                                                          null,
+                                                          SimpleTrigger.REPEAT_INDEFINITELY,
+                                                          ms);
+
+        addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#addJob(java.lang.String, java.lang.Object, java.lang.String, boolean, org.apache.avalon.framework.parameters.Parameters, java.util.Map)
@@ -601,7 +630,7 @@ public class QuartzJobScheduler
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
      */
     private static class ThreadPool
         extends AbstractLogEnabled

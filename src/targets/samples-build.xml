@@ -46,31 +46,6 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="scratchpad-samples" depends="prepare" unless="unless.exclude.scratchpad.samples">
- 
-    <!-- copy sample files -->
-    <copy todir="${build.webapp.samples}" filtering="on">
-      <fileset dir="${scratchpad.samples}">
-       <exclude name="**/*.jpg"/>
-       <exclude name="**/*.gif"/>
-       <exclude name="**/*.png"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${build.webapp.samples}" filtering="off">
-      <fileset dir="${scratchpad.samples}">
-       <include name="**/*.jpg"/>
-       <include name="**/*.gif"/>
-       <include name="**/*.png"/>
-      </fileset>
-    </copy>
-
-    <!-- patch the samples page to tell we have scratchpad samples to show -->
-    <xpatch file="${build.webapp.samples}/samples.xml"
-            srcdir="${scratchpad.samples}" 
-            includes="**/*.xsamples"/>
-  </target>
-    
   <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
