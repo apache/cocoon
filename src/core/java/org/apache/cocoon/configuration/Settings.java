@@ -55,7 +55,6 @@ public class Settings {
     public static final boolean SHOW_TIME = false;
     public static final boolean HIDE_SHOW_TIME = false;
     public static final boolean MANAGE_EXCEPTIONS = true;
-    public static final String FORM_ENCODING = "";
 
     /**
      * This parameter tells Cocoon to set the thread's context classloader to
@@ -280,7 +279,7 @@ public class Settings {
                     } else if ( key.equals("uploads.overwrite") ) {
                         this.overwriteUploads = value;
                     } else if ( key.equals("uploads.maxsize") ) {
-                        this.maxUploadSize = NumberUtils.stringToInt(value);
+                        this.maxUploadSize = NumberUtils.toInt(value);
                     } else if ( key.equals("cache.directory") ) {
                         this.cacheDirectory = value;
                     } else if ( key.equals("work.directory") ) {

@@ -140,8 +140,15 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
      * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
      */
     public void release(Source source) {
-        // Don't care. The factories we use here don't need that
-        // TODO - We should check this!!!
+        if ( source != null ) {
+            if ( "context".equals(source.getScheme()) ) {
+                this.contextFactory.release(source);
+            } else if ( "resource".equals(source.getScheme()) ) {
+                this.resourceFactory.release(source);
+            } else {
+                this.urlFactory.release(source);
+            }
+        }
     }
     
     public static final class SimpleServiceManager implements ServiceManager {

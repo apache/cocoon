@@ -16,16 +16,21 @@
  */
 package org.apache.cocoon.core.container;
 
+import java.io.InputStream;
+
 import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.configuration.ConfigurationBuilder;
 
 /**
  * The component enviromnent contains all objects necessary to create
  * a new component; it's just a "container" of objects.
  *
- * @version CVS $Id:  123716 2004-12-30 14:16:00Z vgritsenko $
+ * @version SVN $Id:  123716 2004-12-30 14:16:00Z vgritsenko $
  */
 public class ComponentEnvironment {
 
@@ -57,5 +62,20 @@ public class ComponentEnvironment {
 
     public Class loadClass(String name) throws ClassNotFoundException {
         return this.classLoader.loadClass(name);
+    }
+    
+    public ComponentInfo loadComponentInfo(String name) 
+    throws Exception {
+        final StringBuffer bu = new StringBuffer(name);
+        bu.append(".xconf");
+        ComponentInfo ci = null;
+        final InputStream is = this.classLoader.getResourceAsStream(bu.toString());
+        if ( is != null ) {
+            final ConfigurationBuilder cb = new ConfigurationBuilder();
+            final Configuration conf = cb.build(is);
+            ci = new ComponentInfo();
+            ci.fill(conf);
+        }
+        return ci;
     }
 }
