@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                           "http://castor.exolab.org/mapping.dtd">
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,8 +16,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE databases PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
-                           "http://castor.exolab.org/mapping.dtd">
 <mapping>
 
   <class name="org.apache.cocoon.portal.pluto.om.common.DisplayNameImpl">
@@ -28,6 +28,30 @@
     </field>
   </class>
     
+  <class name="org.apache.cocoon.portal.pluto.om.common.TagDefinition">
+
+    <field name="uri" type="java.lang.String" required="true">
+      <bind-xml name="taglib-uri" node="element"/>
+    </field>
+
+    <field name="location" type="java.lang.String" required="true">
+      <bind-xml name="taglib-location" node="element"/>
+    </field>
+
+  </class>
+
+  <class name="org.apache.cocoon.portal.pluto.om.common.MimeType">
+
+    <field name="extension" type="java.lang.String" required="true">
+      <bind-xml name="extension" node="element"/>
+    </field>
+
+    <field name="mimeType" type="java.lang.String" required="true">
+      <bind-xml name="mime-type" node="element"/>
+    </field>
+
+  </class>
+
   <class name="org.apache.cocoon.portal.pluto.om.common.DescriptionImpl">
 
     <field name="description" type="java.lang.String">
@@ -176,12 +200,61 @@
            required="true">
       <bind-xml name="servlet-mapping" node="element"/>
     </field>
+    
+    <field name="castorTagDefinitions"
+           type="org.apache.cocoon.portal.pluto.om.common.TagDefinition"
+           collection="collection">
+       <bind-xml name="taglib" node="element" />
+    </field>
+
+    <!-- only for completion, not used in class file -->
+    <field name="icon" transient="true" direct="true">
+        <bind-xml name="icon" node="element"/>
+    </field>
+    <field name="distributable" transient="true" direct="true">
+        <bind-xml name="distributable" node="element"/>
+    </field>
+    <field name="sessionConfig" transient="true" direct="true">
+        <bind-xml name="session-config" node="element"/>
+    </field>
+    <field name="mimeMappings"
+    	transient="true"
+    	required="false"
+    	type="org.apache.cocoon.portal.pluto.om.common.MimeType"
+    	collection="collection">
+      <bind-xml name="mime-mapping" node="element"/>
+    </field>
+    <field name="welcomeFileList" transient="true" direct="true">
+        <bind-xml name="welcome-file-list" node="element"/>
+    </field>
+    <field name="errorPage" transient="true" direct="true">
+        <bind-xml name="error-page" node="element"/>
+    </field>
+    
+    <field name="resourceRef" transient="true" direct="true">
+        <bind-xml name="resource-ref" node="element"/>
+    </field>
+    <field name="securityConstraint" transient="true" direct="true">
+        <bind-xml name="security-constraint" node="element"/>
+    </field>
+    <field name="loginConfig" transient="true" direct="true">
+        <bind-xml name="login-config" node="element"/>
+    </field>
+    <!--field name="securityRole" transient="false" direct="true">
+        <bind-xml name="security-role" node="element"/>
+    </field-->
     <field name="securityRoles"
     	transient="false"
     	type="org.apache.cocoon.portal.pluto.om.common.SecurityRoleImpl"
     	required="false"
     	collection="collection">
       <bind-xml name="security-role" node="element"/>
+    </field>
+    <field name="envEntry" transient="true" direct="true">
+        <bind-xml name="env-entry" node="element"/>
+    </field>
+    <field name="ejbRef" transient="true" direct="true">
+        <bind-xml name="ejb-ref" node="element"/>
     </field>
   </class>
   

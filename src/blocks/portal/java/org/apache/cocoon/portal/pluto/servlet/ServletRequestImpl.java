@@ -483,7 +483,7 @@ public class ServletRequestImpl implements HttpServletRequest {
      *
      * @see javax.servlet.ServletRequest#getContentType()
      */
-    public java.lang.String getContentType() {
+    public String getContentType() {
         String contentType = "text/html";
         if (getCharacterEncoding() != null) {
             contentType += ";" + getCharacterEncoding();

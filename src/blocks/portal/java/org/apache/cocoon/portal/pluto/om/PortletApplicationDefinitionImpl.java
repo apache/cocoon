@@ -32,7 +32,7 @@ import org.apache.cocoon.portal.pluto.om.common.Support;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletApplicationDefinitionImpl.java,v 1.2 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletApplicationDefinitionImpl 
 extends AbstractSupportSet
@@ -40,8 +40,8 @@ implements PortletApplicationDefinition {
 
     protected String GUID;
 
-    protected String appId = null;
-    protected String version = null;
+    protected String appId;
+    protected String version;
 
     
     private ArrayList customPortletMode = new ArrayList();
@@ -51,15 +51,15 @@ implements PortletApplicationDefinition {
 
     private PortletDefinitionListImpl portlets = new PortletDefinitionListImpl();
 
-    private WebApplicationDefinition webApplication = null;
+    private WebApplicationDefinition webApplication;
 
-    private ObjectID objectId = null;
+    private ObjectID objectId;
 
-    private String contextPath = null;
+    private String contextPath;
 
-    // PortletApplicationDefinition implementation.
-
-    /** PUBLIC*/
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.PortletApplicationDefinition#getId()
+     */
     public ObjectID getId() {
         if ( this.objectId == null ) {
             this.objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString(getGUID());                        
@@ -67,36 +67,45 @@ implements PortletApplicationDefinition {
         return this.objectId;
     }
 
-    /** PUBLIC*/
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.PortletApplicationDefinition#getVersion()
+     */
     public String getVersion() {
         return this.version;
     }
 
-    /** TODO PUBLIC*/
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.PortletApplicationDefinition#getPortletDefinitionList()
+     */
     public PortletDefinitionList getPortletDefinitionList() {
         return this.portlets;
     }
 
-    /** PUBLIC*/
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.PortletApplicationDefinition#getWebApplicationDefinition()
+     */
     public WebApplicationDefinition getWebApplicationDefinition() {
         return this.webApplication;
     }
 
-    // Support implementation.
-
-    public void postLoad(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {
         ((Support)portlets).postLoad(parameter);
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
+    public void preBuild(Object parameter) 
+    throws Exception {
         Vector structure = (Vector)parameter;
         String contextRoot = (String)structure.get(0);
         WebApplicationDefinition webApplication = (WebApplicationDefinition)structure.get(1);
         Map servletMap = (Map)structure.get(2);
 
-        setContextRoot(contextRoot);
+        this.setContextRoot(contextRoot);
 
         setWebApplicationDefinition(webApplication);       
 
@@ -108,17 +117,23 @@ implements PortletApplicationDefinition {
 
     }
     
-    public void postBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
+    public void postBuild(Object parameter) throws Exception {
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
+    public void preStore(Object parameter) throws Exception {
         ((Support)portlets).preStore(parameter);
     }
 
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
         ((Support)portlets).postStore(parameter);
     }
 
@@ -147,79 +162,70 @@ implements PortletApplicationDefinition {
         return GUID;
     }
 
-    private void setContextRoot(String contextRoot)
-    {
+    private void setContextRoot(String contextRoot) {
+        // PATCH for IBM WebSphere
+        if (contextRoot != null && contextRoot.endsWith(".war") ) {
+            this.contextPath = contextRoot.substring(0, contextRoot.length()-4);
+        } else {
         this.contextPath = contextRoot;                
+    }
     }
 
     // additional methods.
 
-    public String getAppId()
-    {
+    public String getAppId() {
         return appId;
     }
 
-    public void setAppId(String appId)
-    {
+    public void setAppId(String appId) {
         this.appId = appId;
     }
 
-    public void setVersion(String version)
-    {
+    public void setVersion(String version) {
         this.version = version;
     }
 
 
     // not yet fully supported:
-    public Collection getCustomPortletMode()
-    {
+    public Collection getCustomPortletMode() {
         return customPortletMode;
     }
 
-    public void setCustomPortletMode(Collection customPortletMode)
-    {
+    public void setCustomPortletMode(Collection customPortletMode) {
         this.customPortletMode = (ArrayList)customPortletMode;
     }
 
-    public Collection getCustomPortletState()
-    {
+    public Collection getCustomPortletState() {
         return customPortletState;
     }
 
-    public void setCustomPortletState(Collection customPortletState)
-    {
+    public void setCustomPortletState(Collection customPortletState) {
         this.customPortletState = (ArrayList)customPortletState;
     }
 
-    public Collection getUserAttribute()
-    {
+    public Collection getUserAttribute() {
         return userAttribute;
     }
 
-    public void setUserAttribute(Collection userAttribute)
-    {
+    public void setUserAttribute(Collection userAttribute) {
         this.userAttribute = (ArrayList)userAttribute;
     }
 
-    public Collection getSecurityConstraint()
-    {
+    public Collection getSecurityConstraint() {
         return securityConstraint;
     }
 
-    public void setSecurityConstraint(Collection securityConstraint)
-    {
+    public void setSecurityConstraint(Collection securityConstraint) {
         this.securityConstraint = (ArrayList)securityConstraint;
     }
 
     // additional internal methods
 
-    public Collection getCastorPortlets()
-    {
+    public Collection getCastorPortlets() {
         return portlets;
     }
 
-    protected void setWebApplicationDefinition(WebApplicationDefinition webApplication)
-    {
+    protected void setWebApplicationDefinition(WebApplicationDefinition webApplication) {  
         this.webApplication = webApplication;
     }
 

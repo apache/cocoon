@@ -170,31 +170,31 @@
            role="org.apache.cocoon.portal.layout.LayoutFactory">
     <layouts>
         <layout name="column" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
             <renderers default="column">
                 <renderer name="column"/>
             </renderers>
         </layout>
         <layout name="row" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
             <renderers default="row">
                 <renderer name="row"/>
             </renderers>
         </layout>
         <layout name="tab" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
             <renderers default="tab">
                 <renderer name="tab"/>
             </renderers>
         </layout>
         <layout name="rawtab" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
             <renderers default="rawtab">
                 <renderer name="rawtab"/>
             </renderers>
         </layout>
         <layout name="linktab"
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" >
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl" >
             <renderers default="linktab">
                 <renderer name="linktab"/>
             </renderers>

@@ -23,7 +23,6 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -43,6 +42,7 @@ import org.apache.cocoon.portal.application.PortalApplicationConfig;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.w3c.dom.Document;
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.10 2004/03/20 17:02:46 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -263,9 +263,9 @@ public class ProxyTransformer
                             query.append('&');
                         }
 
-                        query.append(URLEncoder.encode(paramName));
+                        query.append(NetUtils.encode(paramName, "utf-8"));
                         query.append('=');
-                        query.append(URLEncoder.encode(paramValues[i]));
+                        query.append(NetUtils.encode(paramValues[i], "utf-8"));
                     }
                 }
             }

@@ -33,7 +33,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.persistence.RequestDataStore;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 
@@ -44,7 +44,7 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.10 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -61,8 +61,6 @@ public class PortalServiceImpl
 
     protected Map portalComponentManagers = new HashMap();
     
-    protected RequestDataStore dataStore;
-    
     final protected String key = this.getClass().getName();
     
     /* (non-Javadoc)
@@ -70,15 +68,15 @@ public class PortalServiceImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.dataStore = (RequestDataStore) this.manager.lookup(RequestDataStore.ROLE);
     }
 
     protected PortalServiceInfo getInfo() {
-        PortalServiceInfo info = (PortalServiceInfo) this.dataStore.getRequestData(this.key);
+        final Request request = ContextHelper.getRequest( this.context );
+        PortalServiceInfo info = (PortalServiceInfo) request.getAttribute(this.key);
         if ( info == null ) {
             info = new PortalServiceInfo();
             info.setup(ContextHelper.getObjectModel(this.context), this.portalComponentManagers);
-            this.dataStore.setRequestData(this.key, info);
+            request.setAttribute(this.key, info);
         }
         return info;
     }
@@ -141,11 +139,6 @@ public class PortalServiceImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.dataStore );
-            this.manager = null;
-            this.dataStore = null;
-        }
         final Iterator i = this.portalComponentManagers.values().iterator();
         while ( i.hasNext() ) {
             ContainerUtil.dispose( i.next() );
