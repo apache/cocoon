@@ -23,8 +23,8 @@
                 <jpath:value-of select="item/attr5"/> 
                 <jpath:value-of select="item/product/name"/> 
             </desc>
+            <instock><jpath:value-of select="quantity"/></instock>
             <price><jpath:value-of select="item/listPrice"/></price>
-<!--                    <item-quantity><jpath:value-of select="item/quantity"/></item-quantity>-->
         </item>
 
     </site>

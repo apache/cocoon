@@ -13,7 +13,7 @@
 <!--
         <input type="hidden" name="validate" value="editAccount" />
         <input type="hidden"  name="account.username" /> -->
-<!-- ...hmm? -->
+
             <panel label="User Information">
                 <input name="workingAccountForm.account.username" label="User ID" >
                     <xsp:attribute name="value"><jpath:value-of select="account/username" /></xsp:attribute>
@@ -27,10 +27,10 @@
                     <xsp:attribute name="value"><jpath:value-of select="account/firstName"/></xsp:attribute>
                 </input>
                 <input type="text" label="Last name" >
-                    <xsp:attribute name="value"><jpath:value-of select="account/firstName"/></xsp:attribute>
+                    <xsp:attribute name="value"><jpath:value-of select="account/lastName"/></xsp:attribute>
                 </input>
                 <input type="text" size="40" name="workingAccountForm.email" label="Email" >
-                    <xsp:attribute name="value"><jpath:value-of select="account/lastName"/></xsp:attribute>
+                    <xsp:attribute name="value"><jpath:value-of select="account/email"/></xsp:attribute>
                 </input>
                 <input type="text" name="workingAccountForm.phone" label="Phone" >
                     <xsp:attribute name="value"><jpath:value-of select="account/phone"/></xsp:attribute>

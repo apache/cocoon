@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site>
+    <!--    <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute> -->
+        <form method="POST" styleId="workingOrderForm">
+            <xsp:attribute name="action"><jpath:continuation/>.kont</xsp:attribute>
+        <panel>
+            <panel label="Payment Details">
+                <select name="order.cardType" label="Card Type">
+                    <jpath:for-each select="creditCardTypes" >
+                        <option><xsp:attribute name="value"><jpath:value-of select="." /></xsp:attribute><jpath:value-of select="." /></option>
+                    </jpath:for-each>
+                </select>
+                <input type="text" name="creditCard" label="Card Number" />
+                <input type="text" name="expiryDate" label="Expiry Date (MM/YYYY)" />
+            </panel>
+            <panel label="Billing Address">
+                <input type="text" name="billToFirstName" label="First name">
+                    <xsp:attribute name="value"><jpath:value-of select="order/billToFirstName"/></xsp:attribute>
+                </input>
+                <input type="text" name="billToLastName" label="Last name" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billToLastName"/></xsp:attribute>
+                </input>
+                <input type="text" size="40" name="billAddress1"  label="Address 1" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billAddress"/></xsp:attribute>
+                </input>
+                <input type="text" size="40" name="billAddress2" label="Address 2" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billAddress2"/></xsp:attribute>
+                </input>
+                <input type="text" name="billCity" label="City" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billCity"/></xsp:attribute>
+                </input>
+                <input type="text" name="billState" label="State" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billState"/></xsp:attribute>
+                </input>
+                <input type="text" name="billZip" label="Zip" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billZip"/></xsp:attribute>
+                </input>
+                <input type="text" size="15" name="billCountry" label="Country" >
+                    <xsp:attribute name="value"><jpath:value-of select="order/billCountry"/></xsp:attribute>
+                </input>
+                <input type="checkbox" name="shippingAddressRequired" label="Ship to different address..."/>
+            </panel>
+        </panel>
+        </form>
+    </site>
+
+</xsp:page>
+
+
+
+
