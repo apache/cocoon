@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<grammar>
+<grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
  <priority>
   <terminal symbol="mult"/>
   <terminal symbol="div"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<lexicon>
+<lexicon xmlns="http://chaperon.sourceforge.net/schema/lexicon/1.0">
  <lexeme symbol="cocoon">
   <alt>
    <cstring content="Apache Cocoon"/>
