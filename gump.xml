@@ -82,6 +82,7 @@
     <depend project="pizza"/>
     <depend project="junit"/>
     <depend project="jmock"/>
+    <depend project="easymock"/>
     <depend project="eclipse" id="jdtcore"/>
     <depend project="concurrent"/>
 
