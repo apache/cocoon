@@ -52,35 +52,37 @@ package org.apache.cocoon.woody.util;
 
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.components.LifecycleHelper;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * A very simple ServiceSelector for ThreadSafe services.
  */
-public class SimpleServiceSelector extends AbstractLogEnabled implements ServiceSelector, Configurable, LogEnabled, Composable {
+public class SimpleServiceSelector extends AbstractLogEnabled implements ServiceSelector, Configurable, LogEnabled,
+        Serviceable, Disposable {
     private final String hintShortHand;
     private final Class componentClass;
     private Map components = new HashMap();
-    private ComponentManager componentManager;
+    private ServiceManager serviceManager;
 
     public SimpleServiceSelector(String hintShortHand, Class componentClass) {
         this.hintShortHand = hintShortHand;
         this.componentClass = componentClass;
     }
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -102,7 +104,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
             Object component = null;
             try {
                 component = clazz.newInstance();
-                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, componentManager, null, null, componentConfs[i]);
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, null, componentConfs[i]);
                 lifecycleHelper.setupComponent(component);
             } catch (Exception e) {
                 throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i], e);
@@ -125,5 +127,19 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
     }
 
     public void release(Object o) {
+    }
+
+    public void dispose() {
+        Iterator serviceIt = components.values().iterator();
+        while (serviceIt.hasNext()) {
+            Object service = serviceIt.next();
+            if (service instanceof Disposable) {
+                try {
+                    ((Disposable)service).dispose();
+                } catch (Exception e) {
+                    getLogger().error("Error disposing service " + service, e);
+                }
+            }
+        }
     }
 }

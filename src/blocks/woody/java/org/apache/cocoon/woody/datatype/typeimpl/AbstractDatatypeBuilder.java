@@ -56,13 +56,12 @@ import org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.apache.cocoon.woody.Constants;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
@@ -75,14 +74,14 @@ import java.io.IOException;
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
  */
-public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Composable, Configurable {
-    protected ComponentManager componentManager;
+public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable {
+    protected ServiceManager serviceManager;
     private SimpleServiceSelector convertorBuilders;
     private String defaultConvertorHint;
     private Convertor plainConvertor;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -127,14 +126,14 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Compos
         return plainConvertor;
     }
 
-    protected Source resolve(String src) throws ComponentException, IOException {
+    protected Source resolve(String src) throws IOException, ServiceException {
         SourceResolver resolver = null;
         try {
-            resolver = (SourceResolver)componentManager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             return resolver.resolveURI(src);
         } finally {
             if (resolver != null)
-                componentManager.release(resolver);
+                serviceManager.release(resolver);
         }
     }
 
@@ -149,7 +148,7 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Compos
                     selectionListElement = readSelectionList(src);
                     selectionList = SelectionListBuilder.build(selectionListElement, datatype);
                 } else {
-                    selectionList = new DynamicSelectionList(datatype, src, componentManager);
+                    selectionList = new DynamicSelectionList(datatype, src, serviceManager);
                 }
             } else {
                 // selection list is defined inline

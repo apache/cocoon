@@ -74,7 +74,7 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         Element childrenElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "children", true);
         Element[] fieldElements = DomHelper.getChildElements(childrenElement, Constants.WD_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
-            FieldDefinition fieldDefinition = (FieldDefinition)formManager.buildWidgetDefinition(fieldElements[i]);
+            FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
             if (!String.class.isAssignableFrom(fieldDefinition.getDatatype().getTypeClass()))
                 throw new Exception("An aggregatefield can only contain fields with datatype string, at " + DomHelper.getLocation(fieldElements[i]));
             definition.addWidgetDefinition(fieldDefinition);

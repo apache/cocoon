@@ -53,7 +53,7 @@ package org.apache.cocoon.woody.datatype;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -77,12 +77,12 @@ import java.util.Locale;
 public class DynamicSelectionList implements SelectionList {
     private String src;
     private Datatype datatype;
-    private ComponentManager componentManager;
+    private ServiceManager serviceManager;
 
-    public DynamicSelectionList(Datatype datatype, String src, ComponentManager componentManager) {
+    public DynamicSelectionList(Datatype datatype, String src, ServiceManager serviceManager) {
         this.datatype = datatype;
         this.src = src;
-        this.componentManager = componentManager;
+        this.serviceManager = serviceManager;
     }
 
     public Datatype getDatatype() {
@@ -93,7 +93,7 @@ public class DynamicSelectionList implements SelectionList {
         SourceResolver sourceResolver = null;
         Source source = null;
         try {
-            sourceResolver = (SourceResolver)componentManager.lookup(SourceResolver.ROLE);
+            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(src);
             SelectionListHandler handler = new SelectionListHandler(locale);
             handler.setContentHandler(contentHandler);
@@ -104,7 +104,7 @@ public class DynamicSelectionList implements SelectionList {
             if (sourceResolver != null) {
                 if (source != null)
                     try { sourceResolver.release(source); } catch (Exception e) {}
-                componentManager.release(sourceResolver);
+                serviceManager.release(sourceResolver);
             }
         }
     }
