@@ -9,6 +9,11 @@
     </authors>
   </header>
   <body>
+  <s1 title="Release Early, Release Often">
+    <p>We are back on track: with the Milestone 2 Release of 2.1 we follow
+       again the good and old "release early, release often" theme.
+    </p>
+  </s1>
   <s1 title="Milestone Release">
     <p>We are proud to announce the release of Cocoon 2.1 Milestone 1. As the core and
        most parts can be regards as beta, but some other parts only as alpha we
