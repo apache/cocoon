@@ -76,7 +76,7 @@
         <map:call resource="html"/>
       </map:match>
       <map:match pattern="view/*.vm">
-        <map:generate src="view/templates/{1}.vm" type="velocity" label="debug"/>
+        <map:generate src="view/velocity/{1}.vm" type="velocity" label="debug"/>
         <map:serialize type="html"/>
       </map:match>
       <map:match pattern="view/*.cforms">

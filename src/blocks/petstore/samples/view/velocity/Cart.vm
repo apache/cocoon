@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse("view/templates/IncludeTop.vm")
+#parse("view/velocity/IncludeTop.vm")
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td valign="top" width="20%" align="left">
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
@@ -27,12 +27,12 @@
 <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="5">
   <tr bgcolor="#cccccc">
   <td><b>Item ID</b></td>  <td><b>Product ID</b></td>  <td><b>Description</b></td>  <td><b>Quantity</b></td>  <td><b>List Price</b></td>  <td><b>Total Cost</b></td>
-#if ($label == 'Shopping Cart') 
+#if ($label == 'Shopping Cart')
 <td> </td>
 #end
   </tr>
 
-#if ($cartForm.cart.numberOfItems.intValue() == 0) 
+#if ($cartForm.cart.numberOfItems.intValue() == 0)
 <tr bgcolor="#FFFF88"><td colspan="6"><b>Your cart is empty.</b></td></tr>
 #end
 
@@ -52,16 +52,16 @@
      $cartItem.item.product.name
    </td>
   <td align="center">
-  #if ($label == 'Shopping Cart') 
+  #if ($label == 'Shopping Cart')
   <input type="text" size="3" name="$cartItem.item.itemId" value="$cartItem.quantity.intValue()" />
   #end
-  #if ($label == 'Checkout Summary') 
+  #if ($label == 'Checkout Summary')
     $cartItem.quantity.intValue()
   #end
   </td>
   <td align="right">$fmt.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
   <td align="right">$fmt.formatNumber($cartItem.total, '$#,##0.00')</td>
-  #if ($label == 'Shopping Cart') 
+  #if ($label == 'Shopping Cart')
   <td><a href="removeItemFromCart.do?workingItemId=$cartItem.item.itemId">
   <img border="0" src="images/button_remove.gif" /></a></td>
   #end
@@ -71,11 +71,11 @@
 <td colspan="6" align="right">
 
 <b>Sub Total: $fmt.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
-#if ($label == 'Shopping Cart') 
+#if ($label == 'Shopping Cart')
 <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
 #end
 </td>
-#if ($label == 'Shopping Cart') 
+#if ($label == 'Shopping Cart')
   <td> </td>
 #end
 
@@ -86,11 +86,11 @@
 
 #if ($cartForm.cart.numberOfItems.intValue() > 0)
 
-  #if ($label == 'Shopping Cart') 
+  #if ($label == 'Shopping Cart')
 <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 #end
 
-  #if ($label == 'Checkout Summary') 
+  #if ($label == 'Checkout Summary')
     <br /><center><a href="${continuation.id}.kont"><img border="0" src="images/button_continue.gif" /></a></center>
   #end
 
@@ -104,7 +104,7 @@
  #if ($accountForm.account)
   #if ($accountForm.account.username)
     #if ($accountForm.account.listOption)
-      #parse("view/templates/IncludeMyList.vm")
+      #parse("view/velocity/IncludeMyList.vm")
     #end
   #end
 #end
@@ -114,6 +114,6 @@
 </tr>
 </table>
 
-#parse("view/templates/IncludeBottom.vm")
+#parse("view/velocity/IncludeBottom.vm")
 
 

@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse ("view/templates/IncludeTop.vm")
+#parse ("view/velocity/IncludeTop.vm")
 
 
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
@@ -105,7 +105,7 @@ Country: </td><td>$order.shipCountry
 <center><a href="${continuation.id}.kont?confirmed=true"><img border="0" src="images/button_continue.gif" /></a></center>
 
 </p></p></p>
-#parse ("view/templates/IncludeBottom.vm")
+#parse ("view/velocity/IncludeBottom.vm")
 
 
 
