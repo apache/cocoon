@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -38,6 +37,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
@@ -63,7 +63,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.14 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class CocoonWrapper {
 
@@ -160,8 +160,8 @@ public class CocoonWrapper {
         initialized = true;
     }
     
-    protected ExcaliburComponentManager getComponentManager() {
-        return cocoon.getComponentManager();
+    protected ServiceManager getServiceManager() {
+        return cocoon.getServiceManager();
     }
 
     /**

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.bean;
 
-import java.util.List;
-
 /**
  * Interface allowing caller to install a listener so that it can be informed
  * as the bean makes progress through the links to be called.

@@ -1600,9 +1600,6 @@ public class CocoonPortlet extends GenericPortlet {
             if (parent != null) {
                 ContainerUtil.compose(c, parent);
             }
-            if (this.enableInstrumentation) {
-                c.setInstrumentManager(getInstrumentManager());
-            }
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();
 

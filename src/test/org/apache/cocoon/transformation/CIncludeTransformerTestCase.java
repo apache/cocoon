@@ -22,7 +22,7 @@ import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.components.container.ComponentManagerWrapper;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 
@@ -30,7 +30,7 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: CIncludeTransformerTestCase.java,v 1.3 2004/05/25 07:28:26 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
     
@@ -78,7 +78,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
         
         assertEqual( load(result),
         transform("cinclude", src, parameters, load(input)));
@@ -106,7 +106,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
         
         assertEqual( load(result),
         transform("cinclude", src, parameters, load(input)));
@@ -134,7 +134,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
         
         assertEqual( load(result),
         transform("cinclude", src, parameters, load(input)));

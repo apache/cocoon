@@ -98,7 +98,7 @@ public class CocoonBean extends CocoonWrapper {
             super.initialize();
 
             this.sourceResolver =
-                (SourceResolver) getComponentManager().lookup(
+                (SourceResolver) getServiceManager().lookup(
                     SourceResolver.ROLE);
 
             initialized = true;
@@ -328,7 +328,7 @@ public class CocoonBean extends CocoonWrapper {
     public void dispose() {
         if (this.initialized) {
             if (this.sourceResolver != null) {
-                getComponentManager().release(this.sourceResolver);
+                getServiceManager().release(this.sourceResolver);
                 this.sourceResolver = null;
             }
             super.dispose();

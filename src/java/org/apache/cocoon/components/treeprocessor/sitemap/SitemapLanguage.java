@@ -25,21 +25,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.core.container.CocoonServiceManager;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
@@ -79,15 +76,11 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             config = new DefaultConfiguration("", "");
         }
 
-        final LoggerManager loggerManager = (LoggerManager) this.parentProcessorManager.lookup(LoggerManager.ROLE);
-
-        CocoonComponentManager newManager = new CocoonComponentManager(new WrapperComponentManager(this.parentProcessorManager));
+        CocoonServiceManager newManager = new CocoonServiceManager(this.parentProcessorManager, null);
         
         // Go through the component lifecycle
         newManager.enableLogging(getLogger());
-        newManager.setLoggerManager(loggerManager);
         newManager.contextualize(this.context);
-        newManager.setRoleManager(this.ownRoleManager);
         newManager.configure(config);
         newManager.initialize();
 
@@ -112,7 +105,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         setupMimeTypes(config, Reader.ROLE, "readers");
         
         // Wrap the ComponentManager in a ServiceManager
-        ServiceManager result = new WrapperServiceManager(newManager);
+        ServiceManager result = newManager;
         
         // Register manager and prevent further modifications
         getProcessor().getComponentInfo().setServiceManager(result);
