@@ -168,7 +168,14 @@ implements SourceInspector, Configurable {
      * the given type.
      */
     public final boolean handlesProperty(String namespace, String name) {
-        return m_properties.contains(namespace + "#" + name);
+        String propname;
+        if (namespace == null) {
+            propname = "#" + name;
+        }
+        else {
+            propname = namespace + "#" + name;
+        }
+        return m_properties.contains(propname);
     }
     
     /**
