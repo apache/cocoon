@@ -52,11 +52,11 @@
               use a wide variety of tools and
               technologies, and attempting to understand everything will most probably leave you frustrated, so
               it is better to limit yourself to a subset of the samples.
+          </p>
               <note>
                   <em>Blocks</em> are components which are largely independent of each other, and which are
                   optional when installing Cocoon.
               </note>
-          </p>
        </s1>
       <s1 title="Comments">
         <p>
