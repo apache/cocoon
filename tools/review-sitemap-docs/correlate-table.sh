@@ -41,3 +41,6 @@ echo "diff components-source.txt components-table.txt"
 echo "----------"
 diff components-source.txt components-table.txt
 echo "----------"
+
+echo "Counting the number of components in the table."
+wc -l components-table.txt
