@@ -364,7 +364,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
     public static class NamespaceAsAttributes extends AbstractXMLPipe {
 
         /**
-         * The prefixes of startPreficMapping() declarations for the coming element.
+         * The prefixes of startPrefixMapping() declarations for the coming element.
          */
         private List prefixList = new ArrayList();
 
