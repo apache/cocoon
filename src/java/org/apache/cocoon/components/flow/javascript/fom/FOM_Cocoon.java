@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.33 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.34 2004/05/07 14:42:20 upayavira Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -281,8 +281,12 @@ public class FOM_Cocoon extends ScriptableObject {
                                  (OutputStream)unwrap(outputStream));
     }
 
-    public void jsFunction_redirectTo(String uri) throws Exception {
-        this.currentCall.redirector.redirect(false, uri);
+    public void jsFunction_redirectTo(String uri, boolean isGlobal) throws Exception {
+        if (isGlobal) {
+            this.currentCall.redirector.globalRedirect(false, uri);
+        } else {
+            this.currentCall.redirector.redirect(false, uri);
+        }
     }
 
     public void jsFunction_sendStatus(int sc) {
