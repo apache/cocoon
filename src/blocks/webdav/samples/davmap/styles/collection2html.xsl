@@ -106,4 +106,7 @@
     </tr>
   </xsl:template>
   
+  <!-- ignore everything else -->
+  <xsl:template match="node()|@*" />
+  
 </xsl:stylesheet>
