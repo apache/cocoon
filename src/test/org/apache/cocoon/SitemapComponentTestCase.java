@@ -19,6 +19,7 @@ package org.apache.cocoon;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,12 @@ import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.*;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -60,7 +65,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.5 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.6 2004/06/14 14:49:25 stephan Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -99,6 +104,12 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 
     public final Map getObjectModel() {
         return objectmodel;
+    }
+    
+    protected void addContext(DefaultContext context) {
+        context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
+        context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
+        context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
     }
 
     public void setUp() {
@@ -393,6 +404,76 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         }
 
         return document.toByteArray();
+    }
+    
+    public String callFunction(String type, String source, String function, List params) throws Exception {
+        
+        ComponentSelector selector = null;
+        Interpreter interpreter = null;
+        SourceResolver resolver = null;
+
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Interpreter.ROLE);
+            assertNotNull("Test lookup of interpreter selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if interpreter name is not null", type);
+            interpreter = (Interpreter) selector.select(type);
+            assertNotNull("Test lookup of interpreter", interpreter);
+            
+            ((AbstractInterpreter)interpreter).register(source);
+            interpreter.callFunction(function, params, getRedirector());
+            
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve interpeter", ce);
+            fail("Could not retrieve interpreter: " + ce.toString());
+        } finally {
+            if (interpreter != null) {
+                selector.release((Component) interpreter);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return FlowHelper.getWebContinuation(getObjectModel()).getId();
+    }
+    
+    public String callContinuation(String type, String source, String id, List params) throws Exception {
+        
+        ComponentSelector selector = null;
+        Interpreter interpreter = null;
+        SourceResolver resolver = null;
+
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Interpreter.ROLE);
+            assertNotNull("Test lookup of interpreter selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if interpreter name is not null", type);
+            interpreter = (Interpreter) selector.select(type);
+            assertNotNull("Test lookup of interpreter", interpreter);
+
+            ((AbstractInterpreter)interpreter).register(source);
+            interpreter.handleContinuation(id, params, getRedirector());
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve interpreter", ce);
+            fail("Could not retrieve interpreter: " + ce.toString());
+        } finally {
+            if (interpreter != null) {
+                selector.release((Component) interpreter);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return FlowHelper.getWebContinuation(getObjectModel()).getId();
+    }
+    
+    public Object getFlowContextObject() {
+        return FlowHelper.getContextObject(getObjectModel());
     }
 
     public final void print(Document document) {
