@@ -24,12 +24,15 @@
     </authors>
   </header>
   <body>
-    <s1 title="row-action widget">
-      <p>This is a specific type of action widget that handles frequent actions
+    <s1 title="Concept">
+      <p>This is a specific type of <link href="widget_action.html">action widget</link>
+      that handles frequent actions
       occuring on a repeater row, such as adding/removing a row and moving
       it up and down. These widgets should be placed inside a repeater and
       act on the current row.</p>
+    </s1>
 
+    <s1 title="Configuration">
       <source><![CDATA[<fd:row-action id="..." action-command="add-after|delete|move-up|move-down">
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>

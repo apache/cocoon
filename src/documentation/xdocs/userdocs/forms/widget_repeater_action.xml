@@ -24,9 +24,13 @@
     </authors>
   </header>
   <body>
-    <s1 title="repeater-action widget">
-      <p>This is a specific type of action widget that handles the much
+    <s1 title="Concept">
+      <p>This is a specific type of <link href="widget_action.html">action widget</link>
+      that handles the much
       needed case of adding or removing rows from a repeater.</p>
+    </s1>
+
+    <s1 title="Configuration">
 
       <source><![CDATA[<fd:repeater-action id="..." action-command="delete-rows|add-row" repeater="..." select="...">
   <fd:label>...</fd:label>

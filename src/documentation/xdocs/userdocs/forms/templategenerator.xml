@@ -18,16 +18,34 @@
 
 <document>
   <header>
-    <title>Apache Cocoon Forms: Template Generator</title>
+    <title>Cocoon Forms: Template Generator</title>
     <authors>
       <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
     </authors>
   </header>
   <body>
-    <s1 title="Introduction">
-      <p>What: Forms Template elements implemented using JXTemplate.</p>
+    <s1 title="Concept">
+      <p>The same "ft:" tags as provided by the <link href="templatetransformer.html">template
+      transformer</link> are also available as macros for the
+      <link href="../flow/jxtemplate.html">JXTemplate</link> generator.</p>
 
-      <p>TO BE DONE</p>
+      <p>Before the availability of these macros, the JXTemplate generator was
+      already often used in the form publishing pipeline. It makes it possible
+      to dynamically include additional data on the form page and to conditionally
+      include parts of the page (and thus conditionally show widgets).
+      Moving the interpretation of the <code>ft:</code> tags directly into
+      generator makes this even more powerful. Think of the possibility
+      of not showing a repeater table if the repeater contains no rows,
+      and this also for nested repeaters.</p>
+    </s1>
+
+    <s1 title="Usage">
+      <p>Simply remove the FormsTemplateTransformer from your publishing pipeline,
+      and instead include the following jx statement into your template file:</p>
+
+      <source xml:space="preserve"><![CDATA[<jx:import uri="resource://org/apache/cocoon/forms/generation/template.jx"/>]]></source>
+
+      <p>Note that these macros only work when calling the pipeline from flowscript.</p>
     </s1>
   </body>
 </document>

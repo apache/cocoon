@@ -34,7 +34,9 @@
       <ul>
         <li><code>forms-samples-styling.xsl</code>: this stylesheet includes two
         stylesheets: one for widget styling, one for page styling. You can choose
-        between the basic types of it or advanced stylings.</li>
+        between the basic types of it or advanced stylings. Usually, you will
+        make a clone of this stylesheet for your own project, and use the other
+        stylesheets as is.</li>
         <li><code>forms-field-styling.xsl</code>: contains templates that style
         individual widgets, i.e. templates that translate fi:field, fi:booleanfield
         fi:action, etc. to HTML.</li>

@@ -196,6 +196,8 @@ function registration() {
     cocoon.sendPage("registration-success-pipeline", bizdata);
 }]]></source>
 
+      <note>This sample still shows the "old" flowscript API. Will be updated eventually.</note>
+
       <p>The flowscript works as follows:</p>
 
       <p>First we create a Form object, specifying the form definition file to be used.
