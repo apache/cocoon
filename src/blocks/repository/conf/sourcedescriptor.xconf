@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceInspector']">
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceDescriptor']">
 
   <component 
     role="org.apache.cocoon.components.source.SourceDescriptor" 
