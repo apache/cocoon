@@ -15,13 +15,14 @@
  */
 package org.apache.cocoon.components.flow.java;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Simplified version of a map.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: VarMap.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: VarMap.java,v 1.2 2004/04/04 06:35:08 antonio Exp $
  */
 public class VarMap {
     private HashMap map = new HashMap();
