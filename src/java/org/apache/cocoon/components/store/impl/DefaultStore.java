@@ -67,7 +67,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
-import org.apache.excalibur.store.impl.JispStringKey;
 
 /**
  * This store is based on the Jisp library
@@ -76,7 +75,7 @@ import org.apache.excalibur.store.impl.JispStringKey;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.3 2003/07/26 13:26:47 cziegeler Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.4 2003/07/26 15:17:25 cziegeler Exp $
  */
 public class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
@@ -171,21 +170,13 @@ public class DefaultStore extends AbstractJispFilesystemStore
                 getLogger().debug("Datafile exists: " + databaseExists);
             }
             super.m_Database = new IndexedObjectDatabase(databaseFile.toString(), !databaseExists);
-            // TODO: change to getNullKey when updating to latest store
             super.m_Index = new BTreeIndex(indexFile.toString(),
-                                            order, new JispStringKey(), false);
+                                            order, this.getNullKey(), false);
             super.m_Database.attachIndex(super.m_Index);
         } catch (KeyNotFound ignore) {
         } catch (Exception e) {
             getLogger().error("Exception during initialization of jisp store.", e);
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        // TODO  Remove this when we update to latest store
     }
 
 }
