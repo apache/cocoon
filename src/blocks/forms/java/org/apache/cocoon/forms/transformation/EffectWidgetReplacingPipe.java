@@ -58,7 +58,7 @@ import java.util.Map;
  * for the forms template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.6 2004/03/15 21:33:20 joerg Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.7 2004/03/18 21:04:39 joerg Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -66,7 +66,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * Form location attribute on <code>ft:form-template</code> element, containing
      * JXPath expression which should result in Form object.
      *
-     * @see FormPipelineConfig#findForm
+     * @see FormsPipelineConfig#findForm
      */
     private static final String LOCATION = "location";
 
@@ -114,7 +114,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      */
     private final Map templates = new HashMap(12, 1);
 
-    protected FormPipelineConfig pipeContext;
+    protected FormsPipelineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -147,7 +147,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         throw new SAXException("EffectFormTemplateTransformer: " + message);
     }
 
-    public void init(Widget contextWidget, FormPipelineConfig pipeContext) {
+    public void init(Widget contextWidget, FormsPipelineConfig pipeContext) {
         super.init();
         this.pipeContext = pipeContext;
 

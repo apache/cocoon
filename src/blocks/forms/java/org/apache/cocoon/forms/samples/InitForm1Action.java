@@ -19,7 +19,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.forms.acting.AbstractFormAction;
+import org.apache.cocoon.forms.acting.AbstractFormsAction;
 import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
@@ -34,9 +34,9 @@ import java.util.Date;
  * meant to illustrate how you can prepopulate a Form instance before its
  * initial display.
  * 
- * @version $Id: InitForm1Action.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version $Id: InitForm1Action.java,v 1.3 2004/03/18 21:04:40 joerg Exp $
  */
-public class InitForm1Action extends AbstractFormAction {
+public class InitForm1Action extends AbstractFormsAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws Exception {
         String formSource = parameters.getParameter("form-definition");

@@ -36,16 +36,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * FormPipeLineConfig
- * 
- * @version CVS $Id: FormPipelineConfig.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: FormsPipelineConfig.java,v 1.3 2004/03/18 21:04:39 joerg Exp $
  */
-public class FormPipelineConfig {
+public class FormsPipelineConfig {
 
     /**
-     * Default key under which the Cocoon Form is stored in the JXPath context.
+     * Default key under which the Cocoon Forms form instance is stored in the JXPath context.
      */
-    public static final String COCOONFORM = "CocoonForm";
+    public static final String CFORMSKEY = "CocoonFormsInstance";
 
     /** 
      * Name of the request attribute under which the Cocoon Form is stored (optional). */
@@ -77,7 +75,7 @@ public class FormPipelineConfig {
      */
     private String formMethod;
 
-    private FormPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
+    private FormsPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
             String attName, String actionExpression, String method) {
         this.attributeName = attName;
         this.request = req;
@@ -96,7 +94,7 @@ public class FormPipelineConfig {
      * @return an instance of FormsPipelineConfig initialized according to the 
      * settings in the sitemap.
      */
-    public static FormPipelineConfig createConfig(Map objectModel, Parameters parameters) {
+    public static FormsPipelineConfig createConfig(Map objectModel, Parameters parameters) {
         // create and set the jxpathContext...
         Object flowContext = FlowHelper.getContextObject(objectModel);
         WebContinuation wk = FlowHelper.getWebContinuation(objectModel);
@@ -122,7 +120,7 @@ public class FormPipelineConfig {
         // Note generator will also need some text to go on the submit-button? 
         // Alternative to adding more here is to apply xinclude ?
 
-        return new FormPipelineConfig(jxpc, request, localeParameter, 
+        return new FormsPipelineConfig(jxpc, request, localeParameter, 
                 attributeName, actionExpression, formMethod);
     }
 
@@ -169,7 +167,7 @@ public class FormPipelineConfig {
                 throw new SAXException("Object found in request (attribute = '" + this.attributeName + "') is not a Cocoon Form.");
             }
         } else { // and then see if we got a form from the flow
-            jxpathExpression = "/" + FormPipelineConfig.COCOONFORM;
+            jxpathExpression = "/" + FormsPipelineConfig.CFORMSKEY;
             try {
                 form = this.jxpathContext.getValue(jxpathExpression);
             } catch (JXPathException e) { /* do nothing */ }

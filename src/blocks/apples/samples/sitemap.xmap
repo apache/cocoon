@@ -18,7 +18,7 @@
 <!--+
     | Apples block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.8 2004/03/11 17:12:14 stephan Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2004/03/18 21:04:41 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -28,7 +28,7 @@
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="forms">
           <catalogue id="other" name="OtherMessages" location="messages"/>
-          <catalogue id="forms" name="FormMessages" location="messages"/>
+          <catalogue id="forms" name="FormsMessages" location="messages"/>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>

@@ -24,14 +24,14 @@ import org.apache.cocoon.forms.FormContext;
  * A helper class for the flowscript/cforms integration.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FormFlowHelper.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: FormsFlowHelper.java,v 1.3 2004/03/18 21:04:40 joerg Exp $
  */
 // FOM is really a PITA when the flow has to be integrated with Java classes that use the real
 // environment objects...
-public class FormFlowHelper {
+public class FormsFlowHelper {
     
     /** Only static methods in this class */
-    private FormFlowHelper() {}
+    private FormsFlowHelper() {}
     
     public static final FormContext getFormContext(FOM_Cocoon cocoon, Locale locale) {
         return new FormContext(cocoon.getRequest(), locale);

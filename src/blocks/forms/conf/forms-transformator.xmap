@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='form']">
-    <map:transformer name="form" logger="forms"
-                     src="org.apache.cocoon.forms.transformation.FormTemplateTransformer"/>
+<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='forms']">
+    <map:transformer name="forms" logger="forms"
+                     src="org.apache.cocoon.forms.transformation.FormsTemplateTransformer"/>
 </xmap>

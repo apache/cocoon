@@ -24,7 +24,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.Form;
-import org.apache.cocoon.forms.transformation.FormPipelineConfig;
+import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * using an XSLT.
  *
  * <p>An alternative approach that requires less (or even none) XSLT work is offered by
- * the {@link org.apache.cocoon.forms.transformation.FormTemplateTransformer}.
+ * the {@link org.apache.cocoon.forms.transformation.FormsTemplateTransformer}.
  *
  * <p>The Form whose XML should be produced should reside either 
  * <ol><li> In a request attribute, whose name should be provided to this 
@@ -43,18 +43,18 @@ import org.xml.sax.SAXException;
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
  * 
- * @version $Id: FormGenerator.java,v 1.1 2004/03/11 02:56:33 joerg Exp $
+ * @version $Id: FormsGenerator.java,v 1.5 2004/03/18 21:04:41 joerg Exp $
  */
-public class FormGenerator extends AbstractGenerator {
+public class FormsGenerator extends AbstractGenerator {
     
-    protected FormPipelineConfig config;
+    protected FormsPipelineConfig config;
     private static final String FORM_GENERATED_EL = "form-generated";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        this.config = FormPipelineConfig.createConfig(objectModel, parameters);            
+        this.config = FormsPipelineConfig.createConfig(objectModel, parameters);            
     }
 
     public void recycle() {
