@@ -5,7 +5,7 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: woody-field-styling.xsl,v 1.42 2004/02/18 21:11:44 joerg Exp $
+      | Version CVS $Id: woody-field-styling.xsl,v 1.43 2004/02/18 21:26:46 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -31,7 +31,7 @@
   </xsl:template>
 
   <!--+
-      | Common stuff like wi:validation-message, @required or wi:help.
+      | Common stuff like wi:validation-message, @required.
       +-->
   <xsl:template match="wi:*" mode="common">
     <!-- validation message -->
@@ -40,7 +40,6 @@
     <xsl:if test="@required='true'">
       <span class="woody-field-required"> * </span>
     </xsl:if>
-    <xsl:apply-templates select="wi:help"/>
   </xsl:template>
 
   <!--+
@@ -98,8 +97,6 @@
       <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
-
-  <xsl:template match="wi:help"/>
 
   <!--+
       |
