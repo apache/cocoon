@@ -44,15 +44,27 @@ import org.apache.excalibur.source.SourceUtil;
  * reload script files if they get modified (useful when doing
  * development), and passing the control to Cocoon's sitemap for
  * result page generation.
+ * <p>
+ * Flow intrepreters belonging to different sitemaps should be isolated. To achieve this,
+ * class implements the {@link org.apache.avalon.framework.thread.SingleThreaded}. Since
+ * the sitemap engine looks up the flow intepreter once at sitemap build time, this ensures
+ * that each sitemap will use a different instance of this class. But that instance will
+ * handle all flow calls for a given sitemap, and must therefore be thread safe.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.20 2004/05/04 11:54:35 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Serviceable, Contextualizable, Interpreter,
              SingleThreaded, Configurable, Disposable
 {
+    // The instance counters, used to produce unique IDs 
+    private static int instanceCounter = 0;
+    
+    // The instance ID of this interpreter, used to identify user scopes
+    private String instanceID;
+    
     protected org.apache.avalon.framework.context.Context avalonContext;
 
     /**
@@ -75,6 +87,23 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      * through the "check-time" XML attribute in <code>flow.xmap</code>.
      */
     protected long checkTime;
+
+    public AbstractInterpreter() {
+        synchronized(AbstractInterpreter.class) {
+            instanceCounter++;
+            this.instanceID = String.valueOf(instanceCounter);
+        }
+    }
+    
+    /**
+     * Get the unique ID for this interpreter, which can be used to distinguish user value scopes
+     * attached to the session.
+     * 
+     * @return a unique ID for this interpreter
+     */
+    protected String getInterpreterID() {
+        return this.instanceID;
+    }
 
     public void configure(Configuration config) throws ConfigurationException {
         reloadScripts = config.getChild("reload-scripts").getValueAsBoolean(false);
@@ -130,7 +159,6 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      *
      * @param source the location of the script
      *
-     * @see org.apache.cocoon.components.source.SourceFactory
      * @see org.apache.cocoon.environment.Environment
      * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
      */
