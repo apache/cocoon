@@ -243,18 +243,4 @@ public class HttpRequest implements HttpServletRequest {
     public String getRealPath(String path) {
         return this.req.getRealPath(path);
     }
-
-    public java.util.Map getParameterMap() {
-        return this.req.getParameterMap();
-    }
-     
-    public void setCharacterEncoding(java.lang.String env)
-                          throws java.io.UnsupportedEncodingException {
-        this.req.setCharacterEncoding(env);
-    }
-
-    public java.lang.StringBuffer getRequestURL() {
-        return this.req.getRequestURL();
-    }
-
 }
