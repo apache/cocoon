@@ -60,6 +60,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
@@ -70,7 +71,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.3 2003/03/12 14:51:51 jefft Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.4 2003/05/17 06:00:26 jefft Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -148,7 +149,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             }
         } catch (Exception e) {
             if (getLogger().isWarnEnabled()) 
-                getLogger().warn("A problem occurred setting up input modules :'" + e.getMessage());
+                getLogger().error("A problem occurred setting up input modules :'" + e.getMessage(), e);
         }
     }
 
@@ -237,7 +238,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * @see InputModule#getAttributeNames
      */
     protected Iterator getNames(Map objectModel, 
-                                InputModule staticMod, String staticModName, Configuration staticModConf) {
+                                InputModule staticMod, String staticModName, Configuration staticModConf) 
+        throws ConfigurationException {
 
         return (Iterator) this.get(OP_NAMES, null, objectModel, staticMod, staticModName, staticModConf, null, null, null);
     }
@@ -250,7 +252,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      */
      protected Iterator getNames(Map objectModel, 
                                 InputModule staticMod, String staticModName, Configuration staticModConf,
-                                InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+                                InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
+        throws ConfigurationException {
 
         return (Iterator) this.get(OP_NAMES, null, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
     }
@@ -262,7 +265,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * @see InputModule#getAttribute
      */
      protected Object getValue(String attr, Map objectModel, 
-                              InputModule staticMod, String staticModName, Configuration staticModConf) {
+                              InputModule staticMod, String staticModName, Configuration staticModConf)
+        throws ConfigurationException {
 
         return this.get(OP_GET, attr, objectModel, staticMod, staticModName, staticModConf, null, null, null);
     }
@@ -276,7 +280,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      */
      protected Object getValue(String attr, Map objectModel, 
                               InputModule staticMod, String staticModName, Configuration staticModConf,
-                              InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+                              InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
+        throws ConfigurationException {
 
         return this.get(OP_GET, attr, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
     }
@@ -287,7 +292,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * @see InputModule#getAttributeValues
      */
      protected Object[] getValues(String attr, Map objectModel, 
-                                 InputModule staticMod, String staticModName, Configuration staticModConf) {
+                                 InputModule staticMod, String staticModName, Configuration staticModConf)
+        throws ConfigurationException {
 
         return (Object[]) this.get(OP_VALUES, attr, objectModel, staticMod, staticModName, staticModConf, null, null, null);
     }
@@ -300,7 +306,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      */
      protected Object[] getValues(String attr, Map objectModel, 
                                  InputModule staticMod, String staticModName, Configuration staticModConf,
-                                 InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+                                 InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
+        throws ConfigurationException {
 
         return (Object[]) this.get(OP_VALUES, attr, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
     }
@@ -317,7 +324,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      */ 
     private Object get(int op, String attr, Map objectModel,
                          InputModule staticMod, String staticModName, Configuration staticModConf,
-                         InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+                         InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
+        throws ConfigurationException {
 
         ComponentSelector cs = this.inputSelector;
         Object value = null;
@@ -327,9 +335,13 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         boolean release = false;
 
         try {
-
-            if (cs == null)
+            if (cs == null) {
+                try {
                 cs = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                } catch (ComponentException e) {
+                    throw new ConfigurationException("Could not find MetaModule's module selector", e);
+                }
+            }
 
             boolean useDynamic;
             if (dynamicMod == null && dynamicModName == null) {
@@ -354,7 +366,14 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             if (input == null) {
                 if (cs.hasComponent(name)) {
                     release = true;
+                    try {
                     input = (InputModule) cs.select(name);
+                    } catch (ComponentException e) {
+                        throw new ConfigurationException(
+                                "MetaModule unable to create "+
+                                (useDynamic ? "dynamically" : "statically")+
+                                " specified internal module '"+name+"'", e);
+                    }
                 } else {
                     if (getLogger().isWarnEnabled())
                         getLogger().warn("No such InputModule: "+name);
@@ -376,9 +395,6 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             if (getLogger().isDebugEnabled())
                 getLogger().debug("using "+name+" as "+input+" for "+op+" ("+attr+") and "+conf+" gives "+value);
             
-        } catch (Exception e) {
-            if (getLogger().isWarnEnabled())
-                getLogger().warn("A problem obtaining a value from "+name+" occurred : "+e.getMessage());
         } finally {         
             if (release)
                 cs.release(input);
