@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.21 2003/10/19 17:31:13 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.22 2003/10/21 13:38:36 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -94,9 +94,6 @@ extends ExcaliburComponentManager
 
     /** The configured {@link SourceResolver} */
     private SourceResolver sourceResolver;
-
-    /** The {@link RoleManager} */
-    private RoleManager roleManager;
 
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
@@ -277,14 +274,6 @@ extends ExcaliburComponentManager
 
         // if we don't have an environment yet, just return null
         return null;
-    }
-
-    /**
-     * Configure the RoleManager
-     */
-    public void setRoleManager( final RoleManager roles ) {
-        super.setRoleManager( roles );
-        this.roleManager = roles;
     }
 
     /**
