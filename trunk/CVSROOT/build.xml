@@ -175,7 +175,7 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="site" value="../xml-site/targets/cocoon"/>
 
     <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
-    <available property="saxon.present" classname="com.icl.saxon.Stylesheet"/>
+    <available property="saxon.present" classname="com.icl.saxon.StyleSheet"/>
     <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" classname="javax.naming.Name"/>
     <available property="projectx.present" classname="com.sun.xml.parser.Parser"/>
