@@ -54,6 +54,7 @@ import org.apache.log.Hierarchy;
 import org.apache.log.LogEvent;
 import org.apache.log.Priority;
 import org.apache.log.format.Formatter;
+import org.apache.log.util.DefaultErrorHandler;
 
 import java.io.StringWriter;
 import java.util.Stack;
@@ -74,7 +75,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtensiblePatternFormatter.java,v 1.1 2003/03/09 00:09:44 pier Exp $
+ * @version CVS $Id: ExtensiblePatternFormatter.java,v 1.2 2003/08/04 03:23:08 joerg Exp $
  */
 public class ExtensiblePatternFormatter
     implements Formatter
@@ -422,8 +423,7 @@ public class ExtensiblePatternFormatter
                 break;
 
             default:
-                //TODO: Convert next line to use error handler
-                Hierarchy.getDefaultHierarchy().log( "Unknown Pattern specification." + run.m_type );
+                new DefaultErrorHandler().error("Unknown Pattern specification." + run.m_type. null, null);
         }
 
         return str;
