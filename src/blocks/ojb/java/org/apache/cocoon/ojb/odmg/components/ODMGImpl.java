@@ -25,7 +25,6 @@ import org.odmg.Database;
 import org.odmg.Implementation;
 import org.odmg.ODMGException;
 
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashMap;

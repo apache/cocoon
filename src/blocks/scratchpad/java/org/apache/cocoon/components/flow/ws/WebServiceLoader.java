@@ -19,13 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.wsdl.WSDLException;
 
@@ -42,10 +35,6 @@ import org.apache.axis.utils.JavaUtils;
 import org.apache.axis.wsdl.toJava.Namespaces;
 import org.apache.axis.wsdl.toJava.Utils;
 import org.apache.cocoon.Constants;
-// import org.apache.cocoon.components.flow.javascript.fom.CompilingClassLoader;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 
 /**
