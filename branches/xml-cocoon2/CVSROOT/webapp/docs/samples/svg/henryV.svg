@@ -1,6 +1,4 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000802//EN"
-"http://www.w3.org/TR/2000/CR-SVG-20000802/DTD/svg-20000802.dtd">
 
 <!-- ========================================================================= -->
 <!-- Copyright (C) The Apache Software Foundation. All rights reserved.        -->
@@ -14,10 +12,11 @@
 <!-- Test description here                                                     -->
 <!--                                                                           -->
 <!-- @author bill.haneman@ireland.sun.com                                         -->
-<!-- @version $Id: henryV.svg,v 1.1.2.1 2001-01-08 14:31:08 dims Exp $                                                             -->
+<!-- @version $Id: henryV.svg,v 1.1.2.2 2001-01-12 19:54:32 bloritsch Exp $                                                             -->
 <!-- ========================================================================= -->
 
-<svg width="450" height="500" viewBox="0 0 450 500">
+<svg width="450" height="500" viewBox="0 0 450 500"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
 <title>Henry V</title>
 
     <!-- ============================================================= -->
