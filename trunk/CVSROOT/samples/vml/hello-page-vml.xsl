@@ -16,7 +16,7 @@
     session.
 -->
 
-<xsl:stylesheet xsl:version="1.0"  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/xml"</xsl:processing-instruction>
