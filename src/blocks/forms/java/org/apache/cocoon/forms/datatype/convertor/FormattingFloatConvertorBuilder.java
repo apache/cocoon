@@ -15,17 +15,10 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.i18n.I18nUtils;
-
-import java.util.Locale;
-
 /**
  * Builds {@link FormattingFloatConvertor}s.
  *
- * @version CVS $Id: FormattingFloatConvertorBuilder.java,v 1.3 2004/03/18 11:44:59 bruno Exp $
+ * @version CVS $Id: FormattingFloatConvertorBuilder.java,v 1.4 2004/03/18 15:47:18 joerg Exp $
  */
 public class FormattingFloatConvertorBuilder extends FormattingDecimalConvertorBuilder {
     protected FormattingDecimalConvertor createConvertor() {
