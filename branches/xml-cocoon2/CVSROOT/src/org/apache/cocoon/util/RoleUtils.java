@@ -19,7 +19,7 @@ import java.util.Collections;
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-03 15:58:52 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-05 20:29:00 $
  */
 
 public class RoleUtils {
@@ -58,7 +58,7 @@ public class RoleUtils {
         setup.put(Roles.PROGRAM_GENERATOR, "org.apache.cocoon.components.language.generator.ProgramGeneratorImpl");
         setup.put(Roles.DB_CONNECTION, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.POOL_CONTROLLER, "org.apache.cocoon.util.ComponentPoolController");
-        setup.put(Roles.SAX_CONNECTOR, "org.apache.cocoon.components.saxconnector.SAXConnector");
+        setup.put(Roles.SAX_CONNECTOR, "org.apache.cocoon.components.saxconnector.NullSAXConnector");
         setup.put(Roles.URL_FACTORY, "org.apache.cocoon.components.url.URLFactoryImpl");
         setup.put(Roles.ACTIONS, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.MATCHERS, "org.apache.cocoon.CocoonComponentSelector");
