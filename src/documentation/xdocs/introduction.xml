@@ -17,9 +17,9 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-
   <header>
-    <title>Introducing Cocoon</title>
+    <title>Introducing Apache Cocoon</title>
+    <version>$Id$</version>
     <authors>
       <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
     </authors>
@@ -240,7 +240,7 @@ At this point, clearly not, rather the opposite.
 </p>
 
 <p>
-So, you could be wondering, why did we spend so much effort to 
+So, you could be wondering, why did we spend so much effort to
 write an XML publishing framework? This document was written exactly
 to clear your doubts on this, so let's keep going.
 </p>
@@ -300,7 +300,7 @@ semantics. How this can possibly help you?
 <p>
 This was the point where Stefano was more or less two years ago for
 java.apache.org: I could use XML and define my own semantics with
-<![CDATA[<sidebar>]]>, <![CDATA[<news>]]>, <![CDATA[<status>]]> 
+<![CDATA[<sidebar>]]>, <![CDATA[<news>]]>, <![CDATA[<status>]]>
 and all that and I'm sure people would have
 found those XML documents much easier to write (since the XML syntax is
 very similar to the HTML one and very user friendly)... but I would have
