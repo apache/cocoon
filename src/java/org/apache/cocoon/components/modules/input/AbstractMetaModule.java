@@ -140,14 +140,13 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         ComponentSelector inputSelector = this.inputSelector;
         InputModule module = null;
         try {
-            if (inputSelector == null) 
-                inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-
-            if (inputSelector.hasComponent(type)){
-                
-                if (type != null && inputSelector.hasComponent(type))
+            if (inputSelector == null) { 
+                inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+            }
+            if (inputSelector.hasComponent(type)) {
+                if (type != null && inputSelector.hasComponent(type)) {
                     module = (InputModule) inputSelector.select(type);
-                
+                }
                 if (!(module instanceof ThreadSafe) ) {
                     inputSelector.release(module);
                     module = null;
@@ -156,9 +155,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             if (type != null && module == null)
                 if (getLogger().isWarnEnabled())
                     getLogger().warn("A problem occurred setting up '" + type
-                                     +"': Selector is "+(inputSelector!=null?"not ":"")
-                                     +"null, Component is "
-                                     +(inputSelector!=null && inputSelector.hasComponent(type)?"known":"unknown"));
+                                     + "': Selector is not null, Component is "
+                                     + (inputSelector.hasComponent(type)? "known" : "unknown"));
             
         } catch (ComponentException ce) {
             if (getLogger().isWarnEnabled())
