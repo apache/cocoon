@@ -20,6 +20,10 @@ import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.mozilla.javascript.Script;
 import org.w3c.dom.Element;
 
@@ -37,20 +41,24 @@ import org.w3c.dom.Element;
  * variable.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.2 2004/04/27 12:02:13 bruno Exp $
  */
-public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
+public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe, Contextualizable {
 
-    public static final JavaScriptWidgetListenerBuilder INSTANCE = new JavaScriptWidgetListenerBuilder();
+    private Context context;
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
 
         Script script = JavaScriptHelper.buildScript(element);
 
         if (listenerClass == ActionListener.class) {
-            return new JavaScriptWidgetListener.JSActionListener(script);
+            return new JavaScriptWidgetListener.JSActionListener(script, context);
         } else if (listenerClass == ValueChangedListener.class) {
-            return new JavaScriptWidgetListener.JSValueChangedListener(script);
+            return new JavaScriptWidgetListener.JSValueChangedListener(script, context);
         } else {
             throw new Exception("Unkonwn event class: " + listenerClass);
         }
