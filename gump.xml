@@ -1239,6 +1239,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    
+    <library name="pizza"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1410,7 +1412,7 @@
     <description>
       Java Development Tools from the Eclipse IDE Project
     </description>
-    <home nested="lib/optional"/>
+    <home nested="lib/core"/>
     <jar name="jdtcore-3.0.1.jar"/>
   </project>
 
