@@ -32,6 +32,7 @@ import java.text.ParseException;
 import junit.framework.AssertionFailedError;
 
 import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
@@ -66,10 +67,16 @@ public class MockRequest implements Request {
     private Map cookies = new HashMap();
     
     private MockSession session;
+    private Environment environment = null;
     
     private boolean isRequestedSessionIdFromCookie = true;
     private boolean isRequestedSessionIdFromURL = false;
-    
+
+    // Needed to get getSitemapURI and getSitemapPath right
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#get(java.lang.String)
      */
@@ -257,7 +264,10 @@ public class MockRequest implements Request {
     }
     
     public String getRequestURI() {
-        return requestURI;
+        if (this.environment == null)
+            return requestURI;
+        else
+            return this.environment.getURI();
     }
     
     public void setRequestURI(String uri) {
@@ -265,11 +275,17 @@ public class MockRequest implements Request {
     }
     
     public String getSitemapURI() {
-        return requestURI;
+        if (this.environment == null)
+            return requestURI;
+        else
+            return this.environment.getURI();
     }
     
     public String getSitemapPath() {
-        return "";
+        if (this.environment == null)
+            return "";
+        else
+            return this.environment.getURIPrefix();
     }
 
     public String getServletPath() {
@@ -431,14 +447,14 @@ public class MockRequest implements Request {
         }
     }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Request#getInputStream()
-	 */
-	public InputStream getInputStream() throws IOException, UnsupportedOperationException {
-		return this.inputStream;
-	}
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.environment.Request#getInputStream()
+         */
+        public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+                return this.inputStream;
+        }
 
     public void setInputStream(InputStream is) {
-    		this.inputStream = is;
+                this.inputStream = is;
     }
 }

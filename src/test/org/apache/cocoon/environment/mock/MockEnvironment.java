@@ -57,7 +57,8 @@ public class MockEnvironment implements Environment {
     }
 
     public void setURI(String prefix, String uri) {
-        throw new AssertionFailedError("Not implemented");
+        this.uriprefix = prefix;
+        this.uri = uri;
     }
 
     public void redirect(String url, boolean global, boolean permanent) throws IOException {
@@ -99,6 +100,10 @@ public class MockEnvironment implements Environment {
 
     public Map getObjectModel() {
         return objectmodel;
+    }
+
+    public void setObjectModel(Map objectmodel) {
+        this.objectmodel = objectmodel;
     }
 
     public boolean isResponseModified(long lastModified) {
@@ -155,4 +160,3 @@ public class MockEnvironment implements Environment {
         return false;
     }
 }
-
