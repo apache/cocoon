@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,16 +39,16 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class ProfilingNonCachingProcessingPipeline
-  extends NonCachingProcessingPipeline implements Disposable {
+public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingPipeline
+                                                   implements Disposable {
 
     private Profiler profiler;
 
-    private ProfilerData data = null;
+    private ProfilerData data;
 
-    private int index = 0;
+    private int index;
 
     /**
      * Composable
@@ -56,7 +56,6 @@ public class ProfilingNonCachingProcessingPipeline
      * @param manager
      */
     public void compose(ComponentManager manager) throws ComponentException {
-
         super.compose(manager);
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
@@ -95,7 +94,7 @@ public class ProfilingNonCachingProcessingPipeline
      */
     public void setGenerator(String role, String source, Parameters param,
                              Parameters hintParam)
-                               throws ProcessingException {
+    throws ProcessingException {
 
         super.setGenerator(role, source, param, hintParam);
 
@@ -120,29 +119,30 @@ public class ProfilingNonCachingProcessingPipeline
      */
     public void addTransformer(String role, String source, Parameters param,
                                Parameters hintParam)
-                                 throws ProcessingException {
+    throws ProcessingException {
 
         super.addTransformer(role, source, param, hintParam);
 
         if (this.data==null) {
             this.data = new ProfilerData();
         }
-        this.data.addComponent(super.transformers.get(super.transformers.size()-
-            1), role, source);
+        this.data.addComponent(super.transformers.get(super.transformers.size() - 1),
+                               role, source);
     }
 
     /**
      * Set the serializer for this pipeline
      *
-     * @param role       
-     * @param source     
-     * @param param      
-     * @param hintParam  
-     * @param mimeType   
+     * @param role
+     * @param source
+     * @param param
+     * @param hintParam
+     * @param mimeType
      */
     public void setSerializer(String role, String source, Parameters param,
                               Parameters hintParam,
-                              String mimeType) throws ProcessingException {
+                              String mimeType)
+    throws ProcessingException {
 
         super.setSerializer(role, source, param, hintParam, mimeType);
 
@@ -155,13 +155,14 @@ public class ProfilingNonCachingProcessingPipeline
     /**
      * Set the reader for this pipeline
      *
-     * @param role       
-     * @param source     
-     * @param param      
-     * @param mimeType   
+     * @param role
+     * @param source
+     * @param param
+     * @param mimeType
      */
     public void setReader(String role, String source, Parameters param,
-                          String mimeType) throws ProcessingException {
+                          String mimeType)
+    throws ProcessingException {
 
         super.setReader(role, source, param, mimeType);
 
@@ -177,12 +178,10 @@ public class ProfilingNonCachingProcessingPipeline
      * @param environment
      */
     protected void setupPipeline(Environment environment)
-      throws ProcessingException {
+    throws ProcessingException {
         try {
-
-            // setup the generator
+            // Setup the generator
             long time = System.currentTimeMillis();
-
             this.generator.setup(environment, environment.getObjectModel(),
                                  generatorSource, generatorParam);
             this.data.setSetupTime(0, System.currentTimeMillis()-time);
@@ -191,8 +190,8 @@ public class ProfilingNonCachingProcessingPipeline
             Iterator transformerSourceItt = this.transformerSources.iterator();
             Iterator transformerParamItt = this.transformerParams.iterator();
 
+            // Setup transformers
             int index = 1;
-
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer) transformerItt.next();
 
@@ -204,6 +203,7 @@ public class ProfilingNonCachingProcessingPipeline
                                        System.currentTimeMillis()-time);
             }
 
+            // Setup serializer
             time = System.currentTimeMillis();
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
@@ -215,7 +215,7 @@ public class ProfilingNonCachingProcessingPipeline
             }
             this.data.setSetupTime(index++, System.currentTimeMillis()-time);
 
-            this.setMimeTypeForSerializer(environment);
+            setMimeTypeForSerializer(environment);
         } catch (SAXException e) {
             throw new ProcessingException("Could not setup pipeline.", e);
         } catch (IOException e) {
@@ -275,8 +275,8 @@ public class ProfilingNonCachingProcessingPipeline
             getLogger().warn("Profiler Data havn't any components to measure");
             return super.processXMLPipeline(environment);
         }
-    }    
-    
+    }
+
     /**
      * Process the pipeline using a reader.
      */
@@ -298,7 +298,7 @@ public class ProfilingNonCachingProcessingPipeline
          } else {
              getLogger().warn("Profiler Data havn't any components to measure");
              return super.processReader(environment);
-         }        
+         }
     }
 
 
@@ -306,8 +306,8 @@ public class ProfilingNonCachingProcessingPipeline
      * Connect the next component
      *
      * @param environment
-     * @param producer   
-     * @param consumer   
+     * @param producer
+     * @param consumer
      */
     protected void connect(Environment environment, XMLProducer producer,
                            XMLConsumer consumer) throws ProcessingException {

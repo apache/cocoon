@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,24 +34,22 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class ProfilingCachingProcessingPipeline
-  extends CachingProcessingPipeline {
+public class ProfilingCachingProcessingPipeline extends CachingProcessingPipeline {
 
     private Profiler profiler;
 
-    private ProfilerData data = null;
+    private ProfilerData data;
 
-    private int index = 0;
+    private int index;
 
     /**
      * Composable
      *
-     * @param manager    
+     * @param manager
      */
     public void compose(ComponentManager manager) throws ComponentException {
-
         super.compose(manager);
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
@@ -91,7 +89,7 @@ public class ProfilingCachingProcessingPipeline
      */
     public void setGenerator(String role, String source, Parameters param,
                              Parameters hintParam)
-                               throws ProcessingException {
+    throws ProcessingException {
 
         super.setGenerator(role, source, param, hintParam);
 
@@ -116,7 +114,7 @@ public class ProfilingCachingProcessingPipeline
      */
     public void addTransformer(String role, String source, Parameters param,
                                Parameters hintParam)
-                                 throws ProcessingException {
+    throws ProcessingException {
 
         super.addTransformer(role, source, param, hintParam);
 
@@ -130,15 +128,16 @@ public class ProfilingCachingProcessingPipeline
     /**
      * Set the serializer for this pipeline
      *
-     * @param role       
-     * @param source     
-     * @param param      
-     * @param hintParam  
-     * @param mimeType   
+     * @param role
+     * @param source
+     * @param param
+     * @param hintParam
+     * @param mimeType
      */
     public void setSerializer(String role, String source, Parameters param,
                               Parameters hintParam,
-                              String mimeType) throws ProcessingException {
+                              String mimeType)
+    throws ProcessingException {
 
         super.setSerializer(role, source, param, hintParam, mimeType);
 
@@ -151,13 +150,14 @@ public class ProfilingCachingProcessingPipeline
     /**
      * Set the reader for this pipeline
      *
-     * @param role       
-     * @param source     
-     * @param param      
-     * @param mimeType   
+     * @param role
+     * @param source
+     * @param param
+     * @param mimeType
      */
     public void setReader(String role, String source, Parameters param,
-                          String mimeType) throws ProcessingException {
+                          String mimeType)
+    throws ProcessingException {
 
         super.setReader(role, source, param, mimeType);
 
@@ -168,27 +168,24 @@ public class ProfilingCachingProcessingPipeline
     }
 
     /**
-     * Setup pipeline components.
-     *
-     * @param environment
+     * Timed version of {@link org.apache.cocoon.components.pipeline.AbstractProcessingPipeline#setupPipeline}
+     * and {@link org.apache.cocoon.components.pipeline.impl.AbstractCachingProcessingPipeline#setupPipeline}.
      */
     protected void setupPipeline(Environment environment)
-      throws ProcessingException {
+    throws ProcessingException {
         try {
-
-            // setup the generator
+            // Setup the generator
             long time = System.currentTimeMillis();
-
             this.generator.setup(environment, environment.getObjectModel(),
                                  generatorSource, generatorParam);
-            this.data.setSetupTime(0, System.currentTimeMillis()-time);
+            this.data.setSetupTime(0, System.currentTimeMillis() - time);
 
             Iterator transformerItt = this.transformers.iterator();
             Iterator transformerSourceItt = this.transformerSources.iterator();
             Iterator transformerParamItt = this.transformerParams.iterator();
 
+            // Setup transformers
             int index = 1;
-
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer) transformerItt.next();
 
@@ -196,10 +193,10 @@ public class ProfilingCachingProcessingPipeline
                 trans.setup(environment, environment.getObjectModel(),
                             (String) transformerSourceItt.next(),
                             (Parameters) transformerParamItt.next());
-                this.data.setSetupTime(index++,
-                                       System.currentTimeMillis()-time);
+                this.data.setSetupTime(index++, System.currentTimeMillis() - time);
             }
 
+            // Setup serializer
             time = System.currentTimeMillis();
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
@@ -209,24 +206,24 @@ public class ProfilingCachingProcessingPipeline
                     serializerParam
                 );
             }
-            this.data.setSetupTime(index++, System.currentTimeMillis()-time);
+            this.data.setSetupTime(index++, System.currentTimeMillis() - time);
 
-            this.setMimeTypeForSerializer(environment);
+            setMimeTypeForSerializer(environment);
         } catch (SAXException e) {
             throw new ProcessingException("Could not setup pipeline.", e);
         } catch (IOException e) {
             throw new ProcessingException("Could not setup pipeline.", e);
         }
 
-        // generate the key to fill the cache
-        this.generateCachingKey(environment);
+        // Generate the key to fill the cache
+        generateCachingKey(environment);
 
-        // test the cache for a valid response
+        // Test the cache for a valid response
         if (this.toCacheKey!=null) {
-            this.validatePipeline(environment);
+            validatePipeline(environment);
         }
 
-        this.setupValidities();
+        setupValidities();
     }
 
     /**
@@ -237,91 +234,89 @@ public class ProfilingCachingProcessingPipeline
      * @return true on success
      */
     public boolean process(Environment environment)
-      throws ProcessingException {
-
+    throws ProcessingException {
         this.index = 0;
-        if (this.data!=null) {
+        if (this.data != null) {
             // Capture environment info
             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
 
             // Execute pipeline
             long time = System.currentTimeMillis();
             boolean result = super.process(environment);
-
-            this.data.setTotalTime(System.currentTimeMillis()-time);
+            this.data.setTotalTime(System.currentTimeMillis() - time);
 
             // Report
             profiler.addResult(environment.getURI(), this.data);
             return result;
         } else {
-            getLogger().warn("Profiler Data havn't any components to measure");
+            getLogger().warn("Profiler data has no components to measure");
             return super.process(environment);
         }
     }
 
     /**
      * Process the SAX event pipeline
+     * FIXME: VG: Why override processXMLPipeline, not process(env, consumer)?
      */
-    protected boolean processXMLPipeline(Environment environment) throws ProcessingException {
+    protected boolean processXMLPipeline(Environment environment)
+    throws ProcessingException {
         this.index = 0;
-        if (this.data!=null) {
+        if (this.data != null) {
             // Capture environment info
             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
 
             // Execute pipeline
             long time = System.currentTimeMillis();
             boolean result = super.processXMLPipeline(environment);
-
-            this.data.setTotalTime(System.currentTimeMillis()-time);
+            this.data.setTotalTime(System.currentTimeMillis() - time);
 
             // Report
             profiler.addResult(environment.getURI(), this.data);
             return result;
         } else {
-            getLogger().warn("Profiler Data havn't any components to measure");
+            getLogger().warn("Profiler data has no components to measure");
             return super.processXMLPipeline(environment);
         }
-    }    
-    
+    }
+
     /**
      * Process the pipeline using a reader.
      */
-    protected boolean processReader(Environment environment) throws ProcessingException {
+    protected boolean processReader(Environment environment)
+    throws ProcessingException {
         this.index = 0;
-         if (this.data!=null) {
-             // Capture environment info
-             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
+        if (this.data != null) {
+            // Capture environment info
+            this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
 
-             // Execute pipeline
-             long time = System.currentTimeMillis();
-             boolean result = super.processReader(environment);
+            // Execute pipeline
+            long time = System.currentTimeMillis();
+            boolean result = super.processReader(environment);
+            this.data.setTotalTime(System.currentTimeMillis() - time);
 
-             this.data.setTotalTime(System.currentTimeMillis()-time);
-
-             // Report
-             profiler.addResult(environment.getURI(), this.data);
-             return result;
-         } else {
-             getLogger().warn("Profiler Data havn't any components to measure");
-             return super.processReader(environment);
-         }        
+            // Report
+            profiler.addResult(environment.getURI(), this.data);
+            return result;
+        } else {
+            getLogger().warn("Profiler data has no components to measure");
+            return super.processReader(environment);
+        }
     }
 
     /**
      * Connect the next component
      *
      * @param environment
-     * @param producer   
-     * @param consumer   
+     * @param producer
+     * @param consumer
      */
     protected void connect(Environment environment, XMLProducer producer,
-                           XMLConsumer consumer) throws ProcessingException {
+                           XMLConsumer consumer)
+    throws ProcessingException {
         ProfilingXMLPipe connector = new ProfilingXMLPipe();
-
         connector.setup(this.index, this.data);
         this.index++;
         super.connect(environment, producer, connector);
         super.connect(environment, connector, consumer);
     }
-
 }
