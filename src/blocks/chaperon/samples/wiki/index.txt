@@ -1,4 +1,4 @@
-! Introduction
+!!! Introduction
 
 This is a little example how easy it is to write a wiki engine 
 using the Chaperon parser and Apache Cocoon.
