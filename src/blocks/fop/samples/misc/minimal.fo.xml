@@ -24,6 +24,9 @@
     <fo:page-sequence master-reference="main">
 
         <fo:flow flow-name="xsl-region-body">
+            <fo:block padding="24pt">
+                <fo:external-graphic src="/resources/images/cocoon.gif"/>
+            </fo:block>
             <fo:block font-size="18pt">
                 Congratulations!
             </fo:block>
