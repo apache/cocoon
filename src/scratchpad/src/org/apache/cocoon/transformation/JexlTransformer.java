@@ -85,6 +85,8 @@ import org.apache.commons.jexl.util.introspection.VelPropertySet;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.Variables;
 import org.apache.excalibur.source.Source;
@@ -99,25 +101,30 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 /**
  * Jexl Transformer.
  *
  * <p>
- *  Transformer implementation using Apache Commons Jexl. 
+ *  Transformer implementation using Apache Commons Jexl and
+ *  Apache Commons JXPath.
  *  Provides a tag library and expression language similar
  *  to a read-only subset of core JSTL.
  * </p>
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.2 2003/04/02 21:38:38 stefano Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.3 2003/04/06 06:41:40 coliver Exp $
  */
 
 public class JexlTransformer
     extends AbstractSAXTransformer implements Initializable, Generator {
 
+    private static final JXPathContextFactory 
+        jxpathContextFactory = JXPathContextFactory.newInstance();
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
      * as well as Java Objects
@@ -397,7 +404,7 @@ public class JexlTransformer
     public static final String JEXL_NAMESPACE_URI  
 	= "http://cocoon.apache.org/transformation/jexl/1.0";
 
-    public static final String JEXL_FOR_EACH = "forEach";
+
     public static final String JEXL_CHOOSE = "choose";
     public static final String JEXL_WHEN = "when";
     public static final String JEXL_WHEN_TEST = "test";
@@ -418,6 +425,7 @@ public class JexlTransformer
     public static final String JEXL_FOREACH_STEP = "step";
     public static final String JEXL_FOREACH_VAR = "var";
     public static final String JEXL_FOREACH_VAR_STATUS = "varStatus";
+    public static final String JEXL_FOREACH_SELECT = "select";
 
     static {
         // Hack: there's no _nice_ way to add my introspector to Jexl right now
@@ -436,9 +444,10 @@ public class JexlTransformer
     private WebContinuation kont;
 
     JexlContext jexlContext;
-    JXPathContext jxpathContext;
+    Stack jxpathContextStack;
 
     Iterator foreachIter;
+    boolean foreachXPath;
     String foreachVar;
     int foreachBegin;
     int foreachEnd;
@@ -471,12 +480,20 @@ public class JexlTransformer
     // Run as a generator for debugging: to get line numbers in error messages
 
     private Source inputSource;
+    Locator locator = null;
+
+    public void setDocumentLocator(Locator loc) {
+        this.locator = loc;
+    }
 
     public void generate()
         throws IOException, SAXException, ProcessingException {
 	try {
             this.resolver.toSAX(this.inputSource, this);
         } catch (SAXException e) {
+            if (e instanceof SAXParseException) {
+                throw e; // keep line number info
+            }
             final Exception cause = e.getException();
             if( cause != null ) {
                 if ( cause instanceof ProcessingException )
@@ -485,7 +502,7 @@ public class JexlTransformer
                     throw (IOException)cause;
                 if ( cause instanceof SAXException )
                     throw (SAXException)cause;
-                throw new ProcessingException("Could not read resource "
+                throw new ProcessingException("Error reading resource "
                                               + this.inputSource.getURI(), cause);
             }
             throw e;
@@ -529,6 +546,8 @@ public class JexlTransformer
         kont = (WebContinuation)((Environment)resolver).getAttribute("kont");
         chooseStack = new Stack();
         ifStack = new Stack();
+        jxpathContextStack = new Stack();
+        jexlContext = JexlHelper.createContext();
         setContexts(bean);
         getJexlContext().getVars().put("this", bean);
         getJexlContext().getVars().put("continuation", kont);
@@ -538,19 +557,24 @@ public class JexlTransformer
      * Evaluate a Jexl expr contained in ${} but don't do substitution:
      * just return its value
      */
+    
+    private Object eval(String inStr) throws SAXException {
+        return eval(inStr, false);
+    }
 
-    Object eval(String inStr) /* throws Exception */ {
+    private Object eval(String inStr, boolean iterate) throws SAXException {
         try {
             StringReader in = new StringReader(inStr.trim());
             int ch;
             StringBuffer expr = new StringBuffer();
+            boolean xpath = false;
             boolean inExpr = false;
             while ((ch = in.read()) != -1) {
                 char c = (char)ch;
                 if (inExpr) {
                     if (c == '}') {
                         String str = expr.toString();
-                        return getValue(str);
+                        return getValue(str, xpath, iterate);
                     } else if (c == '\\') {
                         ch = in.read();
                         if (ch == -1) {
@@ -568,67 +592,91 @@ public class JexlTransformer
                             inExpr = true;
                             continue;
                         }
+                    } else if (c == '{') {
+                        ch = in.read();
+                        if (ch != -1) {
+                            inExpr = true;
+                            xpath = true;
+                            expr.append((char)ch);
+                            continue;
+                        }
                     }
                     // hack: invalid expression?
                     // just return the original and swallow exception
                     return inStr;
                 }
             }
-        } catch (Exception ignored) {
+        } catch (IOException ignored) {
             ignored.printStackTrace();
         }
         return inStr;
     }
 
     /**
-     * Substitute the values of JEXL expr's (contained in ${}) within attribute values
+     * Substitute the values of Jexl expr's (contained in ${}) and
+     * XPath expr's (contained in {}) within attribute values
      */
 
-    private void substitute(Reader in, Writer out) throws Exception {
-        int ch;
-        StringBuffer expr = new StringBuffer();
-        boolean inExpr = false;
-        while ((ch = in.read()) != -1) {
-            char c = (char)ch;
-            if (inExpr) {
-                if (c == '}') {
-                    String str = expr.toString();
-                    expr.setLength(0);
-                    str = String.valueOf(getValue(str));
-                    out.write(str);
-                    inExpr = false;
-                } else if (c == '\\') {
-                    ch = in.read();
-                    if (ch == -1) {
-                        expr.append('\\');
-                    } else {
-                        expr.append((char)ch);
-                    }
-                } else {
-                    expr.append(c);
-                }
-            } else {
-                if (c == '\\') {
-                    ch = in.read();
-                    if (ch == -1) {
-                        out.write('\\');
-                    } else {
-                        out.write((char)ch);
-                    }
-                } else {
-                    if (c == '$') {
+    private void substitute(Reader in, Writer out) 
+        throws SAXException {
+        try {
+            int ch;
+            StringBuffer expr = new StringBuffer();
+            boolean inExpr = false;
+            boolean xpath = false;
+            while ((ch = in.read()) != -1) {
+                char c = (char)ch;
+                if (inExpr) {
+                    if (c == '}') {
+                        String str = expr.toString();
+                        expr.setLength(0);
+                        str = String.valueOf(getValue(str, xpath, false));
+                        out.write(str);
+                        inExpr = false;
+                    } else if (c == '\\') {
                         ch = in.read();
-                        if (ch == '{') {
-                            inExpr = true;
-                            continue;
+                        if (ch == -1) {
+                            expr.append('\\');
+                        } else {
+                            expr.append((char)ch);
                         }
-                        out.write('$');
+                    } else {
+                        expr.append(c);
                     }
-                    if (ch != -1) {
-                        out.write((char)ch);
+                } else {
+                    if (c == '\\') {
+                        ch = in.read();
+                        if (ch == -1) {
+                            out.write('\\');
+                        } else {
+                            out.write((char)ch);
+                        }
+                    } else {
+                        if (c == '$') {
+                            ch = in.read();
+                            if (ch == '{') {
+                                inExpr = true;
+                                continue;
+                            }
+                            out.write('$');
+                        } else if (c == '{') {
+                            ch = in.read();
+                            if (ch != -1) {
+                                expr.append((char)ch);
+                                inExpr = true;
+                                xpath = true;
+                                continue;
+                            }
+                        }
+                        if (ch != -1) {
+                            out.write((char)ch);
+                        }
                     }
                 }
             }
+        } catch (IOException e) {
+            throw new CascadingRuntimeException(e.getMessage(),
+                                                e);
         }
     }
 
@@ -640,15 +688,11 @@ public class JexlTransformer
                 // substitute EL values
                 AttributesImpl impl = new AttributesImpl(attr);
                 for (int i = 0, len = impl.getLength(); i < len; i++) {
-                    try {
-                        String value = impl.getValue(i);
-                        StringReader reader = new StringReader(value);
-                        StringWriter writer = new StringWriter();
-                        substitute(reader, writer);
-                        impl.setValue(i, writer.toString());
-                    } catch (Exception exc) {
-                        exc.printStackTrace();
-                    }
+                    String value = impl.getValue(i);
+                    StringReader reader = new StringReader(value);
+                    StringWriter writer = new StringWriter();
+                    substitute(reader, writer);
+                    impl.setValue(i, writer.toString());
                 }
                 attr = impl;
             }
@@ -690,16 +734,16 @@ public class JexlTransformer
             return;
         } else if (JEXL_WHEN.equals(name)) {
             if (!inChoose) {
-                throw new ProcessingException("<when> must be contained in <choose>");
+                throw new SAXParseException("<when> must be contained in <choose>", locator, null);
             }
             doWhen(attr);
         } else if (JEXL_OTHERWISE.equals(name)) {
             if (!inChoose) {
-                throw new ProcessingException("<otherwise> must be contained in <choose>");
+                throw new SAXParseException("<otherwise> must be contained in <choose>", locator, null);
             }
             doOtherwise(attr);
         } else {
-            throw new ProcessingException("unknown jexl-transformer element: " + name);
+            throw new SAXParseException("unknown jexl-transformer element: " + name, locator, null);
         }
         inChoose = false;
     }
@@ -744,11 +788,40 @@ public class JexlTransformer
         return jexlContext;
     }
 
-/*
+
     private JXPathContext getJXPathContext() {
-        return jxpathContext;
+        return (JXPathContext)jxpathContextStack.peek();
     }
-*/
+    
+    private void pushJXPathContext(Object contextObject) {
+        JXPathContext jxpathContext = 
+            jxpathContextFactory.newContext(null, contextObject);
+        jxpathContext.setVariables(new Variables() {
+
+                public boolean isDeclaredVariable(String varName) {
+                    return varName.equals("continuation");
+                }
+
+                public Object getVariable(String varName) {
+                    if (varName.equals("continuation")) {
+                        return kont;
+                    }
+		    return null;
+                }
+
+                public void declareVariable(String varName, Object value) {
+                }
+
+                public void undeclareVariable(String varName) {
+                }
+            });
+        jxpathContextStack.push(jxpathContext);
+    }
+
+    private void popJXPathContext() {
+        jxpathContextStack.pop();
+    }
+
 
     private void setContexts(Object contextObject) {
         Map map;
@@ -790,27 +863,7 @@ public class JexlTransformer
                 }
             }
         }
-        jxpathContext = JXPathContext.newContext(contextObject);
-        jxpathContext.setVariables(new Variables() {
-
-                public boolean isDeclaredVariable(String varName) {
-                    return varName.equals("continuation");
-                }
-
-                public Object getVariable(String varName) {
-                    if (varName.equals("continuation")) {
-                        return kont;
-                    }
-		    return null;
-                }
-
-                public void declareVariable(String varName, Object value) {
-                }
-
-                public void undeclareVariable(String varName) {
-                }
-            });
-        jexlContext = JexlHelper.createContext();
+        pushJXPathContext(contextObject);
         jexlContext.setVars(map);
     }
 
@@ -818,18 +871,39 @@ public class JexlTransformer
      * Helper method for obtaining the value of a particular variable.
      *
      * @param variable variable name
+     * @param xpath if true, treat variable as xpath expression
+     * @param iterate if true, treat result as a collection and return its iterator 
      * @return variable value as an <code>Object</code>
      */
-    private Object getValue(final String variable) {
-        JexlContext context = getJexlContext();
-        try {
-            Expression e = ExpressionFactory.createExpression(variable);
-            return e.evaluate(context);
-        } catch (Exception e) {
-            throw new CascadingRuntimeException(e.getMessage(), e);
+    private Object getValue(final String variable, boolean xpath,
+                            boolean iterate) throws SAXException {
+        if (xpath) {
+            JXPathContext context = getJXPathContext();
+            if (iterate) {
+                return context.iteratePointers(variable);
+            } else {
+                return context.getValue(variable);
+            }
+        } else {
+            JexlContext context = getJexlContext();
+            try {
+                Expression e = ExpressionFactory.createExpression(variable);
+                Object result = e.evaluate(context);
+                if (iterate) {
+                    return Introspector.getUberspect().getIterator(result, 
+                                                                   null);
+                }
+                return result;
+            } catch (Exception e) {
+                throw new SAXParseException("Error evaluating expression: " + 
+                                            variable + ": "+ e.getMessage(), 
+                                            locator,
+                                            e);
+            }
         }
 
     }
+
 
     /**
      * Helper method to process a &lt;jexl-transformer:value-of select="."&gt; tag
@@ -841,22 +915,22 @@ public class JexlTransformer
     private void doOut(final Attributes a)
         throws SAXException, ProcessingException {
 
-        final String select = a.getValue(JEXL_OUT_VALUE);
+        final String value = a.getValue(JEXL_OUT_VALUE);
         final String def = a.getValue(JEXL_OUT_DEFAULT);
 
-        if (null != select) {
-            Object value = eval(select);
-            if (value == null) {
-                value = def;
-                if (value == null) {
-                    value = "";
+        if (value != null) {
+            Object result = eval(value);
+            if (result == null) {
+                result = def;
+                if (result == null) {
+                    result = "";
                 }
             }
-            sendTextEvent(value.toString());
+            sendTextEvent(result.toString());
         } else {
-            throw new ProcessingException(
-                "jexl-transformer:" + JEXL_OUT + " specified without a "+JEXL_OUT_VALUE+" attribute"
-            );
+            throw new SAXParseException("out: \"value\" is required",
+                                        locator, 
+                                        null);
         }
     }
 
@@ -878,7 +952,7 @@ public class JexlTransformer
         // get the test variable
         String expr = a.getValue(JEXL_IF_TEST);
         if (expr == null) {
-            throw new SAXException("if: \"test\" is required");
+            throw new SAXParseException("if: \"test\" is required", locator, null);
         }
         final Object value = eval(expr);
         final boolean isTrueBoolean =
@@ -909,6 +983,7 @@ public class JexlTransformer
         throws SAXException {
         if (ignoreEventsCount == 0) {
             String items = a.getValue(JEXL_FOREACH_ITEMS);
+            String select = a.getValue(JEXL_FOREACH_SELECT);
             String s = a.getValue(JEXL_FOREACH_BEGIN);
             int begin = s == null ? -1 : Integer.parseInt(s);
             s = a.getValue(JEXL_FOREACH_END);
@@ -916,25 +991,24 @@ public class JexlTransformer
             s = a.getValue(JEXL_FOREACH_STEP);
             foreachStep = s == null ? 1 : Integer.parseInt(s);
             if (foreachStep < 1) {
-                throw new SAXException("forEach: \"step\" must be a positive integer");
+                throw new SAXParseException("forEach: \"step\" must be a positive integer", locator, null);
             }
             String var = a.getValue(JEXL_FOREACH_VAR);
-            if (items == null && (begin == -1 || end == -1)) {
-                throw new SAXException("forEach: \"items\" or both \"begin\" and \"end\" must be specified");
+            if (items == null) {
+                 if (select == null && (begin == -1 || end == -1)) {
+                    throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified", locator, null);
+                }
+            } else if (select != null) {
+                throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified", locator, null);
             }
             foreachBegin = begin == -1 ? 0 : begin;
             foreachEnd = end == -1 ? Integer.MAX_VALUE: end;
+            foreachXPath = false;
             if (items != null) {
-                Object value = eval(items);
-                if (value instanceof Collection) {
-                    foreachIter = ((Collection)value).iterator();
-                } else {
-                    try {
-                        foreachIter = Introspector.getUberspect().getIterator(value, null);
-                    } catch (Exception exc) {
-                        throw new SAXException(exc.getMessage(), exc);
-                    }
-                }
+                foreachIter = (Iterator)eval(items, true);
+            } else if (select != null) {
+                foreachIter = (Iterator)eval(select, true);
+                foreachXPath = true;
             } else {
                 foreachIter = new Iterator() {
                         public boolean hasNext() {
@@ -963,16 +1037,27 @@ public class JexlTransformer
             int step = foreachStep;
             foreachIter = null;
             foreachVar = null;
+            boolean xpath = foreachXPath;
             int i;
             for (i = 0; i < begin && iter.hasNext(); i++) {
                 iter.next();
             }
             for (; i < end && iter.hasNext(); i++) {
-                Object value = iter.next();
+                Object value;
+                if (xpath) {
+                   Pointer ptr = (Pointer)iter.next();
+                   value = ptr.getNode();
+                   pushJXPathContext(value);
+                } else {
+                    value = iter.next();
+                }
                 if (varName != null) {
-                    jexlContext.getVars().put(varName, value);
+                    getJexlContext().getVars().put(varName, value);
                 }
                 sendEvents(frag);
+                if (xpath) {
+                    popJXPathContext();
+                }
                 for (int skip = step-1; skip > 0 && iter.hasNext(); --skip) {
                     iter.next();
                 }
@@ -1057,6 +1142,7 @@ public class JexlTransformer
         super.recycle();
         kont = null;
         jexlContext = null;
+        jxpathContextStack = null;
         foreachIter = null;
         foreachVar = null;
         chooseStack = null;
