@@ -52,13 +52,14 @@ package org.apache.cocoon.woody.datatype.convertor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
  * Description of EnumConvertor.
- * @version CVS $Id: EnumConvertor.java,v 1.4 2003/11/09 09:21:19 ugo Exp $
+ * @version CVS $Id: EnumConvertor.java,v 1.5 2003/11/10 11:26:32 ugo Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -107,7 +108,11 @@ public class EnumConvertor implements Convertor {
         Field fields[] = clazz.getDeclaredFields();
         for (int i = 0 ; i < fields.length ; ++i) {
             try {
-                if (fields[i].get(null).equals(value)) {
+                int mods = fields[i].getModifiers();
+                if (Modifier.isPublic(mods)
+                        && Modifier.isStatic(mods)
+                        && Modifier.isFinal(mods)
+                        && fields[i].get(null).equals(value)) {
                     return clazz.getName() + "." + fields[i].getName();
                 }
             } catch (Exception e) {
