@@ -50,7 +50,7 @@ import java.io.FileNotFoundException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-24 20:17:03 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:00:32 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -112,7 +112,7 @@ public class ProgramGeneratorImpl
    * @return The loaded program instance
    * @exception Exception If an error occurs during generation or loading
    */
-  public Modifiable load(
+  public Object load(
     File file, String markupLanguageName, String programmingLanguageName
   ) throws Exception {
     // Get markup and programming languages
@@ -132,7 +132,7 @@ public class ProgramGeneratorImpl
 
     // Ensure no 2 requests for the same file overlap
     Object program = null;
-    Modifiable programInstance = null;
+    Object programInstance = null;
 
     synchronized(filename.intern()) {
       // Attempt to load program object from cache
@@ -146,20 +146,22 @@ public class ProgramGeneratorImpl
           );
   
 	  // Instantiate program
-          programInstance =
-	    (Modifiable) programmingLanguage.instantiate(program);
+          programInstance = programmingLanguage.instantiate(program);
 	}
-
-        programInstance = (Modifiable) programmingLanguage.instantiate(program);
 
         // Store loaded program in cache
         this.cache.store(filename, program);
       } catch (LanguageException e) {}
       
+      /*
+         FIXME: It's the program (not the instance) that must
+	 be queried for changes!!!
+      */
       if (
 	  this.autoReload &&
           programInstance != null &&
-	  programInstance.modifiedSince(file.lastModified())
+	  programInstance instanceof Modifiable &&
+	  ((Modifiable) programInstance).modifiedSince(file.lastModified())
       )
       {
         // Unload program
@@ -204,12 +206,12 @@ public class ProgramGeneratorImpl
 	  normalizedName, this.repositoryName, encoding
 	);
 
-	// Instantiate
-        programInstance = (Modifiable) programmingLanguage.instantiate(program);
-
         // Store generated program in cache
         this.cache.store(filename, program);
       }
+
+      // Instantiate
+      programInstance = programmingLanguage.instantiate(program);
     }
 
     return programInstance;

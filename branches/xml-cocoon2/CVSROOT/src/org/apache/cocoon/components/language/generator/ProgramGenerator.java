@@ -9,14 +9,13 @@ package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 import org.apache.arch.Component;
-import org.apache.arch.Modifiable;
 
 /**
  * This interface defines a loader for programs automatically built from XML
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-24 20:17:02 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:00:30 $
  */
 public interface ProgramGenerator extends Component {
   /**
@@ -31,7 +30,7 @@ public interface ProgramGenerator extends Component {
    * @return The loaded object
    * @exception Exception If an error occurs during generation or loading
    */
-  public Modifiable load(
+  public Object load(
     File file, String markupLanguage, String programmingLanguage
   ) throws Exception;
 }
