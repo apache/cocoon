@@ -2,13 +2,12 @@
 <composite-layout name="tab" id="maintab">
     <named-item name="Main">
         <coplet-layout name="coplet">
-            <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
+            <coplet-instance-data>Portal-Demo-1</coplet-instance-data>
         </coplet-layout>
     </named-item>
     <named-item name="News">
         <composite-layout name="column">
             <item>
-                <parameter name="width" value="350" />
                 <composite-layout name="row">
                     <item>
 		                <coplet-layout name="coplet">
@@ -33,7 +32,7 @@
                         <composite-layout name="column">
                             <item>
                                 <frame-layout name="frame" id="a">
-                                    <source>cocoon://samples/portal/news/NYTSport.rss</source>
+                                    <source>cocoon:/coplets/news/nyt_sport.rss</source>
                                 </frame-layout>
                             </item>
                             <item>
@@ -42,9 +41,9 @@
                                 </coplet-layout>
                             </item>
                         </composite-layout>
-		            </item>
+		            </item> 
                 </composite-layout>
-            </item>
+            </item> 
             <item>
                 <composite-layout name="row">
                     <item>
@@ -58,7 +57,7 @@
 		                </coplet-layout>
                     </item>
                 </composite-layout>
-            </item>
+            </item> 
         </composite-layout>
     </named-item>
     <named-item name="Weblogs">
@@ -90,24 +89,6 @@
             </item>
         </composite-layout>
     </named-item>
-    <named-item name="Cocoon">
-        <composite-layout name="row">
-            <item>
-                <composite-layout name="column">
-                    <item>
-		                <coplet-layout name="coplet">
-		                    <coplet-instance-data>Introduction-1</coplet-instance-data>
-		                </coplet-layout>
-                    </item>
-                    <item>
-		                <coplet-layout name="coplet">
-		                    <coplet-instance-data>Overview-1</coplet-instance-data>
-		                </coplet-layout>
-                    </item>
-	            </composite-layout>
-            </item>
-        </composite-layout>
-    </named-item>
     <named-item name="TabDemo1">
         <composite-layout name="tab">
 		    <named-item name="One">
@@ -122,7 +103,7 @@
 		    </named-item>
 		    <named-item name="Three">
 	            <coplet-layout name="coplet">
-	                <coplet-instance-data>Overview-1</coplet-instance-data>
+	                <coplet-instance-data>Weblog-1</coplet-instance-data>
 	            </coplet-layout>
 		    </named-item>
         </composite-layout>
@@ -141,12 +122,12 @@
 		    </named-item>
 		    <named-item name="Three">
                 <coplet-layout name="coplet">
-                    <coplet-instance-data>Overview-1</coplet-instance-data>
+                    <coplet-instance-data>Weblog-1</coplet-instance-data>
                 </coplet-layout>
 		    </named-item>
 		</composite-layout>
     </named-item>
-    <named-item name="Coplets">
+    <named-item name="Gallery">
         <composite-layout name="column">
             <item>
 			    <coplet-layout name="coplet">

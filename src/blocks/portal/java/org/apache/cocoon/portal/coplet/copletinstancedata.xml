@@ -3,7 +3,7 @@
 	<description>Coplet instance data mapping file</description>
 
 	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
-        <field name="persistentAspectDatas" type="org.apache.cocoon.portal.util.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AspectDataFieldHandler">
+        <field name="persistentAspectDatas" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AspectDataFieldHandler">
             <bind-xml name="aspect"/>
         </field>
     </class>
@@ -47,14 +47,5 @@
 		</field>
 	</class>
 
-	<class name="org.apache.cocoon.portal.util.MapItem">
-		<field name="key" type="java.lang.String">
-			<bind-xml name="name"/>
-		</field>
-
-		<field name="value">
-			<bind-xml name="value"/>
-		</field>
-	</class>
 </mapping>
 

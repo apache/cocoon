@@ -55,14 +55,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.layout.Parameters;
-import org.exolab.castor.mapping.MapItem;
 
 /**
  * Field handler for parameters.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ParameterFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: ParameterFieldHandler.java,v 1.5 2003/12/18 13:16:11 cziegeler Exp $
  */
 public class ParameterFieldHandler extends AbstractFieldHandler {
     
@@ -75,13 +74,13 @@ public class ParameterFieldHandler extends AbstractFieldHandler {
         while (iterator.hasNext()) {
             entry = (Map.Entry) iterator.next();
             key = entry.getKey();
-            map.put(key, new MapItem(key, entry.getValue()));
+            map.put(key, new AttributedMapItem(key, entry.getValue()));
         }
         return map;
     }
 
     public Object newInstance(Object parent) {
-        return new MapItem();
+        return new AttributedMapItem();
     }
 
     public void resetValue(Object object) {
@@ -89,7 +88,7 @@ public class ParameterFieldHandler extends AbstractFieldHandler {
     }
 
     public void setValue(Object object, Object value) {
-        MapItem item = (MapItem) value;
+        AttributedMapItem item = (AttributedMapItem) value;
         ((Parameters) object).getParameters().put(
             item.getKey(),
             item.getValue());

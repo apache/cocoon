@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- $Id: rss2html_news.xsl,v 1.3 2003/12/12 16:34:21 cziegeler Exp $ 
+<!-- $Id: rss2html.xsl,v 1.1 2003/12/18 13:16:16 cziegeler Exp $ 
 
 -->
 <xsl:param name="fullscreen"/>

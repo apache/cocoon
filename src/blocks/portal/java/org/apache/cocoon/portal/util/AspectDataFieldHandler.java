@@ -55,13 +55,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.aspect.Aspectalizable;
+import org.exolab.castor.mapping.MapItem;
 
 /**
  * Field handler for aspects of an Aspectizable object.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AspectDataFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: AspectDataFieldHandler.java,v 1.5 2003/12/18 13:16:11 cziegeler Exp $
  */
 public class AspectDataFieldHandler extends AbstractFieldHandler {
     

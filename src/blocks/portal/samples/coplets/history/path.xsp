@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
+<xsp:structure>
+<xsp:include>org.apache.cocoon.portal.acting.helpers.*</xsp:include>
+<xsp:include>java.lang.String</xsp:include>
+</xsp:structure>
+<links>
+	
+		<xsp:logic>
+
+			List listHistory = (List) request.getSession().getAttribute( "portal-history");
+			String strData = "untitled";
+			for (int i = 1; i &lt; listHistory.size()-1; i++)
+			{
+				List listItem = (List) listHistory.get( i);
+				for( int j=0; j &lt; listItem.size(); j++)
+				{
+					Mapping mapping = (Mapping) listItem.get( j);
+					if( mapping instanceof org.apache.cocoon.portal.acting.helpers.CopletEventDescription)
+					{
+						CopletEventDescription desc = (CopletEventDescription) listItem.get( j);
+						if( desc.copletId.equals( "MyCoplet"))
+						{
+							strData = (String) desc.data;
+						}
+					}
+					else if( mapping instanceof org.apache.cocoon.portal.acting.helpers.LayoutEventDescription)
+					{
+						LayoutEventDescription desc = (LayoutEventDescription) listItem.get( j);
+						if( desc.layoutId.equals( "maintab") &amp;&amp; desc.path.equals("parameters/title"))
+						{
+							strData = (String) desc.data;
+						}
+					}
+				}
+				<xsp:content>				
+				<link>
+					<number><xsp:expr>i</xsp:expr></number>
+					<title><xsp:expr>strData</xsp:expr></title>
+				</link>
+				</xsp:content>
+			}
+		</xsp:logic>
+	
+</links>
+</xsp:page>

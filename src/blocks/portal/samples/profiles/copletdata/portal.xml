@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coplets>
+    <!--
+      + Different news coplets
+      + Read content from a file - for offline presentation
+   -->
    <coplet-data id="Newsweek" name="standard">
       <title>Newsweek</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/newsweek.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/newsweek.rss</value>
       </attribute>
    </coplet-data>
 
@@ -14,7 +18,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/NYTBusiness.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/nyt_business.rss</value>
       </attribute>
    </coplet-data>
 
@@ -23,7 +27,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/BBCNews.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/bbc_news.rss</value>
       </attribute>
    </coplet-data>
 
@@ -32,7 +36,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNET_news.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/cnet_news.rss</value>
       </attribute>
    </coplet-data>
 
@@ -41,7 +45,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNET_business.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/cnet_business.rss</value>
       </attribute>
    </coplet-data>
 
@@ -50,7 +54,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CSTNews.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/cst_news.rss</value>
       </attribute>
    </coplet-data>
 
@@ -59,7 +63,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNNEurope.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/cnn_europe.rss</value>
       </attribute>
    </coplet-data>
 
@@ -68,24 +72,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/ML_weblog.rss</value>
-      </attribute>
-   </coplet-data>
-
-   <coplet-data id="CZ Weblog" name="standard">
-      <title>CZ's Weblog</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
-      <attribute>
-      	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/liverss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
-      </attribute>
-      <attribute>
-      	<name>buffer</name>
-      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
-      </attribute>
-      <attribute>
-      	<name>error-uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CZ_weblog.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/ml_weblog.weblog-rss</value>
       </attribute>
    </coplet-data>
 
@@ -94,25 +81,29 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/Weblog.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/nn_weblog.weblog-rss</value>
       </attribute>
    </coplet-data>
 
-   <coplet-data id="Introduction" name="standard">
-      <title>Cocoon Introduction</title>
+    <!--
+      + Different news coplets
+      + Try to read content from the internet. 
+      + If the net is not available, use static file (for offline presentation)
+   -->
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/introduction.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/live.weblog-rss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
       </attribute>
-   </coplet-data>
-
-   <coplet-data id="Overview" name="standard">
-      <title>Cocoon Overview</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
-      	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/overview.html</value>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>error-uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/cz_weblog.weblog-rss</value>
       </attribute>
    </coplet-data>
 
@@ -124,40 +115,60 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-intro.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-intro.html</value>
       </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
    </coplet-data>
    <coplet-data id="Portal-Demo" name="standard">
       <title>Introduction</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-demo.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-demo.html</value>
       </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
    </coplet-data>
    <coplet-data id="Portal-Right" name="standard">
       <title>Right</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-right.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-right.html</value>
       </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
    </coplet-data>
    <coplet-data id="Portal-Left" name="standard">
       <title>Left</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-left.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-left.html</value>
       </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
    </coplet-data>
    <coplet-data id="Portal-Bottom" name="standard">
       <title>Bottom</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-bottom.html</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-bottom.html</value>
       </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
    </coplet-data>
 
    <!--

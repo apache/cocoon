@@ -86,6 +86,7 @@
     <store name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>
     <store name="session" class="org.apache.cocoon.portal.aspect.impl.SessionAspectDataStore"/>
     <store name="persistent" class="org.apache.cocoon.portal.aspect.impl.PersistentAspectDataStore"/>
+    <store name="memory" class="org.apache.cocoon.portal.aspect.impl.MemoryAspectDataStore"/>
  </component>
 
 <component class="org.apache.cocoon.components.persistence.CastorSourceConverter" role="org.apache.cocoon.components.persistence.CastorSourceConverter">

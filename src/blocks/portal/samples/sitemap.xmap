@@ -124,10 +124,6 @@
          <map:redirect-to uri="portal"/>
     </map:match>
 
-    <map:match pattern="news/**">
-        <map:mount check-reload="yes" src="news/" uri-prefix="news"/>
-    </map:match>
-
    <map:match pattern="coplets/**">
       <map:mount check-reload="yes" src="coplets/" uri-prefix="coplets"/>
     </map:match>
