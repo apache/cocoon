@@ -3,10 +3,10 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <component role="org.apache.cocoon.components.parser.Parser" class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component role="org.apache.cocoon.components.store.Store"  class="org.apache.cocoon.components.store.MemoryStore"/>
+  <component type="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
+  <component type="store" class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component role="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="programming-language" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
       <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
@@ -14,9 +14,9 @@
     </component-instance>
   </component>
 
-  <component role="org.apache.cocoon.components.classloader.ClassLoaderManager" class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+  <component type="classloader" class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
-  <component role="org.apache.cocoon.components.language.markup.MarkupLanguageSelector" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="markup-language" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>
       <parameter name="uri" value="http://apache.org/xsp"/>
@@ -60,11 +60,11 @@
     </component-instance>
   </component>
 
-  <component role="org.apache.cocoon.components.language.generator.ProgramGenerator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
+  <component type="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
     <parameter name="auto-reload" value="true"/>
   </component>
 
-  <component role="org.apache.cocoon.components.datasource.DataSourceComponentSelector" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="datasource" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
       <pool-controller min="5" max="10"/>
       <dburl>jdbc:postgresql://localhost/test</dburl>
@@ -74,7 +74,7 @@
   </component>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <component role="org.apache.avalon.util.pool.PoolController" class="org.apache.cocoon.util.ComponentPoolController"/>
+  <component type="pool-controller" class="org.apache.cocoon.util.ComponentPoolController"/>
 
   <sitemap file="sitemap.xmap"/> 
 </cocoon>
