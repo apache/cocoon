@@ -157,7 +157,7 @@
       <p>The &lt;ft:widget-label&gt; tag will cause the label of a widget to be
        inserted at the location of the tag. The &lt;ft:widget&gt; tag will cause
        the XML representation of a widget to be inserted at the location of that tag.
-       The inserted XML will be in the "Forms Instance" namespace: <strong>wi</strong>.</p>
+       The inserted XML will be in the "Forms Instance" namespace: <strong>fi</strong>.</p>
 
       <p>The XML representation of the widget will then be translated to HTML by an
       XSLT stylesheet (forms-samples-styling.xsl in our case -- see sitemap snippets below).
