@@ -21,12 +21,14 @@
 
   <map:transformers default="xslt">
    <map:transformer     name="xslt"      src="org.apache.cocoon.transformation.TraxTransformer">
-    <compile-stylesheets map:value="true"/>
     <use-store map:value="true"/>
+    <use-request-parameters map:value="false"/>
+    <use-browser-capabilities-db map:value="false"/>
    </map:transformer>
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>
    <map:transformer     name="extractor" src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
+   <map:transformer     name="i18n"      src="org.apache.cocoon.transformation.I18nTransformer"/>
   </map:transformers>
 
   <map:readers default="resource">
@@ -89,6 +91,7 @@
    <map:action name="add-employee" src="org.apache.cocoon.acting.DatabaseAddAction"/>
    <map:action name="del-employee" src="org.apache.cocoon.acting.DatabaseDeleteAction"/>
    <map:action name="upd-employee" src="org.apache.cocoon.acting.DatabaseUpdateAction"/>
+   <map:action name="lang-select" src="org.apache.cocoon.acting.LangSelect"/>
   </map:actions>
 
  </map:components>
@@ -335,6 +338,36 @@
 
    <map:match pattern="slides/**.png">
     <map:read src="docs/samples/{1}.png" mime-type="image/png"/>
+   </map:match>
+
+   <map:match pattern="i18n">
+    <map:generate type="serverpages" src="docs/samples/i18n/navigation.xsp"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <!--
+    This pipeline is responsable for generating the images for the navigation
+    bar. It uses the navimage.xsp to generate an SVG document which contains
+    the text for the image from the request URI passed as a parameter. The
+    requested language is evaluated by the LangSelect action. The text
+    represents a key into the i18n dictionary for all navigation items. At
+    the end the generated SVG is serialized as a PNG image.
+    This pipeline is fully cachable and thus an image depends only on
+    the text id and the laguage used and is generated once for each combination.
+   -->
+   <map:match pattern="i18n/images/*.png">
+    <map:act type="lang-select">
+     <map:generate type="serverpages" src="docs/samples/i18n/navimages.xsp">
+      <parameter name="textid" value="{../1}"/>
+      <parameter name="lang" value="{lang}"/>
+     </map:generate>
+    </map:act>
+     <map:transform type="i18n" src="docs/samples/i18n/nav_trans.xml">
+      <parameter name="default_lang" value="en"/>
+      <parameter name="available_lang_1" value="en"/>
+      <parameter name="available_lang_2" value="de"/>
+     </map:transform>
+    <map:serialize type="svg2png"/>
    </map:match>
 
    <!-- =========================== Dynamic ================================ -->

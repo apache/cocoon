@@ -41,58 +41,58 @@
 			 Cocoon @version@.</p>
 		  <p>The sitemap is defined in <code>${cocoon}/sitemap.xmap</code>.</p> 
 		  <source><![CDATA[ 
-          <?xml version="1.0"?>
+<?xml version="1.0"?>
           
-          <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"> 
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"> 
           
-          <!--===========================Components================================-->
-          <map:components>
+  <!--===========================Components================================-->
+  <map:components>
           
-            <map:generators default="file">
-               <map:generator name="file" label="content" 
-                              src="org.apache.cocoon.generation.FileGenerator"/> 
-            </map:generators> 
-            
-            <map:transformers default="xslt">
-               <map:transformer name="xslt"
-                                src="org.apache.cocoon.transformation.XalanTransformer">
-                  <compile-stylesheets map:value="true"/> 
-               </map:transformer> 
-            </map:transformers>
-            
-            <map:serializers default="html">
-               <map:serializer name="html" mime-type="text/html" 
-                               src="org.apache.cocoon.serialization.HTMLSerializer"/> 
-            </map:serializers>
+    <map:generators default="file">
+    <map:generator name="file" label="content" 
+                   src="org.apache.cocoon.generation.FileGenerator"/> 
+    </map:generators> 
+
+    <map:transformers default="xslt">
+      <map:transformer name="xslt"
+                       src="org.apache.cocoon.transformation.XalanTransformer">
+        <compile-stylesheets map:value="true"/> 
+      </map:transformer> 
+    </map:transformers>
+
+    <map:serializers default="html">
+      <map:serializer name="html" mime-type="text/html" 
+                      src="org.apache.cocoon.serialization.HTMLSerializer"/> 
+    </map:serializers>
+
+    <map:selectors default="browser">
+      <map:selector name="browser" 
+                    factory="org.apache.cocoon.selection.BrowserSelectorFactory">
+        <browser name="explorer" useragent="MSIE"/>
+        <browser name="netscape" useragent="Mozilla"/> 
+      </map:selector> 
+    </map:selectors>
+
+    <map:matchers default="uri">
+      <map:matcher name="uri" 
+                   factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+    </map:matchers> 
+
+  </map:components> 
           
-            <map:selectors default="browser">
-               <map:selector name="browser" 
-                  factory="org.apache.cocoon.selection.BrowserSelectorFactory">
-                  <browser name="explorer" useragent="MSIE"/>
-                  <browser name="netscape" useragent="Mozilla"/> 
-               </map:selector> 
-            </map:selectors>
-            
-            <map:matchers default="uri">
-               <map:matcher name="uri" 
-                  factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
-            </map:matchers> 
+  <!--===========================Pipelines=================================-->
+  <map:pipelines> 
+    <map:pipeline> 
+      <map:match pattern="hello.html">
+        <map:generate src="docs/samples/hello-page.xml"/>
+        <map:transform src="stylesheets/page/simple-page2html.xsl"/>
+        <map:serialize type="html"/> 
+      </map:match> 
+    </map:pipeline> 
+  </map:pipelines>
           
-          </map:components> 
-          
-          <!--===========================Pipelines=================================-->
-          <map:pipelines> 
-            <map:pipeline> 
-               <map:match pattern="hello.html">
-                  <map:generate src="docs/samples/hello-page.xml"/>
-                  <map:transform src="stylesheets/page/simple-page2html.xsl"/>
-                  <map:serialize type="html"/> 
-               </map:match> 
-            </map:pipeline> 
-          </map:pipelines>
-          
-       </map:sitemap> 
-       ]]></source> 
+</map:sitemap> 
+]]></source>
 		</s2> 
 		<s2 title="cocoon.xconf"> 
 		  <p><code>cocoon.xconf</code> is the file that defines the
@@ -240,7 +240,7 @@
 		  </s3> 
 		  <s3 title="UML sequence diagram">
 			 <p>You can find it <link
-			 href="images/initialize_cocoon.png">here</link>.</p> 
+			 href="images/initialize_Cocoon.png">here</link>.</p> 
 		  </s3> 
 		</s2> 
 		<s2 title="HttpRequest handling"> 

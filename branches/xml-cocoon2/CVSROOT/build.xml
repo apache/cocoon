@@ -447,6 +447,14 @@ by the main ones.
       </fileset>
     </copy>
 
+    <copy todir="${build.docs}" filtering="off">
+      <fileset dir="${docs.dir}">
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="**/*.jpg"/>
+      </fileset>
+    </copy>
+
     <copy file="changes.xml" tofile="${build.xdocs}/changes.xml" filtering="on"/>
     <copy file="todo.xml"    tofile="${build.xdocs}/todo.xml"/>
 
