@@ -9,10 +9,9 @@ function selectMethod() {
   cocoon.sendPage(method+"/"+page, null);
 }
 
-function sendStatus() {
-  var status  = cocoon.parameters["status"];
-  var msg = cocoon.parameters["message"];
-  cocoon.sendPage("status/" + status, {message:msg});
+function sendStatus(status,msg) {
+  //cocoon.response.setStatus(status);
+  cocoon.sendPage("status/"+status,{message:msg});
 }
 
 function put() {
@@ -20,11 +19,11 @@ function put() {
   var dest = cocoon.parameters["dest"];
   try {
     var status = repository.save(src,dest);
-    cocoon.sendPage("status/" + status, {message:""});
+    sendStatus(status,"");
   }
   catch (e) {
     cocoon.log.error(e);
-    cocoon.sendPage("status/500",{message:"unknown error"});
+    sendStatus(500,"unknown error");
   }
 }
 
@@ -32,11 +31,11 @@ function remove() {
   var location = cocoon.parameters["location"];
   try {
     var status = repository.remove(location);
-    cocoon.sendPage("status/" + status, {message:""});
+    sendStatus(status,"");
   }
   catch (e) {
     cocoon.log.error(e);
-    cocoon.sendPage("status/500",{message:"unknown error"});
+    sendStatus(500,"unknown error");
   }
 }
 
@@ -44,33 +43,37 @@ function mkcol() {
   var location = cocoon.parameters["location"];
   try {
     var status = repository.makeCollection(location);
-    cocoon.sendPage("status/" + status, {message:""});
+    sendStatus(status,"");
   }
   catch (e) {
     cocoon.log.error(e);
-    cocoon.sendPage("status/500",{message:"unknown error"});
+    sendStatus(500,"unknown error");
   }
 }
 
 function copy() {
-  var from = cocoon.parameters["from"];
-  var to   = cocoon.parameters["to"];
+  var from      = cocoon.parameters["from"];
+  var to        = cocoon.parameters["to"];
+  var recurse   = isRecurse(cocoon.parameters["depth"]);
+  var overwrite = isOverwrite(cocoon.parameters["overwrite"]);
   try {
-    var status = repository.copy(from,to);
-    cocoon.sendPage("status/" + status, {message:""});
+    var status = repository.copy(from,to,recurse,overwrite);
+    sendStatus(status,"");
   } catch (e) {
-    cocoon.log.error("status/500",{message:""});
+    sendStatus(500,"unknown error");
   }
 }
 
 function move() {
-  var from = cocoon.parameters["from"];
-  var to   = cocoon.parameters["to"];
+  var from      = cocoon.parameters["from"];
+  var to        = cocoon.parameters["to"];
+  var recurse   = isRecurse(cocoon.parameters["depth"]);
+  var overwrite = isOverwrite(cocoon.parameters["overwrite"]);
   try {
-    var status = repository.move(from,to);
-    cocoon.sendPage("status/" + status, {message:""});
+    var status = repository.move(from,to,recurse,overwrite);
+    sendStatus(status,"");
   } catch (e) {
-    cocoon.log.error("status/500",{message:""});
+    sendStatus(500,"unknown error");
   }
 }
 
@@ -79,7 +82,36 @@ function options() {
   var options = "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PUT" 
               + ",MKCOL,PROPFIND,PROPPATCH,COPY,MOVE";
   cocoon.response.setHeader("Allow",options);
-  cocoon.sendPage("status/200",{});
+  sendStatus(200,"");
+}
+
+/*
+ * parse the depth header to find out if recursion
+ * take place. (used by MOVE and COPY)
+ */
+function isRecurse(depth) {
+  var recurse;
+  if (depth == null || depth == '') {
+    recurse = true;
+  }
+  else if (depth == 'infinity') {
+    recurse = true;
+  }
+  else {
+    recurse = false;
+  }
+  return recurse;
+}
+
+/*
+ * convert the overwrite header into a boolean type
+ */
+function isOverwrite(header) {
+  var overwrite = true;
+  if (header == 'F') {
+    overwrite = false;
+  }
+  return overwrite;
 }
 
 /*

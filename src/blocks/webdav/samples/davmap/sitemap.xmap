@@ -190,7 +190,7 @@
         <map:match pattern="MKCOL/**.*">
           <map:call function="sendStatus">
             <map:parameter name="status" value="409" />
-            <map:parameter name="message" value="Not valid collection name." />
+            <map:parameter name="message" value="Not a valid collection name." />
           </map:call>
         </map:match>
         <map:call function="mkcol">
@@ -208,9 +208,15 @@
         <map:match pattern="http://**/repo/**" type="destination">
           <map:call function="copy">
             <map:parameter name="from" value="{global:staging}{../1}" />
-            <map:parameter name="to"   value="{global:staging}/{2}" />
+            <map:parameter name="to" value="{global:staging}/{2}" />
+            <map:parameter name="depth" value="{request-header:Depth}" />
+            <map:parameter name="overwrite" value="{request-header:Overwrite}" />
           </map:call>
         </map:match>
+        <map:call function="sendStatus">
+          <map:parameter name="status" value="405" />
+          <map:parameter name="message" value="Destination resource out of scope." />
+        </map:call>
       </map:match>
       
       <map:match pattern="MOVE/**">
@@ -218,8 +224,14 @@
           <map:call function="move">
             <map:parameter name="from" value="{global:staging}{../1}" />
             <map:parameter name="to"   value="{global:staging}/{2}" />
+            <map:parameter name="depth" value="{request-header:Depth}" />
+            <map:parameter name="overwrite" value="{request-header:Overwrite}" />
           </map:call>
         </map:match>
+        <map:call function="sendStatus">
+          <map:parameter name="status" value="405" />
+          <map:parameter name="message" value="Destination resource out of scope." />
+        </map:call>
       </map:match>
       
       <map:match pattern="PROPPATCH/**">
