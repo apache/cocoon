@@ -92,6 +92,12 @@ public class DefaultTreeBuilder
      * It is created by {@link #createServiceManager(Context, Configuration)}.
      */
     private ServiceManager itsManager;
+    
+    /**
+     * The classloader for the processor that we are building.
+     * It is created by {@link #createServiceManager(Context, Configuration)}.
+     */
+    protected ClassLoader itsClassLoader;
 
     /**
      * Helper object which sets up components in the context
@@ -208,6 +214,9 @@ public class DefaultTreeBuilder
      */
     protected ServiceManager createServiceManager(Context context, Configuration tree)
     throws Exception {
+        // Useless method as it's redefined in SitemapLanguage
+        // which is the only used incarnation.
+        this.itsClassLoader = Thread.currentThread().getContextClassLoader();
         return this.manager;
     }
 
@@ -230,6 +239,9 @@ public class DefaultTreeBuilder
         return this.itsManager;
     }
 
+    public ClassLoader getBuiltProcessorClassLoader() {
+        return this.itsClassLoader;
+    }
 
     /**
      * Register a <code>ProcessingNode</code> under a given name.

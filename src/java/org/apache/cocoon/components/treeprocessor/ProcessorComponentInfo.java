@@ -72,9 +72,6 @@ public class ProcessorComponentInfo {
     /** Component info for the parent processor */
     ProcessorComponentInfo parent;
     
-    /** The service manager for this processor */
-    private ServiceManager manager;
-    
     /** Lock that prevents further modification */
     private boolean locked = false;
     

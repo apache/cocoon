@@ -44,6 +44,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
     /** Our ServiceManager */
     private ServiceManager manager;
+    
+    /** Our class loader */
+    private ClassLoader classloader;
 
     /** The processor that wraps us */
     private TreeProcessor wrappingProcessor;
@@ -75,12 +78,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     }
     
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ServiceManager manager, ProcessingNode rootNode, List disposableNodes) {
+    public void setProcessorData(ServiceManager manager, ClassLoader classloader, ProcessingNode rootNode, List disposableNodes) {
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
 
         this.manager = manager;
+        this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
     }
@@ -188,7 +192,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         synchronized (this) {
             requestCount++;
         }
-
+        
+        Thread currentThread = Thread.currentThread();
+        ClassLoader oldClassLoader = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(this.classloader);
+        
         try {
             // and now process
             EnvironmentHelper.enterProcessor(this, this.manager, environment);
@@ -211,6 +219,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             }
 
         } finally {
+            // Restore classloader
+            currentThread.setContextClassLoader(oldClassLoader);
+
             // Decrement the concurrent request count
             synchronized (this) {
                 requestCount--;

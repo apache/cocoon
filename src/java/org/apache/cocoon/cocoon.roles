@@ -30,8 +30,8 @@
 
 <role-list>
 
-  <role name="org.apache.cocoon.core.ClassLoaderFactory"
-        default-class="org.apache.cocoon.core.DefaultClassLoaderFactory"/>
+  <role name="org.apache.cocoon.components.classloader.ClassLoaderFactory"
+        default-class="org.apache.cocoon.components.classloader.DefaultClassLoaderFactory"/>
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"

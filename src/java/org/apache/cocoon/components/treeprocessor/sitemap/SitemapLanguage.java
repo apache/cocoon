@@ -31,6 +31,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.classloader.ClassLoaderFactory;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
@@ -71,14 +72,40 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             }
             config = new DefaultConfiguration("", "");
         }
-
-        CocoonServiceManager newManager = new CocoonServiceManager(this.parentProcessorManager);
-
-        // Go through the component lifecycle
-        newManager.enableLogging(getLogger());
-        newManager.contextualize(context);
-        newManager.configure(config);
-        newManager.initialize();
+        
+        // Create the classloader, if needed.
+        ClassLoader newClassLoader;
+        Configuration classpathConfig = config.getChild("classpath", false);
+        if (classpathConfig == null) {
+            newClassLoader = Thread.currentThread().getContextClassLoader();
+        } else {
+            // Create a new classloader
+            ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentProcessorManager.lookup(ClassLoaderFactory.ROLE);
+            newClassLoader = clFactory.createClassLoader(
+                    Thread.currentThread().getContextClassLoader(),
+                    classpathConfig
+            );
+        }
+        
+        this.itsClassLoader = newClassLoader;
+        
+        // Create the manager within its own classloader
+        Thread currentThread = Thread.currentThread();
+        ClassLoader oldClassLoader = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(newClassLoader);
+        CocoonServiceManager newManager;
+        
+        try {
+            newManager = new CocoonServiceManager(this.parentProcessorManager, newClassLoader);
+    
+            // Go through the component lifecycle
+            newManager.enableLogging(getLogger());
+            newManager.contextualize(context);
+            newManager.configure(config);
+            newManager.initialize();
+        } finally {
+            currentThread.setContextClassLoader(oldClassLoader);
+        }
 
         return newManager;
     }
