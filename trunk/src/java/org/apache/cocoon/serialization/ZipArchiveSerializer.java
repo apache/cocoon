@@ -51,23 +51,23 @@
 
 package org.apache.cocoon.serialization;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.source.Source;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.NamespaceSupport;
-
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.NamespaceSupport;
 
 /**
  * A serializer that builds Zip archives by aggregating several sources.
@@ -102,7 +102,7 @@ import java.util.zip.ZipOutputStream;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.3 2003/05/08 20:42:38 vgritsenko Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.4 2003/05/23 09:53:46 cziegeler Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -111,7 +111,10 @@ import java.util.zip.ZipOutputStream;
 // TODO (2) : handle more attributes on <entry> for properties of ZipEntry
 //            (compression method and level, time, comment, etc.)
 
-public class ZipArchiveSerializer extends AbstractSerializer implements Composable {
+public class ZipArchiveSerializer 
+    extends AbstractSerializer 
+    implements Composable, Disposable {
+        
     /**
      * The namespace for elements handled by this serializer,
      * "http://apache.org/cocoon/zip-archive/1.0".
@@ -160,6 +163,7 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE);
     }
 
     /**
@@ -182,7 +186,6 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
     public void startDocument() throws SAXException {
         this.state = START_STATE;
         this.zipOutput = new ZipOutputStream(this.output);
-        this.resolver = CocoonComponentManager.getCurrentEnvironment();
     }
 
     /**
@@ -421,4 +424,16 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
         }
         super.recycle();
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.resolver );
+            this.resolver = null;
+            this.manager = null;
+        }
+    }
+
 }
