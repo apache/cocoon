@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.107 2003/08/07 03:33:00 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.108 2003/08/07 07:00:24 bdelacretaz Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BD" type="add">
+    slop block added (Simple Line Oriented Parser)
+  </action>
   <action dev="JH" type="fix" fixes-bug="21931, 22173" due-to="Unico Hommes"
     due-to-email="unico@hippo.nl">
     LDAPTransformer now handles multiple attribute values.
