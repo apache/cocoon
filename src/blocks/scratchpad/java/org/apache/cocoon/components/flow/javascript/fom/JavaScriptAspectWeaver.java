@@ -114,7 +114,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.6 2003/09/12 18:41:36 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.7 2003/09/17 01:09:45 joerg Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -839,7 +839,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                 boolean functionStartSet = false;
                 boolean isExecStopFunctionSet = false;
                 int countOpenBrackets = 0;
-                String curStopFunction = "";
                 int countCurToken = pos - 1;  // get the current index
                 
                 // continue in the token list to find opening and closing brackets
@@ -887,7 +886,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                         else if( type == JSToken.CODE ) { 
                             String fnc = isStopFunction( t, li );
                             if( null != fnc ) {
-                                curStopFunction = t.toString();     
                                 li.previous();                   
                                 li.add( new InterceptorEvent( InterceptorEvent.STOP_EXEC,
                                    functionName ));
