@@ -53,6 +53,7 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     public FOM_WebContinuation() {
+        this(null);
     }
 
 

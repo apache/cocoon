@@ -69,7 +69,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
@@ -187,6 +186,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                             newSrc = sourceResolver.resolveURI(uri);
                             valid = newSrc.getValidity().isValid(validity);
                         } catch (Exception ignored) {
+                            // ignore exception
                         } finally {
                             if (newSrc != null) {
                                 sourceResolver.release(newSrc);
@@ -642,9 +642,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 compiledScript = entry.getScript(cx, this.scope, false, this);
                 return compiledScript;
             }
-        } else {
-            throw new ResourceNotFoundException(fileName + ": not found");
         }
+        throw new ResourceNotFoundException(fileName + ": not found");
     }
 
     protected Script compileScript(Context cx, Scriptable scope, Source src)
@@ -683,9 +682,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         RE re = new RE(encodingRE);
         if (re.match(str)) {
             return re.getParen(1);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
