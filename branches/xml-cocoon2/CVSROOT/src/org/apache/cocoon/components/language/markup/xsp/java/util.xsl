@@ -146,8 +146,8 @@
           } catch (Exception e) {
               getLogger().error("Could not include page", e);
           } finally {
-              this.manager.release((Component) factory);
-              this.manager.release((Component) newParser);
+              if (factory != null) this.manager.release((Component) factory);
+              if (newParser != null) this.manager.release((Component) newParser);
           }
       }
     } </xsp:logic>
@@ -185,7 +185,7 @@
             } catch (Exception e) {
               getLogger().error("Could not include page", e);
             } finally {
-              this.manager.release((Component) newParser);
+              if (newParser != null) this.manager.release((Component) newParser);
             }
        }
      </xsp:logic>
@@ -219,7 +219,7 @@
           } catch (Exception e) {
               getLogger().error("Could not include page", e);
           } finally {
-              this.manager.release((Component) newParser);
+              if (newParser != null) this.manager.release((Component) newParser);
           }
       }
     </xsp:logic>

@@ -40,7 +40,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-12 05:55:23 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-12 12:30:35 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;
@@ -168,8 +168,9 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
 
+        ProgramGenerator programGenerator = null;
         try {
-            ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
+            programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
 
             if (this.sitemap != null) {
@@ -184,8 +185,6 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
             } else {
                 getLogger().debug("No errors, but the sitemap has not been set.");
             }
-
-            this.manager.release((Component) programGenerator);
         } catch (Throwable t) {
             getLogger().error("Error compiling sitemap", t);
 
@@ -193,6 +192,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
               this.exception = (Exception) t;
             }
         } finally {
+            if(programGenerator != null) this.manager.release((Component) programGenerator);
             this.regeneration = null;
             this.environment = null;
             this.isRegenerationRunning = false;

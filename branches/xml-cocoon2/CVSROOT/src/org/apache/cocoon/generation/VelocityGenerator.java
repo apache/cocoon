@@ -28,7 +28,7 @@ import org.apache.velocity.VelocityContext;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 20:08:23 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 12:30:34 $
  */
 public class VelocityGenerator extends ServletGenerator implements Poolable {
 
@@ -93,7 +93,7 @@ public class VelocityGenerator extends ServletGenerator implements Poolable {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()",e);
         } finally {
-            this.manager.release((Component) parser);
+            if (parser != null) this.manager.release((Component) parser);
         }
     }
 }

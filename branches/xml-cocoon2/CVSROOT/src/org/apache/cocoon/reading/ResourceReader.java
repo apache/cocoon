@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-30 17:14:35 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-12 12:30:35 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -67,14 +67,6 @@ public class ResourceReader extends AbstractReader implements Composer {
     public void generate() throws IOException, ProcessingException {
         Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
         Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
-        URLFactory urlFactory = null;
-
-        try {
-            urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-        } catch (Exception e) {
-            getLogger().error("cannot obtain the URLFactory", e);
-            throw new ProcessingException ("cannot obtain the URLFactory", e);
-        }
 
         if (response == null) {
            throw new ProcessingException ("Missing a Response object in the objectModel");
@@ -91,7 +83,14 @@ public class ResourceReader extends AbstractReader implements Composer {
         InputStream is = null;
         long len = 0;
 
+        URLFactory urlFactory = null;
         try {
+            try {
+                urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+            } catch (Exception e) {
+                getLogger().error("cannot obtain the URLFactory", e);
+                throw new ProcessingException ("cannot obtain the URLFactory", e);
+            }
             if(this.source.indexOf(":/") != -1) {
                 src = this.source;
                 url = urlFactory.getURL (src);
@@ -124,7 +123,7 @@ public class ResourceReader extends AbstractReader implements Composer {
             throw new ResourceNotFoundException ("ResourceReader: malformed source \""
                 +src+"\". ", mue);
         } finally {
-            this.manager.release((Component) urlFactory);
+            if(urlFactory != null) this.manager.release((Component) urlFactory);
         }
 
         try {

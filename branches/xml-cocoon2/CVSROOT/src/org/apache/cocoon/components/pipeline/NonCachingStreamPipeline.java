@@ -10,6 +10,7 @@ package org.apache.cocoon.components.pipeline;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.ComponentSelector;
@@ -36,7 +37,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 12:41:21 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 12:30:34 $
  */
 public class NonCachingStreamPipeline extends AbstractLoggable implements StreamPipeline {
     private EventPipeline eventPipeline;
@@ -102,6 +103,7 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
         this.readerParam = param;
         this.readerMimeType = mimeType;
         this.sitemapReaderMimeType = selector.getMimeTypeForRole(role);
+        this.manager.release((Component)selector);
     }
 
     public void setSerializer (String role, String source, Parameters param)
@@ -120,6 +122,7 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
         this.sitemapSerializerMimeType = selector.getMimeTypeForRole(role);
+        this.manager.release((Component)selector);
     }
 
     public void addTransformer (String role, String source, Parameters param) throws Exception {

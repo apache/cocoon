@@ -17,6 +17,7 @@ import org.apache.cocoon.components.url.URLFactory;
 
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.configuration.Parameters;
@@ -147,14 +148,15 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
         String translations_file = parameters.getParameter("src", null);
 
         URL tr = null;
+        URLFactory urlFactory = null;
         try {
-            Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
-            tr = ((URLFactory) urlFactory)
-                .getURL(resolver.resolveEntity(null, translations_file).getSystemId());
-            this.manager.release(urlFactory);
+            urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+            tr = urlFactory.getURL(resolver.resolveEntity(null, translations_file).getSystemId());
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
             throw new SAXException("cannot obtain the URLFactory", e);
+        } finally {
+            if (urlFactory != null) this.manager.release((Component)urlFactory);
         }
         initialiseDictionary(tr);
     }
@@ -308,31 +310,41 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
 
         Object object = url.getContent();
         Parser parser = null;
-        try {
+
+        try 
+        {
             parser = (Parser)(manager.lookup(Roles.PARSER));
+            InputSource input;
+            if (object instanceof Loggable) {
+                ((Loggable)object).setLogger(getLogger());
+            }
+            if (object instanceof Reader) {
+                input = new InputSource(new BufferedReader((Reader)(object)));
+            } else if (object instanceof InputStream) {
+                input = new InputSource(new BufferedInputStream((InputStream)(object)));
+            } else {
+                throw new SAXException("Unknown object type: " + object);
+            }
 
-        } catch (Exception e) {
-            getLogger().error("Could not find component", e);
-            return;
+            // How this could be cached?
+            dictionary = new Hashtable();
+            I18nContentHandler i18n_handler = new I18nContentHandler();
+            parser.setContentHandler(i18n_handler);
+            parser.parse(input);
+        } catch(SAXException e) {
+            getLogger().error("Error in initialiseDictionary", e);
+            throw e;
+        } catch(MalformedURLException e) {
+            getLogger().error("Error in initialiseDictionary", e);
+            throw e;
+        } catch(IOException e) {
+            getLogger().error("Error in initialiseDictionary", e);
+            throw e;
+        } catch(ComponentManagerException e) {
+            getLogger().error("Error in initialiseDictionary", e);
+            throw new SAXException("ComponentManagerException in initialiseDictionary");
+        } finally {
+            if(parser != null) this.manager.release((Component) parser);
         }
-        InputSource input;
-        if (object instanceof Loggable) {
-            ((Loggable)object).setLogger(getLogger());
-        }
-        if (object instanceof Reader) {
-            input = new InputSource(new BufferedReader((Reader)(object)));
-        } else if (object instanceof InputStream) {
-            input = new InputSource(new BufferedInputStream((InputStream)(object)));
-        } else {
-            throw new SAXException("Unknown object type: " + object);
-        }
-
-        // How this could be cached?
-        dictionary = new Hashtable();
-        I18nContentHandler i18n_handler = new I18nContentHandler();
-        parser.setContentHandler(i18n_handler);
-        parser.parse(input);
-
-        this.manager.release((Component) parser);
     }
 }

@@ -47,7 +47,7 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-02 20:18:45 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-12 12:30:33 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -163,11 +163,16 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             logicsheet.setLogger(getLogger());
         }
 
-        URLFactory urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-
-        logicsheetURL = urlFactory.getURL(logicsheetLocation);
-
-        this.manager.release((Component) urlFactory);
+        URLFactory urlFactory = null;
+        try {
+            urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+            logicsheetURL = urlFactory.getURL(logicsheetLocation);
+        } catch (Exception e){
+            getLogger().warn("URL Error: " + e.getMessage(), e);
+            throw e;
+        } finally {
+            if (urlFactory!=null) this.manager.release((Component) urlFactory);
+        }
 
         logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
 
@@ -278,13 +283,15 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             }
 
             URL url = null;
+            URLFactory urlFactory = null;
             try {
-                Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
-                url = ((URLFactory) urlFactory).getURL(logicsheetLocation);
-                this.manager.release(urlFactory);
+                urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
+                url = urlFactory.getURL(logicsheetLocation);
             } catch (Exception e) {
                 getLogger().error("cannot get logicsheet at " + logicsheetLocation);
                 new SAXException ("cannot get logicsheet at " + logicsheetLocation, e);
+            } finally {
+                if(urlFactory != null) this.manager.release((Component)urlFactory);
             }
             getLogger().debug("Logicsheet Used:" + url.toExternalForm());
             inputSource = new InputSource(url.openStream());

@@ -16,6 +16,7 @@ import org.apache.cocoon.ProcessingException;
 
 // Avalon imports
 
+import org.apache.avalon.Component;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
  * and additional interpreter (Rhino, Jython, etc.) as a Cocoon Generator
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 04:38:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 12:30:34 $
  */
 public class ScriptGenerator extends ComposerGenerator {
     
@@ -53,6 +54,7 @@ public class ScriptGenerator extends ComposerGenerator {
     }
 
     public void generate() throws ProcessingException {
+        Parser parser = null;
         try {
             // Figure out what file to open and do so
 
@@ -96,7 +98,7 @@ public class ScriptGenerator extends ComposerGenerator {
 
             InputSource xmlInput =
                     new InputSource(new StringReader(output.toString()));
-            Parser parser = (Parser)(this.manager.lookup(Roles.PARSER));
+            parser = (Parser)(this.manager.lookup(Roles.PARSER));
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(xmlInput);
@@ -109,6 +111,8 @@ public class ScriptGenerator extends ComposerGenerator {
         } catch (Exception e) {
             throw new ProcessingException(
                     "Exception in ScriptGenerator.generate()", e);
+        } finally {
+            if (parser != null) this.manager.release((Component)parser);
         }
     }
 }

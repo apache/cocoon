@@ -71,7 +71,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-03-30 17:14:40 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-12 12:30:36 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer, Loggable, Poolable {
@@ -343,13 +343,15 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable, Comp
     public void loadStylesheet(InputSource sheetSource) throws SAXException, IOException {
         // Set the xslFile for the caching mechanism
         URL url = null;
+        URLFactory urlFactory = null;
         try {
-            Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
-            url = ((URLFactory) urlFactory).getURL(sheetSource.getSystemId());
-            this.manager.release(urlFactory);
+            urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
+            url = urlFactory.getURL(sheetSource.getSystemId());
         } catch (Exception e) {
             log.error("cannot obtain the URLFactory", e);
             throw new SAXException ("cannot obtain the URLFactory", e);
+        } finally {
+            if(urlFactory != null) this.manager.release((Component)urlFactory);
         }
         this.xslFile = new File(url.getFile());
         lastModified = xslFile.lastModified();

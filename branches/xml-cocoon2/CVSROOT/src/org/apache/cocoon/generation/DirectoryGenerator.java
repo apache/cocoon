@@ -21,6 +21,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import org.apache.avalon.Component;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
@@ -67,7 +68,7 @@ import org.apache.regexp.RESyntaxException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-19 21:20:32 $ */
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-12 12:30:34 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -185,15 +186,19 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         File path;
 
         input = resolver.resolveEntity(null,super.source);
-            try {
-                url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(input.getSystemId());
-            } catch (Exception e) {
-                getLogger().error("cannot obtain the URLFactory");
-                throw new SAXException ("cannot obtain the URLFactory", e);
-            }
-            path = new File(url.getFile());
+        URLFactory urlFactory = null;
+        try {
+            urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
+            url = urlFactory.getURL(input.getSystemId());
+        } catch (Exception e) {
+            getLogger().error("cannot obtain the URLFactory");
+            throw new SAXException ("cannot obtain the URLFactory", e);
+        } finally {
+            if (urlFactory != null) manager.release((Component)urlFactory);
+        }
+        path = new File(url.getFile());
 
-            if (!path.isDirectory()) {
+        if (!path.isDirectory()) {
                 throw new IOException("Cannot read directory from "
                       + url.toString() + "\"");
         }

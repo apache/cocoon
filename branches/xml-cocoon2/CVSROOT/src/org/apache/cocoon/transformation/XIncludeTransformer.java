@@ -29,6 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Document;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
@@ -51,7 +52,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-02 20:18:38 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-12 12:30:36 $ $Author: dims $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 
@@ -224,53 +225,64 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         } else if (parse.equals("xml")) {
             getLogger().debug("Parse type is XML");
             Parser parser = null;
-            try {
+            try 
+            {
                 getLogger().debug("Looking up " + Roles.PARSER);
                 parser = (Parser)manager.lookup(Roles.PARSER);
-            } catch (Exception e) {
-                getLogger().error("Could not find component", e);
-                return;
-            }
-            InputSource input;
-            if (object instanceof Loggable) {
-                ((Loggable)object).setLogger(getLogger());
-            }
-            if (object instanceof Reader) {
-                input = new InputSource(new BufferedReader((Reader)object));
-            } else if (object instanceof InputStream) {
-                input = new InputSource(new BufferedInputStream((InputStream)object));
-            } else {
-                throw new SAXException("Unknown object type: "+object);
-            }
-            if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
-                String xpath = suffix.substring(9,suffix.length()-1);
-                getLogger().debug("XPath is "+xpath);
-                DOMBuilder builder = new DOMBuilder(parser);
-                parser.setContentHandler(builder);
-                parser.setLexicalHandler(builder);
-                parser.parse(input);
 
-                Document document = builder.getDocument();
-                try {
-                    NodeList list = XPathAPI.selectNodeList(document,xpath);
-                    DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);
-                    int length = list.getLength();
-                    for (int i=0; i<length; i++) {
-                        streamer.stream(list.item(i));
-                    }
-                } catch (TransformerException e){
-                    getLogger().error("TransformerException", e);
-                    return;
+                InputSource input;
+                if (object instanceof Loggable) {
+                    ((Loggable)object).setLogger(getLogger());
                 }
-            } else {
-                XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
-        xinclude_handler.setLogger(getLogger());
-                parser.setContentHandler(xinclude_handler);
-                parser.setLexicalHandler(xinclude_handler);
-                parser.parse(input);
-            }
+                if (object instanceof Reader) {
+                    input = new InputSource(new BufferedReader((Reader)object));
+                } else if (object instanceof InputStream) {
+                    input = new InputSource(new BufferedInputStream((InputStream)object));
+                } else {
+                    throw new SAXException("Unknown object type: "+object);
+                }
+                if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
+                    String xpath = suffix.substring(9,suffix.length()-1);
+                    getLogger().debug("XPath is "+xpath);
+                    DOMBuilder builder = new DOMBuilder(parser);
+                    parser.setContentHandler(builder);
+                    parser.setLexicalHandler(builder);
+                    parser.parse(input);
 
-            this.manager.release((Component) parser);
+                    Document document = builder.getDocument();
+                    try {
+                        NodeList list = XPathAPI.selectNodeList(document,xpath);
+                        DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);
+                        int length = list.getLength();
+                        for (int i=0; i<length; i++) {
+                            streamer.stream(list.item(i));
+                        }
+                    } catch (TransformerException e){
+                        getLogger().error("TransformerException", e);
+                        return;
+                    }
+                } else {
+                    XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
+                    xinclude_handler.setLogger(getLogger());
+                    parser.setContentHandler(xinclude_handler);
+                    parser.setLexicalHandler(xinclude_handler);
+                    parser.parse(input);
+                }
+            } catch(SAXException e) {
+                getLogger().error("Error in processXIncludeElement", e);
+                throw e;
+            } catch(MalformedURLException e) {
+                getLogger().error("Error in processXIncludeElement", e);
+                throw e;
+            } catch(IOException e) {
+                getLogger().error("Error in processXIncludeElement", e);
+                throw e;
+            } catch(ComponentManagerException e) {
+                getLogger().error("Error in processXIncludeElement", e);
+                throw new SAXException("ComponentManagerException in processXIncludeElement");
+            } finally {
+                if(parser != null) this.manager.release((Component) parser);
+            }
         }
     }
 

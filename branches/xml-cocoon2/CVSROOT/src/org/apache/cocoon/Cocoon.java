@@ -50,7 +50,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.70 $ $Date: 2001-04-11 15:51:38 $
+ * @version CVS $Revision: 1.4.2.71 $ $Date: 2001-04-12 12:30:32 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -249,14 +249,16 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
      */
     public void generateSitemap(Environment environment)
     throws Exception {
-        URLFactory urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
-        File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, sitemapFileName).getSystemId()).getFile());
-        String markupLanguage = "sitemap";
-        String programmingLanguage = "java";
-
-        getLogger().debug("Sitemap regeneration begin:" + sitemapFileName);
+        ProgramGenerator programGenerator = null;
+        URLFactory urlFactory = null;
         try {
-            ProgramGenerator programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
+            File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, sitemapFileName).getSystemId()).getFile());
+            String markupLanguage = "sitemap";
+            String programmingLanguage = "java";
+
+            getLogger().debug("Sitemap regeneration begin:" + sitemapFileName);
             CompiledComponent smap = (CompiledComponent) programGenerator.load(sourceFile, markupLanguage, programmingLanguage, environment);
             getLogger().debug("Sitemap regeneration complete");
 
@@ -265,11 +267,12 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
             } else {
                 getLogger().debug("Main: No errors, but the sitemap has not been set.");
             }
-
-            this.componentManager.release((Component) programGenerator);
         } catch (Exception e) {
             getLogger().error("Main: Error compiling sitemap", e);
             throw e;
+        } finally {
+            if (programGenerator != null) this.componentManager.release((Component) programGenerator);
+            if (urlFactory != null) this.componentManager.release((Component) urlFactory);
         }
     }
 
@@ -278,15 +281,17 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
      */
     public void generateXSP(String fileName, Environment environment)
     throws Exception {
-        getLogger().debug("XSP generation begin:" + fileName);
-
-        URLFactory urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
-        File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, fileName).getSystemId()).getFile());
-        String markupLanguage = "xsp";
-        String programmingLanguage = "java";
-
+        ProgramGenerator programGenerator = null;
+        URLFactory urlFactory = null;
         try {
-            ProgramGenerator programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            getLogger().debug("XSP generation begin:" + fileName);
+
+            programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
+            File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, fileName).getSystemId()).getFile());
+            String markupLanguage = "xsp";
+            String programmingLanguage = "java";
+
             CompiledComponent xsp = (CompiledComponent) programGenerator.load(sourceFile, markupLanguage, programmingLanguage, environment);
             getLogger().debug("XSP generation complete:" + xsp);
 
@@ -294,6 +299,9 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         } catch (Exception e) {
             getLogger().error("Main: Error compiling XSP", e);
             throw e;
+        } finally {
+            if (programGenerator != null) this.componentManager.release((Component) programGenerator);
+            if (urlFactory != null) this.componentManager.release((Component) urlFactory);
         }
     }
 }

@@ -18,6 +18,7 @@ import net.php.servlet;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Component;
 import org.apache.cocoon.Roles;
 
 import org.xml.sax.InputSource;
@@ -29,7 +30,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-09 15:56:51 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-12 12:30:34 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 
@@ -117,6 +118,7 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
         if (!systemId.startsWith("file:/"))
             throw new IOException("protocol not supported: " + systemId);
 
+        Parser parser = null;
         try {
             // construct both ends of the pipe
             PipedInputStream input = new PipedInputStream();
@@ -131,7 +133,7 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             new Thread(php).start();
 
             // pipe the results into the parser
-            Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
+            parser = (Parser)this.manager.lookup(Roles.PARSER);
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(new InputSource(input));
@@ -147,6 +149,8 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
         } catch (Exception e) {
             getLogger().debug("PhpGenerator.generate()", e);
             throw new IOException(e.toString());
+        } finally {
+            if (parser != null) this.manager.release((Component)parser);
         }
     }
 }

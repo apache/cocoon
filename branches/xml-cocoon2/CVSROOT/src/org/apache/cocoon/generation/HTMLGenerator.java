@@ -30,7 +30,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-27 10:29:51 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-12 12:30:34 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 
@@ -39,6 +39,7 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
+        URLFactory urlFactory = null;
         try
         {
             // Setup an instance of Tidy.
@@ -46,10 +47,10 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             tidy.setXmlOut(true);
             tidy.setXHTML(true);
 
+            urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+            URL url = urlFactory.getURL(this.source);
+
             // Extract the document using JTidy and stream it.
-            Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
-            URL url = ((URLFactory) urlFactory).getURL(this.source);
-            this.manager.release(urlFactory);
             org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(url.openStream()), null);
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
             streamer.stream(doc);
@@ -62,6 +63,8 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
         } catch (Exception e){
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in HTMLGenerator.generate()",e);
+        } finally {
+            this.manager.release((Component)urlFactory);
         }
     }
 }

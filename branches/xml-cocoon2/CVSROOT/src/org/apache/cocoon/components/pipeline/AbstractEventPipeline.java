@@ -37,7 +37,7 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:31 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 12:30:34 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -77,6 +77,7 @@ implements EventPipeline {
         }
         ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
         this.generator = (Generator) selector.select(role);
+        this.manager.release((Component)selector);
         this.generatorSource = source;
         this.generatorParam = param;
     }
@@ -85,6 +86,7 @@ implements EventPipeline {
     throws Exception {
         ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
         this.transformers.add ((Transformer)selector.select(role));
+        this.manager.release((Component)selector);
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }
@@ -240,6 +242,8 @@ implements EventPipeline {
             while ( itt.hasNext() ) {
                 transformerSelector.release((Component)itt.next());
             }
+            this.manager.release((Component)transformerSelector);
+
             this.transformers.clear();
             this.transformerParams.clear();
             this.transformerSources.clear();
