@@ -56,7 +56,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.18 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.19 2004/03/22 13:41:44 joerg Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -79,7 +79,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         this.xIncludePipe = new XIncludePipe();
         this.xIncludePipe.enableLogging(getLogger());
         this.xIncludePipe.init(null);
-        super.setConsumer(xIncludePipe);
+        super.setContentHandler(xIncludePipe);
+        super.setLexicalHandler(xIncludePipe);
     }
 
     public void setConsumer(XMLConsumer consumer) {
