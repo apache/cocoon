@@ -29,19 +29,23 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.components.LifecycleHelper;
 
 /**
  * A very simple ServiceSelector for ThreadSafe services.
  * 
- * @version $Id: SimpleServiceSelector.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version $Id: SimpleServiceSelector.java,v 1.2 2004/04/15 18:09:03 bruno Exp $
  */
 public class SimpleServiceSelector extends AbstractLogEnabled implements ServiceSelector, Configurable, LogEnabled,
-        Serviceable, Disposable {
+        Serviceable, Disposable, Contextualizable {
     private final String hintShortHand;
     private final Class componentClass;
     private Map components = new HashMap();
     private ServiceManager serviceManager;
+    private Context context;
 
     public SimpleServiceSelector(String hintShortHand, Class componentClass) {
         this.hintShortHand = hintShortHand;
@@ -50,6 +54,10 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
+    }
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -71,7 +79,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
             Object component = null;
             try {
                 component = clazz.newInstance();
-                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, componentConfs[i]);
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), context, serviceManager, null, componentConfs[i]);
                 lifecycleHelper.setupComponent(component);
             } catch (Exception e) {
                 throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i].getLocation(), e);
