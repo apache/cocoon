@@ -56,7 +56,6 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.TraversableSource;
@@ -78,8 +77,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Generates an XML directory listing from a Traversable Source. This class
- * is nothing more than a Source-oriented refactoring of DirectoryGenerator.
+ * Generates an XML directory listing from a Traversable Source.
  * <p>
  * The root node of the generated document will normally be a
  * <code>directory</code> node, and a directory node can contain zero
@@ -107,7 +105,7 @@ import java.util.Comparator;
  * directory's immediate contents will be returned.
  * <dt> <i>sort</i> (optional)
  * <dd> Sort order in which the nodes are returned. Possible values are
- * name, size, time, collection. collection is the same as name,
+ * name, size, time, directory. directory is the same as name,
  * except that the directory entries are listed first. System order is default.
  * <dt> <i>reverse</i> (optional)
  * <dd>	Reverse the order of the sort
@@ -124,32 +122,38 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
- * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * 
- * @version CVS $Id: TraversableGenerator.java,v 1.1 2003/07/10 08:12:49 gianugo Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/07/10 16:33:36 gianugo Exp $
  */
 public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
     /** The URI of the namespace of this generator. */
-    protected static final String URI = "http://apache.org/cocoon/collection/1.0";
+    protected static final String URI = "http://apache.org/cocoon/directory/2.0";
 
     /** The namespace prefix for this namespace. */
-    protected static final String PREFIX = "collection";
+    protected static final String PREFIX = "dir";
 
     /* Node and attribute names */
-    protected static final String COL_NODE_NAME = "collection";
-    protected static final String RESOURCE_NODE_NAME = "file";
+    protected static final String DIR_NODE_NAME = "directory";
+    protected static final String FILE_NODE_NAME = "file";
 
-    protected static final String RES_NAME_ATTR_NAME = "name";
+    protected static final String FILENAME_ATTR_NAME = "name";
     protected static final String LASTMOD_ATTR_NAME = "lastModified";
     protected static final String DATE_ATTR_NAME = "date";
     protected static final String SIZE_ATTR_NAME = "size";
 
     /** The validity that is being built */
-    protected CollectionValidity validity;
+    protected DirValidity validity;
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
+
+    /**
+     * The cache key needs to be generated for the configuration of this
+     * generator, so storing the parameters for generateKey().
+     * Using the member variables after setup() would not work I guess. I don't
+     * know a way from the regular expressions back to the pattern or at least
+     * a useful string.
+     */
+    protected List cacheKeyParList;
 
     /** The depth parameter determines how deep the DirectoryGenerator should delve. */
     protected int depth;
@@ -180,7 +184,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * This is only set to true for the requested directory specified by the
      * <code>src</code> attribute on the generator's configuration.
      */
-    protected boolean isRequestedCollection;
+    protected boolean isRequestedDirectory;
 
     /**
      * Set the request parameters. Must be called before the generate method.
@@ -193,13 +197,18 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         if (src == null) {
-            throw new ProcessingException("No src attribute pointing to a traversable source to be XMLized specified.");
+            throw new ProcessingException("No src attribute pointing to a directory to be XMLized specified.");
         }
         super.setup(resolver, objectModel, src, par);
 
+        this.cacheKeyParList = new ArrayList();
+        this.cacheKeyParList.add(src);
+
         this.depth = par.getParameterAsInteger("depth", 1);
+        this.cacheKeyParList.add(String.valueOf(this.depth));
 
         String dateFormatString = par.getParameter("dateFormat", null);
+        this.cacheKeyParList.add(dateFormatString);
         if (dateFormatString != null) {
             this.dateFormatter = new SimpleDateFormat(dateFormatString);
         } else {
@@ -207,10 +216,13 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         }
 
         this.sort = par.getParameter("sort", "name");
+        this.cacheKeyParList.add(this.sort);
 
         this.reverse = par.getParameterAsBoolean("reverse", false);
+        this.cacheKeyParList.add(String.valueOf(this.reverse));
 
         this.refreshDelay = par.getParameterAsLong("refreshDelay", 1L) * 1000L;
+        this.cacheKeyParList.add(String.valueOf(this.refreshDelay));
 
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("depth: " + this.depth);
@@ -223,40 +235,44 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         String rePattern = null;
         try {
             rePattern = par.getParameter("root", null);
+            this.cacheKeyParList.add(rePattern);
             this.rootRE = (rePattern == null) ? null : new RE(rePattern);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("root pattern: " + rePattern);
             }
 
             rePattern = par.getParameter("include", null);
+            this.cacheKeyParList.add(rePattern);
             this.includeRE = (rePattern == null) ? null : new RE(rePattern);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("include pattern: " + rePattern);
             }
 
             rePattern = par.getParameter("exclude", null);
+            this.cacheKeyParList.add(rePattern);
             this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
-
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("exclude pattern: " + rePattern);
             }
         } catch (RESyntaxException rese) {
-            throw new ProcessingException("Syntax error in regexp pattern '"
-                                          + rePattern + "'", rese);
+            throw new ProcessingException("Syntax error in regexp pattern '" 
+            			+ rePattern + "'", rese);
         }
 
-        this.isRequestedCollection = false;
+        this.isRequestedDirectory = false;
         this.attributes = new AttributesImpl();
     }
 
-    /** 
+    /* (non-Javadoc)
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
-     * FIXME: SimpleDateFormat and RE don't have a toString() implemented, so
-     *        the key generation is buggy!!
      */
     public Serializable getKey() {
-        return super.source + this.depth + this.dateFormatter + this.sort
-               + this.reverse + this.rootRE + this.excludeRE + this.includeRE;
+        StringBuffer buffer = new StringBuffer();
+        int len = this.cacheKeyParList.size();
+        for (int i = 0; i < len; i++) {
+            buffer.append((String)this.cacheKeyParList.get(i) + ":");
+        }
+        return buffer.toString();
     }
 
     /**
@@ -264,28 +280,28 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * is initially empty since the files that define it are not known before
      * generation has occured. So the returned object is kept by the generator
      * and filled with each of the files that are traversed.
+     * 
      * @see DirectoryGenerator.DirValidity
      */
     public SourceValidity getValidity() {
-        this.validity = new CollectionValidity(this.refreshDelay);
+        if (this.validity == null) {
+            this.validity = new DirValidity(this.refreshDelay);
+        }
         return this.validity;
     }
 
     /**
      * Generate XML data.
      *
-     * @throws  SAXException
-     *      if an error occurs while outputting the document
-     * @throws  ProcessingException
-     *      if the requsted URI isn't a directory on the local filesystem
+     * @throws  SAXException if an error occurs while outputting the document
+     * @throws  ProcessingException if the requsted URI isn't a directory on the local filesystem
      */
     public void generate() throws SAXException, ProcessingException {
         String directory = super.source;
         TraversableSource inputSource = null;
         try {
-            inputSource = (TraversableSource)this.resolver.resolveURI(directory);
-            String systemId = inputSource.getURI();
-                        
+            inputSource = (TraversableSource) this.resolver.resolveURI(directory);
+
             if (!inputSource.isCollection()) {
                 throw new ResourceNotFoundException(directory + " is not a collection.");
             }
@@ -299,11 +315,9 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } catch (IOException ioe) {
-            throw new ResourceNotFoundException("Could not read collection " + directory, ioe);
+            throw new ResourceNotFoundException("Could not read directory " + directory, ioe);
         } catch (ClassCastException ce) {
-            throw new ResourceNotFoundException(directory + 
-                " is not a traversable source");
-
+            throw new ResourceNotFoundException(directory + " is not a traversable source");
         } finally {
             this.resolver.release(inputSource);
         }
@@ -311,6 +325,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
 
     /**
      * Creates a stack containing the ancestors of File up to specified directory.
+     * 
      * @param path the File whose ancestors shall be retrieved
      * @return a Stack containing the ancestors.
      */
@@ -319,8 +334,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         Stack ancestors = new Stack();
 
         while ((parent != null) && !isRoot(parent)) {
-            parent = (TraversableSource)parent.getParent();
- 
+            parent = (TraversableSource) parent.getParent();
             if (parent != null) {
                 ancestors.push(parent);
             } else {
@@ -335,18 +349,20 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     /**
      * Adds recursively the path from the directory matched by the root pattern
      * down to the requested directory.
+     * 
      * @param path       the requested directory.
      * @param ancestors  the stack of the ancestors.
      * @throws SAXException
      */
-    protected void addAncestorPath(TraversableSource path, Stack ancestors) throws SAXException {
+    protected void addAncestorPath(TraversableSource path, Stack ancestors)
+        throws SAXException {
         if (ancestors.empty()) {
-            this.isRequestedCollection = true;
+            this.isRequestedDirectory = true;
             addPath(path, depth);
         } else {
-            startNode(COL_NODE_NAME, (TraversableSource)ancestors.pop());
+            startNode(DIR_NODE_NAME, (TraversableSource) ancestors.pop());
             addAncestorPath(path, ancestors);
-            endNode(COL_NODE_NAME);
+            endNode(DIR_NODE_NAME);
         }
     }
 
@@ -360,11 +376,12 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      *
      * @throws SAXException  if an error occurs while constructing nodes
      */
-    protected void addPath(TraversableSource path, int depth) throws SAXException {
+    protected void addPath(TraversableSource path, int depth)
+        throws SAXException {
         if (path.isCollection()) {
-            startNode(COL_NODE_NAME, path);
+            startNode(DIR_NODE_NAME, path);
             if (depth > 0) {
-                
+
                 Collection contents;
                 try {
                     contents = path.getChildren();
@@ -376,38 +393,34 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
                             if (reverse) {
-                                return ((TraversableSource)o2).getName().compareTo(((TraversableSource)o1).getName());
+                                return ((TraversableSource) o2).getName().compareTo(((TraversableSource) o1).getName());
                             }
-                            return ((TraversableSource)o1).getName().compareTo(((TraversableSource)o2).getName());
+                            return ((TraversableSource) o1).getName().compareTo(((TraversableSource) o2).getName());
                         }
                     });
                 } else if (sort.equals("size")) {
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
                             if (reverse) {
-                                return new Long(((TraversableSource)o2).getContentLength()).compareTo(
-                                    new Long(((TraversableSource)o1).getContentLength()));
+                                return new Long(((TraversableSource) o2).getContentLength()).compareTo(new Long(((TraversableSource) o1).getContentLength()));
                             }
-                            return new Long(((TraversableSource)o1).getContentLength()).compareTo(
-                                new Long(((TraversableSource)o2).getContentLength()));
+                            return new Long(((TraversableSource) o1).getContentLength()).compareTo(new Long(((TraversableSource) o2).getContentLength()));
                         }
                     });
                 } else if (sort.equals("lastmodified")) {
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
                             if (reverse) {
-                                return new Long(((TraversableSource)o2).getLastModified()).compareTo(
-                                    new Long(((TraversableSource)o1).getLastModified()));
+                                return new Long(((TraversableSource) o2).getLastModified()).compareTo(new Long(((TraversableSource) o1).getLastModified()));
                             }
-                            return new Long(((TraversableSource)o1).getLastModified()).compareTo(
-                                new Long(((TraversableSource)o2).getLastModified()));
+                            return new Long(((TraversableSource) o1).getLastModified()).compareTo(new Long(((TraversableSource) o2).getLastModified()));
                         }
                     });
-                } else if (sort.equals("collection")) {
+                } else if (sort.equals("directory")) {
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
-                            TraversableSource ts1 = (TraversableSource)o1;
-                            TraversableSource ts2 = (TraversableSource)o2;
+                            TraversableSource ts1 = (TraversableSource) o1;
+                            TraversableSource ts2 = (TraversableSource) o2;
 
                             if (reverse) {
                                 if (ts2.isCollection() && !ts1.isCollection())
@@ -431,11 +444,11 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
                     }
                 }
             }
-            endNode(COL_NODE_NAME);
+            endNode(DIR_NODE_NAME);
         } else {
             if (isIncluded(path) && !isExcluded(path)) {
-                startNode(RESOURCE_NODE_NAME, path);
-                endNode(RESOURCE_NODE_NAME);
+                startNode(FILE_NODE_NAME, path);
+                endNode(FILE_NODE_NAME);
             }
         }
     }
@@ -448,12 +461,17 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * 
      * @throws SAXException  if an error occurs while creating the node
      */
-    protected void startNode(String nodeName, TraversableSource path) throws SAXException {
+    protected void startNode(String nodeName, TraversableSource path)
+        throws SAXException {
         if (this.validity != null) {
             this.validity.addSource(path);
         }
         setNodeAttributes(path);
-        super.contentHandler.startElement(URI, nodeName, PREFIX + ':' + nodeName, attributes);
+        super.contentHandler.startElement(
+            URI,
+            nodeName,
+            PREFIX + ':' + nodeName,
+            attributes);
     }
 
     /**
@@ -465,23 +483,24 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      *
      * @throws SAXException  if an error occurs while setting the attributes
      */
-    protected void setNodeAttributes(TraversableSource path) throws SAXException {
+    protected void setNodeAttributes(TraversableSource path)
+        throws SAXException {
         long lastModified = path.getLastModified();
         attributes.clear();
-        attributes.addAttribute("", RES_NAME_ATTR_NAME, RES_NAME_ATTR_NAME,
-                                "CDATA", path.getName());
+        attributes.addAttribute("", FILENAME_ATTR_NAME,FILENAME_ATTR_NAME,
+            "CDATA", path.getName());
         attributes.addAttribute("", LASTMOD_ATTR_NAME, LASTMOD_ATTR_NAME,
-                                "CDATA", Long.toString(path.getLastModified()));
+            "CDATA", Long.toString(path.getLastModified()));
         attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME,
-                                "CDATA", dateFormatter.format(new Date(lastModified)));
+            "CDATA", dateFormatter.format(new Date(lastModified)));
         attributes.addAttribute("", SIZE_ATTR_NAME, SIZE_ATTR_NAME,
-                                "CDATA", Long.toString(path.getContentLength()));
-        if (this.isRequestedCollection) {
+            "CDATA", Long.toString(path.getContentLength()));
+        if (this.isRequestedDirectory) {
             attributes.addAttribute("", "sort", "sort", "CDATA", this.sort);
             attributes.addAttribute("", "reverse", "reverse", "CDATA",
-                                    String.valueOf(this.reverse));
+                String.valueOf(this.reverse));
             attributes.addAttribute("", "requested", "requested", "CDATA", "true");
-            this.isRequestedCollection = false;
+            this.isRequestedDirectory = false;
         }
     }
 
@@ -505,7 +524,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      *         false otherwise.
      */
     protected boolean isRoot(TraversableSource path) {
-        return (this.rootRE == null) ? true : this.rootRE.match(path.getURI());
+        return (this.rootRE == null) ? true : this.rootRE.match(path.getName());
     }
 
     /**
@@ -517,7 +536,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      *         false otherwise.
      */
     protected boolean isIncluded(TraversableSource path) {
-        return (this.includeRE == null) ? true : this.includeRE.match(path.getURI());
+        return (this.includeRE == null) ? true : this.includeRE.match(path.getName());
     }
 
     /**
@@ -529,31 +548,32 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      *         true otherwise.
      */
     protected boolean isExcluded(TraversableSource path) {
-        return (this.excludeRE == null) ? false : this.excludeRE.match(path.getURI());
+        return (this.excludeRE == null) ? false : this.excludeRE.match(path.getName());
     }
 
     /**
      * Recycle resources
      */
     public void recycle() {
-        super.recycle();
+        this.cacheKeyParList = null;
         this.attributes = null;
         this.dateFormatter = null;
         this.rootRE = null;
         this.includeRE = null;
         this.excludeRE = null;
         this.validity = null;
+        super.recycle();
     }
 
     /** Specific validity class, that holds all files that have been generated */
-    public static class CollectionValidity implements SourceValidity {
+    public static class DirValidity implements SourceValidity {
 
         private long expiry;
         private long delay;
         List sources = new ArrayList();
-        List resourceDates = new ArrayList();
+        List sourcesDates = new ArrayList();
 
-        public CollectionValidity(long delay) {
+        public DirValidity(long delay) {
             expiry = System.currentTimeMillis() + delay;
             this.delay = delay;
         }
@@ -566,13 +586,13 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             expiry = System.currentTimeMillis() + delay;
             int len = sources.size();
             for (int i = 0; i < len; i++) {
-                Source f = (Source)sources.get(i);
-                if (!f.exists()) {
-                    return -1; // File was removed
+                TraversableSource ts =  (TraversableSource) sources.get(i);
+                if (!ts.exists()) {
+                    return -1; // Sources was removed
                 }
 
-                long oldDate = ((Long)resourceDates.get(i)).longValue();
-                long newDate = f.getLastModified();
+                long oldDate = ((Long) sourcesDates.get(i)).longValue();
+                long newDate = ts.getLastModified();
 
                 if (oldDate != newDate) {
                     return -1;
@@ -590,7 +610,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
 
         public void addSource(TraversableSource f) {
             sources.add(f);
-            resourceDates.add(new Long(f.getLastModified()));
+            sourcesDates.add(new Long(f.getLastModified()));
         }
     }
 }
