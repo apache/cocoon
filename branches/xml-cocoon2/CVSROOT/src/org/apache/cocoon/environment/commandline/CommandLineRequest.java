@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-15 20:29:18 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-25 00:30:12 $
  */
 
 /*
@@ -124,8 +124,10 @@ public class CommandLineRequest implements HttpServletRequest {
         return (header != null) ? Integer.parseInt(header) : -1;
     }
     public long getDateHeader(String name) {
-        throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
-    } // FIXME
+        //FIXME
+        //throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
+        return 0;
+    } 
     public Enumeration getHeaders(String name) {
         throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
     } // FIXME
