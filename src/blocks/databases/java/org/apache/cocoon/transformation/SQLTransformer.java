@@ -64,6 +64,7 @@ import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -85,7 +86,7 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: SQLTransformer.java,v 1.1 2003/03/09 00:03:11 pier Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.2 2003/03/10 11:45:57 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1044,7 +1045,8 @@ public class SQLTransformer
                     sb.append( query.getColumnValue( av.name ) );
                 }
             }
-            String query = sb.toString().trim();
+            
+            String query = StringUtils.deleteWhitespace(sb.toString());
             // Test, if this is an update (by comparing with select)
             if ( !isstoredprocedure && !isupdate) {
                 if (query.length() > 6 && !query.substring(0,6).equalsIgnoreCase("SELECT")) {
