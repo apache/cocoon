@@ -97,9 +97,12 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
 </source>
 
    <note>
-    from this version of Cocoon the <code>cocoon.jar</code>
-    package should be added to the servlet engine classpath as any other
-    required package (as shown above).
+    The <code>cocoon.jar</code> package <strong>must</strong> be added to the 
+    servlet engine classpath in order for the XSP subsystem to work correctly.
+    We perfectly understand this as a limitation to Cocoon flexibility, and 
+    we are working hard to make it possible for multiple cocoon instances to
+    reside in the same JVM, unfortunately some limitations in Java 1.1 make 
+    this impossible at this time.
    </note>
 
    <note>
@@ -157,9 +160,11 @@ AddHandler cocoon xml</source>
    </p>
 
    <p>
-    If the page above is working, place the samples contained in the distribution
-    (under <code>./samples</code>) in your web server URI space and call
-    <code>index.xml</code> to see Cocoon in action.
+    If the page above is working, make the samples contained in the distribution
+    (under <code>./samples</code>) visible from your web server (by either 
+    copying the files under yout <code>htdocs</code> directory, or by making
+    at alias for the sample directory) and call <code>./samples/index.xml</code>
+    to see Cocoon in action.
    </p>
 
    <note>

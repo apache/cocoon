@@ -109,6 +109,20 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 </faq>
 
 <faq>
+ <question>Why can't I place <code>cocoon.jar</code> in my servlet repository?</question>
+ <answer>
+  <p>Since Cocoon is a web application, it should reside on servlet repository while all the
+  libraries it uses should be place in the classpath. This would allow a single
+  servlet engine to host more than one Cocoon instances with different classloaders
+  and different security restrictions.</p>
+  <p>Unfortunately, due to specific needs of the XSP subsystem and some Java 1.1
+  classloading limitations, this cannot be done.</p>
+  <p>We are working for make this possible on Cocoon2, but assume this will
+  require at least Java 1.2</p>
+ </answer>
+</faq>
+
+<faq>
  <question>Why the LDAP processor doesn't work?</question>
  <answer>
   <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">Sun JNDI API</link>
