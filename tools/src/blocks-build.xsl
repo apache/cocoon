@@ -397,6 +397,17 @@
         </then>
       </if>
 
+      <if>
+        <istrue value="${{include.sources-jars}}"/>
+        <then>
+          <jar jarfile="${{build.blocks}}/{$block-name}-block.src.jar">
+            <fileset dir="${{blocks}}/{$block-name}/java">
+              <include name="**/*.java"/>
+            </fileset>
+          </jar>
+        </then>
+      </if>
+
       <!-- exclude sample classes from the block package -->
       <mkdir dir="${{build.blocks}}/{$block-name}/samples"/>
       <javac destdir="${{build.blocks}}/{$block-name}/samples"
