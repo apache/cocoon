@@ -97,7 +97,7 @@ public class Repeater extends AbstractWidget
         	rowIndex = Integer.parseInt(id);
         } catch (NumberFormatException nfe) {
         }
-        if (rowIndex < 0 && rowIndex > getSize()) 
+        if (rowIndex < 0 || rowIndex > getSize()) 
             return null;
         return getRow(rowIndex);
     }
