@@ -253,6 +253,17 @@
                         <li><code><![CDATA[<i18n:number type="int-currency-no-unit" value="170374" />]]></code> will result in localized presentation of the value for US locale: 1,703.74, and 170374 (without currency unit) for a currency without subunit.</li>
                         <li><code><![CDATA[<i18n:number type="percent" value="1.2" />]]></code> will result in localized percent value: %120 for most of the locales.</li>
                     </ul>
+                <p>
+                 If someone from US want to see sales figures from a store in Germany,
+                 the value is formatted with locale="de_DE", e.g.
+                 100,00 &#x20AC;. The decimal and grouping separator than is also in de_DE locale.
+                 This may be leading to some confusion/misunderstanding because
+                 people from US know the "," as thousand separator.
+
+                 There is a attribute called "dec-and-grp-locale", so that the output from
+                 <code><![CDATA[<i18n:number type="currency" locale="de_DE" dec-and-grp-locale="en_US">100</i18n:number>]]></code>
+                 results in 100.00 &#x20AC;
+                </p>
                 <anchor id="i18n_param"/><p>
                     Also, date and number formatting can be used with substitution params. <code>type</code> attribute must be used with params to indicate the param type (date, number, currency, ...). Default type is <code>string</code>.
                 </p>
