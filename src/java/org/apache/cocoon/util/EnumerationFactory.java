@@ -136,22 +136,22 @@ public class EnumerationFactory {
   /**
    * Order relations Object.op (OtherObject) representing the relation
    * Object op OtherObject.
-   * @param enum the right operand
+   * @param e the right operand
    */
-  public boolean lt(EnumerationFactory enum) {                   // "<"
-    return this.getPos() < enum.getPos ();
+  public boolean lt(EnumerationFactory e) {                   // "<"
+    return this.getPos() < e.getPos ();
   }
 
-  public boolean le(EnumerationFactory enum) {                   // "<="
-    return this.getPos() <= enum.getPos ();
+  public boolean le(EnumerationFactory e) {                   // "<="
+    return this.getPos() <= e.getPos ();
   }
 
-  public boolean gt(EnumerationFactory enum) {                   // ">"
-    return this.getPos() > enum.getPos ();
+  public boolean gt(EnumerationFactory e) {                   // ">"
+    return this.getPos() > e.getPos ();
   }
 
-  public boolean ge(EnumerationFactory enum) {                   // ">="
-    return this.getPos() >= enum.getPos ();
+  public boolean ge(EnumerationFactory e) {                   // ">="
+    return this.getPos() >= e.getPos ();
   }
 
   // "==" and "equals" are inherited.

@@ -21,13 +21,15 @@ import java.util.Iterator;
 /**
  * Wraps an Enumeration and provides Iterator interface.
  *
- * @version CVS $Id: IteratorHelper.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 class IteratorHelper implements Iterator {
-    Enumeration enum = null;
-    public IteratorHelper( Enumeration e ) { this.enum = e; }
-    public boolean hasNext() { return this.enum.hasMoreElements(); }
-    public Object next() { return this.enum.nextElement(); }
+
+    protected Enumeration enumeration;
+
+    public IteratorHelper( Enumeration e ) { this.enumeration = e; }
+    public boolean hasNext() { return this.enumeration.hasMoreElements(); }
+    public Object next() { return this.enumeration.nextElement(); }
     /** ignored */
     public void remove() {}
 }
