@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P\u00F6tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.35 2004/05/07 21:13:50 joerg Exp $
+ * @version CVS $Id$
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -1443,11 +1443,11 @@ public class FOM_Cocoon extends ScriptableObject {
         return ContextHelper.getObjectModel(currentCall.avalonContext);
     }
 
-    /**
-     * Get the current Sitemap's component manager
-     * @return The component manager
-     */
-
+//    /**
+//     * Get the current Sitemap's component manager
+//     * @return The component manager
+//     */
+//
 //    public ComponentManager getComponentManager() {
 //        return currentCall.componentManager;
 //    }

@@ -23,24 +23,23 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  *
- * @version CVS $Id: InterpreterSelector.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class InterpreterSelector extends ExcaliburComponentSelector
-  implements Configurable, ThreadSafe
-{
+        implements Configurable, ThreadSafe {
+
   private String defaultLanguage;
 
-  public void configure(Configuration config)
-    throws ConfigurationException
-  {
+    public void configure(Configuration config) throws ConfigurationException {
     super.configure(config);
 
-    defaultLanguage = config.getAttribute("default", null);
+        this.defaultLanguage = config.getAttribute("default", null);
 
     // Finish the initialization of the already created components
     Configuration[] configurations = config.getChildren("component-instance");
-    if (configurations.length == 0)
-      throw new ConfigurationException("No languages defined!");
+        if (configurations.length == 0) {
+            throw new ConfigurationException("No languages defined!");
+        }
 
     for (int i = 0; i < configurations.length; i++) {
       Configuration conf = configurations[i];
@@ -52,13 +51,13 @@ public class InterpreterSelector extends ExcaliburComponentSelector
         );
       }
 
-      if (i == 0 && defaultLanguage == null)
+            if (i == 0 && defaultLanguage == null) {
         defaultLanguage = hint;
     }
   }
+    }
 
-  public String getDefaultLanguage()
-  {
+    public String getDefaultLanguage() {
     return defaultLanguage;
   }
 }
