@@ -48,7 +48,7 @@ import java.util.Map;
 // The corresponding TODO in the EffectPipe needs to be completed first.
 
 /**
- * The basic operation of this Pipe is that it replaces wt:widget (in the
+ * The basic operation of this Pipe is that it replaces ft:widget (in the
  * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
@@ -71,6 +71,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      */
     private static final String LOCATION = "location";
 
+    private static final String AGGREGATE_WIDGET = "aggregate-widget";
+    private static final String CHOOSE = "choose";
     private static final String CLASS = "class";
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
@@ -78,14 +80,12 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String REPEATER_SIZE = "repeater-size";
     private static final String REPEATER_WIDGET = "repeater-widget";
     private static final String REPEATER_WIDGET_LABEL = "repeater-widget-label";
-    private static final String AGGREGATE_WIDGET = "aggregate-widget";
     private static final String STRUCT = "struct";
     private static final String STYLING_EL = "styling";
-    private static final String CHOOSE = "choose";
     private static final String UNION = "union";
     private static final String VALIDATION_ERROR = "validation-error";
-    private static final String WIDGET_LABEL = "widget-label";
     private static final String WIDGET = "widget";
+    private static final String WIDGET_LABEL = "widget-label";
 
     protected Widget contextWidget;
     protected LinkedList contextWidgets;
@@ -94,31 +94,31 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected Widget widget;
     protected Map classes;
 
+    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
+    private final ChooseHandler              chooseHandler          = new ChooseHandler();
+    private final ChoosePassThruHandler      choosePassThruHandler  = new ChoosePassThruHandler();
+    private final ClassHandler               classHandler           = new ClassHandler();
+    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
     private final DocHandler                 docHandler             = new DocHandler();
     private final FormHandler                formHandler            = new FormHandler();
     private final NestedHandler              nestedHandler          = new NestedHandler();
-    private final SkipHandler                skipHandler            = new SkipHandler();
-    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
-    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final NewHandler                 newHandler             = new NewHandler();
     private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
-    private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
     private final RepeaterWidgetHandler      repeaterWidgetHandler  = new RepeaterWidgetHandler();
-    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
+    private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
+    private final SkipHandler                skipHandler            = new SkipHandler();
     private final StructHandler              structHandler          = new StructHandler();
-    private final ChooseHandler              chooseHandler          = new ChooseHandler();
-    private final ChoosePassThruHandler      choosePassThruHandler  = new ChoosePassThruHandler();
+    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
+    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
     private final UnionHandler               unionHandler           = new UnionHandler();
     private final UnionPassThruHandler       unionPassThruHandler   = new UnionPassThruHandler();
-    private final NewHandler                 newHandler             = new NewHandler();
-    private final ClassHandler               classHandler           = new ClassHandler();
-    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
-    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
     private final ValidationErrorHandler     validationErrorHandler = new ValidationErrorHandler();
 
     /**
      * Map containing all handlers
      */
-    private final Map templates = new HashMap(12, 1);
+    private final Map templates = new HashMap();
 
     protected FormsPipelineConfig pipeContext;
 
@@ -135,19 +135,19 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public EffectWidgetReplacingPipe() {
         // Setup map of templates.
-        templates.put(WIDGET, widgetHandler);
-        templates.put(WIDGET_LABEL, widgetLabelHandler);
-        templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
         templates.put(AGGREGATE_WIDGET, aggregateWidgetHandler);
-        templates.put(REPEATER_SIZE, repeaterSizeHandler);
-        templates.put(REPEATER_WIDGET_LABEL, repeaterWidgetLabelHandler);
-        templates.put(STRUCT, structHandler);
         templates.put(CHOOSE, chooseHandler);
-        templates.put(UNION, unionHandler);
-        templates.put(NEW, newHandler);
         templates.put(CLASS, classHandler);
         templates.put(CONTINUATION_ID, continuationIdHandler);
+        templates.put(NEW, newHandler);
+        templates.put(REPEATER_SIZE, repeaterSizeHandler);
+        templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
+        templates.put(REPEATER_WIDGET_LABEL, repeaterWidgetLabelHandler);
+        templates.put(STRUCT, structHandler);
+        templates.put(UNION, unionHandler);
         templates.put(VALIDATION_ERROR, validationErrorHandler);
+        templates.put(WIDGET, widgetHandler);
+        templates.put(WIDGET_LABEL, widgetLabelHandler);
     }
 
     private void throwSAXException(String message) throws SAXException{
@@ -290,7 +290,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             switch(event) {
             case EVENT_START_ELEMENT:
                 if (contextWidget != null) {
-                    throwSAXException("Detected nested wt:form-template elements, this is not allowed.");
+                    throwSAXException("Detected nested ft:form-template elements, this is not allowed.");
                 }
                 out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
