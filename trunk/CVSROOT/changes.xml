@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.166 2000-12-13 13:30:26 greenrd Exp $ 
+  $Id: changes.xml,v 1.167 2000-12-22 11:52:51 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add" due-to="Ovidiu Predescu" due-to-email="ovidiu@cup.hp.com">
+   Added user-agent option (-A) to command-line mode.
+  </action>
+  <action dev="RDG" type="fix" due-to="Ovidiu Predescu" due-to-email="ovidiu@cup.hp.com">
+   Fixed command-line mode.
+  </action>
   <action dev="RDG" type="add">
    Added multi-encoding support to esql. Even tables using multiple encodings can be
    read from! However, this will only work if your JDBC driver

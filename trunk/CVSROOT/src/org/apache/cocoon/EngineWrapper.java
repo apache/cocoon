@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.11 2000-05-25 14:06:34 stefano Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.12 2000-12-22 11:52:58 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,15 +70,17 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-05-25 14:06:34 $
+ * @version $Revision: 1.12 $ $Date: 2000-12-22 11:52:58 $
  */
 
 public class EngineWrapper {
 
     private Engine engine;
+    private String userAgent;
     
     protected EngineWrapper(Configurations confs) throws Exception {
         this.engine = Engine.getInstance(confs, new Object());
+        this.userAgent = (String)confs.get("user-agent");
     }
 
     public void handle(PrintWriter out, File pathToDocument) throws Exception {
@@ -122,11 +124,12 @@ public class EngineWrapper {
         public String getPathInfo() { return ""; }
 
         public String getParameter(String name) { 
-            if ((document != null) &&  (name.equalsIgnoreCase("producer"))) {
+            if ((document != null) &&  (name.equalsIgnoreCase("producer")))
                 return "org.apache.cocoon.producer.ProducerFromRequest";
-            } else {
+            else if (name.equalsIgnoreCase("user-agent"))
+              return userAgent;
+            else
                 return null;
-            }
         }
 
         public BufferedReader getReader () throws IOException { 

@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.19 2000-12-13 03:38:39 greenrd Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.20 2000-12-22 11:52:57 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.19 $ $Date: 2000-12-13 03:38:39 $
+ * @version $Revision: 1.20 $ $Date: 2000-12-22 11:52:57 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -266,31 +266,56 @@ public class Cocoon extends HttpServlet implements Defaults {
     public static void main(String[] argument) throws Exception {
         
         String properties = null;
+        String userAgent = null;
         String xml = null;
-        String xsl = null;
         String out = null;
-        int i = 0;
+        PrintWriter writer = null;
+        Configurations confs = null;
 
-        if ((argument.length < 2) || (argument.length > 4)) {
+        if (argument.length == 0)
+          usage();
+        
+        for (int i = 0; i < argument.length; i++) {
+          if (argument[i].equals("-p")) {
+            if (i + 1 < argument.length)
+              properties = argument[++i];
+            else
+              usage();
+          }
+          else if (argument[i].equals("-A")) {
+            if (i + 1 < argument.length)
+              userAgent = argument[++i];
+            else
+              usage();
+          }
+          else if (xml == null)
+            xml = argument[i];
+          else if (out == null)
+            out = argument[i];
+          else
             usage();
         }
 
-        if (argument[i].charAt(0) == '-') {
-            properties = getProperties(argument[++i]);
-            i++;
-        }
-        
-        xml = argument[i++];
-        out = argument[i];
-        
-        EngineWrapper engine = new EngineWrapper(new Configurations(properties));
-        engine.handle(new PrintWriter(new FileWriter(out), true), new File(xml));
+        if (xml == null)
+          usage();
+
+        confs = new Configurations(properties);
+        if (userAgent != null)
+          confs.put("user-agent", userAgent);
+
+        EngineWrapper engine = new EngineWrapper(confs);
+        if (out == null)
+          writer = new PrintWriter(System.out);
+        else
+          writer = new PrintWriter(new FileWriter(out), true);
+        engine.handle(writer, new File(xml));
     }
 
     private static void usage() {
-        System.err.println("Usage: java org.apache.cocoon.Cocoon [-p properties] Input Output");
+        System.err.println("Usage:\n  java org.apache.cocoon.Cocoon [-p properties] [-A user-agent] Input Output");
         System.err.println("\nOptions:");
         System.err.println("  -p : indicates the property file");
+        System.err.println("  -A : indicates the user agent");
         System.err.println("\nNote: if the property file is not specified, Cocoon looks for a file named");
         System.err.println("\"cocoon.properties\" in the current working directory, in the user directory");
         System.err.println("and in the \"/usr/local/etc/\" directory before giving up.");
