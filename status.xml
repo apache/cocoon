@@ -204,6 +204,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="update">
+     Add support for translating attribute values which contain i18n expressions
+     rather than complete i18n key.
+   </action>
    <action dev="SW" type="add">
      Forms block: allow widget attributes which were only accessible programmatically
      to be set in the form definition. This allows e.g. generic form processing code
