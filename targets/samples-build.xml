@@ -21,7 +21,7 @@
     Samples Targets
   </description>
 
-  <target name="samples" depends="prepare" unless="unless.exclude.webapp.samples">
+  <target name="samples" depends="prepare" unless="internal.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
@@ -71,7 +71,7 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">
+  <target name="block-samples" depends="prepare" unless="internal.exclude.webapp.samples">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"

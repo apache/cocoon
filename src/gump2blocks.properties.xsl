@@ -47,12 +47,12 @@
 #                             Cocoon Blocks                                    #
 #------------------------------------------------------------------------------#
 
-# Remove blocks from your cocoon distribution by uncommenting the
-# corresponding exclude property.
+# Remove blocks from your cocoon distribution by setting the corresponding
+# include property to true or false.
 
 # NOTE: Don't modify this file directly but make a copy named
-# 'local.blocks.properties' and modify that. The build system will override
-# these properties with the ones in the 'local.blocks.properties' file.
+# 'local.blocks.properties' and modify that. The build system will first load
+# 'local.blocks.properties' and properties are immutable in Ant.
 
 # NOTE: "[dependency]" indicates blocks that are required by other blocks.
 # Disabling batik, for example, will result in a RuntimeException when using
@@ -129,11 +129,12 @@
         <xsl:with-param name="text" select="'is needed by'"/>
     </xsl:call-template>
 
-    <!-- TODO: make this configurable externally (dependent on @status or @name) -->
-    <xsl:if test="not(@status='deprecated' or @exclude='true')">#</xsl:if>
-    <xsl:text>exclude.block.</xsl:text>
+    <xsl:text>include.block.</xsl:text>
     <xsl:value-of select="substring-after(@name, 'cocoon-block-')"/>
-    <xsl:text>=true&#10;</xsl:text>
+    <xsl:text>=</xsl:text>
+    <!-- TODO: make this configurable externally (dependent on @status or @name) -->
+    <xsl:value-of select="not(@status='deprecated' or @exclude='true')"/>
+    <xsl:text>&#10;</xsl:text>
 </xsl:template>
 
 <xsl:template name="dependency">

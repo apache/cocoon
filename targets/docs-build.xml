@@ -173,7 +173,7 @@ Not rebuilding docs, as they are up-to-date:
        <srcfiles dir= "${java}" includes="**/*.java,**/package.html"/>
        <srcfiles dir= "${deprecated.src}" includes="**/*.java,**/package.html"/>
       </uptodate>
-      <istrue value="${unless.exclude.javadocs}"/>
+      <istrue value="${internal.exclude.javadocs}"/>
      </or>
     </condition>
   </target>

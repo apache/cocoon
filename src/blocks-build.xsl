@@ -66,7 +66,12 @@
       <target name="init">
         <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
           <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <condition property="unless.exclude.block.{$block-name}">
+          <condition property="exclude.block.{$block-name}">
+            <not>
+              <istrue value="${{include.block.{$block-name}}}"/>
+            </not>
+          </condition>
+          <condition property="internal.exclude.block.{$block-name}">
             <istrue value="${{exclude.block.{$block-name}}}"/>
           </condition>
         </xsl:for-each>
@@ -171,7 +176,7 @@
               <srcfiles dir="${{blocks}}/{substring-after(@name,'cocoon-block-')}/java" includes="**/*.java,**/package.html"/>
             </xsl:for-each>
           </uptodate>
-          <istrue value="${{unless.exclude.javadocs}}"/>
+          <istrue value="${{internal.exclude.javadocs}}"/>
         </or>
       </condition>
     </target>
@@ -255,13 +260,13 @@
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
 
-    <target name="{@name}-excluded" if="unless.exclude.block.{$block-name}">
+    <target name="{@name}-excluded" if="internal.exclude.block.{$block-name}">
       <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
     </target>
 
-    <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
+    <target name="{@name}" unless="internal.exclude.block.{$block-name}"/>
 
-    <target name="{@name}-compile" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-compile" unless="internal.exclude.block.{$block-name}">
       <xsl:attribute name="depends">
         <xsl:if test="depend">
           <xsl:value-of select="$block-name"/><xsl:text>-prepare,</xsl:text>
@@ -383,7 +388,7 @@
       </javac>
     </target>
 
-    <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-patch" unless="internal.exclude.block.{$block-name}">
       <xsl:attribute name="depends">
         <xsl:value-of select="$block-name"/><xsl:text>-prepare</xsl:text>
         <xsl:if test="depend">
@@ -411,7 +416,7 @@
 
     </target>
                                                                                                                                                                                
-    <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
       </xsl:if>
@@ -421,7 +426,7 @@
       </xpatch>
     </target>
 
-    <target name="{@name}-patch-samples" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-patch-samples" unless="internal.exclude.block.{$block-name}">
       <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.samplesxpipe"/>
       </xpatch>
@@ -430,7 +435,7 @@
       </xpatch>
     </target>
 
-    <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-samples" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
@@ -458,7 +463,7 @@
       </if>
     </target>
 
-    <target name="{@name}-lib" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-lib" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
@@ -496,7 +501,7 @@
 
     </target>
 
-    <target name="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
+    <target name="{$block-name}-prepare" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
@@ -523,7 +528,7 @@
       </path>
     </target>
 
-    <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-tests" unless="internal.exclude.block.{$block-name}">
       <xsl:attribute name="depends">
         <xsl:value-of select="@name"/><xsl:text>-compile</xsl:text>
         <xsl:if test="depend">
@@ -583,7 +588,7 @@
         </then>
       </if>
     </target>
-    <target name="{@name}-prepare-anteater-tests" unless="unless.exclude.block.{$block-name}">
+    <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">
 
       <!-- Test if this block has Anteater tests -->
       <if>
