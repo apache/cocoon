@@ -86,7 +86,7 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.3 2004/02/23 01:19:45 coliver Exp $
+ * @version CVS $Id: ScriptableConnection.java,v 1.4 2004/02/24 10:35:11 joerg Exp $
  */
 public class ScriptableConnection extends ScriptableObject {
 
@@ -259,15 +259,11 @@ public class ScriptableConnection extends ScriptableObject {
                 }
                 // Process the remaining rows upto maxRows
                 int processedRows = 0;
-                int index = 0;
-                boolean isLimited = false;
                 Scriptable scope = getTopLevelScope(this);
-                Scriptable thisObj;
                 Scriptable proto = getObjectPrototype(scope);
                 Object[] args;
                 while (rs.next()) {
                     if ((maxRows != -1) && (processedRows == maxRows)) {
-                        isLimited = true; 
                         break;
                     }
                     Scriptable row = new ScriptableResult.Row();
