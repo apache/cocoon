@@ -86,7 +86,7 @@
   This patch is already present in latest CVS code but in case you don't want
   to download the latest code you can apply this:</p>
   
-  <source> Index: RequestMapper.java
+  <source><![CDATA[ Index: RequestMapper.java
    ===================================================================
    RCS file: /home/cvs/jakarta-tomcat/src/share/org/apache/tomcat/core/RequestMapper.java,v
  
@@ -109,7 +109,7 @@
    +            mapPath = this.resourceName;
             }
  
-            return mapPath;</source>
+            return mapPath;]]></source>
  </answer>
 </faq>
  
