@@ -152,6 +152,103 @@
 		<s2 title="Configuration of Pipelines">
 			<p>Each pipeline can be configured with a buffer size, and each
 			  caching pipeline with the name of the Cache to use.</p>
+     	<s3 title="Expiration of Content">
+     	<p>
+     	Utilize the pipeline <code>expires</code> parameter to dramatically reduce
+     	redundand requests. Even the most dynamic application pages have a 
+     	reasonable period of time during which they are static. 
+     	Even if a page doesn't change for just one minute, still use the 
+     	<code>expires</code> parameter. Here is an example:
+     	</p>
+<source><![CDATA[
+<map:pipeline>
+  <map:parameter name="expires" value="access plus 1 minutes"/>
+  ...
+</map:pipeline> 
+]]></source>
+		<p>
+     	The value of the parameter is in a format borrowed from the Apache HTTP module mod_expires.
+     	Examples of other possible values are:
+     	</p>
+<source><![CDATA[
+access plus 1 hours
+access plus 1 month
+access plus 4 weeks
+access plus 30 days
+access plus 1 month 15 days 2 hours
+]]></source>
+     	<p>
+     	Imagine 1'000 users hitting your web site at the same time.
+     	Say that they are split into 5 groups, each of which has the same ISP.
+     	Most ISPs use intermediate proxy servers to reduce traffic, hense
+     	improving their end user experience and also reducing their operating costs.
+     	In our case the 1'000 end user requests will result in just 5 requests to Cocoon.
+     	</p>
+     	<p>
+     	After the first request from each group reaches the server, the expires header will
+     	be recognized by the proxy servers which will serve the following requests from their cache.
+     	Keep in mind however that most proxies cache HTTP GET requests, but will not cache HTTP POST requests.
+     	</p>
+     	<p>
+		 To feel the difference, set an expires parameter on one of your pipelines and
+		 load the page with the browser. Notice that after the first time, there are no 
+		 access records in the server logs until the specified time expires.
+     	</p>
+     	<p>This parameter has effect on all pipeline implementations, even on 
+     	the non caching ones. Remember, the caching does not take place in Cocoon,
+     	it's either in a proxy inbetween Cocoon and the client or in the client
+     	itself.</p>
+         </s3>
+         <s3 title="Response Buffering">
+          <p>Each pipeline can buffer the response, before it is send to the client.
+            The default buffer size is unlimited (-1), which means when all bytes of
+            the response are available on the server, they are send with one
+            command directly to the client.</p>
+          <p>Of course, this slows down the response as the whole response
+            is first buffered inside Cocoon and then send to the client instead of
+            directly sending the parts of the response when they are available.
+            But on the other hand this is very important for error handling. If you
+            don't buffer the response and an error occurs, you might get corrupt
+            pages. Example: you have a pipeline that already send some content
+            to the client and now an exception occurs. This exception "calls"
+            the error handler that generates a new response that is appended
+            to the already send content. If content is already send to the client
+            there is no way of reverting this! So buffering in these cases makes
+            sense.
+           </p>
+           <p>If you have a stable application running in production where the
+           error handler is never invoked, you can turn off the buffering, by
+           setting the buffer to <em>0</em>.</p>
+           <p>You can set the buffer to any other value higher than 0 which means
+           the content of the response is buffered in Cocoon until the buffer is
+           full. If the buffer is full it's flushed and the next part of the
+           response is buffered again. If you know the maximum size of your
+           content than you can fine tune the buffer handling with this.</p>
+           <p>You can set the default buffer size for each pipeline implementation
+            at the declaration of the pipeline. Example:</p>
+    <source>
+     <![CDATA[
+        <map:pipe name="noncaching" src="...">
+            <parameter name="outputBufferSize" value="2048"/>
+        </map:pipe>
+     ]]>
+    </source>
+          <p>The above configuration sets the buffer size to <em>2048</em> for the
+          non caching pipeline. Please note, that the parameter element does not
+          have the sitemap namespace!</p>
+          <p>You can override the buffer size in each <em>map:pipeline</em> section:</p>
+    <source>
+     <![CDATA[
+        <map:pipeline type="noncaching">
+            <map:parameter name="outputBufferSize" value="4096"/>
+            ...
+        </map:pipeline>
+     ]]>
+    </source>
+          <p>The above parameters sets the buffer size to <em>4096</em> for this
+          particular pipeline. Please note, that the parameter element does have
+          the sitemap namespace!</p>
+         </s3>
 	    </s2>
 		<s2 title="Configuration of Caches">
 			<p>Each cache can be configured with the store to use.</p>
@@ -182,7 +279,7 @@
 				<p>The <code>XMLByteStreamInterpreter</code> is the counterpart of the 
 				   <code>XMLByteStreamCompiler</code>. It interprets the byte
                            stream and creates sax events.</p>
-			</s3>
+			</s3> 
 			<s3 title="Configuration">
 			<p>The XMLSerializer and XMLDeserialzer are two Avalon components which
 			   can be configured in the cocoon.xconf:</p>
