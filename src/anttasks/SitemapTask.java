@@ -101,8 +101,8 @@ public final class SitemapTask extends AbstractQdoxTask {
     protected boolean stable = true;
     
     /**
-     * Set the directory containg the source files.
-     * Only .java files will be scannend
+     * Set the directory containing the source files.
+     * Only .java files will be scanned
      */
     public void setSource(File dir) {
         try {
@@ -207,10 +207,10 @@ public final class SitemapTask extends AbstractQdoxTask {
     }
 
     /**
-     * Collect the component infos
+     * Collect the component information
      */
     private List collectInfo() {
-        log("Collection sitemap components info");
+        log("Collecting sitemap components info");
         final List components = new ArrayList();
         
         final Iterator it = super.allClasses.iterator();
@@ -714,7 +714,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                 throw new BuildException(e);
             }
         }
-    
+
     }
     
     // Class Constants
