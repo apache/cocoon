@@ -152,19 +152,18 @@
 
   <!-- Prepare the build directory -->
   <target name="prepare" depends="init-tasks">
-    <echo>
-+------------------------------------------------------------------+
-             ${fullname} ${version} [${year}]
-+------------------------------------------------------------------+
+    <echo>======================================================================
+                 ${fullname} ${version} [${year}]
+======================================================================
  Building with ${ant.version}
- using build file ${ant.file}
- Compiling with debug ${compiler.debug}, optimize ${compiler.optimize}, deprecation ${compiler.deprecation}
-+-------------------------| W A R N I N G |------------------------+
- This build is targeted for use with JVM ${target.vm}
- Using this build on a virtual machine other than the one
- it is targeted for may result in runtime errors.
-+------------------------------------------------------------------+
-    </echo>
+----------------------------------------------------------------------
+ Using build file ${ant.file}
+----------------------------------------------------------------------
+ Compiler options:
+   - debug ......... [${compiler.debug}]
+   - optimize ...... [${compiler.optimize}]
+   - deprecation ... [${compiler.deprecation}]
+======================================================================</echo>
     <mkdir dir="${build}"/>
   </target>
 
