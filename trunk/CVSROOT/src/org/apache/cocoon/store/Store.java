@@ -1,4 +1,4 @@
-/*-- $Id: Store.java,v 1.3 1999-11-09 02:30:57 dirkx Exp $ -- 
+/*-- $Id: Store.java,v 1.4 1999-12-16 11:44:13 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,10 +59,10 @@ import org.apache.cocoon.framework.*;
  * implement.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:57 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-16 11:44:13 $
  */
 
-public interface Store extends Actor {
+public interface Store {
 
     /**
      * Get the object associated to the given unique key.

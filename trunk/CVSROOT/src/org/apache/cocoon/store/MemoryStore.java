@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.4 1999-11-30 16:30:10 stefano Exp $ -- 
+/*-- $Id: MemoryStore.java,v 1.5 1999-12-16 11:44:13 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,10 +65,10 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:10 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-16 11:44:13 $
  */
 
-public class MemoryStore extends AbstractActor implements Store, Configurable, Status {
+public class MemoryStore implements Store, Configurable, Status {
     
     private Runtime jvm;
     private int memory;
