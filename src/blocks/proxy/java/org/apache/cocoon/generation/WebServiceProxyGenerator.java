@@ -104,7 +104,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.4 2003/07/05 04:44:57 joerg Exp $
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.1 2003/07/05 14:46:13 joerg Exp $
  */
 public class WebServiceProxyGenerator extends ComposerGenerator {
 

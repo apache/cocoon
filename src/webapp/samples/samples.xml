@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.19 2003/06/27 20:10:43 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.20 2003/07/05 14:46:14 joerg Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -52,27 +52,6 @@
    </sample>
   </group>
   
-<!-- 
- 
-  FIXME (SM) this should move into the proxy block 
-  
-  <group name="Web Site Syndication">
-    <sample name="Examples" href="webserviceproxy/">
-    Demonstrates how to embed One Web Site functionality
-    in Another. Using the WebServiceProxyGenerator remote web app
-    integration is easy.
-    </sample>
-    <sample name="Virtual Portal Demo" href="webserviceproxy/cocoonhive/">
-    A more sophisticated example including Amazon and OpenWiki. 
-    Shows how a personalized
-    portal can be built by connecting multiple remote
-    services without writing a single line of business logic code.
-    Only styling is used in addition to the proxy.
-   </sample>
-  </group> 
-  
--->
-   
   <group name="The Power of Sitemap">
    <sample name="Input Modules" href="modules/">
     This example shows the usage of Input Modules in sitemap attribute expressions.
