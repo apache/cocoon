@@ -179,11 +179,6 @@
       that the entries are in the session(Stephan).
     </action>
 
-    <action context="code" assigned-to="SMS">
-      The wiki samples for the Chaperon block doesn't work anymore
-      (samples/chaperon/wikitest/selftest.html).
-    </action>
-
     <action context="code">
       Examples are broken, if you went first to precept example
       (samples/precept/app/example1.html)
