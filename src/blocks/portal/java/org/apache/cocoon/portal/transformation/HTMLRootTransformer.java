@@ -25,6 +25,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -138,7 +139,7 @@ public class HTMLRootTransformer
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
-        return new Boolean[] { new Boolean(this.addMode), new Boolean(this.ignoreRootElement)};
+        return new Boolean[] { BooleanUtils.toBooleanObject(this.addMode), BooleanUtils.toBooleanObject(this.ignoreRootElement)};
     }
 
     /* (non-Javadoc)

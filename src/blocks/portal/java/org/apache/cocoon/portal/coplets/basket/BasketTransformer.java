@@ -27,6 +27,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -93,10 +94,7 @@ extends AbstractSAXTransformer {
     throws ProcessingException, IOException, SAXException {
         if ( ADD_ITEM_ELEMENT.equals(name) ) {
             String value = attr.getValue("content");
-            boolean addContent = false;
-            if ( value != null ) {
-                addContent = new Boolean(value).booleanValue();
-            }
+            boolean addContent = BooleanUtils.toBoolean(value);
             String href = attr.getValue("href");
             PortalService service = null;
             try {

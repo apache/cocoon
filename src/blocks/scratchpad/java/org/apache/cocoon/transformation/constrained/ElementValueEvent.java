@@ -20,7 +20,7 @@ import org.xml.sax.Attributes;
 /**
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
- * @version CVS $Id: ElementValueEvent.java,v 1.3 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ElementValueEvent extends ContainerElementEndEvent {
 
@@ -48,6 +48,6 @@ public class ElementValueEvent extends ContainerElementEndEvent {
     }
 
     public String getAttribute(String attributeName) {
-        return elementAttributes.getValue(attributeName).toString();
+        return elementAttributes.getValue(attributeName);
     }
 }

@@ -142,9 +142,9 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 	 */
 	public SimpleLuceneQuery copy() {
 		SimpleLuceneQueryBean query = new SimpleLuceneQueryBean ();
-		if (mName != null) query.setName (new String (mName));
-		if (mType != null) query.setType (new String (mType));
-		if (mBool != null) query.setBool (new String (mBool));
+		if (mName != null) query.setName(mName);
+		if (mType != null) query.setType(mType);
+		if (mBool != null) query.setBool(mBool);
 		query.setSize (DEFAULT_PAGE_SIZE);
 		query.setPage (new Long (0));
 		query.setTotal (null);

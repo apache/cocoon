@@ -99,7 +99,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Felix Knecht
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  * @author <a href="mailto:yuryx@mobicomk.donpac.ru">Yury Mikhienko</a>
- * @version CVS $Id: LDAPTransformer.java,v 1.8 2004/03/05 13:02:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LDAPTransformer extends AbstractTransformer {
 
@@ -1837,7 +1837,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                                 /* confirm of success */
                                                 transformer.start(attrID, attr);
-                                                transformer.data(new String("replaced"));
+                                                transformer.data("replaced");
                                                 transformer.end(attrID);
                                             }
                                         }

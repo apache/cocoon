@@ -152,7 +152,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: VelocityGenerator.java,v 1.14 2004/03/06 00:09:52 joerg Exp $
+ * @version CVS $Id$
  */
 public class VelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
@@ -932,7 +932,7 @@ public class VelocityGenerator extends ServiceableGenerator
                             return kont;
                         }
                         if (handler != null) {
-                            return handler.getProperty(bean, key.toString());
+                            return handler.getProperty(bean, key);
                         } else {
                             for (int i = 0; i < props.length; i++) {
                                 if (props[i].getName().equals(key)) {

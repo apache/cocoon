@@ -113,7 +113,7 @@ public class Tokenizer implements Enumeration {
       || (returnTokens && delim.indexOf(str.charAt(previous)) >= 0))) {
 
       current++;
-      return new String();
+      return "";
     }
 
     if (current >= max)

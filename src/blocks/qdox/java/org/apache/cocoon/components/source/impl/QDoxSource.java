@@ -869,7 +869,7 @@ public final class QDoxSource
             outputSuperClassInheritance(handler, jClass, INTERFACE_INHERITANCE);
 
             for (int i=0; i<interfaces.length; i++) {
-                String name = interfaces[i].getValue().toString();
+                String name = interfaces[i].getValue();
                 String pckg = name.substring(0, name.lastIndexOf('.'));
                 name = name.substring(pckg.length() + 1);
 
