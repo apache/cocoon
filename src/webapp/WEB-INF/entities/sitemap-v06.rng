@@ -84,6 +84,7 @@ CHANGE HISTORY:
 20030219 V0.6 Add new i18nTransformer contents <catalogues> (DC)
 20030730 V0.6 Added new htmlGenerator contents <catalogues> (NKB)
 20040123 V0.6 Added <parameter>* to <generator> (NKB)
+20040414 V0.6 Added <parameter>* to <pipe> (DC)
 
 ====================================================================
 -->
@@ -1091,7 +1092,9 @@ CHANGE HISTORY:
   <define name="map.pipe">
     <element name="map:pipe">
       <ref name="map.pipe.attlist"/>
-      <empty/>
+      <zeroOrMore>
+        <ref name="map.parameter"/>
+      </zeroOrMore>
     </element>
   </define>
   <define name="map.pipe.attlist" combine="interleave">
