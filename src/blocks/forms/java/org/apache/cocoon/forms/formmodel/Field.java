@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.16 2004/05/07 13:42:09 mpo Exp $
+ * @version CVS $Id: Field.java,v 1.17 2004/06/01 16:40:48 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -131,7 +131,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (newValue != null && !getDatatype().getTypeClass().isAssignableFrom(newValue.getClass())) {
             throw new RuntimeException("Incorrect value type for \"" + getRequestParameterName() +
                            "\" (expected " + getDatatype().getTypeClass() +
-                           ", got " + newValue.getClass() + ".");
+                           ", got " + newValue.getClass() + ").");
         }
         Object oldValue = this.value;
         boolean changed = ! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue);
