@@ -35,9 +35,95 @@
     </s1>
 
     <s1 title="Configuring the Portal contents">
+      <p>
+        The configuration of a coplet is done in several steps that are outlined
+        in the next chapters.
+      </p>
       <s2 title="Configuring Coplets">
         <p>
+          Configuring coplets is like defining a class and creating their instances.
+          So in fact, you define the available coplets (= classes) and each portal
+          view gets some instances of these coplets. 
         </p>
+        <s3 title="Available Coplet Types">
+          <p>
+          Before you can define your available coplets, you have to define the
+          available coplet types, or the so called coplet base data. The current
+          sample contains an XML document for this:
+          </p>
+          <source>
+<![CDATA[...
+<coplets>
+   <coplet-base-data id="URICoplet">
+      <coplet-adapter>uri</coplet-adapter>
+   </coplet-base-data>
+</coplets>
+...]]>
+          </source>
+          <p>In the example above, we define one coplet type, the <em>URICoplet</em>,
+             that uses the <em>uri coplet adapter</em>. By this we define a type,
+             that uses URIs to get the content of a coplet.</p>
+          <p>You can add different coplet types with additional configuration here,
+             but rarely have to touch this file.</p>
+        </s3>
+        <s3 title="Available Coplets">
+          <p>
+          Based on the coplet types, you can define the available coplets in your
+          portal application (= classes). In the example portal an own configuration
+          file contains these so called coplet datas. Here is an excerpt:
+          </p>
+          <source>
+<![CDATA[...
+<coplets>
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/liverss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>error-uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CZ_weblog.rss</value>
+      </attribute>
+   </coplet-data>
+</coplets>
+...]]>
+          </source>
+          <p>Each coplet data contains a unique id and additional configuration. A required
+          configuration is the underlying coplet base data. In the example above,
+          the <em>URICoplet</em> is used here.
+          </p>
+          <p>The above configured coplet data requires some configuration, like the
+          URI to invoke to fetch the content for this coplet. This configuration is
+          passed in the different attributes you see above. Each attribute has
+          a name and value.
+          </p>
+          <p>The set of coplet datas defines the set of available coplets a user can
+          choose from. If a user chooses to view a coplet, an instance of this coplet
+          data is created. If, e.g. the user chooses the same coplet twice,
+          two instances are created. This is useful for configurable coplets where
+          the user can choose the same coplet with different configurations.
+          </p>
+        </s3>
+        <s3 title="Selected Coplets">
+          <p>
+          The selected coplets are described by the set of coplet instance datas.
+          </p>
+          <source>
+<![CDATA[...
+<coplets>
+   <coplet-instance-data id="CZ Weblog-1" name="standard">
+      <coplet-data>CZ Weblog</coplet-data>
+   </coplet-instance-data>
+</coplets>
+...]]>
+          </source>
+        </s3>
       </s2>
       <s2 title="Configuring the arrangement of the defined Coplets">
         <p>
