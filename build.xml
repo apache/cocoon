@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.3 2003/03/10 18:08:38 cziegeler Exp $:
+       CVS: $Id: build.xml,v 1.4 2003/03/10 18:22:18 cziegeler Exp $:
 
 ============================================================================ -->
 
@@ -862,6 +862,15 @@
   <!-- Build the Eclipse projects files -->
   <target name="eclipse-project" depends="init" description="Generate the Eclipse project files">
 
+    <echo>+---------------------------------------------------------------------------+</echo>
+    <echo>                        ${fullname} ${version} [${year}]</echo>
+    <echo>+---------------------------------------------------------------------------+</echo>
+    <echo> Building Eclipse Project Files</echo>
+    <echo>+---------------------------| W A R N I N G |-------------------------------+</echo>
+    <echo>          The project files are targeted for use with JVM ${target.vm}</echo>
+    <echo>+---------------------------------------------------------------------------+</echo>
+
+    <mkdir dir="${build}"/>
     <!-- prepare the various paths that will form the project -->
     <path id="srcs">
       <!-- main source dir -->
@@ -873,6 +882,7 @@
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
         <include name="*/java"/>
+        <include name="*/java${target.vm}"/>
       </dirset>
     </path>
 
