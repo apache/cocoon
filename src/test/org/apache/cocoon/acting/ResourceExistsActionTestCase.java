@@ -16,34 +16,69 @@
 
 package org.apache.cocoon.acting;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.SitemapComponentTestCase;
+import org.apache.cocoon.MockLogger;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.mock.MockRequest;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
 
 /**
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.4 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class ResourceExistsActionTestCase extends SitemapComponentTestCase {
+public class ResourceExistsActionTestCase extends MockObjectTestCase {
+    private Map objectModel = new HashMap();
 
     public ResourceExistsActionTestCase(String name) {
         super(name);
     }
 
-    public void testExistAction() throws Exception {
+    public void testExists() throws Exception {
 
-        String src = "resource://org/apache/cocoon/acting/ResourceExistsActionTestCase.xtest";
+        MockRequest request = new MockRequest();
+
+        String src = "don't care";
         Parameters parameters = new Parameters();
 
-        Map result = act("exist", src, parameters);
-        assertNotNull("Test if resource exists", result);
+        ResourceExistsAction action = new ResourceExistsAction();
+        action.enableLogging(new MockLogger(action.getClass()));
+        Mock resolver = new Mock(SourceResolver.class);
+        Mock source = new Mock(Source.class);
+        resolver.expects(once()).method("resolveURI").with(same(src)).
+                will(returnValue(source.proxy()));
+        resolver.expects(once()).method("release").with(same(source.proxy()));
+        source.expects(atLeastOnce()).method("exists").will(returnValue(true));
+        Map result = action.act(null, (SourceResolver) resolver.proxy(), 
+                objectModel, src, parameters);
+        assertSame("Test if resource exists", AbstractAction.EMPTY_MAP, result);
+        resolver.verify();
+        source.verify();
+    }
 
-        src = "resource://org/apache/cocoon/acting/ResourceExistsActionTestCase.abc";
+    public void testNotExists() throws Exception {
 
-        result = act("exist", src, parameters);
+        MockRequest request = new MockRequest();
+
+        String src = "don't care";
+        Parameters parameters = new Parameters();
+
+        ResourceExistsAction action = new ResourceExistsAction();
+        action.enableLogging(new MockLogger(action.getClass()));
+        Mock resolver = new Mock(SourceResolver.class);
+        resolver.expects(once()).method("resolveURI").with(same(src)).
+                will(this.throwException(new SourceNotFoundException("don't care")));
+        Map result = action.act(null, (SourceResolver) resolver.proxy(), 
+                objectModel, src, parameters);
         assertNull("Test if resource not exists", result);
+        resolver.verify();
     }
 }
