@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 2000-04-28 19:18:45 $
+ * @version $Revision: 1.4 $ $Date: 2000-05-01 06:27:36 $
  */
 
 public class XSPSQLLibrary {
@@ -86,6 +86,7 @@ public class XSPSQLLibrary {
       String update_rows_attribute,
       String namespace,
       String query,
+	  /** a table of Formats indexed by column name **/
       Hashtable column_formats
 	) throws Exception {
 
@@ -181,6 +182,8 @@ public class XSPSQLLibrary {
                 }
                 for (int i=0; i<columns.length; i++) {
 					Object value = rs.getObject(i+1);
+					System.err.println(value.toString());
+					System.err.println("CLASS: "+value.getClass().getName());
                     if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
                         row_element.setAttribute(id_attribute,value.toString());
                         continue;
@@ -193,7 +196,14 @@ public class XSPSQLLibrary {
                         column_element.setAttribute("NULL","YES");
                         column_element.appendChild(document.createTextNode(""));
                     } else {
-						column_element.appendChild(document.createTextNode(value.toString()));
+						Format format = (Format)column_formats.get(columns[i].name);
+						String formatted_value;
+						if (format == null) {
+							formatted_value = value.toString();
+						} else {
+							formatted_value = format.format(value);
+						}
+						column_element.appendChild(document.createTextNode(formatted_value));
                     }
                     row_node.appendChild(column_element);
                 }

@@ -156,6 +156,31 @@
 		try {
 			skip_rows = new Integer(skip_rows_string);
 		} catch (Exception e) {}
+		Hashtable column_formats = new Hashtable();
+		<xsl:for-each select="sql:column-format">
+		{
+			String name = String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sql:name"/></xsl:call-template>);
+			String classname = String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sql:class"/></xsl:call-template>);
+			String parameters[] = new String[<xsl:value-of select="count(sql:parameter)"/>];
+			<xsl:for-each select="sql:parameter">
+			 parameters[<xsl:value-of select="position()-1"/>] = String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>);
+			</xsl:for-each>
+			Class my_class = Class.forName(classname);
+			Object format;
+			if (parameters.length == 0) {
+				format = my_class.newInstance();
+			} else {
+				Class class_ary[] = new Class[parameters.length];
+				for (int i=0; i&lt;parameters.length; i++) {
+					class_ary[i] = parameters[i].getClass();
+				}
+				java.lang.reflect.Constructor constructor  = my_class.getConstructor(class_ary);
+				format = constructor.newInstance(parameters);
+			}
+			column_formats.put(name,format);
+		}
+		</xsl:for-each>
+
 	<xsp:content>
 	<xsp:expr>
 		XSPSQLLibrary.processQuery(
@@ -179,7 +204,7 @@
 			String.valueOf(<xsl:copy-of select="$update-rows-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$namespace"/>),
 			String.valueOf(<xsl:copy-of select="$query"/>),
-			null)
+			column_formats)
 	</xsp:expr>
 	</xsp:content>
 	}
