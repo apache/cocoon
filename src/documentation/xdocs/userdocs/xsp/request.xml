@@ -386,7 +386,7 @@ translated to a real path.</td>
 </tr>
 
 <tr>
-<td>xsp-request:get-remote-addr</td>
+<td>xsp-request:get-remote-address</td>
 <td></td>
 <td>yes</td>
 <td>Gets the IP address of the requesting client.</td>
@@ -416,11 +416,17 @@ authenticated.</td>
 </tr>
 
 <tr>
-<td>xsp-request:get-request-uri</td>
+<td>xsp-request:get-sitemap-uri</td>
 <td></td>
 <td>yes</td>
-<td>Gets the part of the request URL from the protocol name up to the
-query string.</td>
+<td>Gets the part of the request URL that was matched in the sitemap.</td>
+</tr>
+
+<tr>
+<td>xsp-request:get-requested-url</td>
+<td></td>
+<td>yes</td>
+<td>Returns the full request URL including server name and port.</td>
 </tr>
 
 <tr>
@@ -452,6 +458,20 @@ query string.</td>
 </tr>
 
 <tr>
+<td>xsp-request:get-session-attribute</td>
+<td></td>
+<td>no</td>
+<td>Gets a given attribute of a session.</td>
+</tr>
+
+<tr>
+<td>xsp-request:get-session-id</td>
+<td></td>
+<td>yes</td>
+<td>Gets the id of the session.</td>
+</tr>
+
+<tr>
 <td>xsp-request:get-user-principal</td>
 <td></td>
 <td>yes</td>
@@ -460,25 +480,11 @@ if a user has been authenticated.</td>
 </tr>
 
 <tr>
-<td>xsp-request:is-requested-session-id-from-cookie</td>
+<td>xsp-request:get-uri</td>
 <td></td>
 <td>yes</td>
-<td>Indicates whether the requested session id was provided in a cookie.</td>
-</tr>
-
-<tr>
-<td>xsp-request:is-requested-session-id-from-url</td>
-<td></td>
-<td>yes</td>
-<td>Indicates whether the requested session id was provided as part of the
-request URL.</td>
-</tr>
-
-<tr>
-<td>xsp-request:is-requested-session-id-valid</td>
-<td></td>
-<td>yes</td>
-<td>Indicates whether the requested session id is still valid.</td>
+<td>Gets the part of the request URL after the server address and port, up to
+the query string.</td>
 </tr>
 
 <tr>
