@@ -77,12 +77,6 @@
      <td>When file changes</td>
     </tr>
     <tr>
-     <td>DCP</td>
-     <td>Processor</td>
-     <td>Always</td>
-     <td>n/a</td>
-    </tr>
-    <tr>
      <td>LDAP</td>
      <td>Processor</td>
      <td>Always</td>
