@@ -21,6 +21,8 @@ import java.lang.reflect.Modifier;
 import java.util.Locale;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * A {@link org.apache.cocoon.forms.datatype.convertor.Convertor Convertor}
@@ -29,7 +31,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
  * typesafe enum</a> pattern.
  * 
  * @see org.apache.cocoon.forms.datatype.typeimpl.EnumType
- * @version CVS $Id: EnumConvertor.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version CVS $Id: EnumConvertor.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -108,5 +110,9 @@ public class EnumConvertor implements Convertor {
      */
     public Class getTypeClass() {
         return clazz;
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // intentionally empty
     }
 }

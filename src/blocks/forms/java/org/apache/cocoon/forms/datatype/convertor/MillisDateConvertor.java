@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import java.util.Locale;
 import java.util.Date;
 
@@ -22,7 +25,7 @@ import java.util.Date;
  * A Convertor for Date objects which uses the number of milliseconds since
  * January 1, 1970, 00:00:00 GMT as string representation.
  *
- * @version CVS $Id: MillisDateConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: MillisDateConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
  */
 public class MillisDateConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
@@ -41,5 +44,9 @@ public class MillisDateConvertor implements Convertor {
 
     public Class getTypeClass() {
         return Date.class;
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // intentionally empty
     }
 }

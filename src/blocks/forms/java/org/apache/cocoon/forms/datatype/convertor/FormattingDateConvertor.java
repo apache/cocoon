@@ -17,6 +17,10 @@ package org.apache.cocoon.forms.datatype.convertor;
 
 import org.outerj.i18n.DateFormat;
 import org.outerj.i18n.I18nSupport;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.xml.AttributesImpl;
 
 import java.util.Locale;
 import java.util.Date;
@@ -40,7 +44,7 @@ import java.text.ParseException;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDateConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: FormattingDateConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
@@ -137,5 +141,20 @@ public class FormattingDateConvertor implements Convertor {
 
     public void setNonLocalizedPattern(String pattern) {
         this.nonLocalizedPattern = pattern;
+    }
+
+    private static final String CONVERTOR_EL = "convertor";
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        String pattern = (String)localizedPatterns.get(locale);
+        if (pattern == null)
+            pattern = nonLocalizedPattern;
+
+        if (pattern != null) {
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addCDATAAttribute("pattern", pattern);
+            contentHandler.startElement(Constants.INSTANCE_NS, CONVERTOR_EL, Constants.INSTANCE_PREFIX_COLON + CONVERTOR_EL, attrs);
+            contentHandler.endElement(Constants.INSTANCE_NS, CONVERTOR_EL, Constants.INSTANCE_PREFIX_COLON + CONVERTOR_EL);
+        }
     }
 }

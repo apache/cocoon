@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.ContentHandler;
+
 import java.util.Locale;
 
 /**
@@ -29,7 +32,7 @@ import java.util.Locale;
  * Some convertors need to build and configure parser or formatting objects,
  * which can be expensive if it needs to be done repeatedly.
  *
- * @version CVS $Id: Convertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: Convertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
  */
 public interface Convertor {
     
@@ -44,6 +47,11 @@ public interface Convertor {
     String convertToString(Object value, Locale locale, FormatCache formatCache);
 
     Class getTypeClass();
+
+    /**
+     * Generates a bit of information about this convertor (optional).
+     */
+    void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException;
 
     public interface FormatCache {
         public Object get();

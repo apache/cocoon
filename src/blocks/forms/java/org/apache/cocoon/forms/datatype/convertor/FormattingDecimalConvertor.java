@@ -17,6 +17,8 @@ package org.apache.cocoon.forms.datatype.convertor;
 
 import org.outerj.i18n.I18nSupport;
 import org.outerj.i18n.DecimalFormat;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 import java.util.Locale;
 import java.text.ParseException;
@@ -41,7 +43,7 @@ import java.math.BigInteger;
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDecimalConvertor.java,v 1.2 2004/03/28 20:51:23 antonio Exp $
+ * @version CVS $Id: FormattingDecimalConvertor.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;
@@ -148,5 +150,9 @@ public class FormattingDecimalConvertor implements Convertor {
 
     public Class getTypeClass() {
         return java.math.BigDecimal.class;
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // intentionally empty
     }
 }

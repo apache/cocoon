@@ -25,12 +25,16 @@ import org.apache.cocoon.forms.datatype.DatatypeBuilder;
 import org.apache.cocoon.forms.datatype.ValidationRule;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.outerj.expression.ExpressionContext;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
- * @version $Id: AbstractDatatype.java,v 1.3 2004/03/24 18:57:26 joerg Exp $
+ * @version $Id: AbstractDatatype.java,v 1.4 2004/04/10 13:40:27 bruno Exp $
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();
@@ -87,5 +91,15 @@ public abstract class AbstractDatatype implements Datatype {
 
     public String convertToString(Object value, Locale locale) {
         return getConvertor().convertToString(value, locale, null);
+    }
+
+    private static final String DATATYPE_EL = "datatype";
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        AttributesImpl attrs = new AttributesImpl();
+        attrs.addCDATAAttribute("type", getDescriptiveName());
+        contentHandler.startElement(Constants.INSTANCE_NS, DATATYPE_EL, Constants.INSTANCE_PREFIX_COLON + DATATYPE_EL, attrs);
+        getConvertor().generateSaxFragment(contentHandler, locale);
+        contentHandler.endElement(Constants.INSTANCE_NS, DATATYPE_EL, Constants.INSTANCE_PREFIX_COLON + DATATYPE_EL);
     }
 }

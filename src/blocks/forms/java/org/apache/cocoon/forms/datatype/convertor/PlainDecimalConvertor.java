@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import java.util.Locale;
 import java.math.BigDecimal;
 
@@ -22,7 +25,7 @@ import java.math.BigDecimal;
  * Convertor for {@link java.math.BigDecimal}s that does not do any
  * (locale-dependent) formatting.
  *
- * @version CVS $Id: PlainDecimalConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: PlainDecimalConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
  */
 public class PlainDecimalConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
@@ -39,5 +42,9 @@ public class PlainDecimalConvertor implements Convertor {
 
     public Class getTypeClass() {
         return BigDecimal.class;
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // intentionally empty
     }
 }
