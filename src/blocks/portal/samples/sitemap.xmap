@@ -69,12 +69,10 @@
                   src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
       <map:action name="portal-save-profile"
                   src="org.apache.cocoon.portal.acting.SaveAction"/>
-      <map:action name="portal-bookmark"
-                  src="org.apache.cocoon.portal.acting.BookmarkAction"/>
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
-    <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
+      <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
     </map:actions>
   </map:components>
 
