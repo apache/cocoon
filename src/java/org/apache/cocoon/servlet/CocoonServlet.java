@@ -304,8 +304,11 @@ public class CocoonServlet extends HttpServlet {
             this.workDir = new File(workDir, "cocoon-files");
         }
         this.workDir.mkdirs();
+        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
+        // Init logger
         initLogger();
+
         String path = this.servletContextPath;
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("getRealPath for /: " + path);
@@ -342,25 +345,19 @@ public class CocoonServlet extends HttpServlet {
                 throw new ServletException("Unable to determine servlet context URL.", me);
             }
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("URL for Root: " + this.servletContextURL);
-        }
 
         this.forceLoadParameter = getInitParameter("load-class", null);
-
         this.forceSystemProperty = getInitParameter("force-property", null);
 
-        // add work directory
-        if (workDirParam != null) {
-            if (getLogger().isDebugEnabled()) {
+        // Output some debug info
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Servlet Context URL: " + this.servletContextURL);
+            if (workDirParam != null) {
                 getLogger().debug("Using work-directory " + this.workDir);
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("work-directory was not set - defaulting to " + this.workDir);
+            } else {
+                getLogger().debug("Using default work-directory " + this.workDir);
             }
         }
-        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -383,7 +380,7 @@ public class CocoonServlet extends HttpServlet {
         } else {
             this.uploadDir = new File(workDir, "upload-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("upload-directory was not set - defaulting to " + this.uploadDir);
+                getLogger().debug("Using default upload-directory " + this.uploadDir);
             }
         }
         this.uploadDir.mkdirs();
@@ -794,11 +791,12 @@ public class CocoonServlet extends HttpServlet {
 
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
+        subcontext.put("context-work", this.workDir);
         if (this.servletContextPath == null) {
             File logSCDir = new File(this.workDir, "log");
             logSCDir.mkdirs();
             if (logger.isWarnEnabled()) {
-                logger.warn("Setting servlet-context for LogKit to " + logSCDir);
+                logger.warn("Setting context-root for LogKit to " + logSCDir);
             }
             subcontext.put("context-root", logSCDir.toString());
         } else {

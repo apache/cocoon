@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
 
 /**
- * The Cocoon Wrapper simplifies usage of the Cocoon object. Allows to create, 
+ * The Cocoon Wrapper simplifies usage of the Cocoon object. Allows to create,
  * configure Cocoon instance and process single requests.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
@@ -80,7 +80,7 @@ public class CocoonWrapper {
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
     private List classList = new ArrayList();
- 
+
     // Objects used alongside User Supplied Parameters
     private File context;
     private File work;
@@ -110,12 +110,13 @@ public class CocoonWrapper {
 
         try {
             DefaultContext appContext = new DefaultContext();
-            appContext.put(
-                Constants.CONTEXT_CLASS_LOADER,
-                CocoonWrapper.class.getClassLoader());
+            appContext.put(Constants.CONTEXT_CLASS_LOADER,
+                           CocoonWrapper.class.getClassLoader());
             cliContext = new CommandLineContext(contextDir);
             cliContext.enableLogging(log);
             appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
+            appContext.put(Constants.CONTEXT_WORK_DIR, work);
+
             LogKitLoggerManager logKitLoggerManager =
                     new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
             logKitLoggerManager.enableLogging(log);
@@ -126,7 +127,7 @@ public class CocoonWrapper {
                     new DefaultConfigurationBuilder();
                 final Configuration logKitConf = builder.build(fis);
                 final DefaultContext subcontext = new DefaultContext(appContext);
-                subcontext.put("context-root", contextDir);
+                subcontext.put("context-root", this.contextDir);
                 logKitLoggerManager.contextualize(subcontext);
                 logKitLoggerManager.configure(logKitConf);
                 if (logger != null) {
@@ -137,13 +138,12 @@ public class CocoonWrapper {
             }
 
             appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));
-            appContext.put(Constants.CONTEXT_WORK_DIR, work);
             appContext.put(Constants.CONTEXT_UPLOAD_DIR, contextDir + "upload-dir");
             File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
             appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
-            
+
             loadClasses(classList);
 
             cocoon = new Cocoon();
@@ -158,7 +158,7 @@ public class CocoonWrapper {
         }
         initialized = true;
     }
-    
+
     protected ExcaliburComponentManager getComponentManager() {
         return cocoon.getComponentManager();
     }
@@ -313,7 +313,7 @@ public class CocoonWrapper {
     public String getLoggerName() {
         return logger;
     }
-    
+
     /**
      * Set context directory
      * @param contextDir context directory
@@ -467,7 +467,7 @@ public class CocoonWrapper {
      */
     protected String getType(String deparameterizedURI, Map parameters)
         throws Exception {
-        
+
         parameters.put("user-agent", userAgent);
         parameters.put("accept", accept);
 

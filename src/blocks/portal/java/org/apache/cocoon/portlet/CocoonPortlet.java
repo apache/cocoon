@@ -331,8 +331,11 @@ public class CocoonPortlet extends GenericPortlet {
             this.workDir = new File(workDir, "cocoon-files");
         }
         this.workDir.mkdirs();
+        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
+        // Init logger
         initLogger();
+
         String path = this.portletContextPath;
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("getRealPath for /: " + path);
@@ -369,25 +372,19 @@ public class CocoonPortlet extends GenericPortlet {
                 throw new PortletException("Unable to determine portlet context URL.", me);
             }
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("URL for Root: " + this.portletContextURL);
-        }
 
         this.forceLoadParameter = getInitParameter("load-class", null);
-
         this.forceSystemProperty = getInitParameter("force-property", null);
 
-        // add work directory
-        if (workDirParam != null) {
-            if (getLogger().isDebugEnabled()) {
+        // Output some debug info
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Portlet Context URL: " + this.portletContextURL);
+            if (workDirParam != null) {
                 getLogger().debug("Using work-directory " + this.workDir);
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("work-directory was not set - defaulting to " + this.workDir);
+            } else {
+                getLogger().debug("Using default work-directory " + this.workDir);
             }
         }
-        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -410,7 +407,7 @@ public class CocoonPortlet extends GenericPortlet {
         } else {
             this.uploadDir = new File(workDir, "upload-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("upload-directory was not set - defaulting to " + this.uploadDir);
+                getLogger().debug("Using default upload-directory " + this.uploadDir);
             }
         }
         this.uploadDir.mkdirs();
@@ -842,8 +839,8 @@ public class CocoonPortlet extends GenericPortlet {
         if (this.portletContextPath == null) {
             File logSCDir = new File(this.workDir, "log");
             logSCDir.mkdirs();
-            if (logger.isWarnEnabled()) {
-                logger.warn("Setting servlet-context for LogKit to " + logSCDir);
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Setting context-root for LogKit to " + logSCDir);
             }
             subcontext.put("context-root", logSCDir.toString());
         } else {
