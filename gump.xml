@@ -502,8 +502,6 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-lucene"/>
-    <depend project="cocoon-block-xsp" type="samples"/>
-    <depend project="cocoon-block-forms" type="samples"/>
 
     <library name="lucene"/>
 
