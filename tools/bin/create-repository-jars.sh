@@ -1,6 +1,6 @@
 #!/bin/sh 
 
-# $Id: create-repository-jars.sh,v 1.3 2004/02/02 10:50:23 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.4 2004/02/02 10:55:23 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -35,11 +35,6 @@ fi
 #   in there to update to the requested revision (see REVISION below)
 if [ "$LOCAL_REPOSITORY" = "" ]; then
   LOCAL_REPOSITORY=$HOME/cvs/cocoon-2.1
-fi
-
-# create it if it doesn't exists
-if [ ! -d $LOCAL_REPOSITORY ]; then
-  mkdir -p $LOCAL_REPOSITORY
 fi
 
 # On which host should the artifacts be published
