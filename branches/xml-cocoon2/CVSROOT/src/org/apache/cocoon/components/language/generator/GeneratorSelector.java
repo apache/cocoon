@@ -8,23 +8,23 @@
 package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.excalibur.component.DefaultComponentSelector;
+import org.apache.avalon.excalibur.component.DefaultComponentSelector;
 
 /**
  * This interface is the common base of all Compiled Components.  This
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:32 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-30 14:17:05 $
  */
 public class GeneratorSelector extends DefaultComponentSelector implements Disposable {
     private ClassLoaderManager classManager;

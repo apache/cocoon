@@ -11,11 +11,11 @@ package org.apache.cocoon.sitemap;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
@@ -38,7 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.9 2001-04-25 17:08:43 donaldp Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.10 2001-04-30 14:17:42 bloritsch Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper

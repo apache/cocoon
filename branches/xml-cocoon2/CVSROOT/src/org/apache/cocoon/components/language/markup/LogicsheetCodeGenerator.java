@@ -20,7 +20,7 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.log.Logger;
 import org.xml.sax.ContentHandler;
@@ -32,7 +32,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:38 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-30 14:17:06 $
  */
 public class LogicsheetCodeGenerator extends AbstractLoggable implements MarkupCodeGenerator {
 

@@ -65,12 +65,12 @@
     import java.util.HashMap;
     import java.util.Stack;
 
-    import org.apache.avalon.component.Component;
-    import org.apache.avalon.configuration.Configurable;
-    import org.apache.avalon.configuration.Configuration;
-    import org.apache.avalon.configuration.ConfigurationException;
-    import org.apache.avalon.configuration.DefaultConfiguration;
-    import org.apache.avalon.parameters.Parameters;
+    import org.apache.avalon.framework.component.Component;
+    import org.apache.avalon.framework.configuration.Configurable;
+    import org.apache.avalon.framework.configuration.Configuration;
+    import org.apache.avalon.framework.configuration.ConfigurationException;
+    import org.apache.avalon.framework.configuration.DefaultConfiguration;
+    import org.apache.avalon.framework.parameters.Parameters;
 
     import org.apache.regexp.RE;
     import org.apache.regexp.REProgram;
@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.109 2001-04-27 15:14:20 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.110 2001-04-30 14:17:08 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";

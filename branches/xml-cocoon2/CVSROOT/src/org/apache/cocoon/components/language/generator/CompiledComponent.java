@@ -7,8 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.Composable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.Modifiable;
 
 /**
@@ -16,7 +16,7 @@ import org.apache.cocoon.Modifiable;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:05:31 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:17:05 $
  */
 public interface CompiledComponent extends Component, Composable, Modifiable {
 }

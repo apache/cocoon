@@ -7,8 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -18,7 +18,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:09:33 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-30 14:17:46 $
  */
 public abstract class AbstractXMLProducer extends AbstractLoggable implements XMLProducer, Recyclable {
 

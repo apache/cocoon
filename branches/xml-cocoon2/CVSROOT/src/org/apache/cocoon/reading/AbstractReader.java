@@ -11,17 +11,17 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:08:13 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-30 14:17:33 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */

@@ -12,12 +12,12 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * This class provides a cache algorithm for the requested documents.

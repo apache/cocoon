@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
 import org.xml.sax.SAXException;
@@ -23,7 +23,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.10 $ $Date: 2001-04-25 21:02:12 $
+ * @version $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:22 $
  */
 public class ImageDirectoryGenerator extends DirectoryGenerator {
 

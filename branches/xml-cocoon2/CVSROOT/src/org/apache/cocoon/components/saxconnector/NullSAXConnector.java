@@ -9,18 +9,18 @@ package org.apache.cocoon.components.saxconnector;
 
 import java.io.IOException;
 import java.util.Map;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  * Null implementation of the SAXConnector. Simply sends events on to the next component in the pipeline.
  * @author <a href="prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-27 15:14:34 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:17:14 $
  */
 public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXConnector {
     /** Set the sitemap

@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.NOPCacheValidity;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:08:27 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-30 14:17:38 $
  *
  */
 public class FOPSerializer extends AbstractSerializer

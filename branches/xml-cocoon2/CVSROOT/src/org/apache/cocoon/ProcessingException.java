@@ -9,7 +9,7 @@ package org.apache.cocoon;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import org.apache.avalon.CascadingException;
+import org.apache.avalon.framework.CascadingException;
 
 /**
  * This Exception is thrown every time there is a problem in processing
@@ -17,7 +17,7 @@ import org.apache.avalon.CascadingException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:04:55 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:16:53 $
  */
 public class ProcessingException extends CascadingException {
 

@@ -11,7 +11,7 @@ package org.apache.cocoon;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
-import org.apache.avalon.CascadingException;
+import org.apache.avalon.framework.CascadingException;
 import org.xml.sax.SAXException;
 
 

@@ -15,19 +15,19 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.activity.Initializable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.SAXConfigurationHandler;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.ContextException;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -42,8 +42,8 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.excalibur.component.DefaultComponentManager;
-import org.apache.excalibur.component.DefaultRoleManager;
+import org.apache.avalon.excalibur.component.DefaultComponentManager;
+import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.80 $ $Date: 2001-04-27 15:14:11 $
+ * @version CVS $Revision: 1.4.2.81 $ $Date: 2001-04-30 14:16:53 $
  */
 public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */

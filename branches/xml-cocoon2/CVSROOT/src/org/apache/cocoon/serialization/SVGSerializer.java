@@ -12,11 +12,11 @@ import java.awt.Color;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -30,7 +30,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.SVGBuilder;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.log.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.ContentHandler;
@@ -42,7 +42,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-25 21:02:16 $
+ * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-30 14:17:38 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {

@@ -24,14 +24,14 @@ import java.util.Map;
 import oracle.jdbc.OracleResultSet;
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
-import org.apache.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -39,7 +39,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:11 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-30 14:16:58 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();

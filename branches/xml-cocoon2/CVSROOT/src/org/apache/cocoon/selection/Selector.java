@@ -8,12 +8,12 @@
 package org.apache.cocoon.selection;
 
 import java.util.Map;
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:08:20 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-30 14:17:35 $
  */
 public interface Selector extends Component {
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.57 2001-04-20 20:49:56 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.58 2001-04-30 14:17:09 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -187,7 +187,7 @@
             <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
           </xsl:when>
           <xsl:when test="$environment = 'cocoon2'">
-            <xsp:include>org.apache.excalibur.datasource.DataSourceComponent</xsp:include>
+            <xsp:include>org.apache.avalon.excalibur.datasource.DataSourceComponent</xsp:include>
           </xsl:when>
         </xsl:choose>
       </xsl:if>

@@ -9,14 +9,14 @@ package org.apache.cocoon.components.pipeline;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.environment.Environment;
@@ -35,7 +35,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:06:17 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:17:12 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;

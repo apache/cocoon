@@ -18,20 +18,20 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.datasource.DataSourceComponent;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.log.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -46,7 +46,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-25 17:09:02 $ $Author: donaldp $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-30 14:17:45 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {

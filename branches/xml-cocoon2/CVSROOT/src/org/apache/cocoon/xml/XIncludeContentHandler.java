@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -18,7 +18,7 @@ import org.xml.sax.ext.LexicalHandler;
  * Extracted class from XIncludeTransformer for use in XIncludeSAXConnector.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:09:39 $ $Author: donaldp $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-30 14:17:46 $ $Author: bloritsch $
  */
 public class XIncludeContentHandler extends AbstractLoggable implements ContentHandler, LexicalHandler {
 

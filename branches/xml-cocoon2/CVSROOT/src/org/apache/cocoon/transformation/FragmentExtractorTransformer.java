@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
@@ -42,7 +42,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:09:00 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:45 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements Composable, Disposable, Cacheable {

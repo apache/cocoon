@@ -7,8 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.CodeFactory;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-25 17:08:04 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-30 14:17:29 $
  */
 
 public class RegexpTargetHostMatcherFactory extends AbstractLoggable implements CodeFactory {

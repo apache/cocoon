@@ -14,7 +14,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Vector;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -28,7 +28,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-25 17:05:28 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-30 14:17:04 $
  */
 public class RepositoryClassLoader extends URLClassLoader implements Loggable {
 

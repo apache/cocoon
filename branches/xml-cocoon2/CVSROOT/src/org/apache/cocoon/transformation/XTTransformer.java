@@ -29,12 +29,12 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
@@ -46,7 +46,7 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
 import org.apache.cocoon.xml.DocumentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.log.Logger;
 import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
@@ -66,7 +66,7 @@ import org.xml.sax.ext.LexicalHandler;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-25 17:09:04 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-30 14:17:45 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composable, Loggable, Poolable, Disposable {

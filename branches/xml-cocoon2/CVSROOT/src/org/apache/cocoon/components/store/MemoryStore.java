@@ -9,8 +9,8 @@ package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  *
@@ -20,7 +20,7 @@ import org.apache.avalon.thread.ThreadSafe;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:03 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:17:16 $
  */
 public class MemoryStore implements Store, ThreadSafe {
     /* WARNING: Hashtable is threadsafe, whereas HashMap is not.

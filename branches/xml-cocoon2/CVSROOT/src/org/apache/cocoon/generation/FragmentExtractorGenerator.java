@@ -12,7 +12,7 @@ import java.rmi.server.UID;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:07:39 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-30 14:17:21 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator
         implements Poolable, Cacheable {

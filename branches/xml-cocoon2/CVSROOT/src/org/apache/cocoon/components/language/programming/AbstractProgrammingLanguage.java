@@ -8,11 +8,11 @@
 package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -22,7 +22,7 @@ import org.apache.cocoon.util.ClassUtils;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-25 17:05:52 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-30 14:17:10 $
  */
 public abstract class AbstractProgrammingLanguage extends AbstractLoggable
   implements ProgrammingLanguage, Configurable

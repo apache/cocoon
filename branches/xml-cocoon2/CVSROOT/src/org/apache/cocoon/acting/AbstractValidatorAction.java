@@ -1,9 +1,9 @@
-// $Id: AbstractValidatorAction.java,v 1.1.2.5 2001-04-25 21:01:44 dims Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.6 2001-04-30 14:16:56 bloritsch Exp $
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 
 /**
@@ -41,7 +41,7 @@ import org.apache.log.Logger;
  * octal values as accepted by java.Lang.decode (String s).
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 21:01:44 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-30 14:16:56 $
  */
 public abstract class AbstractValidatorAction
 extends AbstractComplementaryConfigurableAction
@@ -280,5 +280,5 @@ implements Configurable
     }
 }
 
-// $Id: AbstractValidatorAction.java,v 1.1.2.5 2001-04-25 21:01:44 dims Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.6 2001-04-30 14:16:56 bloritsch Exp $
 // vim: set et ts=4 sw=4:

@@ -22,7 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -47,7 +47,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:05:37 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-30 14:17:06 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */

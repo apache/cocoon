@@ -12,10 +12,10 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:20 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-30 14:17:12 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 

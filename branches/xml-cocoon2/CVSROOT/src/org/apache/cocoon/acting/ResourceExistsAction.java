@@ -12,14 +12,14 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -34,7 +34,7 @@ import org.xml.sax.InputSource;
  * null otherwise. It has only been tested with context urls.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:05:11 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-30 14:16:59 $
  */
 public class ResourceExistsAction extends ComposerAction {
 

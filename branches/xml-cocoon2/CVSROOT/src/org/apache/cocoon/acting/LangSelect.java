@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Cookie;
@@ -98,7 +98,7 @@ public class LangSelect extends java.lang.Object implements Action {
      * </ol>
      * @return java.lang.String
      * @param objectModel java.util.Map
-     * @param par org.apache.avalon.parameter.Parameters
+     * @param par org.apache.avalon.framework.parameter.Parameters
      */
     public static String getLang(Map objectModel, Parameters par) {
 

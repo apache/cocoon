@@ -9,10 +9,10 @@
 package org.apache.cocoon.xml;
 
 import java.util.Vector;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.log.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.DocumentHandler;
@@ -32,7 +32,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:09:37 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:17:46 $
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer implements Loggable /*, Recyclable*/ {
 

@@ -7,9 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.Composable;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.Cocoon;
 
 /**
@@ -17,7 +17,7 @@ import org.apache.cocoon.Cocoon;
  * that extends this to access SitemapComponents.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:16:56 $
  */
 public abstract class ComposerAction extends AbstractAction implements Composable {
 

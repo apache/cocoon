@@ -15,10 +15,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * and additional interpreter (Rhino, Jython, etc.) as a Cocoon Generator
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:07:45 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-30 14:17:23 $
  */
 public class ScriptGenerator extends ComposerGenerator {
 

@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.store.Store;
@@ -50,7 +50,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-25 17:05:36 $
+ * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-04-30 14:17:06 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composable, Configurable {
     /** The supported language table */

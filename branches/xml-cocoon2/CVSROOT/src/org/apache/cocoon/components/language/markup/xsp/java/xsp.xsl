@@ -12,7 +12,7 @@
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-26 15:45:03 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-30 14:17:09 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -50,14 +50,14 @@
     import org.xml.sax.SAXException;
     import org.xml.sax.helpers.AttributesImpl;
 
-    //import org.apache.avalon.*;
-    import org.apache.avalon.component.Component;
-    import org.apache.avalon.component.ComponentException;
-    import org.apache.avalon.component.ComponentManager;
-    import org.apache.avalon.component.ComponentSelector;
-    import org.apache.avalon.context.Context;
-    import org.apache.excalibur.datasource.DataSourceComponent;
-    //import org.apache.avalon.util.*;
+    //import org.apache.avalon.framework.*;
+    import org.apache.avalon.framework.component.Component;
+    import org.apache.avalon.framework.component.ComponentException;
+    import org.apache.avalon.framework.component.ComponentManager;
+    import org.apache.avalon.framework.component.ComponentSelector;
+    import org.apache.avalon.framework.context.Context;
+    import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+    //import org.apache.avalon.framework.util.*;
 
     import org.apache.cocoon.Constants;
     import org.apache.cocoon.Roles;

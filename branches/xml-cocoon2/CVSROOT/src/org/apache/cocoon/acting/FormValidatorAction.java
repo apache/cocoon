@@ -1,12 +1,12 @@
-// $Id: FormValidatorAction.java,v 1.1.2.6 2001-04-25 21:01:46 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.7 2001-04-30 14:16:57 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.Tokenizer;
@@ -32,7 +32,7 @@ import org.xml.sax.EntityResolver;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 21:01:46 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:16:57 $
  */
 public class FormValidatorAction extends AbstractValidatorAction
 {
@@ -82,5 +82,5 @@ public class FormValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: FormValidatorAction.java,v 1.1.2.6 2001-04-25 21:01:46 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.7 2001-04-30 14:16:57 bloritsch Exp $
 // vim: set et ts=4 sw=4:

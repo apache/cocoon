@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.environment.Environment;
 import org.apache.log.LogKit;
 import org.xml.sax.InputSource;

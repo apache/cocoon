@@ -22,9 +22,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.context.DefaultContext;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Notification;
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.90 $ $Date: 2001-04-27 14:57:49 $
+ * @version CVS $Revision: 1.1.4.91 $ $Date: 2001-04-30 14:17:41 $
  */
 
 public class CocoonServlet extends HttpServlet {

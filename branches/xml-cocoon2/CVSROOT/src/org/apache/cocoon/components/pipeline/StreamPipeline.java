@@ -7,11 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.components.pipeline;
 
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 
 /** A <CODE>StreamPipeline</CODE> either
  * <UL>
@@ -20,7 +20,7 @@ import org.apache.excalibur.pool.Recyclable;
  *  <CODE>Serializer</CODE> and let them produce the character stream
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:06:23 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-30 14:17:12 $
  */
 public interface StreamPipeline extends Component, Composable, Recyclable, Processor {
 

@@ -16,8 +16,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetCodeGenerator;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
@@ -35,7 +35,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 21:01:58 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-30 14:17:07 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 

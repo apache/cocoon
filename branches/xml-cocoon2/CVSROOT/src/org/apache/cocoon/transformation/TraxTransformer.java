@@ -24,15 +24,15 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -48,8 +48,8 @@ import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -62,7 +62,7 @@ import org.xml.sax.ext.LexicalHandler;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-25 17:09:02 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-30 14:17:45 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {

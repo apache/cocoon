@@ -9,7 +9,7 @@ package org.apache.cocoon.sitemap;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.Notifier;
 import org.apache.cocoon.generation.ComposerGenerator;
@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @created 31 July 2000
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:08:43 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:17:42 $
  */
 public class ErrorNotifier extends ComposerGenerator {
 

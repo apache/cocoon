@@ -28,16 +28,16 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-26 17:53:34 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-30 14:17:22 $
  */
 public class JspGenerator extends ServletGenerator implements Poolable {
 
@@ -155,10 +155,10 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public boolean isRequestedSessionIdFromCookie(){ return request.isRequestedSessionIdFromCookie(); }
         public boolean isRequestedSessionIdFromURL(){ return request.isRequestedSessionIdFromURL(); }
         public boolean isRequestedSessionIdFromUrl(){ return request.isRequestedSessionIdFromUrl(); }
-        public Object getAttribute(String s){ 
+        public Object getAttribute(String s){
             if(s != null && s.equals(INC_SERVLET_PATH))
                 return jspFile;
-            return request.getAttribute(s); 
+            return request.getAttribute(s);
         }
         public Enumeration getAttributeNames(){ return request.getAttributeNames(); }
         public String getCharacterEncoding(){ return request.getCharacterEncoding(); }
@@ -184,7 +184,7 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public RequestDispatcher getRequestDispatcher(String s){ return request.getRequestDispatcher(s); }
         public String getRealPath(String s){ return request.getRealPath(s); }
     }
-    
+
     /**
      * Stub implementation of HttpServletResponse
      */
@@ -200,8 +200,8 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public int getBufferSize() { return 1024; }
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
-        public PrintWriter getWriter() { 
-            return new PrintWriter(this.output); 
+        public PrintWriter getWriter() {
+            return new PrintWriter(this.output);
         }
         public boolean isCommitted() { return false; }
         public void reset() {}
@@ -209,8 +209,8 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public void setContentLength(int len) {}
         public void setContentType(java.lang.String type) {}
         public void setLocale(java.util.Locale loc) {}
-        public ServletOutputStream getOutputStream() { 
-            return this.output; 
+        public ServletOutputStream getOutputStream() {
+            return this.output;
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
         public boolean containsHeader(String s){ return response.containsHeader(s); }
@@ -238,18 +238,18 @@ public class JspGenerator extends ServletGenerator implements Poolable {
      * Stub implementation of ServletOutputStream
      */
     class MyServletOutputStream extends ServletOutputStream {
-        OutputStream output; 
+        OutputStream output;
         public MyServletOutputStream(OutputStream output) {
             this.output = output;
         }
-        public void write(byte[] b) throws java.io.IOException { 
-            output.write(b); 
+        public void write(byte[] b) throws java.io.IOException {
+            output.write(b);
         }
         public void write(byte[] b, int off, int len) throws java.io.IOException  {
-            output.write(b,off,len); 
+            output.write(b,off,len);
         }
         public void write(int b) throws java.io.IOException  {
-            output.write(b); 
+            output.write(b);
         }
      }
 }

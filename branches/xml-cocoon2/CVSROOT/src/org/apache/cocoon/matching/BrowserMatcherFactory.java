@@ -8,7 +8,7 @@
 package org.apache.cocoon.matching;
 
 import java.util.Stack;
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.xerces.dom.TreeWalkerImpl;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:08:02 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-30 14:17:29 $
  */
 
 public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {

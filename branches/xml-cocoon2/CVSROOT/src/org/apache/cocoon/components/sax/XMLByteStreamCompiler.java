@@ -8,8 +8,8 @@
 package org.apache.cocoon.components.sax;
 
 import java.util.HashMap;
-import org.apache.avalon.component.Component;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -22,7 +22,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:06:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-30 14:17:13 $
  */
 
 public final class XMLByteStreamCompiler

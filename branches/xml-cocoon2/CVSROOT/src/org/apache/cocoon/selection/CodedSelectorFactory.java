@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.CodeFactory;
 import org.w3c.dom.NodeList;
 
@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:08:19 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:35 $
  */
 public class CodedSelectorFactory extends java.lang.Object
         implements CodeFactory {

@@ -10,13 +10,13 @@ package org.apache.cocoon.components.pipeline;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-27 15:14:25 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:12 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer

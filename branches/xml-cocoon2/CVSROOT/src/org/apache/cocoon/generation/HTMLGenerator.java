@@ -13,21 +13,21 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.w3c.tidy.Tidy;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:07:41 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-30 14:17:22 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 

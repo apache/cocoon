@@ -8,10 +8,10 @@
 package org.apache.cocoon.acting;
 
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:09 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-30 14:16:58 $
  */
 public class HelloAction extends ComposerAction {
 

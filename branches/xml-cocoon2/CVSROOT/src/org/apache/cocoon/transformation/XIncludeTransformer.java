@@ -18,14 +18,14 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Stack;
 import javax.xml.transform.TransformerException;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
@@ -33,7 +33,7 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.XIncludeContentHandler;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -54,7 +54,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-25 17:09:03 $ $Author: donaldp $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-30 14:17:45 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 

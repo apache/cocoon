@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.CodeFactory;
 import org.apache.xerces.dom.TreeWalkerImpl;
 import org.w3c.dom.NamedNodeMap;
@@ -35,7 +35,7 @@ import org.w3c.dom.traversal.TreeWalker;
  *   </map:select>
  *
  * @author <a href="mailto:cbritton@centervilletech.com">Colin Britton</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:08:19 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-30 14:17:35 $
 */
 
 

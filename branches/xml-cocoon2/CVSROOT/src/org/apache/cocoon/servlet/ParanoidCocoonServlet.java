@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import org.apache.avalon.context.ContextException;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 import org.apache.cocoon.util.IOUtils;
@@ -29,7 +29,7 @@ import org.apache.cocoon.util.IOUtils;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:08:37 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:17:41 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {

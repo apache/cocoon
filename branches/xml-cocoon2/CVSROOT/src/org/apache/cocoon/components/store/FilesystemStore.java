@@ -10,11 +10,11 @@ package org.apache.cocoon.components.store;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.ContextException;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 

@@ -1,4 +1,4 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.8 2001-04-25 21:01:46 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.9 2001-04-30 14:16:57 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.sql.Connection;
@@ -7,13 +7,13 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 
@@ -50,7 +50,7 @@ import org.xml.sax.EntityResolver;
  * not verified.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 21:01:46 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:16:57 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -223,5 +223,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.8 2001-04-25 21:01:46 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.9 2001-04-30 14:16:57 bloritsch Exp $
 // vim: set et ts=4 sw=4:

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;

@@ -1,11 +1,11 @@
-// $Id: SessionInvalidatorAction.java,v 1.1.2.7 2001-04-25 21:01:47 dims Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.8 2001-04-30 14:16:59 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -17,7 +17,7 @@ import org.xml.sax.EntityResolver;
  * empty map if everything is ok, null otherwise.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 21:01:47 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-30 14:16:59 $
  */
 public class SessionInvalidatorAction extends AbstractAction
 {
@@ -49,5 +49,5 @@ public class SessionInvalidatorAction extends AbstractAction
     }
 }
 
-// $Id: SessionInvalidatorAction.java,v 1.1.2.7 2001-04-25 21:01:47 dims Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.8 2001-04-30 14:16:59 bloritsch Exp $
 // vim: set et ts=4 sw=4:

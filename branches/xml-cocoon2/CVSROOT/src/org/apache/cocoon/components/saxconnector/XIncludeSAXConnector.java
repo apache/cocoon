@@ -13,12 +13,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.pipeline.EventPipeline;
@@ -29,7 +29,7 @@ import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.Locator;
@@ -40,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-27 15:14:37 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:15 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 

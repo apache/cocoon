@@ -8,12 +8,12 @@
 package org.apache.cocoon.matching;
 
 import java.util.Map;
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-25 17:08:03 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-30 14:17:29 $
  */
 public interface Matcher extends Component {
     /**

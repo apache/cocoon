@@ -10,13 +10,13 @@ package org.apache.cocoon.components.language.programming;
 
 import java.io.IOException;
 import java.util.List;
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * This interface defines a compiler's functionality for all
  * (Java-based) compiled languages
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:05:54 $
+ * @version $Revision: 1.1.2.8 $ $Date: 2001-04-30 14:17:10 $
  * @since 2.0
  */
 public interface LanguageCompiler extends Component {

@@ -8,7 +8,7 @@
 package org.apache.cocoon.components.language.programming.javascript;
 
 import java.io.File;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.programming.CompiledProgrammingLanguage;
 import org.apache.cocoon.components.language.programming.java.JavaLanguage;
@@ -19,7 +19,7 @@ import org.mozilla.javascript.tools.jsc.Main;
  * The compiled Javascript (Rhino) programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 21:02:08 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:17:11 $
  */
 public class JavascriptLanguage extends JavaLanguage
 {

@@ -9,7 +9,7 @@
 package org.apache.cocoon.sitemap;
 
 import java.util.HashMap;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.CodeFactory;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.log.Logger;
@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:08:51 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-30 14:17:43 $
  */
 
 public class XSLTFactoryLoader {

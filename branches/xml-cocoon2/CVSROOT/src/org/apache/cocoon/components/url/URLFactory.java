@@ -9,11 +9,11 @@ package org.apache.cocoon.components.url;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactory.java,v 1.1.2.3 2001-04-25 17:06:54 donaldp Exp $
+ * @version $Id: URLFactory.java,v 1.1.2.4 2001-04-30 14:17:18 bloritsch Exp $
  */
 public interface URLFactory extends ThreadSafe {
 

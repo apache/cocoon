@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.14 $ $Date: 2001-04-25 21:02:00 $
+ * @version $Revision: 1.1.2.15 $ $Date: 2001-04-30 14:17:10 $
  * @since 2.0
  */
 public abstract class AbstractJavaCompiler extends AbstractLoggable implements LanguageCompiler, Recyclable {

@@ -9,7 +9,7 @@ package org.apache.cocoon.generation;
 
 import java.io.IOException;
 import java.util.Map;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.EntityResolver;
@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:07:34 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-30 14:17:20 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer implements Generator {
 

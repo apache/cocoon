@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -19,7 +19,7 @@ import org.xml.sax.XMLReader;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:05:39 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:07 $
  */
 public interface MarkupLanguage extends Component {
     /**

@@ -9,7 +9,7 @@
 package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.log.Logger;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:09:54 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-30 14:17:47 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;

@@ -25,11 +25,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.xml.dom.DOMFactory;

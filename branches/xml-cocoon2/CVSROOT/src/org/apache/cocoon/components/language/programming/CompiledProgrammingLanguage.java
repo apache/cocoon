@@ -8,11 +8,11 @@
 package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.ContextException;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.LanguageException;
@@ -23,7 +23,7 @@ import org.apache.cocoon.util.IOUtils;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-25 18:20:35 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-30 14:17:10 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */

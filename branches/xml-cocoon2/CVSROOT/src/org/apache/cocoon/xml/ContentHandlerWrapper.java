@@ -10,7 +10,7 @@ package org.apache.cocoon.xml;
 
 import java.util.Vector;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
-import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -25,7 +25,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:09:34 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-30 14:17:46 $
  */
 public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
 

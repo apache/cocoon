@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.log.Logger;
 
@@ -25,7 +25,7 @@ import org.apache.log.Logger;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.14 $ $Date: 2001-04-27 15:38:21 $
+ * @version $Revision: 1.1.2.15 $ $Date: 2001-04-30 14:17:10 $
  * @since 2.0
  */
 

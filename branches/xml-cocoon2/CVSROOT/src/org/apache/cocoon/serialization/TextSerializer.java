@@ -12,13 +12,13 @@ import java.io.OutputStream;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.excalibur.pool.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:08:30 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-30 14:17:39 $
  */
 
 public class TextSerializer extends AbstractTextSerializer implements Poolable {

@@ -8,16 +8,16 @@
 package org.apache.cocoon.acting;
 
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:05:05 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:16:56 $
  */
 public interface Action extends Component, ThreadSafe {
     /**

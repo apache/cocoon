@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -21,7 +21,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:09:31 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-30 14:17:46 $
  */
 public abstract class AbstractXMLConsumer extends AbstractLoggable implements XMLConsumer {
 

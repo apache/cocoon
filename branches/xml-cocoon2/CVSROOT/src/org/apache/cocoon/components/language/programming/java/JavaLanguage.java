@@ -11,14 +11,14 @@ package org.apache.cocoon.components.language.programming.java;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import org.apache.avalon.activity.Disposable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.LanguageException;
@@ -34,7 +34,7 @@ import org.apache.log.Logger;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-25 21:02:01 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-30 14:17:10 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composable, Disposable {
 

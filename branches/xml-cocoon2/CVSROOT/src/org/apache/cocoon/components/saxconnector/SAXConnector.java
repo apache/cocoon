@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.saxconnector;
 
-import org.apache.avalon.component.Component;
+import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.XMLPipe;
@@ -16,7 +16,7 @@ import org.xml.sax.XMLFilter;
 /**
  * Provides a connection between SAX components.
  * @author <a href="mailto:prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-27 15:14:36 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-30 14:17:15 $
  */
 public interface SAXConnector extends XMLPipe, Component, SitemapModelComponent {
     /**

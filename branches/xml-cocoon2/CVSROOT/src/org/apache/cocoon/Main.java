@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.avalon.context.DefaultContext;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
@@ -30,10 +30,10 @@ import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.util.MIMEUtils;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.excalibur.cli.CLArgsParser;
-import org.apache.excalibur.cli.CLOption;
-import org.apache.excalibur.cli.CLOptionDescriptor;
-import org.apache.excalibur.cli.CLUtil;
+import org.apache.avalon.excalibur.cli.CLArgsParser;
+import org.apache.avalon.excalibur.cli.CLOption;
+import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
+import org.apache.avalon.excalibur.cli.CLUtil;
 import org.apache.log.Category;
 import org.apache.log.LogKit;
 import org.apache.log.LogTarget;
@@ -46,7 +46,7 @@ import org.apache.log.output.FileOutputLogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.31 $ $Date: 2001-04-25 17:04:54 $
+ * @version CVS $Revision: 1.1.4.32 $ $Date: 2001-04-30 14:16:53 $
  */
 
 public class Main {

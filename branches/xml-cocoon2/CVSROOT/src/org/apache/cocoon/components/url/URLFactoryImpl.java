@@ -13,21 +13,21 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.ContextException;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.9 2001-04-25 17:06:55 donaldp Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.10 2001-04-30 14:17:18 bloritsch Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 

@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetCodeGenerator;
@@ -36,7 +36,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:05:46 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-30 14:17:09 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
