@@ -58,6 +58,7 @@
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
         <include name="*/java"/>
+        <include name="*/test"/>
         <include name="*/java${target.vm}"/>
       </dirset>
     </path>
