@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.16 2000-06-04 20:03:35 balld Exp $ --
+/*-- $Id: Utils.java,v 1.17 2000-07-21 23:38:26 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.16 $ $Date: 2000-06-04 20:03:35 $
+ * @version $Revision: 1.17 $ $Date: 2000-07-21 23:38:26 $
  */
 
 public final class Utils {
@@ -248,7 +248,7 @@ public final class Utils {
             String resource = ((ServletContext) context).getRealPath(path);
 
             if (resource != null) {
-                return resource.replace('\\', '/');
+                return resource.replace('\\','/');
             } else {
                 throw new RuntimeException("Cannot access non-file/war resources");
             }
