@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.23 2003/03/24 11:23:15 stephan Exp $
+  CVS $Id: gump.xml,v 1.24 2003/03/24 12:12:54 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -806,7 +806,7 @@
        This package provides standardized, efficient versions of utility classes 
        commonly encountered in concurrent Java programming.
     </description>
-    <home nested="src/blocks/swf/lib"/>
+    <home nested="lib/core"/>
     <jar name="util.concurrent-1.3.1.jar"/>
   </project>
   
