@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.8 2000-06-24 20:19:03 balld Exp $
+  $Id: changes.xml,v 1.9.2.9 2000-08-23 13:12:09 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -12,13 +12,21 @@
  <devs>
   <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Berin Loritsch" email="bloritsch@infoplanning.com" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+   Distribution cleanup and creation of a decent live demo, also to test the new sitemap.
+  </action>
+  <action dev="GP" type="update">
+   Major update to implement the new compiled sitemap subsystem.
+  </action>
   <action dev="DB" type="update">
    Patched XSLTFilter to pass request parameters into stylesheet like cocoon1
   </action>

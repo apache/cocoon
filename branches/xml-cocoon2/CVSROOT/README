@@ -1,5 +1,5 @@
 
-                         C   O   C   O   O   N
+                  A  P  A  C  H  E     C  O  C  O  O  N
 
                                @version@
 
@@ -7,8 +7,8 @@
   What is it?
   -----------
 
-  Cocoon is a 100% pure Java publishing framework that relies on
-  new W3C technologies (such as XML and XSL) to provide web content.
+  Apache Cocoon is a 100% pure Java publishing framework that relies on
+  new W3C technologies (such as XML, XSL, SVG, etc..) to provide web content.
 
   The Cocoon project aims to change the way web information is created,
   rendered and delivered. This new paradigm is based on fact that document
@@ -23,10 +23,10 @@
   Where is it?
   ------------
 
-  The home page for the Cocoon project can be found in the Apache XML Project
-  web site (http://xml.apache.org/cocoon/). There you also find information
-  on how to download the latest release as well as all the other information
-  you might need regarding this project.
+  The home page for the Apache Cocoon project can be found in the Apache XML 
+  Project web site (http://xml.apache.org/cocoon/). There you also find 
+  information on how to download the latest release as well as all the other 
+  information you might need regarding this project.
 
 
   Requirements
@@ -64,7 +64,7 @@
 
 
 
-  Thanks for using Cocoon.
+  Thanks for using Apache Cocoon.
 
                                            The Apache XML Project
                                            http://xml.apache.org/
