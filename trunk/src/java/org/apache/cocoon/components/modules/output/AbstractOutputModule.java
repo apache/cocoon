@@ -69,7 +69,7 @@ import org.apache.cocoon.util.HashMap;
  * Logger, use getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractOutputModule.java,v 1.1 2003/03/09 00:09:05 pier Exp $
+ * @version CVS $Id: AbstractOutputModule.java,v 1.2 2003/03/12 13:27:34 haul Exp $
  */
 public abstract class AbstractOutputModule extends AbstractLogEnabled
     implements OutputModule, Configurable, Disposable {
@@ -95,7 +95,7 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
         this.settings = new HashMap(parameters.length);
         for (int i = 0; i < parameters.length; i++) {
             String key = parameters[i].getName();
-            String val = parameters[i].getValue();
+            String val = parameters[i].getValue("");
             this.settings.put(key, val);
         }
     }
