@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@
     <menu-item label="EncodeURL Transformer" href="encodeurl-transformer.html"/>
     <menu-item label="SourceWriting Transformer" href="sourcewriting-transformer.html"/>
     <menu-item label="Augment Transformer" href="augment-transformer.html"/>
+    <menu-item label="JX Template Transformer" href="jx-template-transformer.html"/>
   </menu>
   <menu label="Optional">
     <menu-item label="LDAP Transformer" href="ldap-transformer.html"/>
