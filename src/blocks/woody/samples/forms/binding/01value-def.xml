@@ -14,7 +14,7 @@
       <wd:datatype base="string" />
     </wd:field>
 
-    <wd:field id="writeonly" >
+    <wd:field id="writeonly" required="true">
       <wd:label>String - bound only during save:</wd:label>
       <wd:datatype base="string" />
     </wd:field>
