@@ -18,7 +18,6 @@ using the MetadataManager.
 -->
     <jdbc-connection-descriptor
         jcd-alias="default"
-        default-connection="true"
         platform="Hsqldb"
         jdbc-level="3.0"
         driver="org.hsqldb.jdbcDriver"
@@ -42,18 +41,18 @@ using the MetadataManager.
         </sequence-manager>
     </jdbc-connection-descriptor>
 
-    <jdbc-connection-descriptor jcd-alias="personnel">
+    <jdbc-connection-descriptor jcd-alias="personnel" default-connection="true">
         <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
             <attribute attribute-name="grabSize" attribute-value="5"/>
         </sequence-manager>
     </jdbc-connection-descriptor>
 
-    <class-descriptor class="org.apache.cocoon.ojb.samples.Department" table="DEPARTMENT">
+    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Department" table="DEPARTMENT">
         <field-descriptor name="id"   column="ID"   jdbc-type="INTEGER" primarykey="true"/>
         <field-descriptor name="name" column="NAME" jdbc-type="VARCHAR"/>
     </class-descriptor>
 
-    <class-descriptor class="org.apache.cocoon.ojb.samples.Employee" table="EMPLOYEE">
+    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Employee" table="EMPLOYEE">
         <field-descriptor name="id"             column="ID"             jdbc-type="INTEGER" primarykey="true"/>
         <field-descriptor name="departmentId" column="DEPARTMENT_ID" jdbc-type="INTEGER"/>
         <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>

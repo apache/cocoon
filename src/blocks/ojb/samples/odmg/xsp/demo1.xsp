@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: demo1.xsp,v 1.1 2004/02/01 21:37:29 giacomo Exp $-->
+<!-- $Id: demo1.xsp,v 1.2 2004/02/04 17:33:59 joerg Exp $-->
 <!--
 
  ============================================================================
@@ -55,14 +55,14 @@
  * Simple demo that insert a row into hsqldb using OJB with JDO
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/02/01 21:37:29 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/04 17:33:59 $
 -->
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
 
 	<xsp:structure>
 		<xsp:include>org.apache.cocoon.ojb.odmg.components.OdmgImplementation</xsp:include>
-		<xsp:include>org.apache.cocoon.ojb.samples.Department</xsp:include>
+		<xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
 		<xsp:include>org.odmg.Implementation</xsp:include>
 		<xsp:include>org.odmg.Transaction</xsp:include>
 		<xsp:include>org.odmg.ODMGException</xsp:include>

@@ -6,13 +6,13 @@ function employeeform_jdo(form) {
    	var factory = cocoon.getComponent(Packages.org.apache.cocoon.ojb.jdo.components.JdoPMF.ROLE);
 
     // Create a empty Bean
-    var bean = new Packages.org.apache.cocoon.ojb.samples.Employee();
-    var ojbEmployee = Packages.org.apache.cocoon.ojb.samples.EmployeeImpl();
+    var bean = new Packages.org.apache.cocoon.ojb.samples.bean.Employee();
+    var dao = new Packages.org.apache.cocoon.ojb.samples.EmployeeDAO();
 
 	// Fill some initial data to the bean
 	bean.setId(1);
     // Load bean based on the given PrimaryKey
-    ojbEmployee.retrieve(bean, factory);
+    dao.retrieve(bean, factory);
 
     // Load the Bean to the form
     form.load(bean);
@@ -22,7 +22,7 @@ function employeeform_jdo(form) {
 	form.save(bean);
 
     // Update Bean in Database
-	ojbEmployee.update(bean, factory);
+	dao.update(bean, factory);
 	// Clean up the operation
 	cocoon.releaseComponent(factory);
 

@@ -48,37 +48,50 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.ojb.samples;
+
+package org.apache.cocoon.ojb.samples.bean;
 
 import java.io.Serializable;
 
 /**
- *  Department's Bean
+ *  Employee's Bean
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: Department.java,v 1.1 2004/02/03 11:12:04 antonio Exp $
+ * @version CVS $Id: Employee.java,v 1.1 2004/02/04 17:33:58 joerg Exp $
 */
-public class Department implements Serializable {
+public class Employee implements Serializable {
 
     private int id;
+    protected int departmentId;
     protected String name;
 
-    public Department(){
+    public Employee(){
+        this.id = 1;
+        this.departmentId = 1;
+        this.name = "My Name";
     }
 
     public int getId() {
-        return id;
+        return this.id;
+    }
+
+    public int getDepartmentId() {
+        return this.departmentId;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setId(int newId) {
-        id = newId;
+        this.id = newId;
+    }
+
+    public void setDepartmentId(int newDepartmentId) {
+        this.departmentId = newDepartmentId;
     }
 
     public void setName(String newName) {
-        name = newName;
+        this.name = newName;
     }
-}
+} 

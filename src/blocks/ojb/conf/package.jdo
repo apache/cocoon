@@ -2,7 +2,7 @@
 <!DOCTYPE jdo SYSTEM "file:/javax/jdo/jdo.dtd">
 
 <jdo>
-    <package name="org.apache.cocoon.ojb.samples">
+    <package name="org.apache.cocoon.ojb.samples.bean">
          <class name="Employee" identity-type="datastore">
             <extension vendor-name="ojb" key="table" value="EMPLOYEE"/>
             <field name="id" persistence-modifier="persistent">
