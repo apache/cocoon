@@ -19,13 +19,12 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.cocoon.components.expression.Expression;
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
 import org.apache.commons.jexl.util.introspection.Info;
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionCompiler;
-import org.apache.cocoon.components.expression.ExpressionContext;
-import org.apache.cocoon.components.expression.ExpressionException;
 
 public class JexlExpression implements Expression {
 
