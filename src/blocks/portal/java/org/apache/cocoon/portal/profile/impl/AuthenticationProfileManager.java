@@ -71,6 +71,7 @@ import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 import org.apache.cocoon.portal.util.ProfileException;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.commons.collections.map.LinkedMap;
@@ -84,7 +85,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.16 2004/01/27 14:58:05 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.17 2004/02/23 15:24:54 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -121,7 +122,11 @@ public class AuthenticationProfileManager
     throws Exception {
         final RequestState state = this.getRequestState();
         final UserHandler handler = state.getHandler();
-        final Configuration appConf = state.getApplicationConfiguration().getConfiguration("portal");
+        final ApplicationConfiguration ac = state.getApplicationConfiguration();        
+        if ( ac == null ) {
+            throw new ProcessingException("Configuration for portal not found in application configuration.");
+        }
+        final Configuration appConf = ac.getConfiguration("portal");
         if ( appConf == null ) {
             throw new ProcessingException("Configuration for portal not found in application configuration.");
         }
