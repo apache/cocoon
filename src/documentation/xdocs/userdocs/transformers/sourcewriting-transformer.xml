@@ -325,7 +325,6 @@
       </s2>
     </s1>
     <s1 title="Known Problems">
-      <p>Namespace handling: namespace declarations are not copied to the <code>Source</code>, resulting in invalid XML.</p>
       <p>I cannot get the 'insert before' example working, which uses the <code><![CDATA[<source:reinsert/>]]></code> tag.</p>
     </s1>
     <s1 title="Warning">
