@@ -32,6 +32,10 @@
   </a>
  </xsl:template>
 
+ <xsl:template match="lex:lexeme[@symbol='cssurl']">
+  <a href="{lex:group[3]}"><xsl:value-of select="lex:group[1]"/></a>
+ </xsl:template>
+ 
  <xsl:template match="@*|*|text()|processing-instruction()" priority="-1">
   <xsl:copy>
    <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>

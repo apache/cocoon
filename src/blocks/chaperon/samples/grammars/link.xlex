@@ -66,6 +66,88 @@
   </concat>
  </lexeme>
 
+ <lexeme symbol="cssurl">
+  <concat>
+      <group>
+       <concat>
+        <cstring content="u"/>
+        <cstring content="r"/>
+        <cstring content="l"/>
+       </concat>
+     
+       <concat minOccurs="0" maxOccurs="*">
+        <cstring content=" "/>
+       </concat>
+    
+       <concat>
+        <cstring content="("/>
+       </concat>
+       
+       <concat minOccurs="0" maxOccurs="*">
+        <cstring content=" "/>
+       </concat>
+       
+       <concat minOccurs="0" maxOccurs="1">
+        <cstring content="'"/>
+       </concat>
+      </group>
+      
+      <group>
+       <concat minOccurs="0">
+        <cstring content="/"/>
+        <cclass minOccurs="0" maxOccurs="*">
+         <cinterval min="A" max="Z"/>
+         <cinterval min="a" max="z"/>
+         <cinterval min="0" max="9"/>
+         <cset content="._-:"/>
+        </cclass>
+       </concat>
+     
+       <cclass minOccurs="0" maxOccurs="*">
+        <cinterval min="A" max="Z"/>
+        <cinterval min="a" max="z"/>
+        <cinterval min="0" max="9"/>
+        <cset content="._-:/"/>
+       </cclass>
+    
+       <concat minOccurs="0">
+        <cstring content="?"/>
+        <cclass minOccurs="0" maxOccurs="*">
+         <cinterval min="A" max="Z"/>
+         <cinterval min="a" max="z"/>
+         <cinterval min="0" max="9"/>
+         <cset content="._-:/?"/>
+        </cclass>
+       </concat>
+    
+       <concat minOccurs="0">
+        <cstring content="#"/>
+        <cclass minOccurs="0" maxOccurs="*">
+         <cinterval min="A" max="Z"/>
+         <cinterval min="a" max="z"/>
+         <cinterval min="0" max="9"/>
+         <cset content="._-:/?#"/>
+        </cclass>
+       </concat>
+      </group>
+      
+      <group>
+       <concat minOccurs="0" maxOccurs="1">
+        <cstring content="'"/>
+       </concat>   
+    
+       <concat minOccurs="0" maxOccurs="*">
+        <cstring content=" "/>
+       </concat>
+    
+       <concat>
+        <cstring content=")"/>
+       </concat>   
+      </group>
+      
+  </concat>
+ </lexeme>
+ 
  <lexeme symbol="email">
   <concat>
    <concat>
