@@ -22,7 +22,7 @@ HTMLArea.I18N = {
 		bold:           "Félkövér",
 		italic:         "Dőlt",
 		underline:      "Aláhúzott",
-		strikethrough:  "�?thúzott",
+		strikethrough:  "Áthúzott",
 		subscript:      "Alsó index",
 		superscript:    "Felső index",
 		justifyleft:    "Balra zárt",

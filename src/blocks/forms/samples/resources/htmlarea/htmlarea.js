@@ -9,7 +9,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: htmlarea.js,v 1.2 2004/03/18 06:05:05 crossley Exp $
+// $Id: htmlarea.js,v 1.3 2004/05/03 15:30:34 bruno Exp $
 
 if (typeof _editor_url == "string") {
 	// Leave exactly one backslash at the end of _editor_url
@@ -1572,6 +1572,8 @@ HTMLArea.prototype.execCommand = function(cmdID, UI, param) {
 		this._createLink();
 		break;
 	    case "popupeditor":
+		// this object will be passed to the newly opened window
+		HTMLArea._object = this;
 		if (HTMLArea.is_ie) {
 			//if (confirm(HTMLArea.I18N.msg["IE-sucks-full-screen"]))
 			{
@@ -1584,8 +1586,6 @@ HTMLArea.prototype.execCommand = function(cmdID, UI, param) {
 				    "toolbar=no,menubar=no,personalbar=no,width=640,height=480," +
 				    "scrollbars=no,resizable=yes");
 		}
-		// pass this object to the newly opened window
-		HTMLArea._object = this;
 		break;
 	    case "undo":
 	    case "redo":
@@ -1641,6 +1641,12 @@ HTMLArea.prototype.execCommand = function(cmdID, UI, param) {
 HTMLArea.prototype._editorEvent = function(ev) {
 	var editor = this;
 	var keyEvent = (HTMLArea.is_ie && ev.type == "keydown") || (ev.type == "keypress");
+	if (keyEvent) {
+		for (var i in editor.plugins) {
+			var plugin = editor.plugins[i].instance;
+			if (typeof plugin.onKeyPress == "function") plugin.onKeyPress(ev);
+		}
+	}
 	if (keyEvent && ev.ctrlKey) {
 		var sel = null;
 		var range = null;
@@ -2030,7 +2036,10 @@ HTMLArea.getHTML = function(root, outputRoot, editor) {
 		}
 		break;
 	    case 3: // Node.TEXT_NODE
-		html = HTMLArea.htmlEncode(root.data);
+		// If a text node is alone in an element and all spaces, replace it with an non breaking one
+		// This partially undoes the damage done by moz, which translates '&nbsp;'s into spaces in the data element
+		if ( !root.previousSibling && !root.nextSibling && root.data.match(/^\s*$/i) ) html = '&nbsp;';
+		else html = HTMLArea.htmlEncode(root.data);
 		break;
 	    case 8: // Node.COMMENT_NODE
 		html = "<!--" + root.data + "-->";

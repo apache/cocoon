@@ -1,16 +1,7 @@
 // I18N constants
 
-// LANG: "en", ENCODING: UTF-8 | ISO-8859-1
-// Author: Mihai Bazon, http://dynarch.com/mishoo
-
-// FOR TRANSLATORS:
-//
-//   1. PLEASE PUT YOUR CONTACT INFO IN THE ABOVE LINE
-//      (at least a valid email address)
-//
-//   2. PLEASE TRY TO USE UTF-8 FOR ENCODING;
-//      (if this is not possible, please include a comment
-//       that states what encoding is necessary.)
+// LANG: "el", ENCODING: UTF-8 | ISO-8859-7
+// Author: Dimitris Glezos, dimitris@glezos.com
 
 HTMLArea.I18N = {
 
@@ -21,57 +12,57 @@ HTMLArea.I18N = {
 	tooltips: {
 		bold:           "Έντονα",
 		italic:         "Πλάγια",
-		underline:      "Υπογ�?αμμισμένα",
-		strikethrough:  "Διαγ�?αμμένα",
+		underline:      "Υπογραμμισμένα",
+		strikethrough:  "Διαγραμμένα",
 		subscript:      "Δείκτης",
 		superscript:    "Δείκτης",
-		justifyleft:    "Στοίχιση Α�?ιστε�?ά",
-		justifycenter:  "Στοίχιση Κέντ�?ο",
+		justifyleft:    "Στοίχιση Αριστερά",
+		justifycenter:  "Στοίχιση Κέντρο",
 		justifyright:   "Στοίχιση Δεξιά",
-		justifyfull:    "Πλή�?ης Στοίχιση",
-		orderedlist:    "Α�?ίθμηση",
+		justifyfull:    "Πλήρης Στοίχιση",
+		orderedlist:    "Αρίθμηση",
 		unorderedlist:  "Κουκκίδες",
 		outdent:        "Μείωση Εσοχής",
-		indent:         "Α�?ξηση Εσοχής",
-		forecolor:      "Χ�?ώμα Γ�?αμματοσει�?άς",
-		hilitecolor:    "Χ�?ώμα Φόντου",
-		horizontalrule: "Ο�?ιζόντια Γ�?αμμή",
+		indent:         "Αύξηση Εσοχής",
+		forecolor:      "Χρώμα Γραμματοσειράς",
+		hilitecolor:    "Χρώμα Φόντου",
+		horizontalrule: "Οριζόντια Γραμμή",
 		createlink:     "Εισαγωγή Συνδέσμου",
-		insertimage:    "Εισαγωγή/Τ�?οποποίηση Εικόνας",
+		insertimage:    "Εισαγωγή/Τροποποίηση Εικόνας",
 		inserttable:    "Εισαγωγή Πίνακα",
 		htmlmode:       "Εναλλαγή σε/από HTML",
-		popupeditor:    "Μεγένθυνση επεξε�?γαστή",
-		about:          "Πλη�?οφο�?ίες",
+		popupeditor:    "Μεγένθυνση επεξεργαστή",
+		about:          "Πληροφορίες",
 		showhelp:       "Βοήθεια",
-		textindicator:  "Πα�?ών στυλ",
-		undo:           "Αναί�?εση τελευταίας ενέ�?γειας",
-		redo:           "Επαναφο�?ά από αναί�?εση",
+		textindicator:  "Παρών στυλ",
+		undo:           "Αναίρεση τελευταίας ενέργειας",
+		redo:           "Επαναφορά από αναίρεση",
 		cut:            "Αποκοπή",
-		copy:           "Αντιγ�?αφή",
+		copy:           "Αντιγραφή",
 		paste:          "Επικόλληση",
-        lefttoright:    "Κατε�?θυνση α�?ιστε�?ά π�?ος δεξιά",
-        righttoleft:    "Κατε�?θυνση από δεξιά π�?ος τα α�?ιστε�?ά"
+        lefttoright:    "Κατεύθυνση αριστερά προς δεξιά",
+        righttoleft:    "Κατεύθυνση από δεξιά προς τα αριστερά"
 	},
 
 	buttons: {
 		"ok":           "OK",
-		"cancel":       "Ακ�?�?ωση"
+		"cancel":       "Ακύρωση"
 	},
 
 	msg: {
-		"Path":         "Διαδ�?ομή",
-		"TEXT_MODE":    "Είστε σε TEXT MODE.  Χ�?ησιμοποιήστε το κουμπί [<>] για να επανέ�?θετε στο WYSIWIG.",
+		"Path":         "Διαδρομή",
+		"TEXT_MODE":    "Είστε σε TEXT MODE.  Χρησιμοποιήστε το κουμπί [<>] για να επανέρθετε στο WYSIWIG.",
 
-       "IE-sucks-full-screen":	"Η κατάσταση πλή�?ης οθόνης έχει π�?οβλήματα με τον Internet Explorer, " +
-       							"λόγω σφαλμάτων στον ίδιο τον browser.  Αν το σ�?στημα σας είναι Windows 9x " +
-       							"μπο�?εί και να χ�?ειαστείτε reboot. Αν είστε σίγου�?οι, πατήστε ΟΚ."
+       "IE-sucks-full-screen":	"Η κατάσταση πλήρης οθόνης έχει προβλήματα με τον Internet Explorer, " +
+       							"λόγω σφαλμάτων στον ίδιο τον browser.  Αν το σύστημα σας είναι Windows 9x " +
+       							"μπορεί και να χρειαστείτε reboot. Αν είστε σίγουροι, πατήστε ΟΚ."
        },
 
        dialogs: {
-               "Cancel"                                            : "Ακ�?�?ωση",
-               "Insert/Modify Link"                                : "Εισαγωγή/Τ�?οποποίηση σ�?νδεσμου",
-               "New window (_blank)"                               : "�?έο πα�?άθυ�?ο (_blank)",
-               "None (use implicit)"                               : "Κανένα (χ�?ήση απόλυτου)",
+               "Cancel"                                            : "Ακύρωση",
+               "Insert/Modify Link"                                : "Εισαγωγή/Τροποποίηση σύνδεσμου",
+               "New window (_blank)"                               : "Νέο παράθυρο (_blank)",
+               "None (use implicit)"                               : "Κανένα (χρήση απόλυτου)",
                "OK"                                                : "Εντάξει",
                "Other"                                             : "Αλλο",
                "Same frame (_self)"                                : "Ίδιο frame (_self)",
@@ -79,6 +70,6 @@ HTMLArea.I18N = {
                "Title (tooltip):"                                  : "Τίτλος (tooltip):",
                "Top frame (_top)"                                  : "Πάνω frame (_top)",
                "URL:"                                              : "URL:",
-               "You must enter the URL where this link points to"  : "Π�?έπει να εισάγετε το URL που οδηγεί αυτός ο σ�?νδεσμος"
+               "You must enter the URL where this link points to"  : "Πρέπει να εισάγετε το URL που οδηγεί αυτός ο σύνδεσμος"
        }
 };

@@ -13,25 +13,25 @@
 //       that states what encoding is necessary.)
 
 SpellChecker.I18N = {
-	"CONFIRM_LINK_CLICK"                    : "Prosím potvr�?te otevření tohoto odkazu",
+	"CONFIRM_LINK_CLICK"                    : "Prosím potvrďte otevření tohoto odkazu",
 	"Cancel"                                : "Zrušit",
 	"Dictionary"                            : "Slovník",
-	"Finished list of mispelled words"      : "Dokon�?en seznam chybných slov",
+	"Finished list of mispelled words"      : "Dokončen seznam chybných slov",
 	"I will open it in a new page."         : "Bude otevřen jej v nové stránce.",
 	"Ignore all"                            : "Ignorovat vše",
 	"Ignore"                                : "Ignorovat",
 	"NO_ERRORS"                             : "Podle zvoleného slovníku nebyla nalezena žádná chybná slova.",
-	"NO_ERRORS_CLOSING"                     : "Kontrola správnosti slov dokon�?ena, nebyla nalezena žádná chybná slova. Ukon�?ování ...",
+	"NO_ERRORS_CLOSING"                     : "Kontrola správnosti slov dokončena, nebyla nalezena žádná chybná slova. Ukončování ...",
 	"OK"                                    : "OK",
 	"Original word"                         : "Původní slovo",
-	"Please wait.  Calling spell checker."  : "Prosím �?ekejte. Komunikuace s kontrolou správnosti slov.",
-	"Please wait: changing dictionary to"   : "Prosím �?ekejte: změna adresáře na",
-	"QUIT_CONFIRMATION"                     : "Změny budou zrušeny a kontrola správnosti slov ukon�?ena. Prosím potvr�?te.",
+	"Please wait.  Calling spell checker."  : "Prosím čekejte. Komunikuace s kontrolou správnosti slov.",
+	"Please wait: changing dictionary to"   : "Prosím čekejte: změna adresáře na",
+	"QUIT_CONFIRMATION"                     : "Změny budou zrušeny a kontrola správnosti slov ukončena. Prosím potvrďte.",
 	"Re-check"                              : "Překontrolovat",
 	"Replace all"                           : "Zaměnit všechno",
 	"Replace with"                          : "Zaměnit za",
 	"Replace"                               : "Zaměnit",
 	"SC-spell-check"                        : "Kontrola správnosti slov",
-	"Suggestions"                           : "Doporu�?ení",
+	"Suggestions"                           : "Doporučení",
 	"pliz weit ;-)"                         : "strpení prosím ;-)"
 };
