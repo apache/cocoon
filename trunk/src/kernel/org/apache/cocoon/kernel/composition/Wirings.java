@@ -37,7 +37,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public interface Wirings extends Resolver {
 
@@ -94,6 +94,7 @@ public interface Wirings extends Resolver {
      *             {@link Wirings} must be castable to.
      * @param name the block's wiring name as required in the block's
      *               descriptor.
+     * @return a <b>non null</b> {@link Wire} implementing the specified role.
      * @throws WiringException if an error occurred creating the instance.
      */
     public Wire lookup(Class role, String name)
