@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.19 2000-01-09 23:45:05 stefano Exp $
+  $Id: changes.xml,v 1.20 2000-01-10 21:51:30 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,9 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="SM" type="update">
+  	Fixed command line operation.
+  </action>
   <action dev="SM" type="update">
   	Cleaned up XSLTProcessor code.
   </action>

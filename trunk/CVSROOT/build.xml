@@ -309,6 +309,7 @@ of build files, give credits to the original authors. Thank you.
     <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
+    <replace file="${samples.dir}/index.xsl" token="@@year@@" value="${year}"/>
     <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" ignore="docs-book.xml, site-book.xml"/>
     <copydir src="${dtd.dir}" dest="${dist.dir}/xdocs/DTD"/>
     <copydir src="${sheets.dir}" dest="${dist.dir}/xdocs/stylesheets" ignore="javadoc.css"/>
