@@ -67,9 +67,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: ServletGenerator.java,v 1.3 2003/10/15 16:55:01 bloritsch Exp $
  */
-public abstract class ServletGenerator extends ComposerGenerator {
+public abstract class ServletGenerator extends ServiceableGenerator {
 
     protected Request request;
     protected Response response;

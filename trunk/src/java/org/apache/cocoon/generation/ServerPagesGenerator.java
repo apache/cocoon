@@ -58,6 +58,8 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -91,7 +93,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.4 2003/10/07 16:07:33 vgritsenko Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.5 2003/10/15 16:55:00 bloritsch Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -113,8 +115,8 @@ public class ServerPagesGenerator extends ServletGenerator
      *
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
 
         if (programGenerator == null) {
             this.programGenerator =
