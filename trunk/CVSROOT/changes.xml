@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.61 2000-04-27 17:53:48 stefano Exp $
+  $Id: changes.xml,v 1.62 2000-05-01 23:51:41 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update" due-to="Paul Lamb" due-to-email="paul@redfork.com">
+   Added ability to recognize Servlet 2.1 container and get cocoon.properties
+   as a ServletContext resource. This should ease installation on Tomcat.
+  </action>
   <action dev="SM" type="update">
    Cleaned the docs a little, fixed some typos and extended the cocoon2 sitemap example.
   </action>
