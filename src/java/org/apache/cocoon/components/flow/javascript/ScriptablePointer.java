@@ -58,7 +58,7 @@ import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePointer.java,v 1.4 2003/05/04 20:24:47 cziegeler Exp $
+ * @version CVS $Id: ScriptablePointer.java,v 1.5 2003/10/10 10:48:25 cziegeler Exp $
  */
 public class ScriptablePointer extends DynamicPointer {
 
@@ -108,7 +108,7 @@ public class ScriptablePointer extends DynamicPointer {
             value = node;
         } else {
             value = ScriptableObject.getProperty(node, index);
-            if (value == ScriptableObject.NOT_FOUND) {
+            if (value == Scriptable.NOT_FOUND) {
                 value = node; // hack: same behavior as ValueUtils.getValue()
             } 
         }
