@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-07-28 16:20:41 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-07-31 17:05:56 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -80,7 +80,7 @@ public class ResourcePipeline implements Composer {
     throws InstantiationException, IllegalAccessException {
         this.reader = (Reader)reader.getClass().newInstance();
         if (this.reader instanceof Composer) 
-            ((Composer)this.generator).setComponentManager (manager);
+            ((Composer)this.reader).setComponentManager (manager);
         if (this.reader instanceof Configurable) 
             ((Configurable)this.reader).setConfiguration (conf);
         this.readerSource = source;
@@ -99,7 +99,7 @@ public class ResourcePipeline implements Composer {
     throws InstantiationException, IllegalAccessException {
         this.serializer = (Serializer)serializer.getClass().newInstance();
         if (this.serializer instanceof Composer) 
-            ((Composer)this.generator).setComponentManager (manager);
+            ((Composer)this.serializer).setComponentManager (manager);
         if (this.serializer instanceof Configurable) 
             ((Configurable)this.serializer).setConfiguration (conf);
         this.serializerSource = source;
@@ -111,7 +111,7 @@ public class ResourcePipeline implements Composer {
     throws InstantiationException, IllegalAccessException {
         Transformer transfmr = (Transformer)transformer.getClass().newInstance();
         if (transfmr instanceof Composer) 
-            ((Composer)this.generator).setComponentManager (manager);
+            ((Composer)transfmr).setComponentManager (manager);
         if (transfmr instanceof Configurable) 
             ((Configurable)transfmr).setConfiguration (conf);
         this.transformers.add (transfmr);
