@@ -50,30 +50,33 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
- *
+ * TODO: remove this. Both ServiceSelector and ThreadSafe are deprecated in Fortress.
+ * 
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.2 2003/09/30 12:42:18 cziegeler Exp $
+ * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.3 2003/11/16 18:52:36 unico Exp $
  */
-
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode {
 
     /** The node component name (e.g. action name, selector name, etc) */
-    protected String componentName;
+    protected String componentHint;
 
     /** Selector where to get components from */
-    protected ComponentSelector selector;
-
-    public SimpleSelectorProcessingNode(String componentName) {
-        this.componentName = componentName;
+    protected ServiceSelector selector;
+    
+    public SimpleSelectorProcessingNode() {
     }
-
-    public void setSelector(ComponentSelector selector) throws ComponentException {
+    
+    public void setComponentHint(String componentHint) {
+        this.componentHint = componentHint;
+    }
+    
+    public void setSelector(ServiceSelector selector) throws ServiceException {
         this.selector = selector;
     }
 
@@ -83,18 +86,18 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
      * <p>
      * Note : this method must be called <i>after</i> <code>setSelector()</code>.
      */
-    protected Component getThreadSafeComponent() throws ComponentException {
-        return getThreadSafeComponent(this.componentName);
+    protected Object getThreadSafeComponent() throws ServiceException {
+        return getThreadSafeComponent(this.componentHint);
     }
-
+    
     /**
      * Tests if the component designated by this node using the selector and component name
      * is <code>ThreadSafe</code>, and return it if true.
      * <p>
      * Note : this method must be called <i>after</i> <code>setSelector()</code>.
      */
-    protected Component getThreadSafeComponent(String name) throws ComponentException {
-        Component component = this.selector.select(name);
+    protected Object getThreadSafeComponent(String name) throws ServiceException {
+        Object component = this.selector.select(name);
         if (component instanceof ThreadSafe) {
             return component;
         } else {
