@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.11 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.12 2003/11/07 13:36:51 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -120,7 +120,11 @@ public class AuthenticationProfileManager
     throws Exception {
         final RequestState state = this.getRequestState();
         final UserHandler handler = state.getHandler();
-        final Configuration config = state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles");
+        final Configuration appConf = state.getApplicationConfiguration().getConfiguration("portal");
+        if ( appConf == null ) {
+            throw new ProcessingException("Configuration for portal not found in application configuration.");
+        }
+        final Configuration config = appConf.getChild("profiles");
 
         HashMap parameters = new HashMap();
         parameters.put("config", config);
