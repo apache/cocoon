@@ -46,7 +46,7 @@
       <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
       <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
       <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
-      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${anteater.target.host} -Dport=${anteater.target.port} -Dbase=${anteater.target.base.path}"/>
+      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${anteater.target.host} -Dport=${anteater.target.port} -Dbase=${anteater.target.base.path} -Ddefault.haltonerror=${anteater.option.haltonerror}"/>
     </java>
   </target>
 
