@@ -101,7 +101,7 @@
   <target name="package" depends="package-core, package-deprecated, package-testcase"/>
 
   <!-- package the core -->
-  <target name="package-core" depends="compile-core, block-roles">
+  <target name="package-core" depends="compile-core">
     <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf">
       <fileset dir="${build.dest}">
          <exclude name="**/Manifest.mf"/>
@@ -130,33 +130,5 @@
         <include name="org/apache/cocoon/xml/WhitespaceFilter*"/>
       </fileset>
     </jar>
-  </target>
-
-<!-- === Block Targets ========================================================= -->
-
-  <!-- prepares the blocks build -->
-  <target name="prepare-blocks" depends="prepare">
-    <mkdir dir="${build.blocks}"/>
-
-    <xslt in="${gump.descriptor}"
-          out="${build.temp}/blocks-build.xml"
-          processor="trax"
-          style="${tools.src}/blocks-build.xsl"/>
-  </target>
-
-  <!-- patch the cocoon role file -->
-  <target name="block-roles" depends="prepare-blocks">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="patch-roles"/>
-  </target>
-  
-  <!-- compiles and packages all blocks -->
-  <target name="blocks" depends="compile,prepare-blocks">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="compile"/>
   </target>
 

@@ -46,10 +46,4 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="samples"/>
-  </target>
   

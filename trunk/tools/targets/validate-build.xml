@@ -6,9 +6,6 @@
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="${blocks}">
-        <include name="*/lib/*.jar"/>
-      </fileset>
     </path>
 
     <property name="all.jars" refid="all.jars"/>
@@ -29,16 +26,10 @@
     <replace file="${build.temp}/current-jars.xml" 
              token="${user}${file.separator}lib${file.separator}" 
              value=""/>
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${user}${file.separator}${blocks}${file.separator}" 
-             value=""/>
 
     <!-- and incase that fails, remove the base directory -->
     <replace file="${build.temp}/current-jars.xml" 
              token="${basedir}${file.separator}lib${file.separator}" 
-             value=""/>
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${basedir}${file.separator}${blocks}${file.separator}" 
              value=""/>
 
     <!-- replace platform-dependent path separator by '/' -->

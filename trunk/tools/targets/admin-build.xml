@@ -24,11 +24,3 @@
 
   <!-- compiles and packages the core classes and the deprecated classes -->
   <target name="gump-core" depends="package-core, package-deprecated, javadocs, validate-jars, junit-tests"/>
-
-  <!-- compiles and packages a single block identified by ${block-name} -->
-  <target name="gump-block" depends="compile-core, compile-deprecated, prepare-blocks, compile-tests">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="cocoon-block-${block-name}-tests"/>
-  </target>

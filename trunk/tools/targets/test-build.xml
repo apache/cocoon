@@ -1,7 +1,7 @@
 <!-- === Test targets =========================================================== -->
 
   <!-- Runs all tests -->
-  <target name="test" depends="junit-tests, block-tests" description="Runs all tests"/>
+  <target name="test" depends="junit-tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
   <target name="junit-tests" depends="compile-tests">
@@ -21,7 +21,7 @@
   </target>
 
   <!-- Anteater tests  -->
-  <target name="anteater-tests" depends="compile-tests,block-anteater-tests">
+  <target name="anteater-tests" depends="compile-tests">
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
@@ -46,21 +46,3 @@
     </java>
   </target>
 
-  <!-- Block tests -->
-  <target name="block-tests" depends="compile-tests, prepare-blocks">
-
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="tests"/>
-
-  </target>
-
-  <target name="block-anteater-tests" depends="prepare-blocks">
-
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="prepare-anteater-tests"/>
-
-  </target>

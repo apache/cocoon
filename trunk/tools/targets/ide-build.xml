@@ -31,11 +31,6 @@
       <pathelement path="${src}/deprecated/java"/>
       <!-- test source dir -->
       <pathelement path="${src}/test"/>
-      <!-- blocks source dirs -->
-      <dirset dir="${blocks}">
-        <include name="*/java"/>
-        <include name="*/java${target.vm}"/>
-      </dirset>
     </path>
 
     <path id="mockss">
@@ -54,10 +49,6 @@
         <include name="optional/*.jar"/>
         <include name="local/*.jar"/>
         <include name="endorsed/*.jar"/>
-      </fileset>
-      <!-- blocks lib -->
-      <fileset dir="${blocks}">
-        <include name="**/*.jar"/>
       </fileset>
       <!-- tools libs -->
       <fileset dir="${tools}/lib">

@@ -1,6 +1,6 @@
 <!-- === Webapp targets ==================================================== -->
 
-  <target name="prepare-webapp" depends="package"> <!-- removed dependency on blocks -->
+  <target name="prepare-webapp" depends="package">
     <mkdir dir="${build.webapp}"/>
 
     <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
@@ -52,28 +52,9 @@
       </fileset>
     </copy>
 
-<!--
-    <copy todir="${build.webapp.lib}">
-      <fileset dir="${build.blocks}">
-        <include name="*-block.jar"/>
-      </fileset>
-      <mapper type="glob" from="*-block.jar" to="cocoon-*-block.jar"/>
-    </copy>
-
-
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="lib"/>
-
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="patch-conf"/>
--->         
   </target>
 
-  <target name="prepare-webapp-samples" depends="prepare-webapp, samples" unless="unless.exclude.webapp.samples"/><!-- removed dependency on block-samples -->
+  <target name="prepare-webapp-samples" depends="prepare-webapp, samples" unless="unless.exclude.webapp.samples"/>
  
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
@@ -81,19 +62,6 @@
             srcdir="${deprecated.conf}" 
             includes="**/*.xconf"
             addComments="true"/>
-  </target>
-
-  <target name="prepare-webapp-idldocs" depends="idldocs" unless="unless.exclude.webapp.idldocs">
-    <mkdir dir="${build.webapp.idldocs}"/>
-
-    <copy todir="${build.webapp.idldocs}" filtering="off">
-      <fileset dir="${build.idldocs}"/>
-    </copy>
-
-    <!-- patch the welcome page to tell we have idldocs to show -->
-    <xpatch file="${build.webapp}/welcome.xml"
-            srcdir="${idl}" 
-            includes="**/*.xwelcome"/>
   </target>
   
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
@@ -108,8 +76,10 @@
             srcdir="${resources.javadoc}" 
             includes="**/*.xwelcome"/>    
   </target>
-    
-  <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="unless.exclude.webapp.documentation">
+  <!-- disable docs
+  <target name="prepare-webapp-docs" depends="init,validate-xdocs,validate-jars" unless="unless.exclude.webapp.documentation">
+  -->
+  <target name="prepare-webapp-docs" depends="init,validate-jars" unless="unless.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
     
     <copy todir="${build.webapp.docs}" filtering="on">

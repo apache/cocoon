@@ -29,13 +29,6 @@
     <!-- Get the build properties from an external file -->
     <property file="build.properties"/>
 
-    <!-- Allow users a chance to override without editing the main file -->
-    <property file="${user.home}/cocoon.blocks.properties"/>
-    <property file="local.blocks.properties"/>
-
-    <!-- Get the block properties from an external file -->
-    <property file="blocks.properties"/>
-
     <!-- Use unless.exclude.XXX shadow props used in the
       unless target attributes -->
     <condition property="unless.exclude.webapp.documentation">
@@ -45,12 +38,6 @@
       <or>
         <istrue value="${exclude.javadocs}"/>
         <istrue value="${exclude.webapp.javadocs}"/>
-      </or>
-    </condition>
-    <condition property="unless.exclude.webapp.idldocs">
-      <or>
-        <istrue value="${exclude.idldocs}"/>
-        <istrue value="${exclude.webapp.idldocs}"/>
       </or>
     </condition>
     <condition property="unless.exclude.webapp.samples">

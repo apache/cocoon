@@ -1,16 +1,10 @@
 <!-- === Documentation Targets ================================================= -->
 
-  <target name="prepare-docs" depends="blocks">
+  <target name="prepare-docs">
 
     <!-- Set classpath for documentation -->
     <path id="documentation.classpath">
       <path refid="classpath"/>
-      <fileset dir="${build.blocks}">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${blocks}">
-        <include name="*/lib/*.jar"/>
-      </fileset>
       <path location="${tools.jar}"/>
       <path location="${build.context}/WEB-INF/classes"/>
     </path>
@@ -138,19 +132,7 @@
     </java>
   </target>
 -->
-<!-- === Javadoc/IDLDoc Targets ================================================ -->
-
-  <!-- Create IDL API documentation -->
-  <target name="idldocs" depends="prepare" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
-    <mkdir dir="${build.idldocs}"/>
-    <java classname="org.openorb.compiler.doc.IdlDoc">
-      <arg value="-I${idl}"/>
-      <arg value="-outdir:${build.idldocs}"/>
-      <arg value="-all"/>
-      <arg value="-html"/>
-      <arg value="${idl}/main.idl"/>
-    </java>
-  </target>
+<!-- === Javadoc Targets ================================================ -->
 
   <!-- Check if javadocs have to be generated -->
   <!-- Obsolete:
@@ -211,11 +193,6 @@
   
   <!-- Creates Javadocs -->
   <target name="javadocs" 
-          depends="prepare-blocks"
           description="Builds the API documentation (javadocs)">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="javadocs"/>
   </target>
 
