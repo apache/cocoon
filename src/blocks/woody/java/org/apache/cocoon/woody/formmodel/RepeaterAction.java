@@ -50,34 +50,46 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
-
 /**
- * Builds {@link ActionDefinition}s.
+ * An action that acts on a repeater.
+ * 
+ * @see RepeaterActionDefinitionBuilder
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RepeaterAction.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class RepeaterAction extends Action {
+    
+    private Repeater repeater;
+    
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+    public RepeaterAction(ActionDefinition definition) {
+        super(definition);
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    /**
+     * Get the repeater on which this action acts.
+     */
+    public Repeater getRepeater() {
+        if (this.repeater == null) {
+            String name = ((RepeaterActionDefinition)this.definition).getRepeaterName();
+            Widget widget;
+            if (name != null) {
+                // Get the corresponding sibling
+                widget = getParent().getWidget(name);
+            } else {
+                // Get the grand-parent (parent is the repeater row).
+                widget = getParent().getParent();
+            }
+         
+            if (widget == null || !(widget instanceof Repeater)) {
+                throw new RuntimeException(name != null ?
+                    "Cannot find sibling repeater named '" + name + "'." :
+                    "Parent widget is not a repeater");
+            }
+            
+            this.repeater = (Repeater)widget;
+        }
+        
+        return this.repeater;
     }
 }

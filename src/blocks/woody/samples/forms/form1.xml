@@ -61,6 +61,18 @@
   <wd:field id="number1" required="true">
     <wd:label>Please enter a number:</wd:label>
     <wd:datatype base="long"/>
+    <wd:on-value-changed>
+      <javascript>
+        java.lang.System.err.println("Was here!");
+        var newValue = event.source.value;
+        if (newValue != null) {
+          var number2 = event.source.parent.getWidget("number2");
+          if (number2.value == null) {
+            number2.setValue(new java.lang.Long(newValue.intValue() + 1));
+          }
+        }
+      </javascript>
+    </wd:on-value-changed>
   </wd:field>
 
   <wd:field id="number2" required="true">
@@ -208,12 +220,12 @@
     </wd:booleanfield>
   </wd:repeater>
 
-  <wd:action id="addcontact" action-command="add-contact">
+  <wd:repeater-action id="addcontact" action-command="add-row" repeater="contacts">
     <wd:label>Add contact</wd:label>
-  </wd:action>
+  </wd:repeater-action>
 
-  <wd:action id="removecontacts" action-command="remove-selected-contacts">
+  <wd:repeater-action id="removecontacts" action-command="delete-rows" repeater="contacts" select="select">
     <wd:label>Remove selected contacts</wd:label>
-  </wd:action>
+  </wd:repeater-action>
 
 </wd:form>

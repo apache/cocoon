@@ -50,25 +50,24 @@
 */
 package org.apache.cocoon.woody;
 
+import java.util.Locale;
+
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.event.ActionEvent;
 
-import java.util.Locale;
-
-/**
- * Holds data needed during the processing of a form submit.
- */
 public class FormContext {
     
     protected Request request;
     protected Locale locale;
     protected ActionEvent actionEvent;
-    protected boolean doValidation;
 
     public FormContext(Request request, Locale locale) {
         this.request = request;
-        this.locale = locale;;
-        doValidation = true;
+        this.locale = locale;
+    }
+
+    public FormContext(Request request) {
+        this(request, request.getLocale());
     }
 
     /**
@@ -83,8 +82,7 @@ public class FormContext {
      */
     public void setActionEvent(ActionEvent actionEvent) {
         if (this.actionEvent != null)
-            throw new RuntimeException("There is already an actionEvent set on this formContext!");
-        doValidation = false;
+            throw new IllegalStateException("There is already an actionEvent set on this formContext!");
         this.actionEvent = actionEvent;
     }
 
@@ -98,9 +96,5 @@ public class FormContext {
 
     public Locale getLocale() {
         return locale;
-    }
-
-    public boolean doValidation() {
-        return doValidation;
     }
 }

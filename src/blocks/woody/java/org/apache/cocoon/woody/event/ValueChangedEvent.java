@@ -48,36 +48,30 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.formmodel.Widget;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Event raised when a field value changes.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+public class ValueChangedEvent extends WidgetEvent {
+    
+    private Object oldValue;
+    private Object newValue;
+    
+    public ValueChangedEvent(Widget source, Object oldValue, Object newValue) {
+        super(source);
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public Object getOldValue() {
+        return this.oldValue;
     }
+    
+    public Object getNewValue() {
+        return this.newValue;
+    }
+
 }

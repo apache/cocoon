@@ -49,13 +49,18 @@
 */
 
 package org.apache.cocoon.woody.flow.javascript;
-import org.mozilla.javascript.*;
-import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.cocoon.woody.formmodel.Field;
-import org.apache.cocoon.woody.formmodel.Repeater;
-import org.apache.cocoon.woody.formmodel.BooleanField;
 import org.apache.cocoon.woody.formmodel.AggregateField;
+import org.apache.cocoon.woody.formmodel.BooleanField;
+import org.apache.cocoon.woody.formmodel.Field;
 import org.apache.cocoon.woody.formmodel.MultiValueField;
+import org.apache.cocoon.woody.formmodel.Repeater;
+import org.apache.cocoon.woody.formmodel.Widget;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 
 public class ScriptableWidget extends ScriptableObject {
 
@@ -281,7 +286,7 @@ public class ScriptableWidget extends ScriptableObject {
         }
         return Undefined.instance;
     }
-
+    
     public boolean jsFunction_equals(Object other) {
         if (other instanceof ScriptableWidget) {
             ScriptableWidget otherWidget = (ScriptableWidget)other;

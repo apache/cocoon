@@ -48,36 +48,30 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
+import org.apache.cocoon.woody.event.impl.JavaClassWidgetListenerBuilder;
+import org.apache.cocoon.woody.event.impl.JavaScriptWidgetListenerBuilder;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Quick hack to avoid declaring a component selector and all that stuff for now (should be removed
+ * in a near future)
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: WidgetListenerBuilderUtil.java,v 1.1 2003/09/24 20:47:05 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
+public class WidgetListenerBuilderUtil {
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public static WidgetListener getWidgetListener(Element element, Class listenerClass) throws Exception {
+        if (element.getLocalName().equals("java")) {
+            return new JavaClassWidgetListenerBuilder().buildListener(element, listenerClass);
+        } else if (element.getLocalName().equals("javascript")) {
+            return new JavaScriptWidgetListenerBuilder().buildListener(element, listenerClass);
+        } else {
+            throw new IllegalArgumentException("Unknown listener element " + element.getTagName() +
+                " at " + DomHelper.getLocation(element));
+        }
     }
 }

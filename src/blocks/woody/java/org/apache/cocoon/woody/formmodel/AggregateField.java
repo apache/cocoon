@@ -104,39 +104,47 @@ public class AggregateField extends AbstractWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        enteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
-        validationError = null;
-
+        String newEnteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
+        
         // whitespace & empty field handling
-        if (enteredValue != null) {
+        if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
-            enteredValue.trim();
+            newEnteredValue.trim();
 
-            if (enteredValue.equals(""))
-                enteredValue = null;
+            if (newEnteredValue.length() == 0) {
+                newEnteredValue = null;
+            }
         }
 
-        if (enteredValue != null) {
-            // try to split it
-            PatternMatcher matcher = new Perl5Matcher();
-            if (matcher.matches(enteredValue, definition.getSplitPattern())) {
-                MatchResult matchResult = matcher.getMatch();
-                Iterator iterator = definition.getSplitMappingsIterator();
-                while (iterator.hasNext()) {
-                    SplitMapping splitMapping = (SplitMapping)iterator.next();
-                    String result = matchResult.group(splitMapping.getGroup());
-                    // Since we know the fields are guaranteed to have a string datatype, we
-                    // can set the value immediately, instead of going to the readFromRequest
-                    // (which would also require us to create wrapper FormContext and Request
-                    // objects)
-                    ((Field)fieldsById.get(splitMapping.getFieldId())).setValue(result);
-                }
-            } else {
-                // set values of the fields to null
-                Iterator fieldsIt = fields.iterator();
-                while (fieldsIt.hasNext()) {
-                    Field field = (Field)fieldsIt.next();
-                    field.setValue(null);
+        // Only convert if the text value actually changed. Otherwise, keep the old value
+        // and/or the old validation error (allows to keep errors when clicking on actions)
+        if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
+            
+            enteredValue = newEnteredValue;
+            validationError = null;
+    
+            if (enteredValue != null) {
+                // try to split it
+                PatternMatcher matcher = new Perl5Matcher();
+                if (matcher.matches(enteredValue, definition.getSplitPattern())) {
+                    MatchResult matchResult = matcher.getMatch();
+                    Iterator iterator = definition.getSplitMappingsIterator();
+                    while (iterator.hasNext()) {
+                        SplitMapping splitMapping = (SplitMapping)iterator.next();
+                        String result = matchResult.group(splitMapping.getGroup());
+                        // Since we know the fields are guaranteed to have a string datatype, we
+                        // can set the value immediately, instead of going to the readFromRequest
+                        // (which would also require us to create wrapper FormContext and Request
+                        // objects)
+                        ((Field)fieldsById.get(splitMapping.getFieldId())).setValue(result);
+                    }
+                } else {
+                    // set values of the fields to null
+                    Iterator fieldsIt = fields.iterator();
+                    while (fieldsIt.hasNext()) {
+                        Field field = (Field)fieldsIt.next();
+                        field.setValue(null);
+                    }
                 }
             }
         }

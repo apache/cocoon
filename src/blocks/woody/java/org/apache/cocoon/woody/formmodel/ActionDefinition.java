@@ -50,11 +50,16 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.woody.event.ActionEvent;
+import org.apache.cocoon.woody.event.ActionListener;
+import org.apache.cocoon.woody.event.WidgetEventMulticaster;
+
 /**
  * The {@link WidgetDefinition} part of a Action widget, see {@link Action} for more information.
  */
 public class ActionDefinition extends AbstractWidgetDefinition {
     private String actionCommand;
+    private ActionListener listener;
 
     public void setActionCommand(String actionCommand) {
         this.actionCommand = actionCommand;
@@ -66,5 +71,19 @@ public class ActionDefinition extends AbstractWidgetDefinition {
 
     public Widget createInstance() {
         return new Action(this);
+    }
+
+    public void addActionListener(ActionListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+    
+    public void fireActionEvent(ActionEvent event) {
+        if (this.listener != null) {
+            this.listener.actionPerformed(event);
+        }
+    }
+
+    public boolean hasActionListeners() {
+        return this.listener != null;
     }
 }

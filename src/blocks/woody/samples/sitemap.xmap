@@ -125,7 +125,7 @@
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
-       <map:transform src="resources/woody-samples-layout.xsl"/>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
        <map:serialize/>
      </map:match>
         
@@ -160,7 +160,7 @@
          <map:parameter name="file" value="forms/form1_template_flow.xml"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform> 
-       <map:transform src="resources/woody-samples-layout.xsl"/>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
        <map:serialize/>
      </map:match>
 

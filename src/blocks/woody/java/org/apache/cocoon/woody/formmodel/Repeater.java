@@ -52,6 +52,7 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -257,6 +258,10 @@ public class Repeater extends AbstractWidget {
         public Widget getParent() {
             return Repeater.this;
         }
+        
+        public Form getForm() {
+            return Repeater.this.getForm();
+        }
 
         public String getNamespace() {
             return getParent().getNamespace() + "." + getId();
@@ -320,6 +325,10 @@ public class Repeater extends AbstractWidget {
                 widget.generateSaxFragment(contentHandler, locale);
             }
             contentHandler.endElement(Constants.WI_NS, ROW_EL, Constants.WI_PREFIX_COLON + ROW_EL);
+        }
+        
+        public void broadcastEvent(WidgetEvent event) {
+            throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
         }
     }
 }

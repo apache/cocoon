@@ -51,6 +51,8 @@
 package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -190,5 +192,9 @@ public class MultiValueField extends AbstractWidget {
                 throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + values[i].getClass().getName());
         }
         this.values = values;
+    }
+    
+    public void broadcastEvent(WidgetEvent event) {
+        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
     }
 }

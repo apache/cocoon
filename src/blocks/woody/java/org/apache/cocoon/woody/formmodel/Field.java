@@ -55,6 +55,9 @@ import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.event.DeferredValueChangedEvent;
+import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -69,14 +72,24 @@ import java.util.Locale;
  * that the value for the Field can be selected from a list, rather than being
  * entered in a textbox. The validation of the field is delegated to its associated
  * Datatype.
+ * 
+ * @author Bruno Dumon
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: Field.java,v 1.10 2003/09/24 20:47:06 sylvain Exp $
  */
 public class Field extends AbstractWidget {
-    private FieldDefinition definition;
-    private String enteredValue;
-    private Object value;
-    private boolean conversionFailed;
-    private ValidationError validationError;
     private SelectionList selectionList;
+    private FieldDefinition definition;
+    
+    private String enteredValue = null;
+    private Object value = null;
+
+    // At startup, we don't need to parse (both enteredValue and value are null),
+    // but need to validate (error if field is required)
+    private boolean needsParse = true;
+    private boolean needsValidate = true;
+    
+    private ValidationError validationError;
 
     public Field(FieldDefinition fieldDefinition) {
         this.definition = fieldDefinition;
@@ -91,50 +104,116 @@ public class Field extends AbstractWidget {
     }
 
     public Object getValue() {
-        return value;
+        // Parse the value
+        if (this.needsParse) {
+            
+            // Clear value, it will be recomputed
+            this.value = null;
+            if (this.enteredValue == null) {
+                this.value = null;
+                this.needsParse = false;
+                this.needsValidate = true;
+                
+            } else {
+                // Parse the value
+                this.value = definition.getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
+            
+                if (this.value == null) {
+                    // Conversion failed
+                    this.validationError = new ValidationError(
+                        "datatype.conversion-failed",
+                        new String[] {"datatype." + definition.getDatatype().getDescriptiveName()},
+                        new boolean[] { true }
+                    );
+                    
+                    // No need for further validation (and need to keep the above error)
+                    this.needsValidate = false;
+                } else {
+                    // Conversion successfull
+                    this.needsParse = false;
+                    this.needsValidate = true;
+                }
+            }
+        }
+        
+        // Validate the value
+        if (this.needsValidate) {
+            
+            // Clear error, it will be recomputed
+            this.validationError = null;
+            
+            if (this.value == null) {
+                // No value : is it required ?
+                if (this.definition.isRequired()) {                    
+                    this.validationError = new ValidationError("general.field-required");
+                }
+                
+            } else {
+                this.validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
+            }
+            
+            this.needsValidate = false;
+        }
+        
+        return this.validationError == null ? this.value : null;
     }
 
-    public void setValue(Object object) {
-        if (object != null && !definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass()))
-            throw new RuntimeException("Tried to set value of field \"" + getFullyQualifiedId() + "\" with an object of an incorrect type.");
+    public void setValue(Object newValue) {
+        if (newValue != null && !definition.getDatatype().getTypeClass().isAssignableFrom(newValue.getClass()))
+            throw new RuntimeException("Incorrect value type for \"" + getFullyQualifiedId() +
+               "\" (expected " + definition.getDatatype().getTypeClass() + ", got " + newValue.getClass() + ".");
 
-        value = object;
-        validationError = null;
-        conversionFailed = false;
+        Object oldValue = this.value;
+        // Do something only if value is different
+        if (! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue) ) {
+        
+            this.value = newValue;
+    
+            this.needsParse = false;
+            this.validationError = null;
+            // Force validation, even if set by the application
+            this.needsValidate = true;
+
+            this.enteredValue = definition.getDatatype().convertToString(newValue, getForm().getLocale());
+    
+            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
+        }
     }
 
     public void readFromRequest(FormContext formContext) {
-        enteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
-        validationError = null;
-        conversionFailed = false;
-
+        String newEnteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
+        
         // whitespace & empty field handling
-        if (enteredValue != null) {
+        if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
-            enteredValue.trim();
+            newEnteredValue.trim();
 
-            if (enteredValue.equals(""))
-                enteredValue = null;
+            if (newEnteredValue.length() == 0) {
+                newEnteredValue = null;
+            }
         }
+        
+        // Only convert if the text value actually changed. Otherwise, keep the old value
+        // and/or the old validation error (allows to keep errors when clicking on actions)
+        if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
+            
+            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
 
-        // try to convert entered string to the field's native datatype
-        if (enteredValue != null) {
-            value = definition.getDatatype().convertFromString(enteredValue, formContext.getLocale());
-            if (value == null)
-                conversionFailed = true;
-        } else
+            enteredValue = newEnteredValue;
+            validationError = null;
             value = null;
+            needsParse = true;
+
+        }
+        
+        // Always revalidate, as validation may depend on the value of other fields
+        this.needsValidate = true;
     }
 
     public boolean validate(FormContext formContext) {
-        if (value != null)
-            validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
-        else if (conversionFailed)
-            validationError = new ValidationError("datatype.conversion-failed", new String[] {"datatype." + definition.getDatatype().getDescriptiveName()}, new boolean[] { true });
-        else if (definition.isRequired())
-            validationError = new ValidationError("general.field-required");
-
-        return validationError == null;
+        // If needed, getValue() will do the validation
+        getValue();
+        return this.validationError == null;
     }
 
     /**
@@ -215,5 +294,9 @@ public class Field extends AbstractWidget {
 
     public Datatype getDatatype() {
         return definition.getDatatype();
+    }
+    
+    public void broadcastEvent(WidgetEvent event) {
+        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
     }
 }

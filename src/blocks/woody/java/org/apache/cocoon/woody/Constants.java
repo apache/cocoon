@@ -57,6 +57,17 @@ import org.xml.sax.helpers.AttributesImpl;
  * Various constants used in the Woody form framework.
  */
 public final class Constants {
+// TODO : see this later
+//    /**
+//     * The value returned by {@link org.apache.cocoon.woody.formmodel.Widget#getValue()}
+//     * when the widget's value is invalid.
+//     */
+//    public static final Object INVALID_VALUE = new Object() {
+//        public String toString() {
+//            return "Invalid value";
+//        }
+//    };
+    
     /** Namespace for Woody Template elements */
     public static final String WT_NS = "http://apache.org/cocoon/woody/template/1.0";
     public static final String WT_PREFIX = "wt";

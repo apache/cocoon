@@ -50,34 +50,34 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Builds a <code>&lt;wd:submit></code> widget. A submit is an action that terminates
+ * the current form. It can either require the form to be valid (in which case it will
+ * be redisplayed if not valid) or terminate it without validation (e.g. a "cancel" button).
+ * <p>
+ * The syntax is as follows :
+ * <pre>
+ *   &lt;wd:submit id="sub-id" action-command="cmd" validate="false">
+ * </pre>
+ * The "validate" attribute can have the value <code>true</code> or <code>false</code>
+ * and determines if the form is to be validated (defaults to true).
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: SubmitDefinitionBuilder.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
+public class SubmitDefinitionBuilder  extends ActionDefinitionBuilder {
     
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        
+        SubmitDefinition definition = (SubmitDefinition)super.buildWidgetDefinition(widgetElement);
+        definition.setValidateForm(DomHelper.getAttributeAsBoolean(widgetElement, "validate", true));
+        return definition;
+    }
+
     protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+        return new SubmitDefinition();
     }
 }

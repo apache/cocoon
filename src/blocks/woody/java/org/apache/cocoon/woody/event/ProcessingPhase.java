@@ -48,36 +48,54 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.commons.lang.enum.ValuedEnum;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Type-safe enumeration of the various form processing phases.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class ProcessingPhase extends ValuedEnum {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+    protected ProcessingPhase(String name, int value) {
+        super(name, value);
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public static final int LOAD_MODEL_VALUE = 0;
+    public static final ProcessingPhase LOAD_MODEL = new ProcessingPhase("Load model", LOAD_MODEL_VALUE);
+    
+    public static final int READ_FROM_REQUEST_VALUE = 1;
+    public static final ProcessingPhase READ_FROM_REQUEST = new ProcessingPhase("Read from request", READ_FROM_REQUEST_VALUE);
+    
+    public static final int VALIDATE_VALUE = 2;
+    public static final ProcessingPhase VALIDATE = new ProcessingPhase("Validate", VALIDATE_VALUE);
+    
+    public static final int SAVE_MODEL_VALUE = 3;
+    public static final ProcessingPhase SAVE_MODEL = new ProcessingPhase("Save model", SAVE_MODEL_VALUE);
+     
+    public static ProcessingPhase getEnum(String name) {
+      return (ProcessingPhase) getEnum(ProcessingPhase.class, name);
+    }
+    
+    public static ProcessingPhase getEnum(int value) {
+      return (ProcessingPhase) getEnum(ProcessingPhase.class, value);
+    }
+
+    public static Map getEnumMap() {
+      return getEnumMap(ProcessingPhase.class);
+    }
+ 
+    public static List getEnumList() {
+      return getEnumList(ProcessingPhase.class);
+    }
+ 
+    public static Iterator iterator() {
+      return iterator(ProcessingPhase.class);
     }
 }

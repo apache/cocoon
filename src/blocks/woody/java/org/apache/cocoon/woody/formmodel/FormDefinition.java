@@ -52,12 +52,17 @@ package org.apache.cocoon.woody.formmodel;
 
 import java.util.*;
 
+import org.apache.cocoon.woody.event.ProcessingPhaseEvent;
+import org.apache.cocoon.woody.event.ProcessingPhaseListener;
+import org.apache.cocoon.woody.event.WidgetEventMulticaster;
+
 /**
  * The {@link WidgetDefinition} part of a Form widget, see {@link Form} for more information.
  */
 public class FormDefinition extends AbstractWidgetDefinition {
     private List widgetDefinitions = new ArrayList();
     private Map widgetDefinitionsById = new HashMap();
+    private ProcessingPhaseListener listener;
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
         if (widgetDefinitionsById.containsKey(widgetDefinition.getId()))
@@ -76,5 +81,19 @@ public class FormDefinition extends AbstractWidgetDefinition {
         }
 
         return form;
+    }
+    
+    public void addProcessingPhaseListener(ProcessingPhaseListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+    
+    public boolean hasProcessingPhaseListeners() {
+        return this.listener != null;
+    }
+    
+    public void fireEvent(ProcessingPhaseEvent event) {
+        if (this.listener != null) {
+            this.listener.phaseEnded(event);
+        }
     }
 }

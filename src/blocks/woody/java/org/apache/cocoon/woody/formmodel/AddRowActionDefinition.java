@@ -50,34 +50,25 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
 import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * The definition for a repeater action that adds a row to a sibling repeater.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: AddRowActionDefinition.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
+public class AddRowActionDefinition extends RepeaterActionDefinition {
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public AddRowActionDefinition(String repeaterName) {
+        super(repeaterName);
+        
+        this.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                repeater.addRow();
+            }
+        });
     }
 }

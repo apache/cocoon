@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.formmodel;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.event.ActionEvent;
+import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -68,7 +69,7 @@ import java.util.Locale;
  * value a non-empty value.
  */
 public class Action extends AbstractWidget {
-    private ActionDefinition definition;
+    protected ActionDefinition definition;
 
     public Action(ActionDefinition definition) {
         this.definition = definition;
@@ -78,19 +79,32 @@ public class Action extends AbstractWidget {
         return definition.getId();
     }
 
-    public void readFromRequest(FormContext formContext) {
+    public void readFromRequest(final FormContext formContext) {
+        Form form = getForm();
+        
+        // Set the submit widget if we can determine it from the request
         String value = formContext.getRequest().getParameter(getFullyQualifiedId());
         if (value != null && value.length() > 0) {
-            formContext.setActionEvent(new ActionEvent() {
-                public String getActionCommand() {
-                    return definition.getActionCommand();
-                }
-
-                public Widget getSource() {
-                    return Action.this;
-                }
-            });
+            form.setSubmitWidget(this);
         }
+        
+        if (form.getSubmitWidget() == this) {
+            form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
+            
+            handleActivate();
+            
+            // TODO : to be removed
+            formContext.setActionEvent(new ActionEvent(this, definition.getActionCommand()));
+        }
+    }
+    
+    /**
+     * Handle the fact that this action was activated. The default here is to end the
+     * current form processing and redisplay the form, which means that actual behaviour
+     * should be implemented in event listeners.
+     */
+    protected void handleActivate() {
+        getForm().endProcessing(true);
     }
 
     public boolean validate(FormContext formContext) {
@@ -112,5 +126,9 @@ public class Action extends AbstractWidget {
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
         definition.generateLabel(contentHandler);
+    }
+    
+    public void broadcastEvent(WidgetEvent event) {
+        this.definition.fireActionEvent((ActionEvent)event);
     }
 }

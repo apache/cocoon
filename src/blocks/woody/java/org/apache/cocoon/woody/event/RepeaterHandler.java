@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.woody.event;
 
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.FormHandler;
-import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.woody.formmodel.Repeater;
 
@@ -90,10 +90,10 @@ import org.apache.cocoon.woody.formmodel.Repeater;
  * 
  * to the FormContext.
  * 
+ * @deprecated use the new &lt;wd:repeater-action&gt; widgets.
  */
 public class RepeaterHandler implements FormHandler {
 
-    private Form form;
     private final String repeaterName;
     private final String addCommand;
     private final String removeCommand;
@@ -124,28 +124,23 @@ public class RepeaterHandler implements FormHandler {
     }
 
     /**
-     * @see org.apache.cocoon.woody.FormHandler#setup(org.apache.cocoon.woody.formmodel.Form)
-     */
-    public void setup(Form form) {
-        this.form = form;
-    }
-
-    /**
      * @see org.apache.cocoon.woody.FormHandler#handleActionEvent(org.apache.cocoon.woody.event.ActionEvent)
      */
-    public void handleActionEvent(ActionEvent actionEvent) {
+    public void handleActionEvent(FormContext context, ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
+        Form form = actionEvent.getSourceWidget().getForm();
 
         if (command.equals(this.addCommand)) {
-            Repeater repeater =
-                (Repeater) form.getWidget(this.repeaterName);
+            Repeater repeater = (Repeater) form.getWidget(this.repeaterName);
             repeater.addRow();
+            form.endProcessing(true);
         } else if (command.equals(this.removeCommand)) {
-            removeSelectedRows();
+            removeSelectedRows(form);
+            form.endProcessing(true);
         }
     }
 
-    private void removeSelectedRows() {
+    private void removeSelectedRows(Form form) {
         Repeater repeater = (Repeater) form.getWidget(this.repeaterName);
         for (int i = repeater.getSize() - 1; i >= 0; i--) {
             boolean selected =

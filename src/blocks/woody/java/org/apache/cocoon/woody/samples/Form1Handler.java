@@ -50,22 +50,19 @@
 */
 package org.apache.cocoon.woody.samples;
 
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.RepeaterHandler;
-import org.apache.cocoon.woody.formmodel.Form;
+//import org.apache.cocoon.woody.event.RepeaterHandler;
 
 /**
  * Example FormHandler for the "Form1" sample form.
  */
 public class Form1Handler implements FormHandler {
-    private RepeaterHandler delegate = new RepeaterHandler("contacts", "add-contact", "remove-selected-contacts", "select");
+// FIXME: find another use-case, this repeaters are handled by <repeater-action> widgets
+//    private RepeaterHandler delegate = new RepeaterHandler("contacts", "add-contact", "remove-selected-contacts", "select");
     
-    public void setup(Form form) {
-        this.delegate.setup(form);
-    }
-
-    public void handleActionEvent(ActionEvent actionEvent) {
-        this.delegate.handleActionEvent(actionEvent);
+    public void handleActionEvent(FormContext context, ActionEvent actionEvent) {
+//        this.delegate.handleActionEvent(context, actionEvent);
     }
 }

@@ -35,7 +35,9 @@
                   <wi:label>Number fields</wi:label>
                   <wi:styling layout="columns"/>
                   <wi:items>
-                    <wt:widget id="number1"/>
+                    <wt:widget id="number1">
+                      <wi:styling submit-on-change="true"/>
+                    </wt:widget>
                     <wt:widget id="number2"/>
                     <wt:widget id="account"/>
                     <wt:widget id="cowheight">

@@ -107,12 +107,12 @@
     </wd:booleanfield>
   </wd:repeater>
 
-  <wd:action id="addcontact" action-command="add-contact">
+  <wd:repeater-action id="addcontact" action-command="add-row" repeater="contacts">
     <wd:label>Add contact</wd:label>
-  </wd:action>
+  </wd:repeater-action>
 
-  <wd:action id="removecontacts" action-command="remove-selected-contacts">
+  <wd:repeater-action id="removecontacts" action-command="delete-rows" repeater="contacts" select="select">
     <wd:label>Remove selected contacts</wd:label>
-  </wd:action>
+  </wd:repeater-action>
 
 </wd:form>

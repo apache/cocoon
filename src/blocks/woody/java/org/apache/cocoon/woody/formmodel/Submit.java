@@ -50,34 +50,26 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
-
 /**
- * Builds {@link ActionDefinition}s.
+ * A submit is an action that exits of the current form.
+ * 
+ * @see SubmitDefinitionBuilder
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: Submit.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class Submit extends Action {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+    private boolean validateForm;
+    
+    public Submit(ActionDefinition definition, boolean validateForm) {
+        super(definition);
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    protected void handleActivate() {
+        if (!validateForm) {
+            // End the form processing now and don't redisplay the form.
+            getForm().endProcessing(false);
+        }
+        // Otherwise let the normal processing flow continue.
     }
 }

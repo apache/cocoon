@@ -50,34 +50,45 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
-
 /**
- * Builds {@link ActionDefinition}s.
+ * Abstract repeater action. Subclasses will typically just self-add an
+ * event handler that will act on the repeater.
+ * 
+ * @see RepeaterActionDefinitionBuilder
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RepeaterActionDefinition.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public abstract class RepeaterActionDefinition extends ActionDefinition {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+    private String name = null;
+    
+    /**
+     * Builds an action whose target repeater is the parent of this widget
+     */
+    public RepeaterActionDefinition() {
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    /**
+     * Builds an action whose target is a sibling of this widget
+     * @param repeaterName the name of the repeater
+     */
+    public RepeaterActionDefinition(String repeaterName) {
+        this.name = repeaterName;
     }
+
+    public Widget createInstance() {
+        return new RepeaterAction(this);
+    }
+    
+    /**
+     * Get the name of the repeater on which to act. If <code>null</code>, the repeater
+     * is the parent of the current widget (i.e. actions are in repeater rows). Otherwise,
+     * the repeater is a sibling of the current widget.
+     * 
+     * @return the repeater name (can be <code>null</code>).
+     */
+    public String getRepeaterName() {
+        return this.name;
+    }
+    
 }

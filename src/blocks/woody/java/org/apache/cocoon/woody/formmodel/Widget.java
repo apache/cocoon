@@ -51,6 +51,7 @@
 package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.event.WidgetEvent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -106,6 +107,12 @@ public interface Widget {
      * which case it should be called when a widget is added as child of your widget).
      */
     public void setParent(Widget widget);
+    
+    /**
+     * Get the {@link Form} to which this widget belongs. The form is the top-most ancestor
+     * of the widget.
+     */
+    public Form getForm();
 
     /**
      * Gets the namespace of this widget. The combination of a widget's namespace
@@ -151,9 +158,12 @@ public interface Widget {
     /**
      * Returns the value of the widget. For some widgets (notably ContainerWidgets) this may not make sense, those
      * should then simply return null here.
+     * <p>
+     * Object having a value, but whose value is invalid, will return 
+     * {@link org.apache.cocoon.woody.Constants#INVALID_VALUE}.
      */
     public Object getValue();
-
+    
     /**
      * Sets the value of this widget to the given object. Some widgets may not support this
      * method, those should throw an runtime exception if you try to set their value anyway.
@@ -170,4 +180,9 @@ public interface Widget {
      * Gets the child widget of this widget with the given id, or null if there isn't such a child.
      */
     public Widget getWidget(String id);
+    
+    /**
+     * Broadcast an event previously queued by this widget to its event listeners.
+     */
+    public void broadcastEvent(WidgetEvent event);
 }

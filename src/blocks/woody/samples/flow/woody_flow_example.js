@@ -1,4 +1,4 @@
-cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
+cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
 function form1(form) {
     var locale = determineLocale();
@@ -16,34 +16,15 @@ function form1(form) {
     model.contacts[2].firstname = "Chris";
     model.drinks = ["Jupiler", "Coca Cola"];
 
-    form.show("form1-display-pipeline", formHandler, locale);
-    print("visa="+model.visa);
-    cocoon.sendPage("form1-success-pipeline");
-    form.finish();
-
-}
-
-function formHandler(form) {
-    print("submitId="+form.getSubmitId());
-    switch(form.getSubmitId()) {
-    case "remove-selected-contacts":
-        {
-            for (var i = model.contacts.length-1; i >= 0; i--) {
-                if (model.contacts[i].select) {
-                    model.contacts.remove(i);
-                }
-            }
-        }
-        break;
-    case "add-contact":
-        {
-            model.contacts.length++;
-        }
-        break;
-    default:
-        return true;
+    form.locale = locale;
+    form.showForm("form1-display-pipeline");
+    print("submitId = " + form.submitId);
+    if (form.isValid) {
+      print("visa=" + model.visa);  
+    } else {
+      print("Form is not valid");
     }
-    return false;
+    cocoon.sendPage("form1-success-pipeline");
 }
 
 function determineLocale() {

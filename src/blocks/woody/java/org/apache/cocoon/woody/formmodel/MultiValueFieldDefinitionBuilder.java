@@ -50,10 +50,14 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.Iterator;
+
 import org.w3c.dom.Element;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
 
 /**
  * Builds {@link MultiValueFieldDefinition}s.
@@ -79,6 +83,10 @@ public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefi
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         definition.setRequired(required);
 
+        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedEvent.class).iterator();
+        while (iter.hasNext()) {
+            definition.addValueChangedListener((ValueChangedListener)iter.next());
+        }
         return definition;
     }
 }
