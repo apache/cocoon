@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[role='org.apache.cocoon.components.source.impl.Refresher/Delay']">
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.impl.Refresher/Delay']">
 
   <!--+
       | A Refresher is a component that is used by the CachingSource protocol.
@@ -51,7 +51,6 @@
   -->
   <component role="org.apache.cocoon.components.cron.CronJob/UpdateTarget"
              class="org.apache.cocoon.components.source.impl.UpdateTarget"
-             logger="core.refresher.update"
-  />
+             logger="core.refresher.update" />
   
 </xconf>
