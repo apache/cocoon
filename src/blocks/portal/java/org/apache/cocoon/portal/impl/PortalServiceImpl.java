@@ -47,6 +47,12 @@ import org.apache.cocoon.portal.layout.Layout;
  * 
  * @version CVS $Id$
  */
+/**
+ * @author Carsten
+ *
+ * To change this generated comment go to 
+ * Window>Preferences>Java>Code Generation>Code Template
+ */
 public class PortalServiceImpl
     extends AbstractLogEnabled
     implements Serviceable,
@@ -84,14 +90,23 @@ public class PortalServiceImpl
         return info;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getPortalName()
+     */
     public String getPortalName() {
         return this.getInfo().getPortalName();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#setPortalName(java.lang.String)
+     */
     public void setPortalName(String value) {
         this.getInfo().setPortalName(value);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String key) {
         return this.getInfo().getAttribute(key);
     }
@@ -100,32 +115,50 @@ public class PortalServiceImpl
         this.getInfo().setAttribute(key, value);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String key) {
         this.getInfo().removeAttribute(key);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getAttributeNames()
+     */
     public Iterator getAttributeNames() {
         return this.getInfo().getAttributeNames();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getTemporaryAttribute(java.lang.String)
+     */
     public Object getTemporaryAttribute(String key) {
         return this.getInfo().getTemporaryAttribute(key);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#setTemporaryAttribute(java.lang.String, java.lang.Object)
+     */
     public void setTemporaryAttribute(String key, Object value) {
         this.getInfo().setTemporaryAttribute(key, value);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#removeTemporaryAttribute(java.lang.String)
+     */
     public void removeTemporaryAttribute(String key) {
         this.getInfo().removeTemporaryAttribute(key);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getTemporaryAttributeNames()
+     */
     public Iterator getTemporaryAttributeNames() {
         return this.getInfo().getTemporaryAttributeNames();
     }
 
-    /**
-     * Return the component manager for the current portal
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getComponentManager()
      */
     public PortalComponentManager getComponentManager() {
         return this.getInfo().getComponentManager();
@@ -224,6 +257,5 @@ public class PortalServiceImpl
         }
         return key;
     }
-
-    
+   
 }
