@@ -15,9 +15,10 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="store[@class='org.apache.cocoon.components.store.JCSDefaultStore']">
+<xconf xpath="/cocoon" unless="comment()[contains(.,'Experimental JCS Store implementation')]">
 
   <!-- Experimental JCS Store implementation -->
+  <!--
   <store class="org.apache.cocoon.components.store.JCSDefaultStore" 
                     logger="core.store">
     <parameter name="maxobjects" value="100"/>
@@ -28,5 +29,6 @@
                     logger="core.store.transient">
     <parameter name="maxobjects" value="100"/>
   </transient-store>
+  -->
 
 </xconf>
