@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: AbstractUserProfileManager.java,v 1.3 2003/08/04 03:06:30 joerg Exp $
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
@@ -91,7 +91,6 @@ public abstract class AbstractUserProfileManager
     public void logout() {
         final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
-        String attribute = null;
         ComponentSelector adapterSelector = null;
         try {
             adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");

@@ -54,12 +54,11 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.impl.EventAwareCacheImpl;
 import org.apache.cocoon.caching.validity.NamedEvent;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
@@ -75,7 +74,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This is used in the Event based cache example. 
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version CVS $Id: CacheEventAction.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version CVS $Id: CacheEventAction.java,v 1.2 2003/08/04 03:06:30 joerg Exp $
  */
 public class CacheEventAction extends ComposerAction implements ThreadSafe {
 
@@ -91,7 +90,6 @@ public class CacheEventAction extends ComposerAction implements ThreadSafe {
     ) throws Exception {
         Cache cache = (Cache)this.manager.lookup(Cache.ROLE);
         if (cache instanceof EventAwareCacheImpl) {
-            Request request = ObjectModelHelper.getRequest(objectModel);
             String eventName = par.getParameter("event");
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Configured for cache event named: " + eventName);

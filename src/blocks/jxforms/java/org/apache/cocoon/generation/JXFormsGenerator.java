@@ -1345,15 +1345,7 @@ public class JXFormsGenerator extends ComposerGenerator {
                                                 null);
                 }
                 while (iter.hasNext()) {
-                    Object value;
                     Pointer ptr = (Pointer)iter.next();
-                    try {
-                        value = ptr.getNode();
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                    ev.location,
-                                                    exc);
-                    }
                     JXPathContext localJXPathContext = 
                         currentContext.getRelativeContext(ptr);
                     String path = "";
@@ -1436,15 +1428,7 @@ public class JXFormsGenerator extends ComposerGenerator {
                                                 null);
                 }
                 while (iter.hasNext()) {
-                    Object value;
                     Pointer ptr = (Pointer)iter.next();
-                    try {
-                        value = ptr.getNode();
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                        ev.location,
-                                                        exc);
-                    }
                     JXPathContext localJXPathContext = 
                         currentContext.getRelativeContext(ptr);
                     AttributesImpl attrs = new AttributesImpl();
@@ -1724,12 +1708,7 @@ public class JXFormsGenerator extends ComposerGenerator {
                     (StartViolations)ev;
                 StartElement startElement = 
                     startViolations.startElement;
-                Attributes attrs = startElement.attributes;
-                String formAttr = attrs.getValue(FORM);
-                Form theForm = form;
-                if (formAttr != null) {
-                    theForm = Form.lookup(objectModel, formAttr);
-                }
+
                 Set violations = form.getViolationsAsSortedSet();
                 String mypath = null;
                 if (startViolations.parent instanceof StartInputControl) {

@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.3 2003/07/20 21:08:06 ghoward Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.4 2003/08/04 03:09:42 joerg Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -95,7 +95,6 @@ public class DefaultEventRegistryImpl
 	private boolean m_init_success = false;
 	private File m_persistentFile;
 	private static final String PERSISTENT_FILE = "ev_cache.ser";
-	private File m_workDir;
     private MultiHashMap m_keyMMap;
     private MultiHashMap m_eventMMap;
 

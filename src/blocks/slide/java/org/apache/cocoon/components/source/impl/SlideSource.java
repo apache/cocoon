@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.6 2003/04/24 09:41:59 stephan Exp $
+ * @version CVS $Id: SlideSource.java,v 1.7 2003/08/04 03:06:30 joerg Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,
@@ -278,12 +278,6 @@ public class SlideSource extends AbstractLogEnabled
      */
     public InputStream getInputStream() throws IOException, SourceException {
         try {
-            /* FIXME (SM): the variable object is never used. can we remove it?
-            ObjectNode object = structure.retrieve(this.slideToken,
-                                                   this.config.getFilesPath()+
-                                                   this.path);
-            */
-
             return content.retrieve(slideToken, this.revisionDescriptors,
                                     this.revisionDescriptor).streamContent();
         } catch (SlideException se) {

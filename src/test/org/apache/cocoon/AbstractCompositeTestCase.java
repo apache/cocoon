@@ -89,7 +89,7 @@ import org.xml.sax.SAXException;
  * Testcase for action, generator and transformer components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.5 2003/07/18 20:57:02 stephan Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.6 2003/08/04 03:06:30 joerg Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
@@ -203,7 +203,6 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         Generator generator = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
-        Source assertionsource = null;
 
         Document document = null;
         try {

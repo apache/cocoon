@@ -1742,7 +1742,6 @@ public class JXTemplateGenerator extends ComposerGenerator {
                         !(stack.peek() instanceof StartDefine)) {
                         syntaxErr = true;
                     } else {
-                        StartDefine startDefine = (StartDefine)stack.peek();
                         String name = attrs.getValue("name");
                         String optional = attrs.getValue("optional");
                         String default_ = attrs.getValue("default");
@@ -2350,7 +2349,6 @@ public class JXTemplateGenerator extends ComposerGenerator {
                 StartForEach startForEach = (StartForEach)ev;
                 final Object items = startForEach.items;
                 Iterator iter = null;
-                boolean xpath = false;
                 int begin, end, step;
                 try {
                     if (items == null) {
@@ -2363,14 +2361,11 @@ public class JXTemplateGenerator extends ComposerGenerator {
                             Object val = 
                                 compiledExpression.getPointer(jxpathContext,
                                                               expr.raw).getNode();
-                            // Hack: workaround for JXPath bug
+                            // FIXME: workaround for JXPath bug
                             if (val instanceof NativeArray) {
-                                iter = 
-                                    new JSIntrospector.NativeArrayIterator((NativeArray)val);
+                                iter = new JSIntrospector.NativeArrayIterator((NativeArray)val);
                             } else {
-                                iter = 
-                                    compiledExpression.iteratePointers(jxpathContext);
-                                xpath = true;
+                                iter = compiledExpression.iteratePointers(jxpathContext);
                             }
                         } else if (expr.compiledExpression instanceof org.apache.commons.jexl.Expression) {
                             org.apache.commons.jexl.Expression e = 

@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: DefaultContextManager.java,v 1.3 2003/08/04 03:06:31 joerg Exp $
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
@@ -269,7 +269,6 @@ implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, 
         synchronized(session) {
             final Map contexts = this.getSessionContexts(session);
             if (contexts.containsKey(name)) {
-                SessionContext context = (SessionContext)contexts.get(name);
                 contexts.remove(name);
             }
         }

@@ -352,7 +352,6 @@ public class XPointerFrameworkParser
     private Token jj_scanpos, jj_lastpos;
     private int jj_la;
     public boolean lookingAhead = false;
-    private boolean jj_semLA;
     private int jj_gen;
     final private int[] jj_la1 = new int[6];
     static private int[] jj_la1_0;
