@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: showString.xml,v 1.1 2004/02/22 19:12:52 unico Exp $
+    | Author: Ovidiu Predescu "ovidiu@apache.org"
+    | Date: October 1, 2002
+    |
+    | This page is used by anteater test. Please see src/test/anteater/flowscriptReload.xml
+    +-->
+
+<page>
+  <resources>
+    <resource type="file" href="sendpage.js">Flowscript</resource>
+  </resources>
+  <title>Show String</title>
+  <content>
+    <para>${replaceme}</para>
+    <para>${parameter}</para>
+  </content>
+</page>
