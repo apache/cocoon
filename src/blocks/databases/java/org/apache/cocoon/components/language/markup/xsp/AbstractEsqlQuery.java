@@ -64,7 +64,7 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlQuery.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
+ * @version CVS $Id: AbstractEsqlQuery.java,v 1.5 2003/08/04 13:42:15 haul Exp $
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
@@ -232,6 +232,30 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
         }
     }
 
+    /**
+     * Clean up all database resources used by the query. In particular,
+     * close result sets and statements. 
+     *
+     */
+    public void cleanUp() {
+        this.resultSetMetaData = null;
+        if (this.resultSet != null){
+            try {
+                this.resultSet.close();
+                this.resultSet = null;
+            } catch (SQLException e) {
+                // should never happen! (only cause: access error)
+            }
+        }
+        if (this.preparedStatement != null){
+            try {
+                this.preparedStatement.close();
+                this.preparedStatement = null;
+            } catch (SQLException e) {
+                // should never happen! (only cause: access error)
+            }
+        }
+    }
 
     /* ************** FINAL methods *********************** */
 
