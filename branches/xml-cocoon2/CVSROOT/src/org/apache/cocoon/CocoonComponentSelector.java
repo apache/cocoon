@@ -42,13 +42,13 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-15 21:09:28 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-16 16:21:34 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
     /** Hashmap of all components which this ComponentManager knows about.
      */
-    private Map components;
+    protected Map components;
 
     /** The app Context */
     private Context context;
@@ -64,7 +64,7 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
     /** Component pools. */
     private Map pools;
 
-        /** Parent Component Manager */
+    /** Parent Component Manager */
     private ComponentManager manager;
 
 

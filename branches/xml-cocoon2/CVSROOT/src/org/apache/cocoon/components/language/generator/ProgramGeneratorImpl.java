@@ -12,10 +12,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import org.apache.log.Logger;
+import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Configurable;
@@ -32,8 +36,6 @@ import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.AbstractLoggable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -43,15 +45,15 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-16 15:38:27 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-02-16 16:21:38 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
     /** The auto-reloading option */
     protected boolean autoReload = false;
 
-    /** The in-memory store */
-    protected Store cache;
+    /** The ComponentSelector for CompiledPages */
+    protected GeneratorSelector cache;
 
     /** The repository store */
     protected Store repository;
@@ -68,10 +70,22 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     /** The working directory */
     protected File workDir;
 
+    public ProgramGeneratorImpl() {
+        this.cache = new GeneratorSelector();
+    }
+
+    /** Set the Cache's logger */
+    public void setLogger(Logger log) {
+        super.setLogger(log);
+
+        this.cache.setLogger(log);
+    }
+
     /** Contextualize this class */
     public void contextualize(Context context) {
        if (this.workDir == null) {
            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+           this.cache.contextualize(context);
        }
     }
 
@@ -80,11 +94,11 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
      * <code>ComponentSelector</code> used as language factory for both markup and programming languages.
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager) throws ComponentManagerException {
         if ((this.manager == null) && (manager != null)) {
             this.manager = manager;
+            this.cache.compose(manager);
             try {
-                this.cache = (Store) this.manager.lookup(Roles.STORE);
                 this.repository = (Store) this.manager.lookup(Roles.REPOSITORY);
                 this.markupSelector = (ComponentSelector)this.manager.lookup(Roles.MARKUP_LANGUAGE);
                 this.languageSelector = (ComponentSelector)this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
@@ -129,30 +143,36 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             CompiledComponent programInstance = null;
             synchronized(filename.intern()) {
                 // Attempt to load program object from cache
-                program = (Class) this.cache.get(filename);
                 try {
-                    if (program == null) {
-          /*
-             FIXME: Passing null as encoding may result in invalid
-             recompilation under certain circumstances!
-          */
+                    programInstance = (CompiledComponent) this.cache.select(filename);
+                } catch (Exception e) {
+                    getLogger().debug("The instance was not accessible, creating it now.");
+                    try {
+                        if (programInstance == null) {
+                          /*
+                             FIXME: Passing null as encoding may result in invalid
+                             recompilation under certain circumstances!
+                          */
 
-                        program = programmingLanguage.load(normalizedName, this.workDir, null);
-                        // Store loaded program in cache
-                        this.cache.store(filename, program);
+                            program = programmingLanguage.load(normalizedName, this.workDir, null);
+                            // Store loaded program in cache
+                            this.cache.addGenerator(filename, program);
+                        }
+                        // Instantiate program
+                        programInstance = programmingLanguage.instantiate(program);
+                        if (programInstance instanceof Loggable) {
+                            ((Loggable)programInstance).setLogger(getLogger());
+                        }
+                        programInstance.compose(this.manager);
+                    } catch (LanguageException le) {
+                        getLogger().debug("Language Exception", le);
                     }
-                    // Instantiate program
-                    programInstance = programmingLanguage.instantiate(program);
-                    if (programInstance instanceof Loggable) {
-                        ((Loggable)programInstance).setLogger(getLogger());
-                    }
-                    programInstance.compose(this.manager);
-                } catch (LanguageException e) { getLogger().debug("Language Exception", e); }
+                }
 
-      /*
-         FIXME: It's the program (not the instance) that must
-         be queried for changes!!!
-      */
+              /*
+                 FIXME: It's the program (not the instance) that must
+                 be queried for changes!!!
+              */
 
                 if (this.autoReload && programInstance != null && programInstance.modifiedSince(file.lastModified())) {
                         // Unload program
@@ -178,7 +198,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                     // [Compile]/Load generated program
                     program = programmingLanguage.load(normalizedName, this.workDir, encoding);
                     // Store generated program in cache
-                    this.cache.store(filename, program);
+                    this.cache.addGenerator(filename, program);
                 }
                 // Instantiate
                 programInstance = programmingLanguage.instantiate(program);

@@ -7,15 +7,18 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.Composer;
-import org.apache.avalon.Modifiable;
+import org.apache.cocoon.CocoonComponentSelector;
 
 /**
  * This interface is the common base of all Compiled Components.  This
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-16 16:21:36 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-16 16:21:37 $
  */
-public interface CompiledComponent extends Composer, Modifiable {
+public class GeneratorSelector extends CocoonComponentSelector {
+
+    public void addGenerator(Object hint, Class generator) {
+        this.components.put(hint, generator);
+    }
 }
