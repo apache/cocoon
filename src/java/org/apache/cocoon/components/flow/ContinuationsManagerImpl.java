@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,7 +45,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.9 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.10 2004/04/09 19:52:54 vgritsenko Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -113,7 +113,7 @@ public class ContinuationsManagerImpl
 
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
-                                                 int timeToLive, 
+                                                 int timeToLive,
                                                  ContinuationsDisposer disposer) {
         int ttl = (timeToLive == 0 ? defaultTimeToLive : timeToLive);
 
@@ -170,21 +170,16 @@ public class ContinuationsManagerImpl
             _invalidate((WebContinuation) children.get(i));
         }
     }
-    
+
     /**
      * Makes the continuation inaccessible for lookup, and triggers possible needed
      * cleanup code through the ContinuationsDisposer interface.
-     * 
+     *
      * @param wk the continuation to dispose.
      */
     private void disposeContinuation(WebContinuation wk) {
         idToWebCont.remove(wk.getId());
-           
-        // Call specific possible implementation-specific clean-up on this continuation.
-        ContinuationsDisposer disposer = wk.getDisposer();
-        if (disposer != null) {
-          disposer.disposeContinuation(wk);
-        }
+        wk.dispose();
     }
 
     public WebContinuation lookupWebContinuation(String id) {
@@ -208,10 +203,10 @@ public class ContinuationsManagerImpl
      * cleanup of the continuation.
      * @return the generated <code>WebContinuation</code> with unique identifier
      */
-    private WebContinuation generateContinuation( Object kont, 
-                                                  WebContinuation parent,
-                                                  int ttl, 
-                                                  ContinuationsDisposer disposer) {
+    private WebContinuation generateContinuation(Object kont,
+                                                 WebContinuation parent,
+                                                 int ttl,
+                                                 ContinuationsDisposer disposer) {
 
         char[] result = new char[bytes.length * 2];
         WebContinuation wk = null;
@@ -328,7 +323,7 @@ public class ContinuationsManagerImpl
         Iterator iter = expirations.iterator();
         while (iter.hasNext() && ((wk = (WebContinuation) iter.next()).hasExpired())) {
             iter.remove();
-            this.removeContinuation(wk);
+            removeContinuation(wk);
         }
 
         // log state after continuations clean up
