@@ -95,7 +95,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.6 2003/05/27 12:19:30 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.7 2003/06/18 12:36:45 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -271,14 +271,14 @@ extends AbstractSessionComponent {
     public void configurationTest()
     throws ProcessingException, IOException, SAXException {
         // no sync required
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN configurationTest");
         }
 
         // Ignore result
         this.getConfiguration();
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END configurationTest");
         }
     }
@@ -289,7 +289,7 @@ extends AbstractSessionComponent {
     public SessionContext getContext(boolean create)
     throws ProcessingException, IOException, SAXException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getContext create="+create);
         }
         SessionContext context = null;
@@ -303,7 +303,7 @@ extends AbstractSessionComponent {
                     attrName = attrName + ':' + appName;
                 }
                 context = this.getContextManager().getContext(attrName);
-                if (context == null && create == true) {
+                if (context == null && create) {
 
                     // create new context
                     
@@ -313,7 +313,7 @@ extends AbstractSessionComponent {
             } // end synchronized
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END getContext context="+context);
         }
         return context;
@@ -374,7 +374,7 @@ extends AbstractSessionComponent {
     public void showAdminConf(XMLConsumer consumer)
     throws SAXException, ProcessingException, IOException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN showAdminConf consumer=" + consumer);
         }
         try {
@@ -395,12 +395,12 @@ extends AbstractSessionComponent {
                     // delete : use id to delete coplet
                     // change : change the coplet
                     //        cache : cleans the cache
-                    if (command.equals("delete") == true && copletID != null) {
+                    if (command.equals("delete") && copletID != null) {
                         Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
                         if (coplet != null) {
                             coplet.getParentNode().removeChild(coplet);
                         }
-                    } else if (command.equals("change") == true && copletID != null) {
+                    } else if (command.equals("change") && copletID != null) {
                         Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
                         if (coplet != null) {
                             // now get the information
@@ -443,14 +443,14 @@ extends AbstractSessionComponent {
                             }
                             resource = this.request.getParameter("portaladmin_cust");
                             boolean isCustom = DOMUtil.getValueAsBooleanOf(coplet, "configuration/customizable", false);
-                            if (resource != null && isCustom == true) {
+                            if (resource != null && isCustom ) {
                                 Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization");
                                 if (resourceNode != null) resourceNode.getParentNode().removeChild(resourceNode);
                                 resourceNode = coplet.getOwnerDocument().createElementNS(null, "customization");
                                 resourceNode.setAttributeNS(null, "uri", resource);
                                 coplet.appendChild(resourceNode);
                             }
-                            if (isCustom == false) {
+                            if (!isCustom) {
                                 Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization");
                                 if (resourceNode != null) resourceNode.getParentNode().removeChild(resourceNode);
                             }
@@ -470,17 +470,17 @@ extends AbstractSessionComponent {
                             Enumeration keys = this.request.getParameterNames();
                             Element sNode;
                             String key;
-                            while (keys.hasMoreElements() == true) {
+                            while (keys.hasMoreElements() ) {
                                 key = (String)keys.nextElement();
-                                if (key.startsWith("portaladmin_xsl_") == true) {
+                                if (key.startsWith("portaladmin_xsl_") ) {
                                     value = key.substring(key.lastIndexOf('_')+ 1);
                                     sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]");
                                     if (sNode != null) {
                                         String xslName = this.request.getParameter(key);
-                                        if (xslName.equals("true") == true) xslName = "**STYLESHEET**";
+                                        if (xslName.equals("true") ) xslName = "**STYLESHEET**";
                                         DOMUtil.setValueOfNode(sNode, xslName);
                                     }
-                                } else if (key.startsWith("portaladmin_delxsl_") == true) {
+                                } else if (key.startsWith("portaladmin_delxsl_") ) {
                                     value = key.substring(key.lastIndexOf('_')+ 1);
                                     sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]");
                                     if (sNode != null) {
@@ -495,14 +495,14 @@ extends AbstractSessionComponent {
                                 }
                             }
                         }
-                    } else if (command.equals("new") == true) {
+                    } else if (command.equals("new") ) {
                         // first we have to invent a new coplet id!
                         int index = 0;
                         boolean found = false;
                         Element coplet;
                         Element subNode;
 
-                        while (found == false) {
+                        while (!found) {
                             copletID = "S"+index;
                             coplet = (Element)DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
                             if (coplet == null) {
@@ -528,7 +528,7 @@ extends AbstractSessionComponent {
                         DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/visible"), "true");
                         DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/size"), "max");
                         DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets").appendChild(coplet);
-                    } else if (command.equals("save") == true) {
+                    } else if (command.equals("save") ) {
 
                         SourceParameters pars = new SourceParameters();
                         pars.setSingleParameterValue("profile", "coplet-base");
@@ -559,7 +559,7 @@ extends AbstractSessionComponent {
             }
 
             // general commands
-            if (command != null && command.equals("cleancache") == true) {
+            if (command != null && command.equals("cleancache") ) {
                 this.cleanUpCache(null, null, configuration);
             }
 
@@ -577,7 +577,7 @@ extends AbstractSessionComponent {
             consumer.characters(state.toCharArray(), 0, state.length());
             consumer.endElement("", PortalConstants.ELEMENT_STATE, PortalConstants.ELEMENT_STATE);
 
-            if (state.equals(PortalConstants.STATE_MAIN) == true) {
+            if (state.equals(PortalConstants.STATE_MAIN) ) {
 
                 Document rolesDF = this.getRoles();
                 Node     roles   = null;
@@ -585,7 +585,7 @@ extends AbstractSessionComponent {
                 IncludeXMLConsumer.includeNode(roles, consumer, consumer);
             }
 
-            if (state.equals(PortalConstants.STATE_MAIN_ROLE) == true) {
+            if (state.equals(PortalConstants.STATE_MAIN_ROLE) ) {
 
                 Document rolesDF = this.getRoles();
                 Node     roles   = null;
@@ -610,7 +610,7 @@ extends AbstractSessionComponent {
                 }
             }
 
-            if (state.equals(PortalConstants.STATE_GLOBAL) == true) {
+            if (state.equals(PortalConstants.STATE_GLOBAL)) {
                 profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, true);
                 Map profile = this.retrieveProfile(profileID);
                 if (profile == null) {
@@ -620,7 +620,7 @@ extends AbstractSessionComponent {
                 this.showPortal(consumer, true, context, profile, profileID);
             }
 
-            if (state.equals(PortalConstants.STATE_ROLE) == true) {
+            if (state.equals(PortalConstants.STATE_ROLE) ) {
                 String role = this.request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
                 if (role == null) {
                     role = (String)context.getAttribute(ATTRIBUTE_ADMIN_ROLE);
@@ -639,7 +639,7 @@ extends AbstractSessionComponent {
                     this.showPortal(consumer, true, context, profile, profileID);
                 }
             }
-            if (state.equals(PortalConstants.STATE_USER) == true) {
+            if (state.equals(PortalConstants.STATE_USER) ) {
                 String role = this.request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
                 String id   = this.request.getParameter(PortalManager.REQ_PARAMETER_ID);
                 if (role == null) {
@@ -668,7 +668,7 @@ extends AbstractSessionComponent {
                 }
             }
             // one coplet
-            if (state.equals(PortalConstants.STATE_COPLET) == true) {
+            if (state.equals(PortalConstants.STATE_COPLET) ) {
                 if (copletsFragment != null && copletID != null) {
                     Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
                     if (coplet != null) {
@@ -678,7 +678,7 @@ extends AbstractSessionComponent {
                     state = PortalConstants.STATE_COPLETS;
                 }
             }
-            if (state.equals(PortalConstants.STATE_COPLETS) == true) {
+            if (state.equals(PortalConstants.STATE_COPLETS) ) {
                 consumer.startElement("", PortalConstants.ELEMENT_COPLETS, PortalConstants.ELEMENT_COPLETS, attr);
 
                 // load the base coplets profile
@@ -709,7 +709,7 @@ extends AbstractSessionComponent {
             throw new ProcessingException("TransformerException: " + local, local);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END showAdminConf");
         }
     }
@@ -720,7 +720,7 @@ extends AbstractSessionComponent {
     public Element getStatusProfile()
     throws SAXException, IOException, ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN getStatusProfile");
         }
         SessionContext context = this.getContext(true);
@@ -743,7 +743,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END getStatusProfile statusProfile="+(statusProfile == null ? "null" : XMLUtils.serializeNodeToXML(statusProfile)));
         }
         return statusProfile;
@@ -795,7 +795,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("start showing profile");
         }
         this.showPortal(consumer,
@@ -803,11 +803,11 @@ extends AbstractSessionComponent {
                         context,
                         storedProfile,
                         profileID);
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("end showing profile");
             this.getLogger().debug("end portal generation");
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END showPortal");
         }
     }
@@ -873,7 +873,7 @@ extends AbstractSessionComponent {
                            String       profileID)
     throws SAXException, ProcessingException, IOException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN showPortal consumer=" + consumer+", configMode="+configMode+", context="+context+
                 ", profile="+storedProfile);
         }
@@ -920,7 +920,7 @@ extends AbstractSessionComponent {
 
             // now start producing xml:
             AttributesImpl attr = new AttributesImpl();
-            if (configMode == true) {
+            if (configMode) {
                 this.sendStartElementEvent(consumer, PortalConstants.ELEMENT_PORTALCONF);
             } else {
                 this.sendStartElementEvent(consumer, PortalConstants.ELEMENT_PORTAL);
@@ -930,7 +930,7 @@ extends AbstractSessionComponent {
             this.streamConfiguration(consumer, this.request.getRequestURI(), profileID, mediaType, null);
 
             // LAYOUT:
-            if (configMode == true) {
+            if (configMode) {
                 IncludeXMLConsumer.includeNode(DOMUtil.getFirstNodeFromPath(profile, new String[] {"profile","layout-profile"}, false),
                      consumer, consumer);
                 // copletsConfiguration (only for configMode)
@@ -949,7 +949,7 @@ extends AbstractSessionComponent {
             }
             // END LAYOUT
 
-            if (configMode == false) {
+            if (!configMode) {
                 Element statusProfile = (Element)DOMUtil.getFirstNodeFromPath(profile, new String[] {"profile","status-profile"}, false);
 
                 String copletNotAvailableMessage = "The coplet is currently not available.";
@@ -982,7 +982,7 @@ extends AbstractSessionComponent {
                 // test for header
                 String value;
                 value = DOMUtil.getValueOfNode(miscNodes[PortalConstants.PROFILE_MISC_HEADER_NODE]);
-                if (value != null && new Boolean(value).booleanValue() == true) {
+                if (value != null && new Boolean(value).booleanValue()) {
                     element = (Element)miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE];
                     if (element != null) {
                         this.loadCoplets(element,
@@ -1043,7 +1043,7 @@ extends AbstractSessionComponent {
 
                 // test for footer
                 value = DOMUtil.getValueOfNode(miscNodes[PortalConstants.PROFILE_MISC_FOOTER_NODE]);
-                if (value != null && new Boolean(value).booleanValue() == true) {
+                if (value != null && new Boolean(value).booleanValue()) {
                     element = (Element)miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE];
                     if (element != null) {
                         this.loadCoplets(element,
@@ -1130,7 +1130,7 @@ extends AbstractSessionComponent {
                 this.sendEvents(consumer, statusProfile);
             }
 
-            if (configMode == true) {
+            if (configMode) {
                 this.sendEndElementEvent(consumer, PortalConstants.ELEMENT_PORTALCONF);
             } else {
                 this.sendEndElementEvent(consumer, PortalConstants.ELEMENT_PORTAL);
@@ -1141,7 +1141,7 @@ extends AbstractSessionComponent {
         } finally {
             this.getTransactionManager().stopReadingTransaction(context);
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END showPortal");
         }
     }
@@ -1157,7 +1157,7 @@ extends AbstractSessionComponent {
                              boolean adminProfile)
     throws ProcessingException, IOException, SAXException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildProfile type=" + objectModel + ", role=" + role + ", id=" +id+", adminProfile="+adminProfile);
         }
         try {
@@ -1165,14 +1165,14 @@ extends AbstractSessionComponent {
             if (type == null) {
                 throw new ProcessingException("buildProfile: Type is required");
             }
-            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true ||
-                type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) == true) {
+            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) ||
+                type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
                 // nothing to do here
-            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE) == true) {
+            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                 if (role == null) {
                     throw new ProcessingException("buildProfile: Role is required");
                 }
-            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                 if (role == null) {
                     throw new ProcessingException("buildProfile: Role is required");
                 }
@@ -1197,7 +1197,7 @@ extends AbstractSessionComponent {
                 }
 
                 // is the ID profile cached?
-                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) ) {
                     theProfile = this.getCachedProfile(profileID, config);
                 }
 
@@ -1209,7 +1209,7 @@ extends AbstractSessionComponent {
                     boolean doID = false;
                     String previousID;
 
-                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         doID = true;
                         previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, adminProfile);
                         theProfile = this.getCachedProfile(previousID, config);
@@ -1223,7 +1223,7 @@ extends AbstractSessionComponent {
                                 theProfile = this.getCachedProfile(previousID, config);
                             }
                         }
-                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE) == true) {
+                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                         theProfile = this.getCachedProfile(profileID, config);
                         if (theProfile == null) {
                             doRole = true;
@@ -1235,7 +1235,7 @@ extends AbstractSessionComponent {
                                 theProfile = this.getCachedProfile(previousID, config);
                             }
                         }
-                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true) {
+                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
                         theProfile = this.getCachedProfile(profileID, config);
                         if (theProfile == null) {
                             doGlobal = true;
@@ -1255,7 +1255,7 @@ extends AbstractSessionComponent {
                     Element          profileRoot;
                     DocumentFragment profile;
 
-                    if (doBase == true) {
+                    if (doBase) {
                         // build the base level
                         profile = this.buildBaseProfile(config, adminProfile);
                         profileRoot = (Element)profile.getFirstChild();
@@ -1267,28 +1267,28 @@ extends AbstractSessionComponent {
                     }
 
                     // load the global delta if type is global, role or user (but not basic!)
-                    if (doGlobal == true) {
+                    if (doGlobal) {
                         this.buildGlobalProfile(profileRoot, config, adminProfile);
                         this.cacheProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile), theProfile, config);
                     }
 
                     // load the role delta if type is role or user
-                    if (doRole == true) {
+                    if (doRole) {
                         this.buildRoleProfile(profileRoot, config, role, adminProfile);
                         this.cacheProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, adminProfile), theProfile, config);
                     }
 
                     // load the user delta if type is user
-                    if (doID == true) {
+                    if (doID) {
                         this.buildUserProfile(profileRoot, config, role, id, adminProfile);
                     }
 
                     // load the status profile when type is user
-                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         this.buildUserStatusProfile(profileRoot, config, role, id, adminProfile);
                     }
 
-                    if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) == false) {
+                    if (!type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
                         this.buildRunProfile(theProfile, context, profile);
 
                         theProfile.put(PortalConstants.PROFILE_PORTAL_LAYOUTS,
@@ -1300,12 +1300,12 @@ extends AbstractSessionComponent {
                     }
 
                     // cache the profile, if user
-                    if (doID == true) {
+                    if (doID) {
                         this.cacheProfile(profileID, theProfile, config);
                     }
                 } else {
                     // load the status profile when type is user
-                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         DocumentFragment profile = (DocumentFragment)theProfile.get(PortalConstants.PROFILE_PROFILE);
                         Element profileRoot = (Element)profile.getFirstChild();
                         this.buildUserStatusProfile(profileRoot, config, role, id, adminProfile);
@@ -1316,8 +1316,8 @@ extends AbstractSessionComponent {
                 this.storeProfile(profileID, theProfile);
 
                 // now put role and id into the context if type is ID
-                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true
-                    && adminProfile == false) {
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)
+                    && !adminProfile) {
                     context.setAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE, role);
                     context.setAttribute(PortalManager.ATTRIBUTE_PORTAL_ID, id);
                 }
@@ -1328,7 +1328,7 @@ extends AbstractSessionComponent {
             throw new ProcessingException("TransformerException: " + local, local);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildProfile");
         }
     }
@@ -1342,7 +1342,7 @@ extends AbstractSessionComponent {
                                                boolean adminProfile)
     throws SAXException, ProcessingException, IOException, javax.xml.transform.TransformerException {
         // calling method must be synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildProfileDeltaN type="+type+", role="+role+", id="+id);
         }
 
@@ -1359,17 +1359,17 @@ extends AbstractSessionComponent {
                    type + " - " + role + " - " + id + ".");
         }
 
-        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             baseType = PortalManager.BUILDTYPE_VALUE_ROLE;
             baseRole = role;
             baseID   = null;
             rootElementName = "user-delta";
-        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE) == true) {
+        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
             baseType = PortalManager.BUILDTYPE_VALUE_GLOBAL;
             baseRole = null;
             baseID   = null;
             rootElementName = "role-delta";
-        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true) {
+        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
             baseType = PortalManager.BUILDTYPE_VALUE_BASIC;
             baseRole = null;
             baseID   = null;
@@ -1402,7 +1402,7 @@ extends AbstractSessionComponent {
                   (DocumentFragment)baseProfile.get(PortalConstants.PROFILE_PROFILE),
                   "profile/coplets-profile",
                   (Element)delta.getFirstChild());
-        if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
             profileDelta = DOMUtil.getFirstNodeFromPath(originalFragment, new String[] {"profile","personal-profile"}, false).cloneNode(true);
             delta.getFirstChild().appendChild(profileDelta);
         } else {
@@ -1438,7 +1438,7 @@ extends AbstractSessionComponent {
                                 copletsChanged = true;
                             }
                         }
-                        if (copletsChanged == true) {
+                        if (copletsChanged) {
                             this.saveUserStatusProfile(originalProfile,
                                    this.getConfiguration(), role, id, adminProfile);
                         }
@@ -1457,7 +1457,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildProfileDelta delta="+delta);
         }
         return delta;
@@ -1513,22 +1513,22 @@ extends AbstractSessionComponent {
                 // search the delta node in the profile
                 m = 0;
                 found = false;
-                while (found == false && m < l) {
+                while (!found && m < l) {
                     currentBaseNode = baseChilds.item(m);
                     if (currentBaseNode.getNodeType() == Node.ELEMENT_NODE
-                        && currentBaseNode.getNodeName().equals(currentOrigNode.getNodeName()) == true) {
+                        && currentBaseNode.getNodeName().equals(currentOrigNode.getNodeName()) ) {
 
                         // now we have found a node with the same name
                         // next: the attributes must match also
                         found = this.compareAttributes(currentBaseNode, currentOrigNode);
                     }
-                    if (found == false) m++;
+                    if (!found) m++;
                 }
 
-                if (found == true) {
+                if (found) {
                     // do we have elements as children or text?
                     currentOrigNode.normalize();
-                    if (currentOrigNode.hasChildNodes() == true) {
+                    if (currentOrigNode.hasChildNodes()) {
 
                         // do a recursive call for sub elements
                         nodeStack.add(currentOrigNode);
@@ -1541,7 +1541,7 @@ extends AbstractSessionComponent {
                         String baseString = DOMUtil.getValueOfNode(currentBaseNode, "").trim();
                         String originalString = DOMUtil.getValueOfNode(currentOrigNode, "").trim();
 
-                        if (baseString.equals(originalString) == false) {
+                        if (!baseString.equals(originalString)) {
                             // this is the tricky part:
                             // we have to process all nodes on the stack
                             // and insert them in the deltaElement
@@ -1557,12 +1557,12 @@ extends AbstractSessionComponent {
                                 foundChild = false;
                                 cIndex = 0;
                                 if (possibleChilds != null) {
-                                    while (foundChild == false && cIndex < possibleChilds.getLength()) {
+                                    while (!foundChild && cIndex < possibleChilds.getLength()) {
                                         foundChild = this.compareAttributes(currentElement, possibleChilds.item(cIndex));
-                                        if (foundChild == false) cIndex++;
+                                        if (!foundChild) cIndex++;
                                     }
                                 }
-                                if (foundChild == true) {
+                                if (foundChild) {
                                     contextElement = (Element)possibleChilds.item(cIndex);
                                 } else {
                                     currentElement = (Element)currentElement.cloneNode(false);
@@ -1592,7 +1592,7 @@ extends AbstractSessionComponent {
                                 boolean adminProfile) 
     throws ProcessingException {
         // No sync required
-        StringBuffer key = new StringBuffer((adminProfile == true ? "aprofile:" : "uprofile:"));
+        StringBuffer key = new StringBuffer((adminProfile ? "aprofile:" : "uprofile:"));
         RequestState reqstate = this.getRequestState();
         key.append(reqstate.getHandlerName())
            .append('|')
@@ -1600,12 +1600,12 @@ extends AbstractSessionComponent {
            .append(':')
            .append(type);
 
-        if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE) == true
-            || type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)
+            || type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             role = XMLUtil.encode(role);
             key.append('_').append(role.length()).append('_').append(role);
         }
-        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             id = XMLUtil.encode(id);
             key.append('_').append(id);
         }
@@ -1688,7 +1688,7 @@ extends AbstractSessionComponent {
                               Map profile)
     throws ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN storeProfile id="+profileID+", profile="+profile);
         }
 
@@ -1697,7 +1697,7 @@ extends AbstractSessionComponent {
             session.setAttribute(profileID, profile);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END storeProfile");
         }
     }
@@ -1708,7 +1708,7 @@ extends AbstractSessionComponent {
     public Map retrieveProfile(String profileID)
     throws ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN retrieveProfile id="+profileID);
         }
         Session session = this.getSessionManager().getSession(true);
@@ -1717,7 +1717,7 @@ extends AbstractSessionComponent {
             result = (Map)session.getAttribute(profileID);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END retrieveProfile profile="+(result != null ? "**PROFILE**" : "null"));
         }
 
@@ -1731,11 +1731,11 @@ extends AbstractSessionComponent {
                               Map profile,
                               Map configuration) {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN cacheProfile id="+profileID+", profile="+profile);
         }
         try {
-            if (configuration != null && this.getIsAdminProfile(profileID) == false) {
+            if (configuration != null && !this.getIsAdminProfile(profileID)) {
                 String storePrefix = (String)configuration.get(PortalConstants.CONF_PROFILE_CACHE);
                 if (storePrefix != null) {
                     String key = profileID.substring(1);
@@ -1747,7 +1747,7 @@ extends AbstractSessionComponent {
             // local exceptions are ignored
             // we dont want to get an exception response due to cache problems
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END cacheProfile");
         }
     }
@@ -1757,19 +1757,19 @@ extends AbstractSessionComponent {
      */
     private Map getCachedProfile(String profileID, Map configuration) {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getCachedProfile id="+profileID);
         }
 
         Map result = null;
 
         try {
-            if (configuration != null && this.getIsAdminProfile(profileID) == false) {
+            if (configuration != null && !this.getIsAdminProfile(profileID)) {
                 final String storePrefix = (String)configuration.get(PortalConstants.CONF_PROFILE_CACHE);
                 if (storePrefix != null) {
                     final String key = profileID.substring(1);
                     final Store store = this.getProfileStore();
-                    if (store.containsKey(key) == true) {
+                    if (store.containsKey(key)) {
                         result = (Map)store.get(key);
                     }
                 }
@@ -1781,7 +1781,7 @@ extends AbstractSessionComponent {
             result = null;
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END getCachedProfile profile="+(result != null ? "**PROFILE**" : "null"));
         }
         return result;
@@ -1794,12 +1794,12 @@ extends AbstractSessionComponent {
      */
     private void cleanUpCache(String type, String role, Map configuration)
     throws ProcessingException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN cleanUpCache type="+type+", role="+role+", config="+configuration);
         }
         if (configuration != null
             && type != null
-            && type.equals(PortalManager.BUILDTYPE_VALUE_ID) == false) {
+            && !type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             String storePrefix = (String)configuration.get(PortalConstants.CONF_PROFILE_CACHE);
             if (storePrefix != null) {
                 Store store = this.getProfileStore();
@@ -1809,9 +1809,9 @@ extends AbstractSessionComponent {
                 String  deleteRole = null;
                 String  deleteUser = null;
 
-                if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) == true ||
-                    type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true) {
-                    if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) == true) {
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) ||
+                    type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
                         deleteGlobal = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false).substring(1);
                     }
                     deleteRole = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
@@ -1824,13 +1824,13 @@ extends AbstractSessionComponent {
                     deleteUser = deleteUser.substring(1, deleteUser.length()-1);
                 }
 
-                while (keys.hasMoreElements() == true) {
+                while (keys.hasMoreElements()) {
                     currentKey = (String)keys.nextElement();
-                    if (deleteGlobal != null && currentKey.equals(deleteGlobal) == true) {
+                    if (deleteGlobal != null && currentKey.equals(deleteGlobal)) {
                         store.remove(currentKey);
-                    } else if (deleteRole != null && currentKey.startsWith(deleteRole) == true) {
+                    } else if (deleteRole != null && currentKey.startsWith(deleteRole)) {
                         store.remove(currentKey);
-                    } else if (deleteUser != null && currentKey.startsWith(deleteUser) == true) {
+                    } else if (deleteUser != null && currentKey.startsWith(deleteUser)) {
                         store.remove(currentKey);
                     }
                 }
@@ -1846,16 +1846,16 @@ extends AbstractSessionComponent {
 
                 delete = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
                 delete = delete.substring(1, delete.lastIndexOf(':') + 1);
-                while (keys.hasMoreElements() == true) {
+                while (keys.hasMoreElements()) {
                     currentKey = (String)keys.nextElement();
-                    if (currentKey.startsWith(delete) == true) {
+                    if (currentKey.startsWith(delete)) {
                         store.remove(currentKey);
                     }
                 }
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END cleanUpCache");
         }
     }
@@ -1868,7 +1868,7 @@ extends AbstractSessionComponent {
                                  DocumentFragment baseProfile)
     throws ProcessingException, javax.xml.transform.TransformerException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildRunProfile context="+context+", profile="+baseProfile);
         }
 
@@ -1917,10 +1917,10 @@ extends AbstractSessionComponent {
             l = coplets.getLength();
             for(i = 0; i < l; i++) {
                 configElement = (Element)coplets.item(i);
-                if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/active") == true) {
+                if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/active")) {
 
                     copletID = configElement.getAttributeNS(null, "id");
-                    if (configElement.hasAttributeNS(null, "media") == true) {
+                    if (configElement.hasAttributeNS(null, "media")) {
                         copletMedia = configElement.getAttributeNS(null, "media");
                         mediaMap = (Map)mediaCoplets.get(copletMedia);
                         if (mediaMap != null) {
@@ -1932,7 +1932,7 @@ extends AbstractSessionComponent {
                     }
 
                     // Now: add the coplet if mandatory and missing
-                    if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/mandatory") == true) {
+                    if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/mandatory")) {
                         // get all coplet instances
                         NodeList copletElements;
 
@@ -2000,12 +2000,12 @@ extends AbstractSessionComponent {
                             sl = copletElements.getLength();
                             si = 0;
                             found = false;
-                            while (si < sl && found == false) {
+                            while (si < sl && !found) {
                                 found = DOMUtil.getValueAsBooleanOf(copletElements.item(si),
                                            "status/visible", origVisible);
                                 si++;
                             }
-                            if (found == false) {
+                            if (!found) {
                                 // set first to visible
                                 // first: is status node available
                                 Node statusElem = DOMUtil.getFirstNodeFromPath(copletElements.item(0), new String[] {"status"}, false);
@@ -2020,7 +2020,7 @@ extends AbstractSessionComponent {
                                     statusElem.appendChild(visibleElem);
                                 }
                                 // remove old childs
-                                while (visibleElem.hasChildNodes() == true) {
+                                while (visibleElem.hasChildNodes()) {
                                     visibleElem.removeChild(visibleElem.getFirstChild());
                                 }
                                 visibleElem.appendChild(statusElem.getOwnerDocument().createTextNode("true"));
@@ -2074,7 +2074,7 @@ extends AbstractSessionComponent {
                     currentCoplet = list[index];
 
                     String numberValue = currentCoplet.getAttributeNS(null, "number");
-                    if (numberValue == null || numberValue.equals("") == true) {
+                    if (numberValue == null || numberValue.equals("")) {
                         // create unique number attribute
                         currentCoplet.setAttributeNS(null, "number", ""+number);
                         miscNodes[PortalConstants.PROFILE_MISC_LAST_COPLET_NODE] = currentCoplet;
@@ -2139,7 +2139,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildRunProfile");
         }
     }
@@ -2152,7 +2152,7 @@ extends AbstractSessionComponent {
                                   DocumentFragment baseProfile)
     throws javax.xml.transform.TransformerException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildTypeProfile context="+context+", profile="+baseProfile);
         }
         List list = new ArrayList(25);
@@ -2165,7 +2165,7 @@ extends AbstractSessionComponent {
 
         typeElement = (Element)DOMUtil.getFirstNodeFromPath(baseProfile, new String[] {"profile","type-profile","elements"}, false);
         if (typeElement != null) {
-            if (typeElement.hasChildNodes() == true)
+            if (typeElement.hasChildNodes())
                 this.addTypePath(list, typeElement.getChildNodes(), "profile");
 
             // now we have the list with the xpaths
@@ -2184,7 +2184,7 @@ extends AbstractSessionComponent {
                 current = current.substring(0, pos);
 
                 pos = current.lastIndexOf('[');
-                if (current.substring(pos+1).equals("not(@*)]") == true) {
+                if (current.substring(pos+1).equals("not(@*)]")) {
                     current = current.substring(0, pos+1);
                 } else {
                     current = current.substring(0, current.length()-1) + " and ";
@@ -2210,7 +2210,7 @@ extends AbstractSessionComponent {
         NodeList columnNodes = DOMUtil.selectNodeList(baseProfile, "profile/portal-profile/content/column[@position]");
         int columns = columnNodes.getLength();
         if (columns != layoutColumns) {
-            if (layoutColumnsNode.hasAttributeNS(null, "formtype") == true) {
+            if (layoutColumnsNode.hasAttributeNS(null, "formtype")) {
                 DOMUtil.setValueOfNode(layoutColumnsNode, ""+columns);
             } else {
                 this.changeColumns(baseProfile,
@@ -2223,7 +2223,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildTypeProfile");
         }
     }
@@ -2234,7 +2234,7 @@ extends AbstractSessionComponent {
     private void setTypeInfo(DocumentFragment baseProfile, List paths, List confPaths)
     throws javax.xml.transform.TransformerException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN setTypeInfo profile="+baseProfile+", paths="+paths);
         }
         if (baseProfile != null && paths != null) {
@@ -2276,7 +2276,7 @@ extends AbstractSessionComponent {
                         }
                     }
                 }
-                if (changed == true && confPaths != null) {
+                if (changed && confPaths != null) {
                     currentPath = (String)confPaths.get(i);
                     nodes = DOMUtil.selectNodeList(baseProfile, currentPath);
                     if (nodes != null) {
@@ -2293,7 +2293,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END setTypeInfo");
         }
     }
@@ -2314,7 +2314,7 @@ extends AbstractSessionComponent {
                 current = (Element)childs.item(i);
                 newPath = new StringBuffer(path);
                 newPath.append('/').append(current.getNodeName());
-                if (current.hasAttributes() == true) {
+                if (current.hasAttributes()) {
                     NamedNodeMap nnm = current.getAttributes();
                     int ia, la;
                     boolean first = true;
@@ -2322,10 +2322,10 @@ extends AbstractSessionComponent {
                     la = nnm.getLength();
                     newPath.append('[');
                     for(ia = 0; ia < la; ia++) {
-                        if (nnm.item(ia).getNodeName().equals("type") == false
-                            && nnm.item(ia).getNodeName().equals("description") == false) {
-                            if (first == false) expression.append(" and ");
-                            if (nnm.item(ia).getNodeValue().equals("*") == false) {
+                        if (!nnm.item(ia).getNodeName().equals("type")
+                            && !nnm.item(ia).getNodeName().equals("description")) {
+                            if (!first) expression.append(" and ");
+                            if (!nnm.item(ia).getNodeValue().equals("*")) {
                                 expression.append('@')
                                   .append(nnm.item(ia).getNodeName())
                                   .append("='")
@@ -2337,7 +2337,7 @@ extends AbstractSessionComponent {
                             first = false;
                         }
                     }
-                    if (first == true) {
+                    if (first) {
                         newPath.append("not(@*)");
                     } else {
                         newPath.append(expression);
@@ -2349,7 +2349,7 @@ extends AbstractSessionComponent {
                 if (current.getAttributeNS(null, "type").length() > 0) {
                     list.add(newPath.toString() + '/' + current.getAttributeNS(null, "type") + '|' + current.getAttributeNS(null, "description"));
                 } else {
-                    if (current.hasChildNodes() == true) {
+                    if (current.hasChildNodes()) {
                         this.addTypePath(list, current.getChildNodes(), newPath.toString());
                     }
                 }
@@ -2364,7 +2364,7 @@ extends AbstractSessionComponent {
                                  DocumentFragment baseProfile)
     throws ProcessingException, javax.xml.transform.TransformerException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildPortalLayouts context="+context+", profile="+baseProfile);
         }
         Map layouts = new HashMap(5, 2);
@@ -2379,7 +2379,7 @@ extends AbstractSessionComponent {
              layouts.put(types[i], (currentLayout == null ? defLayout : currentLayout));
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildPortalLayouts layouts="+layouts);
         }
         return layouts;
@@ -2392,7 +2392,7 @@ extends AbstractSessionComponent {
                                  DocumentFragment baseProfile)
     throws ProcessingException, javax.xml.transform.TransformerException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildcopleyLayouts context="+context+", profile="+baseProfile);
         }
         Map layouts = new HashMap(5, 2);
@@ -2407,7 +2407,7 @@ extends AbstractSessionComponent {
            layouts.put(types[i], (currentLayout == null ? defLayout : currentLayout));
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildcopleyLayouts layouts="+layouts);
         }
         return layouts;
@@ -2422,7 +2422,7 @@ extends AbstractSessionComponent {
                                   String           deltaTag)
     throws ProcessingException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN importProfileDelta root=" + profileRoot + ", delta=" + delta + ", deltaRoot:" + deltaRootTagName + ", delta: " + deltaTag);
         }
         Node     deltaRoot   = null;
@@ -2443,7 +2443,7 @@ extends AbstractSessionComponent {
             this.importNode(profileRoot, (Element)deltaRoot);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END importProfileDelta");
         }
     }
@@ -2457,7 +2457,7 @@ extends AbstractSessionComponent {
                               String           deltaTag)
     {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
            this.getLogger().debug("BEGIN addProfilePart root=" + profileRoot + ", delta=" + delta + ", deltaRoot:" + deltaRootTagName + ", delta: " + deltaTag);
         }
         Node     deltaRoot   = null;
@@ -2479,7 +2479,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END addProfilePart");
         }
     }
@@ -2508,22 +2508,22 @@ extends AbstractSessionComponent {
                 l = profileChilds.getLength();
                 m = 0;
                 found = false;
-                while (found == false && m < l) {
+                while (!found && m < l) {
                     currentProfile = profileChilds.item(m);
                     if (currentProfile.getNodeType() == Node.ELEMENT_NODE
-                        && currentProfile.getNodeName().equals(currentDelta.getNodeName()) == true) {
+                        && currentProfile.getNodeName().equals(currentDelta.getNodeName())) {
 
                         // now we have found a node with the same name
                         // next: the attributes must match also
                         found = this.compareAttributes(currentProfile, currentDelta);
                     }
-                    if (found == false) m++;
+                    if (!found) m++;
                 }
-                if (found == true) {
+                if (found) {
                     // this is not new
 
                     // do we have elements as children or text?
-                    if (currentDelta.hasChildNodes() == true) {
+                    if (currentDelta.hasChildNodes()) {
                         currentDelta.normalize();
                         currentProfile.normalize();
                         // do a recursive call for sub elements
@@ -2581,7 +2581,7 @@ extends AbstractSessionComponent {
             if (attr1.getNamedItemNS(null, "formdescription") != null) attr1Len--;
             int l = attr1.getLength();
             for(int i=0;i<l;i++) {
-                if (attr1.item(i).getNodeName().startsWith("xmlns:") == true)
+                if (attr1.item(i).getNodeName().startsWith("xmlns:"))
                     attr1Len--;
             }
         }
@@ -2591,7 +2591,7 @@ extends AbstractSessionComponent {
             if (attr2.getNamedItemNS(null, "formdescription") != null) attr2Len--;
             int l = attr2.getLength();
             for(int i=0;i<l;i++) {
-                if (attr2.item(i).getNodeName().startsWith("xmlns:") == true)
+                if (attr2.item(i).getNodeName().startsWith("xmlns:"))
                     attr2Len--;
             }
         }
@@ -2603,16 +2603,16 @@ extends AbstractSessionComponent {
         l2 = attr2.getLength();
         boolean ok = true;
         // each attribute of first must be in second with the same value
-        while (i < l && ok == true) {
+        while (i < l && ok) {
             value = attr1.item(i).getNodeName();
-            if (value.equals("formtype") == false
-                && value.equals("formpath") == false
-                && value.equals("formdescription") == false
-                && value.startsWith("xmlns:") == false) {
+            if (!value.equals("formtype") 
+                && !value.equals("formpath") 
+                && !value.equals("formdescription") 
+                && !value.startsWith("xmlns:")) {
                 ok = false;
                 m = 0;
-                while (m < l2 && ok == false) {
-                    if (attr2.item(m).getNodeName().equals(value) == true) {
+                while (m < l2 && !ok) {
+                    if (attr2.item(m).getNodeName().equals(value)) {
                         // same name, same value?
                         ok = attr1.item(i).getNodeValue().equals(attr2.item(m).getNodeValue());
                     }
@@ -2657,7 +2657,7 @@ extends AbstractSessionComponent {
         // calling method is synced
         // All children, which are coplets are processed, all other tags
         // are ignored
-        if (element.hasChildNodes() == true) {
+        if (element.hasChildNodes()) {
             NodeList childs = element.getChildNodes();
             Node     current = null;
             int i, l;
@@ -2665,7 +2665,7 @@ extends AbstractSessionComponent {
             for(i = 0; i < l; i++) {
                 current = childs.item(i);
                 if (current.getNodeType() == Node.ELEMENT_NODE
-                    && current.getNodeName().equals("coplet") == true) {
+                    && current.getNodeName().equals("coplet")) {
 
                     // now we have a coplet
                     this.loadCoplet((Element)current,
@@ -2702,18 +2702,18 @@ extends AbstractSessionComponent {
                 "status/visible");
             // second: check media
             String media = this.getMediaManager().getMediaType();
-            if (visible == true && copletConf.hasAttributeNS(null, "media") == true) {
+            if (visible && copletConf.hasAttributeNS(null, "media")) {
                 String copletMedia = copletConf.getAttributeNS(null, "media");
                 visible = media.equals(copletMedia);
             }
 
-            if (visible == true) {
+            if (visible) {
 
                 Object[] loadedCoplet = new Object[8];
                 copletList.add(loadedCoplet);
 
                 boolean isCustomizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/customizable", false);
-                if (isCustomizable == true) {
+                if (isCustomizable) {
                     boolean showCustomizePage = DOMUtil.getValueAsBooleanOf(element, "status/customize", false);
                     boolean hasConfig = false;
                     if (statusProfile != null) {
@@ -2769,7 +2769,7 @@ extends AbstractSessionComponent {
                 theThread.start();
                 Thread.yield();
 
-                if (parallelCoplets == false) {
+                if (!parallelCoplets) {
                     copletThread = (CopletThread)loadedCoplet[6];
                     if (copletThread != null) {
                         long startTime = System.currentTimeMillis() - ((Long)loadedCoplet[4]).longValue();
@@ -2828,7 +2828,7 @@ extends AbstractSessionComponent {
             if (children != null && children.getLength() > 0) {
                 int l = children.getLength();
                 for(int i = 0; i < l; i++) {
-                    if (children.item(i).getNodeName().equals("status") == false
+                    if (!children.item(i).getNodeName().equals("status") 
                         && children.item(i).getNodeType() == Node.ELEMENT_NODE) {
                         IncludeXMLConsumer.includeNode(children.item(i), consumer, consumer);
                     }
@@ -2965,7 +2965,7 @@ extends AbstractSessionComponent {
                                  DocumentFragment profile)
     throws ProcessingException, javax.xml.transform.TransformerException {
         // synchronized as the caller is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN modifyCoplet request=" + requestString);
         }
         boolean result = false;
@@ -2990,7 +2990,7 @@ extends AbstractSessionComponent {
             }
 
             // create a new coplet: in the given column, header or footer
-            if (requestString.startsWith(PortalManager.REQ_CMD_NEW) == true
+            if (requestString.startsWith(PortalManager.REQ_CMD_NEW)
                 && this.isCopletAvailable(context, copletID,
                                  (Map)theProfile.get(PortalConstants.PROFILE_DEFAULT_COPLETS),
                                  (Map)theProfile.get(PortalConstants.PROFILE_MEDIA_COPLETS))) {
@@ -3009,7 +3009,7 @@ extends AbstractSessionComponent {
                 if (lastNumber == null) lastNumber = "0";
 
                 Node copletsNode;
-                if (copletNr.equals("header") == true) {
+                if (copletNr.equals("header")) {
                     copletsNode = miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE];
                     if (copletsNode == null) {
                         copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/header");
@@ -3018,7 +3018,7 @@ extends AbstractSessionComponent {
                         Node oldCoplet = DOMUtil.getFirstNodeFromPath(copletsNode, new String[] {"coplet"}, false);
                         if (oldCoplet != null) copletsNode.removeChild(oldCoplet);
                     }
-                } else if (copletNr.equals("footer") == true) {
+                } else if (copletNr.equals("footer")) {
                     copletsNode = miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE];
                     if (copletsNode == null) {
                         copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/footer");
@@ -3060,11 +3060,11 @@ extends AbstractSessionComponent {
                         current = parameters.item(i);
                         if (current.getNodeType() == Node.ELEMENT_NODE) {
                             statusNode = (Element)current;
-                            if (statusNode.hasAttributeNS(null, "formpath") == true)
+                            if (statusNode.hasAttributeNS(null, "formpath"))
                                 statusNode.removeAttributeNS(null, "formpath");
-                            if (statusNode.hasAttributeNS(null, "formtype") == true)
+                            if (statusNode.hasAttributeNS(null, "formtype"))
                                 statusNode.removeAttributeNS(null, "formtype");
-                            if (statusNode.hasAttributeNS(null, "formdescription") == true)
+                            if (statusNode.hasAttributeNS(null, "formdescription"))
                                 statusNode.removeAttributeNS(null, "formdescription");
                         }
                     }
@@ -3077,27 +3077,27 @@ extends AbstractSessionComponent {
                                     copletNr,
                                     (Node[])theProfile.get(PortalConstants.PROFILE_MISC_POINTER));
                 if (coplet != null) {
-                    if (requestString.startsWith(PortalManager.REQ_CMD_CLOSE) == true ||
-                        requestString.startsWith(PortalManager.REQ_CMD_HIDE) == true) {
+                    if (requestString.startsWith(PortalManager.REQ_CMD_CLOSE) ||
+                        requestString.startsWith(PortalManager.REQ_CMD_HIDE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/visible");
                          DOMUtil.setValueOfNode(node, "false");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_OPEN) == true ||
-                        requestString.startsWith(PortalManager.REQ_CMD_SHOW) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_OPEN) ||
+                        requestString.startsWith(PortalManager.REQ_CMD_SHOW)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/visible");
                          DOMUtil.setValueOfNode(node, "true");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MINIMIZE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MINIMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/size");
                          DOMUtil.setValueOfNode(node, "min");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MAXIMIZE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MAXIMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/size");
                          DOMUtil.setValueOfNode(node, "max");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_CUSTOMIZE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_CUSTOMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/customize");
                          DOMUtil.setValueOfNode(node, "true");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_UPDATE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_UPDATE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/customize");
                          DOMUtil.setValueOfNode(node, "false");
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_DELETE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_DELETE)) {
                         // delete the status of the coplet
                         Node statusNode = DOMUtil.getSingleNode(profile,
                              "profile/status-profile/customization/coplet[@id='"+copletID+"' and @number='"+copletNr+"']");
@@ -3107,7 +3107,7 @@ extends AbstractSessionComponent {
                                                       (Map)theProfile.get(PortalConstants.PROFILE_DEFAULT_COPLETS),
                                                       (Map)theProfile.get(PortalConstants.PROFILE_MEDIA_COPLETS));
                             boolean isPersistent = DOMUtil.getValueAsBooleanOf(configElement, "configuration/persistent", false);
-                            if (isPersistent == true) {
+                            if (isPersistent) {
                                 // mark the status profile to be saved
                                 theProfile.put(PortalConstants.PROFILE_SAVE_STATUS_FLAG, "true");
                             }
@@ -3124,12 +3124,12 @@ extends AbstractSessionComponent {
                                 ((Element)followUps.item(i)).setAttributeNS(null, "position", "" + value);
                            }
                         }
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVE) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVE)) {
                         if (argument != null) {
                             Element  copletsElement = (Element)DOMUtil.getSingleNode(profile,
                                   "profile/portal-profile/content/column[@position='"+argument+"']/coplets");
                             if (copletsElement != null) {
-                                if (coplet.getParentNode().equals(copletsElement) == false) {
+                                if (!coplet.getParentNode().equals(copletsElement)) {
                                      String posAttr = coplet.getAttributeNS(null, "position");
                                      NodeList followUps = DOMUtil.selectNodeList(coplet.getParentNode(), "coplet[@position > '"+posAttr+"']");
                                      coplet.getParentNode().removeChild(coplet);
@@ -3149,7 +3149,7 @@ extends AbstractSessionComponent {
                                  }
                             }
                         }
-                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVEROW) == true) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVEROW)) {
                         if (argument != null) {
                             Element newCoplet = (Element)DOMUtil.getSingleNode(coplet.getParentNode(),
                                                  "coplet[@position='"+argument+"']");
@@ -3166,7 +3166,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END modifyCoplet calculate="+result);
         }
         return result;
@@ -3184,22 +3184,22 @@ extends AbstractSessionComponent {
                                     Map mediaCoplets)
     {
         // no sync required
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN isCopletAvailable coplet="+copletID);
         }
         boolean result = false;
 
         if (context != null) {
             result = defaultCoplets.containsKey(copletID);
-            if (result == false) {
+            if (!result) {
                 Iterator iter = mediaCoplets.values().iterator();
-                while (result == false && iter.hasNext() == true) {
+                while (!result && iter.hasNext()) {
                     result = ((Map)iter.next()).containsKey(copletID);
                 }
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END isCopletAvailable result=" + result);
         }
         return result;
@@ -3211,7 +3211,7 @@ extends AbstractSessionComponent {
     public boolean checkAuthentication(Redirector redirector, String copletID)
     throws SAXException, IOException, ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN checkAuthentication coplet="+copletID);
         }
         boolean result = false;
@@ -3241,7 +3241,7 @@ extends AbstractSessionComponent {
         }
 
 
-        if (result == false) {
+        if (!result) {
             Map config = this.getConfiguration();
             if (config != null) {
                 String redirectURI = (String)config.get(PortalConstants.CONF_AUTH_REDIRECT);
@@ -3254,7 +3254,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END checkAuthentication result=" + result);
         }
         return result;
@@ -3269,7 +3269,7 @@ extends AbstractSessionComponent {
     private Map getConfiguration()
     throws ProcessingException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getConfiguration");
         }
         Map result = null;
@@ -3306,7 +3306,7 @@ extends AbstractSessionComponent {
 
                         // profile-cache (optional)
                         config = conf.getChild("profile-cache", false);
-                        if (config != null && config.getValueAsBoolean() == true) {
+                        if (config != null && config.getValueAsBoolean()) {
                             result.put(PortalConstants.CONF_PROFILE_CACHE, appName);
                         }
 
@@ -3428,7 +3428,7 @@ extends AbstractSessionComponent {
 
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END getConfiguration conf="+result);
         }
         return result;
@@ -3454,7 +3454,7 @@ extends AbstractSessionComponent {
         RequestState reqstate = this.getRequestState();
         SourceParameters pars = reqstate.getHandler().getContext().getContextInfoAsParameters();
         pars.setSingleParameterValue("type", type);
-        pars.setSingleParameterValue("admin", (adminProfile == true ? "true" : "false"));
+        pars.setSingleParameterValue("admin", (adminProfile ? "true" : "false"));
 
         if (!type.equals(PortalManager.BUILDTYPE_VALUE_ID) || role != null) {
             pars.setSingleParameterValue("ID", id);
@@ -3472,7 +3472,7 @@ extends AbstractSessionComponent {
         // is the configuration build by using a own resource?
         String resource = (String)map.get(PortalConstants.CONF_BUILD_RESOURCE);
         if (resource != null) {
-            if (this.getLogger().isInfoEnabled() == true) {
+            if (this.getLogger().isInfoEnabled()) {
                 this.getLogger().info("Building portal profile: " + resource);
             }
             SourceUtil.readDOM(resource, 
@@ -3483,7 +3483,7 @@ extends AbstractSessionComponent {
             this.buildProfile(type, role, id, adminProfile);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END createProfile");
         }
 
@@ -3497,7 +3497,7 @@ extends AbstractSessionComponent {
     private DocumentFragment buildBaseProfile(Map config, boolean adminProfile)
     throws ProcessingException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildBaseProfile config="+config+", adminProfile="+adminProfile);
         }
         DocumentFragment copletsFragment;
@@ -3519,7 +3519,7 @@ extends AbstractSessionComponent {
         if (res == null) {
             throw new ProcessingException("No configuration for portal-coplet base profile found.");
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Loading coplet base profile");
         }
         copletsFragment = SourceUtil.readDOM(res, 
@@ -3527,14 +3527,14 @@ extends AbstractSessionComponent {
                                pars, 
                                this.resolver);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("coplet base profile loaded");
         }
         res = (String)config.get(PortalConstants.CONF_LAYOUTBASE_RESOURCE);
         if (res == null) {
             throw new ProcessingException("No configuration for portal-layout base profile found.");
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("loading layout base profile");
         }
         pars.setSingleParameterValue("profile", "layout-base");
@@ -3543,7 +3543,7 @@ extends AbstractSessionComponent {
                                pars, 
                                this.resolver);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("layout base profile loaded");
         }
         // now create the base profile containing the above profiles
@@ -3557,7 +3557,7 @@ extends AbstractSessionComponent {
                                                                   "coplets-profile"), true));
 
         // if avalailable append the type profile
-        if (adminProfile == true) {
+        if (adminProfile) {
             res = (String)config.get(PortalConstants.CONF_ADMIN_TYPE_BASE);
             pars.setSingleParameterValue("profile", "admin-type-base");
         } else {
@@ -3565,7 +3565,7 @@ extends AbstractSessionComponent {
             pars.setSingleParameterValue("profile", "type-base");
         }
         if (res != null) {
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading type base profile");
             }
             typeFragment = SourceUtil.readDOM(res, 
@@ -3575,12 +3575,12 @@ extends AbstractSessionComponent {
             profileRoot.appendChild(profileDoc.importNode(DOMUtil.selectSingleNode(typeFragment,
                               "type-profile"), true));
 
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("type base profile loaded");
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildBaseProfile profile=" + profile);
         }
         return profile;
@@ -3594,7 +3594,7 @@ extends AbstractSessionComponent {
                                     boolean adminProfile)
     throws ProcessingException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildGlobalProfile profileRoot="+profileRoot+", config="+config+", adminProfile="+adminProfile);
         }
         DocumentFragment globalFragment;
@@ -3608,14 +3608,14 @@ extends AbstractSessionComponent {
         pars.setSingleParameterValue("handler", reqstate.getHandlerName());
         pars.setSingleParameterValue("profile", "global-delta");
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("loading global profile");
         }
         globalFragment = SourceUtil.readDOM(res, 
                                    null, 
                                    pars, 
                                    this.resolver);
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("global profile loaded");
         }
         this.importProfileDelta(profileRoot, globalFragment, "global-delta", "layout-delta");
@@ -3625,21 +3625,21 @@ extends AbstractSessionComponent {
 
         // types
         res = (String)config.get(PortalConstants.CONF_GLOBALDELTA_TYPERESOURCE);
-        if (adminProfile == false && res != null) {
+        if (!adminProfile && res != null) {
             pars.setSingleParameterValue("profile", "global-type-delta");
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading global type profile");
             }
             globalFragment = SourceUtil.readDOM(res, 
                                        null, 
                                        pars, 
                                        this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("global type profile loaded");
             }
             this.addProfilePart(profileRoot, globalFragment, "global-delta", "type-profile");
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildGlobalProfile");
         }
     }
@@ -3665,14 +3665,14 @@ extends AbstractSessionComponent {
 
         String res = (String)config.get(PortalConstants.CONF_ROLEDELTA_LOADRESOURCE);
         if (res != null) {
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading role profile");
             }
             roleFragment = SourceUtil.readDOM(res, 
                                        null, 
                                        pars, 
                                        this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("role profile loaded");
             }
             this.importProfileDelta(profileRoot, roleFragment, "role-delta", "layout-delta");
@@ -3683,16 +3683,16 @@ extends AbstractSessionComponent {
 
         // types
         res = (String)config.get(PortalConstants.CONF_ROLEDELTA_TYPERESOURCE);
-        if (adminProfile == false && res != null) {
+        if (!adminProfile && res != null) {
             pars.setSingleParameterValue("profile", "role-type-delta");
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading role type profile");
             }
             roleFragment = SourceUtil.readDOM(res, 
                                    null, 
                                    pars, 
                                    this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("role type profile loaded");
             }
             this.addProfilePart(profileRoot, roleFragment, "role-delta", "type-profile");
@@ -3721,14 +3721,14 @@ extends AbstractSessionComponent {
 
         String res = (String)config.get(PortalConstants.CONF_USERDELTA_LOADRESOURCE);
         if (res != null) {
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user profile");
             }
             userFragment = SourceUtil.readDOM(res, 
                                    null, 
                                    pars, 
                                    this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user profile loaded");
             }
             this.importProfileDelta(profileRoot, userFragment, "user-delta", "layout-delta");
@@ -3739,16 +3739,16 @@ extends AbstractSessionComponent {
 
         // types
         res = (String)config.get(PortalConstants.CONF_USERDELTA_TYPERESOURCE);
-        if (adminProfile == false && res != null) {
+        if (!adminProfile && res != null) {
             pars.setSingleParameterValue("profile", "user-type-delta");
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user type profile");
             }
             userFragment = SourceUtil.readDOM(res, 
                                    null, 
                                    pars, 
                                    this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user type profile loaded");
             }
             this.addProfilePart(profileRoot, userFragment, "user-delta", "type-profile");
@@ -3783,14 +3783,14 @@ extends AbstractSessionComponent {
             pars.setSingleParameterValue("application", reqstate.getApplicationName());
             pars.setSingleParameterValue("handler", reqstate.getHandlerName());
             pars.setSingleParameterValue("profile", "user-status");
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user status profile");
             }
             userFragment = SourceUtil.readDOM(res, 
                                    null, 
                                    pars, 
                                    this.resolver);
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user status profile loaded");
             }
             this.addProfilePart(profileRoot, userFragment, null, "status-profile");
@@ -3833,7 +3833,7 @@ extends AbstractSessionComponent {
                 copletID = coplet.getAttributeNS(null, "id");
                 copletConfig = this.getCopletConfiguration(copletID, copletConfigs, mediaCopletConfigs);
                 isPersistent = DOMUtil.getValueAsBooleanOf(copletConfig, "configuration/persistent", false);
-                if (isPersistent == false) {
+                if (!isPersistent) {
                     coplet.getParentNode().removeChild(coplet);
                 }
             }
@@ -3868,7 +3868,7 @@ extends AbstractSessionComponent {
     private void changeProfile()
     throws ProcessingException, SAXException, IOException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN changeProfile");
         }
         SessionContext context = this.getContext(false);
@@ -3891,9 +3891,9 @@ extends AbstractSessionComponent {
                         boolean          saveProfile = false;
 
                         // first iteration: all changing commands
-                        while (enum.hasMoreElements() == true) {
+                        while (enum.hasMoreElements()) {
                             current = (String)enum.nextElement();
-                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF) == true) {
+                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
                                 pos2 = current.indexOf('.', pos1+1);
@@ -3907,7 +3907,7 @@ extends AbstractSessionComponent {
                                         if (nodes != null) {
                                             Node node = nodes.item(place);
                                             if (node != null) {
-                                                if (node.equals(columns) == false) {
+                                                if (!node.equals(columns)) {
                                                         DOMUtil.setValueOfNode(node, request.getParameter(current));
                                                 }
                                             }
@@ -3921,10 +3921,10 @@ extends AbstractSessionComponent {
                         // second: all new
                         boolean     calculate = false;
                         enum = this.request.getParameterNames();
-                        while (enum.hasMoreElements() == true) {
+                        while (enum.hasMoreElements()) {
 
                             current = (String)enum.nextElement();
-                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF) == true) {
+                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
                                 pos2 = current.indexOf('.', pos1+1);
@@ -3938,7 +3938,7 @@ extends AbstractSessionComponent {
                                         if (nodes != null) {
                                             Node node = nodes.item(place);
                                             if (node != null) {
-                                                if (node.equals(columns) == true) {
+                                                if (node.equals(columns)) {
                                                     int columnNumber = new Integer(this.request.getParameter(current)).intValue();
                                                     int oldNumber = new Integer(DOMUtil.getValueOfNode(columns)).intValue();
                                                     if (columnNumber > 0 && columnNumber != oldNumber && columnNumber <= PortalConstants.MAX_COLUMNS) {
@@ -3956,14 +3956,14 @@ extends AbstractSessionComponent {
                                     }
                                 }
 
-                            } else if (current.equals(PortalManager.REQ_PARAMETER_CMD) == true) {
+                            } else if (current.equals(PortalManager.REQ_PARAMETER_CMD)) {
                                 String[] cmds = request.getParameterValues(current);
                                 if (cmds != null && cmds.length > 0) {
                                     for(int i = 0; i < cmds.length; i++) {
-                                        if (cmds[i].equals(PortalManager.REQ_CMD_SAVEPROFILE) == true) {
+                                        if (cmds[i].equals(PortalManager.REQ_CMD_SAVEPROFILE)) {
                                             saveProfile = true;
                                         } else {
-                                            if (this.modifyCoplet(cmds[i], context, theProfile, profile) == true) {
+                                            if (this.modifyCoplet(cmds[i], context, theProfile, profile)) {
                                                 calculate = true;
                                             }
                                         }
@@ -3972,7 +3972,7 @@ extends AbstractSessionComponent {
                             }
                         }
                         // set type infos
-                        if (calculate == true) {
+                        if (calculate) {
                             this.setTypeInfo(profile,
                                  (List)theProfile.get(PortalConstants.PROFILE_TYPE_PATHS),
                                  (List)theProfile.get(PortalConstants.PROFILE_TYPE_CONF_PATHS));
@@ -3990,7 +3990,7 @@ extends AbstractSessionComponent {
                         }
 
                         // save the profile
-                        if (saveProfile == true) {
+                        if (saveProfile) {
                             Map      conf = this.getConfiguration();
                             String   role = this.getRole(profileID);
                             String   id   = this.getID(profileID);
@@ -3998,13 +3998,13 @@ extends AbstractSessionComponent {
                             String   saveResource;
                             String   profileType;
 
-                            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) == true) {
+                            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_GLOBALDELTA_SAVERESOURCE);
                                 profileType = "global-delta";
-                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE) == true) {
+                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_ROLEDELTA_SAVERESOURCE);
                                 profileType = "role-delta";
-                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == true) {
+                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_USERDELTA_SAVERESOURCE);
                                 profileType = "user-delta";
                             } else {
@@ -4020,7 +4020,7 @@ extends AbstractSessionComponent {
                                 String value;
                                 for(int l=0; l < statusNodes.getLength(); l++) {
                                     value = DOMUtil.getValueOfNode(statusNodes.item(l));
-                                    if (value.equals("true") == true) {
+                                    if (value.equals("true")) {
                                         DOMUtil.setValueOfNode(statusNodes.item(l), "false");
                                     }
                                 }
@@ -4060,7 +4060,7 @@ extends AbstractSessionComponent {
                             // Note CZ: The above is correct, but for building the delta
                             // the "previous" profile is build and cached ! Thus we can
                             // easily cache the new profile.
-//                            if (this.isProfileCached(profileID, conf) == true) {
+//                            if (this.isProfileCached(profileID, conf)) {
                             this.cacheProfile(profileID, theProfile, conf); // cache it
                             // now the hardest part, clean up the cache
                             this.cleanUpCache(type, role, conf);
@@ -4074,7 +4074,7 @@ extends AbstractSessionComponent {
                 throw new ProcessingException("TransformerException: " + local, local);
             }
         }
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END changeProfile");
         }
     }
@@ -4217,7 +4217,7 @@ extends AbstractSessionComponent {
     private Document getUsers(String role, String ID)
     throws IOException, ProcessingException, SAXException {
         // calling method is syned
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getUsers role="+role+", ID="+ID);
         }
         RequestState reqstate = this.getRequestState();
@@ -4250,7 +4250,7 @@ extends AbstractSessionComponent {
             }
         }
             
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNodeToXML(frag)));
         }
         return frag;
@@ -4267,7 +4267,7 @@ extends AbstractSessionComponent {
     private Document getRoles()
     throws IOException, ProcessingException, SAXException {
         // calling method is syned
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getRoles");
         }
         Document frag = null;
@@ -4293,7 +4293,7 @@ extends AbstractSessionComponent {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END getRoles fragment="+frag);
         }
         return frag;

@@ -95,7 +95,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.3 2003/05/06 17:08:53 cziegeler Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.4 2003/06/18 12:36:46 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -251,10 +251,10 @@ implements SessionContext {
     throws ProcessingException {
         DocumentFragment result = null;
 
-        if (path.startsWith("/") == true) path = path.substring(1);
+        if (path.startsWith("/")) path = path.substring(1);
         NodeList list = null;
 
-        if (path == null || path.equals("") == true) {
+        if (path == null || path.equals("")) {
             Document doc = DOMUtil.createDocument();
             result = doc.createDocumentFragment();
             this.getLayoutDOM();
@@ -309,7 +309,7 @@ implements SessionContext {
             if (this.statusProfile != null) {
                 if (this.copletID != null && this.copletNumber != null) {
                     String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
-                    if (path.startsWith("coplet-data/") == true) {
+                    if (path.startsWith("coplet-data/")) {
                         statusPath = statusPath + path.substring(11);
                     }
                     try {
@@ -360,7 +360,7 @@ implements SessionContext {
                 if (this.statusProfile != null) {
                     if (this.copletID != null && this.copletNumber != null) {
                         String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
-                        if (path.startsWith("coplet-data/") == true) {
+                        if (path.startsWith("coplet-data/")) {
                             statusPath = statusPath + path.substring(11);
                         }
 
@@ -372,7 +372,7 @@ implements SessionContext {
                         } else {
 
                             // remove old childs
-                            while (node.hasChildNodes() == true) {
+                            while (node.hasChildNodes()) {
                                 node.removeChild(node.getFirstChild());
                             }
 
