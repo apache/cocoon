@@ -76,7 +76,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.43 $ $Date: 2000-10-07 16:38:22 $
+     * @version CVS $Revision: 1.1.2.44 $ $Date: 2000-10-07 17:44:10 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
