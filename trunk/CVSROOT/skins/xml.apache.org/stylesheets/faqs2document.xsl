@@ -31,7 +31,7 @@
   </xsl:template>
 
   <xsl:template match="faq">
-    <anchor name="faq-{position()}"/>
+    <anchor id="faq-{position()}"/>
     <s2 title="{question}">
       <xsl:apply-templates/>
     </s2>
