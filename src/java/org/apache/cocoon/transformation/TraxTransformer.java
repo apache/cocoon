@@ -152,7 +152,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.5 2003/05/02 15:25:23 bruno Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.6 2003/05/06 09:00:17 bruno Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -498,7 +498,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         }
         this.resolver = null;
         this.par = null;
-        if (this.finishedDocument == false) {
+        if (this.finishedDocument == false && transformerHandler != null) {
             // This situation will only occur if an exception occured during pipeline execution.
             // If Xalan is used in incremental mode, it is important that endDocument is called, otherwise
             // the thread on which it runs the transformation will keep waiting.
