@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.100 2000-08-18 22:35:08 stefano Exp $
+  $Id: changes.xml,v 1.101 2000-08-21 17:33:37 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix" due-to="Darren Smith" due-to-email="darrens@acay.com.au">
+   Fixed a NPE in XIncludeProcessor on win32 systems
+  </action>
   <action dev="SM" type="add" due-to="Juergen Sonnauer" due-to-email="juergen.sonnauer@t-online.de">
    Added java compiler abstraction for XSP compilation (now we can use Jikes to improve XSP compilation speed).
   </action>

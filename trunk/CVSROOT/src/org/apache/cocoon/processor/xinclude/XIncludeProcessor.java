@@ -101,7 +101,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.13 $ $Date: 2000-08-03 17:57:27 $ $Author: balld $
+ * @version CVS $Revision: 1.14 $ $Date: 2000-08-21 17:33:40 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -206,8 +206,8 @@ class XIncludeProcessorWorker {
 		this.document = document;
 		request = (HttpServletRequest)parameters.get("request");
 		monitor_key = Utils.encode(request);
-		String basename = Utils.getBasename(request,context);
-		current_xmlbase = new File((new File(basename)).getParent());
+		String basepath = Utils.getBasepath(request,context);
+		current_xmlbase = new File(basepath);
 	}
 
 	void process() throws Exception {
