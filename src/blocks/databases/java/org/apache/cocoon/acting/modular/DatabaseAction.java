@@ -118,7 +118,7 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.1 2003/03/09 00:03:04 pier Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.2 2003/05/21 08:45:37 haul Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -797,7 +797,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                                                                 param.getParameter( "throw-exception", null ) );
             if ( throwException != null &&
                  ( throwException.equalsIgnoreCase( "true" ) || throwException.equalsIgnoreCase( "yes" ) ) ) {
-                throw new ProcessingException("Could not add record",e);
+                throw new ProcessingException("Cannot process the requested SQL statement ",e);
             }
         } finally {
             if (conn != null) {
