@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="../index.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<samples>
+ <group name="XInclude Example">
+  <sample name="A Poem" url="xinclude_poem.xml">
+   This is an example of xinclude (combined with xslt, so you get 
+   some browser-renderable output).  There are three xinclude 
+   directives in it: a simple include parsed as text, a simple 
+   include parsed as xml and a more complicated include using 
+   xpointer parsed as xml.  Plus the xpointer included stanza 
+   itself has an xinclude in it, illustrating nested xinclude.
+  </sample>
+ </group>
+
+</samples>

@@ -1,0 +1,422 @@
+<!-- ===========================================================================
+
+
+                           * ==================== *
+                           |  How to build Cocoon |
+                           * ==================== *
+
+                                     by
+
+                     Stefano Mazzocchi <stefano@apache.org>
+
+
+
+Introduction
+============
+
+Cocoon is an highly componentized software. This means: we are lazy and reuse
+whatever possible. But also means: we avoid duplication of efforts and Cocoon
+development can go on concurrently with the other used projects without
+interference. At the end: Cocoon evolves much faster :)
+
+Anyway, any componentized software is based on "contracts" between the core
+and the modules used. Normally, these "contracts" are standard APIs (such as
+Java API or externally standardized API) but since Cocoon is a pioneer in many
+fields, these APIs do not (yet) exist.
+
+For this reason, Cocoon itself provides some "glue" classes (decorators) that
+wrap around existing packages (for example, the different XSLT processors) and
+come up with a simple interface for Cocoon to use them.
+
+Unfortunately, this requires the "glued" classes to be present at compile time,
+that is: you have to download the packages to compile the glue classes.
+
+This is the main reason why the distribution includes a precompiled version
+that should be handy for most users, but power users willing to further tune
+the software or developers willing to play around with it, must be able
+to compile it and test it.
+
+Note, however, that Cocoon comes with all the packages required to build a
+fully functional distribution. You'll have to download external packages
+only if you have special requirements. See the build-FAQ section below for more
+info on this.
+
+
+Installing the build tools
+==========================
+
+The Cocoon build system is based on Jakarta Ant, which is a Java building tool
+originally developed for the Jakarta Tomcat project but now used in many other
+Apache projects and extended by many developers.
+
+Ant is a little but very handy tool that uses a build file written in XML
+(this file) as building instructions. For more information refer to
+"http://jakarta.apache.org/ant/".
+
+To make things easier for you, the Cocoon distribution contains a precompiled
+version of Ant and the build scripts take care of all the classpath issues.
+
+The only thing that you have to make sure, is the "JAVA_HOME" environment
+property should be set to match the JVM you want to use. That's it.
+
+
+Building instructions
+=====================
+
+Ok, let's build the baby. First, make sure your current working directory is
+where this very file is located. Then type
+
+  ./build.sh (unix)
+  .\build.bat (win32)
+
+if everything is right and all the required packages are visible, this action
+will generate a file called "cocoon.jar" in the "./build" directory. Note, that
+if you do further development, compilation time is reduced since Ant is able
+to detect which files have changed an to recompile them at need.
+
+If something went wrong, go to the FAQ section below.
+
+Also, you'll note that reusing a single JVM instance for each task, increases
+tremendously the performance of the whole build system, compared to other
+tools (i.e. make or shell scripts) where a new JVM is started for each task.
+
+
+Build targets
+=============
+
+The build system is not only responsible of compiling Cocoon into a jar file,
+but is also responsible for creating the HTML documentation, javadocs,
+distributions and web site. In fact, the file you have here is _exactly_ what
+is used by cocoon maintainers to take care of everything in the Cocoon
+project, no less and no more.
+
+These are the meaningful targets for this build file:
+
+ - package [default] -> creates ./build/cocoon.jar
+ - docs -> generates the HTML documentation in ./build/docs
+ - printer-docs -> generates printer friendly HTML documentation in ./build/printer-docs
+ - javadocs -> generates the API documentation in ./build/javadocs
+ - dist-zip -> generates the Cocoon distribution
+ - dist-tgz -> generates the Cocoon distribution
+ - clean -> restores the distribution to its original and clean state
+ - site -> generates the web site in ../xml-site/targets/cocoon
+
+====================================== FAQ =====================================
+
+1) Why some of the classes present in the original jar are not built anymore?
+
+The cocoon build system is very flexible: if a module requires a package that
+is not present in the classpath at build time, the module is skipped but
+the built process is not stopped.
+
+Here is a list of such modules and what you have to download to build them:
+
+ org.apache.cocoon.transformer.XTTransformer ===>
+       James Clark's XT (http://www.jclark.com/)
+
+ org.apache.cocoon.processor.ldap.LdapProcessor ===>
+       Sun JNDI API 1.2.1+ (http://java.sun.com/products/jndi/index.html)
+
+ org.apache.cocoon.processor.dcp.DCPProcessor ===>
+       FESI 1.21+ (http://home.worldcom.ch/jmlugrin/fesi/download.html)
+
+2) The "docs" target doesn't work. What's wrong?
+
+You are probably using a Java 1.1.x environment. Since Stylebook renders also
+the page images from the XML documents, it needs extended image rendering
+and graphic capabilities that were included in Java 1.2. For this reason,
+a Java 1.2 compatible JVM is required for this target.
+
+============================================================================ -->
+
+<project default="package" basedir=".">
+
+  <!-- =================================================================== -->
+  <!-- Initialization target                                               -->
+  <!-- =================================================================== -->
+  <target name="init">
+    <tstamp/>
+    <property name="Name" value="Cocoon"/>
+    <property name="name" value="cocoon"/>
+    <property name="version" value="1.8.1"/>
+    <property name="year" value="1999-2001"/>
+
+    <echo message="      ------------------- ${Name} ${version} [${year}] ---------"/>
+
+    <property name="build.compiler" value="classic"/>
+    <property name="debug" value="on"/>
+    <property name="optimize" value="on"/>
+    <property name="deprecation" value="off"/>
+
+    <property name="src.dir" value="./src"/>
+    <property name="lib.dir" value="./lib"/>
+    <property name="docs.dir" value="./xdocs"/>
+    <property name="dtd.dir" value="./xdocs/dtd"/>
+    <property name="skins.dir" value="./skins"/>
+    <property name="images.dir" value="./xdocs/images"/>
+    <property name="samples.dir" value="./samples"/>
+    <property name="packages" value="org.apache.cocoon.*"/>
+
+    <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
+    <property name="printer.skin" value="${skins.dir}/printer/"/>
+    <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
+    <property name="doc.generator.package" value="${lib.dir}/stylebook-1.0-b2.jar"/>
+
+    <property name="build.dir" value="./build"/>
+    <property name="build.src" value="./build/src"/>
+    <property name="build.dest" value="./build/classes"/>
+    <property name="build.docs" value="./build/docs"/>
+    <property name="build.docs.printer" value="./build/printer-docs"/>
+    <property name="build.javadocs" value="./build/javadocs"/>
+
+    <property name="dist.root" value="./dist"/>
+    <property name="dist.dir" value="${dist.root}/${name}-${version}"/>
+
+    <property name="site" value="../xml-site/targets/cocoon"/>
+
+    <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
+    <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
+    <available property="jndi.present" classname="javax.naming.Name"/>
+    <available property="projectx.present" classname="com.sun.xml.parser.Parser"/>
+
+    <filter token="year" value="${year}"/>
+    <filter token="version" value="${version}"/>
+    <filter token="date" value="${TODAY}"/>
+    <filter token="log" value="true"/>
+    <filter token="verbose" value="true"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Help on usage                                                       -->
+  <!-- =================================================================== -->
+  <target name="usage">
+    <echo message=""/>
+    <echo message=""/>
+    <echo message="Cocoon Build file"/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=" available targets are:"/>
+    <echo message=""/>
+    <echo message="   package      --> generates the cocoon.jar file (default)"/>
+    <echo message="   compile      --> compiles the source code"/>
+    <echo message="   docs         --> generates the HTML documentation"/>
+    <echo message="   printer-docs --> generates printer-friendly HTML documentation"/>
+    <echo message="   javadocs     --> generates the API documentation (java 1.2 only)"/>
+    <echo message="   dist-zip     --> generates the Cocoon distribution as .zip"/>
+    <echo message="   dist-tgz     --> generates the Cocoon distribution as .tar.gz"/>
+    <echo message="   clean        --> cleans up the directory"/>
+    <echo message="   site         --> generates the Cocoon web site"/>
+    <echo message=""/>
+    <echo message=" See the comments inside the build.xml file for more details."/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=""/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare" depends="init">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare-projectx" depends="init" if="projectx.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/parser/Sun*"
+             filtering="on"/>
+  </target>
+
+  <target name="prepare-xt" depends="init" if="xt.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/XT*"
+             filtering="on"/>
+  </target>
+
+  <target name="prepare-ldap" depends="init" if="jndi.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/ldap/**"
+             filtering="on"/>
+  </target>
+
+  <target name="prepare-ecma" depends="init" if="fesi.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/ecmascript/**"
+             filtering="on"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-ecma, prepare-ldap">
+    <!-- create directories -->
+    <mkdir dir="${build.src}"/>
+    <mkdir dir="${build.dest}"/>
+
+    <!-- copy src files -->
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             excludes="**/parser/Sun*, **/XT*, **/ldap/**, **/ecmascript/**"
+             filtering="on"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare-src">
+    <javac srcdir="${build.src}"
+           destdir="${build.dest}"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="${deprecation}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the class package                                           -->
+  <!-- =================================================================== -->
+  <target name="package" depends="compile">
+    <jar jarfile="${build.dir}/${name}.jar"
+         basedir="${build.dest}"
+         manifest="${build.src}/Manifest.mf"
+         includes="org/**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the docs                                                   -->
+  <!-- =================================================================== -->
+  <target name="prepare-docs" depends="init">
+    <copyfile src="changes.xml" dest="${docs.dir}/changes.xml" filtering="on"/>
+    <copyfile src="todo.xml" dest="${docs.dir}/todo.xml"/>
+
+    <replace file="${docs.dir}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
+    <replace file="${docs.dir}/todo.xml" token="./xdocs/dtd/" value="dtd/"/>
+
+    <delete file="${docs.dir}/book.xml"/>
+    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Generate HTML docs                                                  -->
+  <!-- =================================================================== -->
+  <target name="docs" depends="prepare-docs">
+    <mkdir dir="${build.docs}"/>
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
+          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Generate printer-friendly HTML docs                                 -->
+  <!-- =================================================================== -->
+  <target name="printer-docs" depends="prepare-docs">
+    <mkdir dir="${build.docs.printer}"/>
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
+          args="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the web site                                                -->
+  <!-- =================================================================== -->
+  <target name="site" depends="prepare-docs">
+    <mkdir dir="${site}"/>
+    <delete file="${docs.dir}/book.xml"/>
+    <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
+          args="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the API documentation                                       -->
+  <!-- =================================================================== -->
+  <target name="javadocs" depends="prepare-src">
+    <mkdir dir="${build.javadocs}"/>
+    <javadoc packagenames="${packages}"
+             sourcepath="${build.src}"
+             destdir="${build.javadocs}"
+             author="true"
+             version="true"
+             use="false"
+             noindex="true"
+             windowtitle="${Name} API"
+             doctitle="${Name}"
+             bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
+             stylesheetfile="${skins.dir}/javadoc.css"
+    />
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the distribution                                            -->
+  <!-- =================================================================== -->
+  <target name="dist" depends="package, docs, printer-docs, javadocs">
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}/bin"/>
+    <mkdir dir="${dist.dir}/lib"/>
+    <mkdir dir="${dist.dir}/src"/>
+    <mkdir dir="${dist.dir}/conf"/>
+    <mkdir dir="${dist.dir}/docs"/>
+    <mkdir dir="${dist.dir}/docs/api"/>
+    <mkdir dir="${dist.dir}/docs/printer"/>
+    <mkdir dir="${dist.dir}/samples"/>
+    <mkdir dir="${dist.dir}/skins"/>
+    <mkdir dir="${dist.dir}/xdocs"/>
+
+    <copydir src="${build.src}" dest="${dist.dir}/src" excludes="cocoon.properties"/>
+    <copyfile src="${src.dir}/org/apache/cocoon/cocoon.properties" dest="${dist.dir}/conf/cocoon.properties"/>
+    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
+    <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
+    <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
+    <copydir src="${samples.dir}" dest="${dist.dir}/samples" filtering="on"/>
+    <copydir src="${build.docs.printer}" dest="${dist.dir}/docs/printer"/>
+    <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
+    <copydir src="${docs.dir}" dest="${dist.dir}" includes="changes.xml, todo.xml"/>
+    <copydir src="${skins.dir}" dest="${dist.dir}/skins"/>
+    <copydir src="${lib.dir}" dest="${dist.dir}/lib"/>
+
+    <copydir src="." dest="${dist.dir}" includes="README, INSTALLING, LICENSE, build.*, 
+lcp.bat, index.html" filtering="on"/>
+
+    <chmod perm="+x" file="${dist.dir}/build.sh"/>
+    <fixcrlf srcdir="${dist.dir}" includes="build.sh" cr="remove"/>
+    <fixcrlf srcdir="${dist.dir}" includes="build.bat" cr="add"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Packages the distribution as .zip                                   -->
+  <!-- =================================================================== -->
+  <target name="dist-zip" depends="dist">
+    <zip zipfile="${Name}-${version}.zip" basedir="${dist.root}" includes="**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Packages the distribution with .tar.gzip                            -->
+  <!-- =================================================================== -->
+  <target name="dist-tgz" depends="dist">
+    <tar tarfile="${Name}-${version}.tar" basedir="${dist.root}" includes="**"/>
+    <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Clean targets                                                       -->
+  <!-- =================================================================== -->
+  <target name="clean" depends="init">
+    <deltree dir="${build.dir}"/>
+    <delete file="${docs.dir}/changes.xml"/>
+    <delete file="${docs.dir}/todo.xml"/>
+    <delete file="${docs.dir}/book.xml"/>
+  </target>
+
+  <target name="distclean" depends="clean">
+    <deltree dir="${dist.root}"/>
+    <delete file="${Name}-${version}.tar.gz"/>
+    <delete file="${Name}-${version}.tar"/>
+    <delete file="${Name}-${version}.zip"/>
+  </target>
+
+</project>
+
+<!-- End of file -->

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Jeremy Quinn "sharkbait@mac.com" -->
+
+<defaults>
+  <form>
+    <page>
+      <title>The Title</title>
+      <author>
+       <name>Author's Name</name>
+       <address>Author's Email Address</address>
+      </author>
+      <item>
+        <title>
+          <label>Title</label>
+          <value>Your News Item Title</value>
+        </title>
+        <body>
+          <label>Body Text</label>
+          <value>
+           <body>Your Body Text</body>
+          </value>
+        </body>
+        <figure>
+          <label>image</label>
+          <value>
+            <option value="images/image1.jpg">One</option>
+            <option value="images/image2.jpg">Two</option>
+            <option value="images/image3.jpg">Three</option>
+          </value>
+        </figure>
+        <submit>
+          <label>Finished?</label>
+          <value>Save it</value>
+        </submit>
+      </item>
+    </page>
+  </form>
+</defaults>

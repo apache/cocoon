@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="entities-page-html.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
+
+<!DOCTYPE page [
+ <!ENTITY message SYSTEM "message.txt">
+]>
+
+<page>
+ <title>Hello</title>
+ <content>
+  <paragraph>&message;</paragraph>
+ </content>
+</page>

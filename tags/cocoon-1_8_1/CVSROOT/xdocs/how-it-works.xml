@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+<document>
+ <header>
+  <title>How the Cocoon Engine Works</title>
+  <version>Thu Aug 24 16:38:14</version>
+  <authors>
+   <person name="Luca Ida Giovanni Toldo" email="lucatoldo@aol.com"/>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+<body>
+ <s1 title="How Cocoon 1.8 works">
+  <p>
+   This document tries to follow the operations of Cocoon from a
+   &quot;document point of view&quot; while the javadoc documentation describes it
+   from a &quot;procedural point of view&quot;.
+   Therefore, here we try to be complementary to the
+   javadoc and not to simply repeat what is stated there already. Furthermore,
+   since the ultimate documentation is the <code>source code</code> itself, this
+   document tries not to go too deep but eventually to integrate with the comments
+   in the code. In fact, some people may find that reading the source code
+   directly will shed more light than just reading this (significantly incomplete)
+   overview.
+  </p>
+  <p>
+   Unless otherwise specified, for sake of brevity any class name
+   is assumed to have the <code>org.apache.cocoon</code> prefix prepended to it.
+  </p>
+
+  <s2 title="Cocoon">
+   <p>
+    This is the &quot;main&quot; class, either when Cocoon is being used as a servlet
+    or for command-line use. Clearly, it contains the methods <code>init</code>
+    for the latter case as well as <code>main</code> for the first case.
+   </p>
+   <p>
+    Hereafter are described the operations in the two common cases of command-line
+    execution (typically used for offline site creation), and servlet usage.
+   </p>
+   <s3 title="From the Command-line">
+    <p>
+     When <code>Cocoon</code> is invoked from the command-line, it requires as
+     arguments the location of the <code>cocoon.properties</code>, the name
+     of the file containing the XML to be processed, and the name of the output
+     file. After reading the properties file, it creates a new
+     <code>EngineWrapper</code> initialized with the above mentioned properties
+     and then calls the <code>handle</code> method, and hands it
+     an output <code>Writer</code> and an input <code>File</code>. There is no good
+     reason for this asymmetry - the command-line operation mode of Cocoon was
+     coded quickly as a temporary hack to meet a popular need, in lieu of the
+     better, more integrated and well-designed command-line support planned for
+     Cocoon 2.
+    </p>
+    <s4 title="EngineWrapper">
+     <p>
+      This is a &quot;hack&quot; which provides a "fake" implementation of
+      the Servlet API methods that are needed by Cocoon, in the inner classes
+      <code>HttpServletRequestImpl</code> and
+      <code>HttpServletResponseImpl</code>. When Cocoon gets integrated
+      with Stylebook, this class will probably need to be cleaned up.
+     </p>
+     <p>
+      Basically, this class instantiates an <code>Engine</code> class and passes
+      it the "fake" request and response objects mentioned above.
+     </p>
+    </s4>
+   </s3>
+   <s3 title="As a Servlet">
+    <s4 title="Startup Phase">
+     <p>
+      As for any servlet, upon startup the <code>init</code> method is
+      invoked. In Cocoon, this tries to load the cocoon.properties file, and, if
+      that is successful, creates an <code>Engine</code> instance.
+     </p>
+    </s4>
+    <s4 title="Production Phase">
+     <p>
+      A <code>service</code> method is provided by <code>Cocoon</code>, which
+      accepts all incoming requests, whatever their type. Servlet programmers may be
+      accustomed to writing <code>doGet</code> or <code>doPost</code> methods to
+      handle different types of requests, which is fine for simple servlets;
+      however, a <code>service</code> method is the best way to implement a fully
+      generic servlet like Cocoon.
+     </p>
+
+     <!--
+
+     <p>
+      <strong>*********** FIXME *************
+       Luca - you didn't even finish writing that paragraph!!
+       Please will someone complete it. And in future please build docs
+       and proofread before submitting, if possible! - RDG</strong>
+     </p>
+
+     <p>
+      This method is the one which is called by your servlet engine (e.g. Tomcat or
+      JServ) and gets both the <code>HttpServletRequest</code> as well as will
+      return (to the servlet engine, e.g. to Tomcat) the
+      <code>HttpServletResponse</code>. Basically, what happens is that the
+     </p>
+
+     -->
+    </s4>
+   </s3>
+  </s2>
+  <s2 title="Engine">
+   <p>
+    <em>This class implements the engine that does all the document processing.
+    </em>
+   </p>
+   <p>
+    What better definition of the function of this class than the words of its
+    author (Stefano Mazzocchi)? From this otherwise lapidary definition, one
+    should realize the importance of this Class in the context of the Cocoon
+    operations and thus one should carefully read it through in order to understand
+    the "big picture" of how Cocoon works.
+   </p>
+   <s3 title="Startup Phase">
+    <p>
+     Either from command-line or from the servlet, upon startup of the cocoon
+     servlet the <code>Engine</code> is instantiated by the
+     <code>private Engine</code> constructor. For the sake of understanding Cocoon
+     operations, it is important to know that at this point in time (and only this
+     time in the whole lifespan of the Cocoon servlet) the objects performing the
+     initialization of the various components
+
+     <!--
+
+    </p>
+    <ul>
+     <li><code>Parser</code></li>
+     <li><strong> *********** FIXME *************
+      Again there is missing text here.</strong></li>
+    </ul>
+    <p>
+
+    -->
+
+     are instantiated with the parameters contained by the Configuration object.
+     This is the reason why, if changes are applied to the cocoon.properties file,
+     these do not have any effect on Cocoon until the engine is stopped and
+     then restarted.
+    </p>
+
+    <p>These objects either directly represent the components (such as
+     <code>logger.ServletLogger</code>)
+     or are Factories to provide the correct components
+     for a particular request (such as <code>processor.ProcessorFactory</code>).
+     The long-winded setup code involved here reads class names from the
+     <code>cocoon.properties</code> file and dynamically loads and configures
+     the classes, thus allowing for easy "swapping in and out" of components
+     without recompiling the whole of Cocoon.
+    </p>
+
+    <note>
+     In general, all components
+     referenced here must be loadable at startup, otherwise Cocoon will refuse
+     to initialize - even if the missing component(s) are not actually used in
+     the web-application. Still, this is exactly the same situation as with
+     a more convential Java application which does not store class names in
+     configuration files.
+    </note>
+   </s3>
+   <s3 title="production phase">
+    <p>
+     The <code>handle</code> method has been already mentioned previously
+     and is indeed the focal point for all the runtime operations of Cocoon.
+     It is invoked with two objects, one being the input
+     <code>HttpServletRequest</code> and one being the output
+     <code>HttpServletResponse</code> (just as in a servlet).
+    </p>
+    <p>Until the whole page is done, it repeats the following process for up to
+     10 times (the pipeline will only need to be repeated if an OutOfMemoryError
+     occurs, in which case the cache will be cleared out somewhat and the
+     pipeline restarted):
+    </p>
+    <ol>
+     <li>Creates the <code>Page</code> wrapper for cacheing purposes</li>
+     <li>Gets the initial document <code>Producer</code> from the
+      <code>ProducerFactory</code>. The HTTP parameter "producer=myproducer"
+      can be used to select the producer; if this parameter is not present,
+      the default producer is used.</li>
+     <li>Calls the producer to generate an <code>org.w3c.dom.Document</code></li>
+     <li>Setup the hash table <code>environment</code> to pass various parameters
+      to the processor pipeline</li>
+     <li>Process the document through the document <code>Processor</code>s,
+      (obtained from the <code>ProcessorFactory</code>)
+      for each processor invoked in the <code>Document</code></li>
+     <li>Get the <code>Formatter</code> requested by the <code>Document</code>
+      from the <code>FormatterFactory</code></li>
+     <li>Format the page</li>
+     <li>Fill the <code>Page</code> bean with content</li>
+     <li>Set the content type and the encoding</li>
+    </ol>
+    <p>Finally,</p>
+    <ul>
+     <li>Print the page to the response's PrintWriter object</li>
+     <li>Append timing information as an XML comment, if the content type allows</li>
+     <li>Flush the PrinterWriter to the client</li>
+     <li>Cache the page (if cacheing is enabled)</li>
+    </ul>
+    <p>
+     Now, I suggest you to take a deep breath and read the above steps again, since
+     the simplicity of the algorithm exploited is so beautiful that it makes sense
+     to appreciate it in depth and breath.
+    </p>
+   </s3>
+   <p>
+    At this point the key elements are therefore the processors and the formatters,
+    which directly operate upon the content of the Document. We are going to
+    investigate them in detail. It should be already clear that indeed one can have
+    more than one <code>Processor</code> per <code>Document</code> and that these
+    are going to be applied sequentially one after the other. Namely, this is how
+    is implemented the &quot;chaining&quot; of various <code>Processors</code>:
+    in five lines of code (including debugging information).
+    Again, simplicity and good coding style are assets of this implementation.
+    Let us have a look then at what <code>Processors</code> and
+    <code>Formatters</code> are, since these could be leveraged further and indeed
+    these are going to be likely extended with new components for specific needs.
+   </p>
+  </s2>
+
+  <s2 title="ProducerFactory">
+   <p>
+    For each source there must be an appropriate Producer implemented. Currently
+    (version 1.8), only ProducerFromFile is implemented. This is because XSP provides
+    the best solution (both in terms of ease-of-use and forward-compatibility with
+    Cocoon 2) for nearly all dynamic content solutions, so there is usually
+    no need to write a Producer explicitly.
+   </p>
+  </s2>
+
+  <s2 title="ProcessorFactory">
+   <p>
+    For each processing instruction type there must be an appropriate Processor
+    implemented. Currently (version 1.8), the following ones are implemented:
+   </p>
+   <ul>
+    <li>Light weight Directory Access Protocol (LDAP)</li>
+    <li>SQL (deprecated - SQL or EQSL taglibs are preferred)</li>
+    <li>eXtendible Server Pages (supercedes Dynamic Content Processor)</li>
+    <li>Dynamic Content Processor (deprecated, use XSP instead)</li>
+    <li>XInclude (attempts to implement a W3C draft standard, but may not always
+     be up to date with the standard - as it is still evolving)</li>
+    <li>XSLT (implements the W3C Recommendation, XSLT)</li>
+   </ul>
+  </s2>
+
+  <s2 title="FormatterFactory">
+   <p>
+    For each format in which the output should be delivered
+    (e.g. PDF, TEXT, HTML, XML, XHTML ), there must be an appropriate Formatter
+    implemented. Currently (version 1.8), the following ones are distributed:
+   </p>
+   <ul>
+    <li>HTML</li>
+    <li>XHTML (while the HTML formatter writes some tags without closing tags for
+     compatability with older user agents, the XHTML formatter is fully
+     XML-compliant - indeed, it is just the XML formatter with a specific doctype.)
+    </li>
+    <li>Text (i.e. plain text)</li>
+    <li>XML</li>
+    <li>FO2PDF (transforms XSL:FO to PDF which can be read by Acrobat Viewer/Reader)
+    </li>
+   </ul>
+   <p>
+    Clearly, one might imagine many more formatters such as
+   </p>
+   <ul>
+    <li>FO2RTF Microsoft Rich Text Format</li>
+    <li>FO2MIF FrameMaker Interchange Format</li>
+    <li>BRAILLE</li>
+   </ul>
+   <p>
+    In Cocoon 1.8 all of the formatters provided are in fact implemented as simple
+    "wrapper" classes (as can be easily seen by examining the source code in the
+    <code>formatters</code> directory) which merely set the parameters to the Apache
+    Serializers, or in the case of FO2PDF, Apache FOP, and then delegate the actual
+    formatting to those classes. In a way, no "real work" actually goes on
+    in the Formatter classes themselves. As you can see, Cocoon is a framework which
+    tries not to reinvent the wheel too often!
+   </p>
+
+   <p>
+    If you're wondering why FO2PDF isn't a Processor instead of a Formatter, the
+    answer is simple - it is conceptually more of a Processor (it transforms the entire
+    document), but for one vital difference - it does not output XML. Yes, there is
+    the workaround that XSP uses internally, which is to output one XML element with
+    all the content inside that as a text node - but this method would be rather clunky
+    for FO2PDF and would provide no real benefit.
+   </p>
+
+   <p>
+    Note that the CPU-intensive processing required for FO2PDF can be obviated by
+    the use of newer XML-compliant graphics and document markup languages on the client
+    side, such as SVG (Scalable Vector Graphics), or XSL:FO itself, which can just be
+    written out as XML. This is definitely the future for dynamic web
+    publishing, since the "rendering" of dozens of concurrent users' documents into PDF
+    all on the server does not make any sense from a performance point of view - it is
+    advantageous today of course because current popular browsers do not support XSL:FO
+    or SVG natively, but in the future this will change.
+   </p>
+
+   <p>In fact, XML markup languages like VoiceXML are supported by Cocoon by returning XML
+    and indeed in that case the parameter to cocoon-format is <code>text/xml</code>! In the
+    case of VRML, the cocoon format is <code>model/vrml</code> which in the
+    <code>cocoon.properties</code>
+    configuration file is mapped to <code>TextFormatter</code>.
+   </p>
+  </s2>
+ </s1>
+</body>
+</document>

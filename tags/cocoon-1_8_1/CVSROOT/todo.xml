@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
+
+<!--
+  $Id: todo.xml,v 1.58 2001-01-18 22:53:36 greenrd Exp $
+-->
+
+<todo title="Things To Do for Cocoon 1.x">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code" assigned-to="RDG" bugid="19">
+   Track down cause of multiple PDF problems.
+  </action>
+  <action context="docs" assigned-to="RDG" bugid="6">
+   Fix dead links in docs.
+  </action>
+<!-- audit <action context="code" bugid="33">
+   Fix XSP string escaping bug.
+  </action>-->
+  <action context="code" bugid="30">
+   Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
+  </action>
+ </actions>
+
+ <actions priority="medium">
+  <action context="code" assigned-to="DB">
+   Add StoredProcedure support to esql.
+  </action>
+  <action context="code" bugid="5" assigned-to="RDG">
+   Work out how to integrate inline XSP docs (such as inline esql docs)
+   into the build docs procedure.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Fix remaining caching bugs. Cleanup caching code, which is messy.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Better HTTP support and conformance
+  </action>
+  <action context="docs" assigned-to="RDG" bugid="8">
+   Write a full guide to logicsheets, including: (1) What they are and how
+   they work - explaining why XSP results can't be assigned to XSLT variables;
+   (2) What all the supplied logicsheets do (long-term aim: document every tag
+   and every attribute); (3) How to write your own and use it; (4) How to
+   specify logicsheet execution order with the as-yet-undocumented 
+   &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
+  </action>
+  <action context="code" assigned-to="RDG" bugid="9">
+   Fix stylesheet-chaining bug.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Add a working version of JQ's multiline string template to util logicsheet.
+  </action>
+  <action context="docs">
+   Cleanup and improve documentation. (in progress.)
+  </action>
+  <action context="code" bugid="11">
+   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
+  </action>
+  <action context="code" assigned-to="RDG" bugid="12">
+   Class auto-reloading for XSP pages
+   (code written; just needs to be merged in and documented.)
+  </action>
+  <action context="docs" bugid="13">
+   Ensure that all HTML docs are not too wide for screen/printer width
+   (as appropriate - there are separate directories for screen and
+   printer docs).
+  </action>
+  <action context="docs" bugid="17">
+   FAQ (particularly) and XSP docs are too long lengthwise. Split them
+   up. Their length (or complexity)
+   causes extremely slow rendering on Netscape 4.x and recent Mozilla builds.
+  </action>
+ </actions>
+
+ <actions priority="low">
+  <action context="code" bugid="20">
+   Taglib (not part of esql) to dynamically specify connection parameters
+   (with or without connection pooling).
+  </action>
+  <action context="code" bugid="21">
+   Make handle.errors.internally return a suitable HTTP error code.
+  </action>
+  <action context="code" bugid="22">
+   Add hooks for user-defined error-handling (better than just handle.errors.internally
+   flag in cocoon.properties).
+  </action>
+  <action context="docs" bugid="23">
+   Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
+  </action>
+  <action context="code" assigned-to="RDG" bugid="24">
+   Add GroupingProcessor which makes it easy to group elements together in bundles
+   of N (this is messy in XSLT).
+  </action>
+  <action context="code" assigned-to="RDG" bugid="14">
+   Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
+  </action>
+  <action context="code" assigned-to="RDG" bugid="25">
+   Fix redundant XSP namespace declarations output quirk.
+  </action>
+  <action context="docs">
+   Make authors appear on all HTML docs (where appropriate).
+  </action>
+  <action context="code">
+   Fix Jikes compilation error reporting bug.
+  </action>
+  <action context="code" bugid="15">
+   Make cache more configurable (e.g. to turn off per-user-agent caching,
+   maybe for specific pages only). However, Mark Washeim thinks that this
+   offers only "trivial" overhead reduction, even on large sites.
+  </action>
+  <action context="code" bugid="16">
+   Selection based on domain name not just user agent.
+  </action>
+  <action context="code" bugid="26">
+   Better error reporting for typos in stylesheet URIs.
+  </action>
+  <action context="code" bugid="28">
+   XSP logicsheet dependency tracking.
+  </action>
+ </actions>
+
+ <actions priority="wish">
+  <action context="code">
+   Add Jeremy Quinn's multiline get-nested-content template to all relevant
+   logicsheets.
+  </action>
+  <action context="code">
+   Automated test suite - maybe build upon samples and JMeter??
+  </action>
+  <action context="design">
+   Work out best way of breaking the 64K method barrier in XSP.
+   (The ESQL logicsheet already tries to address this by executing queries
+   in separate methods.)
+  </action>
+  <action context="code">
+   More powerful request taglib, e.g. list of parameters are read into
+   local variables.
+  </action>
+  <action context="code">
+   More logicsheets for common requirements, e.g. upload logicsheet.
+   (see infozone, turbine, etc. for examples;
+    O'Reilly is NOT open source) - but first fix
+   tomcat+apache+cocoon upload bug.
+  </action>
+  <action context="code">
+   Semi-portable (to C2) XSP redirect semantics (topic for xsp-dev list).
+  </action>
+  <action context="code">
+   Support disable-output-escaping for MathML using IBM TechExplorer and
+   other uses.
+  </action>
+ </actions>
+
+</todo>

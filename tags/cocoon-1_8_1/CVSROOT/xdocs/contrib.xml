@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Making a Contribution to Apache Cocoon</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/> 
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Introduction">
+
+  <p>
+   The Cocoon Project is an <link href="http://www.opensource.org/">Open Source</link>
+   volunteer project under the auspices of the
+   <link href="http://www.apache.org/">Apache Software Foundation (ASF)</link>,
+   and, in harmony with the Apache webserver itself, it is released under
+   a very open license.
+   This means there are many ways to contribute to the project - either
+   with direct participation (coding, documenting, answering questions,
+   proposing ideas, reporting bugs, suggesting bug-fixes, etc..) or by resource
+   donations (money, time, publicity, hardware, software, conference
+   presentations, speeches, etc...).
+  </p>
+  <p>
+   To begin with, we suggest you to subscribe to the
+   <connect href="mail-lists.xml">Cocoon mailing lists</connect>
+   (follow the link for information on how to subscribe and to access the mail
+   list archives), to checkout the <link href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/">
+   latest and greatest code</link> (which you find in the xml-cocoon module in
+   the xml.apache.org CVS code repository, or from the
+   <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>),
+   control the <connect href="todo.xml">todo</connect>
+   list and jump in. Document writers are usually the most wanted people so if
+   you like to help but you're not familiar with the innermost technical details, don't worry:
+   we have work for you!
+  </p>
+  <p>
+   For financial support in particular, the Cocoon Project and the ASF in general
+   is closely collaborating with the <link href="http://www.sourcexchange.com">Collab.net
+   SourceXchange</link> program that will provide a legal, solid and
+   well-established resource for money collecting to fund software production
+   under the open source flag. Please, feel free to contact directly
+   the ASF President and Collab.net co-founder <link href="mailto:brian@collab.net">Brian
+   Behlendorf</link> for more information on how to contribute financially to the
+   advancement of this project.
+  </p>
+
+ </s1>
+
+ <s1 title="Help Wanted Here">
+  <p>
+   The rest of this document is mainly about
+   contributing new or improved code and/or documentation, but we would also be glad to have
+   extra help in any of the following areas:
+  </p>
+  <ul>
+   <li>Answering questions on the <code>cocoon-users</code> mailing list - there is often a problem of
+    having too many questioners and not enough experts to respond to all the questions.</li>
+   <li>Testing Cocoon (especially its less-frequently-used features) on various configurations
+    and reporting back.</li>
+   <li>Debugging - producing reproducable test cases and/or finding causes of bugs (at the time of
+    writing, some known bugs are informally listed on <connect href="todo.xml">To Do</connect>, but
+    eventually a bug database should be made available on the Apache site).</li>
+   <li>Specifying/analysing/designing new features for Cocoon 2 - and beyond. (If you wish to get involved
+    with this, please join <code>cocoon-dev@xml.apache.org</code>
+    (you may also want to join <code>xsp-dev@xml.apache.org</code>), install and try out Cocoon 2
+    and read some of the <link href="http://mail-archives.apache.org/">mail archives</link>.
+    You should have a strong "fluency" in XML technologies, Java and a basic understanding of
+    the Cocoon 2 architecture - don't just say "it should have XYZ" without reading anything first -
+    because chances are, someone's already thought of that feature!)</li>
+   <li>Packaging easy-to-install packages (such as RPMs) for the myriad of possible configurations out
+    there. (The Cocoon project does not maintain anything but the basic <code>.zip</code> and
+    <code>.tar.gz</code> packages, but anyone is welcome to build their own specific packages and
+    announce them on <code>cocoon-users</code>)</li>
+   <li>... and there is just one other thing - don't forget to tell everyone who asks how great Cocoon is! ;-)
+    The more people that know about and start to use Cocoon, the larger the pool of
+    potential contributors there will be
+    - so, please, help us by placing the cocoon logo somewhere in your
+    site to indicate that you are using and supporting the Cocoon Project.
+   </li>
+  </ul>
+ 
+  <p>
+   Thank you very much. <img src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
+  </p>
+ </s1>
+
+ <s1 title="Contributions of Code and Documentation">
+  <p>We are starting to use an informal system for accepting contributions to Cocoon.
+   The process varies depending on whether the contribution is a modification (i.e. patch)
+   or a fairly standalone item, and whether you have commit access (committers have been
+   granted access by a vote of confidence, so they are assumed to be trustworthy enough
+   to make changes directly in CVS. If you submit many good patches, you may be 
+   nominated as a committer yourself!)</p>
+
+  <p>If your contribution requires changing more than a few lines of Cocoon (code or
+   documentation), then it counts as a <strong>patch</strong>. If you have a patch and
+   would like to see it incorporated into the Cocoon distribution, take note of the Licensing
+   Requirements listed below, and then read the <connect href="patches.xml">Patch management
+   </connect> page for more information.
+  </p>
+
+  <p>Otherwise (that is, if it does not require patching or you are not particularly interested in
+   having it included in the main distribution), your code and/or
+   documentation can be listed on the 
+   <connect href="3rdparty.xml">Third-Party Contributions</connect> page.
+   The rationale for this split is that core patches may fix important issues, and may 
+   require timely attention if they are not to go
+   out-of-date and become useless, but other contributions can simply be downloaded and
+   applied by users who wish to use them.
+  </p>
+
+  <p>A typical contribution (not a patch) may go through the following stages:</p>
+
+  <ol>
+   <li>Posted to cocoon-users with a URL to download it from.</li>
+   <li>Listed on 3rdparty.html by a maintainer. [No requirements, other than relevance (at the moment).]</li>
+   <li>Inclusion into the <code>contrib</code> directory,
+    which is for 3rd-party contributions that have been tested, but are not necessarily
+    mature enough or general enough for the main distribution. [Must be tested at least as
+    specified below. See also Licensing Requirements below.]</li>
+   <li>Inclusion into the main distribution. [Committers must be confident that it should work properly in 
+    most/all environments, it must be documented as appropriate, and it must be considered sufficiently
+    useful and general to go into Cocoon. See also  Licensing Requirements below].</li>
+  </ol>
+  
+  <s2 title="Testing Requirements for Cocoon Contrib and Distribution">
+   <note>These tests do not apply to Cocoon 2 because it is designed
+    to have different minimum requirements. As Cocoon 2 is still alpha (at the time of this writing),
+    we are not at a rigourous test stage yet. Stay tuned!</note>
+
+   <p>All new code should be tested under the following servlet engines:</p>
+   <ul>
+    <li>Apache JServ 1.1.2 (NOTE: This uses Servlet API 2.0)</li>
+    <li>Apache Tomcat 3.1</li>
+    <li>Resin 1.2.0</li>
+   </ul>
+   <p>It should also be tested on the following:</p>
+   <ul>
+    <li>A Windows operating system</li>
+    <li>A UNIX-type operating system</li>
+    <li>A JDK version 1.1.x</li>
+   </ul>
+   <p>And obviously, it should be tested against the current CVS snapshot of Cocoon!</p>
+
+   <p>This testing is designed to iron out the most common kinds of incompatibilty
+    problems (Servlet >2.0 requirements; platform-dependent assumptions; JDK >1.1 code).
+    These requirements are, of course, open to review and discussion. Note that
+    the contributor is not required to do the testing - indeed it is probably better
+    if someone else tests it, because the contributor might be tempted to do less
+    than thorough testing!</p>
+ </s2>
+
+ <s2 title="Documentation Requirements for Cocoon Distribution">
+  <p>All new features (processor, logicsheets, config options etc.) should be documented
+   appropriately (in XML or in cocoon.properties in the case of config options).</p>
+
+  <p>Use something like <code>xdocs/index.xml</code> as a rough guide, add
+   the new page(s) to <code>xdocs/site-book.xml</code> and <code>xdocs/docs-book.xml</code>,
+   and type <code>build.sh docs</code> or <code>build.bat docs</code> to test the
+   documentation build.
+  </p>
+ </s2>
+
+ <s2 title="Licensing Requirements for the Cocoon Distribution">
+  <p>To avoid legal problems, the Apache Project Management Committe (PMC) have agreed on
+   a policy for under what licensing code can be accepted into Apache projects:</p>
+  <ul>
+   <li>Source code files must be under the Apache license and must have copyright assigned to
+    the Apache Software Foundation.</li>
+   <li>Jar files need only be released under a license that permits free redistribution
+    and does not cover new files added to the jar/library (so the GPL and LGPL are not allowed,
+    but MPL and Apache licenses are, for example).</li>
+  </ul>
+  <p><strong>By submitting a patch, you signify your understanding and acceptance of these
+   conditions</strong> - like most open source projects, 
+   we do not have the resources nor the inclination to obtain signed statements from all
+   contributors!</p>
+
+  <p><strong>Note:</strong> Since the <code>contrib/</code> directory of Cocoon CVS contains
+   third-party. completely optional extensions, one of the above requirements is relaxed.
+   Code in the contrib directory does not have to have its copyright assigned to the ASF
+   - but it must still be released under the Apache license.</p>
+ </s2>
+ </s1>
+</body>
+</document>

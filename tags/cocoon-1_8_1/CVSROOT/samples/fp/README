@@ -1,0 +1,210 @@
+I'll walk you through the "Add Item" example.
+Sorry, this is really rough.
+
+
+It's XML.
+
+	<?xml version="1.0"?>
+
+You want it processed as XSP, then XSLT.
+
+	<?cocoon-process type="xsp"?>
+	<?cocoon-process type="xslt"?>
+
+This is your StyleSheet.
+
+	<?xml-stylesheet type="text/xsl" href="form-html.xsl"?>
+	
+If you change this reference to "form-xml.xsl" you can see the output of the TagSet before it goes to the StyleSheet.
+
+Declare the xsp:page and the Tag Libraries we are using, including the FP TagLib.
+
+	<xsp:page 
+		xmlns:fp="http://apache.org/cocoon/XSP/FP/1.0"
+		xmlns:request="http://www.apache.org/1999/XSP/Request"
+		xmlns:util="http://www.apache.org/1999/XSP/Util"
+		xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+		language="java"
+	>
+
+Declare your "user" root element, any name will do	
+
+	<page>
+	
+The fp:resource tag declares an external file that you can read and write to.
+The "id" attribute is the name you will refer to it by.
+This is the file we are going to get default values for the form from.
+
+		<fp:resource id="default-item">
+		
+The path to the file
+
+			<fp:resource-file>default.xml</fp:resource-file>
+			
+The root node you want to work from, specified as an XPath.
+
+			<fp:resource-node>form/page/item</fp:resource-node>
+			
+Close the resource
+
+		</fp:resource>
+		
+This is the file we are going to modify.
+
+		<fp:resource id="external-item">
+		
+			<fp:resource-file>../index.xml</fp:resource-file>
+			
+We are nesting a Tag from the Request TagLib inside an FP Tag to build an XPath on the fly from the "item" request parameter.
+
+			<fp:resource-node>item[position()=<request:get-parameter name="item"/>]</fp:resource-node>
+			
+We are writing to the resource, this inserts a new "item" Node before the current one, to be filled by the Form data.
+
+			<fp:default-mode>insert-before</fp:default-mode>
+		</fp:resource>
+
+You can pass along anything you want in this file		
+
+		<title>Add more News</title>
+		
+Use other TagLibs
+
+		<method><request:get-method/></method>
+		<task>add</task>
+		
+Here, I want to get the Title of all onf the Items, to build a Menu.
+
+		<menu action="item-add.xml?item=">
+		
+The fp:read Tag is replaced by the contents of the read.
+The "from" Attribute is the name of the resource you want to read.
+The "select" Attribute is an XPath relative to the Node specified in this resource's "resource-node".
+The "as" Attribute, in this case "node" specified that the data should be read and passed on as XML.
+Status and Error id's are added as attributes to the parent of the fp:read tag, in this case the <menu/> tag.
+
+			<fp:read select="../item/title" from="external-item" as="node"/>
+		</menu>
+
+The output looks like this:
+<menu fp-action="read" [fp-error="fp-1"] fp-from="external-item" fp-select="../item/title" fp-type="text/xml">
+	<title>Title 1</title>
+	<title>Title 2</title>
+	<title>Title ...</title>
+</menu>
+If there is an error, you get the ID of the error report, placed at the end of the page.
+
+It's a Form, could be anything
+
+		<form action="item-add.xml" method="POST">
+		
+It's a Form Field, so the name is important, but it does not need to relate to the name of the location where the data is to be stored.
+
+			<input name="title">
+			
+I create a "label" Attribute in the "input" Element, using XSP, but the content comes from reading Text from the defaults file. (as="string" is the default for read and write).
+
+				<xsp:attribute name="label"><fp:read select="title/label" from="default-item"/></xsp:attribute>
+				
+Only do this bit if someone is POSTing a Form.
+
+				<fp:if-post>
+				
+Write the contents of the fp:write Tag, in this case the value of the POSTed Form field called "title" (this one), to the Title Node of the external file, as Text.
+The fp:write Tag does not emit anything into the <input/> tag, except status Attributes. 
+
+					<fp:write to="external-item" select="title">
+						<request:get-parameter name="title"/>
+					</fp:write>
+					
+This reads the info back out, it ends up being the contents of the <input/> tag.
+
+					<fp:read select="title" from="external-item"/>
+				</fp:if-post>
+				
+Only do this bit if someone is GETting a Form.
+
+				<fp:if-get>
+				
+Get the default value for the field.
+
+					<fp:read select="title/value" from="default-item"/>
+				</fp:if-get>
+			</input>
+			
+A TEXTAREA to put the Body text in as a Node, so we can edit and retain it as XML, otherwise does the same as the previous field.
+
+			<input name="body" type="textarea">
+				<xsp:attribute name="label"><fp:read select="body/label" from="default-item"/></xsp:attribute>
+				<fp:if-post>
+					<fp:write select="body" to="external-item" as="node">
+						<request:get-parameter name="body"/>
+					</fp:write>
+					<fp:read select="body" from="external-item" as="node"/>
+				</fp:if-post>
+				<fp:if-get>
+					<fp:read select="body/value/body" from="default-item" as="node"/>
+				</fp:if-get>
+			</input>
+			
+A SELECT, to choose the Image.
+
+			<input name="figure" type="select">
+			
+Get the label as usual
+
+				<xsp:attribute name="label"><fp:read select="figure/label" from="default-item"/></xsp:attribute>
+				
+Always get all of the select option values from the defaults file.
+
+				<fp:read as="node" select="figure/value" from="default-item"/>
+				
+If POST, write the value to the external file
+
+				<fp:if-post>
+					<fp:write select="figure" to="external-item">
+						<request:get-parameter name="figure"/>
+					</fp:write>
+					
+Read the current selection, put it in a <selection/> Element
+
+					<selection><fp:read select="figure" from="external-item"/></selection>
+				</fp:if-post>
+			</input>
+			
+A hidden field, to pass on our "item" parameter
+
+			<input name="item" type="hidden">
+				<value><request:get-parameter name="item"/></value>
+			</input>
+			
+Write a date on save
+
+			<input name="date">
+				<fp:if-post>
+				
+I can't remember why I snuck the fp:redirect in here, it could go anywhere.
+
+					<fp:redirect>../index.xml</fp:redirect>
+					<fp:write select="date" to="external-item">
+						<util:time format="dd/MM/yyyy hh:mm:ss"/>
+					</fp:write>
+				</fp:if-post>
+			</input>
+			
+Make a Submit button from the defaults.
+
+			<input name="submit" type="submit">
+				<xsp:attribute name="label"><fp:read select="submit/label" from="default-item"/></xsp:attribute>
+				<fp:read select="submit/value" from="default-item"/>
+			</input>
+		</form>
+	</page>
+</xsp:page>
+
+That's for now I'm afraid :(
+
+BTW.
+
+You can put an fp:read inside an fp:write to move or copy data from one file or Node to another.
+An fp:read inside an fp:write, will not send it's contents to the parent of the fp:write.

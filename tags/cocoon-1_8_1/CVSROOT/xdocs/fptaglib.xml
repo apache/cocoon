@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document><header><title>FP Taglib</title><authors><person name="Jeremy Quinn" email="sharkbait@mac.com"/></authors></header><body>
+
+	<s1 title="Description">
+		<p>The FP logicsheet is an XSP logicsheet, a TagLib, that performs tasks useful to people wanting to build and handle HTML Forms within Cocoon. Some of the tags are general enough to be used for other purposes as well. </p>
+		<p>The Tags form a simple XML language that can be mixed with other TagLibs, for writing the typical logic required for modifying XML Files with HTML Forms.</p>
+		<p>They allow you to work with data (Strings and Nodes) from external XML Files, both reading and writing to them using the XPath Specification to identify your target. There are also tags to choose between HTTP Methods GET and POST, so you could have a page that can both build a Form and handle saving it's data.</p>
+	</s1>
+
+	<s1 title="Installation">
+		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
+		<source>processor.xsp.logicsheet.fp.java = 
+  resource://org/apache/cocoon/processor/xsp/library/java/fp.xsl</source>
+  		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
+	</s1>
+
+	<s1 title="Configuration">
+		<p>Map the</p>
+		<source>http://apache.org/cocoon/XSP/FP/1.0</source>
+		<p>namespace to the fp prefix. Elements in the fp taglib namespace will be interpreted as input to the fp taglib and will be stripped from the output.</p>
+		<p>This is typically done like this:</p>
+		<source><![CDATA[
+<xsp:page
+	language="java"
+	xmlns:fp="http://apache.org/cocoon/XSP/FP/1.0"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+	. . .
+
+</xsp:page>
+]]></source>
+	</s1>
+
+	<s1 title="The Tags">
+		<p>The <code>fp:resource</code> element with it's mandatory <code>id</code> attribute, is for defining a file you would like to read and/or write to. It takes a series of configuration elements as children.</p>
+			<p>The list of valid child elements is:</p>
+			<dl>
+				<dt><code>fp:resource-file</code> <strong>(mandatory)</strong></dt>
+				<dd>The path to a file you want to work with</dd>	
+				<dt><code>fp:resource-node</code> <strong>(mandatory)</strong></dt>
+				<dd>An XPath to select the Node in your file that you want to work with</dd>	
+				<dt><code>fp:default-mode</code> <strong>(defaults to <code>replace</code> if not present)</strong></dt>
+				<dd>The default mode you want to use when <strong>writing</strong> your Nodes, <code>replace</code> replaces the selected Node, <code>insert-before</code> and <code>inser-after</code> create a new Node, with the same name as the selected, and inserts before or after.</dd>	
+			</dl>
+		<p>None of the above tags have any relevance outside of the <code>fp:resource-file</code>.</p>
+		<p>You can use as many <code>fp:resource-file</code> elements as you have unique files to work with, each one should have a unique <code>id</code> attribute, this is what you use to refer to them. ie. the FP TagLib can work with multiple files at the same time.</p>
+		<p>Errors are flagged by placing an <code>fp-error</code> attribute into the parent of the <code>fp:resource-file</code> tag, with a value that is an IDREF pointing to an <code>fp-error</code> element in your document root.</p>
+
+		<p>The <code>fp:read</code> element reads TextNodes or Nodes from the specified <code>fp:resource</code> into it's parent Element using a relative XPath. It has several mandatory attributes.</p>
+			<p>The list of valid attributes is:</p>
+			<dl>
+				<dt><code>from</code> <strong>(mandatory)</strong></dt>
+				<dd>The <code>id</code> of the <code>fp:resource</code> you want to read</dd>	
+				<dt><code>select</code> <strong>(mandatory)</strong></dt>
+				<dd>An XPath (relative to <code>fp:resource-node</code>) to select the Node(s) in the <code>fp:resource</code> you want to read</dd>	
+				<dt><code>as</code> <strong>(defaults to <code>string</code>)</strong></dt>
+				<dd>The way you want to read the Node(s) selected by your XPath. The default, <code>string</code> reads all of the TextNodes that are children of the selected Node(s); <code>node</code> reads all of the selected Nodes as deep cloned XML.</dd>	
+			</dl>
+		<p>It is safe to use an XPath in your <code>fp:read</code> element <code>select</code> attribute that selects multiple Nodes.</p>
+		<p>If the parent of an <code>fp:read</code> element is an <code>fp:write</code> element, the output of the  <code>fp:read</code> element goes to the <code>fp:write</code> element and is written to file. Otherwise the output goes to the user, like any other TagLib.</p>
+		
+		<p>The <code>fp:write</code> element writes TextNodes or Nodes to the specified <code>fp:resource</code> at the location specified by it's relative XPath. It has several mandatory attributes.</p>
+		<p>The list of valid attributes is:</p>
+		<dl>
+			<dt><code>to</code> <strong>(mandatory)</strong></dt>
+			<dd>The <code>id</code> of the <code>fp:resource</code> you want to write</dd>	
+			<dt><code>select</code> <strong>(mandatory)</strong></dt>
+			<dd>An XPath (relative to <code>fp:resource-node</code>) to select the Node in the <code>fp:resource</code> you want to write</dd>	
+			<dt><code>as</code> <strong>(defaults to <code>string</code>)</strong></dt>
+			<dd>The way you want to write the Node selected by your XPath. The default, <code>string</code> overwrites all of the TextNodes that are children of the selected Node with the text content of the <code>fp:write</code> element; <code>node</code> replaces the selected Node with the content of the <code>fp:write</code> element as XML.</dd>
+		</dl>
+		<p>It is <strong>not</strong> safe to use an XPath in your <code>fp:write</code> element <code>select</code> attribute that selects multiple Nodes.</p>
+		<p>Only FP or other TagLib Tags can be used as child elements of the <code>fp:write</code> element. To do otherwise, causes compilation errors that can be difficult to track down. There may be a solution to this</p>
+		<p>The <code>fp:write</code> element may only use a simplified form of XPath in it's <code>select</code> attribute, one that is just a simple "path/to/node", because the TagLib has to be able to construct any Nodes you ask for and it can only interpret the simplest case. ie. you can use an XPath like <code>this/is/an/xpath/to/nowhere</code> and the data will be written with all the intervening elements whether they currently exist or not, but an XPath like <code>title/*</code> will not work. (This is different from <code>fp:read</code>'s behaviour).</p>
+
+		<p>The <code>fp:if-post</code> element allows simple logic, based on the HTTP Method of the incoming request.</p>
+		<p>Any child elements of the <code>fp:if-post</code> element are ignored during GET, HEAD, PUT and DELETE requests.</p>
+
+		<p>The <code>fp:if-get</code> element allows simple logic, based on the HTTP Method of the incoming request.</p>
+		<p>Any child elements of the <code>fp:if-get</code> element are ignored during POST, HEAD, PUT and DELETE requests.</p>
+
+		<p>The <code>fp:redirect</code> element can be used to redirect the user to another URL when two conditions have been met, that this was a POST Request, and there were no errors generated by any of the other FP Tags.</p>
+			<p>The value of the <code>fp:redirect</code> element, is the URL you want users to go to, it should accept relative, root and absolute addressed URLs.</p>
+	</s1>
+	
+	<s1 title="Usage">
+		<p>Try the sample. The URL is http://[your server]/[your cocoon path]/samples/fp/index.xml</p>
+		<p>The sample files</p>
+		<dl>
+			<dt>form/default.xml</dt>
+			<dd>Default values used by the Forms</dd>
+			<dt>form/form-html.xsl</dt>
+			<dd>Renders the Form to HTML</dd>
+			<dt>form/form-xml.xsl</dt>
+			<dd>Renders the Form to XML (for debugging purposes)</dd>
+			<dt>form/item-add.xml</dt>
+			<dd>Builds and saves a Form to add new Items in index.xml</dd>
+			<dt>form/item-edit.xml</dt>
+			<dd>Builds and saves a Form to edit existing Items in index.xml</dd>
+			<dt>images</dt>
+			<dd>Folder of images</dd>
+			<dt>index.xml</dt>
+			<dd>The content XML file</dd>
+			<dt>page-html.xsl</dt>
+			<dd>Renders the normal view of the project</dd>
+		</dl>		
+	</s1>
+	
+	<s1 title="Samples">	
+		<p>These are bits of annotated code from fp/form/item-add.xml</p>
+		
+		<p>This is how to set up a file resource that you want to modify.</p>
+		<source><![CDATA[
+<fp:resource id="external-item">
+  <fp:resource-file>../index.xml</fp:resource-file>
+  <fp:resource-node>item[position()=<request:get-parameter name="item"/>]</fp:resource-node>
+  <fp:default-mode>insert-before</fp:default-mode>
+</fp:resource>
+]]></source>
+		
+		<p>We are nesting an element from the Request TagLib inside an FP element to build an XPath on the fly from the "item" request parameter. Now you can use <code>fp:read</code> and <code>fp:write</code> elements to read and/or write to this file, inserting a new "item" Node before the current one, from text in a Form field.</p>
+
+		<p>You can have as many <code>fp:resource</code> elements in your XSP as you need.</p>
+
+		<p>The <code>id</code> attribute of the <code>fp:resource</code> must be unique, you use it's value in the <code>fp:read</code> or <code>fp:write</code> elements to define which file you want.</p>
+
+
+		<p>Here, I want to get the Title of all onf the Items, to build a Menu.</p>
+		<source><![CDATA[
+<menu action="item-add.xml?item=">
+  <fp:read select="../item/title" from="external-item" as="node"/>
+</menu>
+]]></source>		
+
+		<p>The <code>fp:read</code> element is replaced by the contents of the read.</p>
+		<p>The <code>from</code> attribute is the name of the resource you want to read.</p>
+		<p>The <code>select</code> attribute is an XPath relative to the Node specified in this resource's "resource-node".</p>
+		<p>The <code>as</code> attribute, in this case <code>node</code> specified that the data should be read and passed on as XML.</p>
+		<p>Status and Error id's are added as attributes to the parent of the <code>fp:read</code> tag, in this case the <code>&lt;menu/&gt;</code>tag.</p>
+		<p>If there is an error, you get the ID of the error report, placed at the end of the page.</p>
+
+		<p>The output looks like this:</p>
+		<source><![CDATA[
+	<menu fp-action="read" [fp-error="fp-1"] fp-from="external-item" fp-select="../item/title" fp-type="text/xml">
+		<title>Title 1</title>
+		<title>Title 2</title>
+		<title>Title ...</title>
+	</menu>
+	]]></source>
+
+		<p>Here we make a Form <code>input</code> Field, so the name is important, but it does not need to relate to the name of the location where the data is to be stored. The parent deos not have to be <code>input</code>, use whatever you want.</p>
+
+		<source><![CDATA[
+<input name="title">
+  <xsp:attribute name="label"><fp:read select="title/label" from="default-item"/></xsp:attribute>
+  <fp:if-post>
+    <fp:write to="external-item" select="title">
+      <request:get-parameter name="title"/>
+    </fp:write>
+    <fp:read select="title" from="external-item"/>
+  </fp:if-post>
+  <fp:if-get>
+    <fp:read select="title/value" from="default-item"/>
+  </fp:if-get>
+</input>
+]]></source>			
+
+		<p>I create a <code>label</code> attribute in the <code>input</code> element, using XSP, but the content comes from reading Text from the defaults file (I would have had to set this file up previously as a <code>fp:resource</code>). The default value for the <code>as</code> attribute is "string", so I am leaving it out. I understand Xerces prefers you to write attributes before elements.</p>
+		<p>Next I write, only if someone is POSTing a Form.</p>
+		<p>Write the contents of the <code>fp:write</code> element, in this case the value of the POSTed Form field called "title" (this one), to the <code>title</code> Node of our selected <code>item</code> in the external file, as Text.</p>
+		<p>The <code>fp:write</code> element does not emit anything into the <code>&lt;input/&gt;</code> tag, except status Attributes. </p>
+		<p>After finishing the write, we read the info back out, this is what ends up being the contents of the <code>input</code> element. I am reading it back out incase I want to display that the user has written etc.</p>
+		<p>Lastly, only get the default value for the field if someone is GETting a Form.</p>
+
+	</s1>
+	
+</body></document>

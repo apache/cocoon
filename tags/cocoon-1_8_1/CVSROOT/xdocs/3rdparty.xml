@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Third Party Contributions</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+   <person name="Ovidiu Predescu" email="ovidiu@cup.hp.com"/> <!-- author of emacs editing functions -->
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="How to Contribute">
+  <p>
+   See <connect href="contrib.xml">How to contribute to Apache Cocoon</connect>.
+  </p>
+
+ </s1>
+
+ <s1 title="Contributed Components">
+  <p>
+   These are not necessarily deemed to be high enough quality to be included in the
+   core distribution, but they have been tested under <connect href="contrib.xml">
+   several key environments</connect>, they are provided under the same license
+   as Cocoon, and they are included in the Cocoon distribution under the
+   <code>contrib/</code> directory.
+  </p>
+
+  <p>
+   <strong>None as yet!</strong> - although you can expect that some of the links
+   listed below will eventually migrate to the "contributed components" level, and
+   then maybe even into the main distribution.
+  </p>
+ </s1>
+
+ <s1 title="Patch Queue">
+  <p><connect href="patches.xml">Submissions of modifications</connect>
+   to Cocoon which are awaiting review. Anyone can
+   comment on them on the cocoon-dev mailing list - code reviewers are needed!
+   <strong>Use these at your own risk</strong> - although Cocoon has no guarantee
+   either, these patches have not been reviewed, let alone accepted.
+  </p>
+ </s1>
+
+ <s1 title="Other Extensions">
+  <p>The other extensions listed here are <strong>not endorsed</strong> by the Cocoon
+   project either - they are provided as a convenience only. They may or may not work,
+   they may or may not be open source, etc.
+  </p>
+
+  <p>To have a link added to this table, see <connect href="contrib.xml">How to contribute
+   to Apache Cocoon</connect>.</p>
+
+  <table>
+   <tr>
+    <th>Name and Link</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Status</th>
+    <th>Licensing</th>
+    <th>Contact</th>
+   </tr>
+   <tr>
+    <td><link href="http://www.geocities.com/SiliconValley/Monitor/7464/emacs/xslt-process/">
+     XSLT-process</link></td>
+    <td>Development Environment</td>
+    <td>A minor mode for (X)Emacs that allows you to invoke an XSLT processor, or Cocoon on a buffer,
+     thus yielding a fast turnaround time.</td>
+    <td>Supports Xalan, Cocoon, Saxon</td>
+    <td>?</td>
+    <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://www.plenix.com/dbprism/">DB Prism</link></td>
+    <td>Servlet/CMS</td>
+    <td>"A Servlet which emulates Oracle Web Application Server plsql Cartridge or the newest Oracle IAS mod_plsql.
+DB Prism provides Java Stored Procedures, and it is 100% compatible with OWS 3.x/OAS 4.x and IAS 1.0. It supports
+UTF-8 database encoding, Oracle 7, 8, and Oracle Lite. It includes DB Producer for the Cocoon framework so that it can
+integrate with XML technology from http://xml.apache.org/ . It also includes the DB Prism/Cocoon Content Management
+System (CMS), based on Oracle CMS."</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:mochoa@ieee.org">Marcelo F. Ochoa</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://perso.club-internet.fr/pedron/ejb/index.html">EJB Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>An experimental logicsheet to faciliate the use of Enterprise Java Beans from an XSP page</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:pedron@club-internet.fr">Yvon Pedron</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://kenny.socialchange.net.au/~jeff/ldaptaglib/">LDAP Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>Performs LDAP queries and serializes their results as XML. Alternative to Cocoon's LDAP Processor.</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:jeff@socialchange.net.au">Jeff Turner</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://ulim.cocoonhost.com/">Auth Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>Protects XML/XSP pages, so that they can only be viewed/executed by 
+     authenticated users. Supports several authentication schemes using a
+     database or encrypted files.</td>
+    <td>"Suitable for production use. Syntax/Concept finalized, i.e. future
+     versions will be backwards-compatible"</td>
+    <td>Open Source</td>
+    <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://ulim.cocoonhost.com/">SOAP Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>Implements a generic SOAP client. Any SOAP server wanting to present its
+     services to the world over a uniform HTTP-based interface can do so via
+     an XML page using the SOAP taglib.</td>
+    <td>"Suitable for production use. Syntax/Concept <strong>not</strong> finalized."
+     Currently not Cocoon 2 compatible.</td>
+    <td>Open Source</td>
+    <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
+   </tr>
+
+   <tr>
+    <td><link href="http://www.life.be/~bavo/projects/gpl/cocoon/imapprocessor.tgz">IMAP Processor</link></td>
+    <td>Processor</td>
+    <td>Sends emails via an IMAP server.</td>
+    <td>Not fully functional. Mail taglib(s) in Cocoon distribution are probably 
+     better.</td>
+    <td><link href="http://www.fsf.org/">GPL</link></td>
+    <td><link href="mailto:bavo@life.be">Bavo De Ridder</link></td>
+   </tr>
+
+   <tr>
+    <td><link href="http://www.suranyami.com/XSPtutorial/">XSP Tutorial</link></td>
+    <td>Documentation</td>
+    <td>A "beginner's guide" to XSP.</td>
+    <td></td>
+    <td>N/A</td>
+    <td><link href="mailto:XSPtutorial@suranyami.com">David Parry</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://www.suranyami.com/cocoon1">UML Docs for Cocoon 1.8</link></td>
+    <td>Documentation</td>
+    <td>Complete UML diagrams for Cocoon 1.8. UML appears in top pane, javadoc in bottom right.
+     Generated using Together 4.1.</td>
+    <td>?</td>
+    <td>N/A</td>
+    <td><link href="mailto:dayv@suranyami.com">David Parry</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://feersumendjinns.com/cocoon/sessions.zip">
+     Session toy and number-guessing game</link></td>
+    <td>Examples</td>
+    <td>Demonstrates use of session variables (but not session taglib)</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:od@feersumendjinns.com">OD</link></td>
+   </tr>
+  </table>
+
+  <s2 title="Emacs Editing Functions for XSL/XSP">
+   <p>Thanks to <link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link> for these.</p>
+
+   <p><em>"For those of you that use Emacs/Xemacs to edit XSL/XSP pages, here are some
+   handy functions you can use in your .emacs to speed up the editing. They insert
+   the commonly used tags in the current buffer, indented and nicely formatted.
+   They were developed and used on Xemacs 21.1, but they should work on GNU Emacs
+   as well.</em></p>
+
+   <p><em>"I'd be curious to know what other little things people use in emacs to speed up
+   development."</em></p>
+
+<source><![CDATA[
+(require 'tempo)
+
+   (defun get-value-from-minibuffer (display format-string)
+     (let ((input (read-from-minibuffer display)))
+       (if (string= input "")
+           ""
+         (format format-string input))))
+
+   (tempo-define-template "xsl-template"
+    '('&'o'> "<xsl:template"
+      (get-value-from-minibuffer "Template name: " " match=\"%s\"")
+      ">" 'n'>'n
+      "</xsl:template>" '>
+      (end-of-line 0)))
+
+   (tempo-define-template "xsl-if"
+    '('&'o'> "<xsl:if"
+      (get-value-from-minibuffer "Test expression: " " test=\"%s\"")
+      ">" 'n'>'n
+      "</xsl:if>" '>
+      (end-of-line 0)))
+
+   (tempo-define-template "xsl-for-each"
+    '('&'o'> "<xsl:for-each"
+      (get-value-from-minibuffer "Select expression: " " select=\"%s\"")
+      ">" 'n'>'n
+      "</xsl:for-each>" '>
+      (end-of-line 0)))
+
+   (tempo-define-template "xsp-logic"
+    '('&'o'> "<xsp:logic>" '>'n'>'n
+      "</xsp:logic>" '>'n
+      (end-of-line -1)))
+
+   (tempo-define-template "xsp-expr"
+    '('&'o'> "<xsp:expr>" '>'n'>'n
+      "</xsp:expr>" '>'n
+      (end-of-line -1)))
+
+   (tempo-define-template "xsl-value-of"
+    '('> "<xsl:value-of"
+      (get-value-from-minibuffer "Value: " " select=\"%s\"")
+      "/>" '>))
+
+   (tempo-define-template "xsl-apply-templates"
+    '('> "<xsl:apply-templates"
+      (get-value-from-minibuffer "Select: " " select=\"%s\"")
+      "/>" '>))
+
+   (defun my-xml-templates-hook()
+     (define-key xml-mode-map "\C-ct" 'tempo-template-xsl-template)
+     (define-key xml-mode-map "\C-ci" 'tempo-template-xsl-if)
+     (define-key xml-mode-map "\C-cf" 'tempo-template-xsl-for-each)
+     (define-key xml-mode-map "\C-cv" 'tempo-template-xsl-value-of)
+     (define-key xml-mode-map "\C-ca" 'tempo-template-xsl-apply-templates)
+     (define-key xml-mode-map "\C-cl" 'tempo-template-xsp-logic)
+     (define-key xml-mode-map "\C-ce" 'tempo-template-xsp-expr))
+
+   (add-hook 'xml-mode-hook 'my-xml-templates-hook)
+]]>
+</source>
+
+  </s2>
+
+ </s1>
+</body>
+</document>

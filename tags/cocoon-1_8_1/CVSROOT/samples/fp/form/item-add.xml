@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!-- Written by Jeremy Quinn "sharkbait@mac.com" -->
+
+<?cocoon-process type="xsp"?>
+<?cocoon-process type="xslt"?>
+
+<?xml-stylesheet type="text/xsl" href="form-html.xsl"?>
+
+<xsp:page 
+	xmlns:fp="http://apache.org/cocoon/XSP/FP/1.0"
+	xmlns:request="http://www.apache.org/1999/XSP/Request"
+	xmlns:util="http://www.apache.org/1999/XSP/Util"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+	language="java"
+>
+	
+	<page>
+		<fp:resource id="default-item">
+			<fp:resource-file>default.xml</fp:resource-file>
+			<fp:resource-node>form/page/item</fp:resource-node>
+		</fp:resource>
+		<fp:resource id="external-item">
+			<fp:resource-file>../index.xml</fp:resource-file>
+			<fp:resource-node>item[position()=<request:get-parameter name="item"/>]</fp:resource-node>
+			<fp:default-mode>insert-before</fp:default-mode>
+		</fp:resource>
+		
+		<title>Add more News</title>
+		<method><request:get-method/></method>
+		<task>add</task>
+		<menu action="item-add.xml?item=">
+			<fp:read select="../item/title" from="external-item" as="node"/>
+		</menu>
+
+		
+		<form action="item-add.xml" method="POST">
+			<input name="title">
+				<xsp:attribute name="label"><fp:read select="title/label" from="default-item"/></xsp:attribute>
+				<fp:if-post>
+					<fp:write to="external-item" select="title">
+						<request:get-parameter name="title"/>
+					</fp:write>
+					<fp:read select="title" from="external-item"/>
+				</fp:if-post>
+				<fp:if-get>
+					<fp:read select="title/value" from="default-item"/>
+				</fp:if-get>
+			</input>
+			<input name="body" type="textarea">
+				<xsp:attribute name="label"><fp:read select="body/label" from="default-item"/></xsp:attribute>
+				<fp:if-post>
+					<fp:write select="body" to="external-item" as="node">
+						<request:get-parameter name="body"/>
+					</fp:write>
+					<fp:read select="body" from="external-item" as="node"/>
+				</fp:if-post>
+				<fp:if-get>
+					<fp:read select="body/value/body" from="default-item" as="node"/>
+				</fp:if-get>
+			</input>
+			<input name="figure" type="select">
+				<xsp:attribute name="label"><fp:read select="figure/label" from="default-item"/></xsp:attribute>
+				<fp:read as="node" select="figure/value" from="default-item"/>
+				<fp:if-post>
+					<fp:write select="figure" to="external-item">
+						<request:get-parameter name="figure"/>
+					</fp:write>
+					<selection><fp:read select="figure" from="external-item"/></selection>
+				</fp:if-post>
+			</input>
+			<input name="item" type="hidden">
+				<value><request:get-parameter name="item"/></value>
+			</input>
+			<input name="date">
+				<fp:if-post>
+					<fp:redirect>../index.xml</fp:redirect>
+					<fp:write select="date" to="external-item">
+						<util:time format="dd/MM/yyyy hh:mm:ss"/>
+					</fp:write>
+				</fp:if-post>
+			</input>
+			<input name="submit" type="submit">
+				<xsp:attribute name="label"><fp:read select="submit/label" from="default-item"/></xsp:attribute>
+				<fp:read select="submit/value" from="default-item"/>
+			</input>
+		</form>
+	</page>
+</xsp:page>

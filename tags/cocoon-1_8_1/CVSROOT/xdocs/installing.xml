@@ -1,0 +1,1314 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Installing Cocoon</title>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+   <person name="Brett McLaughlin" email="bmclaugh@algx.net"/>
+   <person name="Russell Castagnaro" email="russell@synctank.com"/>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+   <person name="Michele Bianchi" email="mic@pow2.com"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Notes for Upgraders">
+ 
+   <p>If you are upgrading Cocoon from a previous version, please note four
+    important points:</p>
+ 
+   <ul>
+    <li>It is likely to cause errors if you use your old cocoon.properties file.
+     Instead, copy the new one from the Cocoon distribution and make changes to it
+     if necessary.
+    </li>
+    <li>Again, it may cause errors if you use old samples with a new Cocoon.</li>
+    <li>If you use the ESQL taglib, the
+     <connect href="esql.xml">syntax has changed</connect> between Cocoon 1.8 and
+     Cocoon 1.8.1</li>
+    <li>The most common upgrading and installation mistakes can be rectified by carefully
+     reading the instructions below.</li>
+   </ul>
+ 
+ </s1>
+
+ <s1 title="System Requirements">
+  <p>
+   Cocoon requires the following systems to be already installed in your
+   system:
+  </p>
+
+  <ul>
+   <li><strong>Java Virtual Machine</strong>
+    A Java 1.1 or greater compatible virtual machine must be present for both
+    command-line and servlet usage of Cocoon. Note that all servlet engines
+    require a JVM to run so if you are already using servlets you already have
+    one installed.
+   </li>
+   <li><strong>Servlet Engine</strong>
+    A Servlet 2.x compliant servlet engine  must be present in order to support
+    servlet operation and dynamic request handling. Note that this requirement
+    is optional for command-line operation.
+   </li>
+  </ul>
+ </s1>
+
+ <anchor id="jars"/>
+ <s1 title="Required Components">
+  <p>
+   Cocoon is a publishing framework and was designed to be highly modular to
+   allow users to choose their preferred implementation for the required
+   component and to allow better and faster parallel development.
+  </p>
+
+  <p>
+   Previous releases of Cocoon forced you to download all the basic required
+   packages for the installation, but this generated lots of problems due to
+   lack of synch between the projects and the complexity of the operation.
+   For this reason, Cocoon now ships with all the <em>required</em> packages,
+   (but not the optional packages),
+   a sort of a simple distribution to make things easier for you. We apologize
+   for the increased size of the distribution, but we think this will be
+   worthwhile even for users with low bandwidth.
+  </p>
+
+  <p>
+   In the <code>/bin</code> directory you'll find the <code>cocoon.jar</code>
+   jar package that contains the Cocoon binary files, while the <code>/lib</code>
+   directory contains all the libraries required for Cocoon operation.
+   While these packages may not be the most up-to-date versions, they are
+   guaranteed and tested to work properly with Cocoon so, we suggest that you
+   use them. Note, however, that they were all redistributed untouched from
+   their original distributions.
+  </p>
+
+  <p>
+   <strong>If you use Java 1.2 or greater</strong>, you also have to treat the file
+   <code>[jdk_home]/lib/tools.jar</code> as another Cocoon component and include
+   this into your classpath. This package contains the java compiler that
+   is required for Cocoon page compilation.
+  </p>
+
+  <p>
+   It is <strong>very important</strong> to ensure that the xerces jar is in front
+   of other XML parsers in the CLASSPATH (if any). This is the most frequent source of errors
+   in installing Cocoon!
+  </p>
+
+  <note>
+   The Ant, Stylebook and Servlet packages are only used in the build system and
+   are <strong>not</strong> used by Cocoon at run-time. So you can safely
+   ignore them in the installation (unless otherwise specified).
+  </note>
+
+  <note>
+   The <code>sax-bugfix.jar</code> is an <strong>optional</strong>, unofficial bugfix
+   - which <strong>must</strong> be ahead of xerces in the CLASSPATH to work -
+   to allow you to see line numbers
+   and column numbers in XML parsing error messages, and is only needed on some virtual
+   machines. If you get "sealing violations", try removing it from your CLASSPATH.
+  </note>
+ </s1>
+
+ <s1 title="Installing Cocoon">
+  <p>
+   As Cocoon is a servlet (albeit a large servlet!), you should be able to
+   install it on every compliant servlet engine by associating the
+   "org.apache.cocoon.Cocoon" servlet
+   with the requests you want it to handle, and adding the required jar files
+   to the CLASSPATH.
+   Unfortunately, there is as yet no standard way to do this,
+   so we try to provide detailed information for a variety of
+   servlet engines:
+  </p>
+
+  <ul>
+   <li><jump anchor="jserv">Apache JServ</jump></li>
+   <li><jump anchor="tomcat">Apache Tomcat</jump> - 
+     <link href="http://jakarta.apache.org/tomcat/index.html">Tomcat homepage</link></li>
+   <li><jump anchor="weblogic">BEA WebLogic</jump></li>
+   <li><jump anchor="dynamo">Dynamo</jump></li>
+   <li><jump anchor="websphere">IBM WebSphere</jump></li>
+   <li><jump anchor="inprise">Inprise Application Server</jump></li>
+   <li><jump anchor="iplanet">iPlanet Web Server</jump></li>
+   <li><jump anchor="servletexec">ServletExec</jump></li>
+   <li><jump anchor="other">Other</jump></li>
+  </ul>
+
+  <p>
+   Note that you should not need to change anything from the template
+   <code>cocoon.properties</code> configuration file found in the distribution (under <code>/conf/</code>),
+   but you must edit it for more complex operation. Please refer directly to
+   that file, which contains brief comments and hints on the
+   different configurations.
+  </p>
+
+  <note>
+   If you have any problems, please look at the 
+   <connect href="faqs.xml">FAQ</connect> before submitting a bug
+   report or a request for help on the mailing lists. Thank you.
+  </note>
+
+  <anchor id="jserv"/>
+  <s2 title="Installing Cocoon on Apache JServ">
+   <p>
+    The first thing to do is to make sure that Cocoon and all the needed
+components
+    (as explained in the previous section) are visible to the JVM. This
+    means adding
+    the following to the servlet engine classpath by adding a bunch of
+classpath lines
+    to your <code>jserv.properties</code> file for each jar package.
+   </p>
+
+<source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
+
+   <p>
+    Here is an example: <strong>This is an EXAMPLE only and may not be 
+    up to date. If you get errors, first check that all the required jar files
+    <jump anchor="jars">(see top of page)</jump>
+    from cocoon/lib are on your CLASSPATH, and spelled correctly.</strong>
+   </p>
+
+<source>
+wrapper.classpath=/usr/local/java/jdk/lib/tools.jar
+wrapper.classpath=/usr/local/java/cocoon/bin/cocoon.jar
+wrapper.classpath=/usr/local/java/cocoon/lib/xerces.jar
+[... and all the other required jar files in cocoon/lib as discussed above]
+</source>
+
+   <note>
+    The <code>./bin/cocoon.jar</code> package <strong>must</strong> be added to the
+    servlet engine classpath in order for the XSP subsystem to work correctly.
+    We understand that this could be a flexibility limitation. 
+    On JServ it is not yet possible to run
+    multiple instances of Cocoon in the same virtual machine - if you
+    would like to do that, try using a different servlet engine. (To be fixed soon.)
+   </note>
+
+   <note>
+    JServ is a Servlet 2.0 compliant servlet engine and will not work if you
+    place the Servlet_2.2.jar in its classpath. So ignore the servlet_2.2.jar
+    package that is shipped with Cocoon if you use Jserv.
+   </note>
+
+   <p>
+    At this point, you must set the Cocoon configuration. To do this, you
+    must choose the servlet zone(s) where you want Cocoon to reside.
+    If you don't know what a servlet zone is, open the
+    <code>zone.properties</code> file.
+   </p>
+
+   <p>
+    To configure Cocoon, you must pass the <code>cocoon.properties</code>
+    file location to the servlet by adding the following line to the servlet zone:
+   </p>
+
+   <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
+
+   <p>
+    where [path-to-cocoon] is an <em>absolute</em> path.
+   </p>
+
+   <p>
+    Now your cocoon servlet is properly configured, but you should tell Apache
+    to direct any call to an XML file (or any other file you want Cocoon to
+    process) to the Cocoon servlet. To do this, you should add the following
+    line to your <code>jserv.conf</code> file:
+   </p>
+
+<source>Action cocoon /servlet/org.apache.cocoon.Cocoon
+AddHandler cocoon xml</source>
+
+   <p>
+    where <em>xml</em> is the file extention you want Cocoon to handle
+    and <em>/servlet/</em> is the mount point of your servlet zone (and the
+    above is the standard name for servlet mapping for Apache JServ).
+   </p>
+
+   <p>
+    If you haven't already got the Actions module compiled in to Apache
+    (<strong>note - this is compiled in by default in standard installs</strong>),
+    you will need to have the following line uncommented in your
+    <code>httpd.conf</code> or Apache will not be able to start:
+   </p>
+
+<source>LoadModule action_module /path/to/mod_actions.so</source>
+
+   <p>
+    Restart both Apache and Apache JServ and try accessing the Cocoon 
+    status page:
+   </p>
+
+<source>http://localhost/Cocoon.xml</source>
+
+   <p>
+    Cocoon will show you how it's configured.
+   </p>
+
+   <p>
+    If the page above is working, make the samples contained in the distribution
+    (under <code>./samples</code>) visible from your web server (by either
+    copying the files under yout <code>htdocs</code> directory, or by making
+    at alias for the sample directory) and call <code>./samples/index.xml</code>
+    to see Cocoon in action.
+   </p>
+
+   <note>
+    If you have any problems, please look at the 
+    <connect href="faqs.xml">FAQ</connect> before submitting a bug
+    report or a request for help on the mailing lists. Thank you.
+   </note>
+  </s2>
+
+  <anchor id="tomcat"/>
+  <s2 title="Installing Cocoon on Apache Tomcat">
+
+   <p>We highly recommend using Tomcat 3.2.1 or higher, since it is more secure and supports
+    virtual hosting with <strong>or</strong> without using separate JVMs.</p>
+
+   <p>
+    To make Cocoon work with Tomcat, you must add a context to Tomcat that describes
+    to Tomcat how to load Cocoon files. Then you must tell Apache to send 
+    certain requests to Tomcat (and consequently Cocoon). Finally you must 
+    provide the .xml files to be served by Cocoon. These steps are outlined below.
+   </p>
+
+   <p>
+    A context in Tomcat describes to Tomcat how and when to load a particular servlet
+    and Cocoon is one such servlet. First we need to make sure that Tomcat knows how to
+    load the Cocoon .jar files. To begin with, you must copy any .jar files from
+    <code>$COCOON_HOME/lib</code> to <code>$TOMCAT_HOME/lib</code> that are necessary for Cocoon to run
+    (see <jump anchor="jars">top of page</jump>).
+    In addition, you must copy <code>$COCOON_HOME/bin/cocoon.jar</code> to <code>$TOMCAT_HOME/lib</code>.
+   </p>
+
+   <p>
+    In recent versions of Tomcat under Unix and Windows, Tomcat will automatically
+    detect any <code>.jar</code> files
+    in the <code>$TOMCAT_HOME/lib</code> directory. But with Tomcat 3.1 under Windows only, you must explicitly add 
+the new
+    <code>.jar</code> files in the appropriate place in the file <code>$TOMCAT_ROOT/bin/tomcat.bat</code>.
+   </p>
+
+   <p>
+    Next you must tell Tomcat about the new context which will run Cocoon requests. To do
+    this edit the file <code>$TOMCAT_HOME/conf/server.xml</code> and add the following line:
+   </p>
+
+ <source><![CDATA[
+ <Context path="/cocoon" docBase="webapps/cocoon" debug="0" reloadable="true" >
+ </Context>
+ ]]></source>
+
+      <p>
+      This tells Tomcat that requests that come in under that partial path "/cocoon" should
+      be mapped to the context defined in the directory "webapps/cocoon". We will set that up
+      shortly.
+      </p>
+
+     <p>
+      Next, if using Apache with Tomcat (which is recommended on a production server, since Tomcat standalone
+      is not yet as efficient or robust - Apache is more mature!)
+      we need to tell Apache to forward the same partial pathnames to Tomcat. This is done
+      by editing the tomcat <code>.conf</code> file (it's called <code>tomcat-apache.conf</code> if you're 
+      using Tomcat 3.1, but with Tomcat 3.2 you have a choice between tomcat-apache and the more
+      advanced <code>mod_jk.conf-auto</code>) and associating it with your Apache setup, as described below.</p>
+
+     <p>
+      <strong>Very Important Note!</strong> Both of these files are now <strong>regenerated and overwritten</strong>
+      whenever you run Tomcat, so don't edit them directly, but instead <strong>save them as something else!</strong>
+     </p>
+
+     <p>If you're using mod_jserv, 
+      add the following lines to your copy of <code>tomcat-apache.conf</code>:
+     </p>
+
+ <source><![CDATA[
+ Alias /cocoon $TOMCAT_HOME/webapps/cocoon
+ <Directory "$TOMCAT_HOME/webapps/cocoon">
+     Options Indexes FollowSymLinks
+ </Directory>
+ ApJServMount /cocoon /cocoon
+ AddType text/xml .xml
+ AddHandler jserv-servlet .xml
+ <Location /cocoon/WEB-INF/ >
+     AllowOverride None
+     deny from all
+ </Location>
+ ]]></source>
+
+      <p>
+      This tells Apache to direct .xml requests that come in under that partial path "/cocoon" to
+      the directory under Tomcat (<code>$TOMCAT_HOME/webapps/cocoon</code>). The equivalent setup for
+      mod_jk with a worker called "ajp13" is simpler (see also the mod_jk HOWTO for more details):
+      </p>
+
+ <source><![CDATA[
+ Alias /cocoon $TOMCAT_HOME/webapps/cocoon
+ <Directory "$TOMCAT_HOME/webapps/cocoon">
+     Options Indexes FollowSymLinks
+ </Directory>
+ JkMount /cocoon/*.xml ajp13
+ AddType text/xml .xml
+ <Location /cocoon/WEB-INF/ >
+     AllowOverride None
+     deny from all
+ </Location>
+ ]]></source>
+
+     <note>Don't mix mod_jserv directives with mod_jk directives. It won't work.</note>
+
+     <p>
+      These files don't actually do anything by themselves. To be activated, they need to be included
+      into the main Apache configuration file. To do this, add this to <code>httpd.conf</code>.
+     </p>
+
+     <source>
+       include /your-dir/your-filename-here
+     </source>
+
+     <p>(of course, substituting <code>/your-dir/your-filename-here</code> for the location of your
+       configuration file)</p>
+
+     <p>
+      Finally, we need to set up the actual context that we have defined and pointed requests
+      to above. To do this, we need to create a new directory in webapps called cocoon. Then
+      we need to make a sub-directory that describes to Tomcat how to map particular files to
+      Cocoon, then we need to fill the sub-directory with our Cocoon source files (<code>.xml</code> files).
+     </p>
+
+     <p>
+      First make a directory and its subdirectory:
+     </p>
+
+ <source><![CDATA[
+ mkdir $TOMCAT_HOME/webapps/cocoon
+ mkdir $TOMCAT_HOME/webapps/cocoon/WEB-INF
+ ]]></source>
+
+     <p>
+      Next copy the template files from the Cocoon distribution:
+     </p>
+
+ <source><![CDATA[
+ cp $COCOON_HOME/src/WEB-INF/web.xml $TOMCAT_HOME/webapps/cocoon/WEB-INF
+ cp $COCOON_HOME/conf/cocoon.properties $TOMCAT_HOME/webapps/cocoon/WEB-INF
+ ]]></source>
+ 
+     <p>
+      Next you need to edit the <code>$TOMCAT_HOME/webapps/cocoon/WEB-INF/web.xml</code>
+      file to point to the
+      Cocoon properties file in the same directory. Do this by changing the text
+      <code>conf/cocoon.properties</code> to <code>WEB-INF/cocoon.properties</code>. Note that this path is a relative
+      path, and must be so. Don't try to use an absolute path here. It won't work. Also note that
+      the web.xml file describes how to map .xml requests to the Cocoon servlet.
+     </p>
+ 
+     <p>
+      Next you need to populate the cocoon context with source <code>.xml</code> files. For testing purposes
+      you can just use the samples that come along with Cocoon.
+      <strong>Note that some of these are insecure and SHOULD NOT be available on a production server, because
+       they allow access to arbitrary .xml source code</strong>
+     </p>
+ 
+  <source><![CDATA[
+ cp -R $COCOON_HOME/samples $TOMCAT_HOME/webapps/cocoon/samples
+  ]]></source>
+ 
+      <p>
+      Finally, you need to stop Tomcat, stop Apache, then restart the two in order to make
+      all of the new settings load. You should be able to access pages like 
+      http://localhost/cocoon/Cocoon.xml and http://localhost/cocoon/samples/index.xml
+     </p>
+ 
+ 
+   <p>
+    <strong>IMPORTANT:</strong>
+    If you get a NoSuchMethodError when starting up, 
+    make sure that <code>xerces.jar</code> is located 
+    <strong>before</strong> 
+    other XML jars in the CLASSPATH, otherwise XSP won't work.
+    Tomcat 3.1 on UNIX - and Tomcat 3.2 on both UNIX and Windows -
+    construct their own CLASSPATH automatically and then add the environment 
+    CLASSPATH, so manually setting the CLASSPATH before running Tomcat won't work.
+    Instead, a hack which some people have found to work is (in the case of Tomcat 3.2) renaming
+    <code>xml.jar</code> as <code>zxml.jar</code> <strong>and</strong>
+    <code>parser.jar</code> as <code>zparser.jar</code>. For other versions try renaming <code>crimson.jar</code>.
+    (Alert readers may have noticed that xerces is lexicographically prior to xml anyway - so why does this work?
+     Well, to be quite frank - who cares? It works, okay! ;-)
+   </p>
+
+   <note>
+    If you have any other problems, <em>please, please</em> look at the 
+    <connect href="faq.xml">FAQ</connect> and the Tomcat documentation
+    <em>before</em> submitting a bug report or a request for help on the mailing lists. 
+    Please also consider that Tomcat has its own mailing lists for more Tomcat-related
+    problems. Thank you.
+   </note>
+  </s2>
+
+  <anchor id="weblogic"/>
+  <s2 title="Installing Cocoon on BEA WebLogic">
+
+   <p>Please follow the instructions for the version that you are using.</p>
+
+   <p>
+    Afterwards, everything should be configured fine. Restart Weblogic
+    and try accessing the samples contained in the distribution to see
+    Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
+    status.
+   </p>
+
+   <s3 title="BEA WebLogic version 4.5.1">
+    <p>
+     Add all of the required jar files
+    (see <jump anchor="jars">top of page</jump>)
+     to your <code>weblogic.class.path</code> variable, either
+     using the <em>t3config</em> utility or use the <code>-Dweblogic.class.path</code>
+     argument with the java runtime that invokes the system.
+    </p>
+    <p>
+     Once you've done that, you should register Cocoon by adding these lines
+     to your configuration files:
+    </p>
+<source>weblogic.httpd.register.*.xml=\org.apache.cocoon.Cocoon
+weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties</source>
+    <p>
+     making sure that you replaced <em>[path-to-cocoon]</em> with the actual
+     path in your system.
+    </p>
+
+   </s3>
+
+   <s3 title="BEA WebLogic version 5.1 / Enterprise 5.1 J-Engine">
+    <p>WLS 5.1 implements Servlet 2.2. so it plugs in easily. Here's a quick recipe:</p>
+
+    <p>(The following will also work for installing Cocoon in the BEA WebLogic
+     Enterprise 5.1 J-Engine.)</p>
+
+    <ol>
+     <li>Add all the required jar files 
+      <jump anchor="jars">(see top of page)</jump>
+      to your CLASSPATH (but see the CLASSPATH section below!).
+      You can do this through <code>wlconfig</code> in the <code>weblogic\bin</code> directory,
+      or on Windows through <code>regedit32</code> (Software -> BEA Systems -> 
+      Weblogic -> 5.10 -> classpath), or the <code>startweblogic.cmd</code> file.
+     </li>
+     <li>Create a new subdirectory tree of your WLS run time directory
+      "cocoonwar/WEB-INF" and copy the default web.xml file (from the
+      src/WEB-INF directory of the distribution) there.</li>
+     <li>Copy the cocoon.properties from the conf directory of the
+      distribution to cocoonwar/WEB-INF and update the web.xml file to 
+      refer to it. You should use a relative path:
+      <code>/WEB-INF/cocoon.properties</code></li>
+     <li>Copy the samples directory from the distribution to <code>cocoonwar</code></li>
+     <li>Map the web application into the WLS URI name space by adding the
+      following line to your weblogic.properties file:
+      <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
+     </li>
+     <li>Restart the Weblogic server</li>
+    </ol>
+
+    <s4 title="Classpaths and XSP">
+ 
+     <p>To support hot deployment of EJB's and Servlets, WebLogic Server
+      uses its own class loader with its own classpath (the "WebLogic
+      classpath"). Normally you'd put all the WebLogic Server container
+      code, JDBC drivers, etc. in your Java CLASSPATH (so that WebLogic
+      Server can start up) and add all your application code (stuff that
+      needs to be able to be redeployable) to the WebLogic classpath.</p>
+
+     <p>Cocoon is effectively "container" code, and the XSP processor uses
+      dynamic classloading which only understands the Java CLASSPATH, so
+      you should put all of the Cocoon jars in CLASSPATH.</p>
+
+     <p>The big problem with this is that you can't use any code that loads
+      from the WebLogic classpath within XSP's. This includes all of the
+      WebLogic API, so is a PITA. To overcome this, either the way Cocoon
+      loads classes needs to be modified, or the
+      WebLogic Server class loader needs to be disabled (in which case you
+      have to be willing to live without hot redeployment).</p>
+
+     <p>To disable the WebLogic class loader, put your application classes,
+      the Cocoon jars and <em>all</em> of the WebLogic Server stuff into the Java
+      CLASSPATH, and add</p>
+
+     <source>-Dweblogic.system.disableWeblogicClassPath=true</source>
+
+     <p>to the java command at the end of your WebLogic start script.</p>
+    </s4>
+
+   </s3>
+
+   <s3 title="BEA Weblogic Server version 6.0">
+    <ol>
+     <li>Create a "cocoon" directory in WEBLOGIC_HOME/config/mydomain/applications</li>
+     <li>Copy the "conf" and "samples" directories from the Cocoon distribution to
+      <code>WEBLOGIC_HOME/config/mydomain/applications/cocoon</code></li>
+     <li>Create WEBLOGIC_HOME/config/mydomain/applications/cocoon/WEB-INF and copy
+  src/web.xml from the distro to this directory. Note that all caps are important
+  for the WEB-INF directory regardless of OS (since Java is case sensitive).</li>
+     <li>Edit the web.xml file to point to the cocoon.properties file. If you followed
+  the instructions above, the &lt;param-value&gt; tag should contain
+  /conf/cocoon.properties</li>
+     <li>Make sure ALL the required jars in the Cocoon distribution are in your Java CLASSPATH. If
+  you get errors initializing Cocoon or accessing XSP pages, check this first.</li>
+     <li>Start WLS. Cocoon should automagically deploy. Start the console, click on
+  the "deployments" -> "Applications". You should see "cocoon" in the application
+  list. Click on it and see if the "Deployed" box is checked in the configuration
+  tab. If it isn't, check it and click "apply".</li>
+    </ol>
+   </s3>
+   
+  </s2>
+
+  <anchor id="dynamo"/>
+  <s2 title="Installing Cocoon on Dynamo">
+   <p>This has been tested on Windows 2000.</p>
+
+   <ol>
+    <li>Remove lotusxsl.jar and xml4j.jar - these are replaced by the newer
+     xalan and xerces, respectively, supplied with Cocoon.</li>
+    <li>Update your system CLASSPATH with the required Cocoon jars
+     <jump anchor="jars">(see top of page)</jump></li>
+    <li>Start the Dynamo server and the Developer Workbench.</li>
+    <li>In the Developer Workbench create a component in the Nucleus tree named <code>/Cocoon</code></li>
+    <li>Edit the properties file $DYNAMO_HOME/localconfig/Cocoon.properties and add the line
+     <code>properties=C:/Programs/cocoon-1.8/conf/cocoon.properties</code> (use the correct path for your
+     installation, and use forward slashes instead of backslashes).</li>
+    <li>Look for the component "/atg/dynamo/servlet/pipeline/MimeTyperServlet" and
+     check the property "mimeTyper" is "/atg/dynamo/servlet/pipeline/MimeTyper".</li>
+    <li>Look for the component "/atg/dynamo/servlet/pipeline/MimeTyper" and check
+     properties 160 and 161 are "xml" and "application/xml".  If not, you have to
+     add them.</li>
+    <li>Look for the component "/atg/dynamo/servlet/pipeline/MimeTypeDispatcher" and
+     edit the proprerty "dispatcherServiceMap", adding "key" = "application/xml"
+     and "value" = "/Cocoon".</li>
+    <li>Re-start Dynamo.</li>
+    <li>Go to http://localhost/Cocoon.xml and you should see the Cocoon status page.</li>
+   </ol>
+
+  </s2>
+
+  <anchor id="websphere"/>  
+  <s2 title="Installing Cocoon on IBM WebSphere 3.5">
+    <p>The following rough-and-ready script installs Cocoon and maps the content directory to
+ the cocoon examples directory using /cocoon as a URI.  This script assumes
+ you've unpacked the cocoon 1.8 distribution into d:/cocoon-1.8, you may need
+ to adjust the paths to make this work for your config.</p>
+    <p><strong>WARNING! This script will wipe out any user set command line arguments to the
+     default Application server.</strong></p>
+    <p><strong>WARNING! Do NOT add servlet_2_2.jar (from the Cocoon distribution) to the CLASSPATH.
+     This is only provided for the purposes of rebuilding Cocoon, and because WebSphere uses
+     non-standard Servlet API calls, this jar may cause WebSphere to fail.</strong></p>
+   <p>
+    <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    <jump anchor="jars">(see top of page)</jump>
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
+
+   <source><![CDATA[
+# usage: wscp -f ws.tcl
+
+set node [Node list]
+set appserv "[set node]ApplicationServer:Default Server"
+set webapp "$appserv/ServletEngine:Default Servlet Engine/WebApplication:cocoon"
+set cocoon "$webapp/Servlet:cocoon"
+
+# add the cocoon classes to the classpath
+# *** NOTE! - the following should be all on one line!! ***
+ApplicationServer modify $appserv/ -attribute
+{{CommandLineArgs {-classpath D:/cocoon-1.8/lib/bsf.jar;D:/cocoon-1.8/lib/bsfengines.jar;
+D:/cocoon-1.8/lib/turbine-pool.jar;D:/cocoon-1.8/lib/xerces_1_2.jar;
+D:/cocoon-1.8/lib/xalan_1_2_D02.jar;D:/cocoon-1.8/lib/fop_0_15_0.jar;
+D:/WebSphere/AppServer/jdk/lib/tools.jar;D:\cocoon-1.8\bin\cocoon.jar}}}
+
+# create the cocoon web application
+set attributes {}
+lappend attributes {Name cocoon}
+lappend attributes {Description {Cocoon web application}}
+lappend attributes {DocRoot {d:/cocoon-1.8/samples}}
+lappend attributes {URIPath default_host/cocoon}
+lappend attributes {Classpath d:/cocoon-1.8/samples}
+WebApplication create $webapp/ -attribute ${attributes}
+
+# create the servlet
+set attributes {}
+lappend attributes {Code org.apache.cocoon.Cocoon}
+lappend attributes {Name cocoon}
+lappend attributes {LoadAtStartup true}
+lappend attributes {Description {Cocoon servlet}}
+lappend attributes {URIPaths {default_host/cocoon/}}
+lappend attributes {InitParams {{properties D:\cocoon-1.8\conf\cocoon.properties}}}
+Servlet create $cocoon/ -attribute ${attributes}
+
+# stop & start the app server to make cocoon runnable.
+ApplicationServer stop $appserv/
+ApplicationServer start $appserv/
+   ]]></source>
+  </s2>
+
+  <anchor id="inprise"/>
+  <s2 title="Installing Cocoon on Inprise Application Server 4.1.1">
+   <p>This has been tested on RedHat, Debian and Windows 2000 with JWS 2.0.</p>
+
+   <ol>
+    <li>Copy all the required jars
+     (see <jump anchor="jars">top of page</jump>)
+     to the IAS <code>[path_to_ias]/ias/lib</code> directory.</li>
+    <li>Start IAS.</li>
+    <li>Open the web server administration interface (not the IAS console) at
+     http://your_host:9090 and login as admin.</li>
+    <li>Select "HTTP Web Engine", the first on the services list.</li>
+    <li>In the "Setup menu" select "Servlet Aliases", press the "add" button and
+      type "<code>*.xml</code>" on the left and "<code>cocoon</code>" on the right. 
+      <strong>Remember to press the "Save" button!</strong></li>
+    <li>Press the "Servlet" button (with the gears icon) on the top on the left,
+   then the "add" button.  Type as "Servlet Name" "<code>cocoon</code>" and "Servlet Class"
+   "<code>org.apache.cocoon.Cocoon.class</code>".  Press "add".  Write whatever description you
+   like and go to press the "Properties" button (on the top).  Press "add" and
+   set the init parameter: the name is "properties" and the value is
+   the full path to your <code>cocoon.properties</code> file.  Press "Save".</li>
+    <li>Choose between "Load at Startup" or "Loaded Now" and press "Save" again.</li>
+    <li>Go to http://localhost:8080/Cocoon.xml and you should see the Cocoon status page.</li>
+   </ol>
+
+  </s2>
+
+  <anchor id="iplanet"/>
+  <s2 title="Installing Cocoon on iPlanet Web Server 4.x">
+   <p>This has been tested on v4.1 under NT 4.</p>
+
+   <s3 title="If you prefer working with your file editor">
+    <p>Edit your <code>servlets.properties</code> file in the config folder
+    of your server (something like <code>C:\Netscape\Server4\https-something.somewhere.com\config</code>),
+    add the following lines:</p>
+
+<source><![CDATA[servlet.cocoon.code=org.apache.cocoon.Cocoon
+servlet.cocoon.initArgs=properties=<yourpath to cocoon>/cocoon/conf/cocoon.properties]]>
+</source>
+
+    <p>In the <code>jvm12.conf</code>, add all the needed ".jar" files to the <code>jvm.classpath</code> line 
+    and uncomment it. This would make the following line, for example, if you
+    installed Netscape on D: drive. (Note: This should be all on one line, but 
+    for legibility it is split accross lines.)</p>
+
+   <p>
+    <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    <jump anchor="jars">(see top of page)</jump>
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
+
+    <source>jvm.classpath=d:/Netscape/Server4/plugins/samples/servlets/beans.10/SDKBeans10.jar;
+d:/Netscape/Server4/plugins/samples/servlets/beans/SDKBeans.jar;
+d:/Netscape/Server4/bin/https/jar/Bugbase.jar;
+d:/Netscape/Server4/bin/https/jar/Calljsac.jar;
+D:/Netscape/Server4/docs/cocoon/bin/cocoon.jar;
+D:/Netscape/Server4/docs/cocoon/lib/fop_0_15.jar;
+D:/Netscape/Server4/docs/cocoon/lib/turbine-pool.jar;
+D:/Netscape/Server4/docs/cocoon/lib/xalan_1_2_D02.jar;
+D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2.jar
+</source>
+
+    <p>In the rules.properties file, add the following line (this is made to turn around a regexp bug in iWS):</p>
+
+    <source>@.*[.]xml=cocoon</source>
+   </s3>
+
+   <s3 title="If you prefer the GUI interface">
+    <p>Everything is in the "Servlets" tab of your server setting:</p>
+    <ol>
+     <li>You need to set first "Configure Servlet Attributes". <strong>Don't try to set the classpath here</strong>. It is of no use :-(</li>
+      <sl>
+       <li>Servlet Name: Cocoon</li>
+       <li>Servlet Code (class name): org.apache.cocoon.Cocoon</li>
+       <li>Servlet Args: properties=&lt;yourpath to cocoon&gt;/cocoon/conf/cocoon.properties (This is a disk path)</li>
+      </sl>
+     <li>Then, go to "Configure JVM Attributes" and add to the classpath the
+     path to the cocoon jar (like the jvm.classpath value in the above section)</li>
+     <li>To finish, go to "Configure Servlet Virtual Path Translation" and add
+     the rule for "*.xml" to point to cocoon servlet:</li>
+     <sl>
+      <li>Virtual Path: @.*[.]xml</li>
+      <li>Servlet Name: cocoon</li>
+     </sl>
+    </ol>
+   </s3>
+  </s2>
+
+  <anchor id="jrun"/>
+  <s2 title="Installing Cocoon on JRun">
+   <p>
+     To configure JRun, you must set up both JRun and the web server
+     of your choice to work with Cocoon.  We assume that you already
+     have a generic JRun installation that works with your web server.
+   </p>
+
+   <p>Please follow the instructions that apply to your version of JRun,
+    and then the additional general instructions for having the webserver
+    pass requests to Cocoon.</p>
+
+   <s3 title="JRun version 2.3">
+    <p>
+     For the JRun portion, you must add all Cocoon jars to the java.classpath
+     in [jrun-home]/jsm-default/properties.
+    </p>
+
+   <p>
+    Here is an example: <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    <jump anchor="jars">(see top of page)</jump>
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
+                                                                                                                            
+<source>java.classpath=[previous jrun jars]:[cocoon-home]/lib/xerces.jar:
+[cocoon-home]/lib/stylebook.jar:[cocoon-home]/lib/fop.jar:
+[cocoon-home]/bin/cocoon.jar:[cocoon-home]/lib/xalan.jar:
+[cocoon-home]/lib/turbine-pool.jar</source>
+    <p>
+     Note that all newlines are added for readability and should not
+     actually be in the configuration file.  All jars should be listed
+     upon the same line.
+    </p>
+
+    <p>
+     Now, modify [jrun-home]/jsm-default/services/jse/properties/rules.properties
+     and add the line:
+    </p>
+
+<source>*.xml=org.apache.cocoon.Cocoon</source>
+
+    <p>
+     In [jrun-home]/jsm-default/services/jse/properties/servlets.properties,
+     add the lines:
+    </p>
+
+<source>servlets.properties:servlet.org.apache.cocoon.Cocoon.code=org.apache.cocoon.Cocoon
+servlets.properties:servlet.org.apache.cocoon.Cocoon.args=properties=[cocoon-home]/conf/cocoon.properties
+servlets.properties:servlet.org.apache.cocoon.Cocoon.preload=false</source>
+
+    <p>
+     And finally, change the defaultdocs line in
+     [jrun-home]/jsm-default/services/jse/properties/files.properties
+     and add "index.xml" so that the line
+     looks something like:
+    </p>
+
+<source>defaultdocs=index.html,index.jsp,index.xml</source>
+
+   </s3>
+
+  <s3 title="JRun version 3.0">
+   <p>In addition to the instructions given at
+    <link href="http://www.allaire.com/Handlers/index.cfm?ID=17501&amp;Method=Full">
+     the JRun website</link>
+   <strong>and</strong> below, 
+    you also need to do the following to 
+    avoid conflicts with JRun 3.0's own XML classes.</p>
+
+   <ol>
+    <li>Make sure you first stop the admin server and the default server.</li>
+    <li>Delete jaxp.jar, parser.jar and xt.jar from the JRun\lib\ext
+     directory.</li>
+    <li>Copy the xerces.jar which is in the Cocoon package,
+     and also the tools.jar of the JDK 1.2.2 to the
+     JRun\lib\ext directory.</li>
+    <li>Restart the admin server.</li>
+   </ol>
+  </s3>
+
+  <p>
+   Next, since JRun is web server independent, you must configure JRun and Cocoon to
+   work with your webserver.  Again, we assume that you already have JRun
+   installed and working for your particular webserver.  We give
+   additional instructions only for making Cocoon work.
+  </p>
+
+  <s3 title="Cocoon with JRun and Apache">
+
+   <p>
+    Add the following to [apache path]/conf/httpd.conf
+   </p>
+
+<source>Action cocoon /servlet/org.apache.cocoon.Cocoon
+AddHandler cocoon xml
+Alias /cocoon/ "[cocoon-home]"</source>
+
+   <p>
+    The "Alias" line above is optional; but it will make
+    testing the setup much easier.  To verify that all is working,
+    make sure to test out the XSP demos.  If you get a
+    NoSuchMethodError, try moving
+    the xerces.jar to the front of JRun's java.classpath, restart
+    JRun, and try the XSP again.
+   </p>
+
+  </s3>
+
+  <s3 title="Cocoon with JRun and other web servers (iPlanet, IIS, etc)">
+   <p>Add your sucessful installation method here.  Volunteers welcome!</p>
+  </s3>
+
+  </s2>
+
+<anchor id="servletexec"/>
+<s2 title="Installing Cocoon on ServletExec 2.2">
+
+<p>Add all the required .jar files
+    <jump anchor="jars">(see top of page)</jump>
+to your <code>Classpath.pref</code> file.
+Then, add this to the <code>servlets.properties</code> file:</p>
+
+<source>servlet.Cocoon.code=org.apache.cocoon.Cocoon
+servlet.Cocoon.initArgs=properties=/web/var/tmp/cocoon/cocoon.properties
+</source>
+
+<p>and this to the <code>rules.properties</code> file:</p>
+
+<source>*.xml=Cocoon</source>
+
+<p>
+to provide the initArgs and extension association for Cocoon.  Once
+the web server is restarted to pick up the new configuration,
+everything should work ok - try accessing the samples contained in the
+distribution to see Cocoon in action or the /Cocoon.xml page for
+Cocoon internal status.
+</p>
+
+<p>
+You could also make these three configuration changes via
+ the servlet/admin GUI interface if you're not into editing files.
+</p>
+
+</s2>
+
+  <anchor id="other"/>
+  <s2 title="Installing Cocoon on other platforms">
+   <p>Yet to be written! <em>Volunteers welcome!</em></p>
+
+  <p>Additionally, there are some servlet engines on the Working Systems table
+   below which are not listed above, but have been gotten to work with Cocoon.</p>
+  </s2>
+
+ </s1>
+
+ <s1 title="Working Systems">
+  <p>
+   Cocoon 1.x has been reported to be working on these systems:
+  </p>
+
+  <table>
+  <tr>
+   <th>Operating System</th>
+   <th>Web Server</th>
+   <th>Servlet Engine</th>
+   <th>JVM</th>
+  </tr>
+  <tr>
+   <td>Debian Potato or Woody</td>
+   <td>Apache 1.3.12</td>
+   <td>JServ 1.1.2</td>
+   <td>IBM JDK 1.1.8 or 1.3</td>
+  </tr>
+  <tr>
+   <td>Debian Woody</td>
+   <td>JWS 2.0</td>
+   <td>IAS 4.1.1</td>
+   <td>IBM JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.0</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Blackdown JDK 1.2pre2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1</td>
+   <td>Apache 1.3.9</td>
+   <td>JRun 2.3.3</td>
+   <td>IBM JRE 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1 (i686)</td>
+   <td>Apache 1.3.11</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1 (i686)</td>
+   <td>Apache 1.3.11 + mod_ssl 2.5.0</td>
+   <td>Apache JServ 1.1</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1</td>
+   <td>Apache 1.3.12-2</td>
+   <td>Jserv 1.1.2-2</td>
+   <td>JDK 1.2.2_006</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.1</td>
+   <td>Apache 1.3.14</td>
+   <td>Tomcat 3.2.1</td>
+   <td>JDK 1.1.6</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2</td>
+   <td>Apache 1.3.12</td>
+   <td>JRun 3.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2 (i686)</td>
+   <td>Apache 1.3.12 + mod_ssl 2.6.5</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2</td>
+   <td>Apache 1.3.12-2</td>
+   <td>Tomcat 3.1</td>
+   <td>JDK 1.2.2_006</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2</td>
+   <td>JWS 2.0</td>
+   <td>IAS 4.1.1</td>
+   <td>IBM JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2 (i686)</td>
+   <td>Apache 1.3.12</td>
+   <td>Resin 1.2.b1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 7.0</td>
+   <td>Apache 1.3.12</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Linux Mandrake 7.0</td>
+   <td colspan="2">Orion/1.0.3</td>
+   <td>Sun JDK 1.3.0rc1</td>
+  </tr>
+  <tr>
+   <td>SuSE 6.2 Linux</td>
+   <td>Apache 1.3.14 mod_ssl</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JDK 1.1.7 / IBM JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>SuSE 6.3 Linux</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>SuSE 7.0 Linux (2.2.16)</td>
+   <td>Apache 1.3.12</td>
+   <td>Apache JServ 1.1.2, Tomcat 3.1</td>
+   <td>IBM JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>IBM JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>IBM JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Windows 98</td>
+   <td>MS Personal Web Server</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows 98 SE</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>JDK 1.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>IIS 4.0</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>IIS 4.0</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td>Apache 1.3.9</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0</td>
+   <td colspan="2">Tomcat 3.1 Milestone 1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP3</td>
+   <td>Apache 1.3.12</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JRE 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP4</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP4</td>
+   <td colspan="2">BEA WebLogic Server 5.1 SP3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td colspan="2">WLS 6.0 Beta</td>
+   <td>JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td>IIS 4.0</td>
+   <td>JRun 3.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td>IIS 4.0</td>
+   <td>Websphere 3.5 Enterprise</td>
+   <td>IBM JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td>Apache 1.3.14</td>
+   <td>Tomcat 3.2b8</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP6</td>
+   <td>Apache 1.3.6</td>
+   <td>JDK 1.1.8</td>
+   <td>Resin 1.1</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP6a</td>
+   <td>Apache 1.3.11</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP6a</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP6a</td>
+   <td>IIS 4.0</td>
+   <td>Tomcat 3.2.1</td>
+   <td>Sun JDK 1.3.0</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td>Apache 1.3.12</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td colspan="2">Resin 1.1</td>
+   <td>Sun JRE 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td>JWS 2.0</td>
+   <td>IAS 4.1.1</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td colspan="2">Dynamo 4.5.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Advanced Server</td>
+   <td colspan="2">Tomcat 3.1</td>
+   <td>JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.5+</td>
+   <td colspan="2">Resin 1.1b</td>
+   <td>MRJ 2.2</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td colspan="2">Tomcat 3.1</td>
+   <td>MRJ 2.2.2</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td>WebSTAR 4.0</td>
+   <td>JRun 2.3</td>
+   <td>MrJ 2.1.4</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td>WebSTAR 4.0</td>
+   <td>ServletExec 2.1</td>
+   <td>Mrj 2.1.4</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td>Quid Pro Quo 2.1.3</td>
+   <td>ServletExec 2.2</td>
+   <td>Mrj 2.1.4</td>
+  </tr>
+  <tr>
+   <td>Solaris 2.5.1</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Solaris 2.5.1</td>
+   <td>Netscape-Enterprise/3.6 SP3</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
+  </tr>
+  <tr>
+   <td>SunOS Netria 5.6</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1b3</td>
+   <td>Sun JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Solaris 2.6 SPARC</td>
+   <td>Apache 1.3.14</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Solaris 7</td>
+   <td>Apache 1.3.14</td>
+   <td>Locomotive 4.2.0</td>
+   <td>JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Solaris 7</td>
+   <td>Netscape Enterprise Server 3.2</td>
+   <td>JRun 2.3</td>
+   <td>Sun JDK 1.2</td>
+  </tr>
+  <tr>
+   <td>Solaris 8 (SPARC)</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.1</td>
+   <td>Sun JDK 1.3 Beta Refresh</td>
+  </tr>
+  <tr>
+   <td>Solaris 8 (x86)</td>
+   <td colspan="2">Resin 1.2.b1</td>
+   <td>JDK 1.3 beta</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 3.4</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Blackdown JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 3.4-STABLE with linux_base-6.1 for linux-emulation</td>
+   <td colspan="2">Jetty Java HTTP Server v2.3.3</td>
+   <td>Blackdown jdk-1.2.2-RC4-linux-i386-glibc</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 4.1 (RELEASE)</td>
+   <td>Apache 1.3.12</td>
+   <td>Jserv 1.1.2</td>
+   <td>JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 4.1 (RELEASE)</td>
+   <td>Apache 1.3.12</td>
+   <td>Jserv 1.1.2</td>
+   <td>Linux JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>SCO OpenServer 5</td>
+   <td colspan="2">WebLogic 4.5.1</td>
+   <td>SCO JDK 1.1.7A</td>
+  </tr>
+  <tr>
+   <td>OS/2 Warp 4 FP 12</td>
+   <td colspan="2">Gefion Software LiteWebServer</td>
+   <td>IBM JDK 1.1.8</td>
+  </tr>
+  <tr>
+   <td>SGI IRIX 6.5.7</td>
+   <td>Apache 1.3.12</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.1 (SGI)</td>
+  </tr>
+  </table>
+
+  <p>
+   Please, submit your feedback on the
+   <link href="mailto:cocoon-users@xml.apache.org">cocoon users mailing list</link>
+   (nowhere else!) if
+   you were able to install Cocoon on a different combination not listed above.
+   Thanks!
+  </p>
+ </s1>
+</body>
+</document>
