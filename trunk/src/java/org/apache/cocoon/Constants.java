@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.8 2003/09/27 13:01:15 joerg Exp $
+ * @version CVS $Id: Constants.java,v 1.9 2003/10/17 20:58:08 bloritsch Exp $
  */
 public final class Constants {
 
@@ -95,7 +95,7 @@ public final class Constants {
     public static final String COMPLETE_NAME = properties.getProperty("fullname") + " " + VERSION;
 
     /** The version of the configuration schema */
-    public static final String CONF_VERSION  = "2.1";
+    public static final String CONF_VERSION  = "2.2";
 
     /** The year of the build */
     public static final String YEAR = properties.getProperty("year");
