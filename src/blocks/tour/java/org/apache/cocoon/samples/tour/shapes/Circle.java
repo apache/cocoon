@@ -31,11 +31,11 @@ public class Circle implements Shape{
         _r = r;
     }
     
-    public double area() {
+    public double getArea() {
         return 3.14 * _r * _r;
     }
     
-    public double perimeter() {
+    public double getPerimeter() {
         return 2 * 3.14 * _r;
     }
     

@@ -32,11 +32,11 @@ public class Rectangular implements Shape{
         return "Rectangular";
     }
 
-    public double area(){
+    public double getArea(){
     	return _h * _b;
     }
     
-    public double perimeter(){
+    public double getPerimeter(){
         return (_h + _b) * 2;
     }
 	    

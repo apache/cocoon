@@ -21,6 +21,6 @@ package org.apache.cocoon.samples.tour.shapes;
  */
 public interface Shape {
     String getName();
-    abstract double area();
-    abstract double perimeter();
+    abstract double getArea();
+    abstract double getPerimeter();
 }

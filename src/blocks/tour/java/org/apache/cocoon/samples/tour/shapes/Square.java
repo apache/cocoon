@@ -30,11 +30,11 @@ public class Square implements Shape {
         return "Square";
     }
 
-    public double area() {
+    public double getArea() {
         return _b*_b;
     }
     
-    public double perimeter() {
+    public double getPerimeter() {
         return 4*_b;
     }
     
