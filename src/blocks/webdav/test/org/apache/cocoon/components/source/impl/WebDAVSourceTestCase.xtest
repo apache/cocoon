@@ -16,10 +16,6 @@
 -->
 <!-- $Id$ -->
 <testcase>
- <annotation>
-  Test Cases: WebDAVSource
- </annotation>
-
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"

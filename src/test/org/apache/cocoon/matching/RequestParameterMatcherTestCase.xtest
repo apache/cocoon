@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: RequestParameterMatcher
- </annotation>
-
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"

@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: AugmentTransformer
- </annotation>
-
  <context>
    <entry name="root-url" value="/"/>
  </context>

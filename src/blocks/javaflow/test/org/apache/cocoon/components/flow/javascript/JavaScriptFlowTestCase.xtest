@@ -15,10 +15,6 @@
   limitations under the License.
 -->
 <testcase>
- <annotation>
-  Test Cases: JavaScriptFlowTestCase
- </annotation>
-
  <context>
   <entry name="org.apache.excalibur.event.Queue" 
   	     class="org.apache.excalibur.event.impl.DefaultQueue"/>
