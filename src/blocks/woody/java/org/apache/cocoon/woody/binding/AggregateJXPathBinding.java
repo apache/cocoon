@@ -90,8 +90,9 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
         AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.loadFormFromModel(aggregate, subContext);
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("done loading " + toString());
+        }
     }
 
     /**
@@ -103,8 +104,9 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
         AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.saveFormToModel(aggregate, subContext);
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("done saving " + toString());
+        }
     }
 
     public String toString() {
