@@ -85,7 +85,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.36 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.37 2004/02/20 20:34:37 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -371,7 +371,7 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-        Object key = EnvironmentHelper.startProcessing(environment);
+        environment.startingProcessing();
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
@@ -399,7 +399,7 @@ public class Cocoon
             throw any;
         } finally {
             EnvironmentHelper.leaveProcessor();
-            EnvironmentHelper.endProcessing(environment, key);
+            environment.finishingProcessing();
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
@@ -470,7 +470,7 @@ public class Cocoon
     throws Exception {
         ProgramGenerator programGenerator = null;
         Source source = null;
-        Object key = EnvironmentHelper.startProcessing(environment);
+        environment.startingProcessing();
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
 
         try {
@@ -489,7 +489,7 @@ public class Cocoon
             */
         } finally {
             EnvironmentHelper.leaveProcessor();
-            EnvironmentHelper.endProcessing(environment, key);
+            environment.finishingProcessing();
             this.sourceResolver.release(source);
             this.serviceManager.release(programGenerator);
         }

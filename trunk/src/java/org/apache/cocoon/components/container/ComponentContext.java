@@ -54,7 +54,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.internal.EnvironmentContext;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 import java.util.Map;
@@ -65,7 +65,7 @@ import java.util.Map;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.3 2004/01/19 10:38:32 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.4 2004/02/20 20:34:37 cziegeler Exp $
  */
 
 public class ComponentContext
@@ -119,20 +119,20 @@ public class ComponentContext
     public Object get( final Object key )
     throws ContextException {
         if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
-            final EnvironmentContext envContext = EnvironmentHelper.getCurrentEnvironmentContext();
-            if ( envContext == null ) {
+            final Environment env = EnvironmentHelper.getCurrentEnvironment();
+            if ( env == null ) {
                 throw new ContextException("Unable to locate " + key + " (No environment available)");
             }
-            return envContext.getEnvironment().getObjectModel();
+            return env.getObjectModel();
         }
         if ( key instanceof String ) {
             String stringKey = (String)key;
             if ( stringKey.startsWith(OBJECT_MODEL_KEY_PREFIX) ) {
-                final EnvironmentContext envContext = EnvironmentHelper.getCurrentEnvironmentContext();
-                if ( envContext == null ) {
+                final Environment env = EnvironmentHelper.getCurrentEnvironment();
+                if ( env == null ) {
                     throw new ContextException("Unable to locate " + key + " (No environment available)");
                 }
-                final Map objectModel = envContext.getEnvironment().getObjectModel();
+                final Map objectModel = env.getObjectModel();
                 String objectKey = stringKey.substring(OBJECT_MODEL_KEY_PREFIX.length());
 
                 Object o = objectModel.get( objectKey );

@@ -86,7 +86,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.27 2004/02/13 16:03:14 sylvain Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.28 2004/02/20 20:34:37 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -125,8 +125,8 @@ implements Source, XMLizable {
     /** Do I need a refresh ? */
     private boolean needsRefresh;
 
-    /** The unique key for this processing */
-    private Object processKey;
+    /** Is start processing on the environment called? */
+    private boolean processed;
     
     /** The used protocol */
     private String protocol;
@@ -143,7 +143,7 @@ implements Source, XMLizable {
                          Logger         logger)
     throws MalformedURLException {
 
-        Environment env = EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment();
+        Environment env = EnvironmentHelper.getCurrentEnvironment();
         if ( env == null ) {
             throw new MalformedURLException("The cocoon protocol can not be used outside an environment.");
         }
@@ -303,7 +303,8 @@ implements Source, XMLizable {
     protected void init() {
         this.systemIdForCaching = this.systemId;
         try {
-            this.processKey = EnvironmentHelper.startProcessing(this.environment);
+            this.environment.startingProcessing();
+            this.processed = true;
             this.pipelineDescription = this.processor.buildPipeline(this.environment);
             this.pipelineDescription.lastProcessor.getEnvironmentHelper().setContext(this.environment);
 
@@ -409,9 +410,9 @@ implements Source, XMLizable {
             this.pipelineDescription.release();
             this.pipelineDescription = null;
         }
-        if (this.processKey != null) {
-            EnvironmentHelper.endProcessing(this.environment, this.processKey);
-            this.processKey = null;
+        if ( this.processed ) {
+            this.processed = false;
+            this.environment.finishingProcessing();
         }
         this.sourceValidity = null;
         if (this.redirectSource != null) {

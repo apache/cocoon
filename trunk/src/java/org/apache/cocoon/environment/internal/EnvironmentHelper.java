@@ -78,16 +78,12 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.10 2004/02/20 19:06:21 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.11 2004/02/20 20:34:37 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
 extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
-
-    /** The key used to store the current environment context
-     * in the object model */
-    static protected final String PROCESS_KEY = EnvironmentHelper.class.getName();
 
     /** The environment information */
     static protected final InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
@@ -421,61 +417,17 @@ implements SourceResolver, Serviceable, Disposable {
     }
 
     /**
-     * This hook has to be called before a request is processed.
-     * The hook is called by the Cocoon component and by the
-     * cocoon protocol implementation.
-     * This method should never raise an exception, except when
-     * the environment is not set.
-     *
-     * @return A unique key within this thread.
+     * Return the environment
      */
-    public static Object startProcessing(Environment env) 
-    throws ProcessingException {
-        if ( null == env) {
-            throw new ProcessingException("EnvironmentHelper.startProcessing: environment must be set.");
-        }
-        final EnvironmentContext desc = new EnvironmentContext(env);
-        env.getObjectModel().put(PROCESS_KEY, desc);
-        env.startingProcessing();
-        return desc;
-    }
-
-    /**
-     * Return the environment context
-     * TODO: THIS WILL BE REMOVED SOON
-     */
-    public static EnvironmentContext getCurrentEnvironmentContext() {
+    public static Environment getCurrentEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
         if ( stack != null && !stack.empty() ) {
             final EnvironmentInfo info = stack.getCurrentInfo();
-            final Map objectModel = info.environment.getObjectModel();
-            return (EnvironmentContext)objectModel.get(PROCESS_KEY);
+            return info.environment;
         }
         return null;
     }
     
-    /**
-     * Return the environment context
-     * TODO: THIS WILL BE REMOVED SOON
-     */
-    public static EnvironmentContext getEnvironmentContext(Environment environment) {
-        final Map objectModel = environment.getObjectModel();
-        return (EnvironmentContext)objectModel.get(PROCESS_KEY);
-    }
-
-    /**
-     * This hook has to be called before a request is processed.
-     * The hook is called by the Cocoon component and by the
-     * cocoon protocol implementation.
-     * @param key A unique key within this thread return by
-     *         {@link #startProcessing(Environment)}.
-     */
-    public static void endProcessing(Environment env, Object key) {
-        env.finishingProcessing();
-        final EnvironmentContext desc = (EnvironmentContext)key;
-        env.getObjectModel().remove(PROCESS_KEY);
-    }
-
     /**
      * Return the current processor
      */
