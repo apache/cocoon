@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.131 2004/03/25 02:22:05 joerg Exp $
+    | CVS $Id: gump.xml,v 1.132 2004/03/25 03:57:46 crossley Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -553,6 +553,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-xsp"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
