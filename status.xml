@@ -204,6 +204,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     AbstractSAXTransformer namespaceURI and defaultNamespaceURI must never
+     be null. When extending AbstractSAXTransformer make sure to set
+     defaultNamespaceURI in the constructor.
+   </action>
    <action dev="VG" type="add">
      Faces block: Initial implementation of JavaServer Faces for Cocoon.
    </action>
