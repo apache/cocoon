@@ -86,10 +86,9 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.11 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.12 2004/02/29 12:36:19 antonio Exp $
  */
-public class RepeaterJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
+public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link RepeaterJXPathBinding} according to the
@@ -99,82 +98,79 @@ public class RepeaterJXPathBindingBuilder
      * @param assistant
      * @return JXPathBindingBase
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element bindingElm,
+            JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts =
+                JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             String repeaterId = DomHelper.getAttribute(bindingElm, "id");
             String parentPath =
                 DomHelper.getAttribute(bindingElm, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElm, "row-path");
-            String rowPathForInsert = DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
+            String rowPathForInsert =
+                DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
             String uniqueRowId =
                 DomHelper.getAttribute(bindingElm, "unique-row-id");
             String uniqueRowIdPath =
                 DomHelper.getAttribute(bindingElm, "unique-path");
 
-
             Convertor convertor = null;
             Locale convertorLocale = Locale.US;
-            Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.WD_NS, "convertor");
+            Element convertorEl =
+                DomHelper.getChildElement(bindingElm,
+                        Constants.WD_NS, "convertor");
             if (convertorEl != null) {
-                String datatype = DomHelper.getAttribute(convertorEl, "datatype");
+                String datatype =
+                    DomHelper.getAttribute(convertorEl, "datatype");
                 String localeStr = convertorEl.getAttribute("datatype");
-                if (!localeStr.equals(""))
+                if (!localeStr.equals("")) {
                     convertorLocale = I18nUtils.parseLocale(localeStr);
-                convertor = assistant.getDatatypeManager().createConvertor(datatype, convertorEl);
+                }
+                convertor =
+                    assistant.getDatatypeManager().createConvertor(datatype,
+                            convertorEl);
             }
 
-            Element childWrapElement =
-                DomHelper.getChildElement(
-                    bindingElm,
-                    BindingManager.NAMESPACE,
-                    "on-bind");
-
+            Element childWrapElement = DomHelper.getChildElement(bindingElm,
+                    BindingManager.NAMESPACE, "on-bind");
             if (childWrapElement == null) {
-                throw new BindingException("RepeaterBinding misses '<on-bind>' child definition. " +
-                                           DomHelper.getLocation(bindingElm));
+                throw new BindingException(
+                      "RepeaterBinding misses '<on-bind>' child definition. " +
+                      DomHelper.getLocation(bindingElm));
             }
 
-            JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
-
-            Element deleteWrapElement =
-                DomHelper.getChildElement(
-                    bindingElm,
-                    BindingManager.NAMESPACE,
-                    "on-delete-row");
+            JXPathBindingBase[] childBindings =
+                assistant.makeChildBindings(childWrapElement);
+            Element deleteWrapElement = DomHelper.getChildElement(bindingElm,
+                    BindingManager.NAMESPACE, "on-delete-row");
             JXPathBindingBase[] deleteBindings = null;
-            if(deleteWrapElement != null) {
-                deleteBindings = assistant.makeChildBindings(deleteWrapElement);
+            if (deleteWrapElement != null) {
+                deleteBindings =
+                    assistant.makeChildBindings(deleteWrapElement);
             }
 
-            Element insertWrapElement =
-                DomHelper.getChildElement(
-                    bindingElm,
-                    BindingManager.NAMESPACE,
-                    "on-insert-row");
+            Element insertWrapElement = DomHelper.getChildElement(bindingElm,
+                    BindingManager.NAMESPACE, "on-insert-row");
             JXPathBindingBase insertBinding = null;
             if (insertWrapElement != null) {
-                insertBinding = assistant.makeChildBindings(insertWrapElement)[0];
-
+                insertBinding =
+                    assistant.makeChildBindings(insertWrapElement)[0];
             }
 
             RepeaterJXPathBinding repeaterBinding =
-                new RepeaterJXPathBinding(
-                    commonAtts,
-                    repeaterId, parentPath, rowPath, rowPathForInsert,
-                    uniqueRowId, uniqueRowIdPath,
-                    convertor, convertorLocale,
-                    childBindings, insertBinding, deleteBindings);
-
+                new RepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
+                        rowPath, rowPathForInsert, uniqueRowId,
+                        uniqueRowIdPath, convertor, convertorLocale,
+                        childBindings, insertBinding, deleteBindings);
             return repeaterBinding;
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building repeater binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException(
+                    "Error building repeater binding defined at " +
+                    DomHelper.getLocation(bindingElm), e);
         }
     }
 }

@@ -66,48 +66,56 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.4 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.5 2004/02/29 12:36:19 antonio Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
 
-    public JXPathBindingBase buildBinding(
-        Element bindingElem,
+    public JXPathBindingBase buildBinding(Element bindingElem,
         JXPathBindingManager.Assistant assistant) throws BindingException {
-
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElem);
 
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
-            String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
+            String parentPath = DomHelper.getAttribute(bindingElem,
+                    "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
-            String rowPathInsert = DomHelper.getAttribute(bindingElem, "row-path-insert", rowPath);
-            boolean virtualRows = DomHelper.getAttributeAsBoolean(bindingElem, "virtual-rows", false);
-            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
-            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(bindingElem, "delete-parent-if-empty", false);
+            String rowPathInsert = DomHelper.getAttribute(bindingElem,
+                    "row-path-insert", rowPath);
+            boolean virtualRows = DomHelper.getAttributeAsBoolean(
+                    bindingElem, "virtual-rows", false);
+            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(
+                    bindingElem, "clear-before-load", true);
+            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(
+                    bindingElem, "delete-parent-if-empty", false);
 
-            Element childWrapElement =
-                DomHelper.getChildElement(bindingElem, BindingManager.NAMESPACE, "on-bind");
-            JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
+            Element childWrapElement = DomHelper.getChildElement(
+                    bindingElem, BindingManager.NAMESPACE, "on-bind");
+            JXPathBindingBase[] childBindings =
+                    assistant.makeChildBindings(childWrapElement);
 
-            Element insertWrapElement =
-                DomHelper.getChildElement(
-                    bindingElem,
-                    BindingManager.NAMESPACE,
-                    "on-insert-row");
+            Element insertWrapElement = DomHelper.getChildElement(bindingElem,
+                    BindingManager.NAMESPACE, "on-insert-row");
             JXPathBindingBase[] insertBindings = null;
-            if (insertWrapElement != null)
-                insertBindings = assistant.makeChildBindings(insertWrapElement);
-
-            return new TempRepeaterJXPathBinding(
-                commonAtts, repeaterId, parentPath, rowPath, rowPathInsert, virtualRows, clearOnLoad, deleteIfEmpty,
-                new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings),
-                new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, insertBindings));
+            if (insertWrapElement != null) {
+                insertBindings =
+                    assistant.makeChildBindings(insertWrapElement);
+            }
+            return new TempRepeaterJXPathBinding(commonAtts, repeaterId,
+                    parentPath, rowPath, rowPathInsert, virtualRows,
+                    clearOnLoad, deleteIfEmpty,
+                    new ComposedJXPathBindingBase(
+                            JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                            childBindings),
+                    new ComposedJXPathBindingBase(
+                            JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                            insertBindings));
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building temp-repeater binding defined at " +
-                DomHelper.getLocation(bindingElem), e);
+            throw new BindingException(
+                    "Error building temp-repeater binding defined at " +
+                    DomHelper.getLocation(bindingElem), e);
         }
     }
 }
