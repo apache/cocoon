@@ -54,6 +54,7 @@ import org.apache.avalon.framework.CascadingException;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: FileFormatException.java,v 1.2 2003/03/16 17:49:16 vgritsenko Exp $
  */
 public class FileFormatException extends CascadingException {
     public FileFormatException(String s) {

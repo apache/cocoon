@@ -140,6 +140,7 @@ import org.xml.sax.SAXException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
     implements Initializable, Configurable, LogSystem

@@ -59,7 +59,7 @@ import java.net.URL;
  * @deprecated by the new source resolving of avalon excalibur
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactory.java,v 1.1 2003/03/09 00:07:10 pier Exp $
+ * @version CVS $Id: URLFactory.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public interface URLFactory extends Component {
 

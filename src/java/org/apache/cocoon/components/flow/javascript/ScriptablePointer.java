@@ -55,6 +55,10 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+/**
+ *
+ * @version CVS $Id: ScriptablePointer.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ */
 public class ScriptablePointer extends DynamicPointer {
 
     Scriptable node;

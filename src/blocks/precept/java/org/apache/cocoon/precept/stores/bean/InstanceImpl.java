@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.stores.bean;
 
-
 import org.apache.avalon.framework.component.ComponentException;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -86,12 +85,11 @@ import org.apache.cocoon.precept.stores.AbstractInstance;
 
 import java.util.Collection;
 
-
-/*
- * @version: Mar 15, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 15, 2002
+ * @version CVS $Id: InstanceImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class InstanceImpl extends AbstractInstance implements Configurable {
 
     private Preceptor preceptor;

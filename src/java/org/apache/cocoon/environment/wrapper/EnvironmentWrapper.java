@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * contains a <code>RequestWrapper</code> object.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version $Id: EnvironmentWrapper.java,v 1.2 2003/03/12 12:55:16 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.3 2003/03/16 17:49:14 vgritsenko Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 

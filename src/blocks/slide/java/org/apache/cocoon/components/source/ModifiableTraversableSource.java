@@ -66,7 +66,7 @@ import org.apache.excalibur.source.SourceException;
  *          the version from avalon excalibur instead.
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: ModifiableTraversableSource.java,v 1.1 2003/03/09 00:06:18 pier Exp $
+ * @version CVS $Id: ModifiableTraversableSource.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
  */
 public interface ModifiableTraversableSource extends TraversableSource, ModifiableSource {
 

@@ -53,7 +53,8 @@ package org.apache.cocoon.taglib;
 import org.apache.cocoon.xml.XMLConsumer;
 
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: XMLProducerTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public abstract class XMLProducerTagSupport extends TagSupport implements XMLProducerTag {
     
@@ -73,5 +74,4 @@ public abstract class XMLProducerTagSupport extends TagSupport implements XMLPro
         xmlConsumer = null;
         super.recycle();
     }
-
 }

@@ -54,11 +54,11 @@ import org.apache.avalon.framework.component.Component;
 
 import org.apache.cocoon.precept.Preceptor;
 
-/*
- * @version: Mar 20, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 20, 2002
+ * @version CVS $Id: PreceptorBuilder.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public interface PreceptorBuilder extends Component {
 
     public String ROLE = "org.apache.cocoon.precept.PreceptorBuilder";

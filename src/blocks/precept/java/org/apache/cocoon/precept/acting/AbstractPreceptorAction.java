@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.acting;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,12 +69,11 @@ import org.apache.cocoon.precept.NoSuchNodeException;
 import org.apache.cocoon.precept.Preceptor;
 import org.apache.cocoon.precept.PreceptorViolationException;
 
-
-/*
- * @version: Feb 25, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 25, 2002
+ * @version CVS $Id: AbstractPreceptorAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public abstract class AbstractPreceptorAction extends AbstractMethodAction implements ThreadSafe {
     public final static String PRECEPTORVIOLATIONS = "preceptorViolations";
 

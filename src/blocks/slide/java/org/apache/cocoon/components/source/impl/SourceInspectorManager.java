@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceException;
  * This source inspector manage several source inspectors
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SourceInspectorManager.java,v 1.1 2003/03/09 00:06:21 pier Exp $
+ * @version CVS $Id: SourceInspectorManager.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public class SourceInspectorManager extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe, Contextualizable, Composable, Configurable, 

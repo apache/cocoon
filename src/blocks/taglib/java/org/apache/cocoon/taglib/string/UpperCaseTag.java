@@ -54,7 +54,8 @@ import org.apache.cocoon.taglib.TagSupport;
 import org.apache.cocoon.taglib.i18n.LocaleTag;
 
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: UpperCaseTag.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
  */
 public class UpperCaseTag extends StringTagSupport {
 

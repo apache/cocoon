@@ -53,6 +53,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
+ * @version CVS $Id: JSLog.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JSLog extends ScriptableObject
 {

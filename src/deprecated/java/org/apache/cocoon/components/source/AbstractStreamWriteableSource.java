@@ -77,9 +77,8 @@ import java.io.OutputStream;
  *
  * @deprecated Use the new Avalon Excalibur Source Resolving
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: AbstractStreamWriteableSource.java,v 1.1 2003/03/09 00:07:00 pier Exp $
+ * @version CVS $Id: AbstractStreamWriteableSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
-
 public abstract class AbstractStreamWriteableSource
     extends AbstractStreamSource
     implements org.apache.cocoon.environment.WriteableSource {

@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-
 import org.apache.cocoon.precept.*;
 
 import org.apache.cocoon.precept.preceptors.AbstractPreceptor;
@@ -58,12 +57,11 @@ import org.apache.cocoon.precept.preceptors.AbstractPreceptor;
 
 import java.util.*;
 
-
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: PreceptorImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class PreceptorImpl extends AbstractPreceptor {
     HashMap index = new HashMap();
 

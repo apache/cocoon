@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-
 import org.apache.cocoon.precept.Constraint;
 
 import org.apache.cocoon.precept.preceptors.easyrelax.constraints.ChoiceConstraint;
@@ -59,12 +58,11 @@ import org.apache.cocoon.precept.preceptors.easyrelax.constraints.RegexprConstra
 
 import org.apache.avalon.framework.configuration.Configuration;
 
-
-/*
- * @version: Mar 21, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 21, 2002
+ * @version CVS $Id: ConstraintFactory.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class ConstraintFactory {
 
     public Constraint createConstraintInstance(String type, String name, Object context, Configuration conf) {

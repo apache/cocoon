@@ -51,7 +51,6 @@
 
 package org.apache.cocoon.precept.acting;
 
-
 import org.apache.cocoon.environment.*;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -64,11 +63,11 @@ import org.apache.cocoon.precept.Instance;
 
 import org.apache.cocoon.precept.acting.AbstractPreceptorAction;
 
-/*
- * @version: Feb 25, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 25, 2002
+ * @version CVS $Id: PreceptorDemoAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class PreceptorDemoAction extends AbstractPreceptorAction {
 
     private final static String VIEW1 = "view1";

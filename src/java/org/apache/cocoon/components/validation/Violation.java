@@ -56,6 +56,7 @@ package org.apache.cocoon.components.validation;
  * validation
  * 
  * @author  ivelin@apache.org
+ * @version CVS $Id: Violation.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class Violation implements Comparable {
 

@@ -61,6 +61,7 @@ package org.apache.cocoon.components.validation.schematron;
  * <report test="bone">This dog has a bone.</report>
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: Report.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class Report extends Assert {
 }

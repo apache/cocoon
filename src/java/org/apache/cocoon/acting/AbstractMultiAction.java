@@ -60,62 +60,61 @@ import java.util.HashMap;
 import java.util.Map;
 import java.lang.reflect.Method;
 
-
 /**
  * The <code>AbstractMultiAction</code> provides a way
  * to call methods of an action specified by
  * the <code>method</code> parameter.
- * This can be extremly useful for action-sets. 
+ * This can be extremly useful for action-sets.
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
+ * @version CVS $Id: AbstractMultiAction.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
-   private static final String ACTION_METHOD_PREFIX = "do";
-   private static final String ACTION_METHOD_PARAMETER = "method";
+    private static final String ACTION_METHOD_PREFIX = "do";
+    private static final String ACTION_METHOD_PARAMETER = "method";
 
-   private HashMap methodIndex;
+    private HashMap methodIndex;
 
-   public void configure(Configuration conf) throws ConfigurationException {
-     super.configure(conf);
+    public void configure(Configuration conf) throws ConfigurationException {
+        super.configure(conf);
 
-     try {
-       Method[] methods = this.getClass().getMethods();
-       methodIndex = new HashMap();
+        try {
+            Method[] methods = this.getClass().getMethods();
+            methodIndex = new HashMap();
 
-       int prefixLen = ACTION_METHOD_PREFIX.length();
-       for (int i = 0; i < methods.length; i++) {
-         String methodName = methods[i].getName();
-         if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
-           String actionName = methodName.substring(prefixLen,prefixLen+1).toLowerCase() +
-                               methodName.substring(prefixLen+1);
-           methodIndex.put(methodName, methods[i]);
-           if (getLogger().isDebugEnabled()) {
-             getLogger().debug("registered method \"" + methodName + "\" as action \"" + actionName + "\"");
-           }
-         }
-       }
-     }
-     catch(Exception e) {
-       throw new ConfigurationException("cannot get methods by reflection",e);
-     }
-   }
-
-
-  public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
-    String actionMethod = parameters.getParameter(ACTION_METHOD_PARAMETER,null);
-    if ((actionMethod != null) && (actionMethod.length()>0)) {
-      Method method = (Method) methodIndex.get(actionMethod);
-      if (method != null) {
-        return((Map) method.invoke(this, new Object[]{ redirector,resolver,objectModel,source,parameters }));
-      }
-      else {
-        throw new Exception("action has no method \"" + actionMethod + "\"");
-      }
+            int prefixLen = ACTION_METHOD_PREFIX.length();
+            for (int i = 0; i < methods.length; i++) {
+                String methodName = methods[i].getName();
+                if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
+                    String actionName = methodName.substring(prefixLen, prefixLen + 1).toLowerCase() +
+                            methodName.substring(prefixLen + 1);
+                    methodIndex.put(methodName, methods[i]);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("registered method \"" + methodName + "\" as action \"" + actionName + "\"");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new ConfigurationException("cannot get methods by reflection", e);
+        }
     }
 
-    if (getLogger().isDebugEnabled()) 
-        getLogger().debug("you need to specify the method with parameter \"" + ACTION_METHOD_PARAMETER + "\"");
-    return null;
-  }
+
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
+        String actionMethod = parameters.getParameter(ACTION_METHOD_PARAMETER, null);
+        if ((actionMethod != null) && (actionMethod.length() > 0)) {
+            Method method = (Method) methodIndex.get(actionMethod);
+            if (method != null) {
+                return ((Map) method.invoke(this, new Object[]{redirector, resolver, objectModel, source, parameters}));
+            } else {
+                throw new Exception("action has no method \"" + actionMethod + "\"");
+            }
+        }
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("you need to specify the method with parameter \"" + ACTION_METHOD_PARAMETER + "\"");
+        }
+        return null;
+    }
 }

@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: XSPModuleHelper.java,v 1.1 2003/03/09 00:08:55 pier Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class XSPModuleHelper {
 

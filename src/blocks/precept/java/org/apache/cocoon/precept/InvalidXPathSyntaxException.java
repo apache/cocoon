@@ -52,11 +52,11 @@ package org.apache.cocoon.precept;
 
 import org.apache.avalon.framework.CascadingException;
 
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: InvalidXPathSyntaxException.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class InvalidXPathSyntaxException extends CascadingException {
 
     public InvalidXPathSyntaxException(String s) {
@@ -66,6 +66,5 @@ public class InvalidXPathSyntaxException extends CascadingException {
     public InvalidXPathSyntaxException(Throwable t) {
         super("", t);
     }
-
 }
 

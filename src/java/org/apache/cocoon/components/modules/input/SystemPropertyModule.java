@@ -16,7 +16,7 @@ import java.util.Map;
  * which is wrapped into a configuration exception and re-thrown.
  *
  * @author Konstantin Piroumian
- * @version $Id: SystemPropertyModule.java,v 1.1 2003/03/09 00:09:04 pier Exp $
+ * @version CVS $Id: SystemPropertyModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class SystemPropertyModule extends AbstractJXPathModule
     implements ThreadSafe {

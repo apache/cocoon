@@ -54,12 +54,13 @@ import java.util.Collection;
 
 import org.apache.avalon.framework.component.Component;
 
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: Preceptor.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public interface Preceptor extends Component {
+
     public String ROLE = "org.apache.cocoon.precept.Preceptor";
 
     public Collection getConstraintsFor(String xpath) throws InvalidXPathSyntaxException, NoSuchNodeException;

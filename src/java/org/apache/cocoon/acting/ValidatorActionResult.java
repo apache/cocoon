@@ -49,6 +49,7 @@
 
 */
 package org.apache.cocoon.acting;
+
 import org.apache.cocoon.util.EnumerationFactory;
 
 /**
@@ -56,7 +57,7 @@ import org.apache.cocoon.util.EnumerationFactory;
  * validation.
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: ValidatorActionResult.java,v 1.1 2003/03/09 00:08:40 pier Exp $
+ * @version CVS $Id: ValidatorActionResult.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public class ValidatorActionResult extends EnumerationFactory {
 

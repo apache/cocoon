@@ -54,6 +54,10 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 
+/**
+ *
+ * @version CVS $Id: JSWebContinuation.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ */
 public class JSWebContinuation extends ScriptableObject
 {
   protected JSCocoon cocoon;

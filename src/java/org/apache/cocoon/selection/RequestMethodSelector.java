@@ -56,8 +56,11 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Map;
 
-/** A <code>Selector</code> that matches a getMethod() of the HTTP request.
- *  @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
+/**
+ * A <code>Selector</code> that matches a getMethod() of the HTTP request.
+ *
+ * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
+ * @version CVS $Id: RequestMethodSelector.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class RequestMethodSelector extends AbstractLogEnabled
   implements ThreadSafe, Selector {

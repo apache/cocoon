@@ -66,6 +66,7 @@ import java.util.List;
  *
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: Phase.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class Phase {
 

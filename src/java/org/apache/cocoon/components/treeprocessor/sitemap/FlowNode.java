@@ -63,6 +63,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
+ * @version CVS $Id: FlowNode.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class FlowNode extends AbstractProcessingNode
   implements Composable, Contextualizable

@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.taglib.string;
 
-
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: TrimTag.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
  */
 public class TrimTag extends StringTagSupport {
 

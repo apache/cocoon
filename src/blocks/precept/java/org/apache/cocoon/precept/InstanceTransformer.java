@@ -73,10 +73,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-/*
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @version CVS $Id: InstanceTransformer.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class InstanceTransformer extends AbstractTransformer {
     //implements Cacheable {
 

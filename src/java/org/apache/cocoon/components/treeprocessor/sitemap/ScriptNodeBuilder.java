@@ -57,6 +57,7 @@ import org.apache.cocoon.components.flow.Interpreter;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
+ * @version CVS $Id: ScriptNodeBuilder.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class ScriptNodeBuilder
   extends AbstractProcessingNodeBuilder

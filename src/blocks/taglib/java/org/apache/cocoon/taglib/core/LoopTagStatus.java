@@ -65,9 +65,9 @@ package org.apache.cocoon.taglib.core;
  * This Interface is a copy from JSTL1.0
  * @see javax.servlet.jsp.jstl.core.LoopTagStatus
  *
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: LoopTagStatus.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
-
 public interface LoopTagStatus {
 
     /**

@@ -72,6 +72,7 @@ import java.util.Map;
  * See http://jakarta.apache.org/commons/
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: SchematronValidator.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class SchematronValidator implements Validator {
 

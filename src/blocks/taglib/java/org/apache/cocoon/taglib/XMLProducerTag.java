@@ -54,7 +54,8 @@ package org.apache.cocoon.taglib;
 import org.apache.cocoon.xml.XMLProducer;
 
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: XMLProducerTag.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public interface XMLProducerTag extends Tag, XMLProducer {
 

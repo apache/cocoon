@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.acting;
 
-
 import org.apache.avalon.framework.configuration.Configuration;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -75,12 +74,11 @@ import java.util.Enumeration;
 
 import java.lang.reflect.Method;
 
-
-/*
- * @version: Feb 25, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 25, 2002
+ * @version CVS $Id: AbstractMethodAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public abstract class AbstractMethodAction extends ConfigurableComposerAction {
 
     private static final String ACTION_METHOD_PREFIX = "do";

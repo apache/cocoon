@@ -63,9 +63,8 @@ import java.util.Map;
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: VariableResolver.java,v 1.1 2003/03/09 00:09:24 pier Exp $
+ * @version CVS $Id: VariableResolver.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
-
 public abstract class VariableResolver {
 
     public static final Map EMPTY_MAP = Collections.unmodifiableMap(new java.util.HashMap(0));

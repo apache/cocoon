@@ -57,7 +57,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: TransformerTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public class TransformerTagSupport extends TagSupport implements TransformerTag {
     protected XMLConsumer xmlConsumer;

@@ -66,10 +66,9 @@ import java.util.ConcurrentModificationException;
  * A <code>org.apache.cocoon.environment.WriteableSource</code> for 'file:/' system IDs.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: FileSource.java,v 1.1 2003/03/09 00:07:01 pier Exp $
+ * @version CVS $Id: FileSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  * @deprecated Use the new avalon source resolving instead
  */
-
 public class FileSource extends AbstractStreamWriteableSource
     implements org.apache.cocoon.environment.WriteableSource {
 

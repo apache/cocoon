@@ -55,6 +55,7 @@ package org.apache.cocoon.components.validation.schematron;
  * <active pattern="some"> element
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: ActivePattern.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class ActivePattern {
 

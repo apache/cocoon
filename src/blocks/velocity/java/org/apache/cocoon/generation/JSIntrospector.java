@@ -44,6 +44,7 @@
 
 */
 package org.apache.cocoon.generation;
+
 import org.mozilla.javascript.*;
 import java.util.Iterator;
 import org.apache.velocity.util.introspection.*;
@@ -51,8 +52,9 @@ import org.apache.velocity.util.introspection.*;
 /**
  * Velocity Introspector that supports Rhino JavaScript objects
  * as well as Java Objects
+ *
+ * @version CVS $Id: JSIntrospector.java,v 1.3 2003/03/16 17:49:09 vgritsenko Exp $
  */
-
 public class JSIntrospector extends UberspectImpl {
 
     public static class JSMethod implements VelMethod {

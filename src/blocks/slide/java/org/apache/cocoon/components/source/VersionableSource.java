@@ -62,7 +62,7 @@ import org.apache.excalibur.source.SourceException;
  * A source, which could exist in different versions
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: VersionableSource.java,v 1.1 2003/03/09 00:06:19 pier Exp $
+ * @version CVS $Id: VersionableSource.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public interface VersionableSource extends Source {
 

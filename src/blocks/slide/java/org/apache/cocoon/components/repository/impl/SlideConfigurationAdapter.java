@@ -60,7 +60,7 @@ import java.util.*;
  * The class represent an adapter for the configuration class from jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version $Id: SlideConfigurationAdapter.java,v 1.1 2003/03/09 00:06:17 pier Exp $
+ * @version CVS $Id: SlideConfigurationAdapter.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
  */
 public class SlideConfigurationAdapter implements Configuration {
 

@@ -102,12 +102,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2, 2002
- * 
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
  */
-public class WebServiceProxyGenerator extends ComposerGenerator
-{
-  
-  
+public class WebServiceProxyGenerator extends ComposerGenerator {
+
   /**
    * Setup the WSP generator.
    *

@@ -51,11 +51,11 @@
 
 package org.apache.cocoon.precept;
 
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: Context.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class Context {
 
 }

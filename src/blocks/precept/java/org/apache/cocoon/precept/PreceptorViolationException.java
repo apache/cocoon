@@ -50,15 +50,13 @@
 */
 package org.apache.cocoon.precept;
 
-
 import org.apache.avalon.framework.CascadingException;
 
-
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: PreceptorViolationException.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class PreceptorViolationException extends CascadingException {
 
     public PreceptorViolationException(String s) {
@@ -69,6 +67,5 @@ public class PreceptorViolationException extends CascadingException {
     public PreceptorViolationException(Throwable t) {
         super("", t);
     }
-
 }
 

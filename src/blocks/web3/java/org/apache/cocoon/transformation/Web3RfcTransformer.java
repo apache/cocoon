@@ -81,8 +81,10 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * TBD
+ *
  * @author  <a href="mailto:mge@efp.co.at>Michael Gerzabek</a>
- * @version 1.0, 21. Oct. 2002
+ * @since 21. Oct. 2002
+ * @version CVS $Id: Web3RfcTransformer.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
 public class Web3RfcTransformer extends AbstractTransformer 
 implements Composable, Disposable, Configurable, Poolable, Recyclable {
