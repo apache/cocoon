@@ -10,7 +10,7 @@
     <menu-item label="Index" href="index.html"/>
     <menu-item label="News" href="news.html"/>
     <menu-item label="License" href="license.html"/>
-    <external label="Download" href="http://cocoon.apache.org/dist/"/>
+    <external label="Download" href="http://cocoon.apache.org/mirror.cgi"/>
   </menu>
 
   <menu label="Documentation">

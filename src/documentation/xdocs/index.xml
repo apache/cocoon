@@ -33,7 +33,7 @@
     <s1 title="Where can I find it?">
       <p>
    To download the latest release @released.version@ of Apache Cocoon, go to the 
-   <link href="http://cocoon.apache.org/dist/">download area.</link>
+   <link href="http://cocoon.apache.org/mirror.cgi">download area.</link>
       </p>
       <p>
    If you are looking for a past generation of Cocoon (no longer supported but still available), 
