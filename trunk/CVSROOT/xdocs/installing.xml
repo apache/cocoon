@@ -327,7 +327,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/xerces.jar
     file location to the servlet by adding the following line to the servlet zone:
    </p>
 
-   <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
+   <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/conf/cocoon.properties</source>
 
    <p>
     where [path-to-cocoon] is an <em>absolute</em> path.
