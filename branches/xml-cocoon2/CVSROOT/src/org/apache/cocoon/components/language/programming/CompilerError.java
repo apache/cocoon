@@ -12,7 +12,7 @@ package org.apache.cocoon.components.language.programming;
  * This class encapsulates an error message produced by a programming language
  * processor (whether interpreted or compiled)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:30 $
+ * @version $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:41:45 $
  * @since 2.0
  */
 
@@ -76,6 +76,15 @@ public class CompilerError {
     this.message = message;
   }
 
+  /**
+   * The error message constructor.
+   *
+   * @param message The actual error text produced by the language processor
+   */
+  public CompilerError(String message) {
+    this.message = message;
+  }
+  
   /**
    * Return the filename associated with this compiler error.
    *

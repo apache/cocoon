@@ -5,10 +5,12 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.components.language.programming.java;
 
 import java.io.File;
-import java.util.Vector;
+import java.io.IOException;
+import java.util.List;
 
 import org.apache.avalon.utils.Parameters;
 
@@ -26,9 +28,10 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:41:46 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
+    
   /** The class loader */
   ClassLoaderManager classLoaderManager;
 
@@ -126,53 +129,54 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
   ) throws LanguageException {
 
     try {
-      AbstractJavaCompiler compiler =
-        (AbstractJavaCompiler) this.compilerClass.newInstance();
-  
+      
+      AbstractJavaCompiler compiler = (AbstractJavaCompiler) this.compilerClass.newInstance();
+
       int pos = name.lastIndexOf(File.separatorChar);
       String filename = name.substring(pos + 1);
       String pathname =
         baseDirectory + File.separator +
         name.substring(0, pos).replace(File.separatorChar, '/');
-  
+    
       compiler.setFile(
         pathname + File.separator +
         filename + "." + this.getSourceExtension()
       );
-  
+    
       compiler.setSource(pathname);
-  
+    
       compiler.setDestination(baseDirectory);
-  
+    
       compiler.setClasspath(
         System.getProperty("java.class.path") + File.pathSeparator +
         baseDirectory
       );
-  
+    
       if (encoding != null) {
         compiler.setEncoding(encoding);
       }
-  
+
       if (!compiler.compile()) {
-        StringBuffer message =
-          new StringBuffer("Error compiling " + filename + ":\n");
-  
-        Vector errors = compiler.getErrors();
+        StringBuffer message = new StringBuffer("Error compiling " + filename + ":\n");
+        
+        List errors = compiler.getErrors();
         int count = errors.size();
         for (int i = 0; i < count; i++) {
-          CompilerError error = (CompilerError) errors.elementAt(i);
-          message.append(
-  	  "Line " + error.getStartLine() +
-  	  ", column " + error.getStartColumn() +
-  	  ": " + error.getMessage()
-          );
+          CompilerError error = (CompilerError) errors.get(i);
+          message.append("Line " + error.getStartLine()
+            + ", column " + error.getStartColumn()
+            + ": " + error.getMessage());
         }
-  
+        
         throw new LanguageException(message.toString());
       }
-    } catch (Exception e) {
-e.printStackTrace();
-      throw new LanguageException(e.getMessage());
+
+    } catch (InstantiationException e) {
+      throw new LanguageException("Could not instantiate the compiler: " + e.getMessage());
+    } catch (IllegalAccessException e) {
+      throw new LanguageException("Could not access the compiler class: " + e.getMessage());
+    } catch (IOException e) {
+      throw new LanguageException("Error during compilation: " + e.getMessage());   
     }
   }
 
@@ -226,7 +230,7 @@ e.printStackTrace();
           buffer.append("\\n");
           break;
         case '"':
-	case '\\':
+	    case '\\':
           buffer.append('\\');
           // Fall through
         default:

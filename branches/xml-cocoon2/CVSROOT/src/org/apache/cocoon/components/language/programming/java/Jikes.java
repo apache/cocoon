@@ -15,7 +15,7 @@ import org.apache.cocoon.components.language.programming.*;
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:31 $
+ * @version $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:41:46 $
  * @since 2.0
  */
 
@@ -30,7 +30,7 @@ public class Jikes extends AbstractJavaCompiler {
   * @exception LanguageException If an error occurs during compilation
   */
    public boolean compile() throws IOException {
-      Vector args = new Vector(12);
+      List args = new ArrayList();
       // command line name
       args.add("jikes");
       // indicate Emacs output mode must be used
@@ -56,8 +56,8 @@ public class Jikes extends AbstractJavaCompiler {
    * @return The list of compiler error messages
    * @exception IOException If an error occurs during message collection
    */
-   protected Vector parseStream(BufferedReader input) throws IOException {
-      Vector errors = null;
+   protected List parseStream(BufferedReader input) throws IOException {
+      List errors = null;
       String line = null;
       StringBuffer buffer = new StringBuffer();
 
@@ -79,10 +79,10 @@ public class Jikes extends AbstractJavaCompiler {
         }
         
         // if error is found create the vector
-        if (errors == null) errors = new Vector(10);
+        if (errors == null) errors = new ArrayList();
         
         // add the error bean
-        errors.addElement(parseError(buffer.toString()));
+        errors.add(parseError(buffer.toString()));
       }
    }
    
@@ -105,7 +105,7 @@ public class Jikes extends AbstractJavaCompiler {
       return new CompilerError(file, type.equals("error"), startline, startcolumn, endline, endcolumn, message);
    }
    
-   public String getStatus() {
-      return "IBM Jikes";
+   public String toString() {
+      return "IBM Jikes Compiler";
    }
 }
