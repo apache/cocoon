@@ -27,6 +27,10 @@ import org.w3c.dom.Element;
  * <pre><code>
  * &lt;fb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt;
  * </code></pre>
+ * or if the add method creates the new instance itself:
+ * <pre><code>
+ * &lt;fb:insert-bean addmethod="..method-to-add.."/&gt;
+ * </code></pre>
  *
  * @version CVS $Id$
  */
@@ -42,7 +46,7 @@ public class InsertBeanJXPathBindingBuilder extends JXPathBindingBuilderBase {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             String className =
-                DomHelper.getAttribute(bindingElm, "classname");
+                DomHelper.getAttribute(bindingElm, "classname", null);
             String addMethod =
                 DomHelper.getAttribute(bindingElm, "addmethod");
 
