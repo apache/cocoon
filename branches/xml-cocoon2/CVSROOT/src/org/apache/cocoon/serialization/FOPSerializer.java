@@ -5,6 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.serialization;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-17 17:06:25 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-21 17:36:26 $
  *
  */
 public class FOPSerializer extends XMLConsumerBridge implements Serializer, MessageListener {
@@ -48,6 +49,8 @@ public class FOPSerializer extends XMLConsumerBridge implements Serializer, Mess
         this.driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
         this.driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
         this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
+	    this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
+	    this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
 
         // the use of static resources sucks for servlet enviornments
         // since we could have multiple FOP that all logs in this pipe
@@ -60,8 +63,8 @@ public class FOPSerializer extends XMLConsumerBridge implements Serializer, Mess
      * Set the <code>OutputStream</code> where the XML should be serialized.
      */
     public void setOutputStream(OutputStream out) {
-        this.setBridgedContentHandler(this.driver.getContentHandler());
         this.driver.setWriter(new PrintWriter(out));
+        this.setBridgedContentHandler(this.driver.getContentHandler());
      }
  
     /** 

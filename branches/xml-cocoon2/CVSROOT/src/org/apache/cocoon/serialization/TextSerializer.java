@@ -21,15 +21,15 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:36:27 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-21 17:36:26 $
  */
 
-public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
+public class TextSerializer extends AbstractSerializer implements XMLConsumer {
 
     private SerializerFactory factory;
     
-    public XMLSerializer() {
-        this.factory = SerializerFactory.getSerializerFactory(Method.XML);
+    public TextSerializer() {
+        this.factory = SerializerFactory.getSerializerFactory(Method.TEXT);
     }
     
     public void setOutputStream(OutputStream out) {
