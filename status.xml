@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated commons-transaction to 1.0.1.
+   </action>
    <action dev="SW" type="update">
     Remove restrictions on the flowscript object model (FOM): the objects available through the
     <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
