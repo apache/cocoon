@@ -50,18 +50,25 @@
 */
 package org.apache.cocoon.serialization;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
 import org.apache.cocoon.components.renderer.RendererFactory;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.url.SourceProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -69,23 +76,19 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.Options;
+import org.apache.fop.configuration.ConfigurationParser;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.render.Renderer;
-import org.apache.fop.configuration.ConfigurationParser;
-
-import java.io.OutputStream;
-import java.io.File;
-import java.io.Serializable;
-import java.net.MalformedURLException;
 
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.6 2004/01/19 09:27:26 antonio Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.7 2004/02/04 14:39:58 sylvain Exp $
  */
-public class FOPSerializer
-extends AbstractSerializer
-implements Composable, Configurable, CacheableProcessingComponent {
+public class FOPSerializer extends AbstractSerializer implements
+  Configurable, CacheableProcessingComponent, Serviceable, Disposable {
+
+    protected SourceResolver resolver;
 
     /**
      * The Renderer Factory to use
@@ -130,14 +133,18 @@ implements Composable, Configurable, CacheableProcessingComponent {
     /**
      * Manager to get URLFactory from.
      */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /**
      * Set the component manager for this serializer.
      */
-    public void compose(ComponentManager componentManager)
-            throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    }
+
+    public void dispose() {
+        this.manager.release(this.resolver);
     }
 
     /**
@@ -249,6 +256,10 @@ implements Composable, Configurable, CacheableProcessingComponent {
      * Set the <code>OutputStream</code> where the XML should be serialized.
      */
     public void setOutputStream(OutputStream out) {
+        
+        // Give the source resolver to Batik which is used by FOP
+        SourceProtocolHandler.setup(this.resolver);
+
         // load the fop driver
         this.driver = new Driver();
         this.driver.setLogger(this.logger);
@@ -308,4 +319,5 @@ implements Composable, Configurable, CacheableProcessingComponent {
     public boolean shouldSetContentLength() {
         return this.setContentLength;
     }
+
 }

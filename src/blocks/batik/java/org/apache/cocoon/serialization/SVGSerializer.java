@@ -54,26 +54,25 @@ import java.awt.Color;
 import java.io.OutputStream;
 
 import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.util.ParsedURL;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
-import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
-import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
+import org.apache.cocoon.components.url.SourceProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.dom.SVGBuilder;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.w3c.dom.Document;
@@ -84,20 +83,20 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.10 2003/11/20 15:13:36 joerg Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.11 2004/02/04 14:39:28 sylvain Exp $
  */
 public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
+implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Serviceable, Disposable /*, Contextualizable*/ {
 
-    /**
-     * Get the context
-     */
-    public void contextualize(Context context) throws ContextException {
-        ParsedContextURLProtocolHandler.setContext(
-            (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
-        ParsedURL.registerHandler(new ParsedContextURLProtocolHandler());
-        ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
-    }
+//    /**
+//     * Get the context
+//     */
+//    public void contextualize(Context context) throws ContextException {
+//        ParsedContextURLProtocolHandler.setContext(
+//            (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
+//        ParsedURL.registerHandler(new ParsedContextURLProtocolHandler());
+//        ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
+//    }
 
     /** The current <code>OutputStream</code>. */
     private OutputStream output;
@@ -110,12 +109,28 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
 
     /** The Transcoder Factory to use */
     TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
+    
+    private ServiceManager manager;
+
+    private SourceResolver resolver;
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
      */
     public void setOutputStream(OutputStream out) {
         this.output = out;
+        
+        // Give the source resolver to Batik
+        SourceProtocolHandler.setup(this.resolver);
+    }
+    
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    }
+    
+    public void dispose() {
+        this.manager.release(this.resolver);
     }
 
     /**
@@ -215,6 +230,7 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
      * Receive notification of a successfully completed DOM tree generation.
      */
     public void notify(Document doc) throws SAXException {
+        
         try {
             TranscoderInput transInput = new TranscoderInput(doc);
 
