@@ -13,7 +13,7 @@ import java.net.URL;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 
-import java.util.Stack;
+import java.util.LinkedList;
 import org.xml.sax.Locator;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -41,7 +41,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 17:10:35 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-02 12:21:05 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -150,8 +150,8 @@ public class ServerPagesGenerator
     generator.generate();
 
     // End any started events in case of premature return
-    while (!this.eventStack.empty()) {
-      EventData eventData = (EventData) this.eventStack.pop();
+    while (this.eventStack.size()!=0) {
+      EventData eventData = (EventData) this.eventStack.removeFirst();
 
       switch (eventData.eventType) {
         case DOCUMENT:
@@ -188,7 +188,7 @@ public class ServerPagesGenerator
    * The SAX event stack. Used for "completing" pendind SAX events left "open"
    * by prematurely returning server pages generators
    */
-  protected Stack eventStack = new Stack();
+  protected LinkedList eventStack = new LinkedList();
 
     /**
      * Receive notification of character data.
@@ -201,7 +201,7 @@ public class ServerPagesGenerator
      * Receive notification of the end of a document.
      */
   public void endDocument() throws SAXException {
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
     this.contentHandler.endDocument();
   }
 
@@ -211,7 +211,7 @@ public class ServerPagesGenerator
   public void endElement(String namespaceURI, String localName, String rawName)
     throws SAXException
   {
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
     this.contentHandler.endElement(namespaceURI, localName, rawName);
   }
 
@@ -219,7 +219,7 @@ public class ServerPagesGenerator
      * End the scope of a prefix-URI mapping.
      */
   public void endPrefixMapping(String prefix) throws SAXException {
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
     this.contentHandler.endPrefixMapping(prefix);
   }
 
@@ -262,7 +262,7 @@ public class ServerPagesGenerator
      */
   public void startDocument() throws SAXException {
     this.contentHandler.startDocument();
-    this.eventStack.push(new EventData(DOCUMENT));
+    this.eventStack.addFirst(new EventData(DOCUMENT));
   }
 
     /**
@@ -274,7 +274,7 @@ public class ServerPagesGenerator
     throws SAXException
   {
     this.contentHandler.startElement(namespaceURI, localName, rawName, atts);
-    this.eventStack.push(new EventData(ELEMENT, namespaceURI, localName, rawName));
+    this.eventStack.addFirst(new EventData(ELEMENT, namespaceURI, localName, rawName));
   }
 
     /**
@@ -283,7 +283,7 @@ public class ServerPagesGenerator
   public void startPrefixMapping(String prefix, String uri) throws SAXException
   {
     this.contentHandler.startPrefixMapping(prefix, uri);
-    this.eventStack.push(new EventData(PREFIX_MAPPING, prefix, uri));
+    this.eventStack.addFirst(new EventData(PREFIX_MAPPING, prefix, uri));
   }
 
   public void comment(char[] ch, int start, int length) throws SAXException {
@@ -292,34 +292,34 @@ public class ServerPagesGenerator
 
   public void endCDATA() throws SAXException {
     this.lexicalHandler.endCDATA();
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
   }
 
   public void endDTD() throws SAXException {
     this.lexicalHandler.endDTD();
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
   }
 
   public void endEntity(String name) throws SAXException {
     this.lexicalHandler.endEntity(name);
-    this.eventStack.pop();
+    this.eventStack.removeFirst();
   }
 
   public void startCDATA() throws SAXException {
     this.lexicalHandler.startCDATA();
-    this.eventStack.push(new EventData(CDATA));
+    this.eventStack.addFirst(new EventData(CDATA));
   }
 
   public void startDTD(String name, String publicId, String systemId)
     throws SAXException
   {
     this.lexicalHandler.startDTD(name, publicId, systemId);
-    this.eventStack.push(new EventData(DTD, name, publicId, systemId));
+    this.eventStack.addFirst(new EventData(DTD, name, publicId, systemId));
   }
 
   public void startEntity(String name) throws SAXException {
     this.lexicalHandler.startEntity(name);
-    this.eventStack.push(new EventData(ENTITY, name));
+    this.eventStack.addFirst(new EventData(ENTITY, name));
   }
 
   protected final static int DOCUMENT = 0;

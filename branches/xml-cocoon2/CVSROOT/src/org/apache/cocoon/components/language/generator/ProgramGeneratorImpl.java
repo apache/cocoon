@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.38 $ $Date: 2001-03-01 15:45:33 $
+ * @version CVS $Revision: 1.1.2.39 $ $Date: 2001-03-02 12:21:00 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -133,12 +133,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                                   String programmingLanguageName,
                                   EntityResolver resolver)
     throws Exception {
-        // Get markup and programming languages
-        MarkupLanguage markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
-        ProgrammingLanguage programmingLanguage =
-            (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
 
-        programmingLanguage.setLanguageName(programmingLanguageName);
         // Create filesystem store
         // Set filenames
         String filename = IOUtils.getFullFilename(file);
@@ -158,22 +153,32 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         }
 
         if (programInstance == null) {
+            MarkupLanguage markupLanguage = null;
+            ProgrammingLanguage programmingLanguage = null;
             try {
+                // Get markup and programming languages
+                markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
+                programmingLanguage = (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
+                programmingLanguage.setLanguageName(programmingLanguageName);
                 program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
             } catch (LanguageException le) {
                 getLogger().debug("Language Exception", le);
+            } finally {
+                this.markupSelector.release((Component) markupLanguage);
+                this.languageSelector.release((Component) programmingLanguage);
             }
 
             try {
                 programInstance = (CompiledComponent) select(normalizedName);
             } catch (Exception cme) {
                 getLogger().debug("Can't load ServerPage", cme);
+            } finally {
+                this.markupSelector.release((Component) markupLanguage);
+                this.languageSelector.release((Component) programmingLanguage);
             }
         }
 
         if (this.autoReload == false) {
-            this.markupSelector.release((Component) markupLanguage);
-            this.languageSelector.release((Component) programmingLanguage);
             return programInstance;
         }
 
@@ -187,6 +192,8 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             release(programInstance);
 
             // Unload program
+            ProgrammingLanguage programmingLanguage = (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
+            programmingLanguage.setLanguageName(programmingLanguageName);
             programmingLanguage.unload(program, normalizedName, this.workDir);
             
             // Invalidate previous program/instance pair
@@ -196,14 +203,24 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
         if (programInstance == null) {
             if (program == null) {
-                program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
+                MarkupLanguage markupLanguage = null;
+                ProgrammingLanguage programmingLanguage = null;
+                try {
+                    // Get markup and programming languages
+                    markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
+                    programmingLanguage = (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
+                    programmingLanguage.setLanguageName(programmingLanguageName);
+                    program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
+                } catch (LanguageException le) {
+                    getLogger().debug("Language Exception", le);
+                } finally {
+                    this.markupSelector.release((Component) markupLanguage);
+                    this.languageSelector.release((Component) programmingLanguage);
+                }
             }
             // Instantiate
             programInstance = (CompiledComponent) select(normalizedName);
         }
-
-        this.markupSelector.release((Component) markupLanguage);
-        this.languageSelector.release((Component) programmingLanguage);
 
         return programInstance;
     }
