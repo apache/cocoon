@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.175 2001-01-12 22:36:03 greenrd Exp $ 
+  $Id: changes.xml,v 1.176 2001-01-16 12:09:50 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,14 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add">
+   Added experimental support for xsp:variable declaration and method calling to util taglib.
+   This is designed to automatically pass through required environment variables such
+   as xspCurrentNode.
+  </action>
+  <action dev="DB" type="update">
+   In esql, encoding is now an element not an attribute, to allow passthru.
+  </action>
   <action dev="RDG" type="fix" due-to="Steve Coffman" due-to-email="SCoffman@CBSInc.com">
    Fixed second and third XSL:FO examples for FOP 0.15 conformance.
   </action>
@@ -36,9 +44,8 @@
   </action>
   <action dev="RDG" type="fix" due-to="Sylvain Wallez" 
    due-to-email="sylvain.wallez@anyware-tech.com">
-   Added workaround for FOP/PDF problem on Internet Explorer. This causes a "Open/Save" dialog
-   to pop up - but it's infinitely better than a blank screen, which is what we had before,
-   and it's the best workaround anyone's reported so far.
+   WARNING! - BROKEN - BROKEN!!!
+   Added workaround for FOP/PDF problem on Internet Explorer. 
   </action>
   <action dev="RDG" type="add">
    Added very brief notes on ESQL to documentation
