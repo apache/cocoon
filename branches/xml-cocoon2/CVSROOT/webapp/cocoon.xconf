@@ -97,7 +97,25 @@
 
   <datasources>
     <jdbc name="personnel">
+      <!--
+          If you have an Oracle database, and are using the the
+	  pool-controller below, you should add the attribute
+	  "oradb" and set it to true.
+
+	  <pool-controller min="5" max="10" oradb="true"/>
+
+	  That way the test to see if the server has disconnected
+	  the JdbcConnection will function properly.
+      -->
       <pool-controller min="5" max="10"/>
+      <!--
+          If you need to ensure an autocommit is set to true or
+	  false, then create the "auto-commit" element below.
+
+	  <auto-commit>false</auto-commit>
+
+	  The default is true.
+      -->
       <dburl>@database-url@</dburl>
       <user>@database-user@</user>
       <password>@database-password@</password>
