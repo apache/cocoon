@@ -26,13 +26,17 @@
 
    <map:match pattern="deli.html">
      <map:generate src="context://samples/deli/samples.xml"/>
-     <map:transform src="context://samples/deli/deli_test.xsl" type="deli"/>
+     <map:transform src="context://samples/deli/deli_test.xsl" type="deli">
+       <map:parameter name="ua" value="{request-header:user-agent}"/>
+     </map:transform>
      <map:serialize type="html"/>
    </map:match>
 
    <map:match pattern="deli.wml">
      <map:generate src="context://samples/deli/samples.xml"/>
-     <map:transform src="context://samples/deli/deli_test.xsl" type="deli"/>
+     <map:transform src="context://samples/deli/deli_test.xsl" type="deli">
+       <map:parameter name="ua" value="{request-header:user-agent}"/>
+     </map:transform>
      <map:serialize type="wml"/>
    </map:match>
 
