@@ -67,10 +67,10 @@
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
   
-  <xsl:template name="woody-field-common">
+  <xsl:template match="wi:*" mode="common">
     <xsl:apply-templates select="wi:validation-message"/>
     <xsl:if test="@required='true'">
       <span class="woody-field-required"> * </span>
@@ -141,7 +141,7 @@
         </select>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
   
   <!--
@@ -155,7 +155,7 @@
       <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
       <xsl:copy-of select="wi:value/node()"/>
     </textarea>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--
@@ -183,7 +183,7 @@
       <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
     </input>
     <a href="#" onClick="woody_calendar.select(woody_getForm(this)['{@id}'],'{generate-id()}','{$format}'); return false;" NAME="{generate-id()}" ID="{generate-id()}"><img src="resources/cal.gif" border="0" alt="Calendar"/></a>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--
@@ -205,7 +205,7 @@
         <xsl:attribute name="checked">true</xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--
@@ -295,7 +295,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </span>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
   
   <!--
@@ -313,7 +313,7 @@
         <input type="file" id="{@id}" name="{@id}" title="{wi:hint}" accept="{@mime-types}"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--
@@ -404,7 +404,7 @@
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:call-template name="woody-field-common"/>
+    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <xsl:template match="wi:messages">
