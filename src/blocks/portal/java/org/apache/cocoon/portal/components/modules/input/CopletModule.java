@@ -72,7 +72,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * Example:<br><br>
  * 
  * <pre>&lt;map:action type="foo"&gt;
- * 	&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
+ * 	&lt;map:parameter name="maxpageable" value="{coplet:copletData/maxpageable}"/&gt;
  * &lt;/map:action&gt;<br></pre>
  * 
  * The module will insert the boolean value specifying whether the coplet is 
@@ -88,12 +88,12 @@ import org.apache.commons.jxpath.JXPathContext;
  *	&lt;map:parameter name="portalName" value="exampleportal"/&gt;
  *	&lt;map:parameter name="copletId" value="examplecoplet"/&gt;
  *	&lt;map:action type="foo"&gt;
- *		&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
+ *		&lt;map:parameter name="maxpageable" value="{coplet:copletData/maxpageable}"/&gt;
  *	&lt;/map:action&gt;
  * &lt;/map:action&gt;</pre>
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.8 2003/12/12 16:34:21 cziegeler Exp $
+ * @version CVS $Id: CopletModule.java,v 1.9 2004/02/09 09:11:12 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Serviceable, ThreadSafe {
