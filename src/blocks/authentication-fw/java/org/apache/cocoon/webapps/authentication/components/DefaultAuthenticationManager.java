@@ -202,43 +202,43 @@ public class DefaultAuthenticationManager
         Authenticator authenticator = this.lookupAuthenticator( config );
         try {
             Authenticator.AuthenticationResult result = authenticator.authenticate( config, parameters );
-            if ( result != null && result.valid ) {
-                AuthenticationContext authContext = new AuthenticationContext(this.context, this.xpathProcessor, this.resolver);
-                handler = new UserHandler(config, authContext);
-                // store the authentication data in the context
-                authContext.init(result.result);
-            } else if ( result != null ) {
-                // now set the failure information in the temporary context
-                ContextManager contextManager = null;
-                try {
-                    contextManager = (ContextManager) this.manager.lookup( ContextManager.ROLE );
-                    SessionContext temp = contextManager.getContext( SessionConstants.TEMPORARY_CONTEXT );
-
-                    final DocumentFragment fragment = result.result.createDocumentFragment();
-                    final Node root = result.result.getDocumentElement();
-                    root.normalize();
-                    Node child;
-                    boolean appendedNode = false;
-                    while (root.hasChildNodes() ) {
-                        child = root.getFirstChild();
-                        root.removeChild(child);
-                        // Leave out empty text nodes before any other node
-                        if (appendedNode
-                            || child.getNodeType() != Node.TEXT_NODE
-                            || child.getNodeValue().trim().length() > 0) {
-                            fragment.appendChild(child);
-                            appendedNode = true;
+            if (result != null) {
+                if (result.valid) {
+                    AuthenticationContext authContext = new AuthenticationContext(this.context, this.xpathProcessor, this.resolver);
+                    handler = new UserHandler(config, authContext);
+                    // store the authentication data in the context
+                    authContext.init(result.result);
+                } else {
+                    // now set the failure information in the temporary context
+                    ContextManager contextManager = null;
+                    try {
+                        contextManager = (ContextManager) this.manager.lookup( ContextManager.ROLE );
+                        SessionContext temp = contextManager.getContext( SessionConstants.TEMPORARY_CONTEXT );
+    
+                        final DocumentFragment fragment = result.result.createDocumentFragment();
+                        final Node root = result.result.getDocumentElement();
+                        root.normalize();
+                        Node child;
+                        boolean appendedNode = false;
+                        while (root.hasChildNodes() ) {
+                            child = root.getFirstChild();
+                            root.removeChild(child);
+                            // Leave out empty text nodes before any other node
+                            if (appendedNode
+                                || child.getNodeType() != Node.TEXT_NODE
+                                || child.getNodeValue().trim().length() > 0) {
+                                fragment.appendChild(child);
+                                appendedNode = true;
+                            }
                         }
+                        temp.appendXML("/", fragment);
+                    } catch ( ServiceException se ) {
+                        throw new ProcessingException("Unable to lookup session manager.", se);
+                    } finally {
+                        this.manager.release( contextManager );
                     }
-                    temp.appendXML("/", fragment);
-                } catch ( ServiceException se ) {
-                    throw new ProcessingException("Unable to lookup session manager.", se);
-                } finally {
-                    this.manager.release( contextManager );
                 }
-
             }
-
         } finally {
             this.releaseAuthenticator( authenticator, config );
         }
