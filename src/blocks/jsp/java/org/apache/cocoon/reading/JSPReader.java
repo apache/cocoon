@@ -67,9 +67,9 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
+ * @version CVS $Id: JSPReader.java,v 1.3 2003/07/10 23:38:04 joerg Exp $
  */
-public class JSPReader extends ComposerReader {
+public class JSPReader extends ServiceableReader {
 
     /**
      * Generates the output from JSP page.
@@ -93,7 +93,7 @@ public class JSPReader extends ComposerReader {
 
         JSPEngine engine = null;
         try {
-            // FIXME (KP): Should we exclude not supported protocols, say 'context'?
+            // TODO (KP): Should we exclude not supported protocols, say 'context'?
             String url = this.source;
 
             // absolute path is processed as is
@@ -112,7 +112,7 @@ public class JSPReader extends ComposerReader {
             }
 
             byte[] bytes = engine.executeJSP(url, httpRequest, httpResponse, httpContext);
-            // FIXME (KP): Make buffer size configurable
+            // TODO (KP): Make buffer size configurable
             byte[] buffer = new byte[8192];
             int length = -1;
 

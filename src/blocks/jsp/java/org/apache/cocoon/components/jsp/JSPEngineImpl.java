@@ -69,15 +69,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 /**
  * Allows JSP to be used as a generator.  Builds upon the JSP servlet
  * functionality - overrides the output method and returns the byte(s).
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.5 2003/06/07 23:01:48 vgritsenko Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.6 2003/07/10 23:38:04 joerg Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -134,7 +132,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
      * Stub implementation of Servlet Config
      */
     class config implements ServletConfig {
-        ServletContext c;
+        ServletContext c = null;
         public config(ServletContext c) {this.c = c; }
 
         public String getServletName() { return "JSPEngineImpl"; }
@@ -148,8 +146,8 @@ public class JSPEngineImpl extends AbstractLogEnabled
      * Stub implementation of HttpServletRequest
      */
     class MyServletRequest implements HttpServletRequest {
-        HttpServletRequest request;
-        String jspFile;
+        HttpServletRequest request = null;
+        String jspFile = null;
 
         public MyServletRequest(HttpServletRequest request, String jspFile) {
             this.request = request;
@@ -218,60 +216,37 @@ public class JSPEngineImpl extends AbstractLogEnabled
      * Stub implementation of HttpServletResponse
      */
     class MyServletResponse implements HttpServletResponse {
-        HttpServletResponse response;
+        HttpServletResponse response = null;
         MyServletOutputStream output = null;
-        String encoding = "iso-8859-1";
 
         public MyServletResponse(HttpServletResponse response){
             this.response = response;
+            this.output = new MyServletOutputStream();
         }
         public void flushBuffer() throws IOException { }
         public int getBufferSize() { return 1024; }
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
-            if (this.output == null) {
-                this.output = new MyServletOutputStream(this.encoding);
-            }
             return this.output.getWriter();
         }
         public boolean isCommitted() { return false; }
         public void reset() {}
         public void setBufferSize(int size) {}
         public void setContentLength(int len) {}
-        public void setContentType(java.lang.String type) {
-            StringTokenizer st = new StringTokenizer(type, ";,");
-            st.nextToken();
-            while (st.hasMoreTokens())  {
-                String param = st.nextToken();
-                int equal = param.indexOf("=");
-                if (equal != -1) {
-                    String name = param.substring(0, equal);
-                    if (name.trim().equalsIgnoreCase("charset")) {
-                        this.encoding = param.substring(equal + 1).trim();
-                        break;
-                    }
-                    continue;
-                }
-                break;
-            }
-        }
+        public void setContentType(java.lang.String type) {}
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
-            if (this.output == null) {
-                // FIXME: Won't it break JSPEngine contract? See JSPEngine.executeJSP
-                this.output = new MyServletOutputStream(this.encoding);
-            }
             return this.output;
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
         public boolean containsHeader(String s){ return response.containsHeader(s); }
-        public String encodeURL(String s){ return response.encodeURL(s); }
-        /** @deprecated use encodeRedirectURL(String url) instead. */
-        public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
         /** @deprecated use encodeURL(String url) instead. */
         public String encodeUrl(String s){ return response.encodeUrl(s); }
+        public String encodeURL(String s){ return response.encodeURL(s); }
+        /** @deprecated use encodeRedirectURL(String url) instead. */
         public String encodeRedirectUrl(String s){ return response.encodeRedirectUrl(s); }
+        public String encodeRedirectURL(String s){ return response.encodeRedirectURL(s); }
         public void sendError(int i, String s)
             throws IOException{response.sendError(i,s); }
         public void sendError(int i)
@@ -290,12 +265,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public void resetBuffer(){}
 
         public byte[] toByteArray() {
-            if (this.output != null) {
-                return output.toByteArray();
-            }
-            else {
-                return new byte[0];
-            }
+            return output.toByteArray();
         }
     }
 
@@ -303,15 +273,17 @@ public class JSPEngineImpl extends AbstractLogEnabled
      * Stub implementation of ServletOutputStream
      */
     class MyServletOutputStream extends ServletOutputStream {
-        ByteArrayOutputStream output;
-        PrintWriter writer;
+        ByteArrayOutputStream output = null;
+        PrintWriter writer = null;
 
-        public MyServletOutputStream(String encoding) {
+        public MyServletOutputStream() {
             this.output = new ByteArrayOutputStream();
             try {
-                this.writer = new PrintWriter(new OutputStreamWriter(output, encoding));
+                this.writer = new PrintWriter(new OutputStreamWriter(output, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                getLogger().error("Unsupported encoding: " + encoding + ", using platform default instead.");
+                getLogger().error("Your JVM seems not to support UTF-8,"
+                                  + " using platform default instead."
+                                  + " This can cause problems as you can imagine.");
                 this.writer = new PrintWriter(new OutputStreamWriter(output));
             }
         }

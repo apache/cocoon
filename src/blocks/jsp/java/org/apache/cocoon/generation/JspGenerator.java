@@ -74,7 +74,7 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.3 2003/07/10 23:38:04 joerg Exp $
  */
 public class JspGenerator extends ServletGenerator implements Configurable {
 
@@ -102,7 +102,7 @@ public class JspGenerator extends ServletGenerator implements Configurable {
         JSPEngine engine = null;
         SAXParser parser = null;
         try {
-            // FIXME (KP): Should we exclude not supported protocols, say 'context'?
+            // TODO (KP): Should we exclude not supported protocols, say 'context'?
             String url = this.source;
             // absolute path is processed as is
             if (!url.startsWith("/")) {
