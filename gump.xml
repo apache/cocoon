@@ -1182,7 +1182,7 @@
     <depend project="commons-beanutils-core" inherit="all"/>
     <depend project="commons-digester" inherit="all"/>
     <!-- FIXME Add commons-el dependency -->
-    <depend project="jakarta-servletapi-5" inherit="all"/>
+    <depend project="jakarta-servletapi-4" inherit="all"/>
     <!-- FIXME Add myfaces dependency -->
 
     <work nested="tools/anttasks"/>
