@@ -304,14 +304,17 @@ extends AbstractCopletTransformer {
                 RequestParameters pars = new RequestParameters(parameters);
                 Enumeration enumeration = pars.getParameterNames();
                 while ( enumeration.hasMoreElements() ) {
-                    String pName = (String)enumeration.nextElement();
-                    String pValue = pars.getParameter(pName);
-                    AttributesImpl hiddenAttrs = new AttributesImpl();
-                    hiddenAttrs.addCDATAAttribute("type", "hidden");
-                    hiddenAttrs.addCDATAAttribute("name", pName);
-                    hiddenAttrs.addCDATAAttribute("value", pValue);
-                    this.startElement("", "input", "input", hiddenAttrs);
-                    this.endElement("", "input", "input");
+                    final String pName = (String)enumeration.nextElement();
+                    final String[] pValues = pars.getParameterValues(pName);
+                    for(int k=0; k<pValues.length; k++) {
+                        final String pValue = pValues[k];
+                        AttributesImpl hiddenAttrs = new AttributesImpl();
+                        hiddenAttrs.addCDATAAttribute("type", "hidden");
+                        hiddenAttrs.addCDATAAttribute("name", pName);
+                        hiddenAttrs.addCDATAAttribute("value", pValue);
+                        this.startElement("", "input", "input", hiddenAttrs);
+                        this.endElement("", "input", "input");
+                    }
                 }
                 
             }
