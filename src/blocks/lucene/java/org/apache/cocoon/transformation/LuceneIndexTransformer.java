@@ -82,6 +82,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -89,10 +91,13 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A lucene index creation transformer.
- * <p>FIXME: Write Documentation.</p>
+ * <p>See <a href="http://wiki.cocoondev.org/Wiki.jsp?page=LuceneIndexTransformer">LuceneIndexTransformer</a>
+ * documentation on the Cocoon Wiki.</p>
+ * <p>FIXME: Write more documentation.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.4 2003/03/19 15:42:17 cziegeler Exp $
+ * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.5 2003/07/20 03:33:42 crossley Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
@@ -117,6 +122,13 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public static final String LUCENE_DOCUMENT_URL_ATTRIBUTE = "url";
     public static final String LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE = "text-attr";
     public static final String LUCENE_ELEMENT_ATTR_STORE_VALUE = "store";
+    public static final String LUCENE_ELAPSED_TIME_ATTRIBUTE = "elapsed-time";
+    public static final String CDATA = "CDATA";
+    
+    // The 3 states of the state machine
+    private static final int STATE_GROUND = 0; // initial or "ground" state
+    private static final int STATE_QUERY = 1; // processing a lucene:index (Query) element
+    private static final int STATE_DOCUMENT = 2; // processing a lucene:document element
 
     // Initialization time variables
     protected ComponentManager manager = null;
@@ -129,17 +141,25 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
     // Invocation time parameters values
     private String analyzerClassname;
-    private String directory;
+    private String directoryName;
     private int mergeFactor;
 
 
     // Runtime variables
     private int processing;
+    private boolean createIndex = false;
     private IndexWriter writer;
     private StringBuffer bodyText;
     private Document bodyDocument;
     private String bodyDocumentURL;
     private Stack elementStack = new Stack();
+    /**
+     * Storage for the document element's attributes until the document
+     * has been indexed, so that they can be copied to the output
+     * along with a boolean <code>indexed</code> attribute.
+     */
+    private AttributesImpl documentAttributes; 
+    private long documentStartTime;
 
 
     private static String uid(String url) {
@@ -163,7 +183,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
     throws ProcessingException, SAXException, IOException {
         // We don't need all this stuff
         this.analyzerClassname = parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, analyzerClassnameDefault);
-        this.directory = parameters.getParameter(DIRECTORY_PARAMETER, directoryDefault);
+        this.directoryName = parameters.getParameter(DIRECTORY_PARAMETER, directoryDefault);
         this.mergeFactor = parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, mergeFactorDefault);
     }
 
@@ -179,7 +199,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
     public void recycle() {
-        this.processing = 0;
+        this.processing = STATE_GROUND;
         if (this.writer != null) {
             try { this.writer.close(); } catch (IOException ioe) { }
             this.writer = null;
@@ -230,7 +250,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * @param uri The Namespace URI the prefix is mapped to.
      */
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if (processing == 0) {
+        if (processing == STATE_GROUND) {
             super.startPrefixMapping(prefix,uri);
         }
     }
@@ -241,7 +261,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * @param prefix The prefix that was being mapping.
      */
     public void endPrefixMapping(String prefix) throws SAXException {
-        if (processing == 0) {
+        if (processing == STATE_GROUND) {
             super.endPrefixMapping(prefix);
         }
     }
@@ -249,59 +269,68 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
         throws SAXException {
 
-        if (processing == 0) {
+        if (processing == STATE_GROUND) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)){
                 String sCreate = atts.getValue(LUCENE_QUERY_CREATE_ATTRIBUTE);
-                boolean bCreate = sCreate != null &&
+                createIndex = sCreate != null &&
                     (sCreate.equalsIgnoreCase("yes") || sCreate.equalsIgnoreCase("true"));
 
-                String analyzerClassname =
+                analyzerClassname =
                     atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
                 if (analyzerClassname == null)
                     analyzerClassname = this.analyzerClassname;
-                Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(analyzerClassname);
 
                 String sMergeFactor =
                     atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
-                int mergeFactor = this.mergeFactor;
+                mergeFactor = this.mergeFactor;
                 if (sMergeFactor != null)
                     mergeFactor = Integer.parseInt(sMergeFactor);
 
-                String directoryName =
+                String attributeDirectoryName =
                     atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
-                if (directoryName == null)
-                    directoryName = this.directory;
+                if (attributeDirectoryName != null)
+                    this.directoryName = attributeDirectoryName;
 
                 // System.out.println("QUERY Create=" + bCreate + ", Directory=" + directoryName + ", Analyzer=" + analyzerClassname);
-                try {
-                    Directory directory = LuceneCocoonHelper.getDirectory(
-                        new File(workDir, directoryName), bCreate);
-
-                    writer = new IndexWriter(directory, analyzer, bCreate);
-                    writer.mergeFactor = mergeFactor;
-                } catch (IOException e) {
-                    throw new SAXException(e);
+                if (!createIndex) {
+                    // Not asked to create the index - but check if this is necessary anyway:
+                    try {
+                        IndexReader reader = openReader();
+                        reader.close();
+                    } catch (IOException ioe) {
+                        // couldn't open the index - so recreate it
+                        createIndex = true;
+                    }
                 }
-
-                processing = 1;
+                // propagate the lucene:index to the next stage in the pipeline
+                super.startElement(namespaceURI, localName, qName, atts);
+                processing = STATE_QUERY;
             } else {
                 super.startElement(namespaceURI, localName, qName, atts);
             }
-        } else if (processing == 1) {
+        } else if (processing == STATE_QUERY) {
+            // processing a lucene:index - expecting a lucene:document
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)){
                 this.bodyDocumentURL = atts.getValue(LUCENE_DOCUMENT_URL_ATTRIBUTE);
                 if (this.bodyDocumentURL == null)
                     throw new SAXException("<lucene:document> must have @url attribute");
 
                 // System.out.println("  DOCUMENT URL=" + bodyDocumentURL);
+                
+                // Remember the time the document indexing began
+                this.documentStartTime = System.currentTimeMillis();
+                // remember these attributes so they can be passed on to the next stage in the pipeline,
+                // when this document element is ended.
+                //System.out.println("lucene:document startElement: " + namespaceURI + ", " + localName + ", " + qName);
+                this.documentAttributes = new AttributesImpl(atts);
                 this.bodyText = new StringBuffer();
                 this.bodyDocument = new Document();
                 this.elementStack.clear();
-                processing = 2;
+                processing = STATE_DOCUMENT;
             } else {
-                throw new SAXException("<lucene:query> element can contain only <lucene:document> elements!");
+                throw new SAXException("<lucene:index> element can contain only <lucene:document> elements!");
             }
-        } else if (processing == 2) {
+        } else if (processing == STATE_DOCUMENT) {
             elementStack.push(new IndexHelperField(localName, new AttributesImpl(atts)));
         }
     }
@@ -309,44 +338,59 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public void endElement(String namespaceURI, String localName, String qName)
         throws SAXException {
 
-        if (processing == 1) {
+        if (processing == STATE_QUERY) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
                 // End query processing
                 // System.out.println("QUERY END!");
                 try {
+                    if (this.writer == null)
+                        openWriter();
                     this.writer.optimize();
                     this.writer.close();
                     this.writer = null;
                 } catch (IOException e) {
                     throw new SAXException(e);
                 }
-
-                this.processing = 0;
+                // propagate the query element to the next stage in the pipeline
+                super.endElement(namespaceURI, localName, qName);
+                this.processing = STATE_GROUND;
             } else {
-                throw new SAXException("</lucene:query> was expected!");
+                throw new SAXException("</lucene:index> was expected!");
             }
-        } else if (processing == 2) {
+        } else if (processing == STATE_DOCUMENT) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)) {
                 // End document processing
+                // System.out.println("  DOCUMENT END!");
                 this.bodyDocument.add(Field.UnStored(LuceneXMLIndexer.BODY_FIELD, this.bodyText.toString()));
-                System.out.println("    DOCUMENT BODY=" + this.bodyText);
+                //System.out.println("    DOCUMENT BODY=" + this.bodyText);
                 this.bodyText = null;
 
                 this.bodyDocument.add(Field.UnIndexed(LuceneXMLIndexer.URL_FIELD, this.bodyDocumentURL));
                 // store: false, index: true, tokenize: false
                 this.bodyDocument.add(new Field(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL), false, true, false));
                 // System.out.println("    DOCUMENT UID=" + uid(this.bodyDocumentURL));
-                this.bodyDocumentURL = null;
-                // System.out.println("  DOCUMENT END!");
                 try {
-                    this.writer.addDocument(this.bodyDocument);
-                    this.bodyDocument = null;
+                    reindexDocument();
                 } catch (IOException e) {
                     throw new SAXException(e);
                 }
+                this.bodyDocumentURL = null;
 
-                this.processing = 1;
-            } else {
+                // propagate the lucene:document element to the next stage in the pipeline
+                //System.out.println("lucene:document endElement: " + namespaceURI + ", " + localName + ", " + qName);
+                long elapsedTime = System.currentTimeMillis() - this.documentStartTime;
+                //documentAttributes = new AttributesImpl();
+                this.documentAttributes.addAttribute(
+                    "", 
+                    LUCENE_ELAPSED_TIME_ATTRIBUTE, 
+                    LUCENE_ELAPSED_TIME_ATTRIBUTE, 
+                    CDATA, 
+                    String.valueOf(elapsedTime)
+                );
+                super.startElement(namespaceURI, localName, qName, this.documentAttributes);
+                super.endElement(namespaceURI, localName, qName);
+                this.processing = STATE_QUERY;
+            } else {                
                 // End element processing
                 IndexHelperField tos = (IndexHelperField) elementStack.pop();
                 StringBuffer text = tos.getText();
@@ -389,16 +433,63 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public void characters(char[] ch, int start, int length)
         throws SAXException {
 
-        if (processing == 2 && ch.length > 0 && start >= 0 && length > 1 && elementStack.size() > 0) {
+        if (processing == STATE_DOCUMENT && ch.length > 0 && start >= 0 && length > 1 && elementStack.size() > 0) {
             String text = new String(ch, start, length);
             ((IndexHelperField) elementStack.peek()).append(text);
             bodyText.append(text);
             bodyText.append(' ');
-        } else if (processing == 0) {
+        } else if (processing == STATE_GROUND) {
             super.characters(ch, start, length);
         }
     }
 
+    private void openWriter() throws IOException {
+        File indexDirectory = new File(workDir, directoryName);
+        // If the index directory doesn't exist, then always create it.
+        boolean indexExists = IndexReader.indexExists(indexDirectory);
+        if (! IndexReader.indexExists(indexDirectory)) 
+            createIndex = true;
+        
+        // Get the index directory, creating it if necessary
+        Directory directory = LuceneCocoonHelper.getDirectory(
+            indexDirectory, 
+            createIndex
+        );
+        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(analyzerClassname);
+        this.writer = new IndexWriter(directory, analyzer, createIndex);
+        this.writer.mergeFactor = mergeFactor; 
+    }    
+    
+    private IndexReader openReader() throws IOException {
+        Directory directory = LuceneCocoonHelper.getDirectory(
+            new File(workDir, directoryName), 
+            createIndex
+        );
+        IndexReader reader = IndexReader.open(directory);
+        return reader;
+    }    
+
+     private void reindexDocument() throws IOException {
+        if (this.createIndex) {
+            // The index is being created, so there's no need to delete the doc from an existing index.
+            // This means we can keep a single IndexWriter open throughout the process.
+            if (this.writer == null)
+                openWriter();
+            this.writer.addDocument(this.bodyDocument);
+        } else {
+            // This is an incremental reindex, so the document should be removed from the index before adding it
+            try {
+                IndexReader reader = openReader();
+                reader.delete(new Term(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL)));
+                reader.close();
+            } catch (IOException e) { /* ignore */ }
+            openWriter();
+            this.writer.addDocument(this.bodyDocument);
+            this.writer.close();
+            this.writer = null;
+        }
+        this.bodyDocument = null;
+     }
 
     class IndexHelperField
     {
@@ -427,5 +518,5 @@ public class LuceneIndexTransformer extends AbstractTransformer
         public void append(char[] str, int offset, int length) {
             this.text.append(str, offset, length);
         }
-    }
+    }   
 }
