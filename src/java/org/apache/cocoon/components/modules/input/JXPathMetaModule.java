@@ -51,16 +51,13 @@
 
 package org.apache.cocoon.components.modules.input;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.commons.jxpath.*;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * JXPathModule allows to access properties of any object in generic
@@ -104,7 +101,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathMetaModule.java,v 1.5 2004/02/15 19:12:44 haul Exp $
+ * @version CVS $Id: JXPathMetaModule.java,v 1.6 2004/02/15 19:15:11 haul Exp $
  */
 public class JXPathMetaModule extends AbstractMetaModule implements Configurable, ThreadSafe {
 
