@@ -52,7 +52,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.72 $ $Date: 2001-04-12 16:00:54 $
+ * @version CVS $Revision: 1.4.2.73 $ $Date: 2001-04-17 15:00:06 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -75,6 +75,12 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
 
     /** The working directory (null if not available) */
     private File workDir;
+
+    /** Check reloading of sitemap */
+    private boolean checkSitemapReload = true;
+
+    /** reload sitemap asynchron */
+    private boolean reloadSitemapAsynchron = true;
 
     /** The component manager. */
     private DefaultComponentManager componentManager;
@@ -199,7 +205,13 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
             getLogger().error("No sitemap file name");
             throw new ConfigurationException("No sitemap file name\n" + conf.toString());
         }
+        String value = sconf.getAttribute("check-reload", "yes");
+        this.checkSitemapReload = !(value != null && value.equalsIgnoreCase("no") == true);
+        value = sconf.getAttribute("reload-method", "asynchron");
+        this.reloadSitemapAsynchron = !(value != null && value.equalsIgnoreCase("synchron") == true);
         getLogger().debug("Sitemap location = " + this.sitemapFileName);
+        getLogger().debug("Checking sitemap reload = " + this.checkSitemapReload);
+        getLogger().debug("Reloading sitemap asynchron = " + this.reloadSitemapAsynchron);
     }
 
     /** Queries the class to estimate its ergodic period termination. */
@@ -243,17 +255,20 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     public boolean process(Environment environment)
     throws Exception {
         if (disposed) throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
-        return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true);
+        return this.sitemapManager.invoke(environment, "", this.sitemapFileName,
+                 this.checkSitemapReload, this.reloadSitemapAsynchron);
     }
 
     /**
-     * Process the given <code>Environment</code> to assemble 
+     * Process the given <code>Environment</code> to assemble
      * a <code>StreamPipeline</code> and an <code>EventPipeline</code>.
      */
     public boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
     throws Exception {
         if (disposed) throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
-        return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true, pipeline, eventPipeline);
+        return this.sitemapManager.invoke(environment, "", this.sitemapFileName,
+              this.checkSitemapReload, this.reloadSitemapAsynchron,
+              pipeline, eventPipeline);
     }
 
     /**

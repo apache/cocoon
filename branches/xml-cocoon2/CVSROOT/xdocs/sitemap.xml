@@ -8,6 +8,7 @@
   <authors>
    <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
   </authors>
  </header>
 
@@ -501,7 +502,7 @@
      SitemapComponentManager and can ask it for a SitemapComponent it doesn't know about.
      </p>
     </s3>
-    <s3 title="Usage Cases">
+    <s3 title="Use Cases">
     <p>
      Usually you use the same SitemapComponents over and over again in your sub-sitemaps. 
      And because you have a contract between the parent and sub sitemaps (the uri-prefix) you 
@@ -567,6 +568,27 @@
  </map:sitemap>
 ]]>
     </source>
+     </s3>
+     <s3 title="Reloading">
+     <p>The reloading of the subsitemaps can be configured by two attributes.    </p>
+     <source>
+<![CDATA[
+   <map:match pattern="faq/*"> 
+    <map:mount uri-prefix="faq/" check-reload="no" src="faq/sitemap.xmap" reload-method="asynchron"/> 
+   </map:match> 
+]]>
+    </source>
+    <p>
+     The "check-reload" attribute specifies if the sitemap is reloaded, this means regenerated, if
+     it changes. If it set to "no", the sitemap is only generated on the first request for this
+     sitemap.
+     If it is set to "yes" (the default), the reload-method determines who the sitemap is regenerated
+     if it had changed. If it set to "asynchron" (the default), the next request for the changed
+     sitemap, regenerates the sitemap in the background and the request is served with the old
+     one. All subsequent requests are served with the old sitemap until the regeneration in the 
+     background has finished. If the reload-method is set to "synchron", the sitemap is first
+     regenerated and then the request is responded.
+     </p>
      </s3>
     </s2>
   </s1>

@@ -23,6 +23,7 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.pipeline.EventPipeline;
@@ -38,7 +39,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-16 16:04:44 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-17 15:00:15 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 
@@ -55,21 +56,21 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
 
     /** get a configuration
      * @param conf the configuration
-     */    
+     */
     public void configure (Configuration conf) {
         this.conf = conf;
     }
 
     /** get a context
      * @param context the context object
-     */    
+     */
     public void contextualize (Context context) {
         this.context = context;
     }
 
     /** get a component manager
      * @param manager the component manager
-     */    
+     */
     public void compose (ComponentManager manager) {
         this.manager = manager;
     }
@@ -79,18 +80,19 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
      * @param uri_prefix the prefix to the URI
      * @param source the source of the sitemap
      * @param check_reload should the sitemap be automagically reloaded
+     * @param reload_asynchron should the sitemap be reloaded asynchron
      * @throws Exception there may be several excpetions thrown
      * @return states if the requested resource was produced
-     */    
+     */
     public boolean invoke (Environment environment, String uri_prefix,
-                           String source, boolean check_reload)
+                           String source, boolean check_reload, boolean reload_asynchron)
     throws Exception {
-        
+
         // make sure the uri_prefix ends with a slash
         String prefix = this.getPrefix(uri_prefix);
 
         // get a sitemap handler
-        Handler sitemapHandler = getHandler(environment, source, check_reload);
+        Handler sitemapHandler = getHandler(environment, source, check_reload, reload_asynchron);
 
         // setup to invoke the processing
         setupProcessing(environment, sitemapHandler, uri_prefix, source);
@@ -102,19 +104,20 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
      * @param uri_prefix the prefix to the URI
      * @param source the source of the sitemap
      * @param check_reload should the sitemap be automagically reloaded
+     * @param reload_asynchron should the sitemap be reloaded asynchron
      * @throws Exception there may be several excpetions thrown
      * @return states if the requested resource was produced
-     */    
+     */
     public boolean invoke (Environment environment, String uri_prefix,
-                           String source, boolean check_reload, 
+                           String source, boolean check_reload, boolean reload_asynchron,
                            StreamPipeline pipeline, EventPipeline eventPipeline)
     throws Exception {
-        
+
         // make sure the uri_prefix ends with a slash
         String prefix = this.getPrefix(uri_prefix);
-        
+
         // get a sitemap handler
-        Handler sitemapHandler = getHandler(environment, source, check_reload);
+        Handler sitemapHandler = getHandler(environment, source, check_reload, reload_asynchron);
 
         // setup to invoke the processing
         setupProcessing(environment, sitemapHandler, uri_prefix, source);
@@ -123,7 +126,7 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
 
     /** has the sitemap changed
      * @return whether the sitemap file has changed
-     */    
+     */
     public boolean hasChanged() {
         Handler sitemapHandler = null;
         Iterator iter = sitemaps.values().iterator();
@@ -135,7 +138,7 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
         }
         return false;
     }
-    
+
     /** make sure the uri_prefix ends with a slash */
     private String getPrefix (String uri_prefix) {
         if (uri_prefix.length() > 0)
@@ -143,17 +146,24 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
         else
             return uri_prefix;
     }
-    
-    private Handler getHandler(final Environment environment, final String source, final boolean check_reload) 
+
+    private Handler getHandler(final Environment environment,
+                               final String source,
+                               final boolean check_reload,
+                               final boolean reload_asynchron)
             throws Exception {
         Handler sitemapHandler = (Handler) sitemaps.get(source);
-        
+
         if (sitemapHandler != null) {
             if (sitemapHandler.available()) {
                 if (check_reload
                  && sitemapHandler.hasChanged()
                  && !sitemapHandler.isRegenerating()) {
-                    sitemapHandler.regenerateAsynchronously(environment);
+                    if (reload_asynchron == true) {
+                        sitemapHandler.regenerateAsynchronously(environment);
+                    } else {
+                        sitemapHandler.regenerate(environment);
+                    }
                 }
             } else {
                 sitemapHandler.regenerate(environment);
@@ -170,7 +180,7 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
         return sitemapHandler;
     }
 
-    private void setupProcessing (Environment environment, Handler sitemapHandler, String uri_prefix, String source) 
+    private void setupProcessing (Environment environment, Handler sitemapHandler, String uri_prefix, String source)
             throws Exception {
         environment.changeContext(uri_prefix, source);
         if (! sitemapHandler.available())

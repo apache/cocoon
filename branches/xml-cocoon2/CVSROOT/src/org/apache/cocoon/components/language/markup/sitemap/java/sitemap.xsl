@@ -96,7 +96,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.96 2001-04-17 13:20:54 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.97 2001-04-17 15:00:11 cziegeler Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -900,11 +900,26 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="reload-method">
+      <xsl:choose>
+        <xsl:when test="@reload-method='asynchron'">true</xsl:when>
+        <xsl:when test="@reload-method='synchron'">false</xsl:when>
+        <xsl:when test="not(@reload-method)">true</xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="error">
+            <xsl:with-param name="message">
+              element <xsl:value-of select="name(.)"/> with uri-prefix="<xsl:value-of select="@uri-prefix"/>" has a wrong value in 'reload-method' attribute . Use "asynchron" or "synchron" but not "<xsl:value-of select="@reload-method"/>".
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <!-- generate the code to invoke the sitemapManager which handles delegation of control to sub sitemaps -->
     if (internalRequest)
-      return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, pipeline, eventPipeline);
+      return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, <xsl:value-of select="$reload-method"/>, pipeline, eventPipeline);
     else
-      if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+      if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, <xsl:value-of select="$reload-method"/>);
   </xsl:template> <!-- match="map:mount" -->
 
   <!-- generate the code to redirect a request -->

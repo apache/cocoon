@@ -107,5 +107,23 @@
 
 <!-- ======================== The sitemap  ============================== -->
 
-  <sitemap file="sitemap.xmap"/>
+  <!-- The reloading of the sitemap:
+        The check-reload attribute determines if the sitemap is reloaded on change. If
+        it is set to "no", the sitemap is generated once at startup, if it is set to "yes",
+        the sitemap is regenerated if it changes.
+        The reload-method specifies the method for the regeneration:
+        asynchron: If the sitemap changes, the sitemap is regenerated at the next request in 
+                         the background and the incoming request is served with the old sitemap.
+                         All subsequent requests are served with the old sitemap until the
+                         regeneration in the background has finished.
+        synchron: If the sitemap changes, the sitemap is regenerated at the next request.
+                       When the regeneration is finished the request (and all subsequent ones)
+                       is served with the new sitemap.
+
+        For development environment set the reload-method to synchron and the
+        check-reload to yes, for production environment it is advisable to set 
+        the reload-method to asynchron and for more safety the check-reload to no. 
+     -->
+  <sitemap file="sitemap.xmap" reload-method="asynchron" check-reload="yes"/>
+
 </cocoon>

@@ -27,10 +27,16 @@
    <param-name>log-level</param-name>
    <param-value>DEBUG</param-value>
   </init-param>
+  
+  <!-- Allow reinstantiating (reloading) of the cocoon instance. If this is
+       set to yes, a new cocoon instance can be created using
+       the request parameter "cocoon-reload".
+    -->
   <init-param>
    <param-name>allow-reload</param-name>
    <param-value>yes</param-value>
   </init-param>
+
     <init-param>
       <param-name>load-class</param-name>
       <param-value>
