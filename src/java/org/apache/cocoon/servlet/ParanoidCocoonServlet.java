@@ -77,7 +77,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.3 2003/06/05 16:33:59 sylvain Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.4 2003/07/02 18:33:38 cziegeler Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -87,9 +87,9 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 */
 	public static final String DEFAULT_SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
     
-	private Servlet servlet;
+	protected Servlet servlet;
     
-	private ClassLoader classloader;
+    protected ClassLoader classloader;
     
 	public void init(ServletConfig config) throws ServletException {
 		
@@ -118,7 +118,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
 		Thread.currentThread().setContextClassLoader(this.classloader);
         
 		// Inlitialize the actual servlet
-		initServlet(servlet);
+		this.initServlet();
         
 	}
 	
@@ -126,11 +126,10 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 * Initialize the wrapped servlet. Subclasses (see {@link BootstrapServlet} change the
 	 * <code>ServletConfig</code> given to the servlet.
 	 * 
-	 * @param servlet the servlet to initialize
 	 * @throws ServletException
 	 */
-	protected void initServlet(Servlet servlet) throws ServletException {
-		this.servlet.init(getServletConfig());
+	protected void initServlet() throws ServletException {
+		this.servlet.init(this.getServletConfig());
 	}
 	
 	/**
@@ -151,7 +150,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 * Get the classloader that will be used to create the actual servlet. Its classpath is defined
 	 * by the WEB-INF/classes and WEB-INF/lib directories in the context dir.
 	 */
-	private ClassLoader getClassLoader(File contextDir) throws ServletException {
+	protected ClassLoader getClassLoader(File contextDir) throws ServletException {
 		List urlList = new ArrayList();
         
 		try {
