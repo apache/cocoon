@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.18 2000-09-29 19:32:57 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.19 2000-10-04 20:04:56 balld Exp $-->
 <!--
 
  ============================================================================
@@ -284,7 +284,7 @@
                     <xsl:text>set<xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);</xsl:text>
 		   </xsl:when>
 		   <xsl:otherwise>
-		  <xsl:text>setString(<xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+		  <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
 		  </xsl:text>
 		   </xsl:otherwise>
 		  </xsl:choose>
