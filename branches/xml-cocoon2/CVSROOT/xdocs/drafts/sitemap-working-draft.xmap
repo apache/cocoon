@@ -131,9 +131,9 @@ The following goals were identified as engineering constraints:
        pipeline processing. 
    -->
   <map:generators default="parser">
-   <map:generator type="parser" src="class:///org.apache.cocoon.generator.FileGenerator" label="content"/>
-   <map:generator type="dir"    src="file:///home/mystuff/java/MyDirGenerator.class"     label="content"/>
-   <map:generator type="xsp"    src="class:///org.apache.cocoon.generators.XSPGenerator" label="content">
+   <map:generator name="parser" src="class:///org.apache.cocoon.generation.FileGenerator" label="content"/>
+   <map:generator name="dir"    src="file:///home/mystuff/java/MyDirGenerator.class"     label="content"/>
+   <map:generator name="xsp"    src="class:///org.apache.cocoon.generation.XSPGenerator" label="content">
     ...
    </map:generator>
   </map:generators>
@@ -142,12 +142,12 @@ The following goals were identified as engineering constraints:
        Transformers transform SAX events in SAX events.
    -->
   <map:transformers default="xslt">
-   <map:transformer type="xslt" src="class:///org.apache.cocoon.transformer.XSLTTransformer">
+   <map:transformer name="xslt" src="class:///org.apache.cocoon.transformation.XSLTTransformer">
     <compile-stylesheets map:value="true"/>
    </map:transformer>
-   <map:transformer type="xinclude" src="class:///org.apache.cocoon.transformer.XIncludeTransformer" label="content"/>
-   <map:transformer type="schema" src="class:///org.apache.cocoon.transformer.SchemaLoader"/>
-   <map:transformer type="rdf" src="class:///org.apache.cocoon.transformer.RDFizer"/>
+   <map:transformer name="xinclude" src="class:///org.apache.cocoon.transformation.XIncludeTransformer" label="content"/>
+   <map:transformer name="schema" src="class:///org.apache.cocoon.transformation.SchemaLoader"/>
+   <map:transformer name="rdf" src="class:///org.apache.cocoon.transformation.RDFizer"/>
   </map:transformers>
 
    <!-- 
@@ -155,12 +155,12 @@ The following goals were identified as engineering constraints:
        final client consumption.
    -->
   <map:serializers default="html">
-   <map:serializer type="html" mime-type="text/html" src="class:///org.apache.cocoon.serializer.HTMLSerializer">
+   <map:serializer name="html" mime-type="text/html" src="class:///org.apache.cocoon.serialization.HTMLSerializer">
     <doctype-public map:value="-//W3C//DTD HTML 4.0 Transitional//EN"/>
     <doctype-system map:value="http://www.w3.org/TR/REC-html40/loose.dtd"/>
     <preserve-space map:value="true"/>
     <encoding map:value="UTF-8"/>
-    <indent>1</indent>
+    <indent tab="8">1</indent>
     <colors>
      <foreground map:value="white"/>
      <borders>
@@ -168,7 +168,7 @@ The following goals were identified as engineering constraints:
       <right>red</right>
      </borders>
      <text>black</text>
-     <lines>>
+     <lines>
       <left map:value="cyan"/>
       <right>orange</right>
      </lines>
@@ -179,44 +179,44 @@ The following goals were identified as engineering constraints:
     <line-width map:value="120"/>
    </map:serializer>
 
-   <map:serializer type="wap" mime-type="text/vnd.wap.wml" src="class:///org.apache.cocoon.serializer.XMLSerializer">
+   <map:serializer name="wap" mime-type="text/vnd.wap.wml" src="class:///org.apache.cocoon.serialization.XMLSerializer">
     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
     <encoding>UTF-8</encoding>
    </map:serializer>
 
-   <map:serializer type="svg2jpg" mime-type="image/jpg" src="class:///org.apache.cocoon.serializer.SVGSerializer">
+   <map:serializer name="svg2jpg" mime-type="image/jpg" src="class:///org.apache.cocoon.serialization.SVGSerializer">
     <format map:value="jpg"/>
     <compression-level>80%</compression-level>
    </map:serializer>
 
-   <map:serializer type="svg2png" mime-type="image/png" src="class:///org.apache.cocoon.serializer.SVGSerializer">
+   <map:serializer name="svg2png" mime-type="image/png" src="class:///org.apache.cocoon.serialization.SVGSerializer">
     <format>png</format>
     <color-depth map:value="24"/>
    </map:serializer>
   </map:serializers>
   
    <!-- 
-       Choosers are classes that contain programming logic that perform
+       Selectors are classes that contain programming logic that perform
        boolean evaluation based on enviornment state during the call (state
        includes request parameters, machine state as well as any other
        accessible information)
        
-       Choosers can only respond with true/false when called.
+       Selectors can only respond with true/false when called.
    -->
-  <map:choosers default="browser">
-   <map:chooser type="load" src="class:///org.apache.cocoon.chooser.MachineLoadChooser">
+  <map:selectors default="browser">
+   <map:selector name="load" src="class:///org.apache.cocoon.selection.MachineLoadSelector">
     ...
-   </map:chooser>
+   </map:selector>
 
-   <map:chooser type="user" src="class:///org.apache.cocoon.chooser.AuthenticationChooser">
+   <map:selector name="user" src="class:///org.apache.cocoon.selection.AuthenticationSelector">
     ...
-   </map:chooser>
+   </map:selector>
 
-   <map:chooser type="browser" src="class:///org.apache.cocoon.chooser.BrowserChooser">
+   <map:selector name="browser" factory="org.apache.cocoon.selection.BrowserSelectorFactory">
     ...
-   </map:chooser>
-  </map:choosers>
+   </map:selector>
+  </map:selectors>
 
    <!-- 
        Matchers are classes that are able to test if the request parameters
@@ -225,15 +225,15 @@ The following goals were identified as engineering constraints:
        depending on the matcher own logic (this is up to the matcher implementation).
    -->
   <map:matchers default="uri-wildcard">
-   <map:matcher type="uri-wildcard" factory="org.apache.cocoon.matchers.WildcardURIMatcherFactory">
+   <map:matcher name="uri-wildcard" factory="org.apache.cocoon.matching.WildcardURIMatcherFactory">
     ...
    </map:matcher>
 
-   <map:matcher type="uri-regexp" src="class:///org.apache.cocoon.matcher.RegexpURIMatcher">
+   <map:matcher name="uri-regexp" src="class:///org.apache.cocoon.matching.RegexpURIMatcher">
     ...
    </map:matcher>
 
-   <map:matcher type="browser" factory="org.apache.cocoon.matchers.BrowserMatcherFactory">
+   <map:matcher name="browser" factory="org.apache.cocoon.matching.BrowserMatcherFactory">
     ...
    </map:matcher>
   </map:matchers>

@@ -59,7 +59,8 @@
   <generator  name="request"   class="org.apache.cocoon.generation.RequestGenerator"/>
   <generator  name="directory" class="org.apache.cocoon.generation.DirectoryGenerator"/>
   <generator  name="serverpages" class="org.apache.cocoon.generation.ServerPagesGenerator"/>
-  
+  <generator  name="status"    class="org.apache.cocoon.generation.StatusGenerator"/>  
+
   <transformer     name="xslt"      class="org.apache.cocoon.transformation.XalanTransformer"/>
   <transformer     name="log"       class="org.apache.cocoon.transformation.LogTransformer"/>
   <transformer     name="sql"       class="org.apache.cocoon.transformation.SQLTransformer"/>
@@ -125,7 +126,17 @@
           <parameter name="contentType" value="text/html"/>
         </serializer>
       </process>
-      
+
+      <process uri="status" source="status">
+        <generator name="status"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="stylesheets/simple-status.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>      
+
       <process uri="**/" source="**/">
         <generator name="directory"/>
         <transformer name="xslt">
