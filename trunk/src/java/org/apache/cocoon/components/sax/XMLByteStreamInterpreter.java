@@ -52,8 +52,8 @@ package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -62,12 +62,12 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.4 2003/09/24 21:26:51 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.5 2003/10/22 18:15:49 bloritsch Exp $
  */
 
 public final class XMLByteStreamInterpreter
 extends AbstractXMLProducer
-implements XMLDeserializer, Recyclable {
+implements XMLDeserializer, Resettable {
 
     private static final int START_DOCUMENT         = 0;
     private static final int END_DOCUMENT           = 1;
@@ -92,8 +92,8 @@ implements XMLDeserializer, Recyclable {
     private byte[] input;
     private int currentPos;
 
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.list.clear();
         this.input = null;
     }
@@ -174,8 +174,8 @@ implements XMLDeserializer, Recyclable {
                     }
                     break;
                 case START_DTD:
-                    lexicalHandler.startDTD(this.readString(), 
-                                            this.readString(), 
+                    lexicalHandler.startDTD(this.readString(),
+                                            this.readString(),
                                             this.readString());
                     break;
                 case END_DTD:

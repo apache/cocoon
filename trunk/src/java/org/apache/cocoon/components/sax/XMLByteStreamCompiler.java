@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.components.sax;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -63,11 +63,11 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.2 2003/07/09 17:53:03 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.3 2003/10/22 18:15:49 bloritsch Exp $
  */
 
 public final class XMLByteStreamCompiler
-implements XMLSerializer, Recyclable {
+implements XMLSerializer, Resettable {
 
     private HashMap map;
     private int     count;
@@ -96,7 +96,7 @@ implements XMLSerializer, Recyclable {
         this.bufCount = 6;
     }
 
-    public void recycle() {
+    public void reset() {
         this.initOutput();
     }
 
@@ -215,7 +215,7 @@ implements XMLSerializer, Recyclable {
     /**
      * SAX Event Handling: LexicalHandler
      */
-    public void startDTD(String name, String publicId, String systemId) 
+    public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
         this.writeEvent(START_DTD);
         this.writeString(name);
