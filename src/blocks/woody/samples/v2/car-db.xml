@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cars>
+  <!-- Enhancements to this list are welcome !
+       Types with no models will automatically be filled with dumb values. -->
+       
+  <make name="Audi">
+    <!-- found on http://www.audi.fr/ -->
+    <type name="A2">
+      <model name="1.4 75"/>
+      <model name="1.4 TDI"/>
+      <model name="1.4 75 Pack"/>
+      <model name="1.4 TDI Pack"/>
+      <model name="1.6 FSI 110 Pack"/>
+      <model name="1.4 75 Pack Plus"/>
+      <model name="1.6 FSI 110 Pack Plus"/>
+    </type>
+    <type name="A3">
+      <model name="1.6 Attration 102"/>
+      <model name="2.0 FSI Attractin 150"/>
+      <model name="1.6 Ambiente 102"/>
+      <model name="2.0 FSI Ambiente 150"/>
+      <model name="2.0 FSI Ambiente 150 tiptronic"/>
+      <model name="1.6 Ambition 102"/>
+      <model name="2.0 FSI Ambition 150"/>
+      <model name="2.0 FSI Ambition 150 tiptronic"/>
+      <model name="2.0 FSI Ambition Luxe 150"/>
+    </type>
+    <type name="A4">
+      <model name="Berline 1.9 TDI 101"/>
+      <model name="Berline 2.5 TDI 163"/>
+      <model name="Berline 2.5 TDI 163 multitronic"/>
+      <model name="Berline 2.5 TDI 180 quattro"/>
+      <model name="Berline 2.5 TDI 180 quattro tiptronic"/>
+      <model name="Avant 1.9 TDI 101"/>
+      <model name="Avant 1.9 TDI 130"/>
+      <model name="Avant 2.5 TDI 163"/>
+      <model name="Avant 2.5 TDI 163 multitronic"/>
+      <model name="Avant 2.5 TDI 180 quattro"/>
+      <model name="Avant 2.5 TDI 180 tiptronic quattro"/>
+    </type>
+    <type name="A6">
+    </type>
+    <type name="A8">
+    </type>
+    <type name="TT">
+    </type>
+    <type name="Allroad Quattro">
+    </type>
+  </make>
+  <make name="Volkswagen">
+    <type name="Golf">
+    </type>
+    <type name="Passat">
+    </type>
+    <type name="Bora">
+    </type>
+  </make>
+  <make name="Mercedes">
+    <type name="CLK">
+    </type>
+    <type name="SLK">
+    </type>
+  </make>
+  <make name="Renault">
+    <type name="Twingo">
+    </type>
+    <type name="Scenic">
+    </type>
+    <type name="Espace">
+    </type>
+  </make>
+  <make name="Maserati">
+    <type name="Quattroporte">
+    </type>
+    <type name="Coupe">
+    </type>
+    <type name="Spyder">
+    </type>
+  </make>
+</cars>

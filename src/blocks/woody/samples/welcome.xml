@@ -53,5 +53,11 @@
   <sample name="Flowscript" href="form1.flow?locale=de-DE">Germany</sample>
   <sample name="Flowscript" href="form1.flow?locale=nl-BE">Belgium (dutch)</sample>
  </group>
+ <group name="Experimental Woody Flowscript API">
+  <note>
+    The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
+  </note>
+  <sample name="New Flowscript API example" href="v2/example">example</sample>
+ </group>
 
 </samples>

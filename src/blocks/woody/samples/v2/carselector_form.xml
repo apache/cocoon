@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- form used to illustrate programmatic changing of listbox content. -->
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <wd:widgets>
+    <wd:field id="make" required="true">
+      <wd:label>Make:</wd:label>
+      <wd:datatype base="string"/>
+      <wd:selection-list src="cocoon:/cars" dynamic="true"/>
+    </wd:field>
+  
+    <wd:field id="type" required="true">
+      <wd:label>Type:</wd:label>
+      <wd:datatype base="string"/>
+      <wd:selection-list>
+        <wd:item value="">
+          <wd:label>Select a maker first</wd:label>
+        </wd:item>
+      </wd:selection-list>
+    </wd:field>
+    
+    <wd:field id="model" required="true">
+      <wd:label>Model:</wd:label>
+      <wd:datatype base="string"/>
+      <wd:selection-list>
+        <wd:item value="">
+          <wd:label>Select a type first</wd:label>
+        </wd:item>
+      </wd:selection-list>
+    </wd:field>
+  
+    <wd:output id="message">
+      <wd:datatype base="string"/>
+    </wd:output>
+  
+  </wd:widgets>
+
+</wd:form>
