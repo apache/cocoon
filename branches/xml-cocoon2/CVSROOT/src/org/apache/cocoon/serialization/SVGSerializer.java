@@ -24,6 +24,7 @@ import org.w3c.dom.svg.*;
 
 import org.apache.batik.refimpl.transcoder.*;
 import org.apache.batik.transcoder.*;
+import org.apache.batik.refimpl.transcoder.AbstractTranscoder;
 
 import org.apache.xml.serialize.SerializerFactory;
 import org.apache.xml.serialize.Method;
@@ -36,7 +37,7 @@ import java.io.ByteArrayOutputStream;
  * A Batik based Serializer for generating PNG/JPG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-04 22:39:27 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-01-11 19:12:32 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable {
 
@@ -122,15 +123,9 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
         try {
             TranscoderFactory transcoderFactory =
 	            ConcreteTranscoderFactory.getTranscoderFactoryImplementation();
-            Transcoder transcoder = 
+            AbstractTranscoder transcoder = (AbstractTranscoder)
                 transcoderFactory.createTranscoder(mimetype);
-
-            // TODO: FIXME(DIMS) : Remove hard-coded parser name.
-            transcoder.addTranscodingHint(
-                        TranscodingHints.KEY_XML_PARSER_CLASSNAME,
-		                "org.apache.xerces.parsers.SAXParser");
             transcoder.transcodeToStream(doc,this.output);
-
             this.output.flush();
         } catch (Exception ex) {
             log.warn("SVGSerializer: Exception writing image", ex);
