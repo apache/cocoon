@@ -116,9 +116,6 @@ public class ContinuationsManagerImpl
         continuationsInvalidated = new CounterInstrument("invalidates");
     }
 
-    /**
-     * Get the command sink so that we can be notified of changes
-     */
     public void service(final ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
     }
@@ -132,11 +129,11 @@ public class ContinuationsManagerImpl
         try {
             final RunnableManager runnableManager = (RunnableManager)serviceManager.lookup(RunnableManager.ROLE);
             runnableManager.execute( new Runnable() {
-                public void run()
-                {
-                    expireContinuations();
-                }
-            }, initialDelay, interval);
+                    public void run()
+                    {
+                        expireContinuations();
+                    }
+                }, initialDelay, interval);
             serviceManager.release(runnableManager);
         } catch (Exception e) {
             getLogger().warn("Could not enqueue continuations expiration task. " +
@@ -203,7 +200,9 @@ public class ContinuationsManagerImpl
         // REVISIT: Is the following check needed to avoid threading issues:
         // return wk only if !(wk.hasExpired) ?
         WebContinuation kont = (WebContinuation) idToWebCont.get(id);
-        return (kont.interpreterMatches(interpreterId)) ? kont : null;
+        if ( kont != null )
+        	return (kont.interpreterMatches(interpreterId)) ? kont : null;
+        return null;
     }
 
     /**
@@ -226,7 +225,7 @@ public class ContinuationsManagerImpl
                                                  WebContinuation parent,
                                                  int ttl,
                                                  String interpreterId,
-                                                 ContinuationsDisposer disposer ) {
+                                                 ContinuationsDisposer disposer) {
 
         char[] result = new char[bytes.length * 2];
         WebContinuation wk = null;
