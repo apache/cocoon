@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: esql.xsp,v 1.1 2003/03/09 00:03:31 pier Exp $ -->
+<!-- CVS: $Id: esql.xsp,v 1.2 2003/03/12 11:08:59 tcurdt Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
@@ -10,7 +10,7 @@
    <title>A Database Driven XSP Page</title>
     <resources>
        <resource type="file" href="../transform/sql-page.xml.sql">Schema</resource>
-       <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
+       <resource type="doc" href="userdocs/xsp/esql">ESQL</resource>
     </resources>
 
    <content>

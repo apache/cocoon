@@ -22,9 +22,9 @@
 
       The default is true.
       -->
-      <dburl>@db_url@</dburl>
-      <user>@db_user@</user>
-      <password>@db_password@</password>
+      <dburl>jdbc:hsqldb:hsql://localhost:9002</dburl>
+      <user>sa</user>
+      <password></password>
     </jdbc>
   </datasources>
 </xconf>
