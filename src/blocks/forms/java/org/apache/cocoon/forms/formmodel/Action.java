@@ -19,6 +19,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.ActionListener;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 
 /**
  * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
@@ -29,10 +31,12 @@ import org.apache.cocoon.forms.event.WidgetEvent;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.6 2004/04/22 14:26:48 mpo Exp $
+ * @version $Id: Action.java,v 1.7 2004/04/27 09:17:01 bruno Exp $
  */
 public class Action extends AbstractWidget {
     private final ActionDefinition definition;
+    /** Additional listeners to those defined as part of the widget definition (if any). */
+    private ActionListener listener;
 
     public Action(ActionDefinition definition) {
         this.definition = definition;
@@ -100,8 +104,27 @@ public class Action extends AbstractWidget {
         return ACTION_EL;
     }  
     
+    /**
+     * Adds a ActionListener to this widget instance. Listeners defined
+     * on the widget instance will be executed in addtion to any listeners
+     * that might have been defined in the widget definition.
+     */
+    public void addActionListener(ActionListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+
+    public void removeActionListener(ActionListener listener) {
+        this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+
+    private void fireActionEvent(ActionEvent event) {
+        if (this.listener != null) {
+            this.listener.actionPerformed(event);
+        }
+    }
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireActionEvent((ActionEvent)event);
+        fireActionEvent((ActionEvent)event);
     }
 
 }

@@ -21,6 +21,8 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -36,13 +38,15 @@ import org.xml.sax.SAXException;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.6 2004/04/22 14:26:48 mpo Exp $
+ * @version $Id: BooleanField.java,v 1.7 2004/04/27 09:17:01 bruno Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
     private final BooleanFieldDefinition definition;
+    /** Additional listeners to those defined as part of the widget definition (if any). */
+    private ValueChangedListener listener;
 
     public BooleanField(BooleanFieldDefinition definition) {
         this.definition = definition;
@@ -118,7 +122,27 @@ public class BooleanField extends AbstractWidget {
         }
     }
     
+    /**
+     * Adds a ValueChangedListener to this widget instance. Listeners defined
+     * on the widget instance will be executed in addtion to any listeners
+     * that might have been defined in the widget definition.
+     */
+    public void addValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+
+    public void removeValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+
+    private void fireValueChangedEvent(ValueChangedEvent event) {
+        if (this.listener != null) {
+            this.listener.valueChanged(event);
+        }
+    }
+
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+        fireValueChangedEvent((ValueChangedEvent)event);
     }
 }

@@ -19,9 +19,7 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
-import org.apache.cocoon.forms.event.DeferredValueChangedEvent;
-import org.apache.cocoon.forms.event.ValueChangedEvent;
-import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.*;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
@@ -43,11 +41,14 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.9 2004/04/22 14:26:48 mpo Exp $
+ * @version CVS $Id: Field.java,v 1.10 2004/04/27 09:17:01 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
+    /** Overrides selection list defined in FieldDefinition, if any. */
     protected SelectionList selectionList;
-    
+    /** Additional listeners to those defined as part of the widget definition (if any). */
+    private ValueChangedListener listener;
+
     private final FieldDefinition fieldDefinition;
 
     protected String enteredValue;
@@ -317,7 +318,27 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         return getFieldDefinition().getDatatype();
     }
 
+    /**
+     * Adds a ValueChangedListener to this widget instance. Listeners defined
+     * on the widget instance will be executed in addtion to any listeners
+     * that might have been defined in the widget definition.
+     */
+    public void addValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+
+    public void removeValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+
+    private void fireValueChangedEvent(ValueChangedEvent event) {
+        if (this.listener != null) {
+            this.listener.valueChanged(event);
+        }
+    }
+
     public void broadcastEvent(WidgetEvent event) {
         getFieldDefinition().fireValueChangedEvent((ValueChangedEvent)event);
+        fireValueChangedEvent((ValueChangedEvent)event);
     }
 }
