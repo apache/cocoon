@@ -74,6 +74,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.LockableSource;
 import org.apache.cocoon.components.source.VersionableSource;
@@ -115,7 +117,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.15 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: SlideSource.java,v 1.16 2004/01/13 11:32:54 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -149,6 +151,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     
     private String m_principal;
     private SourceValidity m_validity;
+    private boolean m_useEventCaching;
 
     private SlideSourceOutputStream m_outputStream;
 
@@ -164,7 +167,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                        String scope,
                        String path,
                        String principal, 
-                       String version) {
+                       String version,
+                       boolean useEventCaching) {
 
         m_nat = nat;
         m_scheme = scheme;
@@ -183,7 +187,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         if (version != null) {
             m_version = new NodeRevisionNumber(version);
         }
-
+        m_useEventCaching = useEventCaching;
     }
     
     /**
@@ -300,9 +304,15 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      */
     public SourceValidity getValidity() {
         try {
-            if (m_validity == null && m_descriptor != null) {
-                m_validity = new TimeStampValidity(
-                    m_descriptor.getLastModifiedAsDate().getTime());
+            if (m_validity == null) {
+                if (m_useEventCaching) {
+                    m_validity = new EventValidity(
+                        new NamedEvent(m_nat.getName() + m_uri));
+                }
+                else if (m_descriptor != null) {
+                    m_validity = new TimeStampValidity(
+                        m_descriptor.getLastModifiedAsDate().getTime());
+                }
             }
         } catch (Exception e) {
             getLogger().debug("Could not create SourceValidity", e);
@@ -316,7 +326,9 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * content has changed.
      */
     public void refresh() {
-        m_validity = null;
+        if (!m_useEventCaching) {
+            m_validity = null;
+        }
     }
 
     /**
@@ -469,7 +481,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     private Source getChildByPath(String path) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null);
+        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null,m_useEventCaching);
         child.enableLogging(getLogger());
         child.contextualize(m_context);
         child.service(m_manager);
@@ -519,7 +531,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             parentPath = m_path.substring(0,index);
         }
-        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null);
+        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null,m_useEventCaching);
         parent.enableLogging(getLogger());
         parent.contextualize(m_context);
         parent.service(m_manager);
