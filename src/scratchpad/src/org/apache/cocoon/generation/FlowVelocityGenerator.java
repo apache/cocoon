@@ -147,7 +147,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.1 2003/03/27 19:02:39 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/03/27 19:54:09 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -567,7 +567,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
 
         // Set up a JavaScript introspector for the Cocoon flow layer
         this.tmplEngine.setProperty(org.apache.velocity.runtime.RuntimeConstants.UBERSPECT_CLASSNAME,
-                                    "org.apache.cocoon.generation.JSIntrospector");
+                                    JSIntrospector.class.getName());
         this.tmplEngine.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, this);
 
         // First set up our default 'cocoon' resource loader
