@@ -83,7 +83,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.6 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.7 2004/01/06 12:51:54 joerg Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Composable, Disposable
@@ -127,7 +127,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
     protected ComponentManager manager = null;
 
     protected Analyzer analyzer;
-    private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
+//    private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
     private int mergeFactor = MERGE_FACTOR_DEFAULT;
 
 
@@ -145,21 +145,21 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      * Configure this component.
      *
      * @param  conf                        is the configuration
-     * @exception  ConfigurationException  is thrown iff configuring fails
+     * @exception  ConfigurationException  is thrown if configuring fails
      */
     public void configure(Configuration conf) throws ConfigurationException {
         Configuration child;
-        String value;
 
-        child = conf.getChild(ANALYZER_CLASSNAME_CONFIG, false);
+/*        child = conf.getChild(ANALYZER_CLASSNAME_CONFIG, false);
         if (child != null) {
             // fix Bugzilla Bug 25277, use child.getValue
             // and in all following blocks
-            value = child.getValue(ANALYZER_CLASSNAME_DEFAULT);
+            String value = child.getValue(ANALYZER_CLASSNAME_DEFAULT);
             if (value != null) {
                 analyzerClassnameDefault = value;
             }
         }
+*/
         child = conf.getChild(MERGE_FACTOR_CONFIG, false);
         if (child != null) {
             // fix Bugzilla Bug 25277, use child instead of conf
@@ -191,11 +191,11 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      * index content of base_url, index content of links from base_url.
      *
      * @param  index                    the lucene store to write the index to
-     * @param  create                   iff true create, or overwrite existing index, else
+     * @param  create                   if true create, or overwrite existing index, else
      *   update existing index.
      * @param  base_url                 index content of base_url, and crawl through all its
      *   links recursivly.
-     * @exception  ProcessingException  is thrown iff indexing fails
+     * @exception  ProcessingException  is thrown if indexing fails
      */
     public void index(Directory index, boolean create, URL base_url)
              throws ProcessingException {
