@@ -191,6 +191,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="fix" fixes-bug="14564">
+   Fixing NPE in JspEngineImpl.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="14117">
+   Obtain handler and application name from paramters for internal requests if handler could not be resolved from the request object .
+  </action>
   <action dev="CZ" type="fix" fixes-bug="17612">
    Delaying getting of the output stream from the http response until it is really needed.
   </action>

@@ -75,7 +75,7 @@ import java.util.Locale;
  * functionality - overrides the output method and returns the byte(s).
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.1 2003/03/09 00:04:13 pier Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.2 2003/05/07 20:50:05 cziegeler Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -141,7 +141,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public Enumeration getInitParameterNames()
                { return c.getInitParameterNames(); }
         public ServletContext getServletContext() { return c; }
-        public String getInitParameter(String name) { return null; }
+        public String getInitParameter(String name) { return c.getInitParameter(name); }
     }
 
     /**
