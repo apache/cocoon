@@ -92,7 +92,6 @@ The update process is now going to start.
       <include name="**/*.xml"/>
       <include name="**/*.xsl"/>
       <include name="**/*.xslt"/>
-      <exclude name="${backup.dir}"/>
       <replacefilter
         token="http://apache.org/cocoon/woody/instance/1.0"
         value="http://apache.org/cocoon/forms/1.0#instance"/>
