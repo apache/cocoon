@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,18 +18,19 @@ package org.apache.cocoon.components.treeprocessor.variables;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.WrapperServiceManager;
+
 import org.apache.cocoon.sitemap.PatternException;
 
 import java.util.List;
 
 /**
  *
- * @version CVS $Id: VariableResolverFactory.java,v 1.5 2004/07/15 12:49:51 sylvain Exp $
+ * @version CVS $Id$
  */
 public class VariableResolverFactory {
-    
+
     private static ThreadLocal disposableCollector = new ThreadLocal();
-    
+
     /**
      * Set the thread-local list where all created resolvers that need to be
      * disposed will be collected.
@@ -71,7 +72,7 @@ public class VariableResolverFactory {
         // Nothing found...
         return false;
     }
-    
+
     /**
      * Unescape an expression that doesn't need to be resolved, but may contain
      * escaped '{' characters.
@@ -99,7 +100,7 @@ public class VariableResolverFactory {
     /**
      * Get a resolver for a given expression. Chooses the most efficient implementation
      * depending on <code>expression</code>.
-     * 
+     *
      * @deprecated use the version with <code>ServiceManager</service>
      */
     public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
@@ -116,13 +117,11 @@ public class VariableResolverFactory {
             List collector = (List)disposableCollector.get();
             if (collector != null)
                 collector.add(resolver);
-            
+
             return resolver;
-            
+
         } else {
             return new NOPVariableResolver(expression);
         }
     }
 }
-
-
