@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.38 2003/04/10 15:08:10 stephan Exp $
+  CVS $Id: gump.xml,v 1.39 2003/04/14 12:32:46 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -66,7 +66,10 @@
     <depend project="junit"/>
     <depend project="eclipse-jtd"/>
 
+    <depend project="xmlunit"/><!-- used by the testcases -->
+
     <work nested="build/cocoon-@@DATE@@/classes"/>
+    <work nested="build/cocoon-@@DATE@@/deprecated"/>
     <work nested="tools/anttasks"/>
     <work nested="tools/loader"/>
 
