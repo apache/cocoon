@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.74 2003/08/04 01:54:49 joerg Exp $
+    | CVS $Id: jars.xml,v 1.75 2003/08/07 16:40:22 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -210,6 +210,11 @@
     <homepage>http://avalon.apache.org/framework/</homepage>
   </file>
 
+  <!--+
+      | If you update the AltRMI server libraries, make sure
+      | you also update the AltRMI client libraries in
+      | tools/instrumentation/lib !!
+      +-->
   <file>
     <title>Avalon AltRMI Common</title>
     <description>
