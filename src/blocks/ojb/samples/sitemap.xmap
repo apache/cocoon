@@ -62,8 +62,8 @@
       <map:serialize/>
      </map:match>
 
-     <map:match pattern="jdo/xspdemo">
-        <map:generate src="jdo/xsp/demo1.xsp" type="serverpages"/>
+     <map:match pattern="*/xspdemo">
+        <map:generate src="{1}/xsp/demo1.xsp" type="serverpages"/>
         <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
             <map:parameter name="servletPath" value="{request:servletPath}"/>
             <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
@@ -82,7 +82,7 @@
         <map:call function="handleForm">
             <map:parameter name="function" value="employeeform_jdo"/>
             <map:parameter name="form-definition" value="forms/employee.xml"/>
-            <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>            
+            <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>
         </map:call>
     </map:match>
 
@@ -118,19 +118,6 @@
      <!-- Manages continuations -->
      <map:match pattern="jdo/forms/*.continue">
        <map:call continuation="{1}"/>
-     </map:match>
-
-     <!-- odmg samples -->    
-     <map:match pattern="odmg/xspdemo">
-        <map:generate src="odmg/xsp/demo1.xsp" type="serverpages"/>
-        <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-            <map:parameter name="servletPath" value="{request:servletPath}"/>
-            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-            <map:parameter name="file" value="odmg/xsp/xspdemo.xsp"/>
-            <map:parameter name="remove" value="{0}"/>
-        </map:transform>
-        <map:serialize/>
      </map:match>
 
    </map:pipeline>
