@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.4 2003/09/15 11:26:04 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.5 2003/09/15 19:18:18 upayavira Exp $
  */
 public class Target {
     // Defult type is append
@@ -79,6 +79,7 @@ public class Target {
     private final String deparameterizedSourceURI;
     private final TreeMap parameters;
     
+    private String parentURI = null;
     private String originalURI = null;
     private String mimeType = null; 
     private String defaultFilename = Constants.INDEX_URI;
@@ -139,6 +140,7 @@ public class Target {
         
         Target target = new Target(this.type, this.root, linkURI, this.destURI);
         target.setOriginalURI(originalLinkURI);
+        target.setParentURI(this.sourceURI);
         return target;
     }
 
@@ -150,6 +152,14 @@ public class Target {
      */
     public void setOriginalURI(String uri) {
         this.originalURI = uri;
+    }
+    
+    /**
+     * Sets the URI of the page that contained the link to this 
+     * URI. Used for reporting purposes.
+     */
+    public void setParentURI(String uri) {
+        this.parentURI = uri;
     }
     
     /**
@@ -220,6 +230,15 @@ public class Target {
         return NetUtils.getPath(this.getSourceURI());
     }
 
+    /** 
+     * Gets the parent URI (the URI of the page that contained
+     * a link to this URI). null is returned if this page was
+     * not referred to in a link.
+     */
+    public String getParentURI() {
+        return this.parentURI;
+    }
+    
     /**
      * Calculates the destination URI - the URI to which the generated
      * page should be written. This will be a URI that, when resolved
