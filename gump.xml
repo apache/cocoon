@@ -1336,7 +1336,7 @@
 
   <project name="nekodtd">
     <package>org.cyberneko.dtd</package>
-    <jar name="src/blocks/forms/lib/nekodtd-0.1.10.jar"/>
+    <jar name="src/blocks/forms/lib/nekodtd-0.1.11.jar"/>
   </project>  
 
   <project name="daisy-htmlcleaner">

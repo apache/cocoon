@@ -443,7 +443,7 @@
     <title>CyberNeko DTD Converter</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>Forms block</used-by>
-    <lib>forms/lib/nekodtd-0.1.10.jar</lib>
+    <lib>forms/lib/nekodtd-0.1.11.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
@@ -451,7 +451,7 @@
     <title>CyberNeko</title>
     <description>NekoDTD is a configuration that parses Document Type Definition (DTD) files and converts the information into an XML document.</description>
     <used-by>NekoHTML generator (html block), Forms block</used-by>
-    <lib>optional/nekohtml-0.9.3.jar</lib>
+    <lib>optional/nekohtml-0.9.4.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>  
   
