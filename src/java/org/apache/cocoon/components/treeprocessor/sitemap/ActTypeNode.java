@@ -75,7 +75,7 @@ import org.apache.avalon.framework.component.ComponentManager;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.3 2003/08/07 09:49:51 sylvain Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -130,6 +130,22 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         Parameters     resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         Map actionResult;
+        
+        // If in action set, merge parameters
+        if (inActionSet) {
+            Parameters callerParams = (Parameters)env.getAttribute(ActionSetNode.CALLER_PARAMETERS);
+            if (resolvedParams == Parameters.EMPTY_PARAMETERS) {
+                // Just swap
+                resolvedParams = callerParams;
+            } else if (callerParams != Parameters.EMPTY_PARAMETERS) {
+                // Build a new Parameters object since the both we hare are read-only
+                Parameters newParams = new Parameters();
+                // And merge both
+                newParams.merge(resolvedParams);
+                newParams.merge(callerParams);
+                resolvedParams = newParams;
+            }
+        }
 
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeAction != null) {
@@ -163,7 +179,9 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
                     // Merge child action results, if any
                     Map childMap = (Map)env.getAttribute(ActionSetNode.ACTION_RESULTS);
                     if (childMap != null) {
-                        childMap.putAll(actionResult);
+                        Map newResults = new HashMap(childMap);
+                        newResults.putAll(actionResult);
+                        env.setAttribute(ActionSetNode.ACTION_RESULTS, newResults);
                     } else {
                         // No previous results
                         env.setAttribute(ActionSetNode.ACTION_RESULTS, actionResult);

@@ -78,7 +78,7 @@
   <map:act set="process">
     <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/department-form.xml"/>
     <map:generate type="serverpages" src="docs/confirm-dept.xsp"/>
-    <map:transform src="stylesheets/apache.xsl"/>
+    <map:transform src="apache.xsl"/>
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-dept.xsp"/>
@@ -91,7 +91,7 @@
   <map:act set="process">
     <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/employee-form.xml"/>
     <map:generate type="serverpages" src="docs/confirm-empl.xsp"/>
-    <map:transform src="stylesheets/apache.xsl"/>
+    <map:transform src="apache.xsl"/>
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-empl.xsp"/>
