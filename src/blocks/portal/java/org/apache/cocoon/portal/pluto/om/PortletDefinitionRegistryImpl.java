@@ -21,6 +21,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+import java.util.List;
+import java.util.Arrays;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
+import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -59,7 +64,10 @@ public class PortletDefinitionRegistryImpl
 extends AbstractLogEnabled
 implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceable, Disposable {
 
-    /** The mapping */    
+    private static final String WEB_XML = "WEB-INF/web.xml";
+    private static final String PORTLET_XML = "WEB-INF/portlet.xml";
+
+    /** The mapping */
     public static final String PORTLET_MAPPING = "resource://org/apache/cocoon/portal/pluto/om/portletdefinitionmapping.xml";
 
     /** The mapping */    
@@ -145,19 +153,30 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             }
 
             String baseWMDir = servletContext.getRealPath("");
-            // BEGIN PATCH for IBM WebSphere
-            if (baseWMDir.endsWith(File.separator)) {
-                baseWMDir = baseWMDir.substring(0, baseWMDir.length()-1);
+
+            if (baseWMDir != null) {
+                // BEGIN PATCH for IBM WebSphere
+                if (baseWMDir.endsWith(File.separator)) {
+                    baseWMDir = baseWMDir.substring(0, baseWMDir.length() - 1);
+                }
+                // END PATCH for IBM WebSphere
+                int lastIndex = baseWMDir.lastIndexOf(File.separatorChar);
+                this.contextName = baseWMDir.substring(lastIndex + 1);
+                baseWMDir = baseWMDir.substring(0, lastIndex + 1);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("servletContext.getRealPath('') =" +
+                        servletContext.getRealPath(""));
+                    this.getLogger().debug("baseWMDir = " + baseWMDir);
+                }
+                this.load(baseWMDir, mappingPortletXml, mappingWebXml);
+            } else {
+                if (this.getLogger().isWarnEnabled()) {
+                    this.getLogger().warn("Only local portlets are supported when deployed as a war");
+                    this.contextName = "local";
+                    loadLocal(mappingPortletXml, mappingWebXml);
+                }
             }
-            // END PATCH for IBM WebSphere
-            int lastIndex = baseWMDir.lastIndexOf(File.separatorChar);
-            this.contextName = baseWMDir.substring(lastIndex+1);
-            baseWMDir = baseWMDir.substring(0, lastIndex+1);
-            if ( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug("servletContext.getRealPath('') ="+ servletContext.getRealPath(""));
-                this.getLogger().debug("baseWMDir = " + baseWMDir);
-            }
-            this.load(baseWMDir,mappingPortletXml, mappingWebXml);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -176,109 +195,192 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     }
 
     protected void load(String baseWMDir, Mapping portletXMLMapping, Mapping webXMLMapping) 
-    throws Exception {
+        throws Exception {
         File f = new File(baseWMDir);
         String[] entries = f.list();
+        List entryList = Arrays.asList(entries);
         for (int i=0; i<entries.length; i++) {
             File entry = new File(baseWMDir+entries[i]);
             if ( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug("Searching file: " + entry);
             }
             if (entry.isDirectory()) {
-                load(baseWMDir, entries[i], portletXMLMapping, webXMLMapping);
+                loadWebApp(baseWMDir, entries[i], portletXMLMapping, webXMLMapping);
+            } else if (entry.isFile()) {
+                String name = entry.getName();
+                int index = name.lastIndexOf(".war");
+                if (index > 0 && name.endsWith(".war")) {
+                    String webModule = name.substring(0, index);
+                    if (!entryList.contains(webModule)) {
+                        loadWar(entry, webModule, portletXMLMapping, webXMLMapping);
+                    }
+                }
             }
         }
     }
 
-    protected void load(String baseDir, 
-                        String webModule, 
-                        Mapping portletXMLMapping, 
-                        Mapping webXMLMapping) 
-    throws Exception {
-        String directory = baseDir+webModule+File.separatorChar+"WEB-INF"+File.separatorChar;
-        if ( this.getLogger().isDebugEnabled() ) {
+    private void loadLocal(Mapping portletXMLMapping, Mapping webXMLMapping) throws Exception {
+        ServletConfig config =
+            (ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+        if (config == null) {
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Unable to locate servlet config");
+            }
+            return;
+        }
+        ServletContext servletContext = config.getServletContext();
+        URL url = servletContext.getResource("/" + PORTLET_XML);
+        if (url != null) {
+            InputSource portletSource = new InputSource(url.openStream());
+            portletSource.setSystemId(url.toExternalForm());
+
+            url = servletContext.getResource("/" + WEB_XML);
+            InputSource webSource = null;
+            if (url != null) {
+                webSource = new InputSource(url.openStream());
+                webSource.setSystemId(url.toExternalForm());
+            }
+            else {
+                webSource = new InputSource();
+                webSource.setSystemId("no web.xml!");
+            }
+
+            load(portletSource, webSource, this.contextName, portletXMLMapping, webXMLMapping);
+        }
+    }
+
+    private void loadWar(File warFile, String webModule, Mapping portletXMLMapping,
+                         Mapping webXMLMapping) throws Exception {
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Searching war " + warFile.getName());
+        }
+        InputSource portletSource;
+        InputSource webSource;
+        try {
+            ZipFile war = new ZipFile(warFile);
+            ZipEntry entry = war.getEntry(PORTLET_XML);
+            if (entry != null) {
+                portletSource = new InputSource(war.getInputStream(entry));
+                portletSource.setSystemId("/" + PORTLET_XML);
+                entry = war.getEntry(WEB_XML);
+                if (entry != null) {
+                    webSource = new InputSource(war.getInputStream(entry));
+                    webSource.setSystemId("/" + WEB_XML);
+                } else {
+                    webSource = new InputSource();
+                    webSource.setSystemId("no web.xml!");
+                }
+                load(portletSource, webSource, webModule, portletXMLMapping, webXMLMapping);
+            }
+        } catch (Exception e) {
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Unable to inspect war " + warFile.getName() +". " +
+                    e. getMessage());
+            }
+        }
+    }
+
+    private void loadWebApp(String baseDir, String webModule, Mapping portletXMLMapping,
+                            Mapping webXMLMapping) throws Exception {
+        String directory = baseDir + webModule + File.separatorChar + "WEB-INF" + File.separatorChar;
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Searching in directory: " + directory);
         }
 
-        File portletXml = new File(directory+"portlet.xml");
-        File webXml = new File(directory+"web.xml");
+        File portletXml = new File(directory + "portlet.xml");
+        File webXml = new File(directory + "web.xml");
 
         // check for the porlet.xml. If there is no portlet.xml this is not a
         // portlet application web module
         if (portletXml.exists()) { // && (webXml.exists())) {
-            if ( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug("Loading the following Portlet Applications XML files..."+portletXml+", "+webXml);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Loading the following Portlet Applications XML files..." +
+                    portletXml +
+                    ", " +
+                    webXml);
             }
 
-            InputSource source = new InputSource(new FileInputStream(portletXml));
-            source.setSystemId(portletXml.toURL().toExternalForm());
-            
-            Unmarshaller unmarshaller = new Unmarshaller(portletXMLMapping);
-			unmarshaller.setIgnoreExtraElements(true);
-            unmarshaller.setEntityResolver(this.resolver);
-            unmarshaller.setValidation(false);
-            PortletApplicationDefinitionImpl portletApp = 
-                (PortletApplicationDefinitionImpl)unmarshaller.unmarshal( source );
-
-            WebApplicationDefinitionImpl webApp = null;
+            InputSource portletSource = new InputSource(new FileInputStream(portletXml));
+            portletSource.setSystemId(portletXml.toURL().toExternalForm());
+            InputSource webSource = null;
 
             if (webXml.exists()) {
-                source = new InputSource(new FileInputStream(webXml));
-                source.setSystemId(webXml.toURL().toExternalForm());
-
-                unmarshaller = new Unmarshaller(webXMLMapping);
-				unmarshaller.setIgnoreExtraElements(true);
-                unmarshaller.setEntityResolver(this.resolver);
-                unmarshaller.setValidation(false);
-                webApp = 
-                    (WebApplicationDefinitionImpl)unmarshaller.unmarshal( source );
-
-                Vector structure = new Vector();
-                structure.add(portletApp);
-                structure.add("/"+webModule);
-
-                webApp.postLoad(structure);
-
-                // refill structure with necessary information
-                webApp.preBuild(structure);
-
-                webApp.postBuild(structure);
-
-            } else {
-                this.getLogger().info("no web.xml...");
-
-                Vector structure = new Vector();
-                structure.add("/" + webModule);
-                structure.add(null);
-                structure.add(null);
-
-                portletApp.postLoad(structure);
-                
-                portletApp.preBuild(structure);
-                
-                portletApp.postBuild(structure);
-
-                this.getLogger().debug("portlet.xml loaded");
+                webSource = new InputSource(new FileInputStream(webXml));
+                webSource.setSystemId(webXml.toURL().toExternalForm());
             }
 
-            this.registry.add( portletApp );
+            load(portletSource, webSource, webModule, portletXMLMapping, webXMLMapping);
+        }
+    }
 
-            this.getLogger().debug("Portlet added to registry");
-
-            // fill portletsKeyObjectId
-            final Iterator portlets = portletApp.getPortletDefinitionList().iterator();
-            while (portlets.hasNext()) {
-                final PortletDefinition portlet = (PortletDefinition)portlets.next();
-                portletsKeyObjectId.put(portlet.getId(), portlet);
-                
-                if (this.contextName.equals(webModule)) {
-                    ((PortletDefinitionImpl)portlet).setLocalPortlet(true);
-                }
-                ((PortletDefinitionImpl)portlet).setPortletClassLoader(Thread.currentThread().getContextClassLoader());
-
+    private void load(InputSource portletXml, InputSource webXml, String webModule,
+                      Mapping portletXMLMapping, Mapping webXMLMapping) throws Exception {
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Loading the following Portlet Applications XML files..." +
+                portletXml.getSystemId() +
+                    ", " +
+                    webXml.getSystemId());
             }
+
+        Unmarshaller unmarshaller = new Unmarshaller(portletXMLMapping);
+        unmarshaller.setIgnoreExtraElements(true);
+        unmarshaller.setEntityResolver(this.resolver);
+        unmarshaller.setValidation(false);
+        PortletApplicationDefinitionImpl portletApp =
+            (PortletApplicationDefinitionImpl) unmarshaller.unmarshal(portletXml);
+
+        WebApplicationDefinitionImpl webApp = null;
+
+        if (webXml.getByteStream() != null) {
+            unmarshaller = new Unmarshaller(webXMLMapping);
+            unmarshaller.setIgnoreExtraElements(true);
+            unmarshaller.setEntityResolver(this.resolver);
+            unmarshaller.setValidation(false);
+            webApp = (WebApplicationDefinitionImpl) unmarshaller.unmarshal(webXml);
+
+            Vector structure = new Vector();
+            structure.add(portletApp);
+            structure.add("/" + webModule);
+
+            webApp.postLoad(structure);
+
+            // refill structure with necessary information
+            webApp.preBuild(structure);
+
+            webApp.postBuild(structure);
+        } else {
+            this.getLogger().info("no web.xml...");
+
+            Vector structure = new Vector();
+            structure.add("/" + webModule);
+            structure.add(null);
+            structure.add(null);
+
+            portletApp.postLoad(structure);
+
+            portletApp.preBuild(structure);
+
+            portletApp.postBuild(structure);
+
+            this.getLogger().debug("portlet.xml loaded");
         }
 
+        this.registry.add(portletApp);
+
+        this.getLogger().debug("Portlet added to registry");
+
+        // fill portletsKeyObjectId
+        final Iterator portlets = portletApp.getPortletDefinitionList().iterator();
+        while (portlets.hasNext()) {
+            final PortletDefinition portlet = (PortletDefinition) portlets.next();
+            portletsKeyObjectId.put(portlet.getId(), portlet);
+
+            if (this.contextName.equals(webModule)) {
+                ((PortletDefinitionImpl) portlet).setLocalPortlet(true);
+            }
+            ((PortletDefinitionImpl) portlet).setPortletClassLoader(Thread.currentThread()
+                .getContextClassLoader());
+        }
     }
 
     /* (non-Javadoc)
@@ -287,5 +389,4 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     public PortletApplicationEntityList getPortletApplicationEntityList() {
         return this.portletApplicationEntities;
     }
-    
 }
