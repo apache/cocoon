@@ -123,8 +123,12 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
      */
      static CommonAttributes getCommonAttributes(Element bindingElm) throws BindingException {
         try {
-            //TODO: should we evetually remove this?
-            //throw an error if people are still using the old-style @read-only
+            //TODO: should we eventually remove this?
+            //throw an error if people are still using the old-style @read-only or @readonly
+            if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
+                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm) 
+                        + "\nThe usage of the attribute @readonly has been depricated in favour of @direction.");
+            }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
                 throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm) 
                         + "\nThe usage of the attribute @read-only has been depricated in favour of @direction.");
