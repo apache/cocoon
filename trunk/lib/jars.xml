@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.125 2004/02/15 09:22:31 antonio Exp $
+    | CVS $Id: jars.xml,v 1.126 2004/02/16 04:51:28 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -379,7 +379,7 @@
       HTTP standards and recommendations.
     </description>
     <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
-    <lib>core/commons-httpclient-2.0-rc3.jar</lib>
+    <lib>core/commons-httpclient-2.0-final.jar</lib>
     <lib>optional/commons-logging-1.0.3.jar</lib>
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
@@ -402,8 +402,6 @@
     <lib>optional/jstyle.jar</lib>
     <homepage>http://www.redrival.com/greenrd/java/jstyle/</homepage>
   </file>
-
-
 
   <file>
     <title>Pizza Java Compiler</title>
@@ -432,7 +430,6 @@
     <lib>optional/servlet_2_2.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
-
 
   <file>
     <title>Jakarta Commons JXPath</title>

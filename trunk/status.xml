@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.178 2004/02/15 10:38:03 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.179 2004/02/16 04:51:28 antonio Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated commons-httpclient to 2.0-final
+   </action>
    <action dev="AG" type="update">
      Updated Ant to 1.6.1
    </action>
