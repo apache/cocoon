@@ -32,7 +32,7 @@ import org.outerj.expression.TokenMgrError;
 /**
  * Abstract base class for ValidationRuleBuilder implementations.
  * 
- * @version $Id: AbstractValidationRuleBuilder.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: AbstractValidationRuleBuilder.java,v 1.2 2004/03/09 13:08:47 cziegeler Exp $
  */
 public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Serviceable, Disposable {
     protected ExpressionManager expressionManager;
@@ -48,7 +48,7 @@ public abstract class AbstractValidationRuleBuilder implements ValidationRuleBui
      * sets it one the ValidationRule.
      */
     protected void buildFailMessage(Element validationRuleElement, AbstractValidationRule rule) {
-        Element failMessageElement = DomHelper.getChildElement(validationRuleElement, Constants.FD_NS, "failmessage");
+        Element failMessageElement = DomHelper.getChildElement(validationRuleElement, Constants.DEFINITION_NS, "failmessage");
         if (failMessageElement != null) {
             XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
             rule.setFailMessage(failMessage);

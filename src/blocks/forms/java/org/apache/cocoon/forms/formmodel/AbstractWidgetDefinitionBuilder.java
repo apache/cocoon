@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
  *
- * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;
@@ -87,7 +87,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
 
     protected List buildEventListeners(Element widgetElement, String elementName, Class listenerClass) throws Exception {
         List result = null;
-        Element listenerElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, elementName);
+        Element listenerElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, elementName);
         if (listenerElement != null) {
             NodeList list = listenerElement.getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
@@ -107,7 +107,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         Map displayData = new HashMap(names.length);
         for (int i = 0; i < names.length; i++) {
             XMLizable data = null;
-            Element dataElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, names[i]);
+            Element dataElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, names[i]);
             if (dataElement != null) {
                 data = DomHelper.compileElementContent(dataElement);
             }
@@ -121,7 +121,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     }
 
     protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
-        Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, "validation");
+        Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "validation");
         if (validatorElement != null) {
             NodeList list = validatorElement.getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {

@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
@@ -59,7 +59,7 @@ public class MultiValueJXPathBindingBuilder
 
             Convertor convertor = null;
             Locale convertorLocale = Locale.US;
-            Element convertorEl = DomHelper.getChildElement(bindingElem, Constants.FD_NS, "convertor");
+            Element convertorEl = DomHelper.getChildElement(bindingElem, Constants.DEFINITION_NS, "convertor");
             if (convertorEl != null) {
                 String datatype = DomHelper.getAttribute(convertorEl, "datatype");
                 String localeStr = convertorEl.getAttribute("datatype");

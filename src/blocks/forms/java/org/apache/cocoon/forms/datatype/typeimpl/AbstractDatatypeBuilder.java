@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version $Id: AbstractDatatypeBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable {
     protected ServiceManager serviceManager;
@@ -68,7 +68,7 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
     }
 
     public void buildConvertor(Element datatypeEl, AbstractDatatype datatype) throws Exception {
-        Element convertorEl = DomHelper.getChildElement(datatypeEl, Constants.FD_NS, "convertor", false);
+        Element convertorEl = DomHelper.getChildElement(datatypeEl, Constants.DEFINITION_NS, "convertor", false);
         Convertor convertor = buildConvertor(convertorEl);
         datatype.setConvertor(convertor);
     }
@@ -89,9 +89,9 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
     }
 
     protected void buildValidationRules(Element datatypeElement, AbstractDatatype datatype, DatatypeManager datatypeManager) throws Exception {
-        Element validationElement = DomHelper.getChildElement(datatypeElement, Constants.FD_NS, "validation");
+        Element validationElement = DomHelper.getChildElement(datatypeElement, Constants.DEFINITION_NS, "validation");
         if (validationElement != null) {
-            Element[] validationElements = DomHelper.getChildElements(validationElement, Constants.FD_NS);
+            Element[] validationElements = DomHelper.getChildElements(validationElement, Constants.DEFINITION_NS);
             for (int i = 0; i < validationElements.length; i++) {
                 ValidationRule rule = datatypeManager.createValidationRule(validationElements[i]);
                 if (rule.supportsType(datatype.getTypeClass(), datatype.isArrayType())) {

@@ -36,7 +36,7 @@ import java.util.Locale;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: BooleanField.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -82,18 +82,18 @@ public class BooleanField extends AbstractWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.FI_NS, BOOLEAN_FIELD_EL, Constants.FI_PREFIX_COLON + BOOLEAN_FIELD_EL, fieldAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, BOOLEAN_FIELD_EL, Constants.INSTANCE_PREFIX_COLON + BOOLEAN_FIELD_EL, fieldAttrs);
 
         // value element
-        contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
         String stringValue = String.valueOf(value != null && value.booleanValue() == true? "true": "false");
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-        contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
 
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
 
-        contentHandler.endElement(Constants.FI_NS, BOOLEAN_FIELD_EL, Constants.FI_PREFIX_COLON + BOOLEAN_FIELD_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, BOOLEAN_FIELD_EL, Constants.INSTANCE_PREFIX_COLON + BOOLEAN_FIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

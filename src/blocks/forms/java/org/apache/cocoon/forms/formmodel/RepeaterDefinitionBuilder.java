@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link RepeaterDefinition}s.
  * 
- * @version $Id: RepeaterDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: RepeaterDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -36,9 +36,9 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setDisplayData(repeaterElement, repeaterDefinition);
         setValidators(repeaterElement, repeaterDefinition);
 
-        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.FD_NS, "widgets", true);
+        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.FD_NS);
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.DEFINITION_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
             repeaterDefinition.addWidgetDefinition(widgetDefinition);

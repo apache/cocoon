@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: Upload.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private UploadDefinition uploadDefinition;
@@ -146,26 +146,26 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         if (uploadDefinition.getMimeTypes() != null) {
             fieldAttrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
         }
-        contentHandler.startElement(Constants.FI_NS, FIELD_EL, Constants.FI_PREFIX_COLON + FIELD_EL, fieldAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL, fieldAttrs);
 
         if (this.part != null) {
             String name = (String)this.part.getHeaders().get("filename");
-            contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
             contentHandler.characters(name.toCharArray(), 0, name.length());
-            contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
 
         // validation message element: only present if the value is not valid
         if (validationError != null) {
-            contentHandler.startElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
             validationError.generateSaxFragment(contentHandler);
-            contentHandler.endElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
         // the display data
         this.definition.generateDisplayData(contentHandler);
 
-        contentHandler.endElement(Constants.FI_NS, FIELD_EL, Constants.FI_PREFIX_COLON + FIELD_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

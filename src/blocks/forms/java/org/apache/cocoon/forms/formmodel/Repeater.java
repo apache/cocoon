@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: Repeater.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;
@@ -241,23 +241,23 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         AttributesImpl repeaterAttrs = new AttributesImpl();
         repeaterAttrs.addCDATAAttribute("id", getFullyQualifiedId());
         repeaterAttrs.addCDATAAttribute("size", String.valueOf(getSize()));
-        contentHandler.startElement(Constants.FI_NS, REPEATER_EL, Constants.FI_PREFIX_COLON + REPEATER_EL, repeaterAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_EL, repeaterAttrs);
 
         // the repeater's label
-        contentHandler.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
         definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
 
         // heading element -- currently contains the labels of each widget in the repeater
-        contentHandler.startElement(Constants.FI_NS, HEADINGS_EL, Constants.FI_PREFIX_COLON + HEADINGS_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, HEADINGS_EL, Constants.INSTANCE_PREFIX_COLON + HEADINGS_EL, Constants.EMPTY_ATTRS);
         Iterator widgetDefinitionIt = repeaterDefinition.getWidgetDefinitions().iterator();
         while (widgetDefinitionIt.hasNext()) {
             WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionIt.next();
-            contentHandler.startElement(Constants.FI_NS, HEADING_EL, Constants.FI_PREFIX_COLON + HEADING_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, HEADING_EL, Constants.INSTANCE_PREFIX_COLON + HEADING_EL, Constants.EMPTY_ATTRS);
             widgetDefinition.generateLabel(contentHandler);
-            contentHandler.endElement(Constants.FI_NS, HEADING_EL, Constants.FI_PREFIX_COLON + HEADING_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, HEADING_EL, Constants.INSTANCE_PREFIX_COLON + HEADING_EL);
         }
-        contentHandler.endElement(Constants.FI_NS, HEADINGS_EL, Constants.FI_PREFIX_COLON + HEADINGS_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, HEADINGS_EL, Constants.INSTANCE_PREFIX_COLON + HEADINGS_EL);
 
         // the actual rows in the repeater
         Iterator rowIt = rows.iterator();
@@ -265,7 +265,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             RepeaterRow row = (RepeaterRow)rowIt.next();
             row.generateSaxFragment(contentHandler, locale);
         }
-        contentHandler.endElement(Constants.FI_NS, REPEATER_EL, Constants.FI_PREFIX_COLON + REPEATER_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
@@ -289,8 +289,8 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
         attrs.addCDATAAttribute("size", String.valueOf(getSize()));
-        contentHandler.startElement(Constants.FI_NS, REPEATER_SIZE_EL, Constants.FI_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
-        contentHandler.endElement(Constants.FI_NS, REPEATER_SIZE_EL, Constants.FI_PREFIX_COLON + REPEATER_SIZE_EL);
+        contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
+        contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL);
     }
 
     public class RepeaterRow extends AbstractContainerWidget {
@@ -343,13 +343,13 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
             AttributesImpl rowAttrs = new AttributesImpl();
             rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-            contentHandler.startElement(Constants.FI_NS, ROW_EL, Constants.FI_PREFIX_COLON + ROW_EL, rowAttrs);
+            contentHandler.startElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL, rowAttrs);
             Iterator widgetIt = widgets.iterator();
             while (widgetIt.hasNext()) {
                 Widget widget = (Widget)widgetIt.next();
                 widget.generateSaxFragment(contentHandler, locale);
             }
-            contentHandler.endElement(Constants.FI_NS, ROW_EL, Constants.FI_PREFIX_COLON + ROW_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL);
         }
         
         public void broadcastEvent(WidgetEvent event) {

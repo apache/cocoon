@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link FormDefinition}s.
  * 
- * @version $Id: FormDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: FormDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -33,9 +33,9 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setDisplayData(formElement, formDefinition);
         setValidators(formElement, formDefinition);
 
-        Element widgetsElement = DomHelper.getChildElement(formElement, Constants.FD_NS, "widgets", true);
+        Element widgetsElement = DomHelper.getChildElement(formElement, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.FD_NS);
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.DEFINITION_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);

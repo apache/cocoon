@@ -46,10 +46,10 @@ import java.util.Map;
 
 /**
  * The basic operation of this Pipe is that it replaces wt:widget (in the
- * {@link Constants#FT_NS} namespace) tags (having an id attribute)
+ * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#FI_NS "Woody Instance"} namespace), can
+ * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "Woody Instance"} namespace), can
  * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
  * individual widget, and will not need to do the whole page layout.
  *
@@ -57,7 +57,7 @@ import java.util.Map;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -208,7 +208,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     }
 
     public Handler nestedTemplate() throws SAXException {
-        if (Constants.FT_NS.equals(input.uri)) {
+        if (Constants.TEMPLATE_NS.equals(input.uri)) {
             // Element in woody template namespace.
             Handler handler = (Handler)templates.get(input.loc);
             if (handler != null) {
@@ -240,7 +240,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 EffectWidgetReplacingPipe.this.namespacePrefix = input.prefix;
                 return this;
             case EVENT_ELEMENT:
-                if (Constants.FT_NS.equals(input.uri)) {
+                if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if (FORM_TEMPLATE_EL.equals(input.loc)) {
                         return formHandler;
                     } else {
@@ -267,7 +267,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (contextWidget != null) {
                     throwSAXException("Detected nested wt:form-template elements, this is not allowed.");
                 }
-                out.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
+                out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
                 // ====> Retrieve the form
                 // First look for the form using the location attribute, if any
@@ -307,14 +307,14 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
                 String[] namesToTranslate = {"action"};
                 Attributes transAttrs = translateAttributes(input.attrs, namesToTranslate);
-                out.element(Constants.FI_PREFIX, Constants.FI_NS, "form-template", transAttrs);
+                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "form-template", transAttrs);
                 out.startElement();
                 return this;
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
                 out.copy();
-                out.endPrefixMapping(Constants.FI_PREFIX);
+                out.endPrefixMapping(Constants.INSTANCE_PREFIX);
                 contextWidget = null;
                 return this;
             default:
@@ -367,7 +367,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 return this;
 
             case EVENT_ELEMENT:
-                if (Constants.FI_NS.equals(input.uri) && STYLING_EL.equals(input.loc)) {
+                if (Constants.INSTANCE_NS.equals(input.uri) && STYLING_EL.equals(input.loc)) {
                     gotStylingElement = true;
                 }
                 return bufferHandler;
@@ -497,7 +497,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
-                out.element(Constants.FI_PREFIX, Constants.FI_NS, "struct");
+                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "struct");
                 out.attributes();
                 out.startElement();
                 return this;
@@ -525,11 +525,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
-                out.element(Constants.FI_PREFIX, Constants.FI_NS, "union");
+                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
                 out.startElement();
                 return this;
             case EVENT_ELEMENT:
-                if (Constants.FT_NS.equals(input.uri)) {
+                if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {
                         String id = input.attrs.getValue("id");
                         if (id == null) throwSAXException("Element \"case\" missing required \"id\" attribute.");
@@ -562,7 +562,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_ELEMENT:
-                if (Constants.FT_NS.equals(input.uri)) {
+                if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {
                         if (contextWidget.getValue().equals(input.attrs.getValue("id"))) {
                             return nestedHandler;
@@ -641,7 +641,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 }
 
                 String id = idObj.toString();
-                out.element(Constants.FI_PREFIX, Constants.FI_NS, "continuation-id", input.attrs);
+                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "continuation-id", input.attrs);
                 out.startElement();
                 out.characters(id.toCharArray(), 0, id.length());
                 out.endElement();
@@ -690,9 +690,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     saxBuffer.toSAX(getContentHandler());
                 } else {
                     // Insert an enclosing <wi:styling>
-                    out.startElement(Constants.FI_NS, STYLING_EL, Constants.FI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
+                    out.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
                     saxBuffer.toSAX(getContentHandler());
-                    out.endElement(Constants.FI_NS, STYLING_EL, Constants.FI_PREFIX_COLON + STYLING_EL);
+                    out.endElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL);
                 }
             }
             super.endElement(uri, loc, raw);
@@ -718,9 +718,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (widget instanceof ValidationErrorAware) {
                     ValidationError error = ((ValidationErrorAware)widget).getValidationError();
                     if (error != null) {
-                        out.startElement(Constants.FI_NS, VALIDATION_ERROR, Constants.FI_PREFIX_COLON + VALIDATION_ERROR, Constants.EMPTY_ATTRS);
+                        out.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, Constants.EMPTY_ATTRS);
                         error.generateSaxFragment(stylingHandler);
-                        out.endElement(Constants.FI_NS, VALIDATION_ERROR, Constants.FI_PREFIX_COLON + VALIDATION_ERROR);
+                        out.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
                     }
                 }
                 widget = null;

@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link AggregateFieldDefinition}s.
  *
- * @version $Id: AggregateFieldDefinitionBuilder.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version $Id: AggregateFieldDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
@@ -38,15 +38,15 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         buildWidgetDefinition(aggregateDefinition, widgetElement);
 
         // make children fields
-        Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, "widgets", true);
-        Element[] fieldElements = DomHelper.getChildElements(widgetsElement, Constants.FD_NS, "field");
+        Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "widgets", true);
+        Element[] fieldElements = DomHelper.getChildElements(widgetsElement, Constants.DEFINITION_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
             FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
             aggregateDefinition.addWidgetDefinition(fieldDefinition);
         }
 
         // compile splitpattern
-        Element splitElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, "split", true);
+        Element splitElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "split", true);
         String patternString = DomHelper.getAttribute(splitElement, "pattern");
         Perl5Compiler compiler = new Perl5Compiler();
         Pattern pattern = null;
@@ -58,7 +58,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         aggregateDefinition.setSplitPattern(pattern, patternString);
 
         // read split mappings
-        Element[] mapElements = DomHelper.getChildElements(splitElement, Constants.FD_NS, "map");
+        Element[] mapElements = DomHelper.getChildElements(splitElement, Constants.DEFINITION_NS, "map");
         HashSet encounteredFieldMappings = new HashSet();
         for (int i = 0; i < mapElements.length; i++) {
             int group = DomHelper.getAttributeAsInteger(mapElements[i], "group");
@@ -77,14 +77,14 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         }
 
         // read split fail message (if any)
-        Element failMessageElement = DomHelper.getChildElement(splitElement, Constants.FD_NS, "failmessage");
+        Element failMessageElement = DomHelper.getChildElement(splitElement, Constants.DEFINITION_NS, "failmessage");
         if (failMessageElement != null) {
             XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
             aggregateDefinition.setSplitFailMessage(failMessage);
         }
 
         // compile combine expression
-        Element combineElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, "combine", true);
+        Element combineElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "combine", true);
         String combineExprString = DomHelper.getAttribute(combineElement, "expression");
         Expression combineExpr = null;
         try {

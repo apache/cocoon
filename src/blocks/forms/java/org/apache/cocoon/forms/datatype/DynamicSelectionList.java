@@ -41,7 +41,7 @@ import java.util.Locale;
  * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version $Id: DynamicSelectionList.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id: DynamicSelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;
@@ -126,7 +126,7 @@ public class DynamicSelectionList implements SelectionList {
             if (convertorConfigNestingLevel > 0) {
                 convertorConfigNestingLevel++;
                 convertorConfigDOMBuilder.startElement(namespaceURI, localName,  qName, attributes);
-            } else if (namespaceURI.equals(Constants.FD_NS)) {
+            } else if (namespaceURI.equals(Constants.DEFINITION_NS)) {
                 if (localName.equals("item")) {
                     if (convertor == null) {
                         // if no convertor was explicitely configured, use the default one of the datatype
@@ -147,12 +147,12 @@ public class DynamicSelectionList implements SelectionList {
                     }
                     AttributesImpl attrs = new AttributesImpl();
                     attrs.addCDATAAttribute("value", currentValueAsString);
-                    super.startElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName, attrs);
+                    super.startElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName, attrs);
                 } else if (localName.equals("label")) {
                     hasLabel = true;
-                    super.startElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName, attributes);
+                    super.startElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName, attributes);
                 } else if (localName.equals("selection-list")) {
-                    super.startElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName, attributes);
+                    super.startElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName, attributes);
                 } else if (convertor == null && localName.equals("convertor")) {
                     // record the content of this element in a dom-tree
                     convertorConfigDOMBuilder = new DOMBuilder();
@@ -181,19 +181,19 @@ public class DynamicSelectionList implements SelectionList {
                         throw new SAXException("Error building convertor from convertor configuration embedded in selection list XML.", e);
                     }
                 }
-            } else if (namespaceURI.equals(Constants.FD_NS)) {
+            } else if (namespaceURI.equals(Constants.DEFINITION_NS)) {
                 if (localName.equals("item")) {
                     if (!hasLabel) {
                         // make the label now
-                        super.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, new AttributesImpl());
+                        super.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, new AttributesImpl());
                         super.characters(currentValueAsString.toCharArray(), 0, currentValueAsString.length());
-                        super.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
+                        super.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
                     }
-                    super.endElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName);
+                    super.endElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName);
                 } else if (localName.equals("label")) {
-                    super.endElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName);
+                    super.endElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName);
                 } else if (localName.equals("selection-list")) {
-                    super.endElement(Constants.FI_NS, localName, Constants.FI_PREFIX_COLON + localName);
+                    super.endElement(Constants.INSTANCE_NS, localName, Constants.INSTANCE_PREFIX_COLON + localName);
                 } else {
                     super.endElement(namespaceURI, localName, qName);
                 }

@@ -23,7 +23,7 @@ import org.apache.cocoon.forms.util.DomHelper;
  * Builds {StructDefinition}s.
  *
  * @author Timothy Larson
- * @version $Id: StructDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: StructDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -34,9 +34,9 @@ public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setDisplayData(element, definition);
         setValidators(element, definition);
 
-        Element widgetsElement = DomHelper.getChildElement(element, Constants.FD_NS, "widgets", true);
+        Element widgetsElement = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.FD_NS);
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.DEFINITION_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);

@@ -54,7 +54,7 @@ import java.util.Map;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version CVS $Id: AggregateField.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class AggregateField extends Field {
 
@@ -212,10 +212,10 @@ public class AggregateField extends Field {
         AttributesImpl aggregatedFieldAttrs = new AttributesImpl();
         aggregatedFieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
         aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(getAggregateFieldDefinition().isRequired()));
-        contentHandler.startElement(Constants.FI_NS, AGGREGATEFIELD_EL, Constants.FI_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, AGGREGATEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
 
         if (enteredValue != null || value != null) {
-            contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
             String stringValue;
             if (value != null) {
                 stringValue = getDatatype().convertToString(value, locale);
@@ -223,14 +223,14 @@ public class AggregateField extends Field {
                 stringValue = enteredValue;
             }
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-            contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
 
         // validation message element: only present if the value is not valid
         if (validationError != null) {
-            contentHandler.startElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
             validationError.generateSaxFragment(contentHandler);
-            contentHandler.endElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
         // generate label, help, hint, etc.
@@ -242,7 +242,7 @@ public class AggregateField extends Field {
         } else if (getFieldDefinition().getSelectionList() != null) {
             getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
         }
-        contentHandler.endElement(Constants.FI_NS, AGGREGATEFIELD_EL, Constants.FI_PREFIX_COLON + AGGREGATEFIELD_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, AGGREGATEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + AGGREGATEFIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

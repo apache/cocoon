@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link EnumConvertor}s.
  * 
- * @version CVS $Id: EnumConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: EnumConvertorBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class EnumConvertorBuilder implements ConvertorBuilder {
 
@@ -34,7 +34,7 @@ public class EnumConvertorBuilder implements ConvertorBuilder {
             return null;
         }
         Element enumEl = DomHelper.getChildElement(configElement,
-                Constants.FD_NS, "enum", true);
+                Constants.DEFINITION_NS, "enum", true);
         String clazz = enumEl.getFirstChild().getNodeValue();
         return new EnumConvertor(clazz);
     }

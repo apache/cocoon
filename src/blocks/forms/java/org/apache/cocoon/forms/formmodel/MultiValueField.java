@@ -44,7 +44,7 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: MultiValueField.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;
@@ -112,25 +112,25 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.FI_NS, MULTIVALUEFIELD_EL, Constants.FI_PREFIX_COLON + MULTIVALUEFIELD_EL, attrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, MULTIVALUEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + MULTIVALUEFIELD_EL, attrs);
 
-        contentHandler.startElement(Constants.FI_NS, VALUES_EL, Constants.FI_PREFIX_COLON + VALUES_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL, Constants.EMPTY_ATTRS);
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
-                contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
                 String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(values[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
-                contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+                contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
             }
         } else if (enteredValues != null) {
             for (int i = 0; i < enteredValues.length; i++) {
-                contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
                 String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(enteredValues[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
-                contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+                contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
             }
         }
-        contentHandler.endElement(Constants.FI_NS, VALUES_EL, Constants.FI_PREFIX_COLON + VALUES_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL);
 
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
@@ -144,12 +144,12 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
         // validation message element
         if (validationError != null) {
-            contentHandler.startElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
             validationError.generateSaxFragment(contentHandler);
-            contentHandler.endElement(Constants.FI_NS, VALIDATION_MSG_EL, Constants.FI_PREFIX_COLON + VALIDATION_MSG_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
-        contentHandler.endElement(Constants.FI_NS, MULTIVALUEFIELD_EL, Constants.FI_PREFIX_COLON + MULTIVALUEFIELD_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, MULTIVALUEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + MULTIVALUEFIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * Builds {@link FormattingDateConvertor}s.
  *
- * @version CVS $Id: FormattingDateConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: FormattingDateConvertorBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class FormattingDateConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
@@ -61,9 +61,9 @@ public class FormattingDateConvertorBuilder implements ConvertorBuilder {
                 throw new Exception("Invalid value \"" + variant + "\" for variant attribute at " + DomHelper.getLocation(configElement));
         }
 
-        Element patternsEl = DomHelper.getChildElement(configElement, Constants.FD_NS, "patterns", false);
+        Element patternsEl = DomHelper.getChildElement(configElement, Constants.DEFINITION_NS, "patterns", false);
         if (patternsEl != null) {
-            Element patternEl[] = DomHelper.getChildElements(patternsEl, Constants.FD_NS, "pattern");
+            Element patternEl[] = DomHelper.getChildElements(patternsEl, Constants.DEFINITION_NS, "pattern");
             for (int i = 0; i < patternEl.length; i++) {
                 String locale = patternEl[i].getAttribute("locale");
                 String pattern = DomHelper.getElementText(patternEl[i]);

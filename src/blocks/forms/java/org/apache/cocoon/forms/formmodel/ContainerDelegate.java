@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * Helper class for the implementation of widgets containing other widgets.
  *
  * @author Timothy Larson
- * @version $Id: ContainerDelegate.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version $Id: ContainerDelegate.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class ContainerDelegate {
 //    private WidgetDefinition definition;
@@ -95,13 +95,13 @@ public class ContainerDelegate {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        contentHandler.startElement(Constants.FI_NS, WIDGETS_EL, Constants.FI_PREFIX_COLON + WIDGETS_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, WIDGETS_EL, Constants.INSTANCE_PREFIX_COLON + WIDGETS_EL, Constants.EMPTY_ATTRS);
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();
             widget.generateSaxFragment(contentHandler, locale);
         }
-        contentHandler.endElement(Constants.FI_NS, WIDGETS_EL, Constants.FI_PREFIX_COLON + WIDGETS_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, WIDGETS_EL, Constants.INSTANCE_PREFIX_COLON + WIDGETS_EL);
     }
 }
 
