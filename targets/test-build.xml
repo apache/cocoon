@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <project name="test">
   <description>Test targets</description>
 
@@ -64,7 +65,7 @@
 
   <!-- Runs JUnit tests in debug mode -->
   <target name="junit-test-debug" depends="compile-tests, junit-tests-prepare">
-    <fail unless="junit.testcase" 
+    <fail unless="junit.testcase"
           message="Please set the property $${junit.testcase} to a JUnit testcase (package.Classname, e.g. org.test.MyTestCase)."/>
 
     <echo message="The JVM will be suspended until you connect with your favourite debugger to port ${junit.test.debugport}."/>
@@ -85,8 +86,8 @@
          inheritAll="true"
          inheritRefs="false"
          target="tests"/>
-  </target>      
-  
+  </target>
+
   <target name="junit-tests-report" depends="init">
     <mkdir dir="${build.test.report}"/>
     <junitreport todir="${build.test.output}">
@@ -104,7 +105,7 @@
   <!--+
       | Anteater tests
       +-->
-      
+
   <!-- Anteater tests  -->
   <target name="anteater-tests" depends="block-anteater-tests, core-anteater-tests"
           description="Runs AntEater tests"/>
@@ -132,7 +133,7 @@
       </java>
     </sequential>
   </macrodef>
-      
+
   <target name="anteater-tests-prepare">
     <!-- check whether Anteater is installed and available -->
     <!-- anteater parameters are set in build.properties -->
@@ -162,7 +163,7 @@
     <call-anteater script="run-tests.xml" target="single" targetfile="${target}"/>
   </target>
 
-  <!-- Block tests -->   
+  <!-- Block tests -->
   <target name="block-anteater-tests" depends="prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
