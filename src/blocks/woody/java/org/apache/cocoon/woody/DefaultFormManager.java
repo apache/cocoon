@@ -114,6 +114,10 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable {
         lifecycleHelper.setupComponent(widgetDefinitionBuilder);
         widgetDefinitionBuilders.put("multivaluefield", widgetDefinitionBuilder);
 
+        widgetDefinitionBuilder = new ButtonDefinitionBuilder();
+        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
+        widgetDefinitionBuilders.put("button", widgetDefinitionBuilder);
+
         // special case
         formDefinitionBuilder = new FormDefinitionBuilder();
         lifecycleHelper.setupComponent(formDefinitionBuilder);
