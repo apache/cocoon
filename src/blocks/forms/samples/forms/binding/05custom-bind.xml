@@ -53,7 +53,7 @@
       var formValue = widget.getValue();
       // you can call a function from anywhere in the flowscript
       var appValue = doSaveConversion(formValue, "-");
-      jxpathPointer.setValue(appValue);   
+      jxpathPointer.setValue("MyconstantValue");
     </fb:save-form>
   </fb:javascript>
 </fb:context>
