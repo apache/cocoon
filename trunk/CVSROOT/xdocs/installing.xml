@@ -26,6 +26,7 @@
      Instead, copy the new one from the Cocoon distribution and make changes to it
      if necessary.
     </li>
+    <li>Again, it may cause errors if you use old samples with a new Cocoon.</li>
     <li>If you use the ESQL taglib, the
      <connect href="esql.xml">syntax has changed</connect> between Cocoon 1.8 and
      Cocoon 1.8.1</li>
