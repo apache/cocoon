@@ -140,7 +140,7 @@
           <xsp:expr>new Date(request.getSession().getCreationTime())</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'long'">
-          request.getSession().getCreationTime()
+          <xsp:expr>request.getSession().getCreationTime()</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -159,7 +159,7 @@
 	  </xsp:element>
 	</xsl:when>
         <xsl:when test="$as = 'string'">
-          request.getSession().getId()
+          <xsp:expr>request.getSession().getId()</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -181,7 +181,7 @@
           <xsp:expr>new Date(request.getSession().getLastAccessedTime())</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'long'">
-          request.getSession().getLastAccessedTime()
+          <xsp:expr>request.getSession().getLastAccessedTime()</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -196,14 +196,14 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:max-inactive-interval">
-	    <xsp:expr>request.getSession().getMaxInactiveInterval())</xsp:expr>
+	    <xsp:expr>request.getSession().getMaxInactiveInterval()</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>request.getSession().getMaxInactiveInterval()</xsp:expr>
+          <xsp:expr>String.valueOf(request.getSession().getMaxInactiveInterval())</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'int'">
-          request.getSession().getMaxInactiveInterval();
+          <xsp:expr>request.getSession().getMaxInactiveInterval()</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -229,10 +229,10 @@
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>request.getSession().isNew()</xsp:expr>
+          <xsp:expr>String.valueOf(request.getSession().isNew())</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'boolean'">
-          request.getSession().isNew()
+          <xsp:expr>request.getSession().isNew()</xsp:expr>
         </xsl:when>
       </xsl:choose>
     </xsp:expr>
