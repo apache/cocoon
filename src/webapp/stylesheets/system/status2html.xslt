@@ -37,6 +37,7 @@
 
       <body>
         <h1><xsl:value-of select="@status:host"/> - <xsl:value-of select="@status:date"/></h1>
+        <h2>Apache Cocoon <xsl:value-of select="@status:cocoon-version"/></h2>
         <xsl:apply-templates/>
       </body>
     </html>
