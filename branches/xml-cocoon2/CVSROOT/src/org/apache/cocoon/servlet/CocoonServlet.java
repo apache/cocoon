@@ -62,7 +62,7 @@ import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.66 $ $Date: 2001-02-22 14:48:44 $
+ * @version CVS $Revision: 1.1.4.67 $ $Date: 2001-02-27 15:20:48 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -168,7 +168,28 @@ public class CocoonServlet extends HttpServlet {
         buildClassPath.append(File.pathSeparatorChar)
                       .append(System.getProperty("java.class.path"));
 
+        buildClassPath.append(File.pathSeparatorChar)
+                      .append(getExtraClassPath(context));
+
         return buildClassPath.toString();
+     }
+
+
+    /**
+     * Retreives the "extra-classpath" attribute, that needs to be
+     * added to the class path.
+     *
+     * @param context  The ServletContext to perform the lookup.
+     *
+     * @throws ServletException
+     */
+     protected String getExtraClassPath(final ServletContext context) 
+     throws ServletException {
+         String extraClassPath = getInitParameter("extra-classpath");
+         if ((extraClassPath != null) && (extraClassPath.trim().equals("") == false)) {
+            return extraClassPath;
+         }
+         return "";
      }
 
     /**

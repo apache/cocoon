@@ -32,7 +32,7 @@ import org.apache.cocoon.components.classloader.RepositoryClassLoader;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-22 14:48:45 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 15:20:51 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {
@@ -107,6 +107,9 @@ public class ParanoidCocoonServlet extends CocoonServlet {
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(System.getProperty("java.class.path"));
+
+        buildClassPath.append(File.pathSeparatorChar)
+                      .append(getExtraClassPath(context));
 
         return buildClassPath.toString();
      }
