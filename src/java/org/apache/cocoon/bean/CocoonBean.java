@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.40 2004/03/10 12:58:09 stephan Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.41 2004/04/30 12:55:55 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -96,12 +96,6 @@ public class CocoonBean extends CocoonWrapper {
         if (this.initialized == false) {
             super.initialize();
 
-            if (crawler.getRemainingCount() == 0 && !precompileOnly) {
-                String error = "Please, specify at least one starting URI.";
-                log.fatalError(error);
-                throw new ProcessingException(error);
-            }
-
             this.sourceResolver =
                 (SourceResolver) getComponentManager().lookup(
                     SourceResolver.ROLE);
@@ -131,6 +125,10 @@ public class CocoonBean extends CocoonWrapper {
         this.precompileOnly = precompileOnly;
     }
 
+    public boolean isPrecompileOnly() {
+        return precompileOnly;
+    }
+    
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
@@ -239,6 +237,10 @@ public class CocoonBean extends CocoonWrapper {
         crawler.addTarget(target);
     }
 
+    public int getTargetCount() {
+        return crawler.getRemainingCount();
+    }
+    
     public void addExcludePattern(String pattern) {
         int preparedPattern[] = WildcardHelper.compilePattern(pattern);
         excludePatterns.add(preparedPattern);
@@ -331,6 +333,11 @@ public class CocoonBean extends CocoonWrapper {
 
         if (!this.initialized) {
             this.initialize();
+        }
+
+        if (crawler.getRemainingCount() == 0 && !precompileOnly) {
+            log.info("No targets for to be processed.");
+            return;
         }
 
         if (this.checksumsURI != null) {
