@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.230 2004/01/28 19:14:23 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.231 2004/01/29 10:41:12 joerg Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="add" fixes-bug="14327" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
+     JSPReader: The output encoding of the reader is now configurable.
+   </action>
    <action dev="VG" type="remove">
      woody.js has been removed. Please use woody2.js instead.
    </action>
@@ -203,7 +206,7 @@
      Resurrected the Slide block and made it to work with current developement version
      of Slide (2.0-b1). Complete revamping of the Slide sample admin app.
    </action>
-   <action dev="CZ" type="fix" fixes-bug="26450" due-to-email="Ralph_Goers@dslextreme.com " due-to="Ralph Goers">
+   <action dev="CZ" type="fix" fixes-bug="26450" due-to-email="Ralph_Goers@dslextreme.com" due-to="Ralph Goers">
      Allow the Authentication Framework to invoke a pipeline during logout
    </action>
     <action dev="AG" type="update">
