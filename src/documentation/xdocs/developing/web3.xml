@@ -109,17 +109,8 @@
 
 		</s1>
 
-		<s1 title="Test the installation">
-			<p>
-				After you configured your Web3 environment you may want to test your connection. In SAP world there is a typical
-				Remote Function available called RFC_SYSTEM_INFO. It returns some basic configuration data about your SAP-System.
-				To call this Remote Function point your browser <link href="../../samples/web3/info.xml">here</link>. 
-			</p>
-		</s1>
-
 		<s1 title="Implementing your own RFC's">
-			<p>Now that you've established your own Web3-connection you may want to test some extra Functions. First of all you have
-			to setup your markup with the right Namespace</p>
+			<p>First of all you have to setup your markup with the right Namespace</p>
 			<source><![CDATA[<page xmlns:rfc="http://efp.cc/Web3-Rfc/2.0">
 	...
 </page>]]></source>
