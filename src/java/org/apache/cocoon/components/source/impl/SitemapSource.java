@@ -431,7 +431,7 @@ implements Source, XMLizable {
     /**
      * A simple SourceValidity protecting callers from resets.
      */
-    private static final class SitemapSourceValidity implements SourceValidity {
+    public static final class SitemapSourceValidity implements SourceValidity {
 
         private SourceValidity nested_validity = null;
 
@@ -453,6 +453,10 @@ implements Source, XMLizable {
             return(this.nested_validity != null?
                    this.nested_validity.isValid(validity):
                    SourceValidity.INVALID);
+        }
+        
+        public SourceValidity getNestedValidity() {
+            return this.nested_validity;
         }
     }
 }
