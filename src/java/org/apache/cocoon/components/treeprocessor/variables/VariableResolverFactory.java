@@ -100,14 +100,8 @@ public class VariableResolverFactory {
     /**
      * Get a resolver for a given expression. Chooses the most efficient implementation
      * depending on <code>expression</code>.
-     */
-    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
-        return getResolver(expression, new WrapperComponentManager(manager));
-    }
-
-    /**
-     * Get a resolver for a given expression. Chooses the most efficient implementation
-     * depending on <code>expression</code>.
+     *
+     * @deprecated use the version with <code>ServiceManager</service>
      */
     public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
         if (needsResolve(expression)) {
@@ -121,5 +115,14 @@ public class VariableResolverFactory {
         } else {
             return new NOPVariableResolver(expression);
         }
+    }
+
+
+    /**
+     * Get a resolver for a given expression. Chooses the most efficient implementation
+     * depending on <code>expression</code>.
+     */
+    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
+        return getResolver(expression, new WrapperComponentManager(manager));
     }
 }
