@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.127 2003/08/19 08:43:00 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.128 2003/08/20 17:29:07 joerg Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="22574" due-to="Neil Bacon" due-to-email="nbacon@pinnaclesoftware.com.au">
+     POI block: fixed formula support. If no ValueType attribute is set on
+     &lt;gmr:Cell/>, the cell content will be interpreted as formula.
+   </action>
    <action dev="CZ" type="add" fixes-bug="21848" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
      Applying patch for using 'host' in the logging patterns.
    </action>
