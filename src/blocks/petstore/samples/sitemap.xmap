@@ -13,7 +13,6 @@
       <map:generator logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
       <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator" logger="woody"/>
     </map:generators>
-    <map:flow-interpreters default="javascript"/>
     <map:serializers default="html"/>
     <map:matchers default="wildcard"/>
   </map:components>
