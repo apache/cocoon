@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.1 2003/03/09 00:03:07 pier Exp $-->
+<!-- $Id: esql.xsl,v 1.2 2003/05/13 12:43:28 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:03:07 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/05/13 12:43:28 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -373,11 +373,11 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
 
 <xspdoc:desc>Returns the connection's meta data.</xspdoc:desc>
 <xsl:template match="esql:get-connection-metadata">
-  <xsp:expr>_esql_connection.getMetaData()</xsp:expr>
+  <xsp:expr>_esql_connection.getConnection().getMetaData()</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:connection/esql:get-connection">
-  <xsp:expr>_esql_connection</xsp:expr>
+<xsl:template match="esql:connection//esql:get-connection">
+  <xsp:expr>_esql_connection.getConnection()</xsp:expr>
 </xsl:template>
 
 <!-- set one parameter of a prepared or callable statement and use correct method for type -->
