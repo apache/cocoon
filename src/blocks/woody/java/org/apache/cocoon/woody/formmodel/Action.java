@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.event.ActionEvent;
@@ -84,9 +85,24 @@ public class Action extends AbstractWidget {
         Form form = getForm();
         
         // Set the submit widget if we can determine it from the request
-        String value = formContext.getRequest().getParameter(getFullyQualifiedId());
+        String fullId = getFullyQualifiedId();
+        Request request = formContext.getRequest();
+        
+        String value = request.getParameter(fullId);
         if (value != null && value.length() > 0) {
             form.setSubmitWidget(this);
+            
+        } else {
+            // Special workaround an IE bug for <input type="image" name="foo"> :
+            // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
+            // standards-compliant browsers such as Mozilla do send the "foo" parameter.
+            //
+            // Note that since actions are terminal widgets, there's no chance of conflict
+            // with a child "x" or "y" widget.
+            value = request.getParameter(fullId + ".x");
+            if ((value != null) && value.length() > 0) {
+                form.setSubmitWidget(this);
+            }
         }
         
         if (form.getSubmitWidget() == this) {
