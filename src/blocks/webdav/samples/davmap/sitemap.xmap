@@ -16,6 +16,12 @@
 <map:resources>
 
 <map:resource name="GET">
+  <map:match pattern="repo/">
+    <map:generate type="traverse" src="{global:staging}repo/">
+      <map:parameter name="depth" value="1"/>
+    </map:generate>
+    <map:serialize type="xml"/>
+  </map:match>
   <map:match pattern="**">
     <map:generate src="{global:staging}{1}"/>
     <map:serialize type="xml"/>
