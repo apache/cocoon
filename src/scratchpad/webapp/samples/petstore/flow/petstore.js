@@ -55,18 +55,18 @@ var VIEW = "Velocity";
 var EXT = ".vm";
 
 
-function Yoshi() {
+function Format() {
 }
 
-Yoshi.prototype.formatNumber = function(num, format) {
+Format.prototype.formatNumber = function(num, format) {
     return new java.text.DecimalFormat(format).format(num);
 }
 
-Yoshi.prototype.formatDate = function(date, format) {
+Format.prototype.formatDate = function(date, format) {
     return new java.text.SimpleDateFormat(format).format(date);
 }
 
-var yoshi = new Yoshi();
+var fmt = new Format();
 var petStore = null;
 var accountForm = null;
 var cartForm = null;
@@ -130,7 +130,7 @@ function viewCart() {
              view: VIEW,
              accountForm: accountForm, 
              cartForm: cartForm, 
-             yoshi: yoshi,
+             fmt: fmt,
              cartItems: cartItems
 
     });
@@ -147,7 +147,7 @@ function removeItemFromCart() {
     }
     sendPage("/view/Cart" + EXT, {
              view: VIEW,
-             yoshi: yoshi, 
+             fmt: fmt, 
              accountForm: accountForm, 
                         cartForm: cartForm, cartItems: cartItems
     });
@@ -164,7 +164,7 @@ function updateCartQuantities() {
     }
     sendPage("/view/Cart" + EXT, {
              view: VIEW,
-             yoshi: yoshi, 
+             fmt: fmt, 
              accountForm: accountForm, 
              cartForm:cartForm,
              cartItems: cartItems
@@ -182,9 +182,9 @@ function addItemToCart() {
     }
     sendPage("/view/Cart" + EXT, {
              view: VIEW,
-             yoshi: yoshi, 
+             fmt: fmt, 
              accountForm: accountForm, 
-             cartForm:cartForm, 
+             cartForm: cartForm, 
              cartItems: cartItems
     });
 }
@@ -197,12 +197,7 @@ function viewCategory() {
     var category = getPetStore().getCategory(categoryId);
     var skipResults = 0;
     var maxResults = MAX_RESULTS;
-    var foo = new Object();
-    foo.skip = skipResults + 0;
     while (true) {
-        print("foo before=" + foo.skip);
-        print("skipResults = " + skipResults);
-        foo.skip = skipResults + 0;
         var productList = 
             getPetStore().getProductListByCategory(categoryId,
                                                    skipResults, 
@@ -256,7 +251,7 @@ function viewProduct() {
         sendPageAndWait("/view/Product" + EXT, {
                         view: VIEW,
                         accountForm: accountForm, 
-                        yoshi: yoshi,
+                        fmt: fmt,
                         product: product,
                         firstPage: skipResults == 0, 
                         lastPage: !itemList.isLimitedByMaxRows,
@@ -287,7 +282,7 @@ function viewItem() {
              item: item, 
              quantity: getPetStore().getItemRowCountByProduct(item.productId),
              product: item.product, 
-             yoshi: yoshi
+             fmt: fmt
     });
 }
 
@@ -349,17 +344,17 @@ function newAccountForm() {
 function validateZIP(field) {
     var valid = "0123456789-";
     var hyphencount = 0;
-    if (field.length!=5 && field.length!=10) {
+    if (field.length != 5 && field.length != 10) {
         throw "Please enter your 5 digit or 5 digit+4 zip code.";
     }
     for (var i=0; i < field.length; i++) {
-        temp = "" + field.substring(i, i+1);
+        var temp = "" + field.substring(i, i+1);
         if (temp == "-") hyphencount++;
         if (valid.indexOf(temp) == "-1") {
             throw "Invalid characters in your zip code";
         }
     }
-    if (hyphencount > 1 || (field.length==10 && ""+field.charAt(5)!="-")) {
+    if (hyphencount > 1 || (field.length == 10 && field.charAt(5) != "-")) {
         throw "The hyphen character should be used with a properly formatted 5 digit+four zip code, like '12345-6789'";
     }
 }
@@ -457,7 +452,7 @@ function checkout() {
                     view: VIEW,
                     accountForm: accountForm,
                     cartForm: cartForm, 
-                    yoshi: yoshi,
+                    fmt: fmt,
                     cartItems: cartItems
     });
     if (accountForm.signOn) {
@@ -470,24 +465,26 @@ function checkout() {
     while (!valid) {
         sendPageAndWait("/view/NewOrderForm" + EXT, { 
                         view: VIEW,
-                        yoshi: yoshi,
+                        fmt: fmt,
                         creditCardTypes: ["Visa", "MasterCard", "American Express"],
                         order: order});
         var shippingAddressRequired = cocoon.request.get("shippingAddressRequired");
         if (shippingAddressRequired) {
             sendPageAndWait("/view/ShippingForm" + EXT,
-                            {order: order, yoshi: yoshi});
+                            {order: order, fmt: fmt});
         }
         // fix me !! do real validation
         valid = true;
     }
     sendPageAndWait("/view/ConfirmOrder" + EXT,
-                    {view: VIEW, order: order, yoshi: yoshi});
+                    {view: VIEW, order: order, fmt: fmt});
     
     var oldCartForm = cartForm;
     cartForm = new CartForm();
     sendPage("/view/ViewOrder" + EXT,
-             {view: VIEW, order: order, itemList: order.lineItems, yoshi: yoshi});
+             {view: VIEW, order: order, 
+              itemList: order.lineItems, 
+              fmt: fmt});
 }
 
 function listOrders() {

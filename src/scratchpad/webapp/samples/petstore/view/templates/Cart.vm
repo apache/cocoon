@@ -36,7 +36,7 @@
   <td align="center">
   <input type="text" size="3" name="$cartItem.item.itemId" value="$cartItem.quantity.intValue()" />
   </td>
-  <td align="right">$yoshi.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
+  <td align="right">$fmt.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
   <td><a href="removeItemFromCart.do?workingItemId=$cartItem.item.itemId">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
@@ -44,7 +44,7 @@
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
 
-<b>Sub Total: $yoshi.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
+<b>Sub Total: $fmt.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
 <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
 
 </td><td> </td>

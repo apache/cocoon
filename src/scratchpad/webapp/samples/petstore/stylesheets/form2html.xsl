@@ -17,7 +17,7 @@
 	<xsl:template match="document">
 		<html>
 			<head>
-				<title>XMLForm - Cocoon Feedback Wizard</title>
+				<title></title>
 
 			</head>
 			<body>
@@ -45,9 +45,9 @@
 					<tr>
 						<td align="left" colspan="3"
 							class="{error/xf:violation[1]/@class}">
-							<p>* There are [<b><xsl:value-of
+							<p>* The information you submitted contains [<b><xsl:value-of
 								select="count(error/xf:violation)"/></b>] 
-								errors. Please fix these errors and submit the
+								error(s). Please fix the specified error(s) and submit the
 								form again.</p>
 							<p>
 								<xsl:variable name="localViolations"
