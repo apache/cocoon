@@ -50,13 +50,12 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
-
-import java.util.Map;
 
 /**
  * This action simply checks to see if a given resource exists. It checks
@@ -70,7 +69,7 @@ import java.util.Map;
  * match the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

@@ -50,6 +50,13 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -63,19 +70,6 @@ import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Generates an XML directory listing.
@@ -123,7 +117,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.10 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.11 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class DirectoryGenerator
     extends ServiceableGenerator

@@ -50,29 +50,23 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.Recomposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import java.io.File;
+import java.io.Serializable;
 
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
-
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.File;
-import java.io.Serializable;
 
 /**
  * Base implementation of <code>ServerPagesGenerator</code>. This class
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.5 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: AbstractServerPage.java,v 1.6 2003/10/27 07:29:31 cziegeler Exp $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator

@@ -50,18 +50,17 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-
+import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Simple helper action to allow passing sitemap variables to InputModules.
@@ -100,7 +99,7 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

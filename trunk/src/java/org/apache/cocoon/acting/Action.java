@@ -50,17 +50,16 @@
 */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.component.Component;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Action.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: Action.java,v 1.3 2003/10/27 07:28:26 cziegeler Exp $
  */
 public interface Action {
 

@@ -50,34 +50,33 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.Tokenizer;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
-import org.apache.excalibur.mpool.Resettable;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.Tokenizer;
+import org.apache.excalibur.mpool.Resettable;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Generates a list of links that are reachable from the src and their status.
@@ -85,7 +84,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.5 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.6 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Resettable, Configurable {
     /** The URI of the namespace of this generator. */
@@ -207,8 +206,8 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Resetta
     private String linkContentType = LINK_CONTENT_TYPE_DEFAULT;
     private HashSet excludeCrawlingURL;
     private HashSet includeCrawlingURL;
-    private String userAgent = USER_AGENT_DEFAULT;
-    private String accept = ACCEPT_DEFAULT;
+//    private String userAgent = USER_AGENT_DEFAULT;
+//    private String accept = ACCEPT_DEFAULT;
 
     private HashSet crawled;
     private HashSet linksToProcess;
@@ -322,7 +321,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Resetta
             }
         }
 
-        child = configuration.getChild(USER_AGENT_CONFIG, false);
+/*        child = configuration.getChild(USER_AGENT_CONFIG, false);
         if (child != null) {
             value = child.getValue();
             if (value != null && value.length() > 0) {
@@ -336,7 +335,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Resetta
             if (value != null && value.length() > 0) {
                 this.accept = value;
             }
-        }
+        }*/
     }
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)

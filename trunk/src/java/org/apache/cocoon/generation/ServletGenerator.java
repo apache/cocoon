@@ -50,24 +50,22 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import java.io.IOException;
+import java.util.Map;
 
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.4 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: ServletGenerator.java,v 1.5 2003/10/27 07:29:31 cziegeler Exp $
  */
 public abstract class ServletGenerator extends ServiceableGenerator {
 

@@ -64,8 +64,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -90,7 +90,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.7 2003/09/25 17:20:19 joerg Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.8 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 

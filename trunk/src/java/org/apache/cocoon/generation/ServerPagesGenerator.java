@@ -50,16 +50,17 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.commons.collections.ArrayStack;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -67,15 +68,12 @@ import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.commons.collections.ArrayStack;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
@@ -93,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.6 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.7 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {

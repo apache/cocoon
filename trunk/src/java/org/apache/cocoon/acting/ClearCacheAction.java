@@ -50,22 +50,21 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 /**
  * Simple action which ensures the cache is cleared of all
  * cached results
  *
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.5 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: ClearCacheAction.java,v 1.6 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

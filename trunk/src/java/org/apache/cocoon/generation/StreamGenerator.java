@@ -50,6 +50,11 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -59,11 +64,6 @@ import org.apache.cocoon.util.PostInputStream;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.io.StringReader;
 
 /**
  *
@@ -87,7 +87,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.6 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.7 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {

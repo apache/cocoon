@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -57,9 +60,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Set up environment for configurable form handling data.  This group
@@ -69,7 +69,7 @@ import java.util.Map;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.3 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.4 2003/10/27 07:28:26 cziegeler Exp $
  */
 public abstract class AbstractComplementaryConfigurableAction extends ConfigurableServiceableAction {
     private static Map configurations = new HashMap();

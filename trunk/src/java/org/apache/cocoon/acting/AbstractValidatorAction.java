@@ -50,27 +50,19 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.*;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.Tokenizer;
-
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
 
 /**
  * Abstract implementation of action that needs to perform validation of
@@ -219,7 +211,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.5 2003/09/24 21:26:51 cziegeler Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.6 2003/10/27 07:28:26 cziegeler Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction

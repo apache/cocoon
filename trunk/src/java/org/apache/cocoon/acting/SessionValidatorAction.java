@@ -50,16 +50,14 @@
 */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Session;
 
 /**
  * This is the action used to validate Session parameters (attributes).
@@ -70,7 +68,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionValidatorAction.java,v 1.3 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: SessionValidatorAction.java,v 1.4 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

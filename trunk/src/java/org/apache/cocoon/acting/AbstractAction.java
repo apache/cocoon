@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * AbstractAction gives you the infrastructure for easily deploying more
@@ -62,7 +62,7 @@ import java.util.TreeMap;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractAction.java,v 1.1 2003/03/09 00:08:38 pier Exp $
+ * @version CVS $Id: AbstractAction.java,v 1.2 2003/10/27 07:28:26 cziegeler Exp $
  */
 public abstract class AbstractAction extends AbstractLogEnabled
     implements Action {

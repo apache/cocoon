@@ -50,21 +50,21 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Generates a document from a session attribute. The attribute may be a DOM
@@ -101,7 +101,7 @@ import java.util.Map;
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
  * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeGenerator.java,v 1.3 2003/10/08 12:38:58 bruno Exp $
+ * @version CVS $Id: SessionAttributeGenerator.java,v 1.4 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class SessionAttributeGenerator extends AbstractGenerator {
 

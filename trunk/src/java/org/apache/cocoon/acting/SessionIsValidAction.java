@@ -50,15 +50,14 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 
 /**
@@ -66,7 +65,7 @@ import java.util.Map;
  * seesion is still valid.
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: SessionIsValidAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: SessionIsValidAction.java,v 1.3 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

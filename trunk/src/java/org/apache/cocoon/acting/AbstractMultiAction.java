@@ -50,19 +50,19 @@
 */
 package org.apache.cocoon.acting;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Enumeration;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * The <code>AbstractMultiAction</code> provides a way
@@ -76,7 +76,7 @@ import java.lang.reflect.Method;
  * will call the method "doSave" of the MultiAction
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.7 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: AbstractMultiAction.java,v 1.8 2003/10/27 07:28:26 cziegeler Exp $
  */
 public abstract class AbstractMultiAction extends ConfigurableServiceableAction {
 

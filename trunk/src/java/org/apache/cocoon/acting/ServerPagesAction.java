@@ -53,21 +53,20 @@ package org.apache.cocoon.acting;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.fortress.impl.handler.ComponentFactory;
+import org.apache.avalon.fortress.impl.handler.ComponentHandler;
+import org.apache.avalon.fortress.impl.handler.PoolableComponentHandler;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.service.DefaultServiceManager;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.fortress.impl.handler.ComponentHandler;
-import org.apache.avalon.fortress.impl.handler.PoolableComponentHandler;
-import org.apache.avalon.fortress.impl.handler.ComponentFactory;
-
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -112,7 +111,7 @@ import org.apache.excalibur.mpool.ObjectFactory;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.6 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.7 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

@@ -57,7 +57,6 @@ import java.io.IOException;
 import org.apache.cocoon.util.FileFormatException;
 import org.apache.cocoon.util.ImageProperties;
 import org.apache.cocoon.util.ImageUtils;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -66,7 +65,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageDirectoryGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: ImageDirectoryGenerator.java,v 1.2 2003/10/27 07:29:31 cziegeler Exp $
  */
 final public class ImageDirectoryGenerator extends DirectoryGenerator {
 

@@ -50,12 +50,12 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
 
 /**
  * A generator is the starting point of a pipeline. It "generates" XML
@@ -63,7 +63,7 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: Generator.java,v 1.2 2003/09/03 13:38:39 cziegeler Exp $
+ * @version CVS $Id: Generator.java,v 1.3 2003/10/27 07:29:31 cziegeler Exp $
  */
 public interface Generator extends XMLProducer, SitemapModelComponent {
 

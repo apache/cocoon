@@ -50,17 +50,15 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 /**
  * Sets the character encoding of parameters.
@@ -75,7 +73,7 @@ import java.util.Map;
  * <p>If no encoding specified, the action does nothing.
  *
  * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
- * @version CVS $Id: SetCharacterEncodingAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: SetCharacterEncodingAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

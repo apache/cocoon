@@ -50,14 +50,14 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * An abstract class that can be used to implement an own generator.
@@ -66,7 +66,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.3 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.4 2003/10/27 07:29:31 cziegeler Exp $
  */
 public abstract class AbstractGenerator
     extends AbstractXMLProducer

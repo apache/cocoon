@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.generation;
 
-import org.xml.sax.SAXException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import org.xml.sax.SAXException;
 
 /**
  * An extension of DirectoryGenerators that adds extra attributes for MP3
@@ -78,7 +78,7 @@ import java.io.RandomAccessFile;
  * </blockquote>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.3 2003/07/05 04:33:57 joerg Exp $
+ * @version CVS $Id: MP3DirectoryGenerator.java,v 1.4 2003/10/27 07:29:31 cziegeler Exp $
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {

@@ -53,9 +53,10 @@ package org.apache.cocoon.acting;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Iterator;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
@@ -84,7 +85,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * "name_1" must also exist and vice versa.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterExistsAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: RequestParameterExistsAction.java,v 1.3 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"

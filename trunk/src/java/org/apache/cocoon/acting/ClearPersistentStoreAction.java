@@ -50,21 +50,20 @@
 */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.store.Store;
-
-import java.util.Map;
 
 /**
  * Simple action which ensures the persistent store is cleared.
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: ClearPersistentStoreAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * @version CVS $Id: ClearPersistentStoreAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"
