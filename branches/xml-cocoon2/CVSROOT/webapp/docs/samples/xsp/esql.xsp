@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+          language="java"
+          xmlns:xsp="http://apache.org/xsp"
+	  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+>
+
+  <page>
+
+   <title>A Database Driven XSP Page</title>
+
+   <content>
+   
+   <esql:execute-query inner-method="no">
+    <esql:driver>postgresql.Driver</esql:driver>
+    <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+    <esql:username>test</esql:username>
+    <esql:password>test</esql:password>
+    <esql:query>select * from department_table</esql:query>
+    <esql:results>
+     <para><esql:get-string column="name"/></para>
+    </esql:results>
+   </esql:execute-query>
+
+   </content>
+  </page>
+</xsp:page>
