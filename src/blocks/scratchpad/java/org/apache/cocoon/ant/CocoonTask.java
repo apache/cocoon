@@ -62,7 +62,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.8 2004/04/17 11:32:24 antonio Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.9 2004/06/24 13:52:49 cziegeler Exp $
  */
 public class CocoonTask extends Task {
 
@@ -330,7 +330,7 @@ public class CocoonTask extends Task {
                 // AntClassLoader
                 // CocoonTask was already loaded via an AntClassLoader by Ant
                 //
-                AntClassLoader antClassLoader = new AntClassLoader(this.project, this.cocoonClasspath, false);
+                AntClassLoader antClassLoader = new AntClassLoader(this.getProject(), this.cocoonClasspath, false);
 
                 log("Using Class Loader having classpath " + String.valueOf(this.cocoonClasspath), Project.MSG_INFO);
                 classLoader = antClassLoader;
