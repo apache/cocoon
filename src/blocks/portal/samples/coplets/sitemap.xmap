@@ -8,11 +8,11 @@
 
     <!-- this is a gallery coplet -->
     <map:match pattern="gallery">
-        <map:generate type="directory" src="../../petstore/images">
-            <map:parameter name="include" value=".jpg"/>
+        <map:generate type="directory" src="{coplet:copletData/attributes/image-dir}">
+            <map:parameter name="include" value="{coplet:copletData/attributes/image-include}"/>
         </map:generate>
         <map:transform src="gallery/dir2pic.xsl">
-            <map:parameter name="dirprefix" value="../petstore/images"/>
+            <map:parameter name="dirprefix" value="{coplet:copletData/attributes/image-uri-prefix}"/>
         </map:transform>
         <map:transform type="xslt" src="gallery/picture.xsl">
           <map:parameter name="pic" value="{coplet:attributes/picture}"/>

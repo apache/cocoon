@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: HistoryAspect.java,v 1.1 2003/12/12 10:13:34 cziegeler Exp $
+ * @version CVS $Id: HistoryAspect.java,v 1.2 2003/12/12 12:37:13 cziegeler Exp $
  */
 public class HistoryAspect 
     extends AbstractAspect {
@@ -122,6 +122,7 @@ public class HistoryAspect
                 }
                 
                 this.addValues(layout.getId(), state, layout.getAspectDatas(), "aspectDatas/");
+                this.addValues(layout.getId(), state, layout.getParameters(), "parameters/");
                 
                 // are we a coplet layout
                 if ( layout instanceof CopletLayout ) {
