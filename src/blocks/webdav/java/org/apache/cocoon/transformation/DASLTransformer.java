@@ -210,7 +210,7 @@ public class DASLTransformer extends AbstractSAXTransformer {
                     url.getUser(),
                     url.getPassword()));                       
             HttpConnection conn = new HttpConnection(url.getHost(), url.getPort());
-            WebdavResource resource = new WebdavResource(new org.apache.util.HttpURL(this.targetUrl));
+            WebdavResource resource = new WebdavResource(new HttpURL(this.targetUrl));
             if(!resource.exists()) {
                 throw new SAXException("The WebDAV resource don't exist");
             }

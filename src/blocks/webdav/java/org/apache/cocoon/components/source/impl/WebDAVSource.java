@@ -42,13 +42,13 @@ import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
-import org.apache.util.HttpURL;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.DepthSupport;
 import org.apache.webdav.lib.Property;
@@ -70,7 +70,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.20 2004/03/05 13:02:26 bdelacretaz Exp $
+ *  @version $Id: WebDAVSource.java,v 1.21 2004/03/22 17:05:28 gcasper Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -84,10 +84,6 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
 
     private static final String COLLECTION_NAME = "collection";
 
-    static {
-        WebdavResource.setGetUseDisk(false);
-    }
-    
     private String systemId;
     
     private String location;
@@ -117,7 +113,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         this.systemId = "http://" + location;
         
         HttpURL httpURL = new HttpURL(this.systemId);
-        httpURL.setUserInfo(principal, password);
+        httpURL.setUserinfo(principal, password);
         
         if (createNew) {
             this.resource = new WebdavResource(httpURL, 
@@ -170,15 +166,17 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     /**
      * Constructor used by the Traversable methods to build children.
      */
-    private WebDAVSource (WebdavResource source)
+    private WebDAVSource (WebdavResource source, String principal, String password)
     throws HttpException, IOException {
     	this.resource = source;
     	this.systemId = source.getHttpURL().getURI();
+        source.getHttpURL().setUserinfo(principal, password);
 
     	//fix trailing slash
         if (this.resource.isCollection() && (this.systemId.endsWith("/") == false)) {
             this.systemId = this.systemId+"/";
             HttpURL httpURL = new HttpURL(this.systemId);
+            httpURL.setUserinfo(principal, password);
             this.resource.setHttpURL(httpURL);
         }
     }
@@ -396,7 +394,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         if (sourcecredential == null) return;
         try {
             HttpURL httpURL = new HttpURL(this.systemId);
-            httpURL.setUserInfo(
+            httpURL.setUserinfo(
                 sourcecredential.getPrincipal(),
                 sourcecredential.getPassword());
             this.resource = new WebdavResource(httpURL);
@@ -435,7 +433,6 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
 
         protected WebDAVSourceOutputStream(WebdavResource resource) {
             this.resource = resource;
-            WebdavResource.setGetUseDisk(false);
         }
 
         public void close() throws IOException {
@@ -607,7 +604,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         try {
             WebdavResource[] resources = this.resource.listWebdavResources();
             for (int i = 0; i < resources.length; i++) {
-                WebDAVSource src = new WebDAVSource(resources[i]);
+                WebDAVSource src = new WebDAVSource(resources[i], this.principal, this.password);
                 children.add(src);
             }
         } catch (HttpException e) {
