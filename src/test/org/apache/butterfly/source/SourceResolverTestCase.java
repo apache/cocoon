@@ -43,6 +43,6 @@ public class SourceResolverTestCase extends SitemapComponentTestCase {
     public void testFileSourceLength() throws MalformedURLException, IOException {
         SourceResolver resolver = (SourceResolver) getBean("sourceResolver");
         Source src = resolver.resolveURI("testdata/test1.xml");
-        assertEquals("FileSource is not of the expected length", 138, src.getContentLength());
+        assertEquals("FileSource is not of the expected length", 739, src.getContentLength());
     }
 }
