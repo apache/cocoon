@@ -99,6 +99,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -108,7 +109,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.4 2003/03/13 14:11:59 bloritsch Exp $
+ * @version CVS $Id: Cocoon.java,v 1.5 2003/03/20 11:45:58 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -708,8 +709,8 @@ public class Cocoon
      * Get the sitemap component configurations
      * @since 2.1
      */
-    public Configuration getComponentConfigurations() {
-        return null;
+    public Map getComponentConfigurations() {
+        return Collections.EMPTY_MAP;
     }
 
     /**

@@ -50,8 +50,9 @@
 */
 package org.apache.cocoon;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 
@@ -60,7 +61,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.1 2003/03/09 00:08:36 pier Exp $
+ * @version CVS $Id: Processor.java,v 1.2 2003/03/20 11:45:58 cziegeler Exp $
  */
 public interface Processor extends Component {
 
@@ -91,5 +92,5 @@ public interface Processor extends Component {
      * Get the sitemap component configurations
      * @since 2.1
      */
-    Configuration getComponentConfigurations();
+    Map getComponentConfigurations();
 }
