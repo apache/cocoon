@@ -117,12 +117,11 @@ import java.util.Set;
  * populate the velocity context passed to the template. In this
  * generator there are two objects:
  * <ul>
- * <li>this - which represents the bean that was passed to sendPage*() </li>
- * <li>continuation - which represents the current continuation - an instance
- * of org.apache.cocoon.components.flow.WebContinuation</li>
+ * <li><code>flowContext</code> - which represents the bean that was from the Flowscript </li>
+ * <li><code>continuation</code> - which represents the current continuation - an instance of {@link org.apache.cocoon.components.flow.WebContinuation}</li>
  * </ul>
  * The immediate properties of the bean object are also available in the context
- * </p>
+ * 
  *
  * <h2>Sitemap Configuration</h2>
  *
@@ -164,7 +163,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.4 2003/04/12 21:29:05 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.5 2003/04/15 06:52:28 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
