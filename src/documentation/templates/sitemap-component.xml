@@ -20,6 +20,9 @@
     <title></title>
     <version></version>
     <type>Reference</type>
+    <authors>
+      <person name="The Cocoon Community" email="users@cocoon.apache.org"/>
+    </authors>
   </header>
   <body>
     <s1 title="Description">

@@ -39,9 +39,15 @@ import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 
 /**
+ * Generate documentation for sitemap components based on javadoc tags
+ * in the source of the component.
+ * 
+ * This is the first, experimental version - the code is a little bit
+ * hacky but straight forward :)
+ * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/05/01 18:06:12 $
+ * @version CVS $Revision: 1.6 $ $Date: 2004/05/03 09:00:28 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -356,7 +362,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             final File componentsDir = new File(parentDir, this.type+'s');
             componentsDir.mkdir();
             
-            final File docFile = new File(componentsDir, this.name + "-generated.xml");
+            final File docFile = new File(componentsDir, this.name + "-" + this.type +".xml");
 
             final String doc = this.getDocumentation();
             if ( doc == null ) {
@@ -422,8 +428,37 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             setValue(body, "s1[@title='Info']/table/tr[3]/td[2]", cacheInfo);
             
+            // merge with old doc
+            this.merge(body, docFile);
+            
             // finally write the doc
             DocumentCache.writeDocument(docFile, template, null);            
+        }
+        
+        /**
+         * Merge the sections of the old document with the new generated one.
+         * All sections (s1) of the old document are added to the generated one
+         * if not a section with the same title exists.
+         */
+        private void merge(Node body, File docFile) throws TransformerException {            
+            final Document mergeDocument;
+            try {
+                mergeDocument = DocumentCache.getDocument(docFile, null);
+            } catch (Exception ignore) {
+                return;
+            }
+            NodeList sections = XPathAPI.selectNodeList(mergeDocument, "/document/body/s1");
+            if ( sections != null ) {
+                for(int i=0; i<sections.getLength(); i++) {
+                    final Element current = (Element)sections.item(i);
+                    final String title = current.getAttribute("title");
+
+                    // is this section not in the template?
+                    if (XPathAPI.selectSingleNode(body, "s1[@title='"+title+"']") == null ) {
+                        body.appendChild(body.getOwnerDocument().importNode(current, true));
+                    }
+                }
+            }
         }
         
         /**
