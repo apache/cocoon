@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.20 2000-03-16 13:40:58 stefano Exp $
+  $Id: todo.xml,v 1.21 2000-03-16 23:57:54 stefano Exp $
 -->
 
 <todo title="Things To Do">
@@ -15,16 +15,20 @@
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
 
+ <actions priority="High">
+  <action context="code">
+   Make cocoon work in jserv servlet zone without requiring special classpaths.
+   The problem currently lies in XSP resource loading when special classloaders
+   are used and affects both Tomcat and JServ. could it be a classloader
+   implementation problem?
+  </action>
+
  <actions priority="medium">
   <action context="code">
    Add logging.
   </action>
  </actions>
 
- <actions priority="medium">
-  <action context="code">
-   Make cocoon work in jserv servlet zone without requiring special classpaths.
-  </action>
  </actions>
 
 </todo>
