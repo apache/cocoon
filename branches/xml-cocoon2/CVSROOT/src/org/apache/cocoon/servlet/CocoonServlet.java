@@ -5,8 +5,10 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+
 package org.apache.cocoon.servlet;
 
+import java.util.Date;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
@@ -28,7 +30,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.11 $ $Date: 2000-07-13 12:17:20 $
+ * @version CVS $Revision: 1.1.4.12 $ $Date: 2000-07-14 14:03:45 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -66,11 +68,13 @@ public class CocoonServlet extends HttpServlet {
      */
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
+        long start = new Date().getTime();
+        long end = 0;
         // Reload cocoon if configuration changed or we are reloading
         boolean reloaded=false;
         synchronized (this) {
             if (this.cocoon!=null) {
-                if (this.cocoon.modifiedSince(this.creationTime)) {  
+                if (this.cocoon.modifiedSince(this.creationTime)) {
                     this.context.log("Configuration changed reload attempt");
                     this.cocoon=this.create();
                     reloaded=true;
@@ -122,48 +126,52 @@ public class CocoonServlet extends HttpServlet {
             return;
         }
         // We got it... Process the request
-        // We should use getServletPath(), otherwise we break compatability with
-        // other Servlet 2.2 engines (like Gefion LWS and Orion)
-        String uri=req.getServletPath();
-        if (uri!=null) try {
-            if (uri.charAt(0)=='/') uri=uri.substring(1);
-            CocoonServletRequest request=new CocoonServletRequest(req,uri);
-            CocoonServletResponse response=new CocoonServletResponse(res);
-            if (!this.cocoon.process(request,response,out)) {
-            res.setStatus(res.SC_NOT_FOUND);
-            res.setContentType("text/html");
-            out.println("<html><head>");
-            out.println("<title>Cocoon Version 2.0: Not Found</title>");
-            out.println("<body>");
-            out.println("<center><h1>Cocoon 2.0: Not Found</h1></center>");
-            out.println("<hr>");
-            out.print("The requested URI \""+req.getRequestURI());
-            out.print("\" was not found.");
-            out.println("<!-- PATH_INFO=\""+req.getServletPath()+"\" -->");
-            out.println("<hr></body></html>");
-            }
-        } catch (Exception e) {
-            //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
-            res.setContentType("text/html");
-            out.println("<html><head>");
-            out.println("<title>Cocoon Version 2.0: Exception</title>");
-            out.println("<body>");
-            out.println("<center><h1>Cocoon 2.0: Exception</h1></center>");
-            out.println("<hr>");
-            this.printException(out,e);
-            if (e instanceof SAXException) {
+        // We should use getRequestURI(), minus the Context path otherwise
+        // we break compatability with Tomcat and other Servlet 2.2 engines
+        // (like Gefion LWS and Orion)
+        String uri=req.getRequestURI().substring(req.getContextPath().length());
+        if (!uri.equals("")) {
+            try {
+                if (uri.charAt(0)=='/') uri=uri.substring(1);
+                CocoonServletRequest request=new CocoonServletRequest(req,uri);
+                CocoonServletResponse response=new CocoonServletResponse(res);
+                if (!this.cocoon.process(request,response,out)) {
+                    res.setStatus(res.SC_NOT_FOUND);
+                    res.setContentType("text/html");
+                    out.println("<html><head>");
+                    out.println("<title>Cocoon Version 2.0: Not Found</title>");
+                    out.println("<body>");
+                    out.println("<center><h1>Cocoon 2.0: Not Found</h1></center>");
+                    out.println("<hr>");
+                    out.print("The requested URI \""+req.getRequestURI());
+                    out.print("\" was not found.");
+                    out.println("<!-- PATH_INFO=\""+uri+"\" -->");
+                    out.println("<hr></body></html>");
+                }
+            } catch (Exception e) {
+                //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
+                res.setContentType("text/html");
+                out.println("<html><head>");
+                out.println("<title>Cocoon Version 2.0: Exception</title>");
+                out.println("<body>");
+                out.println("<center><h1>Cocoon 2.0: Exception</h1></center>");
                 out.println("<hr>");
-                out.println("SAX processing exception<br>");
-                Exception nested=((SAXException)e).getException();
-                this.printException(out,nested);
-            } else if (e instanceof ComponentNotAccessibleException) {
-                out.println("<hr>");
-                out.println("Component not accessible<br>");
-                Exception nested=e;
-                nested=((ComponentNotAccessibleException)nested).getException();
-                this.printException(out,nested);
+                this.printException(out,e);
+                if (e instanceof SAXException) {
+                    out.println("<hr>");
+                    out.println("SAX processing exception<br>");
+                    Exception nested=((SAXException)e).getException();
+                    this.printException(out,nested);
+                } else if (e instanceof ComponentNotAccessibleException) {
+                    out.println("<hr>");
+                    out.println("Component not accessible<br>");
+                    Exception nested=e;
+                    nested=((ComponentNotAccessibleException)nested).getException();
+                    this.printException(out,nested);
+                }
+
+                out.println("<hr></body></html>");
             }
-            out.println("<hr></body></html>");
         } else {
             res.setContentType("text/html");
             out.println("<html><head>");
@@ -173,9 +181,46 @@ public class CocoonServlet extends HttpServlet {
             out.println("<hr>");
             if (reloaded) out.println("Configurations reloaded.<br>");
             out.println("Ready to process requests...");
-            out.println("<!-- PATH_INFO=\""+req.getServletPath()+"\" -->");
+            out.println("<!-- PATH_INFO=\""+uri+"\" -->");
             out.println("<hr></body></html>");
         }
+
+        end = new Date().getTime();
+        String showTime = req.getParameter("showtime");
+        if ((showTime != null) && !showTime.equalsIgnoreCase("no")) {
+            float time = (float) (end - start);
+            float second = (float) 1000;
+            float minute = (float) 60 * second;
+            float hour = (float) 60 * minute;
+
+            if (showTime.equalsIgnoreCase("hide")) {
+                out.print("<!--");
+            } else {
+                out.print("<p>");
+            }
+            out.print("Processed by Cocoon in ");
+
+            if (time > hour) {
+                out.print(time / hour);
+                out.print(" hours.");
+            } else if (time > minute) {
+                out.print(time / minute);
+                out.print(" minutes.");
+            } else if (time > second) {
+                out.print(time / second);
+                out.print(" seconds.");
+            } else {
+                out.print(time);
+                out.print(" milliseconds.");
+            }
+
+            if (showTime == "hide") {
+                out.print("-->");
+            } else {
+                out.print("</p>");
+            }
+        }
+
         out.flush();
     }
 
