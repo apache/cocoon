@@ -61,6 +61,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import java.util.Map;
+import java.util.Date;
 
 /**
  * An action that creates an instance of a specific example form included with Woody,
@@ -74,6 +75,9 @@ public class InitForm1Action extends AbstractWoodyAction {
         String formAttribute = parameters.getParameter("attribute-name");
 
         Form form = formManager.createForm(resolver.resolveURI(formSource));
+
+        Field birthDate = (Field)form.getWidget("birthdate");
+        birthDate.setValue(new Date());
 
         Repeater repeater = (Repeater)form.getWidget("contacts");
         repeater.addRow();
