@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: java_apache_org-html.xsl,v 1.1.2.1 2000-08-21 17:48:58 stefano Exp $ -->
+<!-- Version: $Id: java_apache_org-html.xsl,v 1.1.2.2 2000-08-21 19:29:14 bloritsch Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

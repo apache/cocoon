@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: jakarta_apache_org-html.xsl,v 1.1.2.1 2000-08-21 17:48:57 stefano Exp $ -->
+<!-- Version: $Id: jakarta_apache_org-html.xsl,v 1.1.2.2 2000-08-21 19:29:13 bloritsch Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -35,7 +35,7 @@
       <tr>
        <td>
         <p class="fineprint">
-         Copyright &#169; @year@ The Apache Software Foundation<br/>
+         Copyright &#169; 1999-2000 The Apache Software Foundation<br/>
          <a href="legal.html">Legal Stuff They Make Us Say</a><br/>
          <a href="contact.html">Contact Information</a>
         </p>

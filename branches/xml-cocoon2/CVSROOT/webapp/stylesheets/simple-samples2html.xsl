@@ -12,7 +12,7 @@
 
     <p align="center"><img border="0" src="images/cocoon.png"/></p>
 
-    <h3 align="center">version @version@</h3>
+    <h3 align="center">version 2.0a2</h3>
 
     <p><br/></p>
 
@@ -20,7 +20,7 @@
 
     <p align="center">
      <font size="-1">
-      Copyright &#169; @year@ <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
+      Copyright &#169; 1999-2000 <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
       All rights reserved.
      </font>
     </p>

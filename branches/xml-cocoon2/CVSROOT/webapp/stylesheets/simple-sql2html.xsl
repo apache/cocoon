@@ -4,7 +4,7 @@
                               xmlns:sql="http://apache.org/cocoon/SQL">
 
 
-  <xsl:import href="simple-page2html.xsl"/>
+  <xsl:import href="page/simple-page2html.xsl"/>
 
   <xsl:template match="sql:ROWSET">
    <xsl:choose>
