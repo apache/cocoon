@@ -2,11 +2,10 @@
 <!--+
     | This a simple message page that is shown when a resource is not found.
     |
-    | CVS $Id: not-found.xml,v 1.1 2003/04/01 21:25:10 sylvain Exp $
+    | CVS $Id: not-found.xml,v 1.2 2003/04/30 06:55:48 bdelacretaz Exp $
     +-->
 <welcome>
  <message>
-   Sorry, Cocoon coudln't find the resource you requested.
+   Sorry, Cocoon couldn't find the resource you requested.
  </message>
-  
 </welcome>
