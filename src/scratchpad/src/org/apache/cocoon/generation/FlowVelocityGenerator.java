@@ -63,7 +63,11 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.Session;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
@@ -73,13 +77,24 @@ import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.mozilla.javascript.*;
-import org.apache.velocity.util.introspection.*;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.ScriptRuntime;
+import org.apache.velocity.util.introspection.UberspectImpl;
+import org.apache.velocity.util.introspection.VelMethod;
+import org.apache.velocity.util.introspection.VelPropertyGet;
+import org.apache.velocity.util.introspection.VelPropertySet;
+import org.apache.velocity.util.introspection.Info;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -149,10 +164,184 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/04/06 03:04:27 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.4 2003/04/12 21:29:05 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
+
+    /**
+     * <p>Velocity context implementation specific to the Servlet environment.</p>
+     *
+     * <p>It provides the following special features:</p>
+     * <ul>
+     *   <li>puts the request, response, session, and servlet context objects
+     *       into the Velocity context for direct access, and keeps them 
+     *       read-only</li>
+     *   <li>supports a read-only toolbox of view tools</li>
+     *   <li>auto-searches servlet request attributes, session attributes and
+     *       servlet context attribues for objects</li>
+     * </ul>
+     *
+     * <p>The {@link #internalGet(String key)} method implements the following search order
+     * for objects:</p>
+     * <ol>
+     *   <li>servlet request, servlet response, servlet session, servlet context</li>
+     *   <li>toolbox</li>
+     *   <li>local hashtable of objects (traditional use)</li>
+     *   <li>servlet request attribues, servlet session attribute, servlet context
+     *     attributes</li>
+     * </ol> 
+     *
+     * <p>The purpose of this class is to make it easy for web designer to work 
+     * with Java servlet based web applications. They do not need to be concerned 
+     * with the concepts of request, session or application attributes and the 
+     * live time of objects in these scopes.</p>
+     *  
+     * <p>Note that the put() method always puts objects into the local hashtable.
+     * </p>
+     *
+     * <p>Acknowledge: the source code is borrowed from the jakarta-velocity-tools
+     * project with slight modifications.</p>
+     *
+     * @author <a href="mailto:albert@charcoalgeneration.com">Albert Kwong</a>
+     * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
+     * @author <a href="mailto:sidler@teamup.com">Gabe Sidler</a>
+     * @author <a href="mailto:albert@charcoalgeneration.com">Albert Kwong</a>
+     */
+    public static class ChainedContext extends VelocityContext
+    {
+        
+        /**
+         * A local reference to the current servlet request.
+         */ 
+        private Request request;
+        
+        /**
+         * A local reference to the current servlet response.
+         */
+        private Response response;
+        
+        /**
+         * A local reference to the servlet session.
+         */
+        private Session session;
+        
+        /**
+         * A local reference to the servlet context.
+         */
+        private org.apache.cocoon.environment.Context application;
+        
+        /**
+         * A local reference to pipeline parameters.
+         */
+        private Parameters parameters;
+        
+        /**
+         * Key to the HTTP request object.
+         */
+        public static final String REQUEST = "request";
+        
+        /**
+         * Key to the HTTP response object.
+         */
+        public static final String RESPONSE = "response";
+        
+        /**
+         * Key to the HTTP session object.
+         */
+        public static final String SESSION = "session";
+        
+        /**
+         * Key to the servlet context object.
+         */
+        public static final String APPLICATION = "context";
+        
+        /**
+         * Key to the servlet context object.
+         */
+        public static final String PARAMETERS = "parameters";
+        
+        
+        /**
+         * Default constructor.
+         */
+        public ChainedContext(org.apache.velocity.context.Context ctx, 
+                              Request request,
+                              Response response,
+                              org.apache.cocoon.environment.Context application,
+                              Parameters parameters)
+        {
+            super(null, ctx);
+            this.request = request;
+            this.response = response;
+            this.session = request.getSession(false);
+            this.application = application;
+            this.parameters = parameters;
+        }
+        
+        
+        /**
+         * <p>Looks up and returns the object with the specified key.</p>
+         * 
+         * <p>See the class documentation for more details.</p>
+         *
+         * @param key the key of the object requested
+         * 
+         * @return the requested object or null if not found
+         */
+        public Object internalGet( String key )
+        {
+            // make the four scopes of the Apocalypse Read only
+            if ( key.equals( REQUEST ))
+                {
+                    return request;
+                }
+            else if( key.equals(RESPONSE) )
+                {
+                    return response;
+                }
+            else if ( key.equals(SESSION) )
+                {
+                    return session;
+                }
+            else if ( key.equals(APPLICATION))
+                {
+                    return application;
+                }
+            else if ( key.equals(PARAMETERS))
+                {
+                    return parameters;
+                }
+            
+            Object o = null;
+            
+            // try the local hashtable
+            o = super.internalGet( key );
+            
+            // if not found, wander down the scopes...
+            if (o == null)
+                {
+                    o = request.getAttribute( key );
+                    
+                    if ( o == null )
+                        {
+                            if ( session != null )
+                                {
+                                    o = session.getAttribute( key );
+                                }
+                            
+                            if ( o == null )
+                                {
+                                    o = application.getAttribute( key );
+                                }
+                        }
+                }
+            
+            return o;
+        }
+
+        
+    }  // ChainedContext
 
     /**
      * Velocity Introspector that supports Rhino JavaScript objects
@@ -160,274 +349,274 @@ public class FlowVelocityGenerator extends ComposerGenerator
      *
      */
     public static class JSIntrospector extends UberspectImpl {
-	
-	public static class JSMethod implements VelMethod {
-	    
-	    Scriptable scope;
-	    String name;
-	    
-	    public JSMethod(Scriptable scope, String name) {
-		this.scope = scope;
-		this.name = name;
-	    }
-	    
-	    public Object invoke(Object thisArg, Object[] args)
-		throws Exception {
-		org.mozilla.javascript.Context cx = org.mozilla.javascript.Context.enter();
-		try {
-		    Object result; 
-		    Scriptable thisObj;
-		    if (!(thisArg instanceof Scriptable)) {
-			thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
-		    } else {
-			thisObj = (Scriptable)thisArg;
-		    }
-		    result = ScriptableObject.getProperty(thisObj, name);
-		    Object[] newArgs = null;
-		    if (args != null) {
-			newArgs = new Object[args.length];
-			for (int i = 0; i < args.length; i++) {
-			    newArgs[i] = args[i];
-			    if (args[i] != null && 
-				!(args[i] instanceof Number) &&
-				!(args[i] instanceof Boolean) &&
-				!(args[i] instanceof String) &&
-				!(args[i] instanceof Scriptable)) {
-				newArgs[i] = org.mozilla.javascript.Context.toObject(args[i], scope);
-			    }
-			}
-		    }
-		    result = ScriptRuntime.call(cx, result, thisObj, 
-						newArgs, scope);
-		    if (result == Undefined.instance ||
-			result == ScriptableObject.NOT_FOUND) {
-			result = null;
-		    } else while (result instanceof Wrapper) {
-			result = ((Wrapper)result).unwrap();
-		    }
-		    return result;
-		} catch (JavaScriptException e) {
-		    throw new java.lang.reflect.InvocationTargetException(e);
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	    
-	    public boolean isCacheable() {
-		return false;
-	    }
-	    
-	    public String getMethodName() {
-		return name;
-	    }
-	    
-	    public Class getReturnType() {
-		return Object.class;
-	    }
-	    
-	}
-	
-	public static class JSPropertyGet implements VelPropertyGet {
-	    
-	    Scriptable scope;
-	    String name;
-	    
-	    public JSPropertyGet(Scriptable scope, String name) {
-		this.scope = scope;
-		this.name = name;
-	    }
-	    
-	    public Object invoke(Object thisArg) throws Exception {
-		org.mozilla.javascript.Context.enter();
-		try {
-		    Scriptable thisObj;
-		    if (!(thisArg instanceof Scriptable)) {
-			thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
-		    } else {
-			thisObj = (Scriptable)thisArg;
-		    }
-		    Object result = ScriptableObject.getProperty(thisObj, name);
-		    if (result == Undefined.instance || 
-			result == ScriptableObject.NOT_FOUND) {
-			result = null;
-		    } else while (result instanceof Wrapper) {
-			result = ((Wrapper)result).unwrap();
-		    }
-		    return result;
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	    
-	    public boolean isCacheable() {
-		return false;
-	    }
-	    
-	    public String getMethodName() {
-		return name;
-	    }
-	    
-	}
-	
-	public static class JSPropertySet implements VelPropertySet {
-	    
-	    Scriptable scope;
-	    String name;
-	    
-	    public JSPropertySet(Scriptable scope, String name) {
-		this.scope = scope;
-		this.name = name;
-	    }
-	    
-	    public Object invoke(Object thisArg, Object rhs) throws Exception {
-		org.mozilla.javascript.Context.enter();
-		try {
-		    Scriptable thisObj;
-		    Object arg = rhs;
-		    if (!(thisArg instanceof Scriptable)) {
-			thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
-		    } else {
-			thisObj = (Scriptable)thisArg;
-		    }
-		    if (arg != null && 
-			!(arg instanceof Number) &&
-			!(arg instanceof Boolean) &&
-			!(arg instanceof String) &&
-			!(arg instanceof Scriptable)) {
-			arg = org.mozilla.javascript.Context.toObject(arg, scope);
-		    }
-		    ScriptableObject.putProperty(thisObj, name, arg);
-		    return rhs;
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	    
-	    public boolean isCacheable() {
-		return false;
-	    }
-	    
-	    public String getMethodName() {
-		return name;        
-	    }
-	}
-	
-	public static class NativeArrayIterator implements Iterator {
-	    
-	    NativeArray arr;
-	    int index;
-	    
-	    public NativeArrayIterator(NativeArray arr) {
-		this.arr = arr;
-		this.index = 0;
-	    }
-	    
-	    public boolean hasNext() {
-		return index < (int)arr.jsGet_length();
-	    }
-	    
-	    public Object next() {
-		org.mozilla.javascript.Context.enter();
-		try {
-		    Object result = arr.get(index++, arr);
-		    if (result == Undefined.instance ||
-			result == ScriptableObject.NOT_FOUND) {
-			result = null;
-		    } else while (result instanceof Wrapper) {
-			result = ((Wrapper)result).unwrap();
-		    }
-		    return result;
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	    
-	    public void remove() {
-		arr.delete(index);
-	    }
-	}
-	
-	public static class ScriptableIterator implements Iterator {
-	    
-	    Scriptable scope;
-	    Object[] ids;
-	    int index;
-	    
-	    public ScriptableIterator(Scriptable scope) {
-		this.scope = scope;
-		this.ids = scope.getIds();
-		this.index = 0;
-	    }
-	    
-	    public boolean hasNext() {
-		return index < ids.length;
-	    }
-	    
-	    public Object next() {
-		org.mozilla.javascript.Context.enter();
-		try {
-		    Object result = 
-			ScriptableObject.getProperty(scope, 
-						     ids[index++].toString());
-		    if (result == Undefined.instance ||
-			result == ScriptableObject.NOT_FOUND) {
-			result = null;
-		    } else while (result instanceof Wrapper) {
-			result = ((Wrapper)result).unwrap();
-		    }
-		    return result;
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	    
-	    public void remove() {
-		org.mozilla.javascript.Context.enter();
-		try {
-		    scope.delete(ids[index].toString());
-		} finally {
-		    org.mozilla.javascript.Context.exit();
-		}
-	    }
-	}
-	
-	public Iterator getIterator(Object obj, Info i)
-	    throws Exception {
-	    if (!(obj instanceof Scriptable)) {
-		return super.getIterator(obj, i);
-	    }
-	    if (obj instanceof NativeArray) {
-		return new NativeArrayIterator((NativeArray)obj);
-	    }
-	    return new ScriptableIterator((Scriptable)obj);
-	}
-	
-	public VelMethod getMethod(Object obj, String methodName, 
-				   Object[] args, Info i)
-	    throws Exception {
-	    if (!(obj instanceof Scriptable)) {
-		return super.getMethod(obj, methodName, args, i);
-	    }
-	    return new JSMethod((Scriptable)obj, methodName);
-	}
-	
-	public VelPropertyGet getPropertyGet(Object obj, String identifier, 
-					     Info i)
-	    throws Exception {
-	    if (!(obj instanceof Scriptable)) {
-		return super.getPropertyGet(obj, identifier, i);
-	    }
-	    return new JSPropertyGet((Scriptable)obj, identifier);
-	}
-	
-	public VelPropertySet getPropertySet(Object obj, String identifier, 
-					     Object arg, Info i)
-	    throws Exception {
-	    if (!(obj instanceof Scriptable)) {
-		return super.getPropertySet(obj, identifier, arg, i);
-	    }
-	    return new JSPropertySet((Scriptable)obj, identifier);
-	}
+        
+        public static class JSMethod implements VelMethod {
+            
+            Scriptable scope;
+            String name;
+            
+            public JSMethod(Scriptable scope, String name) {
+                this.scope = scope;
+                this.name = name;
+            }
+            
+            public Object invoke(Object thisArg, Object[] args)
+                throws Exception {
+                org.mozilla.javascript.Context cx = org.mozilla.javascript.Context.enter();
+                try {
+                    Object result; 
+                    Scriptable thisObj;
+                    if (!(thisArg instanceof Scriptable)) {
+                        thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
+                    } else {
+                        thisObj = (Scriptable)thisArg;
+                    }
+                    result = ScriptableObject.getProperty(thisObj, name);
+                    Object[] newArgs = null;
+                    if (args != null) {
+                        newArgs = new Object[args.length];
+                        for (int i = 0; i < args.length; i++) {
+                            newArgs[i] = args[i];
+                            if (args[i] != null && 
+                                !(args[i] instanceof Number) &&
+                                !(args[i] instanceof Boolean) &&
+                                !(args[i] instanceof String) &&
+                                !(args[i] instanceof Scriptable)) {
+                                newArgs[i] = org.mozilla.javascript.Context.toObject(args[i], scope);
+                            }
+                        }
+                    }
+                    result = ScriptRuntime.call(cx, result, thisObj, 
+                                                newArgs, scope);
+                    if (result == Undefined.instance ||
+                        result == ScriptableObject.NOT_FOUND) {
+                        result = null;
+                    } else while (result instanceof Wrapper) {
+                        result = ((Wrapper)result).unwrap();
+                    }
+                    return result;
+                } catch (JavaScriptException e) {
+                    throw new java.lang.reflect.InvocationTargetException(e);
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+            
+            public boolean isCacheable() {
+                return false;
+            }
+            
+            public String getMethodName() {
+                return name;
+            }
+            
+            public Class getReturnType() {
+                return Object.class;
+            }
+            
+        }
+        
+        public static class JSPropertyGet implements VelPropertyGet {
+            
+            Scriptable scope;
+            String name;
+            
+            public JSPropertyGet(Scriptable scope, String name) {
+                this.scope = scope;
+                this.name = name;
+            }
+            
+            public Object invoke(Object thisArg) throws Exception {
+                org.mozilla.javascript.Context.enter();
+                try {
+                    Scriptable thisObj;
+                    if (!(thisArg instanceof Scriptable)) {
+                        thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
+                    } else {
+                        thisObj = (Scriptable)thisArg;
+                    }
+                    Object result = ScriptableObject.getProperty(thisObj, name);
+                    if (result == Undefined.instance || 
+                        result == ScriptableObject.NOT_FOUND) {
+                        result = null;
+                    } else while (result instanceof Wrapper) {
+                        result = ((Wrapper)result).unwrap();
+                    }
+                    return result;
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+            
+            public boolean isCacheable() {
+                return false;
+            }
+            
+            public String getMethodName() {
+                return name;
+            }
+            
+        }
+        
+        public static class JSPropertySet implements VelPropertySet {
+            
+            Scriptable scope;
+            String name;
+            
+            public JSPropertySet(Scriptable scope, String name) {
+                this.scope = scope;
+                this.name = name;
+            }
+            
+            public Object invoke(Object thisArg, Object rhs) throws Exception {
+                org.mozilla.javascript.Context.enter();
+                try {
+                    Scriptable thisObj;
+                    Object arg = rhs;
+                    if (!(thisArg instanceof Scriptable)) {
+                        thisObj = org.mozilla.javascript.Context.toObject(thisArg, scope);
+                    } else {
+                        thisObj = (Scriptable)thisArg;
+                    }
+                    if (arg != null && 
+                        !(arg instanceof Number) &&
+                        !(arg instanceof Boolean) &&
+                        !(arg instanceof String) &&
+                        !(arg instanceof Scriptable)) {
+                        arg = org.mozilla.javascript.Context.toObject(arg, scope);
+                    }
+                    ScriptableObject.putProperty(thisObj, name, arg);
+                    return rhs;
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+            
+            public boolean isCacheable() {
+                return false;
+            }
+            
+            public String getMethodName() {
+                return name;        
+            }
+        }
+        
+        public static class NativeArrayIterator implements Iterator {
+            
+            NativeArray arr;
+            int index;
+            
+            public NativeArrayIterator(NativeArray arr) {
+                this.arr = arr;
+                this.index = 0;
+            }
+            
+            public boolean hasNext() {
+                return index < (int)arr.jsGet_length();
+            }
+            
+            public Object next() {
+                org.mozilla.javascript.Context.enter();
+                try {
+                    Object result = arr.get(index++, arr);
+                    if (result == Undefined.instance ||
+                        result == ScriptableObject.NOT_FOUND) {
+                        result = null;
+                    } else while (result instanceof Wrapper) {
+                        result = ((Wrapper)result).unwrap();
+                    }
+                    return result;
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+            
+            public void remove() {
+                arr.delete(index);
+            }
+        }
+        
+        public static class ScriptableIterator implements Iterator {
+            
+            Scriptable scope;
+            Object[] ids;
+            int index;
+            
+            public ScriptableIterator(Scriptable scope) {
+                this.scope = scope;
+                this.ids = scope.getIds();
+                this.index = 0;
+            }
+            
+            public boolean hasNext() {
+                return index < ids.length;
+            }
+            
+            public Object next() {
+                org.mozilla.javascript.Context.enter();
+                try {
+                    Object result = 
+                        ScriptableObject.getProperty(scope, 
+                                                     ids[index++].toString());
+                    if (result == Undefined.instance ||
+                        result == ScriptableObject.NOT_FOUND) {
+                        result = null;
+                    } else while (result instanceof Wrapper) {
+                        result = ((Wrapper)result).unwrap();
+                    }
+                    return result;
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+            
+            public void remove() {
+                org.mozilla.javascript.Context.enter();
+                try {
+                    scope.delete(ids[index].toString());
+                } finally {
+                    org.mozilla.javascript.Context.exit();
+                }
+            }
+        }
+        
+        public Iterator getIterator(Object obj, Info i)
+            throws Exception {
+            if (!(obj instanceof Scriptable)) {
+                return super.getIterator(obj, i);
+            }
+            if (obj instanceof NativeArray) {
+                return new NativeArrayIterator((NativeArray)obj);
+            }
+            return new ScriptableIterator((Scriptable)obj);
+        }
+        
+        public VelMethod getMethod(Object obj, String methodName, 
+                                   Object[] args, Info i)
+            throws Exception {
+            if (!(obj instanceof Scriptable)) {
+                return super.getMethod(obj, methodName, args, i);
+            }
+            return new JSMethod((Scriptable)obj, methodName);
+        }
+        
+        public VelPropertyGet getPropertyGet(Object obj, String identifier, 
+                                             Info i)
+            throws Exception {
+            if (!(obj instanceof Scriptable)) {
+                return super.getPropertyGet(obj, identifier, i);
+            }
+            return new JSPropertyGet((Scriptable)obj, identifier);
+        }
+        
+        public VelPropertySet getPropertySet(Object obj, String identifier, 
+                                             Object arg, Info i)
+            throws Exception {
+            if (!(obj instanceof Scriptable)) {
+                return super.getPropertySet(obj, identifier, arg, i);
+            }
+            return new JSPropertySet((Scriptable)obj, identifier);
+        }
     }
 
     /**
@@ -552,6 +741,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
     final private static String CONTEXT_SOURCE_CACHE_KEY = "source-cache";
 
     private VelocityEngine tmplEngine;
+    private boolean tmplEngineInitialized;
     private DefaultContext resolverContext;
     private Context velocityContext;
     private boolean activeFlag;
@@ -637,7 +827,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
      * @see org.apache.avalon.framework.activity.Initializable#initialize
      */
     public void initialize() throws Exception {
-        this.tmplEngine.init();
+        //this.tmplEngine.init();
     }
 
     /**
@@ -657,128 +847,138 @@ public class FlowVelocityGenerator extends ComposerGenerator
 
         // FIXME: Initialize the Velocity context. Use objectModel to pass these
         final Object bean = ((Environment) resolver).getAttribute("bean-dict");
-        final WebContinuation kont =
+        if (bean != null) {
+            final WebContinuation kont =
                 (WebContinuation) ((Environment) resolver).getAttribute("kont");
-
-        // This velocity context provides two variables: "this" which represents the
-        // bean object passed to sendPage*() and "continuation" which is the
-        // current continuation. The immediate properties of the bean object are
-        // also available in the context.
-        //
-        // Hack? I use JXPath to determine the properties of the bean object
-        final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(bean.getClass());
-        DynamicPropertyHandler h = null;
-        final PropertyDescriptor[] props;
-        if (bi.isDynamic()) {
-            Class cl = bi.getDynamicPropertyHandlerClass();
-            try {
-                h = (DynamicPropertyHandler) cl.newInstance();
-            } catch (Exception exc) {
-                exc.printStackTrace();
+            
+            // This velocity context provides two variables: "this" which represents the
+            // bean object passed to sendPage*() and "continuation" which is the
+            // current continuation. The immediate properties of the bean object are
+            // also available in the context.
+            //
+            // Hack? I use JXPath to determine the properties of the bean object
+            final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(bean.getClass());
+            DynamicPropertyHandler h = null;
+            final PropertyDescriptor[] props;
+            if (bi.isDynamic()) {
+                Class cl = bi.getDynamicPropertyHandlerClass();
+                try {
+                    h = (DynamicPropertyHandler) cl.newInstance();
+                } catch (Exception exc) {
+                    exc.printStackTrace();
+                    h = null;
+                }
+                props = null;
+            } else {
                 h = null;
+                props = bi.getPropertyDescriptors();
             }
-            props = null;
-        } else {
-            h = null;
-            props = bi.getPropertyDescriptors();
+            final DynamicPropertyHandler handler = h;
+            
+            this.velocityContext = new Context() {
+                    public Object put(String key, Object value) {
+                        if (key.equals("flowContext") 
+                            || key.equals("continuation")) {
+                            return value;
+                        }
+                        if (handler != null) {
+                            handler.setProperty(bean, key, value);
+                            return value;
+                        } else {
+                            for (int i = 0; i < props.length; i++) {
+                                if (props[i].getName().equals(key)) {
+                                    try {
+                                        return props[i].getWriteMethod().invoke(bean, new Object[]{value});
+                                    } catch (Exception ignored) {
+                                        break;
+                                    }
+                                }
+                            }
+                            return value;
+                        }
+                    }
+                    
+                    public boolean containsKey(Object key) {
+                        if (key.equals("flowContext") 
+                            || key.equals("continuation")) {
+                            return true;
+                        }
+                        if (handler != null) {
+                            String[] result = handler.getPropertyNames(bean);
+                            for (int i = 0; i < result.length; i++) {
+                                if (key.equals(result[i])) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < props.length; i++) {
+                                if (key.equals(props[i].getName())) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                    
+                    public Object[] getKeys() {
+                        Object[] result = null;
+                        if (handler != null) {
+                            result = handler.getPropertyNames(bean);
+                        } else {
+                            result = new Object[props.length];
+                            for (int i = 0; i < props.length; i++) {
+                                result[i] = props[i].getName();
+                            }
+                        }
+                        Set set = new HashSet();
+                        for (int i = 0; i < result.length; i++) {
+                            set.add(result[i]);
+                        }
+                        set.add("flowContext");
+                        set.add("continuation");
+                        result = new Object[set.size()];
+                        set.toArray(result);
+                        return result;
+                    }
+                    
+                    public Object get(String key) {
+                        if (key.equals("flowContext")) {
+                            return bean;
+                        }
+                        if (key.equals("continuation")) {
+                            return kont;
+                        }
+                        if (handler != null) {
+                            return handler.getProperty(bean, key.toString());
+                        } else {
+                            for (int i = 0; i < props.length; i++) {
+                                if (props[i].getName().equals(key)) {
+                                    try {
+                                        return props[i].getReadMethod().invoke(bean, null);
+                                    } catch (Exception ignored) {
+                                        break;
+                                    }
+                                }
+                            }
+                            return null;
+                        }
+                    }
+                    
+                    public Object remove(Object key) {
+                        // not implemented
+                        return key;
+                    }
+                };
         }
-        final DynamicPropertyHandler handler = h;
-
-        this.velocityContext = new Context() {
-            public Object put(String key, Object value) {
-                if (key.equals("this") || key.equals("continuation")) {
-                    return value;
-                }
-                if (handler != null) {
-                    handler.setProperty(bean, key, value);
-                    return value;
-                } else {
-                    for (int i = 0; i < props.length; i++) {
-                        if (props[i].getName().equals(key)) {
-                            try {
-                                return props[i].getWriteMethod().invoke(bean, new Object[]{value});
-                            } catch (Exception ignored) {
-                                break;
-                            }
-                        }
-                    }
-                    return value;
-                }
-            }
-
-            public boolean containsKey(Object key) {
-                if (key.equals("this") || key.equals("continuation")) {
-                    return true;
-                }
-                if (handler != null) {
-                    String[] result = handler.getPropertyNames(bean);
-                    for (int i = 0; i < result.length; i++) {
-                        if (key.equals(result[i])) {
-                            return true;
-                        }
-                    }
-                } else {
-                    for (int i = 0; i < props.length; i++) {
-                        if (key.equals(props[i].getName())) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            public Object[] getKeys() {
-                Object[] result = null;
-                if (handler != null) {
-                    result = handler.getPropertyNames(bean);
-                } else {
-                    result = new Object[props.length];
-                    for (int i = 0; i < props.length; i++) {
-                        result[i] = props[i].getName();
-                    }
-                }
-                Set set = new HashSet();
-                for (int i = 0; i < result.length; i++) {
-                    set.add(result[i]);
-                }
-                set.add("this");
-                set.add("continuation");
-                result = new Object[set.size()];
-                set.toArray(result);
-                return result;
-            }
-
-            public Object get(String key) {
-                if (key.equals("this")) {
-                    return bean;
-                }
-                if (key.equals("continuation")) {
-                    return kont;
-                }
-                if (handler != null) {
-                    return handler.getProperty(bean, key.toString());
-                } else {
-                    for (int i = 0; i < props.length; i++) {
-                        if (props[i].getName().equals(key)) {
-                            try {
-                                return props[i].getReadMethod().invoke(bean, null);
-                            } catch (Exception ignored) {
-                                break;
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-
-            public Object remove(Object key) {
-                // not implemented
-                return key;
-            }
-        };
+        this.velocityContext = 
+            new ChainedContext (this.velocityContext, 
+                                ObjectModelHelper.getRequest(objectModel), 
+                                ObjectModelHelper.getResponse(objectModel), 
+                                ObjectModelHelper.getContext(objectModel),
+                                params);
+        this.velocityContext.put("template", src);
         this.activeFlag = true;
     }
-
     /**
      * Free up the VelocityContext associated with the pipeline, and
      * release any Source objects resolved by the resource loader.
@@ -820,7 +1020,10 @@ public class FlowVelocityGenerator extends ComposerGenerator
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Processing File: " + super.source);
             }
-
+            if (!tmplEngineInitialized) {
+                tmplEngine.init();
+                tmplEngineInitialized = true;
+            }
             /* lets render a template */
             this.tmplEngine.mergeTemplate(super.source, velocityContext, w);
 
@@ -847,8 +1050,8 @@ public class FlowVelocityGenerator extends ComposerGenerator
                 }
                 message += lineStr + "\n";
             }
-            String columnIndicator = "";
             if (column > 0) {
+                String columnIndicator = "";
                 for (int i = 1; i < column; i++) {
                     columnIndicator += " ";
                 }
