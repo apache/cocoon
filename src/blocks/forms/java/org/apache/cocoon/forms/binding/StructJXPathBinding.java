@@ -29,7 +29,7 @@ import org.apache.commons.jxpath.Pointer;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StructJXPathBinding extends ContextJXPathBinding {
 

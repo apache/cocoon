@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -163,8 +163,6 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         jxpc.setLenient(inheritedLeniency);
     }
 
-
-
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
@@ -240,8 +238,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             }
         }
     }
-    
-    
+
     private JXPathContext makeJXPathContext(Object objModel) {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {

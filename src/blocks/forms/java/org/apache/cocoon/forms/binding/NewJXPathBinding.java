@@ -48,6 +48,9 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
         this.classBinding = null;
     }
 
+    /**
+     * Recursively resolves references.
+     */
     private void resolve() throws BindingException {
         classBinding = getClass(widgetId);
         if (classBinding == null) {

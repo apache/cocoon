@@ -61,7 +61,7 @@ import org.xml.sax.SAXNotSupportedException;
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DomHelper {
 

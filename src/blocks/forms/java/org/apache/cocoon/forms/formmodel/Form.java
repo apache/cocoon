@@ -34,7 +34,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Form extends AbstractContainerWidget {
 
