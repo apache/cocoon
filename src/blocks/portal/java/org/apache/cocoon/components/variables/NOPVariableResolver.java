@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.variables;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -23,10 +22,10 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: NOPVariableResolver.java,v 1.2 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class NOPVariableResolver 
-    implements VariableResolver, Disposable {
+    implements VariableResolver {
 
     protected String expression;
 
@@ -63,8 +62,5 @@ public class NOPVariableResolver
      */
     public String resolve() throws PatternException {
         return this.expression;
-    }
-
-    public void dispose() {
     }
 }

@@ -59,9 +59,8 @@ public class DefaultVariableResolverFactory
     throws PatternException {
         if ( this.needsResolve( expression ) ) {
             return new PreparedVariableResolver( expression, this.manager, this.context);
-        } else {
-            return new NOPVariableResolver( expression );
-        }
+        } 
+        return new NOPVariableResolver( expression );
     }
 
     public void release(VariableResolver resolver) {

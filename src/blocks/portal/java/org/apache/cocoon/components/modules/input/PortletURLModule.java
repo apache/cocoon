@@ -49,7 +49,7 @@ import java.util.Map;
  * <code>portlet:render:</code>, <code>portlet:resource:</code>) are omitted.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletURLModule.java,v 1.2 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletURLModule extends AbstractInputModule implements ThreadSafe {
 
@@ -124,16 +124,15 @@ public class PortletURLModule extends AbstractInputModule implements ThreadSafe 
             }
 
             return url.toString();
+        }
+        if (name.startsWith(PREFIX_RENDER)) {
+            return name.substring(PREFIX_RENDER.length());
+        } else if (name.startsWith(PREFIX_RESOURCE)) {
+            return name.substring(PREFIX_RESOURCE.length());
+        } else if (name.startsWith(PREFIX_ACTION)) {
+            return name.substring(PREFIX_ACTION.length());
         } else {
-            if (name.startsWith(PREFIX_RENDER)) {
-                return name.substring(PREFIX_RENDER.length());
-            } else if (name.startsWith(PREFIX_RESOURCE)) {
-                return name.substring(PREFIX_RESOURCE.length());
-            } else if (name.startsWith(PREFIX_ACTION)) {
-                return name.substring(PREFIX_ACTION.length());
-            } else {
-                throw new IllegalArgumentException("Invalid attribute name '" + name + "' for '" + getClass().getName() + "'");
-            }
+            throw new IllegalArgumentException("Invalid attribute name '" + name + "' for '" + getClass().getName() + "'");
         }
     }
 
