@@ -50,11 +50,7 @@
 		</field>
 
 		<field name="allowedRoles" type="java.lang.String">
-			<bind-xml name="allowed-roles"/>
-		</field>
-
-		<field name="deniedRoles" type="java.lang.String">
-			<bind-xml name="denied-roles"/>
+			<bind-xml name="roles"/>
 		</field>
 
 		<field name="attributes" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AttributesFieldHandler">
