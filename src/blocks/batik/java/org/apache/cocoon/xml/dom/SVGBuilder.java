@@ -52,7 +52,6 @@ package org.apache.cocoon.xml.dom;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -72,7 +71,7 @@ import java.net.URL;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.5 2003/08/13 08:44:54 bruno Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.6 2003/08/13 08:58:15 bruno Exp $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled, Recyclable {
     protected Logger log;
