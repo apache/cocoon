@@ -34,6 +34,7 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
+import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
 import org.apache.log.Logger;
@@ -46,7 +47,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.41 $ $Date: 2001-01-15 04:44:26 $
+ * @version CVS $Revision: 1.4.2.42 $ $Date: 2001-01-15 04:45:42 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
