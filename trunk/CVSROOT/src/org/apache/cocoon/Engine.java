@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.21 2000-04-08 00:46:26 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.22 2000-04-20 22:29:41 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.21 $ $Date: 2000-04-08 00:46:26 $
+ * @version $Revision: 1.22 $ $Date: 2000-04-20 22:29:41 $
  */
 
 public class Engine implements Defaults {
@@ -316,7 +316,14 @@ public class Engine implements Defaults {
 
                     // fill the page bean with content
                     page.setContent(writer.toString());
-                    page.setContentType(formatter.getMIMEType());
+
+                    // set content type together with encoding if appropriate
+                    String encoding = formatter.getEncoding();
+                    if (encoding != null) {
+                        page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
+                    } else {
+                        page.setContentType(formatter.getMIMEType());
+                    }                    
 
                     // page is done without memory errors so exit the loop
                     break;
