@@ -38,7 +38,9 @@
   </categories>
  </logkit>
 
- <context/>
+ <context>
+   <entry name="root-url" value="/"/>
+ </context>
 
  <roles>
   <role name="org.apache.cocoon.Processor"
@@ -91,7 +93,6 @@
 
  <components>
   <sitemap check-reload="yes" 
-    config="resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml" 
     file="context://sitemap.xmap" 
     logger="sitemap"/>
 
