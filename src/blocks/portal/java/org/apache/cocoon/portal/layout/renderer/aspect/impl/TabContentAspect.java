@@ -56,11 +56,11 @@ import java.util.Map;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.impl.LayoutEventImpl;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
 import org.apache.cocoon.portal.layout.impl.Parameter;
-import org.apache.cocoon.portal.layout.impl.TabLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.2 2003/05/08 13:38:11 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.3 2003/05/19 13:06:06 cziegeler Exp $
  */
 public class TabContentAspect extends CompositeContentAspect {
 
@@ -85,7 +85,7 @@ public class TabContentAspect extends CompositeContentAspect {
                         PortalService service,
                         ContentHandler handler)
     throws SAXException {
-        if (layout instanceof TabLayout) {
+        if (layout instanceof CompositeLayout) {
             AttributesImpl attributes = new AttributesImpl();
             Map parameter = layout.getParameters();
             for (Iterator iter = parameter.values().iterator(); iter.hasNext();) {
@@ -98,7 +98,7 @@ public class TabContentAspect extends CompositeContentAspect {
             try {
                 portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
                 attributes = new AttributesImpl();
-                TabLayout tabLayout = (TabLayout) layout;
+                CompositeLayout tabLayout = (CompositeLayout) layout;
 
                 // selected tab
                 TabLayoutStatus status = (TabLayoutStatus) this.getStatus( TabLayoutStatus.class, ProfileManager.SESSION_STATUS, tabLayout.getId() ); 
