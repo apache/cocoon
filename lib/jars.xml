@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.240 2004/07/11 22:06:26 antonio Exp $
+    | CVS $Id: jars.xml,v 1.241 2004/07/11 23:45:08 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -696,7 +696,7 @@
     <title>Eclipse Java Development Tools Core</title>
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
-    <lib>optional/jdtcore-2.1.3.jar</lib>
+    <lib>optional/jdtcore-3.0.0.jar</lib>
     <homepage>http://www.eclipse.org/jdt</homepage>
   </file>
 

@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.395 2004/07/11 22:06:26 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.396 2004/07/11 23:45:08 antonio Exp $:-->
 
 <status>
  <developers>
@@ -205,7 +205,7 @@
   <changes>
   <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Update qdox to 1.5.
+     Update qdox to 1.5 and jdt-core to 3.0.0.
    </action>
   <action dev="AG" type="fix" fixes-bug="28209" due-to="Enrico Maccias" due-to-email="enrico.maccias@free.fr">
      Fixing BetwixtTransformer does not marshal Collections properly (java.lang.OutOfMemoryError).
