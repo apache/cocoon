@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: StructJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: StructJXPathBinding.java,v 1.4 2004/01/21 20:18:19 tim Exp $
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -91,13 +91,8 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Struct structWidget = (Struct)getWidget(frmModel, this.widgetId);
-        Binding[] subBindings = getChildBindings();
-        if (subBindings != null) {
-            int size = subBindings.length;
-            for (int i = 0; i < size; i++) {
-                subBindings[i].loadFormFromModel(structWidget, jxpc);
-            }
-        }
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        super.doLoad(structWidget, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done loading " + toString());
         }
@@ -110,13 +105,8 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Struct structWidget = (Struct)frmModel.getWidget(this.widgetId);
-        Binding[] subBindings = getChildBindings();
-        if (subBindings != null) {
-            int size = subBindings.length;
-            for (int i = 0; i < size; i++) {
-                subBindings[i].saveFormToModel(structWidget, jxpc);
-            }
-        }
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        super.doSave(structWidget, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done saving " + toString());
         }
