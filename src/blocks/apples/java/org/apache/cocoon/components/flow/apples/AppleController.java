@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
-import org.apache.cocoon.ProcessingException;
-
 
 /**
  * AppleController declares the main processing interfaces for the stateful 
