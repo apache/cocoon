@@ -76,7 +76,7 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPStyle.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: EPStyle.java,v 1.3 2003/05/11 01:13:30 vgritsenko Exp $
  */
 public class EPStyle
     extends BaseElementProcessor
@@ -140,20 +140,17 @@ public class EPStyle
      * @param attributes the array of Attribute instances; may be
      *                   empty, will never be null
      * @param parent the parent ElementProcessor; may be null
-     * @param filesystem the POIFSFileSystem object
      *
      * @exception IOException if anything is wrong
      */
-
     public void initialize(final Attribute [] attributes,
                            final ElementProcessor parent)
         throws IOException
     {
         super.initialize(attributes, parent);
-        
-        
+
         EPStyleRegion sregion = (EPStyleRegion) parent;
-        
+
         if (sregion.isValid()) {
             Hashtable colorhash = sregion.getColorHash();
 
@@ -163,10 +160,11 @@ public class EPStyle
             short cnvvalign = convertVAlignment(getVerticalAlignment().getCode());            
             style.setVerticalAlignment(cnvvalign);
             style.setFillPattern((short)getShade());
-            
- 
-            if (getShade() == 1) {   //TODO: change to constant when upgrade to new HSSF 
-                                     //solid w/foreground, bg doesn't matter
+
+
+            if (getShade() == 1) {
+                // TODO: change to constant when upgrade to new HSSF
+                // solid w/foreground, bg doesn't matter
                 getLogger().debug("shade = 1");
                 HSSFColor color = (HSSFColor) colorhash.get(getBackgroundColor().toString());
                 if (color == null) {
@@ -196,28 +194,26 @@ public class EPStyle
             }
             style.setWrapText(getWrapText());
             style.setLocked(true);
-            
-            String format = null;
 
-	    try {
-		format = getFormat();
+            String format = null;
+            try {
+                format = getFormat();
             } catch (NullPointerException e) {
-		format = "General";
+                format = "General";
             }
 
             if (!format.equals("General")) {
                 format = kludgeForGnumericMisformats(format);
                 format = kludgeForGnumericDateDivergence(format);
                 short nformat = org.apache.poi.hssf.usermodel.HSSFDataFormat.getFormat(format);
-                        getLogger().debug("setting format to "+ nformat);
+                getLogger().debug("setting format to "+ nformat);
                 style.setDataFormat(nformat);
             }
         } else {
-            
             invalid = true;
         }
-    }    
-    
+    }
+
     /**
      * @return true if horizontal alignment general bit is set
      *
@@ -225,7 +221,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalGeneral()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isGeneral();
     }
@@ -237,7 +233,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalLeft()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isLeft();
     }
@@ -249,7 +245,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalRight()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isRight();
     }
@@ -261,7 +257,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalCenter()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isCenter();
     }
@@ -273,7 +269,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalFill()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isFill();
     }
@@ -285,7 +281,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalJustify()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isJustify();
     }
@@ -298,7 +294,7 @@ public class EPStyle
      */
 
     public boolean isHorizontalCenterAcrossSelection()
-        throws IOException
+            throws IOException
     {
         return getHorizontalAlignment().isCenterAcrossSelection();
     }
