@@ -146,6 +146,8 @@ public class DefaultLayoutFactory
     
     protected Configuration[] layoutsConf;
     
+    protected static long idCounter = System.currentTimeMillis();
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -169,6 +171,7 @@ public class DefaultLayoutFactory
         desc.setName(name);
         desc.setClassName(layoutConf.getAttribute("class"));        
         desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
+        desc.setItemClassName(layoutConf.getAttribute("item-class", null));
                 
         // the renderers
         final String defaultRenderer = layoutConf.getChild("renderers").getAttribute("default");
@@ -255,6 +258,9 @@ public class DefaultLayoutFactory
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#prepareLayout(org.apache.cocoon.portal.layout.Layout)
+     */
     public void prepareLayout(Layout layout) 
     throws ProcessingException {
         if ( layout != null ) {
@@ -278,6 +284,8 @@ public class DefaultLayoutFactory
             // recursive
             if ( layout instanceof CompositeLayout ) {
                 CompositeLayout composite = (CompositeLayout)layout;
+                composite.setItemClassName(layoutDescription.getItemClassName());
+                
                 Iterator items = composite.getItems().iterator();
                 while ( items.hasNext() ) {
                     this.prepareLayout( ((Item)items.next()).getLayout() );
@@ -311,13 +319,20 @@ public class DefaultLayoutFactory
         
         String id = null;
         if ( layoutDescription.createId() ) {
-            // TODO - set unique id
-            id = layoutName + '-' + System.currentTimeMillis();
+            synchronized (this) {
+                id = layoutName + '-' + idCounter;
+                idCounter += 1;
+            }
         }
         layout.initialize( layoutName, id ); 
         layout.setDescription( layoutDescription );
         layout.setAspectDataHandler((AspectDataHandler)o[1]);
 
+        if ( layout instanceof CompositeLayout ) {
+            CompositeLayout composite = (CompositeLayout)layout;
+            composite.setItemClassName(layoutDescription.getItemClassName());
+        }
+        
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
@@ -330,6 +345,9 @@ public class DefaultLayoutFactory
         return layout;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#getLayoutDescriptions()
+     */
     public List getLayoutDescriptions() {
         this.init();
         return this.descriptions;

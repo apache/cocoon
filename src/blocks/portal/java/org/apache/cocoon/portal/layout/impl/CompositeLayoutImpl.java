@@ -23,6 +23,7 @@ import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.util.ClassUtils;
 
 
 /**
@@ -37,8 +38,11 @@ public class CompositeLayoutImpl
     extends AbstractLayout
     implements CompositeLayout {
 
-	protected List items = new ArrayList();
+    protected List items = new ArrayList();
 
+    /** The class name of the items */
+    protected String itemClassName;
+    
     /**
      * Constructor
      */
@@ -98,7 +102,28 @@ public class CompositeLayoutImpl
      * @see org.apache.cocoon.portal.layout.CompositeLayout#createNewItem()
      */
     public Item createNewItem() {
+        if ( this.itemClassName == null ) {
         return new Item();
+    }
+        try {
+            return (Item)ClassUtils.newInstance(this.itemClassName);
+        } catch (Exception ignore) {
+            return new Item();
+        }
+    }
+        
+    /**
+     * @return Returns the item class name.
+     */
+    public String getItemClassName() {
+        return this.itemClassName;
+    }
+    
+    /**
+     * @param itemClassName The item class name to set.
+     */
+    public void setItemClassName(String value) {
+        this.itemClassName = value;
     }
         
     /* (non-Javadoc)
