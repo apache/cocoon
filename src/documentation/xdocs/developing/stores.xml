@@ -29,7 +29,7 @@
       To keep cached data, Cocoon uses components implementing the 
       <em>org.apache.excalibur.Store</em> interface. Cocoon uses two 
       implementations of this interface, the "transient store" and the "store", 
-      and optionnally a third one, the "persistent store".
+      and optionally a third one, the "persistent store".
     </p>
 
     <section>
