@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.134 2000-10-23 16:40:29 greenrd Exp $ 
+  $Id: changes.xml,v 1.135 2000-10-23 16:55:17 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Fixed slides sample to work on all browsers.
+  </action>
   <action dev="RDG" type="fix">
    Fixed package name problem in calendar taglib.
   </action>
