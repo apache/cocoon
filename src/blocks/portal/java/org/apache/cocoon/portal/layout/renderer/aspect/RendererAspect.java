@@ -53,6 +53,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
@@ -60,12 +61,13 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * A renderer aspect extends a renderer with a distinct functionality
+ * A renderer aspect extends a renderer with a distinct functionality.
+ * A renderer aspect has to be thread safe!
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspect.java,v 1.3 2003/06/14 17:55:44 cziegeler Exp $
+ * @version CVS $Id: RendererAspect.java,v 1.4 2003/06/15 16:56:09 cziegeler Exp $
  */
 public interface RendererAspect 
     extends Component {
@@ -85,6 +87,19 @@ public interface RendererAspect
      * Return the aspects required for this renderer
      * @return An iterator for the aspect descriptions or null.
      */
-    Iterator getAspectDescriptions(Parameters configuration);
+    Iterator getAspectDescriptions(Object preparedConfiguration);
 
+    /**
+     * Compile the configuration.
+     * A renderer aspect can "compile" the configuration in
+     * order to increase performance.
+     * If the renderer does not want to compile it should
+     * simply return the configuration.
+     * The "compiled" configuration is passed to the
+     * {@link #getAspectDescriptions(Object)} method and
+     * is available during streaming via the context object.
+     * This method can also be used for validation the configuration.
+     */
+    Object prepareConfiguration(Parameters configuration)
+    throws ParameterException;
 }

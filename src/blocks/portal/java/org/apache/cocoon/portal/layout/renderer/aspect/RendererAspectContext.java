@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.xml.sax.ContentHandler;
@@ -64,7 +63,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectContext.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
+ * @version CVS $Id: RendererAspectContext.java,v 1.3 2003/06/15 16:56:09 cziegeler Exp $
  */
 public interface RendererAspectContext {
     
@@ -75,9 +74,9 @@ public interface RendererAspectContext {
     throws SAXException;
 
     /** 
-     * Get the {@link Parameters} of the aspect.
+     * Get the "compiled" configuration of the aspect.
      */
-    Parameters getAspectParameters();
+    Object getAspectConfiguration();
     
     /**
      * Set an attribute

@@ -56,6 +56,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
@@ -65,7 +66,7 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspect.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: AbstractAspect.java,v 1.4 2003/06/15 16:56:09 cziegeler Exp $
  */
 public abstract class AbstractAspect
     extends AbstractLogEnabled
@@ -84,8 +85,16 @@ public abstract class AbstractAspect
      * Return the aspects required for this renderer
      * @return An iterator for the aspect descriptions or null.
      */
-    public Iterator getAspectDescriptions(Parameters configuration) {
+    public Iterator getAspectDescriptions(Object preparedConf) {
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        return configuration;
     }
 
 }

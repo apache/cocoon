@@ -57,6 +57,8 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.variables.VariableResolver;
 import org.apache.cocoon.components.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
@@ -77,7 +79,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.4 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.5 2003/06/15 16:56:09 cziegeler Exp $
  */
 public class XSLTAspect 
     extends AbstractAspect {
@@ -90,13 +92,15 @@ public class XSLTAspect
                         PortalService service,
                         ContentHandler handler)
     throws SAXException {
+        PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+
         XSLTProcessor processor = null;
         Source stylesheet = null;
         SourceResolver resolver = null;
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            stylesheet = resolver.resolveURI(this.getStylesheetURI(context, layout));
-            processor = (XSLTProcessor) this.manager.lookup(XSLTProcessorImpl.ROLE);
+            stylesheet = resolver.resolveURI(this.getStylesheetURI(config, layout));
+            processor = (XSLTProcessor) this.manager.lookup(config.xsltRole);
             TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
             SAXResult result = new SAXResult(new IncludeXMLConsumer((handler)));
             if (handler instanceof LexicalHandler) {
@@ -122,10 +126,11 @@ public class XSLTAspect
         }
 	}
 
-    protected String getStylesheetURI(RendererAspectContext context, Layout layout) {
+    protected String getStylesheetURI(PreparedConfiguration config, Layout layout) {
+
         // FIXME Get the stylesheet either from a layout attribute or another aspect
-        String stylesheet =  context.getAspectParameters().getParameter("style", "NOTFOUND");
-        // TODO make this more faster
+        String stylesheet = config.stylesheet;
+        // TODO make this faster
         VariableResolverFactory factory = null;
         try {
             factory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
@@ -143,4 +148,26 @@ public class XSLTAspect
         return stylesheet;
     }
 
+    protected class PreparedConfiguration {
+        public String stylesheet;
+        public String xsltRole; 
+
+        public void takeValues(PreparedConfiguration from) {
+            this.stylesheet = from.stylesheet;
+            this.xsltRole = from.xsltRole;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        PreparedConfiguration pc = new PreparedConfiguration();
+        pc.stylesheet = configuration.getParameter("style");
+        pc.xsltRole = configuration.getParameter("xslt-processor-role", XSLTProcessorImpl.ROLE);
+        return pc;
+    }
+
 }
+

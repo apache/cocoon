@@ -53,6 +53,8 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -67,16 +69,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeContentAspect.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
+ * @version CVS $Id: CompositeContentAspect.java,v 1.3 2003/06/15 16:56:09 cziegeler Exp $
  */
 public class CompositeContentAspect extends AbstractCompositeAspect {
 
     protected static final String ITEM_STRING = "item";
 
-    protected String getTagName(RendererAspectContext context) {
-        return context.getAspectParameters().getParameter("tag-name", "composite");
-    }
-    
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
@@ -85,7 +83,8 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                         PortalService service,
                         ContentHandler handler)
     throws SAXException {
-
+        PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        
         AttributesImpl attributes = new AttributesImpl();
         Map parameter = layout.getParameters();
         Map.Entry entry;
@@ -93,9 +92,9 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
         	entry = (Map.Entry) iter.next();
             attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
         }
-        XMLUtils.startElement(handler, this.getTagName(context), attributes);
+        XMLUtils.startElement(handler, config.tagName, attributes);
         super.toSAX(context, layout, service, handler);
-        XMLUtils.endElement(handler, this.getTagName(context));
+        XMLUtils.endElement(handler, config.tagName);
 
     }
 
@@ -125,5 +124,23 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
         XMLUtils.endElement(handler, ITEM_STRING);
 
 	}
+
+    protected class PreparedConfiguration {
+        public String tagName;
+        
+        public void takeValues(PreparedConfiguration from) {
+            this.tagName = from.tagName;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        PreparedConfiguration pc = new PreparedConfiguration();
+        pc.tagName = configuration.getParameter("tag-name", "composite");
+        return pc;
+    }
 
 }
