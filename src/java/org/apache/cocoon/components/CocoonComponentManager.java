@@ -199,7 +199,7 @@ implements SourceResolver
      * @return A unique key within this thread.
      */
     public static Object startProcessing(Environment env) {
-		if ( null == env) {
+		if (null == env) {
 			throw new RuntimeException("CocoonComponentManager.startProcessing: environment must be set.");
 		}
         final EnvironmentDescription desc = new EnvironmentDescription(env);

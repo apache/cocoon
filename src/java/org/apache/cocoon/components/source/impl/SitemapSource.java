@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,7 +67,7 @@ implements Source, XMLizable {
 
     /** The system id used for caching */
     private String systemIdForCaching;
-    
+
     /** The current ComponentManager */
     private final ComponentManager manager;
 
@@ -97,15 +97,15 @@ implements Source, XMLizable {
 
     /** The unique key for this processing */
     private Object processKey;
-    
+
     /** The used protocol */
     private final String protocol;
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
-    
+
     private String mimeType;
-    
+
     /**
      * Construct a new object
      */
@@ -161,16 +161,16 @@ implements Source, XMLizable {
         } else if (position > 0) {
             uri = uri.substring(position);
         }
-        
+
         // determine if the queryString specifies a cocoon-view
         String view = null;
         if (queryString != null) {
             int index = queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
+            if (index != -1
                 && (index == 0 || queryString.charAt(index-1) == '&')
-                && queryString.length() > index + Constants.VIEW_PARAM.length() 
+                && queryString.length() > index + Constants.VIEW_PARAM.length()
                 && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
+
                 String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
                 index = tmp.indexOf('&');
                 if (index != -1) {
@@ -194,10 +194,10 @@ implements Source, XMLizable {
             this.protocol + "://" + requestURI + "?" + queryString;
 
         // create environment...
-        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, requestURI, 
+        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, requestURI,
                                                    queryString, logger, manager, rawMode, view);
         wrapper.setURI(prefix, uri);
-        
+
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
 
@@ -207,7 +207,7 @@ implements Source, XMLizable {
         } else {
             this.environment.getObjectModel().remove(ObjectModelHelper.PARENT_CONTEXT);
         }
-        
+
         // initialize
         this.init();
     }
@@ -286,13 +286,13 @@ implements Source, XMLizable {
     }
 
     /**
-     * 
+     *
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
         return true;
     }
-    
+
     /**
      *  Get the Validity object. This can either wrap the last modification
      *  date or the expires information or...
@@ -332,7 +332,7 @@ implements Source, XMLizable {
         try {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
+            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment);
             this.environment.changeToLastContext();
 
             String redirectURL = this.environment.getRedirectURL();
@@ -345,7 +345,7 @@ implements Source, XMLizable {
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
                     this.mimeType = this.environment.getContentType();
-                    
+
                     final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
                     if (eventPipelineKey != null) {
                         StringBuffer buffer = new StringBuffer(this.systemId);
@@ -358,7 +358,7 @@ implements Source, XMLizable {
                         buffer.append(eventPipelineKey);
                         this.systemIdForCaching = buffer.toString();
                     } else {
-                        this.systemIdForCaching = this.systemId; 
+                        this.systemIdForCaching = this.systemId;
                     }
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
@@ -415,7 +415,7 @@ implements Source, XMLizable {
                                                         this.pipelineProcessor);
                 try {
                     this.processingPipeline.process(this.environment,
-                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer)); 
+                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer));
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
                 }
@@ -437,19 +437,23 @@ implements Source, XMLizable {
     private void reset() {
         if (this.processingPipeline != null) {
             this.processingPipeline.release();
+            this.processingPipeline = null;
         }
+
         if (this.processKey != null) {
             CocoonComponentManager.endProcessing(this.environment, this.processKey);
             this.processKey = null;
         }
-        this.processingPipeline = null;
-        this.sourceValidity = null;
+
         if (this.redirectSource != null) {
             this.sourceResolver.release(this.redirectSource);
+            this.redirectSource = null;
         }
-        this.environment.reset();
-        this.redirectSource = null;
+
+        this.sourceValidity = null;
         this.redirectValidity = null;
+
+        this.environment.reset();
         this.exception = null;
         this.needsRefresh = true;
         this.pipelineProcessor = null;
