@@ -41,8 +41,7 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
@@ -50,15 +49,11 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-22 21:56:34 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-31 15:03:52 $
  */
-public abstract class AbstractMarkupLanguage
-     implements MarkupLanguage, Composer, Configurable, Loggable
+public abstract class AbstractMarkupLanguage extends AbstractLoggable
+     implements MarkupLanguage, Composer, Configurable
 {
-    /**
-     * The logger for AbstractMarkupLanguage
-     */
-    protected Logger log;
     /**
     * The supported language table
     */
@@ -102,12 +97,6 @@ public abstract class AbstractMarkupLanguage
         this.logicsheetCache = new MemoryStore();
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
     /**
     * Initialize the (required) markup language namespace definition.
     *
@@ -148,6 +137,7 @@ public abstract class AbstractMarkupLanguage
                 Logicsheet logicsheet = new Logicsheet();
                 logicsheet.setInputSource(new InputSource(logicsheetURL.toString()));
                 CachedURL entry = new CachedURL(logicsheetURL, logicsheet);
+                entry.setLogger(getLogger());
                 this.logicsheetCache.store(logicsheetName, entry);
                 language.setLogicsheet(logicsheetName);
 
@@ -162,6 +152,7 @@ public abstract class AbstractMarkupLanguage
 
                     // FIXME: This is repetitive; add method for both cases
                     URL namedLogicsheetURL = NetUtils.getURL(namedLogicsheetLocation);
+                    getLogger().info(namedLogicsheetLocation + ": " + namedLogicsheetURL.toExternalForm());
                     String namedLogicsheetName = namedLogicsheetURL.toExternalForm();
                     NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
                     namedLogicsheet.setInputSource(
@@ -171,6 +162,7 @@ public abstract class AbstractMarkupLanguage
                     namedLogicsheet.setUri(namedLogicsheetUri);
                     CachedURL namedEntry =
                     new CachedURL(namedLogicsheetURL, namedLogicsheet);
+                    namedEntry.setLogger(getLogger());
                     this.logicsheetCache.store(namedLogicsheetName, namedEntry);
                     language.addNamedLogicsheet(
                         namedLogicsheetPrefix, namedLogicsheetName
@@ -180,7 +172,7 @@ public abstract class AbstractMarkupLanguage
             this.languages.put(language.getName(), language);
             }
         } catch (Exception e) {
-            log.warn("Configuration Error: " + e.getMessage(), e);
+            getLogger().warn("Configuration Error: " + e.getMessage(), e);
             throw new ConfigurationException("AbstractMarkupLanguage: " + e.getMessage(), e);
         }
     }
@@ -320,7 +312,7 @@ public abstract class AbstractMarkupLanguage
         InputSource inputSource = null;
 
         if (codeGenerator == null) {
-            log.debug("This should never happen: codeGenerator is null");
+            getLogger().debug("This should never happen: codeGenerator is null");
             throw new SAXException("codeGenerator must never be null.");
         }
 
@@ -343,6 +335,7 @@ public abstract class AbstractMarkupLanguage
             logicsheet = new Logicsheet();
             logicsheet.setInputSource(inputSource);
             entry = new CachedURL(url, logicsheet);
+            entry.setLogger(getLogger());
             this.logicsheetCache.store(logicsheetName, entry);
         }
 
@@ -455,7 +448,7 @@ public abstract class AbstractMarkupLanguage
     * This class holds a cached URL entry associated with a logicsheet
     *
     */
-    protected class CachedURL {
+    protected class CachedURL extends AbstractLoggable {
         /**
          * The logicsheet URL
          */
@@ -535,7 +528,7 @@ public abstract class AbstractMarkupLanguage
             try {
                 hasChanged = this.lastModified < this.file.lastModified();
             } catch (SecurityException se) {
-                log.warn("SecurityException", se);
+                getLogger().warn("SecurityException", se);
             }
 
             return hasChanged;
@@ -644,7 +637,6 @@ public abstract class AbstractMarkupLanguage
                         this.logicsheetMarkupGenerator, this.language.getLogicsheet(), resolver
                     );
                 } catch (IOException ioe) {
-                    log.warn("AbstractMarkupLanguage.startElement", ioe);
                     throw new SAXException (ioe);
                 }
                 // All stylesheet have been configured and correctly setup.

@@ -12,13 +12,14 @@ import java.io.File;
 import java.util.Map;
 import java.net.URL;
 import java.net.MalformedURLException;
+import javax.servlet.ServletContext;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-29 18:50:46 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-31 15:03:56 $
  */
 
 public class NetUtils {
@@ -33,6 +34,17 @@ public class NetUtils {
         if (NetUtils.root == null) {
             NetUtils.root = directory;
         }
+    }
+
+    /** Temporary Hack until the protocols are actually working */
+    private static ServletContext context = null;
+
+    public static void setContext(ServletContext context) {
+        if (NetUtils.context == null) {
+            NetUtils.context = context;
+        }
+
+        org.apache.cocoon.util.url.context.Handler.setContext(context);
     }
 
     /**
@@ -55,7 +67,11 @@ public class NetUtils {
             URL u = ClassUtils.getResource(location.substring("resource://".length()));
             if (u != null) return u;
             else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-        } else {
+        } else if (location.startsWith("context://")) {
+        URL u = NetUtils.context.getResource(location.substring("context://".length()));
+        if (u != null) return u;
+        else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
+    } else {
             return new URL(location);
         }
     }

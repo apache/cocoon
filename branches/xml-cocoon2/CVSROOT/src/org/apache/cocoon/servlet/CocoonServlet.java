@@ -37,6 +37,7 @@ import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.NetUtils;
 
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
@@ -53,7 +54,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.47 $ $Date: 2001-01-31 05:21:48 $
+ * @version CVS $Revision: 1.1.4.48 $ $Date: 2001-01-31 15:03:55 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -105,6 +106,8 @@ public class CocoonServlet extends HttpServlet {
         this.root = this.context.getRealPath("/");
 
         ClassUtils.setClassLoader(this.getClass().getClassLoader());
+
+        NetUtils.setContext(this.context);
 
         this.createCocoon();
     }

@@ -39,9 +39,9 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-22 21:56:35 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-31 15:03:54 $
  */
-public class SitemapMarkupLanguage extends AbstractMarkupLanguage implements Loggable {
+public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * the dependencies' list
@@ -135,7 +135,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage implements Log
                 logicsheetMarkupGenerator,
                 resolver
              );
-        filter.setLogger(this.log);
+        filter.setLogger(getLogger());
         return filter;
     }
 

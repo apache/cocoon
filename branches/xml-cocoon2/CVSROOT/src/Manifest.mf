@@ -1,5 +1,8 @@
 Manifest-Version: 1.0
 Main-Class: org.apache.cocoon.Main
+Class-Path: avalonapi.jar batik-all.jar bsf.jar fop-0_16_0.jar
+ jakarta-regexp-1.2.jar jstyle.jar rhino.jar xalan_2_0_D07.jar
+ xerces_1_2_3.jar xt.jar
 
 Name: org/apache/cocoon/components/markup/sitemap/java/sitemap.xsl
 Mime-Type: application/xml
