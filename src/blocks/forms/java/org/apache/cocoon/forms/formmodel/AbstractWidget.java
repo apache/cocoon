@@ -15,7 +15,12 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
@@ -29,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.3 2004/03/25 16:41:47 bruno Exp $
+ * @version $Id: AbstractWidget.java,v 1.4 2004/04/02 08:00:03 antonio Exp $
  */
 public abstract class AbstractWidget implements Widget {
     private String location;
@@ -134,7 +139,6 @@ public abstract class AbstractWidget implements Widget {
         if (this.validators == null) {
             this.validators = new ArrayList();
         }
-        
         this.validators.add(validator);
     }
     
@@ -145,7 +149,11 @@ public abstract class AbstractWidget implements Widget {
      * @return <code>true</code> if the validator was found.
      */
     public boolean removeValidator(WidgetValidator validator) {
-        return (this.validators == null)? false : this.validators.remove(validator);
+        if (this.validators != null) {
+            return this.validators.remove(validator);
+        } else {
+            return false;
+        }
     }
     
     public boolean validate(FormContext context) {
@@ -154,7 +162,7 @@ public abstract class AbstractWidget implements Widget {
             // Failed
             return false;
         } else {
-            // Definition sussessful, test local validators
+            // Definition successful, test local validators
             if (this.validators == null) {
                 // No local validators
                 return true;
@@ -193,14 +201,16 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public Object getAttribute(String name) {
-        return this.attributes == null ? null : this.attributes.get(name);
+        if (this.attributes != null){
+            return this.attributes.get(name);
+        } else{
+            return null;
     }
 
     public void setAttribute(String name, Object value) {
         if (this.attributes == null) {
             this.attributes = new HashMap();
         }
-
         this.attributes.put(name, value);
     }
 
