@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.40 2001-01-10 05:55:52 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.41 2001-01-11 04:56:20 balld Exp $-->
 <!--
 
  ============================================================================
@@ -66,7 +66,7 @@
 <xsl:param name="filename"/>
 <xsl:param name="language"/>
 
-<xsl:variable name="cocoon1-environment">Cocoon 1.8.1-dev</xsl:variable>
+<xsl:variable name="cocoon1-environment">Cocoon 1</xsl:variable>
 <xsl:variable name="cocoon2-environment">something else</xsl:variable>
 
 <xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
@@ -74,12 +74,15 @@
 
 <xsl:variable name="environment">
   <xsl:choose>
-    <xsl:when test="$XSP-ENVIRONMENT = $cocoon1-environment">
+    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon1-environment)">
       <xsl:text>cocoon1</xsl:text>
     </xsl:when>
-    <xsl:when test="$XSP-ENVIRONMENT = $cocoon2-environment">
+    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon2-environment)">
       <xsl:text>cocoon2</xsl:text>
     </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>cocoon2</xsl:text>
+    </xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
 
@@ -109,22 +112,51 @@
 <xsl:template name="get-nested-string">
   <xsl:param name="content"/>
   <xsl:choose>
-    <xsl:when test="$content/*">
-      ""
-      <xsl:for-each select="$content/node()">
-        <xsl:choose>
-          <xsl:when test="name(.)">
-            + <xsl:apply-templates select="."/>
-          </xsl:when>
-          <xsl:otherwise>
-            + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsl:choose>
+        <xsl:when test="$content/*">
+          ""
+          <xsl:for-each select="$content/node()">
+            <xsl:choose>
+              <xsl:when test="name(.)">
+                + <xsl:apply-templates select="."/>
+              </xsl:when>
+              <xsl:otherwise>
+                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          "<xsl:value-of select="normalize-space($content)"/>"
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:when>
-    <xsl:otherwise>
-      "<xsl:value-of select="normalize-space($content)"/>"
-    </xsl:otherwise>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsl:choose>
+        <xsl:when test="$content/*">
+          ""
+          <xsl:for-each select="$content/node()">
+            <xsl:choose>
+              <xsl:when test="name(.)">
+                <xsl:choose>
+                  <xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
+                    + "<xsl:value-of select="."/>"
+                  </xsl:when>
+                  <xsl:otherwise>
+                    + <xsl:apply-templates select="."/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+              <xsl:otherwise>
+                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
   </xsl:choose>
 </xsl:template>
 
@@ -208,27 +240,39 @@
           _esql_connection.connection = _esql_connection.db_connection.getConnection();
         </xsl:when>
         <xsl:otherwise>
-          Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
-          <xsl:choose>
-            <xsl:when test="esql:username">
-              _esql_connection.connection = DriverManager.getConnection(
-                String.valueOf(<xsl:copy-of select="$dburl"/>),
-                String.valueOf(<xsl:copy-of select="$username"/>),
-                String.valueOf(<xsl:copy-of select="$password"/>)
-              );
-            </xsl:when>
-            <xsl:otherwise>
-              _esql_connection.connection = DriverManager.getConnection(
-                String.valueOf(<xsl:copy-of select="$dburl"/>)
-              );
-            </xsl:otherwise>
-          </xsl:choose>
+          try {
+            Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error loading driver: "+String.valueOf(<xsl:copy-of select="$driver"/>));
+          }
+          try {
+            <xsl:choose>
+              <xsl:when test="esql:username">
+                _esql_connection.connection = DriverManager.getConnection(
+                  String.valueOf(<xsl:copy-of select="$dburl"/>),
+                  String.valueOf(<xsl:copy-of select="$username"/>),
+                  String.valueOf(<xsl:copy-of select="$password"/>)
+                );
+              </xsl:when>
+              <xsl:otherwise>
+                _esql_connection.connection = DriverManager.getConnection(
+                  String.valueOf(<xsl:copy-of select="$dburl"/>)
+                );
+              </xsl:otherwise>
+            </xsl:choose>
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error opening connection to dburl: "+String.valueOf(<xsl:copy-of select="$dburl"/>));
+          }
         </xsl:otherwise>
       </xsl:choose>
-      if ("false".equals(String.valueOf(<xsl:copy-of select="$autocommit"/>))) {
-        _esql_connection.connection.setAutoCommit(false);
-      } else {
-        _esql_connection.connection.setAutoCommit(true);
+      try {
+        if ("false".equals(String.valueOf(<xsl:copy-of select="$autocommit"/>))) {
+          _esql_connection.connection.setAutoCommit(false);
+        } else {
+          _esql_connection.connection.setAutoCommit(true);
+        }
+      } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+        throw new RuntimeException("Error setting connection autocommit");
       }
       <xsl:apply-templates/>
     } finally {
@@ -249,7 +293,7 @@
         } else {
           _esql_connection = (EsqlConnection)_esql_connections.pop();
         }
-      } catch (NullPointerException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {}
+      } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {}
     }
   </xsp:logic>
 </xsl:template>
@@ -281,23 +325,35 @@
       <xsl:choose>
         <!-- this is a prepared statement -->
         <xsl:when test="esql:query//esql:parameter">
-          _esql_query.prepared_statement = _esql_connection.connection.prepareStatement(_esql_query.query);
+          try {
+            _esql_query.prepared_statement = _esql_connection.connection.prepareStatement(_esql_query.query);
+          } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error preparing statement: "+_esql_query.query);
+          }
           _esql_query.statement = _esql_query.prepared_statement;
           <xsl:for-each select="esql:query//esql:parameter">
-            <xsl:text>_esql_query.prepared_statement.</xsl:text>
-            <xsl:choose>
-              <xsl:when test="@type">
-                <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,2))"/></xsl:variable>
-                <xsl:text>set</xsl:text><xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);<xsl:text>
-  </xsl:text>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
-  </xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
+            try {
+              <xsl:text>_esql_query.prepared_statement.</xsl:text>
+              <xsl:choose>
+                <xsl:when test="@type">
+                  <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,2))"/></xsl:variable>
+                  <xsl:text>set</xsl:text><xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);<xsl:text>
+</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
+</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+              throw new RuntimeException("Error setting parameter on statement: "+_esql_query.query);
+            }
           </xsl:for-each>
-          _esql_query.results = _esql_query.prepared_statement.execute();
+          try {
+            _esql_query.results = _esql_query.prepared_statement.execute();
+          } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error executed prepared statement: "+_esql_query.query);
+          }
         </xsl:when>
         <!-- this is a normal query -->
         <xsl:otherwise>
@@ -328,23 +384,24 @@
       }
       _esql_query.statement.close();
     } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-      <xsl:choose>
-        <xsl:when test="esql:error-results">
-          _esql_exception = _esql_exception_<xsl:value-of select="generate-id(.)"/>;
-          _esql_exception_writer = new StringWriter();
-          _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
-          <xsl:apply-templates select="esql:error-results"/>
-          if (!_esql_connection.connection.getAutoCommit()) {
-            _esql_connection.connection.rollback();
-          }
-        </xsl:when>
-        <xsl:otherwise>
-          if (!_esql_connection.connection.getAutoCommit()) {
-            _esql_connection.connection.rollback();
-          }
-          throw(_esql_exception_<xsl:value-of select="generate-id(.)"/>);
-        </xsl:otherwise>
-      </xsl:choose>
+      try {
+        <xsl:choose>
+          <xsl:when test="esql:error-results">
+            _esql_exception = _esql_exception_<xsl:value-of select="generate-id(.)"/>;
+            _esql_exception_writer = new StringWriter();
+            _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
+            <xsl:apply-templates select="esql:error-results"/>
+            if (!_esql_connection.connection.getAutoCommit()) {
+              _esql_connection.connection.rollback();
+            }
+          </xsl:when>
+          <xsl:otherwise>
+            if (!_esql_connection.connection.getAutoCommit()) {
+              _esql_connection.connection.rollback();
+            }
+          </xsl:otherwise>
+        </xsl:choose>
+      } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>_2) {}
     }
     if (_esql_queries.empty()) {
       _esql_query = null;
