@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.5 2003/10/01 11:24:57 cziegeler Exp $
+  $Id: release.xml,v 1.6 2003/10/07 08:52:20 cziegeler Exp $
 -->
 
 <document>
@@ -30,6 +30,7 @@
  <ul>
   <li>Design and implement blocks</li>
   <li>Move to a new Avalon container implementation (Fortress)</li>
+  <li>Implement parameters for selectors (closed bug #14745)</li>
  </ul>
  </s1>
  <s1 title="General tasks for a release">
