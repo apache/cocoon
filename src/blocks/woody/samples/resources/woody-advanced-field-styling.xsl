@@ -6,8 +6,8 @@
                 exclude-result-prefixes="wi">
 
   <!--+
-      | This sytlesheet is designed to be imported by 'woody-samples-styling.xsl'
-      | Uncomment this variable declaration if you need to use it by iteslf
+      | This stylesheet is designed to be imported by 'woody-samples-styling.xsl'.
+      | Uncomment this variable declaration if you need to use it by itself.
       |
       |      <xsl:param name="resources-uri">resources</xsl:param>
       +-->

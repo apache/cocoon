@@ -46,7 +46,7 @@
 DESCRIPTION: This object implements a popup calendar to allow the user to
 select a date, month, quarter, or year.
 
-COMPATABILITY: Works with Netscape 4.x, 6.x, IE 5.x on Windows. Some small
+COMPATIBILITY: Works with Netscape 4.x, 6.x, IE 5.x on Windows. Some small
 positioning errors - usually with Window positioning - occur on the 
 Macintosh platform.
 The calendar can be modified to work for any location in the world by 

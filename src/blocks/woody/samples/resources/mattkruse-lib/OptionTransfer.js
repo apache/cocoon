@@ -28,7 +28,7 @@ example, when selecting which columns to show or hide in search results.
 This object adds value by automatically storing the values that were added
 or removed from each list, as well as the state of the final list. 
 
-COMPATABILITY: Should work on all Javascript-compliant browsers.
+COMPATIBILITY: Should work on all Javascript-compliant browsers.
 
 USAGE:
 // Create a new OptionTransfer object. Pass it the field names of the left
