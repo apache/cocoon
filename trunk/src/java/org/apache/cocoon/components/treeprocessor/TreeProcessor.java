@@ -59,20 +59,23 @@ import java.util.Map;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -82,6 +85,7 @@ import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
@@ -91,14 +95,14 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.17 2003/10/19 16:12:54 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.18 2003/10/19 17:43:17 cziegeler Exp $
  */
 
 public class TreeProcessor
     extends AbstractLogEnabled
     implements ThreadSafe,
                Processor,
-               Composable,
+               Serviceable,
                Configurable,
                RoleManageable,
                Contextualizable,
@@ -116,7 +120,7 @@ public class TreeProcessor
     protected Context context;
 
     /** The component manager */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /** The role manager */
     protected RoleManager roleManager;
@@ -163,6 +167,9 @@ public class TreeProcessor
     /** The source resolver */
     protected SourceResolver resolver;
     
+    /** The environment helper */
+    protected EnvironmentHelper environmentHelper;
+
     /**
      * Create a TreeProcessor.
      */
@@ -177,7 +184,7 @@ public class TreeProcessor
     /**
      * Create a child processor for a given language
      */
-    protected TreeProcessor(TreeProcessor parent, ComponentManager manager, String language) {
+    protected TreeProcessor(TreeProcessor parent, ServiceManager manager, String language) {
         this.parent = parent;
         this.language = (language == null) ? parent.language : language;
 
@@ -203,7 +210,7 @@ public class TreeProcessor
      * @return a new child processor.
      */
     public TreeProcessor createChildProcessor(
-        ComponentManager manager,
+        ServiceManager manager,
         String language,
         Source source)
       throws Exception {
@@ -219,9 +226,17 @@ public class TreeProcessor
         this.context = context;
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        try {
+            this.environmentHelper = new EnvironmentHelper(
+                         (String) this.context.get(Constants.CONTEXT_ROOT_URL));
+            ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
+            ContainerUtil.service(this.environmentHelper, this.manager);
+        } catch (ContextException e) {
+            throw new ServiceException("Unable to get context root url from context.", e);
+        }
     }
 
     public void setRoleManager(RoleManager rm) {
@@ -528,8 +543,13 @@ public class TreeProcessor
         this.rootNode = root;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        disposeTree();
+        this.disposeTree();
+        ContainerUtil.dispose(this.environmentHelper);
+        this.environmentHelper = null;
         if (this.parent == null) {
             // root processor : dispose the builder selector
             this.builderSelector.dispose();
@@ -566,7 +586,7 @@ public class TreeProcessor
     private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
         public ForwardEnvironmentWrapper(Environment env,
-            ComponentManager manager, String uri, Logger logger) throws MalformedURLException {
+            ServiceManager manager, String uri, Logger logger) throws MalformedURLException {
             super(env, manager, uri, logger);
         }
 
@@ -591,8 +611,7 @@ public class TreeProcessor
      * @see org.apache.cocoon.Processor#getSourceResolver()
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
-        // TODO (CZ) Add real resolver here
-        return (org.apache.cocoon.environment.SourceResolver)this.resolver;
+        return this.environmentHelper;
     }
 
 }

@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.23 2003/10/19 17:27:32 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.24 2003/10/19 17:43:17 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -251,6 +251,7 @@ public class Cocoon
      */
     public void dispose() {
         ContainerUtil.dispose(this.environmentHelper);
+        this.environmentHelper = null;
         this.context = null;
         this.disposed = true;
     }
