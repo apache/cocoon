@@ -27,6 +27,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -68,7 +69,7 @@ import java.util.Map;
  *  parameter "append-session" to "yes" or "true".
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.4 2004/03/28 20:51:23 antonio Exp $
+ * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.5 2004/03/30 01:12:47 antonio Exp $
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -104,20 +105,15 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                     parameters.getParameter("descriptor", (String) this.settings.get("descriptor")),
                     resolver,
                     parameters.getParameterAsBoolean("reloadable", reloadable));
-            boolean cs = true;
-            boolean as = false;
             String create_session = parameters.getParameter("create-session",
-                    (String) this.settings.get("create-session"));
-            String
-                    append_session = parameters.getParameter("append-session",
-                    (String) this.settings.get("append-session"));
-
-            if (create_session != null && BooleanUtils.toBoolean(create_session.trim())) {
-                cs = false;
+                    (String)this.settings.get("create-session"));
+            String append_session = parameters.getParameter("append-session",
+                    (String)this.settings.get("append-session"));
+            boolean cs = true;
+            if (create_session != null) {
+                cs = BooleanUtils.toBoolean(create_session.trim());
             }
-            if (append_session != null && BooleanUtils.toBoolean(append_session.trim())) {
-                as = true;
-            }
+            boolean as = BooleanUtils.toBoolean(append_session.trim());
 
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
@@ -185,8 +181,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                     }
                 }
 
-                HashMap actionMap = this.propagateParameters(conf, rs,
-                        session);
+                HashMap actionMap = this.propagateParameters(conf, rs, session);
                 if (!conn.getAutoCommit()) {
                     conn.commit();
                 }
@@ -207,9 +202,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         conn.rollback();
                     }
                 } catch (Exception se) {
-                    /*
-                     *  ignore
-                     */
+                    // ignore
                 }
             }
             getLogger().error("Exception: ", e);
@@ -225,15 +218,12 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 try {
                     conn.close();
                 } catch (Exception e) {
-                    /*
-                     *  ignore
-                     */
+                    // ignore
                 }
             }
         }
         return null;
     }
-
 
     /**
      *  Gets the authQuery attribute of the DatabaseCookieAuthenticatorAction
@@ -262,24 +252,13 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 }
                 dbcol = select[i].getAttribute("dbcol");
                 queryBuffer.append(dbcol);
-                try {
-                    cookie_name = select[i].getAttribute("cookie-name");
-                    if (cookie_name == null ||
-                            cookie_name.trim().equals("")) {
-                        continue;
-                    }
-                } catch (Exception e) {
+                cookie_name = select[i].getAttribute("cookie-name", "");
+                if (StringUtils.isEmpty(cookie_name.trim())) {
                     continue;
                 }
-                try {
-                    nullstr = select[i].getAttribute("nullable");
-                    if (nullstr != null) {
-                        nullstr = nullstr.trim();
-                    }
-                    if (BooleanUtils.toBoolean(nullstr)) {
-                        nullable = true;
-                    }
-                } catch (Exception e1) {
+                nullstr = select[i].getAttribute("nullable", "");
+                if (BooleanUtils.toBoolean(nullstr.trim())) {
+                    nullable = true;
                 }
                 /*
                  *  if there is a cookie name,
@@ -317,7 +296,6 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         }
     }
 
-
     /**
      *  Description of the Method
      *
@@ -331,7 +309,6 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         Configuration table = conf.getChild("table");
         Configuration[] select = table.getChildren("select");
         String session_param;
-        String type;
         HashMap map = new HashMap();
         try {
             for (int i = 0; i < select.length; i++) {
@@ -343,17 +320,11 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         /*
                          *  propagate to session
                          */
-                        try {
-                            type = select[i].getAttribute("type");
-                        } catch (Exception e) {
-                            type = null;
-                        }
-                        if (type == null || "".equals(type.trim())) {
-                            type = "string";
-                        }
                         Object o = null;
-                        if ("string".equals(type)) {
-                            o = s;
+                        String type = select[i].getAttribute("type", "");
+                        // "string" is the default type
+                        if (StringUtils.isEmpty(type.trim()) || "string".equals(type)) {
+                            o = s;      
                         } else if ("long".equals(type)) {
                             Long l = Long.decode(s);
                             o = l;
@@ -380,4 +351,3 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         return null;
     }
 }
-
