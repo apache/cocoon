@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,27 +29,37 @@ import org.xml.sax.ext.LexicalHandler;
 import org.w3c.dom.Node;
 
 /**
- * A special purpose <code>XMLConsumer</code> used for including files.
- * It basically ignores the <code>startDocument</code>,
- * </code>endDocument</code>, <code>startDTD</code> and <code>endDTD</code>
- * messages.
+ * A special purpose <code>XMLConsumer</code> which can:
+ * <ul>
+ * <li>Trim empty characters if
+ *     {@link #setIgnoreEmptyCharacters(boolean) ignoreEmptyCharacters} is set.
+ * <li>Ignore root element if
+ *     {@link #setIgnoreRootElement(boolean) ignoreRootElement} is set.
+ * <li>Ignore startDocument, endDocument events.
+ * <li>Ignore startDTD, endDTD, and all comments within DTD.
+ * </ul>
  *
+ * <p>It is more complicated version of {@link EmbeddedXMLPipe} which, except
+ * being used to include other files into the SAX events stream, can perform
+ * optional operations described above.</p>
+ *
+ * @see EmbeddedXMLPipe
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: IncludeXMLConsumer.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class IncludeXMLConsumer implements XMLConsumer {
 
     /** The TrAX factory for serializing xml */
-    final private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    private static final TransformerFactory FACTORY = TransformerFactory.newInstance();
 
-    final private ContentHandler contentHandler;
-    final private LexicalHandler lexicalHandler;
+    private final ContentHandler contentHandler;
+    private final LexicalHandler lexicalHandler;
 
-    private boolean ignoreEmptyCharacters = false;
-    private boolean ignoreRootElement = false;
+    private boolean ignoreEmptyCharacters;
+    private boolean ignoreRootElement;
     private int     ignoreRootElementCount;
-    private boolean inDTD = false;
+    private boolean inDTD;
 
     /**
      * Constructor
@@ -72,11 +82,13 @@ public class IncludeXMLConsumer implements XMLConsumer {
      */
     public IncludeXMLConsumer (ContentHandler contentHandler) {
         this.contentHandler = contentHandler;
-        this.lexicalHandler = (contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null);
+        this.lexicalHandler = contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null;
     }
 
     /**
-     * Include a node into the current chain.
+     * Utility method to stream a DOM node into the provided content handler,
+     * lexical handler.
+     *
      * @param node The DOM Node to be included
      * @param contentHandler The SAX ContentHandler receiving the information
      * @param lexicalHandler The SAX LexicalHandler receiving the information (optional)
@@ -88,7 +100,7 @@ public class IncludeXMLConsumer implements XMLConsumer {
         if (node != null) {
             try {
                 IncludeXMLConsumer filter = new IncludeXMLConsumer(contentHandler, lexicalHandler);
-                Transformer transformer = transformerFactory.newTransformer();
+                Transformer transformer = FACTORY.newTransformer();
                 DOMSource source = new DOMSource(node);
                 SAXResult result = new SAXResult(filter);
                 result.setLexicalHandler(filter);
@@ -102,23 +114,27 @@ public class IncludeXMLConsumer implements XMLConsumer {
     }
 
     /**
-     * Controll SAX EventHandling
-     * If set to <CODE>true</CODE> all empty characters events are ignored.
-     * The default is <CODE>false</CODE>.
+     * Control SAX event handling.
+     * If set to <code>true</code> all empty characters events are ignored.
+     * The default is <code>false</code>.
      */
     public void setIgnoreEmptyCharacters(boolean value) {
         this.ignoreEmptyCharacters = value;
     }
 
     /**
-     * Controll SAX EventHandling
-     * If set to <CODE>true</CODE> the root element is ignored.
-     * The default is <CODE>false</CODE>.
+     * Control SAX event handling.
+     * If set to <code>true</code> the root element is ignored.
+     * The default is <code>false</code>.
      */
     public void setIgnoreRootElement(boolean value) {
         this.ignoreRootElement = value;
         this.ignoreRootElementCount = 0;
     }
+
+    //
+    // ContentHandler interface
+    //
 
     public void setDocumentLocator(Locator loc) {
         this.contentHandler.setDocumentLocator(loc);
@@ -159,7 +175,7 @@ public class IncludeXMLConsumer implements XMLConsumer {
         if (this.ignoreEmptyCharacters) {
             String text = new String(ch, start, end).trim();
             if (text.length() > 0) {
-                this.contentHandler.characters(text.toCharArray(),0,text.length());
+                this.contentHandler.characters(text.toCharArray(), 0, text.length());
             }
         } else {
             this.contentHandler.characters(ch, start, end);
@@ -180,15 +196,19 @@ public class IncludeXMLConsumer implements XMLConsumer {
         this.contentHandler.skippedEntity(ent);
     }
 
+    //
+    // LexicalHandler interface
+    //
+
     public void startDTD(String name, String public_id, String system_id)
     throws SAXException {
         // Ignored
-        inDTD = true;
+        this.inDTD = true;
     }
 
     public void endDTD() throws SAXException {
         // Ignored
-        inDTD = false;
+        this.inDTD = false;
     }
 
     public void startEntity(String name) throws SAXException {
@@ -215,8 +235,7 @@ public class IncludeXMLConsumer implements XMLConsumer {
         }
     }
 
-    public void comment(char ary[], int start, int length)
-        throws SAXException {
+    public void comment(char ary[], int start, int length) throws SAXException {
         if (!inDTD && lexicalHandler != null) {
             lexicalHandler.comment(ary,start,length);
         }
