@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -59,12 +57,14 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 
+import java.util.Map;
+
 /**
  * A set of constants and methods to access the content of the context
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.4 2003/06/01 15:55:35 vgritsenko Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.5 2003/10/22 14:13:52 bloritsch Exp $
  */
 
 public final class ContextHelper {

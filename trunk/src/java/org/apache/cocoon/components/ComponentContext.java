@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.components;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
+
+import java.util.Map;
 
 /**
  * This is the {@link Context} implementation for Cocoon components.
@@ -62,14 +62,14 @@ import org.apache.avalon.framework.context.DefaultContext;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.2 2003/05/23 12:14:04 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.3 2003/10/22 14:13:52 bloritsch Exp $
  */
 
-public class ComponentContext 
+public class ComponentContext
     extends DefaultContext {
 
     protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '.';
-    
+
     /**
      * Create a Context with specified data and parent.
      *
@@ -116,14 +116,14 @@ public class ComponentContext
     public Object get( final Object key )
     throws ContextException {
         if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
-            return CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+            return RequestLifecycleHelper.getCurrentEnvironment().getObjectModel();
         }
         if ( key instanceof String ) {
             String stringKey = (String)key;
             if ( stringKey.startsWith(OBJECT_MODEL_KEY_PREFIX) ) {
-                final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+                final Map objectModel = RequestLifecycleHelper.getCurrentEnvironment().getObjectModel();
                 String objectKey = stringKey.substring(OBJECT_MODEL_KEY_PREFIX.length());
-                
+
                 Object o = objectModel.get( objectKey );
                 if ( o == null ) {
                     final String message = "Unable to locate " + key;

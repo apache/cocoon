@@ -50,13 +50,12 @@
 */
 package org.apache.cocoon.components;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Components implementing this marker interface have a lifecycle of one
@@ -67,16 +66,18 @@ import org.xml.sax.SAXException;
  * not available to a subrequest.
  * In addition, the first time this component is looked up during a request,
  * the {@link #setup(SourceResolver, Map)} method is called.
- * 
+ *
  * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
- * 
+ *
+ * TODO: POOLABLE
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.5 2003/09/02 10:26:18 cziegeler Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.6 2003/10/22 14:13:52 bloritsch Exp $
  */
-public interface RequestLifecycleComponent extends Poolable {
+public interface RequestLifecycleComponent {
 
     /**
-     * Set the {@link SourceResolver} and the objectModel 
+     * Set the {@link SourceResolver} and the objectModel
      * used to process the current request.
      */
     void setup(SourceResolver resolver, Map objectModel)

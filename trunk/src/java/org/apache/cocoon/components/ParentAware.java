@@ -61,7 +61,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * component and the parent have to be both ThreadSafe!
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ParentAware.java,v 1.1 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: ParentAware.java,v 1.2 2003/10/22 14:13:52 bloritsch Exp $
  */
 public interface ParentAware
     extends ThreadSafe {

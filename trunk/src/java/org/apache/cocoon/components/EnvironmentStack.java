@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * cocoon protocol.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.2 2003/10/08 20:18:34 cziegeler Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.3 2003/10/22 14:13:52 bloritsch Exp $
  */
 final class EnvironmentStack 
     extends ArrayStack 

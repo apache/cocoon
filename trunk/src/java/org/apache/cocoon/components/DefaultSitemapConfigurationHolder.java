@@ -56,26 +56,26 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.3 2003/04/19 19:49:33 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.4 2003/10/22 14:13:52 bloritsch Exp $
  */
-public final class DefaultSitemapConfigurationHolder 
+public final class DefaultSitemapConfigurationHolder
     implements SitemapConfigurationHolder {
 
     /** The role of the sitemap component */
     private String role;
-    
+
     /** The prepared configurations indexed by the ChainedConfiguration */
     private Map preparedConfigurations;
-    
+
     public DefaultSitemapConfigurationHolder(String role) {
         this.role = role;
     }
-    
+
     /**
      * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
-        Map confs = CocoonComponentManager.getCurrentProcessor().getComponentConfigurations();
+        Map confs = RequestLifecycleHelper.getCurrentProcessor().getComponentConfigurations();
         return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 
@@ -95,10 +95,10 @@ public final class DefaultSitemapConfigurationHolder
     /**
      * @see SitemapConfigurationHolder#setPreparedConfiguration(ChainedConfiguration, java.lang.Object)
      */
-    public void setPreparedConfiguration(ChainedConfiguration configuration, 
+    public void setPreparedConfiguration(ChainedConfiguration configuration,
                                           Object preparedConfig) {
         if ( null == this.preparedConfigurations ) {
-            this.preparedConfigurations = new HashMap(5);                                              
+            this.preparedConfigurations = new HashMap(5);
         }
         this.preparedConfigurations.put(configuration, preparedConfig);
     }

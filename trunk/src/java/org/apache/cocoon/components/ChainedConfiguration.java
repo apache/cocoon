@@ -60,7 +60,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @since 2.1
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ChainedConfiguration.java,v 1.2 2003/03/19 15:21:19 cziegeler Exp $
+ * @version CVS $Id: ChainedConfiguration.java,v 1.3 2003/10/22 14:13:52 bloritsch Exp $
  */
 public final class ChainedConfiguration implements Configuration {
 

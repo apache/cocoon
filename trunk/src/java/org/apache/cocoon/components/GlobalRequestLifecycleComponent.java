@@ -50,32 +50,32 @@
 */
 package org.apache.cocoon.components;
 
-import java.io.IOException;
-import java.util.Map;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Components implementing this marker interface have a lifecycle of one
  * request-response cycle. This means if during one cycle a component accepting this
  * interface is looked up several times, it's always the same instance.
- * Each internal subrequest happens in the same cycle, so an instance looked up in 
+ * Each internal subrequest happens in the same cycle, so an instance looked up in
  * either the "main" request or in any of the subrequests is available to all
- * other requests in this cycle. 
+ * other requests in this cycle.
  * In addition, the first time this component is looked up during a request,
  * the {@link #setup(SourceResolver, Map)} method is called.
  *
  * @see org.apache.cocoon.components.RequestLifecycleComponent
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.4 2003/09/02 10:26:18 cziegeler Exp $
+ * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.5 2003/10/22 14:13:52 bloritsch Exp $
  */
 public interface GlobalRequestLifecycleComponent {
 
     /**
-     * Set the {@link SourceResolver} and the objectModel 
+     * Set the {@link SourceResolver} and the objectModel
      * used to process the current request.
      */
     void setup(SourceResolver resolver, Map objectModel)
