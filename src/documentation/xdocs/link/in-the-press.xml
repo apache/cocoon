@@ -15,6 +15,13 @@
 		<s1 title="English articles">
 			<ul>
         <li>
+          <link href="http://www.xml.com/pub/a/2003/04/23/cocoon-magazine.html">
+            Online Magazines with Apache Cocoon
+          </link>
+          <br/>
+          An article about aggregation of news with RSS.
+        </li>
+        <li>
           <link href="http://webservices.xml.com/pub/a/ws/2003/03/18/cocoon.html">
             Creating SOAP Services with Cocoon
           </link>
