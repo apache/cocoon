@@ -93,9 +93,9 @@
      <li>Important is the size of the documents that will be cached, because
      caching appears to be very time consuming process.</li>
 
-     <li>If you are using the Caching Pipeline, you should be able to experience 
-     better performance each time you request it. However, if your cache is set 
-     too small to keep the entire XML in memory, the cache will be of no benefit.</li>
+     <li>Use the Caching Pipelines in your sitemaps where relevant.</li>
+     <li>If your cache is set too small to keep the entire XML in memory,
+      then the cache will be of no benefit.</li>
 
      <li>Watch the cachability in the log files, and make sure that things
       are being fed from the cache.</li>
@@ -107,13 +107,13 @@
      names - in 2.0.X series), and the deeper cocoon is located in the
      filesystem, the longer keys are becoming. Obviously, longer keys will
      take more time to process them. In worst case scenario, slowdown up to
-     10% could be achieved (unscientifical observations, do your own
+     10% could be achieved (unscientific observations, do your own
      test).</li>
      
    </ul>
      <p>More information about caching can be found 
        <link href="userdocs/concepts/caching.html">in the Caching documentation</link>.
-       Especially have a look at the information about the expires configuration.
+       Especially look at the information about the expires configuration.
      </p>
  </s1>
  
@@ -163,6 +163,8 @@
 
      <li>Try to keep the size of the documents going through the pipeline
      small. To big documents slows down translation.</li>
+
+     <li>Use the Caching Pipelines in your sitemaps where relevant.</li>
      
      <li>Use the <code>expires</code> parameter (see above) as frequently as you can.
      	It improves the end user experience dramatically. Browsers and intermediate
