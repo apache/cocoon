@@ -36,7 +36,7 @@ import org.apache.cocoon.components.cron.ServiceableCronJob;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
  * @author <a href="http://apache.org/~jeremy/">Jeremy Quinn</a>
- * @version CVS $Id: CocoonPipelineCronJob.java,v 1.1 2004/06/09 10:55:40 jeremy Exp $
+ * @version CVS $Id: CocoonPipelineCronJob.java,v 1.2 2004/07/21 07:30:07 cziegeler Exp $
  *
  * @since 2.1.5
  */
@@ -47,13 +47,13 @@ public class CocoonPipelineCronJob
 	private String CONFIG_FILE_PARAM = "pipeline";
 	private String CONFIG_FILE_DEAFAULT= "";
 	private String pipeline = "";
-	private SourceResolver resolver = null;
-	private Source src = null;
 
 	public void execute(String name) {
 		if (getLogger ().isDebugEnabled ()) {
 			getLogger().debug ("CocoonPipelineCronJob: " + name + ", calling pipeline: " + pipeline);
 		}
+        SourceResolver resolver = null;
+        Source src = null;
 		try {
 			resolver = (SourceResolver)this.manager.lookup (SourceResolver.ROLE);
 			src = resolver.resolveURI ("cocoon://" + pipeline);
