@@ -125,9 +125,6 @@ public class CocoonServlet extends HttpServlet {
      */
     protected DefaultContext appContext = new DefaultContext();
 
-    private File uploadDir;
-    private File workDir;
-    private File cacheDir;
     private String containerEncoding;
 
     protected ServletContext servletContext;
@@ -260,28 +257,29 @@ public class CocoonServlet extends HttpServlet {
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
         final String workDirParam = this.settings.getWorkDirectory();
+        File workDir;
         if (workDirParam != null) {
             if (this.servletContextPath == null) {
                 // No context path : consider work-directory as absolute
-                this.workDir = new File(workDirParam);
+                workDir = new File(workDirParam);
             } else {
                 // Context path exists : is work-directory absolute ?
                 File workDirParamFile = new File(workDirParam);
                 if (workDirParamFile.isAbsolute()) {
                     // Yes : keep it as is
-                    this.workDir = workDirParamFile;
+                    workDir = workDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.workDir = new File(servletContextPath, workDirParam);
+                    workDir = new File(servletContextPath, workDirParam);
                 }
             }
         } else {
-            this.workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
-            this.workDir = new File(workDir, "cocoon-files");
+            workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
+            workDir = new File(workDir, "cocoon-files");
         }
-        this.workDir.mkdirs();
+        workDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
-        this.settings.setWorkDirectory(this.workDir.getAbsolutePath());
+        this.settings.setWorkDirectory(workDir.getAbsolutePath());
         
         String path = this.servletContextPath;
         // these two variables are just for debugging. We can't log at this point
@@ -335,67 +333,69 @@ public class CocoonServlet extends HttpServlet {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Servlet Context URL: " + this.servletContextURL);
             if (workDirParam != null) {
-                getLogger().debug("Using work-directory " + this.workDir);
+                getLogger().debug("Using work-directory " + workDir);
             } else {
-                getLogger().debug("Using default work-directory " + this.workDir);
+                getLogger().debug("Using default work-directory " + workDir);
             }
         }
 
         final String uploadDirParam = this.settings.getUploadDirectory();
+        File uploadDir;
         if (uploadDirParam != null) {
             if (this.servletContextPath == null) {
-                this.uploadDir = new File(uploadDirParam);
+                uploadDir = new File(uploadDirParam);
             } else {
                 // Context path exists : is upload-directory absolute ?
                 File uploadDirParamFile = new File(uploadDirParam);
                 if (uploadDirParamFile.isAbsolute()) {
                     // Yes : keep it as is
-                    this.uploadDir = uploadDirParamFile;
+                    uploadDir = uploadDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.uploadDir = new File(servletContextPath, uploadDirParam);
+                    uploadDir = new File(servletContextPath, uploadDirParam);
                 }
             }
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using upload-directory " + this.uploadDir);
+                getLogger().debug("Using upload-directory " + uploadDir);
             }
         } else {
-            this.uploadDir = new File(workDir, "upload-dir" + File.separator);
+            uploadDir = new File(workDir, "upload-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using default upload-directory " + this.uploadDir);
+                getLogger().debug("Using default upload-directory " + uploadDir);
             }
         }
-        this.uploadDir.mkdirs();
-        this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
-        this.settings.setUploadDirectory(this.uploadDir.getAbsolutePath());
+        uploadDir.mkdirs();
+        this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, uploadDir);
+        this.settings.setUploadDirectory(uploadDir.getAbsolutePath());
 
         String cacheDirParam = this.settings.getCacheDirectory();
+        File cacheDir;
         if (cacheDirParam != null) {
             if (this.servletContextPath == null) {
-                this.cacheDir = new File(cacheDirParam);
+                cacheDir = new File(cacheDirParam);
             } else {
                 // Context path exists : is cache-directory absolute ?
                 File cacheDirParamFile = new File(cacheDirParam);
                 if (cacheDirParamFile.isAbsolute()) {
                     // Yes : keep it as is
-                    this.cacheDir = cacheDirParamFile;
+                    cacheDir = cacheDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.cacheDir = new File(servletContextPath, cacheDirParam);
+                    cacheDir = new File(servletContextPath, cacheDirParam);
                 }
             }
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using cache-directory " + this.cacheDir);
+                getLogger().debug("Using cache-directory " + cacheDir);
             }
         } else {
-            this.cacheDir = IOUtils.createFile(workDir, "cache-dir" + File.separator);
+            cacheDir = IOUtils.createFile(workDir, "cache-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("cache-directory was not set - defaulting to " + this.cacheDir);
+                getLogger().debug("cache-directory was not set - defaulting to " + cacheDir);
             }
         }
-        this.cacheDir.mkdirs();
-        this.appContext.put(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
-        this.settings.setCacheDirectory(this.cacheDir.getAbsolutePath());
+        cacheDir.mkdirs();
+        this.appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
+        this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         this.appContext.put(Constants.CONTEXT_CONFIG_URL,
                             this.getConfigFile(this.settings.getConfiguration()));
@@ -413,7 +413,7 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
         this.requestFactory = new RequestFactory(settings.isAutosaveUploads(),
-                                                 this.uploadDir,
+                                                 new File(settings.getUploadDirectory()),
                                                  settings.isAllowOverwrite(),
                                                  settings.isSilentlyRename(),
                                                  settings.getMaxUploadSize(),
@@ -421,8 +421,11 @@ public class CocoonServlet extends HttpServlet {
         // Add the servlet configuration
         this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         this.createCocoon();
-        this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is initialized and ready to serve requests.");
-
+        if ( this.exception == null ) {
+            this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
+        } else {
+            this.servletContext.log("Errors during initializing Apache Cocoon " + Constants.VERSION + " : " + this.exception.getMessage());
+        }
     }
 
     /**
@@ -575,7 +578,7 @@ public class CocoonServlet extends HttpServlet {
                 libList.add(st.nextToken());
             }
 
-            File root = new File(this.workDir, "lib");
+            File root = new File(this.settings.getWorkDirectory(), "lib");
             root.mkdirs();
 
             File[] oldLibs = root.listFiles();
@@ -676,7 +679,7 @@ public class CocoonServlet extends HttpServlet {
                                 getLogger().debug("extraClassPath is not absolute pre-pending context path: " + path);
                             }
                         } else {
-                            path = this.workDir.toString() + s;
+                            path = this.settings.getWorkDirectory() + s;
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("extraClassPath is not absolute pre-pending work-directory: " + path);
                             }
@@ -699,9 +702,9 @@ public class CocoonServlet extends HttpServlet {
 
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
-        subcontext.put("context-work", this.workDir);
+        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
         if (this.servletContextPath == null) {
-            File logSCDir = new File(this.workDir, "log");
+            File logSCDir = new File(this.settings.getWorkDirectory(), "log");
             logSCDir.mkdirs();
             subcontext.put("context-root", logSCDir.toString());
         } else {
