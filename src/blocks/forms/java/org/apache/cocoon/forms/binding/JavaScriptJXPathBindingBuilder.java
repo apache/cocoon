@@ -69,11 +69,11 @@ import org.w3c.dom.Element;
  */
 public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase implements Contextualizable {
 
-	private Context avalonContext;
-	
-	public void contextualize(Context context) throws ContextException {
-		this.avalonContext = context;
-	}
+    private Context avalonContext;
+
+    public void contextualize(Context context) throws ContextException {
+        this.avalonContext = context;
+    }
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
@@ -93,7 +93,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
                 loadScript = JavaScriptHelper.buildFunction(loadElem, JavaScriptJXPathBinding.LOAD_PARAMS);
             }
 
-            	// Build save script
+            // Build save script
             Function saveScript = null;
             if (commonAtts.saveEnabled) {
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
@@ -108,37 +108,37 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
             Map childBindings;
             Element[] children = DomHelper.getChildElements(element, BindingManager.NAMESPACE, "child-binding");
             if (children.length == 0) {
-            		childBindings = Collections.EMPTY_MAP;
+                childBindings = Collections.EMPTY_MAP;
             } else {
-            		childBindings = new HashMap();
-            		for (int i = 0; i < children.length; i++) {
-            			Element child = children[i];
+                childBindings = new HashMap();
+                for (int i = 0; i < children.length; i++) {
+                    Element child = children[i];
 
-            			// Get the binding name and check its uniqueness
-            			String name = DomHelper.getAttribute(child, "name");
-            			if (childBindings.containsKey(name)) {
-            				throw new BindingException("Duplicate name '" + name + "' at " + DomHelper.getLocation(child));
-            			}
-            			
-            			// Build the child binding
-            			JXPathBindingBase[] bindings = assistant.makeChildBindings(child);
-            			if (bindings == null) {
-            				bindings = new JXPathBindingBase[0];
-            			}
-            			
-            			ComposedJXPathBindingBase composedBinding = new ComposedJXPathBindingBase(commonAtts, bindings);
-            			composedBinding.enableLogging(getLogger());
-            			childBindings.put(name, composedBinding);
-            		}
+                    // Get the binding name and check its uniqueness
+                    String name = DomHelper.getAttribute(child, "name");
+                    if (childBindings.containsKey(name)) {
+                        throw new BindingException("Duplicate name '" + name + "' at " + DomHelper.getLocation(child));
+                    }
+
+                    // Build the child binding
+                    JXPathBindingBase[] bindings = assistant.makeChildBindings(child);
+                    if (bindings == null) {
+                        bindings = new JXPathBindingBase[0];
+                    }
+
+                    ComposedJXPathBindingBase composedBinding = new ComposedJXPathBindingBase(commonAtts, bindings);
+                    composedBinding.enableLogging(getLogger());
+                    childBindings.put(name, composedBinding);
+                }
             }
 
             JXPathBindingBase result = new JavaScriptJXPathBinding(this.avalonContext, commonAtts, id, path, loadScript, saveScript,
-            		Collections.unmodifiableMap(childBindings));
+                Collections.unmodifiableMap(childBindings));
             result.enableLogging(getLogger());
             return result;
 
         } catch(BindingException be) {
-        	    throw be;
+            throw be;
         } catch(Exception e) {
             throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);
         }

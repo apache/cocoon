@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * <pre><code>
  * &lt;fb:new id="<i>widget-id</i>"&gt;
  *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>"
- *       direction="<i>load|save</i>" lenient="<i>true/false</i>" />
+ *       direction="<i>load|save</i>" lenient="<i>true/false</i>"/&gt;
  * &lt;/fb:new&gt;
  * </code></pre>
  *
