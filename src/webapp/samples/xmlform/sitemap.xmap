@@ -133,10 +133,11 @@
 
       <map:match pattern="flow">
         <map:call function="xmlForm">
-          <map:parameter name="xml-form-function" value="feedbackWizard"/>
-	  <map:parameter name="xml-form-id" value="form-feedback"/>
-          <map:parameter name="xml-form-validator-schema-ns" value="http://www.ascc.net/xml/schematron"/>
-          <map:parameter name="xml-form-validator-schema" value="schematron/wizard-xmlform-sch-report.xml"/>
+          <map:parameter name="xmlform-function" value="feedbackWizard"/>
+	  <map:parameter name="xmlform-id" value="form-feedback"/>
+          <map:parameter name="xmlform-validator-schema-ns" value="http://www.ascc.net/xml/schematron"/>
+          <map:parameter name="xmlform-validator-schema" value="schematron/wizard-xmlform-sch-report.xml"/>
+          <map:parameter name="xmlform-scope" value="session"/>
         </map:call>
       </map:match>
 
