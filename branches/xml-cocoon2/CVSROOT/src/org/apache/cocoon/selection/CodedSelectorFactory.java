@@ -12,52 +12,50 @@ import org.apache.avalon.ConfigurationException;
 import org.w3c.dom.traversal.NodeIterator;
 import org.apache.cocoon.CodeFactory;
 
+
 /**
  * This class generates source code which tests the enviromnent based on
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-05 17:28:35 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-10 14:18:39 $
  */
-public class CodedSelectorFactory implements CodeFactory
-{
+public class CodedSelectorFactory extends java.lang.Object
+        implements CodeFactory {
 
-    public String generateParameterSource(NodeIterator conf)
-    throws ConfigurationException
-    {
+
+    public String generateParameterSource( NodeIterator conf )
+            throws ConfigurationException {
         return "org.apache.cocoon.selection.helpers.CodedSelectorHelper";
     }
 
-    public String generateClassSource (
-      String prefix,
-      String test,
-      NodeIterator conf
-    )
-    throws ConfigurationException
-    {
+
+    public String generateClassSource( String prefix, String test,
+            NodeIterator conf ) throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
-        sb.append("static org.apache.cocoon.selection.helpers.CodedSelectorHelper ")
-        .append(prefix)
-        .append("_expr = new org.apache.cocoon.selection.helpers.CodedSelectorHelper() {")
-        .append("public boolean evaluate(Map objectModel) {")
-        .append("initialize(objectModel);")
-        .append("return (" + test + ");")
-        .append("}")
-        .append("};");
+        sb.append("static org.apache.cocoon.selection.helpers.CodedSelectorHelper " )
+          .append( prefix )
+          .append( "_expr = new org.apache.cocoon.selection.helpers.CodedSelectorHelper() {" )
+          .append( "public boolean evaluate(Map objectModel) {" )
+          .append( "initialize(objectModel);" )
+          .append( "return (" + test + ");" )
+          .append( "}" )
+          .append( "};" );
         return sb.toString();
     }
 
-    public String generateMethodSource (NodeIterator conf)
-    throws ConfigurationException
-    {
+
+    public String generateMethodSource( NodeIterator conf )
+            throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("try {")
-        .append("return pattern.evaluate(objectModel);")
-        .append("} catch (Exception e) {")
-        .append("log.error(\"CodedSelector Exception : \" + e.getMessage() + \", returning false\");")
-        .append("return false;")
-        .append("}");
+        sb.append( "try {" )
+          .append("return pattern.evaluate(objectModel);" )
+          .append("} catch (Exception e) {" )
+          .append("log.error(\"CodedSelector Exception : \"
+                  + e.getMessage() + \", returning false\");" )
+          .append( "return false;" )
+          .append( "}" );
 
         return sb.toString();
     }
