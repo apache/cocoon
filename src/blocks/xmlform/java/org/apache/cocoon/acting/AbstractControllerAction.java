@@ -53,24 +53,15 @@ package org.apache.cocoon.acting;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.validation.Schema;
-import org.apache.cocoon.components.validation.SchemaFactory;
 import org.apache.cocoon.components.validation.Validator;
 import org.apache.cocoon.components.xmlform.Form;
-import org.apache.cocoon.components.xmlform.FormListener;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.source.Source;
-import org.xml.sax.InputSource;
 
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -85,7 +76,7 @@ import java.util.Map;
  * Warning! This classes is an experimental one.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractControllerAction.java,v 1.1 2003/05/13 12:06:12 stephan Exp $
+ * @version CVS $Id: AbstractControllerAction.java,v 1.2 2003/05/15 10:35:14 bruno Exp $
  */
 public abstract class AbstractControllerAction
   extends AbstractComplementaryConfigurableAction implements ThreadSafe {
