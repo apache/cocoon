@@ -32,7 +32,7 @@ import java.util.Map;
  * abstract class helps in implementing a custom reader.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: AbstractReader.java,v 1.4 2004/03/08 14:03:32 cziegeler Exp $
+ * @version CVS $Id: AbstractReader.java,v 1.5 2004/03/12 15:14:36 cziegeler Exp $
  */
 public abstract class AbstractReader
   extends AbstractLogEnabled
@@ -65,7 +65,12 @@ public abstract class AbstractReader
      * Set the <code>OutputStream</code>
      */
     public void setOutputStream(OutputStream out) {
-          this.out = new BufferedOutputStream(out);
+        if ( out instanceof BufferedOutputStream 
+             || out instanceof org.apache.cocoon.util.BufferedOutputStream ) {
+            this.out = out;
+        } else {
+            this.out = new BufferedOutputStream(out, 1536);
+        }
     }
 
     /**
