@@ -97,7 +97,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.31 2004/06/23 19:46:06 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.32 2004/06/23 20:09:04 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -466,7 +466,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
-        this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
+        this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
 
         this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
@@ -543,7 +543,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     protected String getClassPath() throws ServletException {
+    protected String getClassPath() throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
 
         File root = null;
@@ -616,7 +616,7 @@ public class CocoonServlet extends HttpServlet {
         buildClassPath.append(File.pathSeparatorChar)
                       .append(getExtraClassPath());
         return buildClassPath.toString();
-     }
+    }
 
     private File extractLibraries() {
         try {
@@ -774,13 +774,13 @@ public class CocoonServlet extends HttpServlet {
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
-        formatter.setFormat( "%7.7{priority} %{time}   [%8.8{category}] " +
-                             "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}" );
-        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter );
+        formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
+                            "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
+        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter);
 
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
-        defaultHierarchy.setErrorHandler(errorHandler );
+        defaultHierarchy.setErrorHandler(errorHandler);
         defaultHierarchy.setDefaultLogTarget(servTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
@@ -816,7 +816,7 @@ public class CocoonServlet extends HttpServlet {
 
                 // test if this is a qualified url
                 InputStream is = null;
-                if ( logkitConfig.indexOf(':') == -1) {
+                if (logkitConfig.indexOf(':') == -1) {
                     is = this.servletContext.getResourceAsStream(logkitConfig);
                     if (is == null) is = new FileInputStream(logkitConfig);
                 } else {
@@ -827,6 +827,7 @@ public class CocoonServlet extends HttpServlet {
                 final Configuration conf = builder.build(is);
                 ContainerUtil.configure(loggerManager, conf);
             }
+
             // let's configure log4j
             final String log4jConfig = getInitParameter("log4j-config", null);
             if ( log4jConfig != null ) {
@@ -845,7 +846,6 @@ public class CocoonServlet extends HttpServlet {
             }
 
             ContainerUtil.initialize(loggerManager);
-
         } catch (Exception e) {
             errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
@@ -1372,11 +1372,11 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().info("Reloading from: " + configFile.toExternalForm());
             }
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            ContainerUtil.enableLogging(c, getCocoonLogger() );
-            c.setLoggerManager( getLoggerManager() );
+            ContainerUtil.enableLogging(c, getCocoonLogger());
+            c.setLoggerManager(getLoggerManager());
             ContainerUtil.contextualize(c, this.appContext);
             final ComponentManager parent = this.getParentComponentManager();
-            if ( parent != null ) {
+            if (parent != null) {
                 ContainerUtil.compose(c, parent);
             }
             if (this.enableInstrumentation) {
@@ -1423,8 +1423,7 @@ public class CocoonServlet extends HttpServlet {
      * @return an <code>InstrumentManager</code> instance
      */
     private InstrumentManager getInstrumentManager()
-        throws Exception
-    {
+    throws Exception {
         String imConfig = getInitParameter("instrumentation-config");
         if (imConfig == null) {
             throw new ServletException("Please define the init-param 'instrumentation-config' in your web.xml");
@@ -1547,13 +1546,14 @@ public class CocoonServlet extends HttpServlet {
     /** Convenience method to access boolean servlet parameters */
     protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
         String value = getInitParameter(name);
-        if (value != null) {
-            return BooleanUtils.toBoolean(value);
+        if (value == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
         }
-        if (getLogger() != null && getLogger().isDebugEnabled()) {
-            getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-        }
-        return defaultValue;
+
+        return BooleanUtils.toBoolean(value);
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {

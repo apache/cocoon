@@ -15,11 +15,13 @@
  */
 package org.apache.cocoon.portlet;
 
+import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -28,6 +30,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
@@ -45,6 +48,8 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.cocoon.util.log.Log4JConfigurator;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
@@ -53,6 +58,7 @@ import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
 import org.apache.log.util.DefaultErrorHandler;
+import org.apache.log4j.LogManager;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -85,7 +91,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.8 2004/06/23 19:48:04 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.9 2004/06/23 20:09:05 vgritsenko Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -790,7 +796,7 @@ public class CocoonPortlet extends GenericPortlet {
     protected void initLogger() {
         final String logLevel = getInitParameter("log-level", "INFO");
 
-        final String accesslogger = getInitParameter("servlet-logger");
+        final String accesslogger = getInitParameter("servlet-logger", "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
@@ -805,8 +811,15 @@ public class CocoonPortlet extends GenericPortlet {
         defaultHierarchy.setDefaultLogTarget(servTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-        final LogKitLoggerManager logKitLoggerManager = new LogKitLoggerManager(defaultHierarchy);
-        logKitLoggerManager.enableLogging(logger);
+        final String loggerManagerClass =
+            this.getInitParameter("logger-class", LogKitLoggerManager.class.getName());
+
+        // the log4j support requires currently that the log4j system is already configured elsewhere
+
+        final LoggerManager loggerManager =
+                newLoggerManager(loggerManagerClass, defaultHierarchy);
+        ContainerUtil.enableLogging(loggerManager, logger);
+
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("portlet-context", this.portletContext);
         if (this.portletContextPath == null) {
@@ -821,32 +834,65 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         try {
-            logKitLoggerManager.contextualize(subcontext);
-            this.loggerManager = logKitLoggerManager;
+            ContainerUtil.contextualize(loggerManager, subcontext);
+            this.loggerManager = loggerManager;
 
-            //Configure the logkit management
-            String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
+            if (loggerManager instanceof Configurable) {
+                //Configure the logkit management
+                String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
 
-            // test if this is a qualified url
-            InputStream is = null;
-            if (logkitConfig.indexOf(':') == -1) {
-                is = this.portletContext.getResourceAsStream(logkitConfig);
-                if (is == null) is = new FileInputStream(logkitConfig);
-            } else {
-                URL logkitURL = new URL(logkitConfig);
-                is = logkitURL.openStream();
+                // test if this is a qualified url
+                InputStream is = null;
+                if (logkitConfig.indexOf(':') == -1) {
+                    is = this.portletContext.getResourceAsStream(logkitConfig);
+                    if (is == null) is = new FileInputStream(logkitConfig);
+                } else {
+                    URL logkitURL = new URL(logkitConfig);
+                    is = logkitURL.openStream();
+                }
+                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+                final Configuration conf = builder.build(is);
+                ContainerUtil.configure(loggerManager, conf);
             }
-            final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            final Configuration conf = builder.build(is);
-            logKitLoggerManager.configure(conf);
+
+            // let's configure log4j
+            final String log4jConfig = getInitParameter("log4j-config", null);
+            if ( log4jConfig != null ) {
+                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
+
+                // test if this is a qualified url
+                InputStream is = null;
+                if ( log4jConfig.indexOf(':') == -1) {
+                    is = this.portletContext.getResourceAsStream(log4jConfig);
+                    if (is == null) is = new FileInputStream(log4jConfig);
+                } else {
+                    final URL log4jURL = new URL(log4jConfig);
+                    is = log4jURL.openStream();
+                }
+                configurator.doConfigure(is, LogManager.getLoggerRepository());
+            }
+
+            ContainerUtil.initialize(loggerManager);
         } catch (Exception e) {
             errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
 
-        if (accesslogger != null) {
-            this.log = logKitLoggerManager.getLoggerForCategory(accesslogger);
+        this.log = this.loggerManager.getLoggerForCategory(accesslogger);
+    }
+
+    private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
+        if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
+            return new LogKitLoggerManager(hierarchy);
+        } else if (loggerManagerClass.equals(Log4JLoggerManager.class.getName()) ||
+                   loggerManagerClass.equalsIgnoreCase("LOG4J")) {
+            return new Log4JLoggerManager();
         } else {
-            this.log = logKitLoggerManager.getLoggerForCategory("cocoon");
+            try {
+                Class clazz = Class.forName(loggerManagerClass);
+                return (LoggerManager)clazz.newInstance();
+            } catch (Exception e) {
+                return new LogKitLoggerManager(hierarchy);
+            }
         }
     }
 
@@ -980,8 +1026,12 @@ public class CocoonPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * Process the specified <code>ActionRequest</code> producing output
+     * on the specified <code>ActionResponse</code>.
+     */
     public void processAction(ActionRequest req, ActionResponse res)
-            throws PortletException, IOException {
+    throws PortletException, IOException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1145,8 +1195,12 @@ public class CocoonPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * Process the specified <code>RenderRequest</code> producing output
+     * on the specified <code>RenderResponse</code>.
+     */
     public void render(RenderRequest req, RenderResponse res)
-            throws PortletException, IOException {
+    throws PortletException, IOException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1450,7 +1504,7 @@ public class CocoonPortlet extends GenericPortlet {
         if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
             ((Disposable) parentComponentManager).dispose();
         }
-        
+
         parentComponentManager = null;
         if (parentComponentManagerClass != null) {
             try {
@@ -1476,11 +1530,11 @@ public class CocoonPortlet extends GenericPortlet {
         return parentComponentManager;
     }
 
-
     /**
      * Creates the Cocoon object and handles exception handling.
      */
-    private synchronized void createCocoon() throws PortletException {
+    private synchronized void createCocoon()
+    throws PortletException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1552,7 +1606,7 @@ public class CocoonPortlet extends GenericPortlet {
      * @return an <code>InstrumentManager</code> instance
      */
     private InstrumentManager getInstrumentManager()
-            throws Exception {
+    throws Exception {
         String imConfig = getInitParameter("instrumentation-config");
         if (imConfig == null) {
             throw new PortletException("Please define the init-param 'instrumentation-config' in your web.xml");
@@ -1603,7 +1657,7 @@ public class CocoonPortlet extends GenericPortlet {
      * changed or we are reloading.
      */
     private void getCocoon(final String reloadParam)
-            throws PortletException {
+    throws PortletException {
         if (this.allowReload) {
             boolean reload = false;
 
@@ -1680,9 +1734,9 @@ public class CocoonPortlet extends GenericPortlet {
                 getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
             }
             return defaultValue;
-        } else {
-            return BooleanUtils.toBoolean(value);
         }
+
+        return BooleanUtils.toBoolean(value);
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {
