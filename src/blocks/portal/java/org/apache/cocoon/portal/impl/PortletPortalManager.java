@@ -92,7 +92,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletPortalManager.java,v 1.3 2004/02/06 13:07:17 cziegeler Exp $
+ * @version CVS $Id: PortletPortalManager.java,v 1.4 2004/02/09 08:00:48 cziegeler Exp $
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
@@ -116,12 +116,19 @@ public class PortletPortalManager
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-        this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        // we have to somehow pass this component down to other components!
-        // This is ugly, but it's the only chance for sofisticated component containers
-        // that wrap component implementations!
-        this.servletConfig.getServletContext().setAttribute(PortalManager.ROLE, this);
         this.context = context;
+        try {
+            this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+            // we have to somehow pass this component down to other components!
+            // This is ugly, but it's the only chance for sofisticated component containers
+            // that wrap component implementations!
+            this.servletConfig.getServletContext().setAttribute(PortalManager.ROLE, this);
+        } catch (ContextException ignore) {
+            // we ignore the context exception
+            // this avoids startup errors if the portal is configured for the CLI
+            // environment
+            this.getLogger().warn("The JSR-168 support is disabled as the servlet context is not available.", ignore);
+        }
     }
 
     /* (non-Javadoc)
@@ -162,7 +169,9 @@ public class PortletPortalManager
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
-        this.initContainer();
+        if ( this.servletConfig != null ) {
+            this.initContainer();
+        }
     }
     
     /**
@@ -217,6 +226,12 @@ public class PortletPortalManager
     public void process() throws ProcessingException {
         // process the events
         super.process();
+        
+        // if we aren't running in a servlet environment, just skip the JSR-168 part
+        if ( this.servletConfig == null ) {
+            return;
+        }
+        
         // do we already have an environment?
         // if not, create one
         final Map objectModel = ContextHelper.getObjectModel(this.context);
