@@ -92,8 +92,8 @@
     <th>Notes</th>
    </tr>
    <tr>
-    <td>ant_1_1.jar</td>
-    <td>Ant 1.1</td>
+    <td>ant_1_3.jar</td>
+    <td>Ant 1.3</td>
     <td><link href="http://jakarta.apache.org/ant/index.html">jakarta.apache.org</link></td>
     <td>Cocoon build system (a bit like Make)</td>
     <td>No</td>
