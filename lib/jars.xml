@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.225 2004/06/07 13:10:41 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.226 2004/06/11 20:29:29 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -592,8 +592,8 @@
   <file>
     <title>Log4j</title>
     <description>Logging for java</description>
-    <used-by>DELI (deli block)</used-by>
-    <lib>optional/log4j-1.2.8.jar</lib>
+    <used-by>Core and DELI (deli block)</used-by>
+    <lib>core/log4j-1.2.8.jar</lib>
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 

@@ -76,6 +76,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.excalibur.instrument.InstrumentManager;
@@ -87,6 +88,7 @@ import org.apache.log.Priority;
 import org.apache.log.ErrorHandler;
 import org.apache.log.util.DefaultErrorHandler;
 import org.apache.log.output.ServletOutputLogTarget;
+import org.apache.log4j.LogManager;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -98,7 +100,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.29 2004/05/25 07:28:26 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.30 2004/06/11 20:29:29 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -825,6 +827,23 @@ public class CocoonServlet extends HttpServlet {
                 final Configuration conf = builder.build(is);
                 ContainerUtil.configure(loggerManager, conf);
             }
+            // let's configure log4j
+            final String log4jConfig = getInitParameter("log4j-config", null);
+            if ( log4jConfig != null ) {
+                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
+
+                // test if this is a qualified url
+                InputStream is = null;
+                if ( log4jConfig.indexOf(':') == -1) {
+                    is = this.servletContext.getResourceAsStream(log4jConfig);
+                    if (is == null) is = new FileInputStream(log4jConfig);
+                } else {
+                    final URL log4jURL = new URL(log4jConfig);
+                    is = log4jURL.openStream();
+                }
+                configurator.doConfigure(is, LogManager.getLoggerRepository());
+            }
+
             ContainerUtil.initialize(loggerManager);
 
         } catch (Exception e) {
