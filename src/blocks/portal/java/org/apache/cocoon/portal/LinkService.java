@@ -48,7 +48,7 @@ public interface LinkService extends Component {
 
     /**
      * Get the uri for this coplet containing the additional events.
-     * @param events The events to add: These can either be {@link Event}s or {@link ParameterDescription}s.
+     * @param events The events to add: These can either be {@link Event}s or {@link #ParameterDescription}s.
      * @return A URI
      */
     String getLinkURI(List events);

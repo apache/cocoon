@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.8 2004/04/19 14:47:31 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CopletSource 
     implements Source, XMLizable, Serviceable, Contextualizable {
@@ -131,6 +131,7 @@ public class CopletSource
 	 * @see org.apache.excalibur.source.Source#refresh()
 	 */
 	public void refresh() {
+        // nothing to do 
 	}
 
 	/**

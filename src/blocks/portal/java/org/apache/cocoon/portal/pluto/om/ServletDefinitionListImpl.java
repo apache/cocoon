@@ -33,15 +33,14 @@ import org.apache.cocoon.portal.pluto.om.common.Support;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ServletDefinitionListImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ServletDefinitionListImpl extends AbstractSupportSet
 implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializable, Support {
 
     // ServletDefinitionList implementation.
 
-    public ServletDefinition get(String name)
-    {
+    public ServletDefinition get(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             ServletDefinition servletDefinition = (ServletDefinition)iterator.next();
@@ -54,8 +53,7 @@ implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializabl
 
     // ServletDefinitionListCtrl implementation.
 
-    public ServletDefinition add(String name, String className)
-    {
+    public ServletDefinition add(String name, String className) {
         ServletDefinitionImpl servletDefinition = new ServletDefinitionImpl();
         servletDefinition.setServletName(name);
         servletDefinition.setServletClass(className);
@@ -65,8 +63,7 @@ implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializabl
         return servletDefinition;
     }
 
-    public ServletDefinition remove(String name)
-    {
+    public ServletDefinition remove(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             ServletDefinition servletDefinition = (ServletDefinition)iterator.next();
@@ -78,15 +75,13 @@ implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializabl
         return null;
     }
 
-    public void remove(ServletDefinition servletDefinition)
-    {
+    public void remove(ServletDefinition servletDefinition) {
         super.remove(servletDefinition);
     }
 
     // Support implementation.
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    public void preBuild(Object parameter) throws Exception {
         Vector structure = (Vector)parameter;
         WebApplicationDefinition webApplicationDefinition =  (WebApplicationDefinition)structure.get(0);
         Collection servletMappings = (Collection)structure.get(1);
@@ -123,6 +118,7 @@ implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializabl
     }
 
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     public void postLoad(Object parameter) throws Exception {
@@ -134,9 +130,11 @@ implements ServletDefinitionList, ServletDefinitionListCtrl, java.io.Serializabl
     }
 
     public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
     
 }

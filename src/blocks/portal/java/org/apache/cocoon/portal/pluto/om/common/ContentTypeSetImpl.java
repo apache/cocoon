@@ -28,18 +28,18 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ContentTypeSetImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ContentTypeSetImpl extends AbstractSupportSet
 implements ContentTypeSet, java.io.Serializable {
 
-
     // special content type that represents the union of all supported markups
     private ContentType anyContentType;
-    // ContentTypeSet implementation.
     
-    public ContentType get(String contentType)
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.ContentTypeSet#get(java.lang.String)
+     */
+    public ContentType get(String contentType) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             ContentType _contentType = (ContentType)iterator.next();
@@ -50,9 +50,10 @@ implements ContentTypeSet, java.io.Serializable {
         return null;
     }
 
-	// support implemenation
-    public void postLoad(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {
     	super.postLoad(parameter);
     	
     	Collection allPortletModes = new ArrayList();
@@ -76,15 +77,14 @@ implements ContentTypeSet, java.io.Serializable {
 	}
 
 
-    // additional methods.
-
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());

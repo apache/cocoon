@@ -55,6 +55,7 @@ public class ServletResponseImpl implements HttpServletResponse {
         try {
             this.stream.flush();
         } catch (IOException ignore) {
+            // just ignore it
         }
         final String value = new String(this.stream.stream.toByteArray());
         this.stream = new MyOutputStream();
@@ -330,6 +331,7 @@ public class ServletResponseImpl implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#setContentLength(int)
      */
     public void setContentLength(int arg0) {
+        // nothing to do 
     }
 
     /*
@@ -338,6 +340,7 @@ public class ServletResponseImpl implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
      */
     public void setContentType(String arg0) {
+        // nothing to do 
     }
 
     /*
@@ -346,6 +349,7 @@ public class ServletResponseImpl implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
      */
     public void setLocale(Locale arg0) {
+        // nothing to do 
     }
 
     /*
@@ -354,6 +358,7 @@ public class ServletResponseImpl implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#resetBuffer()
      */
     public void resetBuffer() {
+        // nothing to do 
     }
 
 }
@@ -363,7 +368,7 @@ class MyOutputStream extends ServletOutputStream {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     public MyOutputStream() {
-
+        // nothing to do 
     }
 
     /*

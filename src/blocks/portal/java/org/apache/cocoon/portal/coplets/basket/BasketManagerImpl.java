@@ -67,7 +67,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketManagerImpl.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class BasketManagerImpl
 extends AbstractLogEnabled
@@ -194,6 +194,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                     ci.setContent(c);
                     basket.addItem(ci);
                 } catch (Exception ignore) {
+                    // ignore it
                 }
                 if ( file instanceof PartOnDisk) {
                     ((PartOnDisk)file).getFile().delete();

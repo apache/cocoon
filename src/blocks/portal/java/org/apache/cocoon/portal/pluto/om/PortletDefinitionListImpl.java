@@ -32,15 +32,14 @@ import org.apache.pluto.om.servlet.ServletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionListImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletDefinitionListImpl extends AbstractSupportSet
 implements PortletDefinitionList, java.io.Serializable, Support {
 
     // PortletDefinitionList implementation.
 
-    public PortletDefinition get(ObjectID objectId)
-    {
+    public PortletDefinition get(ObjectID objectId) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             PortletDefinition portletDefinition = (PortletDefinition)iterator.next();
@@ -53,8 +52,7 @@ implements PortletDefinitionList, java.io.Serializable, Support {
 
     // Support implementation.
     
-    public void preBuild(Object parameter) throws Exception
-    {
+    public void preBuild(Object parameter) throws Exception {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
         Map servletMap = (Map)structure.get(1);
@@ -77,6 +75,7 @@ implements PortletDefinitionList, java.io.Serializable, Support {
     
 
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     public void postLoad(Object parameter) throws Exception {
@@ -87,15 +86,16 @@ implements PortletDefinitionList, java.io.Serializable, Support {
     }
 
     public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     // additional methods.
 
-    public PortletDefinition get(String objectId)
-    {
+    public PortletDefinition get(String objectId) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             PortletDefinition portletDefinition = (PortletDefinition)iterator.next();

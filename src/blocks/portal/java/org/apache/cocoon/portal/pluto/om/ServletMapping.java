@@ -21,47 +21,41 @@ package org.apache.cocoon.portal.pluto.om;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ServletMapping.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ServletMapping implements java.io.Serializable {
 
-    private String id = null;
-    private String servletName = null;
-    private String urlPattern = null;
+    private String id;
+    private String servletName;
+    private String urlPattern;
 
-    public ServletMapping()
-    {
+    public ServletMapping() {
+        // nothing to do 
     }
 
     // additional methods.
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getServletName()
-    {
+    public String getServletName() {
         return servletName;
     }
 
-    public void setServletName(String servletName)
-    {
+    public void setServletName(String servletName) {
         this.servletName = servletName;
     }
 
-    public String getUrlPattern()
-    {
+    public String getUrlPattern() {
         return urlPattern;
     }
 
-    public void setUrlPattern(String urlPattern)
-    {
+    public void setUrlPattern(String urlPattern) {
         this.urlPattern = urlPattern;
     }
 

@@ -44,9 +44,8 @@ public final class ActionRequest extends PortletRequest {
     public String getCharacterEncoding() {
         if (super.getCharacterEncoding() == null) {
             return getActionRequest().getCharacterEncoding();
-        } else {
-            return super.getCharacterEncoding();
         }
+        return super.getCharacterEncoding();
     }
 
     /**
@@ -55,6 +54,7 @@ public final class ActionRequest extends PortletRequest {
     public String getMethod() {
         return "POST";
     }
+
 
     // ActionRequest API methods
 

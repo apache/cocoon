@@ -25,63 +25,67 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DescriptionImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DescriptionImpl implements Description, java.io.Serializable, Support {
 
-    private String description = null;
-    private Locale locale = null;  // default locale;
-    private String castorLocale = null;
+    private String description;
+    private Locale locale;      // default locale;
+    private String castorLocale;
 
-    public DescriptionImpl()
-    {
+    public DescriptionImpl() {
+        // nothing to do 
     }
 
     // Description implementation.
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public Locale getLocale()
-    {
+    public Locale getLocale() {
         return locale;
     }
 
-    // Support implementation.
-
-    public void postBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
+    public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void postLoad(Object parameter) throws Exception
-    {   
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {   
         if (castorLocale == null) {
             locale = Locale.ENGLISH;
         } else {
             locale = new Locale(castorLocale, "");
         }
     }
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    // additional methods.
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
@@ -94,13 +98,11 @@ public class DescriptionImpl implements Description, java.io.Serializable, Suppo
     }
 
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setLocale(Locale locale)
-    {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
 

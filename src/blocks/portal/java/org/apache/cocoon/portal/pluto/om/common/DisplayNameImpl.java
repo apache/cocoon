@@ -25,7 +25,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DisplayNameImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DisplayNameImpl implements DisplayName, java.io.Serializable, Support {
 
@@ -33,54 +33,70 @@ public class DisplayNameImpl implements DisplayName, java.io.Serializable, Suppo
     private Locale locale;  // default locale
     private String castorLocale;
 
-    public DisplayNameImpl()
-    {
+    public DisplayNameImpl() {
+        // nothing to do 
     }
 
-    // DisplayName implementation.
-    public String getDisplayName()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.DisplayName#getDisplayName()
+     */
+    public String getDisplayName() {
         return displayName;
     }
 
-    public Locale getLocale()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.DisplayName#getLocale()
+     */
+    public Locale getLocale() {
         return locale;
     }
 
-    // Support implementation.
-
-    public void postLoad(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {
         if (castorLocale == null) {
             locale = Locale.ENGLISH;
         } else {
             locale = new Locale(castorLocale, "");
         }
     }
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
+    public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
+    public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    // additional methods.
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
@@ -92,13 +108,11 @@ public class DisplayNameImpl implements DisplayName, java.io.Serializable, Suppo
         return buffer.toString();
     }
 
-    public void setDisplayName(String displayName)
-    {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    public void setLocale(Locale locale)
-    {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
 

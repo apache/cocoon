@@ -99,8 +99,8 @@ public final class CopletInstanceData
         while (iterator.hasNext()) {
             entry = (Map.Entry) iterator.next();
             AttributedMapItem item = new AttributedMapItem();
-            item.setKey((String) entry.getKey());
-            item.setValue((String) entry.getValue());
+            item.setKey(entry.getKey());
+            item.setValue(entry.getValue());
             set.add(item);
         }
         return set;
@@ -189,5 +189,4 @@ public final class CopletInstanceData
             return null;
         }
     }
-    
 }

@@ -22,8 +22,9 @@ package org.apache.cocoon.portal.event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutEvent.java,v 1.4 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface LayoutEvent extends ActionEvent {
     
+    // just a marker interface
 }

@@ -22,8 +22,9 @@ import org.apache.cocoon.portal.event.Event;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class BasketEvent implements Event {
     
+    // just a marker interface
 }

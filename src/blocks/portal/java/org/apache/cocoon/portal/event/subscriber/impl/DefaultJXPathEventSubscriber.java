@@ -25,12 +25,13 @@ import org.apache.commons.jxpath.JXPathContext;
  * This subscriber processes JXPath events
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultJXPathEventSubscriber.java,v 1.3 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class DefaultJXPathEventSubscriber 
     implements Subscriber {
 
     public DefaultJXPathEventSubscriber() {
+        // nothing to do         
     }
 
     /* (non-Javadoc)
