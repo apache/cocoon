@@ -60,7 +60,7 @@ import java.util.Iterator;
  * The avalon behavioural component interface of crawling.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonCrawler.java,v 1.3 2003/10/06 16:30:41 jeremy Exp $
+ * @version CVS $Id: CocoonCrawler.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public interface CocoonCrawler extends Component
 {
@@ -87,7 +87,7 @@ public interface CocoonCrawler extends Component
      * </p>
      * 
 	 * @param url  The URL to start crawling from
-	 * @param depth  The maximum depth to crawl to. -1 for no maxiumum.
+	 * @param maxDepth  The maximum depth to crawl to. -1 for no maxiumum.
 	 */
     void crawl(URL url, int maxDepth);
     

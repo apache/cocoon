@@ -67,7 +67,7 @@ import java.io.PrintStream;
  * This class wraps the Pizza Java Compiler.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Pizza.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: Pizza.java,v 1.2 2003/11/15 04:21:29 joerg Exp $
  */
 public class Pizza extends Javac {
 
@@ -89,11 +89,7 @@ public class Pizza extends Javac {
     /**
      * Compile a source file yielding a loadable class file.
      *
-     * @param filename The object program base file name
-     * @param baseDirectory The directory containing the object program file
-     * @param encoding The encoding expected in the source file or
-     * <code>null</code> if it is the platform's default encoding
-     * @exception LanguageException If an error occurs during compilation
+     * @exception IOException
      */
     public boolean compile() throws IOException {
 

@@ -55,15 +55,20 @@ package org.apache.cocoon.bean;
  * as the bean makes progress through the links to be called.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanListener.java,v 1.3 2003/09/18 12:11:50 upayavira Exp $
+ * @version CVS $Id: BeanListener.java,v 1.4 2003/11/15 04:21:30 joerg Exp $
  */
 public interface BeanListener {
 
     /**
      * Report a page as successfully generated
-     * @param uri            URI of page that has been generated
+     * @param sourceURI
+     * @param destinationURI
+     * @param pageSize
      * @param linksInPage    Number of links found in this page
+     * @param newLinksinPage
      * @param pagesRemaining Number of pages still to be generated
+     * @param pagesComplete
+     * @param timeTaken
      */
     public void pageGenerated(String sourceURI,
                               String destinationURI, 
@@ -77,7 +82,8 @@ public interface BeanListener {
     /**
      * Report a that was skipped because its URI matched an
      * include/exclude pattern.
-     * @param msg            
+     * @param uri
+     * @param message            
      */
     public void pageSkipped(String uri, String message);
     

@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * 
  * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.2 2003/11/03 23:16:12 ugo Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -91,10 +91,11 @@ public class FlowJXPathSelectionList implements SelectionList {
      * Builds a dynamic selection list from an in-memory collection.
      * @see org.apache.cocoon.woody.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
      * @param model The collection used as a model for the selection list. 
-     * @param keyPath An XPath expression referring to the attribute used
+     * @param valuePath An XPath expression referring to the attribute used
      * to populate the values of the list's items. 
      * @param labelPath An XPath expression referring to the attribute used
      * to populate the labels of the list's items.
+     * @param datatype
      */
     public FlowJXPathSelectionList(Object model, String valuePath, String labelPath, Datatype datatype) {
         this.model = model;

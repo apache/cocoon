@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.3 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
 */
 public final class SessionContextProviderImpl
 extends AbstractLogEnabled
@@ -91,7 +91,6 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
     /**
      * Get the context
      * @param name The name of the context
-     * @param objectModel The objectModel of the current request.
      * @return The context
      * @throws ProcessingException If the context is not available.
      */

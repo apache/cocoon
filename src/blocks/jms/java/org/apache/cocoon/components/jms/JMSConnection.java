@@ -61,7 +61,7 @@ import org.apache.avalon.framework.CascadingException;
 /**
  * JMSConnection properties container plus utilities.
  * 
- * @version CVS $Id: JMSConnection.java,v 1.4 2003/10/20 07:19:33 cziegeler Exp $
+ * @version CVS $Id: JMSConnection.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public interface JMSConnection {
@@ -72,7 +72,7 @@ public interface JMSConnection {
      * Register a new TopicListener for this connection.
      * 
      * @param listener
-     * @param string
+     * @param selector
      * 
      * @throws CacadingException if the connection was not successfully 
      * initialized, JMSException or NamingException if errors occur during 

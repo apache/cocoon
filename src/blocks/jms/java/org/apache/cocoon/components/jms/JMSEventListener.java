@@ -84,7 +84,7 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.4 2003/10/20 07:19:33 cziegeler Exp $
+ * @version CVS $Id: JMSEventListener.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
  * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
  */
 public class JMSEventListener
@@ -172,7 +172,7 @@ public class JMSEventListener
      * want to override this method.
      * 
      * @param message
-     * @return
+     * @return cache key
      */
     protected String convertMessage(String message) {
         int pos = message.indexOf('|');

@@ -64,7 +64,7 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.4 2003/10/21 07:52:02 cziegeler Exp $
+ * @version CVS $Id: XSPSessionFwHelper.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
@@ -72,10 +72,9 @@ public class XSPSessionFwHelper {
     /** GetXML Fragment from the given session context and path
      *
      *
-     * @param session The Session object
+     * @param cm The ComponentManager
      * @param context The Session context tha define where to search
      * @param path The parameter path
-     * @param defaultValue Value to substitute in absence of the required Fragment
     **/
     public static DocumentFragment getXML(ComponentManager cm, String context, String path) throws ProcessingException {
 

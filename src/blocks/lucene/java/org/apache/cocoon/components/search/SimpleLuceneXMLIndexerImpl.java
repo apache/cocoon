@@ -100,7 +100,7 @@ import java.util.List;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.4 2003/08/28 16:56:48 asavory Exp $
+ * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.5 2003/11/15 04:21:30 joerg Exp $
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
          implements LuceneXMLIndexer, Configurable, Composable, ThreadSafe {
@@ -168,8 +168,8 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
     /**
      * configure
      *
-     * @param  conf                        Description of Parameter
-     * @exception  ConfigurationException  Description of Exception
+     * @param  configuration
+     * @exception  ConfigurationException
      * @since
      */
     public void configure(Configuration configuration) throws ConfigurationException { 

@@ -131,7 +131,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.3 2003/10/28 14:08:50 unico Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -251,10 +251,9 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	
 	/**
 	 * Performs an XPath query on the source.
-	 * @param xmlFile  the Source the XPath is performed on.
+	 * @param in  the Source the XPath is performed on.
 	 * @throws SAXException  if something goes wrong while adding the XML snippet.
 	 */
-
     protected void performXPathQuery(TraversableSource in)
       throws SAXException {
       doc = null;

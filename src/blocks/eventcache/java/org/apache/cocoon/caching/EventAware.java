@@ -57,14 +57,14 @@ import org.apache.cocoon.caching.validity.Event;
  * of cache Events.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version CVS $Id: EventAware.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version CVS $Id: EventAware.java,v 1.2 2003/11/15 04:21:28 joerg Exp $
  */
 public interface EventAware {
 
     /**
      * Receive notification of an Event.
      * 
-     * @param The Event
+     * @param e The Event
      */
     public void processEvent(Event e);
 

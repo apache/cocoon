@@ -63,7 +63,7 @@ import java.io.*;
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JstyleFormatter.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: JstyleFormatter.java,v 1.2 2003/11/15 04:21:29 joerg Exp $
  */
 public class JstyleFormatter extends AbstractLogEnabled implements CodeFormatter {
   /**
@@ -127,9 +127,10 @@ public class JstyleFormatter extends AbstractLogEnabled implements CodeFormatter
    * The encoding can be <code>null</code> for the platform's default
    * encoding
    *
-   * @param PARAM_NAME Param description
+   * @param out
+   * @param encoding
    * @return the value
-   * @exception EXCEPTION_NAME If an error occurs
+   * @exception UnsupportedEncodingException
    */
   protected String getString(ByteArrayOutputStream out, String encoding)
     throws UnsupportedEncodingException

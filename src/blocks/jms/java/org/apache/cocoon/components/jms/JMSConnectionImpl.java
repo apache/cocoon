@@ -96,7 +96,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.4 2003/10/20 07:19:33 cziegeler Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
@@ -125,7 +125,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
      * Register a new TopicListener for this connection.
      * 
      * @param listener
-     * @param string
+     * @param selector
      */
     public synchronized void registerListener(
         MessageListener listener,
@@ -159,7 +159,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
     /**
      * Get a new TopicPublisher for this connection.
      * 
-     * @return
+     * @return TopicPublisher
      * @throws JMSException
      * @throws NamingException
      */
@@ -171,7 +171,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
      * Get the session associated with this connection. This is needed for example to
      * create messages.
      * 
-     * @return
+     * @return session associated with this connection
      * @throws NamingException
      * @throws JMSException
      */
@@ -182,7 +182,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
     /**
       * Get initial context.
       * 
-      * @return
+      * @return initial context
       * @throws NamingException
       */
     protected Context setupContext() throws NamingException {

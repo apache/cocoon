@@ -138,7 +138,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * </code></pre>
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: DateSelector.java,v 1.3 2003/10/24 08:49:49 cziegeler Exp $
+ * @version CVS $Id: DateSelector.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public class DateSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {
@@ -219,7 +219,7 @@ implements Configurable, ThreadSafe {
      * set fields which are not set by parsing the date attribute value
      *
      * @param cal Calendar parsed in
-     * @param defautl_cal Calendar object providing default value for unset
+     * @param default_cal Calendar object providing default value for unset
      *   fields of cal
      */
     protected void setUnsetFields( Calendar cal, Calendar default_cal ) {
@@ -250,7 +250,7 @@ implements Configurable, ThreadSafe {
      * invocations
      *
      * @param objectModel the objectModel of the pipeline processing
-     * @param paramters unused here
+     * @param parameters unused here
      * @return Object which is an object of class DataSelectorContext
      */
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
@@ -275,7 +275,7 @@ implements Configurable, ThreadSafe {
     /**
      * Evaluate select for a given expression
      *
-     * @param the expression to test against, as now expression
+     * @param expression the expression to test against, as now expression
      *   should be a name defined as <code>NAME_ATTR</code> in the
      *   configuration section of this selector
      * @param selectorContext is the SelectorContext set up by

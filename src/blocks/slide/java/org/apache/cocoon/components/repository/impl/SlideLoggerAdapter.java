@@ -55,7 +55,7 @@ import org.apache.avalon.framework.logger.Logger;
  * The class represent an adapter for the logger for jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideLoggerAdapter.java,v 1.3 2003/09/05 07:31:46 cziegeler Exp $
+ * @version CVS $Id: SlideLoggerAdapter.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     private Logger logger;
@@ -134,7 +134,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     /**
      * Set the logger level for the default channel
      *
-     * @param data The object to log.
+     * @param level the logger level
      */
     public void setLoggerLevel(int level) {
         currentLogLevel = level;
@@ -143,7 +143,8 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     /**
      * Set the logger level for the specified channel
      *
-     * @param data The object to log.
+     * @param channel
+     * @param level the logger level
      */
     public void setLoggerLevel(String channel, int level) {
         currentLogLevel = level;
@@ -151,8 +152,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
 
     /**
      * Get the logger level for the default channel
-     *
-     * @param data The object to log.
+     * @return logger level
      */
     public int getLoggerLevel() {
         return currentLogLevel;
@@ -161,7 +161,8 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     /**
      * Get the logger level for the specified channel
      *
-     * @param data The object to log.
+     * @param channel the channel
+     * @return logger level
      */
     public int getLoggerLevel(String channel) {
         if (this.logger.isDebugEnabled()) {

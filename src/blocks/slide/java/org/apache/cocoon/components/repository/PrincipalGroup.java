@@ -53,7 +53,7 @@ package org.apache.cocoon.components.repository;
  * This class represents a group of principals. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalGroup.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: PrincipalGroup.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public class PrincipalGroup {
 
@@ -75,7 +75,7 @@ public class PrincipalGroup {
     /**
      * Sets the name of the group.
      * 
-     * @param Name of the group.
+     * @param name Name of the group.
      */
     public void setName(String name) {
         this.name = name;

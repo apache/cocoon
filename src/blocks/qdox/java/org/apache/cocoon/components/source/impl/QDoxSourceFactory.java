@@ -109,7 +109,7 @@ import org.apache.regexp.RESyntaxException;
  * </p>
  * 
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/10/25 18:06:19 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/11/15 04:21:29 $
  */
 public final class QDoxSourceFactory
     extends AbstractLogEnabled
@@ -200,7 +200,7 @@ public final class QDoxSourceFactory
     }
     
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#Service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         if (getLogger().isDebugEnabled()) {

@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.5 2003/11/15 04:21:28 joerg Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -593,7 +593,7 @@ public class ProxyTransformer
 
     /**
     * Resolve the possibly relative uri to an absolue uri based on given document base.
-    * @param the uri to resolve
+    * @param uri the uri to resolve
     * @param documentBase the current document base
     * @return returns an absolute URI based on document base (e.g. http://mydomain.com/some/file.html)
     * @throws MalformedURLException if uri or document base is malformed.

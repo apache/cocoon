@@ -61,7 +61,7 @@ import java.util.StringTokenizer;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Jikes.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: Jikes.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  * @since 2.0
  */
 
@@ -190,7 +190,7 @@ public class Jikes extends AbstractJavaCompiler {
      * Parse the compiler error stream to produce a list of
      * <code>CompilerError</code>s
      *
-     * @param errors The error stream
+     * @param input The error stream
      * @return The list of compiler error messages
      * @exception IOException If an error occurs during message collection
      */

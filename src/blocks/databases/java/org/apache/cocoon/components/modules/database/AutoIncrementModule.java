@@ -64,7 +64,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * attribute columns.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AutoIncrementModule.java,v 1.2 2003/09/05 12:46:12 giacomo Exp $
+ * @version CVS $Id: AutoIncrementModule.java,v 1.3 2003/11/15 04:21:30 joerg Exp $
  * */
 public interface AutoIncrementModule extends Component {
 
@@ -74,16 +74,12 @@ public interface AutoIncrementModule extends Component {
     /**
      * Return key attribute value of last inserted row.
      *
-     * @param name a String that specifies what the caller thinks
-     * would identify a set of parameters. This is mainly a fallback
-     * if no modeConf is present.
-
      * @param tableConf Table's configuration from resource description.
      * @param columnConf column's configuration from resource description.
      * @param modeConf this mode's configuration from resource description.
      * @param conn Connection
      * @param stmt Statement that was executed to insert the last row.
-     * @param request The request object
+     * @param objectModel The objectModel
      * @return value representing the last key value value.
      * */
     Object getPostValue( Configuration tableConf, Configuration columnConf, Configuration modeConf,
@@ -120,8 +116,7 @@ public interface AutoIncrementModule extends Component {
      * @param columnConf column's configuration from resource description.
      * @param modeConf this mode's configuration from resource description.
      * @param conn Connection
-     * @param request The request object
-     * @param idx In case of multiple rows to be inserted, index to the desired row
+     * @param objectModel The objectModel
      * @return exact value for key attribute column
      * */
     Object getPreValue( Configuration tableConf, Configuration columnConf, Configuration modeConf,

@@ -73,7 +73,7 @@ import java.util.Hashtable;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPRight.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPRight.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
  */
 public class EPRight
     extends BaseElementProcessor
@@ -112,7 +112,6 @@ public class EPRight
      * @param attributes the array of Attribute instances; may be
      *                   empty, will never be null
      * @param parent the parent ElementProcessor; may be null
-     * @param filesystem the POIFSFileSystem object
      *
      * @exception IOException if anything is wrong
      */

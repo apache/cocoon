@@ -64,7 +64,7 @@ import org.apache.cocoon.portal.layout.Item;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayoutImpl.java,v 1.2 2003/09/02 08:34:20 cziegeler Exp $
+ * @version CVS $Id: CompositeLayoutImpl.java,v 1.3 2003/11/15 04:21:30 joerg Exp $
  */
 public class CompositeLayoutImpl 
     extends AbstractLayout
@@ -79,8 +79,8 @@ public class CompositeLayoutImpl
     
 	/**
 	 * Add indexed item to the itemList.
-	 * @param index, index for the position inside the list
-	 * @param item, item to add
+	 * @param index index for the position inside the list
+	 * @param item item to add
 	 */
 	public final void addItem(int index, Item item) {
 		this.items.add(index, item);
@@ -89,7 +89,7 @@ public class CompositeLayoutImpl
 
 	/**
 	 * Add Item to the ItemList.
-	 * @param item, item to add
+	 * @param item item to add
 	 */
 	public final void addItem(Item item) {
 		this.items.add(item);

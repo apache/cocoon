@@ -109,7 +109,7 @@ import java.util.List;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
  * @see InterpreterSelector
- * @version CVS $Id: Interpreter.java,v 1.3 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: Interpreter.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public interface Interpreter
 {
@@ -180,7 +180,7 @@ public interface Interpreter
   /**
    * Forward the request to a Cocoon pipeline.
    *
-   * @param URI a <code>String</code>, the URI of the forwarded request
+   * @param uri a <code>String</code>, the URI of the forwarded request
    * @param bizData an <code>Object</code>, the business data object
    * to be made available to the forwarded pipeline
    * @param continuation a <code>WebContinuation</code>, the
