@@ -56,6 +56,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
@@ -65,17 +66,20 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.5 2003/08/12 15:48:02 sylvain Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.6 2003/11/21 18:15:44 sylvain Exp $
  */
 
-public class SerializeNode extends PipelineEventComponentProcessingNode {
+public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode{
 
     private String serializerName;
+
+    private VariableResolver source;
 
     private VariableResolver mimeType;
 
     private int statusCode;
 
+    private Map parameters;
 
     /**
      * Build a <code>SerializerNode</code> having a name, a mime-type and a status code (HTTP codes).
@@ -84,12 +88,16 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
      * @param mimeType the mime-type, or <code>null</code> not specified.
      * @param statusCode the HTTP response status code, or <code>-1</code> if not specified.
      */
-    public SerializeNode(String name, VariableResolver mimeType, int statusCode) throws PatternException {
+    public SerializeNode(String name, VariableResolver source, VariableResolver mimeType, int statusCode) throws PatternException {
         this.serializerName = name;
+        this.source = source;
         this.mimeType = mimeType;
         this.statusCode = statusCode;
     }
 
+    public void setParameters(Map parameterMap) {
+        this.parameters = parameterMap;
+    }
 
     public final boolean invoke(Environment env, InvokeContext context)
       throws Exception {
@@ -129,8 +137,8 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
 
         pipeline.setSerializer(
             this.serializerName,
-            null,
-            Parameters.EMPTY_PARAMETERS, // No parameters on serializers
+            source.resolve(context, objectModel),
+            VariableResolver.buildParameters(this.parameters, context, objectModel),
             this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
                 : VariableResolver.buildParameters(this.pipelineHints, context, objectModel),

@@ -64,7 +64,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SerializeNodeBuilder.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: SerializeNodeBuilder.java,v 1.2 2003/11/21 18:15:44 sylvain Exp $
  */
 
 public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
@@ -75,9 +75,9 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
     private Collection views;
     private Map  pipelineHints;
 
-    /** This builder has no parameters -- return <code>false</code> */
+    /** Serializers can have parameters -- return <code>true</code> */
     protected boolean hasParameters() {
-        return false;
+        return true;
     }
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
@@ -89,6 +89,7 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
 
         this.node = new SerializeNode(
             type,
+            VariableResolverFactory.getResolver(config.getAttribute("src", null), this.manager),
             VariableResolverFactory.getResolver(config.getAttribute("mime-type", null), this.manager),
             config.getAttributeAsInteger("status-code", -1)
         );
