@@ -175,6 +175,7 @@ a Java 1.2 compatible JVM is required for this target.
     <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" classname="javax.naming.Name"/>
     <available property="projectx.present" classname="com.sun.xml.parser.Parser"/>
+    <available property="doclet.present" classname="com.sun.javadoc.Doclet"/>
 
     <filter token="year" value="${year}"/>
     <filter token="version" value="${version}"/>
@@ -247,10 +248,17 @@ a Java 1.2 compatible JVM is required for this target.
              filtering="on"/>
   </target>
 
+  <target name="prepare-doclet" depends="init" if="doclet.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/doclet/**"
+             filtering="on"/>
+  </target>
+
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-ecma, prepare-ldap">
+  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-ecma, prepare-ldap, prepare-doclet">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
@@ -258,7 +266,7 @@ a Java 1.2 compatible JVM is required for this target.
     <!-- copy src files -->
     <copydir src="${src.dir}"
              dest="${build.src}"
-             excludes="**/parser/Sun*, **/XT*, **/ldap/**, **/ecmascript/**"
+             excludes="**/parser/Sun*, **/XT*, **/ldap/**, **/ecmascript/**, **/doclet/**"
              filtering="on"/>
   </target>
 
