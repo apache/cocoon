@@ -15,9 +15,6 @@
  */
 package org.apache.cocoon.components.thread;
 
-import EDU.oswego.cs.dl.util.concurrent.CyclicBarrier;
-import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
-
 
 /**
  * A rendezvous channel, similar to those used in CSP and Ada.  Each put must
