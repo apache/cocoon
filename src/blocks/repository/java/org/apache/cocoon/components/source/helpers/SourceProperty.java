@@ -31,20 +31,18 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.2 2004/03/05 13:02:21 bdelacretaz Exp $
+ * @version CVS $Id: SourceProperty.java,v 1.3 2004/03/27 21:49:09 unico Exp $
  */
 public class SourceProperty implements XMLizable {
 
+    private static final String URI = "http://www.w3.org/2000/xmlns/";
+    private static final String NS_PREFIX = "property";
+    private static final String D_PREFIX = NS_PREFIX+":";
+    
     private String namespace;
     private String name;
     private Element value;
-
-    /**  */
-    public static final String NS_PREFIX = "property";
-    private static final String D_PREFIX = NS_PREFIX+":";
-
-    private static final String XMLNS_NS = "http://www.w3.org/2000/xmlns/";
-
+    
     /**
      * Creates a new property for a source
      *
@@ -57,21 +55,15 @@ public class SourceProperty implements XMLizable {
         this.name = name;
 
         try {
-            // FIXME: There must be an easier way to create a DOM element
             DOMBuilder builder = new DOMBuilder();
-
             builder.startDocument();
             builder.startPrefixMapping(NS_PREFIX, namespace);
             AttributesImpl attrs = new AttributesImpl();
-
-            attrs.addAttribute(XMLNS_NS, NS_PREFIX, "xmlns:"+NS_PREFIX,
-                               "NMTOKEN", namespace);
+            attrs.addAttribute(URI, NS_PREFIX, "xmlns:"+NS_PREFIX, "NMTOKEN", namespace);
             builder.startElement(namespace, name, D_PREFIX+name, attrs);
             builder.endElement(namespace, name, D_PREFIX+name);
             builder.endPrefixMapping(NS_PREFIX);
-
             Document doc = builder.getDocument();
-
             this.value = doc.getDocumentElement();
         } catch (SAXException se) {
             // do nothing
@@ -146,28 +138,18 @@ public class SourceProperty implements XMLizable {
      * @param value Value of the property
      */
     public void setValue(String value) {
-        // this.value = value;
-
         try {
             DOMBuilder builder = new DOMBuilder();
-
             builder.startDocument();
             builder.startPrefixMapping(NS_PREFIX, namespace);
             AttributesImpl attrs = new AttributesImpl();
-
-            attrs.addAttribute(XMLNS_NS, NS_PREFIX, "xmlns:"+NS_PREFIX,
-                               "NMTOKEN", namespace);
-
+            attrs.addAttribute(URI, NS_PREFIX, "xmlns:"+NS_PREFIX, "NMTOKEN", namespace);
             builder.startElement(namespace, name, D_PREFIX+name, attrs);
-
             builder.characters(value.toCharArray(), 0, value.length());
-
             builder.endElement(namespace, name, D_PREFIX+name);
             builder.endPrefixMapping(NS_PREFIX);
             builder.endDocument();
-
             Document doc = builder.getDocument();
-
             this.value = doc.getDocumentElement();
         } catch (SAXException se) {
             // do nothing
@@ -180,15 +162,16 @@ public class SourceProperty implements XMLizable {
      * @return Value of the property
      */
     public String getValueAsString() {
-
         NodeList nodeslist = this.value.getChildNodes();
         StringBuffer buffer = new StringBuffer();
-
-        for (int i = 0; i<nodeslist.getLength(); i++)
+        for (int i = 0; i<nodeslist.getLength(); i++) {
             if ((nodeslist.item(i).getNodeType()==Node.TEXT_NODE) ||
-                (nodeslist.item(i).getNodeType()==Node.CDATA_SECTION_NODE)) {
+                (nodeslist.item(i).getNodeType()==Node.CDATA_SECTION_NODE)) 
+            {
+                
                 buffer.append(nodeslist.item(i).getNodeValue());
             }
+        }
 
         return buffer.toString();
     }
@@ -196,38 +179,20 @@ public class SourceProperty implements XMLizable {
     /**
      * Sets the value of the property
      *
-     * @param value Value of the property
-     */
-    public void setValue(Element value) {
-        if ((value.getLocalName().equals(name)) &&
-            (value.getNamespaceURI().equals(namespace))) {
-            this.value = value;
-        }
-    }
-
-    /**
-     * Sets the value of the property
-     *
-     *
      * @param values
      */
     public void setValue(NodeList values) {
         try {
             DOMBuilder builder = new DOMBuilder();
-
             builder.startDocument();
             builder.startElement(namespace, name, name, new AttributesImpl());
-
             DOMStreamer stream = new DOMStreamer(builder);
-
-            for (int i = 0; i<values.getLength(); i++)
+            for (int i = 0; i<values.getLength(); i++) {
                 stream.stream(values.item(i));
-
+            }
             builder.endElement(namespace, name, name);
             builder.endDocument();
-
             Document doc = builder.getDocument();
-
             this.value = doc.getDocumentElement();
         } catch (SAXException se) {
             // do nothing
@@ -235,7 +200,7 @@ public class SourceProperty implements XMLizable {
     }
 
     /**
-     *
+     * Get the property value as DOM Element.
      */
     public Element getValue() {
         return this.value;
@@ -251,7 +216,6 @@ public class SourceProperty implements XMLizable {
      */
     public void toSAX(ContentHandler handler) throws SAXException {
         DOMStreamer stream = new DOMStreamer(handler);
-
         stream.stream(this.value);
     }
 }
