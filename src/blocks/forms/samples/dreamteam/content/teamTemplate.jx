@@ -55,7 +55,7 @@
           </tr>
         </table>
       </div>
-      <ft:form-template action="#{$continuation/id}.continue" method="POST">
+      <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
         <jx:choose>
           <jx:when test="${form.getChild('teammembers').getSize() == 0}">
             <p>
