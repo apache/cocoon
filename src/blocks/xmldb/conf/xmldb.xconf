@@ -19,11 +19,37 @@
 
     <!-- xmldb pseudo protocol -->
     <component-instance class="org.apache.cocoon.components.source.impl.XMLDBSourceFactory" name="xmldb">
-        <!-- Xindice driver -->
-        <driver class="org.apache.xindice.client.xmldb.DatabaseImpl" type="xindice"/>
-        <!-- Xindice 1.1 Embedded driver -->
-        <driver class="org.apache.xindice.client.xmldb.embed.DatabaseImpl" type="xindice-embed"/>
-        <!-- Add here other XML:DB compliant databases drivers -->
+      <!--+
+          | Xindice 1.1 XML-RPC driver. See Xindice javadoc for configuration options.
+          +-->
+      <driver class="org.apache.xindice.client.xmldb.DatabaseImpl" type="xindice">
+        <!-- Specifies xindice web application context path.
+             Default is "/xindice/".
+        <service-location>/xindice/</service-location>
+        -->
+
+        <!-- Specifies name of the XML-RPC 'driver' (XML parser) to use.
+             Default is "xerces".
+        <xmlrpc-driver>xerces</xmlrpc-driver>
+        -->
+      </driver>
+
+      <!--+
+          | Xindice 1.1 Embedded driver. See Xindice javadoc for configuration options.
+          +-->
+      <driver class="org.apache.xindice.client.xmldb.DatabaseImpl" type="xindice-embed">
+        <!-- Specifies path to the Xindice configuration file.
+             If missing, buit-in configuration defaults will be used.
+        <configuration>/opt/xindice/config/system.xml</configuration>
+        -->
+
+        <!-- Specifies path to the Xindice DB home directory.
+             Default is `pwd` (current working directory).
+        <db-home>/var/xindice/db</db-home>
+        -->
+      </driver>
+
+      <!-- Add here other XML:DB compliant databases' drivers -->
     </component-instance>
 
 </xconf>
