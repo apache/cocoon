@@ -658,12 +658,16 @@
     <depend project="jta"/>
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
+    <depend project="commons-transaction"/>
+    <depend project="commons-codec"/>
 
     <library name="geronimo-spec-jta"/>
     <library name="slide-kernel"/>
     <library name="slide-stores"/>
     <library name="slide-webdavservlet"/>
     <library name="jdom"/>
+    <library name="commons-transaction"/>
+    <library name="commons-codec"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
