@@ -1438,10 +1438,11 @@ xspCurrentElement.appendChild(
 </source>
      </s2>
 
-     <s2 title="The XSP Util Class">
+     <s2 title="The XSPUtil Class">
        <p>
          In addition to the above infrastructure objects and methods,
-         XSP provides a utility class offering a number of DOM, HTTP
+         XSP provides a utility class, called <code>XSPUtil</code>,
+         which is automatically imported, offering a number of DOM, HTTP
          and file manipulation services implemented as public
          static methods:
        </p>
@@ -1485,14 +1486,16 @@ xspCurrentElement.appendChild(
              This method converts its <code>text</code> argument
              to <em>x-www-form-urlencode</em> format, as required
              by HTTP form query strings. This method is actually
-             a wrapper for <code>java.net.URLEncoder.encode</code>
+             a replacement for <code>java.net.URLEncoder.encode</code> (introduced
+             in Java2) and exists solely to provide this
+             functionality for JDK1.1.
            </li>
            <li>
              <code>String formDecode(String text)</code>.<br/>
              This method converts its <code>text</code> argument
              from <em>x-www-form-urlencode</em> format to a
              <code>String</code> representation. This method is
-             actually a wrapper for
+             actually a replacement for
              <code>java.net.URLDecoder.decode</code> (introduced
              in Java2) and exists solely to provide this
              functionality for JDK1.1
