@@ -103,6 +103,13 @@ public class Repeater extends AbstractWidget {
     }
 
     /**
+     * Clears all rows from the repeater.
+     */
+    public void removeRows() {
+        rows.clear();
+    }
+
+    /**
      * Gets a widget on a certain row.
      * @param rowIndex startin from 0
      * @param id a widget id
