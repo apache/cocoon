@@ -65,11 +65,6 @@ to extend it.
     then you can switch it off in
     <code>./properties.xml</code>
    </p>
-   <p>
-    There are also validation facilities in Cocoon XMLForm.
-(FIXME: Find link to Ivelin's XMLForm documentation and other explanations
-of its validation component.)
-   </p>
 
   <s2 title="Build target validate-config">
    <p>
@@ -122,14 +117,6 @@ of its validation component.)
    </p>
   </s2>
 
-  <s2 title="XMLForm Validation">
-   <p>
-FIXME: Find links and javadocs.
-   </p>
-   <p>
-Basic overview: <link href="xmlform.html">XMLForm Handling</link>
-   </p>
-  </s2>
  </s1>
 
  <s1 title="To Do">

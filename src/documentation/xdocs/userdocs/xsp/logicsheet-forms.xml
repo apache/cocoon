@@ -29,17 +29,13 @@
   <s1 title="Introduction">
 
    <p>
-    For most web applications input is essential. Apache Cocoon provides a
+    For most web applications input is essential. Apache Cocoon provides
     variety of modules to support basic interaction like simple syntax checking
     of input data or writing input data to databases.
    </p>
 
    <p>
-    Two different packages deal with validating user input:<link
-     href="../../howto/xmlform-wizard/howto-xmlform-wizard.html">XMLForm</link>
-    which tries to stay as close as possible with the <link
-     href="http://www.w3.org">W3C</link> <link
-     href="http://www.w3.org/MarkUp/Forms/">XForms</link> working draft.
+    A new but already very mature modules is the Cocoon Forms (former Woody) framework.
     Another, simpler and older implementation is the validation using the
     <code>FormValidatorAction</code>, which is described here.
    </p>

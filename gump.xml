@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.128 2004/03/23 13:22:16 joerg Exp $
+    | CVS $Id: gump.xml,v 1.129 2004/03/23 19:29:01 tcurdt Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -846,26 +846,6 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/xmlform-block.jar"/>
-
-    <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>
-
-  <project name="cocoon-block-jxforms" status="stable">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="jxforms"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-
-    <work nested="build/cocoon-@@DATE@@/blocks/jxforms/dest"/>
-    <work nested="build/cocoon-@@DATE@@/blocks/jxforms/test"/>
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/jxforms-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>

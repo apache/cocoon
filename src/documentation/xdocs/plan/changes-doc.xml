@@ -17,18 +17,22 @@
 <!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "../dtd/changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.6 2004/03/06 02:25:44 antonio Exp $
+  $Id: changes-doc.xml,v 1.7 2004/03/23 19:29:02 tcurdt Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>
     <!-- in strict alphabetical order -->
     <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
     <person name="David Crossley" email="crossley@apache.org" id="DC"/>
+    <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
     <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
     <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
     <person name="Diana Shannon" email="shannon@apache.org" id="DS"/>
   </devs>
-  <release version="2.1" date="August 12 2003">
+  <release version="2.1" date="March 17 2004">
+    <action dev="TC" type="remove">
+      removed XMLForm and JXForms
+    </action>
     <action dev="DS" type="add" due-to="Mohamed El-Refaey" due-to-email="m.refaey@imkenberg.de">
       New How-To:
       <link href="../howto/howto-i18n-xmlform.html">i18n within the XMLForm Framework</link>

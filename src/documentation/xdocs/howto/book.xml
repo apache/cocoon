@@ -24,13 +24,10 @@
   </menu>
   <menu label="Using Cocoon">
     <menu-item label="Samples" href="howto-explore-samples.html"/>
-    <menu-item label="XMLForm" href="xmlform-wizard/howto-xmlform-wizard.html"/>
     <menu-item label="Paginator" href="howto-paginator-transformer.html"/>
     <menu-item label="HTML-PDF" href="howto-html-pdf-publishing.html"/>
     <menu-item label="Web Syndication" href="../userdocs/generators/wsproxy-generator.html"/>    
-    <menu-item label="i18n XMLForm" href="howto-i18n-xmlform.html"/>
     <menu-item label="Flow Debugger" href="howto-flow-debugger.html"/>
-    <menu-item label="Xindice XMLForm" href="howto-xindice-xmlform.html"/>
   </menu>
   <menu label="Documentation">
     <menu-item label="Author How-To" href="howto-author-howto.html"/>

@@ -42,12 +42,9 @@ This is a collection of How-tos. The Cocooon project is actively seeking additio
           "forms" frameworks.</p>
 	<ul>
 <li><link href="howto-explore-samples.html">Exploring the samples</link></li>
-<li><link href="xmlform-wizard/howto-xmlform-wizard.html">XMLForm Wizard</link></li>
 <li><link href="howto-paginator-transformer.html">Paginator Transformer</link></li>
 <li><link href="howto-html-pdf-publishing.html">HTML-PDF Publishing</link></li>
-<li><link href="howto-i18n-xmlform.html">i18n XMLForm</link></li>
 <li><link href="howto-flow-debugger.html">Flow Debugger</link></li>
-<li><link href="howto-xindice-xmlform.html">Xindice XMLForm</link></li>
 	</ul>
  </s2>
 
