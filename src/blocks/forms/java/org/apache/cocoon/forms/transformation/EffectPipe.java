@@ -33,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * @version $Id: EffectPipe.java,v 1.6 2004/04/12 21:43:39 mpo Exp $
+ * @version $Id: EffectPipe.java,v 1.7 2004/04/14 18:01:22 joerg Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -96,7 +96,7 @@ public class EffectPipe extends AbstractXMLPipe {
          * Adds/overwrites the attributes from the collection in the argument 
          * to the ones inside this class.
          * 
-         * @param attrs collection of attributes to add/overwrite
+         * @param newAttrs collection of attributes to add/overwrite
          */
         public void addAttributes(Attributes newAttrs) {
             if (newAttrs == null || newAttrs.getLength() == 0) return; //nothing to add
