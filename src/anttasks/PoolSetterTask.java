@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 13:20:09 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/05/01 16:12:05 $
  */
 public final class PoolSetterTask extends Task {
 
@@ -80,8 +80,7 @@ public final class PoolSetterTask extends Task {
 
         try {
             // load xml
-            final String fileName = this.file.toURL().toExternalForm();
-            final Document configuration = DocumentCache.getDocument(fileName, this);
+            final Document configuration = DocumentCache.getDocument(this.file, this);
 
             // process recursive
             boolean changed = false;
@@ -112,7 +111,7 @@ public final class PoolSetterTask extends Task {
                 // save xml
                 DocumentCache.writeDocument(this.file, configuration, this);
             }
-            DocumentCache.storeDocument(fileName, configuration, this);
+            DocumentCache.storeDocument(this.file, configuration, this);
        } catch (TransformerException e) {
             throw new BuildException("TransformerException: " + e);
         } catch (SAXException e) {
