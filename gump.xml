@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.114 2004/03/01 20:39:18 joerg Exp $
+    | CVS $Id: gump.xml,v 1.115 2004/03/05 11:22:42 cziegeler Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1100,26 +1100,6 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/paranoid-block.jar"/>
-
-    <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>
-
-  <project name="cocoon-block-workflow" status="unstable" exclude="true">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="workflow"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-    <!-- we need log4j -->
-    <depend project="cocoon-block-deli" />
-
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/workflow-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
