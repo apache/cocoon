@@ -34,7 +34,7 @@
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <a href="signonForm.do?signoff=true"><img border="0" name="img_signout" src="images/sign-out.gif" /></a><img border="0" src="images/separator.gif" hspace="4" />
-                                        <a href="editAccountForm.do"><img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
+                                        <a href="editAccount.form"><img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
                                     </xsl:otherwise>
                                 </xsl:choose>
                                 <img border="0" src="images/separator.gif" hspace="4" /><a href="../help.html"><img border="0" name="img_help" src="images/help.gif" /></a>

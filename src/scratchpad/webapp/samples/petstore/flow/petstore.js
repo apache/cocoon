@@ -46,6 +46,9 @@
 
 // Page Flow for PetStore Application
 
+// load xml form support
+cocoon.load("resource://org/apache/cocoon/components/flow/javascript/xmlForm.js");
+
 var MAX_RESULTS = 5;
 
 var VIEW = "Velocity";
@@ -96,9 +99,9 @@ function setView() {
     VIEW = cocoon.request.get("view");
     print("setView: VIEW="+VIEW);
     if (VIEW == "Velocity") {
-	EXT = ".vm";
+        EXT = ".vm";
     } else if (VIEW == "Xsp") {
-	EXT = ".xsp";
+        EXT = ".xsp";
     }
     print("EXT="+EXT);
 }
@@ -194,7 +197,12 @@ function viewCategory() {
     var category = getPetStore().getCategory(categoryId);
     var skipResults = 0;
     var maxResults = MAX_RESULTS;
+    var foo = new Object();
+    foo.skip = skipResults + 0;
     while (true) {
+        print("foo before=" + foo.skip);
+        print("skipResults = " + skipResults);
+        foo.skip = skipResults + 0;
         var productList = 
             getPetStore().getProductListByCategory(categoryId,
                                                    skipResults, 
@@ -333,16 +341,72 @@ function newAccountForm() {
     });
 }
 
-function editAccountForm() {
-    if (accountForm.signOn) {
-        newAccountForm();
-    } else {
-        sendPageAndWait("/view/EditAccountForm" + EXT, {
-                        accountForm: accountForm,
-                        account: accountForm.account,
-                        categoryList: categoryList
-        });
+//
+// Edit Account page: example of using XMLForm in a flow script
+//
+
+
+function validateZIP(field) {
+    var valid = "0123456789-";
+    var hyphencount = 0;
+    if (field.length!=5 && field.length!=10) {
+        throw "Please enter your 5 digit or 5 digit+4 zip code.";
     }
+    for (var i=0; i < field.length; i++) {
+        temp = "" + field.substring(i, i+1);
+        if (temp == "-") hyphencount++;
+        if (valid.indexOf(temp) == "-1") {
+            throw "Invalid characters in your zip code";
+        }
+    }
+    if (hyphencount > 1 || (field.length==10 && ""+field.charAt(5)!="-")) {
+        throw "The hyphen character should be used with a properly formatted 5 digit+four zip code, like '12345-6789'";
+    }
+}
+
+function validateEmail(value) {
+    var reg  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return reg.test(value);
+}
+
+function editAccountForm(form) {
+    var model = {accountForm: accountForm,
+                 account: accountForm.account,
+                 categoryList: categoryList, 
+                 username: accountForm.account.userid,
+                 password: "",
+                 password2: ""};
+    form.setModel(model);
+    form.sendView("editAccountForm", 
+                  "view/xmlform/EditAccountForm.xml", 
+                  function(form) {
+        for (var i in model.account) {
+            print(i+"="+model.account[i]);
+        }
+        if (model.userName == "") {
+            form.addViolation("/userName", "User ID is required");
+        } else {
+            if (model.password != model.password2) {
+                form.addViolation("/password2", "Passwords don't match");
+            }
+        }
+        if (account.firstName == "") {
+            form.addViolation("/account/firstName", "First name is required");
+        }
+        if (account.lastName == "") {
+            form.addViolation("/account/lastName", "Last name is required");
+        }
+        if (!validateEmail(account.email)) {
+            form.addViolation("/account/email", "Email address is invalid");
+        }
+        try {
+            validateZIP(account.zip);
+        } catch (e) {
+            form.addViolation("/account/zip", e);
+        }
+
+    });
+    index();
 }
 
 // Search
@@ -393,8 +457,8 @@ function checkout() {
                     view: VIEW,
                     accountForm: accountForm,
                     cartForm: cartForm, 
-		    yoshi: yoshi,
-		    cartItems: cartItems
+                    yoshi: yoshi,
+                    cartItems: cartItems
     });
     if (accountForm.signOn) {
         signOn();
