@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE changes SYSTEM "./dtd/changes-v10.dtd">
+<!DOCTYPE changes SYSTEM "./docs/dtd/changes-v10.dtd">
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.23 2000-01-24 21:35:28 stefano Exp $
+  $Id: changes.xml,v 1.24 2000-01-27 03:40:22 stefano Exp $
 -->
 
-<changes title="Cocoon History of Changes">
+<changes title="History of Changes">
   <devs>
     <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
     <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
@@ -59,7 +59,7 @@
   <action dev="SM" type="fix">
     Fixed ability to include external entities with relative paths.
   </action>
-  <action dev="SM" type="fix" due-to="Axel M\u00fcller" due-to-email="axel.mueller@i2c-systems.com">
+  <action dev="SM" type="fix" due-to="Axel M&uuml;ller" due-to-email="axel.mueller@i2c-systems.com">
     Fixed Servlet API illegal state when setting the content type after acquiring the
     servlet response instance.
   </action>
