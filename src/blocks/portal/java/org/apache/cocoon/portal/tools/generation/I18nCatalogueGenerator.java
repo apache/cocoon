@@ -47,7 +47,6 @@ public class I18nCatalogueGenerator extends ServiceableGenerator {
     private String catalogueStartTag = "<?xml version=\"1.0\"?><catalogue>";
     private String catalogueEndTag = "</catalogue>";
     private String lang = ".xml";
-    private PortalToolManager ptm = null;
     private StringBuffer i18n = new StringBuffer();
     
     /* (non-Javadoc)
@@ -76,6 +75,7 @@ public class I18nCatalogueGenerator extends ServiceableGenerator {
             lang = src.substring(src.indexOf("_"), src.length());
             lang = lang.toLowerCase();
         }
+        PortalToolManager ptm = null;
         try {
             ptm = (PortalToolManager) this.manager.lookup(PortalToolManager.ROLE);
             List cats = ptm.getI18n();
@@ -103,7 +103,9 @@ public class I18nCatalogueGenerator extends ServiceableGenerator {
             }
         } catch (ServiceException e) {
             e.printStackTrace();
-        } 
+        } finally {
+            this.manager.release(ptm);
+        }
         
     }
 

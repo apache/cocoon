@@ -42,10 +42,10 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  */
 public class LayoutActions {
     
-    private Layout layout = null;
-    private LayoutFactory lf = null;
-    private ProfileManager pm = null;
-    private CopletFactory cf = null;
+    private final Layout layout;
+    private final LayoutFactory lf;
+    private final ProfileManager pm;
+    private final CopletFactory cf;
     
     public LayoutActions(Layout layout, LayoutFactory lf, CopletFactory cf, ProfileManager pm) {
         this.layout = layout;
@@ -54,6 +54,7 @@ public class LayoutActions {
         this.cf = cf;
     }
     
+    // FIXME - where is this used?
     public static int line = 1;
     
     /**
