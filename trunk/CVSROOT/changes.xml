@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.120 2000-10-04 17:02:58 balld Exp $
+  $Id: changes.xml,v 1.121 2000-10-12 17:41:46 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -19,7 +19,6 @@
  <release version="@version@" date="@date@">
   <action dev="DB" type="fix" due-to="Peter Verhage" due-to-email="peter@ibuildings.nl">
    made xincludeprocessor default to parse="xml"
-  </action>
   </action>
   <action dev="DB" type="fix">
    put heapsize line back into cocoon.properties
