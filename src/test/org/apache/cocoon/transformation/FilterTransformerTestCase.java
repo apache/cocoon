@@ -61,7 +61,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: FilterTransformerTestCase.java,v 1.1 2003/12/10 18:52:39 huber Exp $
+ * @version CVS $Id: FilterTransformerTestCase.java,v 1.2 2004/02/02 12:35:04 stephan Exp $
  */
 public class FilterTransformerTestCase extends SitemapComponentTestCase {
 
@@ -90,7 +90,7 @@ public class FilterTransformerTestCase extends SitemapComponentTestCase {
     /**
      * Testcase for count=1, blocknr=1
      */
-    public void testFilter_1_1() {
+    public void testFilter_1_1() throws Exception {
         getLogger().debug("testFilter_1_1");
 
         Parameters parameters = new Parameters();
@@ -108,7 +108,7 @@ public class FilterTransformerTestCase extends SitemapComponentTestCase {
     /**
      * Testcase for count=3, blocknr=1
      */
-    public void testFilter_3_1() {
+    public void testFilter_3_1() throws Exception {
         getLogger().debug("testFilter_3_1");
         
         Parameters parameters = new Parameters();
@@ -126,7 +126,7 @@ public class FilterTransformerTestCase extends SitemapComponentTestCase {
     /**
      * Testcase for count=1, blocknr=3
      */
-    public void testFilter_1_3() {
+    public void testFilter_1_3() throws Exception {
         getLogger().debug("testFilter_1_3");
         
         Parameters parameters = new Parameters();

@@ -11,7 +11,7 @@ public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testWildcardURIMatch() {
+    public void testWildcardURIMatch() throws Exception {
         getRequest().setRequestURI("/test/foo/bla/end");
 
         Parameters parameters = new Parameters();

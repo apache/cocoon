@@ -60,7 +60,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformerTestCase.java,v 1.4 2003/11/26 16:27:23 stephan Exp $
+ * @version CVS $Id: LexicalTransformerTestCase.java,v 1.5 2004/02/02 12:35:04 stephan Exp $
  */
 public class LexicalTransformerTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class LexicalTransformerTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testLexicalTransformer1() {
+    public void testLexicalTransformer1() throws Exception {
         String src = "resource://org/apache/cocoon/transformation/lexertest-lexicon1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/lexertest-input1.xml";
@@ -77,7 +77,7 @@ public class LexicalTransformerTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), transform("lexer", src, parameters, load(input)));
     }
 
-    public void testLexicalTransformer2() {
+    public void testLexicalTransformer2() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/lexertest-lexicon2.xml";
         Parameters parameters = new Parameters();

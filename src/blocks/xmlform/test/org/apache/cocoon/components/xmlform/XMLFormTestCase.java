@@ -61,7 +61,7 @@ import org.apache.cocoon.AbstractCompositeTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: XMLFormTestCase.java,v 1.2 2003/04/26 12:09:44 stephan Exp $
+ * @version CVS $Id: XMLFormTestCase.java,v 1.3 2004/02/02 12:35:04 stephan Exp $
  */
 public class XMLFormTestCase extends AbstractCompositeTestCase {
 
@@ -69,7 +69,7 @@ public class XMLFormTestCase extends AbstractCompositeTestCase {
         super(name);
     }
 
-    public void testXMLForm() {
+    public void testXMLForm() throws Exception {
 
         getRequest().addParameter("cocoon-action-start", "true");
 
