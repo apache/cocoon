@@ -52,20 +52,19 @@ package org.apache.cocoon.bean;
 import org.apache.avalon.fortress.ContainerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
 import org.apache.avalon.fortress.util.FortressConfig;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.logger.NullLogger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.Constants;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CompilingProcessor;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.CocoonContainer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * CocoonBean does XYZ
@@ -90,6 +89,7 @@ public class CocoonBean
     private long m_threadTimeOut = 60l * 1000l;
     private ClassLoader m_parentClassLoader;
     private boolean m_alreadyLoaded;
+    private Map m_properties;
 
     public CocoonBean()
     {
@@ -98,6 +98,7 @@ public class CocoonBean
         m_initializationLogger = new NullLogger();
         m_contManager = null;
         m_alreadyLoaded = false;
+        m_properties = new HashMap();
     }
 
     public CompilingProcessor getRootProcessor()
@@ -278,7 +279,15 @@ public class CocoonBean
         // TODO: implement this.
         //m_confBuilder.setLifecycleExtensionManager( m_lifecycleExtensions );
 
-        m_contManager = new DefaultContainerManager( m_confBuilder.getContext(), m_initializationLogger );
+        DefaultContext initContext = new DefaultContext( m_confBuilder.getContext() );
+        Iterator it = m_properties.entrySet().iterator();
+        while (it.hasNext())
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            initContext.put(entry.getKey(), entry.getValue());
+        }
+
+        m_contManager = new DefaultContainerManager( initContext, m_initializationLogger );
         ContainerUtil.initialize( m_contManager );
     }
 
@@ -318,5 +327,27 @@ public class CocoonBean
     {
         dispose();
         super.finalize();
+    }
+
+    public void setProperty( String key, Object value )
+    {
+        if ( null == value )
+        {
+            m_properties.remove(key);
+        }
+        else
+        {
+            m_properties.put(key, value);
+        }
+    }
+
+    public Object getProperty( String key )
+    {
+        return m_properties.get(key);
+    }
+
+    public void clearAllProperties()
+    {
+        m_properties.clear();
     }
 }
