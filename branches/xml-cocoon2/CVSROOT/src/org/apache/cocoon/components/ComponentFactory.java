@@ -28,7 +28,7 @@ import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-19 17:08:38 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-05 07:19:04 $
  */
 public class ComponentFactory extends AbstractLoggable implements ObjectFactory, ThreadSafe {
 
@@ -68,12 +68,12 @@ public class ComponentFactory extends AbstractLoggable implements ObjectFactory,
             + componentClass.getName() + "."
         );
 
-        if ( comp instanceof Contextualizable ) {
-            ((Contextualizable)comp).contextualize(this.context);
-        }
-
         if ( comp instanceof Loggable) {
             ((Loggable)comp).setLogger(getLogger());
+        }
+
+        if ( comp instanceof Contextualizable ) {
+            ((Contextualizable)comp).contextualize(this.context);
         }
 
         if ( comp instanceof Composer) {
