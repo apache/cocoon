@@ -328,7 +328,7 @@ by the main ones.
   <target name="docs" depends="prepare-docs" description="Generates the documentation">
     <mkdir dir="${build.docs}"/>
     <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
-    <java classname="${doc.generator}">
+    <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
@@ -340,7 +340,7 @@ by the main ones.
   <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
     <copy file="${docs.dir}/docs-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
-    <java classname="${doc.generator}">
+    <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
     </java>
@@ -352,7 +352,7 @@ by the main ones.
   <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
     <copy file="${docs.dir}/site-book.xml" tofile="${docs.dir}/book.xml" filtering="on"/>
-    <java classname="${doc.generator}">
+    <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
