@@ -2,7 +2,7 @@
  <title>B2B processing</title>
   <content>
    <form action="process-order" id="FORM1" method="post" name="FORM1">
-	<para>Input your XML documet here:</para>
+	<para>Input your XML document here:</para>
 	<textarea cols="80" id="TEXTAREA1" name="Foo" rows="60">&lt;?xml version="1.0"?&gt;
 		&lt;Orders&gt;
 		&lt;OrderID&gt;20259&lt;/OrderID&gt;
