@@ -26,7 +26,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.repository.helpers.CredentialsToken;
 import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.webdav.WebDAVUtil;
 import org.apache.commons.httpclient.HttpException;
 
@@ -137,31 +136,34 @@ implements RepositoryVersioningHelper, Serviceable, Disposable, Component {
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#setVersioned(java.lang.String, boolean)
      */
     public boolean setVersioned(final String uri, final boolean versioned) {            
+
         try {
-            if(!versioned)
-                return unsetVersioned(uri);                                                                                   
-            else      
-                return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).versionControlMethod(this.repo.getAbsoluteURI(uri));                           
+            if(!versioned) {
+                WebDAVUtil.moveResource(this.repo.getAbsoluteURI(uri),
+                                        this.repo.getAbsoluteURI(uri + ".temp"),
+                                        false,
+                                        false);
+                WebDAVUtil.copyResource(this.repo.getAbsoluteURI(uri + ".temp"),
+                                        this.repo.getAbsoluteURI(uri),
+                                        false,
+                                        false);
+                WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri + ".temp")).deleteMethod();
+                return true;
+
+            } else {      
+                return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri))
+                                                    .versionControlMethod(this.repo.getAbsoluteURI(uri));
+            }
+
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error while versioncontrol " + uri, he);
         } catch (IOException ioe) {
             this.getLogger().error("IO Error while versioncontrol " + uri, ioe);
-        } catch (ProcessingException pe) {
-            this.getLogger().error("Processing Error while versioncontrol " + uri, pe);
         }
         
         return false;
     }
 
-    private boolean unsetVersioned(final String uri)
-         throws ProcessingException 
-     {
-         //TODO: Also copy props
-         final String content = this.repo.getContentString(uri);
-         final List props = this.repo.getPropertyHelper().getAllProperties(uri);
-         return this.repo.remove(uri) && this.repo.createResource(uri, content);    
-     }
-    
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#getVersions(java.lang.String)
      */
