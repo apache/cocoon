@@ -1,4 +1,4 @@
-/*-- $Id: Router.java,v 1.4 2000-02-13 18:29:22 stefano Exp $ -- 
+/*-- $Id: Router.java,v 1.5 2000-04-04 11:12:02 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import java.util.*;
  * pluggable instance depending on some "type reaction".
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:22 $
+ * @version $Revision: 1.5 $ $Date: 2000-04-04 11:12:02 $
  */
 
 public abstract class Router extends AbstractActor implements Configurable, Status {
@@ -77,7 +77,7 @@ public abstract class Router extends AbstractActor implements Configurable, Stat
         while (e.hasMoreElements()) {
             String type = (String) e.nextElement();
             String name = (String) types.get(type);
-            objects.put(type, factory.create(name, conf));
+            objects.put(type, factory.create(name, conf.getConfigurations(type)));
         }
 	}
     

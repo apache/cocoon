@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.17 2000-03-30 00:37:18 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.18 2000-04-04 11:12:16 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.17 $ $Date: 2000-03-30 00:37:18 $
+ * @version $Revision: 1.18 $ $Date: 2000-04-04 11:12:16 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -135,9 +135,6 @@ public class XSPProcessor extends AbstractActor
   }
 
   public void init(Configurations conf) {
-
-    // Get Configurations
-    conf = conf.getConfigurations("xsp");
 
     // create a repository for xsp logicsheets
     Hashtable xspLogicsheets = new Hashtable(10);
@@ -534,7 +531,21 @@ public class XSPProcessor extends AbstractActor
   }
 
   public boolean hasChanged(Object context) {
-    return true;
+    if (!(context instanceof HttpServletRequest))
+      return true;               // Can't interpret context
+
+    HttpServletRequest request = (HttpServletRequest) context;
+    String filename = Utils.getBasename(request, servletContext);
+
+    // Get page from Cocoon cache
+    PageEntry pageEntry = (PageEntry) this.store.get(filename);
+
+    // New page?
+    if (pageEntry == null) return true;
+
+    // NOT pageEntry.hasChanged ()! We are calling the hasChanged method
+    // of the XSP page itself.
+    return pageEntry.getPage().hasChanged(context);
   }
 
   public String getStatus() {
