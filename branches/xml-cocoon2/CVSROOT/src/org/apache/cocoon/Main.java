@@ -49,7 +49,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.20 $ $Date: 2001-02-12 13:30:42 $
+ * @version CVS $Revision: 1.1.4.21 $ $Date: 2001-02-14 03:58:37 $
  */
 
 public class Main {
@@ -196,7 +196,9 @@ public class Main {
             //appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, contextDir);
             appContext.put(Constants.CONTEXT_ROOT_PATH, contextDir);
             appContext.put(Constants.CONTEXT_CLASS_LOADER, Main.class.getClassLoader());
-            Cocoon c = new Cocoon(conf.toURL(), null, work);
+            appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
+            appContext.put(Constants.CONTEXT_WORK_DIR, work);
+            Cocoon c = new Cocoon();
             c.setLogger(log);
             c.contextualize(appContext);
             c.init();

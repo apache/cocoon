@@ -40,8 +40,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
@@ -50,12 +49,10 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.48 $ $Date: 2001-02-12 13:30:42 $
+ * @version CVS $Revision: 1.4.2.49 $ $Date: 2001-02-14 03:58:36 $
  */
-public class Cocoon
-  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable, Contextualizable {
-
-    private Logger log;
+public class Cocoon extends AbstractLoggable
+  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Contextualizable {
 
     /** The application context */
     private Context context;
@@ -95,55 +92,36 @@ public class Cocoon
         setSystemProperties();
     }
 
-    /**
-     * Create a new <code>Cocoon</code> object, parsing configuration from
-     * the specified file.
-     */
-    public Cocoon(final URL configurationFile, final String classpath, File workDir)
-    throws SAXException,
-           IOException,
-       ConfigurationException,
-           ComponentManagerException {
-        this();
-
-        this.classpath = classpath;
-        this.workDir = workDir;
-        this.configurationFile = configurationFile;
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-            this.componentManager.setLogger(this.log);
-        }
-    }
-
     public void contextualize(Context context) {
         if (this.context == null) {
             this.context = context;
             this.componentManager.contextualize(this.context);
+
+            this.classpath = (String) context.get(Constants.CONTEXT_CLASSPATH);
+            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+            this.configurationFile = (URL) context.get(Constants.CONTEXT_CONFIG_URL);
         }
     }
 
     public void init() throws Exception {
-        log.debug("New Cocoon object.");
+        getLogger().debug("New Cocoon object.");
 
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
-        log.debug("Using parser: " + parser);
+        getLogger().debug("Using parser: " + parser);
 
         try {
             this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser),null);
         } catch ( Exception e ) {
-            log.error("Could not load parser, Cocoon object not created.", e);
+            getLogger().error("Could not load parser, Cocoon object not created.", e);
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
         this.componentManager.addComponentInstance(Roles.COCOON, this);
 
-        log.debug("Classpath = " + classpath);
+        getLogger().debug("Classpath = " + classpath);
 
-        log.debug("Work directory = " + workDir.getCanonicalPath());
+        getLogger().debug("Work directory = " + workDir.getCanonicalPath());
 
         Parser p = (Parser) this.lookup(Roles.PARSER);
         SAXConfigurationHandler b = new SAXConfigurationHandler();
@@ -180,35 +158,35 @@ public class Cocoon
 
         this.configuration = conf;
 
-        log.debug("Root configuration: " + conf.getName());
+        getLogger().debug("Root configuration: " + conf.getName());
         if (!"cocoon".equals(conf.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
 
-        log.debug("Configuration version: " + conf.getAttribute("version"));
+        getLogger().debug("Configuration version: " + conf.getAttribute("version"));
         if (!CONF_VERSION.equals(conf.getAttribute("version"))) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '"
                 + CONF_VERSION + "'.");
         }
 
-        log.debug("Setting up components...");
+        getLogger().debug("Setting up components...");
         this.componentManager.configure(conf);
 
-        log.debug("Setting up the sitemap.");
+        getLogger().debug("Setting up the sitemap.");
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
 
         this.sitemapManager = new Manager(null);
-        this.sitemapManager.setLogger(this.log);
+        this.sitemapManager.setLogger(getLogger());
         this.sitemapManager.compose(this);
         this.sitemapManager.configure(conf);
         this.sitemapFileName = sconf.getAttribute("file");
         if (this.sitemapFileName == null) {
-            log.error("No sitemap file name");
+            getLogger().error("No sitemap file name");
             throw new ConfigurationException("No sitemap file name\n" + conf.toString());
         }
 
-        log.debug("Sitemap location = " + this.sitemapFileName);
+        getLogger().debug("Sitemap location = " + this.sitemapFileName);
     }
 
     /**
@@ -228,7 +206,7 @@ public class Cocoon
         try {
             answer = date < this.configurationFile.openConnection().getLastModified();
         } catch (IOException ioe) {
-            log.warn("Problem checking the date on the Configuration File.", ioe);
+            getLogger().warn("Problem checking the date on the Configuration File.", ioe);
             answer = false;
         }
 

@@ -59,7 +59,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.52 $ $Date: 2001-02-12 13:30:45 $
+ * @version CVS $Revision: 1.1.4.53 $ $Date: 2001-02-14 03:58:37 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -72,13 +72,8 @@ public class CocoonServlet extends HttpServlet {
 
     private long creationTime = 0;
     private Cocoon cocoon;
-    private URL configFile;
     private Exception exception;
-    private ServletContext servletContext;
     private DefaultContext appContext = new DefaultContext();
-    private String classpath;
-    private File workDir;
-    private RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -96,24 +91,27 @@ public class CocoonServlet extends HttpServlet {
     throws ServletException {
 
         super.init(conf);
+        RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
+        ServletContext context = conf.getServletContext();
 
-        this.servletContext = conf.getServletContext();
-        this.appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, this.servletContext);
+        ClassUtils.setClassLoader(classloader);
+        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
 
-        this.initLogger(conf.getInitParameter("log-level"), this.servletContext);
+        this.appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, context);
 
-        this.setClassPath(this.servletContext);
+        this.initLogger(conf.getInitParameter("log-level"), context, classloader);
+
+        this.appContext.put(Constants.CONTEXT_CLASSPATH, this.getClassPath(context, classloader));
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
-        this.workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
+        this.appContext.put(Constants.CONTEXT_WORK_DIR,
+                context.getAttribute("javax.servlet.context.tempdir"));
 
-        this.setConfigFile(conf.getInitParameter("configurations"), this.servletContext);
+        this.appContext.put(Constants.CONTEXT_CONFIG_URL,
+                this.getConfigFile(conf.getInitParameter("configurations"), context));
 
-        this.appContext.put(Constants.CONTEXT_ROOT_PATH, this.servletContext.getRealPath("/"));
-
-        ClassUtils.setClassLoader(this.classloader);
-        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
+        this.appContext.put(Constants.CONTEXT_ROOT_PATH, context.getRealPath("/"));
 
         this.createCocoon();
     }
@@ -134,14 +132,14 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     private void setClassPath(final ServletContext context)
+     private String getClassPath(final ServletContext context, RepositoryClassLoader classloader)
      throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
         String classDir = context.getRealPath("/WEB-INF/classes");
         File root = new File(context.getRealPath("/WEB-INF/lib"));
 
         try {
-            this.classloader.addDirectory(new File(classDir));
+            classloader.addDirectory(new File(classDir));
         } catch (Exception e) {
             log.debug("Could not add directory" + classDir, e);
         }
@@ -156,7 +154,7 @@ public class CocoonServlet extends HttpServlet {
                               .append(IOUtils.getFullFilename(libraries[i]));
 
                 try {
-                    this.classloader.addDirectory(libraries[i]);
+                    classloader.addDirectory(libraries[i]);
                 } catch (Exception e) {
                     log.debug("Could not add file" + IOUtils.getFullFilename(libraries[i]));
                 }
@@ -166,7 +164,7 @@ public class CocoonServlet extends HttpServlet {
         buildClassPath.append(File.pathSeparatorChar)
                       .append(System.getProperty("java.class.path"));
 
-        this.classpath = buildClassPath.toString();
+        return buildClassPath.toString();
      }
 
     /**
@@ -184,7 +182,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-    private void initLogger(final String logLevel, final ServletContext context)
+    private void initLogger(final String logLevel, final ServletContext context, final RepositoryClassLoader classloader)
     throws ServletException {
         final Priority.Enum logPriority;
 
@@ -204,7 +202,7 @@ public class CocoonServlet extends HttpServlet {
                        new ServletLogTarget(context, Priority.ERROR)
                 });
 
-            this.classloader.setLogger(this.log);
+            classloader.setLogger(this.log);
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
@@ -220,13 +218,13 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-    private void setConfigFile(final String configFileName, final ServletContext context)
+    private URL getConfigFile(final String configFileName, final ServletContext context)
     throws ServletException {
         final String usedFileName;
+
         if (configFileName == null) {
             log.warn("Servlet initialization argument 'configurations' not specified, attempting to use '/cocoon.xconf'");
             usedFileName = "/cocoon.xconf";
-            // throw new ServletException("Servlet initialization argument 'configurations' not specified");
         } else {
             usedFileName = configFileName;
         }
@@ -234,7 +232,7 @@ public class CocoonServlet extends HttpServlet {
         log.debug("Using configuration file: " + usedFileName);
 
         try {
-            this.configFile = this.servletContext.getResource(usedFileName);
+            return context.getResource(usedFileName);
         } catch (Exception mue) {
             log.error("Servlet initialization argument 'configurations' not found at " + usedFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + usedFileName);
@@ -328,7 +326,7 @@ public class CocoonServlet extends HttpServlet {
                 uri = uri.substring(1);
             }
 
-            HttpEnvironment env = new HttpEnvironment(uri, req, res, this.servletContext);
+            HttpEnvironment env = new HttpEnvironment(uri, req, res, (ServletContext) this.appContext.get(Constants.CONTEXT_SERVLET_CONTEXT));
             env.setLogger(this.log);
 
             if (!this.cocoon.process(env)) {
@@ -401,10 +399,11 @@ public class CocoonServlet extends HttpServlet {
      */
     private void createCocoon() {
         try {
-            log.info("Reloading from: " + this.configFile.toExternalForm());
-            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
-            c.setLogger(this.log);
+            URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
+            log.info("Reloading from: " + configFile.toExternalForm());
+            Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
             c.contextualize(this.appContext);
+            c.setLogger(this.log);
             c.init();
             this.creationTime = new Date().getTime();
             this.cocoon = c;
