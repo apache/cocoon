@@ -29,6 +29,7 @@
     <menu-item label="Extending" href="extending.html"/>
     <menu-item label="Avalon" href="avalon.html"/>
     <menu-item label="Source Handling" href="source.html"/>
+    <menu-item label="Stores" href="stores.html"/>
     <menu-item label="Using Databases" href="datasources.html"/>
     <menu-item label="Parent CM" href="parent-component-manager.html"/>
     <menu-item label="DELI Quick Start" href="deliquick.html"/>
