@@ -16,11 +16,13 @@
 -->
 <project name="Cocoon build system" default="init">
 
-    <target name="setProperties">
+    <target name="core-setProperties">
+        <!-- get the properties of properties configuration files -->
         <property name="server" value="localhost"/>
         <property file="${server}.build.properties"/>
         <property file="project.properties"/>
 
+        <!-- conditions depending on property values -->
         <property name="container.use" value="false"/>
         <property name="classesToJAR" value="false"/>
         <condition property="cond.container.use">
@@ -30,6 +32,7 @@
           <istrue value="${classesToJAR}"/>
         </condition>
 
+        <!-- repository directory structure -->
         <property name="rep.cocoon.dir" value="${rep}/cocoon/${cocoon.version}"/>
         <property name="rep.cocoon.webapp.dir" value="${rep.cocoon.dir}/webapp"/>
         <property name="rep.cocoon.lib.dir" value="${rep.cocoon.dir}/webapp/WEB-INF/lib"/>
@@ -37,16 +40,19 @@
         <property name="rep.cocoon.db.dir" value="${rep.cocoon.webapp.dir}/WEB-INF/db"/>
         <property name="rep.container.dir" value="${rep}/container/${container.version}"/>
 
+        <!-- target directory structure -->
         <property name="build.dir" value="build"/>
         <property name="build.webapp.war.dir" value="${build.dir}/${server}_webapp"/>
         <property name="build.webapp.dir" value="${build.dir}/${server}_webapp/ROOT"/>
         <property name="build.container.dir" value="${build.dir}/${server}_container"/>
 
+        <!-- local directories -->
         <property name="local.webapp.dir" value="webapp"/>
         <property name="local.src.dir" value="java"/>
         <property name="local.lib.dir" value="lib"/>
         <property name="local.conf.dir" value="conf"/>
 
+        <!-- default values for compiler settings -->
         <property name="compiler" value="modern"/>
         <property name="compiler.debug" value="on"/>
         <property name="compiler.optimize" value="on"/>
@@ -56,12 +62,12 @@
         <property name="target.vm" value="1.3"/>
     </target>
 
-    <target name="init" depends="beforeSetProperties, setProperties, afterSetProperties, setFilters">
+    <target name="init" depends="setProperties, setFilters">
         <!-- global filters -->
         <filter token="filter.webapp.path" value="${webapp.path}"/>
     </target>
 
-    <target name="webapp" depends="init, before-webapp" description="create the web application">
+    <target name="core-webapp" depends="before-webapp">
         <mkdir dir="${build.webapp.dir}"/>
 
         <!-- copy Cocoon -->
@@ -99,9 +105,6 @@
         <copy todir="${build.webapp.dir}/WEB-INF/lib" filtering="off">
             <fileset dir="${local.lib.dir}"/>
         </copy>
-
-        <antcall  target="after-webapp"/>
-
     </target>
 
     <target name="classesToJAR" if="cond.classesToJAR">
@@ -111,38 +114,36 @@
         <delete dir="${build.webapp.dir}/WEB-INF/classes"/>
     </target>
 
-    <target name="war" depends="webapp" description="create a web archive (WAR)">
+    <target name="core-war" depends="before-war">
         <zip destfile="${build.webapp.war.dir}/ROOT.war">
             <fileset dir="${build.webapp.dir}"/>
         </zip>
     </target>
 
-    <target name="container" depends="init" if="cond.container.use" description="screate a container (uses the property ">
+    <target name="core-container" depends="before-container">
         <ant antfile="${rep.container.dir}/container-build.xml"
             target="create-${container.version}" inheritall="true"/>
     </target>
 
-    <target name="run" depends="init, before-run" description="run the container (only works on windows)">
+    <target name="core-run" depends="before-run">
         <!-- TODO support *nix here -->
         <property file="${rep.container.dir}/build-conf/server.properties"/>
         <exec executable="${build.container.dir}/${server.start.win}" spawn="true">
           <env key="CATALINA_HOME" value="${build.container.dir}"/>
           <arg value="start"/>
         </exec>
-        <antcall target="after-run"/>
     </target>
 
-    <target name="stop" depends="init, before-stop" description="run the container (only works on windows)">
+    <target name="core-stop" depends="init, before-stop">
         <!-- TODO support *nix here -->
         <property file="${rep.container.dir}/build-conf/server.properties"/>
         <exec executable="${build.container.dir}/${server.stop.win}" spawn="true">
           <env key="CATALINA_HOME" value="${build.container.dir}"/>
           <arg value="start"/>
         </exec>
-        <antcall target="after-stop"/>
     </target>
 
-    <target description="Compile" name="compile" depends="init, before-compile">
+    <target name="core-compile" depends="before-compile">
         <!-- TODO support more than one directory with Java classes -->
         <path id="classpath">
             <fileset dir="${rep.cocoon.lib.dir}">
@@ -169,36 +170,53 @@
                debug="${compiler.debug}"
                destdir="${build.webapp.dir}/WEB-INF/classes"
                srcdir="${local.src.dir}" />
-        <antcall target="after-compile"/>
     </target>
 
-    <target name="clean" description="clean webapps and container" depends="init, before-clean">
+    <target name="core-clean" depends="before-clean">
         <delete includeEmptyDirs="true">
           <fileset dir="${build.dir}">
               <include name="*_container/**"/>
               <include name="*_webapp/**"/>
           </fileset>
         </delete>
-        <antcall target="after-clean"/>
     </target>
 
-    <target name="clean-all" description="clean *everything* in the build dir" depends="init">
+    <target name="core-clean-all" depends="before-clean-all">
         <delete dir="${build.dir}"/>
     </target>
 
     <!-- interception targets -->
-    <target name="beforeSetProperties"/>
-    <target name="afterSetProperties"/>
-    <target name="before-webapp"/>
-    <target name="after-webapp"/>
-    <target name="before-run"/>
-    <target name="after-run"/>
-    <target name="before-stop"/>
-    <target name="afeter-stop"/>
-    <target name="before-compile"/>
-    <target name="after-compile"/>
-    <target name="before-clean"/>
-    <target name="after-clean"/>
+    <target name="before-setProperties" depends="init"/>
+    <target name="after-setProperties" depends="core-setProperties"/>
+    <target name="before-webapp" depends="init"/>
+    <target name="after-webapp" depends="core-webapp"/>
+    <target name="before-war" depends="webapp"/>
+    <target name="after-war" depends="core-war"/>
+    <target name="before-container" depends="init" if="cond.container.use"/>
+    <target name="after-container" depends="core-container" if="cond.container.use"/>
+    <target name="before-run" depends="init"/>
+    <target name="after-run" depends="core-run"/>
+    <target name="before-stop" depends="init"/>
+    <target name="after-stop" depends="core-stop"/>
+    <target name="before-compile" depends="init"/>
+    <target name="after-compile" depends="core-compile"/>
+    <target name="before-clean" depends="init"/>
+    <target name="after-clean" depends="core-clean"/>
+    <target name="before-clean-all" depends="init"/>
+    <target name="after-clean-all" depends="core-clean-all"/>
+
+    <!-- public available targets -->
+    <target name="container" depends="after-container" if="cond.container.use" description="screate a container (uses the property 'container.version')"/>
+    <target name="webapp" depends="after-webapp" description="create the web application"/>
+    <target name="war" depends="after-war" description="create a web archive (WAR)"/>
+    <target name="run" depends="after-run" description="run the container (currently it only works on windows boxes)"/>
+    <target name="stop" depends="after-stop" description="run the container (currently it only works on windows boxes)"/>
+    <target name="compile" depends="after-compile" description="Compile Java classes"/>
+    <target name="clean" depends="after-clean" description="clean webapps and container"/>
+    <target name="clean-all" depends="after-clean-all" description="clean *everything* in the build dir"/>
+
+    <!-- internally available targets -->
+    <target name="setProperties" depends="after-setProperties"/>
 
     <!-- empty targets to be overriden -->
     <target name="setFilters"/>
