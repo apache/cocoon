@@ -64,12 +64,12 @@ public interface Binding {
      * @param frmModel
      * @param objModel
      */
-    public void loadFormFromModel(Widget frmModel, Object objModel);
+    void loadFormFromModel(Widget frmModel, Object objModel);
     
     /**
      * Saves the infortmation-elements to the objModel from the frmModel.
      * @param frmModel
      * @param objModel
      */
-    public void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
 }

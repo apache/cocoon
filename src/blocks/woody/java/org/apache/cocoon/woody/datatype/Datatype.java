@@ -76,14 +76,14 @@ public interface Datatype {
      * fails. This method uses the same {@link Convertor} as returned by the
      * {@link #getConvertor} method.
      */
-    public Object convertFromString(String value, Locale locale);
+    Object convertFromString(String value, Locale locale);
 
     /**
      * Converts an object of this datatype to a string representation.
      * This method uses the same {@link Convertor} as returned by the
      * {@link #getConvertor} method.
      */
-    public String convertToString(Object value, Locale locale);
+    String convertToString(Object value, Locale locale);
 
     /**
      * Returns null if validation is successful, otherwise returns a
@@ -92,20 +92,20 @@ public interface Datatype {
      * @param value an Object of the correct type for this datatype (see {@link #getTypeClass}, or
      * if {@link #isArrayType} returns true, an array of objects of that type.
      */
-    public ValidationError validate(Object value, ExpressionContext expressionContext);
+    ValidationError validate(Object value, ExpressionContext expressionContext);
 
     /**
      * Gets the class object for the type represented by this datatype. E.g. Long, String, ...
      * The objects returned from the convertFromString* methods are of this type, and the object
      * passed to the convertToString* or validate methods should be of this type.
      */
-    public Class getTypeClass();
+    Class getTypeClass();
 
     /**
      * Returns a descriptive name for the base type of this datatype,
      * i.e. something like 'string', 'long', 'decimal', ...
      */
-    public String getDescriptiveName();
+    String getDescriptiveName();
 
     /**
      * Indicates wether this datatype represents an array type. This approach has been
@@ -115,22 +115,22 @@ public interface Datatype {
      * arrays instead of single values, and hence different validation rules will be
      * required.
      */
-    public boolean isArrayType();
+    boolean isArrayType();
 
     /**
      * Returns the convertor used by this datatype.
      */
-    public Convertor getConvertor();
+    Convertor getConvertor();
 
     /**
      * Returns the "plain convertor". This is convertor that should have a locale-independent
      * string encoding, and guarantees perfect roundtripping. It is used if a value of this
      * datatype needs to be stored but not displayed to the user.
      */
-    public Convertor getPlainConvertor();
+    Convertor getPlainConvertor();
 
     /**
      * Returns the factory that built this datatype.
      */
-    public DatatypeBuilder getBuilder();
+    DatatypeBuilder getBuilder();
 }

@@ -59,6 +59,7 @@ import java.util.Locale;
  * Interface to be implemented by selection lists.
  */
 public interface SelectionList {
+    
     Datatype getDatatype();
 
     void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException;

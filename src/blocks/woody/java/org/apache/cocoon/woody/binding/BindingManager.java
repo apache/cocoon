@@ -60,18 +60,17 @@ public interface BindingManager {
     /**
      * Avalon Role for this service interface.
      */
-    public static final String ROLE = BindingManager.class.getName();
+    String ROLE = BindingManager.class.getName();
 
     /**
      * Constant matching the namespace used for the Binding config files. 
      */
-    public static final String NAMESPACE =
-        "http://apache.org/cocoon/woody/binding/1.0";
+    String NAMESPACE = "http://apache.org/cocoon/woody/binding/1.0";
 
     /**
      * Creates a binding from the XML config found at source parameter.
      */
-    public Binding createBinding(Source bindingFile)
+    Binding createBinding(Source bindingFile)
         throws BindingException;
 
 }

@@ -70,11 +70,11 @@ public interface Convertor {
      *
      * @param formatCache can be null if not needed
      */
-    public Object convertFromString(String value, Locale locale, FormatCache formatCache);
+    Object convertFromString(String value, Locale locale, FormatCache formatCache);
 
-    public String convertToString(Object value, Locale locale, FormatCache formatCache);
+    String convertToString(Object value, Locale locale, FormatCache formatCache);
 
-    public Class getTypeClass();
+    Class getTypeClass();
 
     public interface FormatCache {
         public Object get();

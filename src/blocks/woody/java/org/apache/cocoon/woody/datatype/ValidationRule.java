@@ -64,7 +64,7 @@ public interface ValidationRule {
      * @param expressionContext many validation rules use the xReporter expression interpreter,
      * the expressionContext allows to resolve variables used in these expressions.
      */
-    public ValidationError validate(Object value, ExpressionContext expressionContext);
+    ValidationError validate(Object value, ExpressionContext expressionContext);
 
     /**
      * Returns true if this ValidationRule supports validating objects of the same class
@@ -72,5 +72,5 @@ public interface ValidationRule {
      * if this validation rule can validate arrays of these objects (i.e. the object passed
      * to the validate method will then be an array).
      */
-    public boolean supportsType(Class clazz, boolean arrayType);
+    boolean supportsType(Class clazz, boolean arrayType);
 }

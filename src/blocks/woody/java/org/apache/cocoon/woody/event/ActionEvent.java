@@ -57,6 +57,6 @@ import org.apache.cocoon.woody.formmodel.Widget;
  * widget.
  */
 public interface ActionEvent {
-    public String getActionCommand();
-    public Widget getSource();
+    String getActionCommand();
+    Widget getSource();
 }
