@@ -500,7 +500,7 @@
       +-->
   <i18n-bundles logger="core.i18n-bundles">
     <catalogue-name>messages</catalogue-name>
-    <catalogue-location>i18n/translations</catalogue-location>
+    <catalogue-location>context://samples/i18n/translations</catalogue-location>
     <cache-at-startup>true</cache-at-startup>
   </i18n-bundles>
 
