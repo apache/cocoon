@@ -53,14 +53,14 @@ package org.apache.cocoon.components.jxforms.validation;
 /**
  *
  * @author  ivelin@apache.org
- * @version CVS $Id: Schema.java,v 1.1 2003/07/12 19:22:29 coliver Exp $
+ * @version CVS $Id: Schema.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
  */
 public interface Schema {
 
     /**
      *
      *
-     * @return
+     * @return org.apache.cocoon.components.jxforms.validation.Validator
      */
     Validator newValidator() throws InstantiationException;
 
