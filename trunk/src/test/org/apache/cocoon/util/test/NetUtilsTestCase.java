@@ -28,7 +28,7 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: NetUtilsTestCase.java,v 1.5 2004/03/08 14:04:20 cziegeler Exp $
+ * @version CVS $Id: NetUtilsTestCase.java,v 1.6 2004/05/05 22:21:09 ugo Exp $
  */
 public class NetUtilsTestCase extends TestCase
 {
@@ -63,6 +63,7 @@ public class NetUtilsTestCase extends TestCase
      */
     public void testGetPath() throws Exception {
         Object[] test_values = {
+                new String[]{"", ""},
                 new String[]{"/", ""},
                 new String[]{"/foo.bar", ""},
                 new String[]{"foo/bar", "foo"},
@@ -198,23 +199,33 @@ public class NetUtilsTestCase extends TestCase
 
 
     /**
-     * A unit test for <code>NetUtils.normalize()</code>
-     *
-     * @exception  Exception  Description of Exception
-     * @since
+     * A unit test for {@link NetUtils#normalize(String)}
      */
     public void testNormalize() throws Exception {
         Object[] test_values = {
+                new String[]{"", ""},
+                new String[]{"/", "/"},
+                new String[]{"/../", "/../"},
+                new String[]{"/../../", "/../../"},
+                new String[]{"/../../foo", "/../../foo"},
+                new String[]{"/../../foo//./../bar", "/../../bar"},
+                new String[]{"//foo//bar", "//foo/bar"},
+                new String[]{"//foo//./bar", "//foo/bar"},
                 new String[]{"/foo/bar", "/foo/bar"},
+                new String[]{"/foo/bar/", "/foo/bar/"},
+                new String[]{"/foo/../bar", "/bar"},
+                new String[]{"/foo/../bar/", "/bar/"},
                 new String[]{"bar", "bar"},
                 new String[]{"foo/../bar", "bar"},
                 new String[]{"foo/./bar", "foo/bar"},
-                new String[]{"foo/bar1/bar2/bar3/../../..", "foo"},
+                new String[]{"foo/bar1/bar2/bar3/../../..", "foo/"},
                 };
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
             String test = tests[0];
             String expected = tests[1];
+            // alternative for JDK 1.4
+            //String expected = new java.net.URI(test).normalize().toString();
 
             String result = NetUtils.normalize(test);
             String message = "Test " + "'" + test + "'";

@@ -19,22 +19,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.StringTokenizer;
 
-import org.apache.excalibur.source.SourceParameters;
 import org.apache.cocoon.environment.Request;
 import org.apache.commons.lang.StringUtils;
+import org.apache.excalibur.source.SourceParameters;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.9 2004/04/20 16:10:52 ugo Exp $
+ * @version CVS $Id: NetUtils.java,v 1.10 2004/05/05 22:21:09 ugo Exp $
  */
 
 public class NetUtils {
@@ -196,7 +197,6 @@ public class NetUtils {
                 buf.reset();
             }
         }
-
         return rewrittenPath.toString();
     }
 
@@ -257,23 +257,16 @@ public class NetUtils {
      * @return The absolutized resource path
      */
     public static String absolutize(String path, String resource) {
-        if (path == null || path.length() == 0) {
-            // Base path is empty
+        if (StringUtils.isEmpty(path)) {
             return resource;
-        }
-        
-        if (resource == null || resource.length() == 0) {
-            // Resource path is empty
+        } else if (StringUtils.isEmpty(resource)) {
             return path;
-        }
-
-        if (resource.charAt(0) == '/') {
+        } else if (resource.charAt(0) == '/') {
             // Resource path is already absolute
             return resource;
         }
-        
-        int length = path.length() - 1;
-        boolean slash = (path.charAt(length) == '/');
+
+        boolean slash = (path.charAt(path.length() - 1) == '/');
         
         StringBuffer b = new StringBuffer();
         b.append(path);
@@ -292,14 +285,14 @@ public class NetUtils {
      * @return the resource relative to the given path
      */
     public static String relativize(String path, String absoluteResource) {
-        if (path == null || "".equals(path)) {
+        if (StringUtils.isEmpty(path)) {
             return absoluteResource;
         }
-        
+
         if (path.charAt(path.length() - 1) != '/') {
             path += "/";
         }
-        
+
         if (absoluteResource.startsWith(path)) {
             // resource is direct descentant
             return absoluteResource.substring(path.length());
@@ -329,58 +322,51 @@ public class NetUtils {
      * @return The normalized uri
      */
     public static String normalize(String uri) {
-        String[] dirty = StringUtils.split(uri, "/");
-        int length = dirty.length;
-        String[] clean = new String[length];
-
-        boolean path;
-        boolean finished;
-        while (true) {
-            path = false;
-            finished = true;
-            for (int i = 0, j = 0; (i < length) && (dirty[i] != null); i++) {
-                if (".".equals(dirty[i])) {
-                    // ignore
-                } else if ("..".equals(dirty[i])) {
-                    clean[j++] = dirty[i];
-                    if (path) finished = false;
-                } else {
-                    if ((i+1 < length) && ("..".equals(dirty[i+1]))) {
-                        i++;
-                    } else {
-                        clean[j++] = dirty[i];
-                        path = true;
+        if ("".equals(uri)) {
+            return uri;
+        }
+        int leadingSlashes = 0;
+        for (leadingSlashes = 0 ; leadingSlashes < uri.length()
+                && uri.charAt(leadingSlashes) == '/' ; ++leadingSlashes) {}
+        boolean isDir = (uri.charAt(uri.length() - 1) == '/');
+        StringTokenizer st = new StringTokenizer(uri, "/");
+        LinkedList clean = new LinkedList();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if ("..".equals(token)) {
+                if (! clean.isEmpty() && ! "..".equals(clean.getLast())) {
+                    clean.removeLast();
+                    if (! st.hasMoreTokens()) {
+                        isDir = true;
                     }
+                } else {
+                    clean.add("..");
                 }
-            }
-            if (finished) {
-                break;
-            } else {
-                dirty = clean;
-                clean = new String[length];
+            } else if (! ".".equals(token) && ! "".equals(token)) {
+                clean.add(token);
             }
         }
-
-        StringBuffer b = new StringBuffer(uri.length());
-        
-        // Added this check to satisfy NetUtilsTestCase. I cannot ascertain whether
-        // this is correct or not, since the description of this method is not very
-        // clear. [Ugo Cei <ugo@apache.org> 2004-04-19]
-        if (uri.charAt(0) == '/') {
-            b.append('/');
+        StringBuffer sb = new StringBuffer();
+        while (leadingSlashes-- > 0) {
+            sb.append('/');
         }
-
-        for (int i = 0; (i < length) && (clean[i] != null); i++) {
-            b.append(clean[i]);
-            if ((i+1 < length) && (clean[i+1] != null)) b.append("/");
+        for (Iterator it = clean.iterator() ; it.hasNext() ; ) {
+            sb.append(it.next());
+            if (it.hasNext()) {
+                sb.append('/');
+            }
         }
-
-        return b.toString();
+        if (isDir && sb.length() > 0 && sb.charAt(sb.length() - 1) != '/') {
+            sb.append('/');
+        }
+        return sb.toString();
     }
 
     /**
      * Remove parameters from a uri.
-     *
+     * Resulting Map will have either String for single value attributes,
+     * or String arrays for multivalue attributes.
+     * 
      * @param uri The uri path to deparameterize.
      * @param parameters The map that collects parameters.
      * @return The cleaned uri
@@ -390,8 +376,8 @@ public class NetUtils {
         if (i == -1) {
             return uri;
         }
-        
-        String[] params = StringUtils.split(uri.substring(i + 1), "&");
+
+        String[] params = StringUtils.split(uri.substring(i + 1), '&');
         for (int j = 0; j < params.length; j++) {
             String p = params[j];
             int k = p.indexOf('=');
@@ -399,24 +385,61 @@ public class NetUtils {
                 break;
             }
             String name = p.substring(0, k);
-            String value = p.substring(k+1);
-            parameters.put(name, value);
+            String value = p.substring(k + 1);
+            Object values = parameters.get(name);
+            if (values == null) {
+                parameters.put(name, value);
+            } else if (values.getClass().isArray()) {
+                String[] v1 = (String[])values;
+                String[] v2 = new String[v1.length + 1];
+                System.arraycopy(v1, 0, v2, 0, v1.length);
+                v2[v1.length] = value;
+                parameters.put(name, v2);
+            } else {
+                parameters.put(name, new String[]{values.toString(), value});
+            }
         }
         return uri.substring(0, i);
     }
 
+    /**
+     * Add parameters stored in the Map to the uri string.
+     * Map can contain Object values which will be converted to the string,
+     * or Object arrays, which will be treated as multivalue attributes.
+     * 
+     * @param uri The uri to add parameters into
+     * @param parameters The map containing parameters to be added
+     * @return The uri with added parameters
+     */
     public static String parameterize(String uri, Map parameters) {
         if (parameters.size() == 0) {
             return uri;
         }
         
         StringBuffer buffer = new StringBuffer(uri);
-        buffer.append('?');
+        if (uri.indexOf('?') == -1) {
+            buffer.append('?');
+        } else {
+            buffer.append('&');
+        }
+        
         for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry)i.next();
-            buffer.append(entry.getKey());
-            buffer.append('=');
-            buffer.append(entry.getValue());
+            if (entry.getValue().getClass().isArray()) {
+                Object[] value = (Object[])entry.getValue();
+                for (int j = 0; j < value.length; j++) {
+                    if (j > 0) {
+                        buffer.append('&');
+                    }
+                    buffer.append(entry.getKey());
+                    buffer.append('=');
+                    buffer.append(value[j]);
+                }
+            } else {
+                buffer.append(entry.getKey());
+                buffer.append('=');
+                buffer.append(entry.getValue());
+            }
             if (i.hasNext()) {
                 buffer.append('&');
             }
