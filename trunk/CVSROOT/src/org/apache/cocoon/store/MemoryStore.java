@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.14 2000-11-19 20:38:52 greenrd Exp $ --
+/*-- $Id: MemoryStore.java,v 1.15 2001-01-16 22:35:01 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,7 +67,7 @@ import org.apache.cocoon.framework.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:michel.lehon@outwares.com">Michel Lehon</a>
- * @version $Revision: 1.14 $ $Date: 2000-11-19 20:38:52 $
+ * @version $Revision: 1.15 $ $Date: 2001-01-16 22:35:01 $
  */
 
 public class MemoryStore implements Store, Status, Configurable, Runnable {
@@ -79,7 +79,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
 
     /**
      * Indicates how big the heap size can grow to before the cleanup thread kicks in.
-     * The default value is based on the default maximum heap size of 64Mb.
+     * The default value is based on the default maximum heap size of 60Mb.
      */
     private int heapsize;
 
@@ -162,11 +162,6 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
     public void run() {
         while (true) {
 
-            // RDG (2000/11/19): Changed the algorithm to free store entries when EITHER
-            // the heap is too big or the free RAM is too small, rather than both having to be
-            // true as was previously the case. This is more intuitive and more forgiving
-            // of configuration mistakes.
-
             if (memoryLow ()) {
                 this.jvm.runFinalization();
                 this.jvm.gc();
@@ -184,7 +179,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
     }
 
     public boolean memoryLow () {
-        return jvm.totalMemory () > heapsize || jvm.freeMemory () < freememory;
+        return jvm.totalMemory () > heapsize && jvm.freeMemory () < freememory;
     }
 
     /**
