@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,34 +15,39 @@
  */
 package org.apache.cocoon.components.source;
 
-
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.xml.sax.ext.LexicalHandler;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- *  This is an <code>XMLConsumer</code> which rewrites the stream
- *  according to the configuration.
- *  The configuration can have the following parameters:
- *  "rewriteURLMode" : The mode to rewrite the urls. Currently none and cocoon
- *                     are supported.
- *  "cocoonURL"    : The url all links are resolved to
- *  "urlParameterName" : The parameter name to use for links (all links are
- *                       then "cocoonURL?urlParameterName=LINK"
- *  "baseURL"        : The current URL to rewrite
+ * This is an <code>XMLConsumer</code> which rewrites the stream according
+ * to the configuration. The configuration can have the following
+ * parameters:
+ *
+ * <ul>
+ * <li><code>rewriteURLMode</code>: The mode to rewrite the urls. Currently,
+ *     values <code>none</code> and <code>cocoon</code> are supported.
+ * <li><code>baseURL</code>: The current URL to rewrite.
+ * <li><code>cocoonURL</code>: The url all links are resolved to.
+ * <li><code>urlParameterName</code>: The parameter name to use for
+ *     links (all links are then "cocoonURL?urlParameterName=LINK").
+ * </ul>
+ *
+ * <p>URLRewriter rewrites only href, src, background, and action attributes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: URLRewriter.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
-*/
+ * @version CVS $Id: URLRewriter.java,v 1.3 2004/06/11 17:41:11 vgritsenko Exp $
+ */
 public final class URLRewriter implements XMLConsumer {
 
     public static final String PARAMETER_MODE = "rewriteURLMode";
@@ -56,10 +61,14 @@ public final class URLRewriter implements XMLConsumer {
     private ContentHandler contentHandler;
     /** The <code>LexicalHandler</code> */
     private LexicalHandler lexicalHandler;
-    /** The mode:
-     *  0 : no rewriting
-     *  1 : cocoon */
+
+    /**
+     * The mode:
+     *  0: no rewriting
+     *  1: cocoon
+     */
     private int mode;
+
     /** The base url */
     private String baseUrl;
     /** The cocoon url */
@@ -76,14 +85,12 @@ public final class URLRewriter implements XMLConsumer {
             this.contentHandler = contentHandler;
             this.lexicalHandler = lexicalHandler;
             this.mode = 0;
-            if (configuration != null
-                && configuration.getParameter(PARAMETER_MODE, null) != null) {
-                if (configuration.getParameter(PARAMETER_MODE, null).equalsIgnoreCase(MODE_COCOON) == true) {
-                    this.mode = 1;
-                    this.baseUrl = configuration.getParameter(PARAMETER_URL);
-                    this.cocoonUrl = configuration.getParameter(PARAMETER_COCOON_URL) +
-                                       '?' + configuration.getParameter(PARAMETER_PARAMETER_NAME) + '=';
-                }
+            if (configuration != null &&
+                    MODE_COCOON.equalsIgnoreCase(configuration.getParameter(PARAMETER_MODE, null))) {
+                this.mode = 1;
+                this.baseUrl = configuration.getParameter(PARAMETER_URL);
+                this.cocoonUrl = configuration.getParameter(PARAMETER_COCOON_URL) +
+                        '?' + configuration.getParameter(PARAMETER_PARAMETER_NAME) + '=';
             }
         } catch (org.apache.avalon.framework.parameters.ParameterException local) {
             throw new ProcessingException("URLRewriter: configuration exception.", local);
@@ -143,7 +150,7 @@ public final class URLRewriter implements XMLConsumer {
      * SAX Event Handling
      */
     public void startElement(String namespace, String name, String raw,
-                         Attributes attr)
+                             Attributes attr)
     throws SAXException {
         if (this.mode == 1) {
             String attrname;
@@ -152,8 +159,8 @@ public final class URLRewriter implements XMLConsumer {
 
             for(int i = 0; i < attr.getLength(); i++) {
                 attrname = attr.getLocalName(i);
-                if (attrname.equals("href") == true
-                    || attrname.equals("action") == true) {
+                if (attrname.equals("href") == true ||
+                        attrname.equals("action") == true) {
                     if (newattr == null) {
                         newattr = new AttributesImpl(attr);
                     }
@@ -167,8 +174,8 @@ public final class URLRewriter implements XMLConsumer {
                         }
                     }
                     newattr.setValue(i, this.cocoonUrl + value);
-                } else if (attrname.equals("src") == true
-                           || attrname.equals("background") == true) {
+                } else if (attrname.equals("src") == true ||
+                        attrname.equals("background") == true) {
                     if (newattr == null) {
                         newattr = new AttributesImpl(attr);
                     }
@@ -189,7 +196,7 @@ public final class URLRewriter implements XMLConsumer {
                 return;
             }
         }
-        contentHandler.startElement(namespace,name,raw,attr);
+        contentHandler.startElement(namespace, name, raw, attr);
     }
 
     /**
@@ -197,7 +204,7 @@ public final class URLRewriter implements XMLConsumer {
      */
     public void endElement(String namespace, String name, String raw)
     throws SAXException {
-        contentHandler.endElement(namespace,name,raw);
+        contentHandler.endElement(namespace, name, raw);
     }
 
     /**
@@ -205,7 +212,7 @@ public final class URLRewriter implements XMLConsumer {
      */
     public void characters(char ary[], int start, int length)
     throws SAXException {
-        contentHandler.characters(ary,start,length);
+        contentHandler.characters(ary, start, length);
     }
 
     /**
@@ -213,7 +220,7 @@ public final class URLRewriter implements XMLConsumer {
      */
     public void ignorableWhitespace(char ary[], int start, int length)
     throws SAXException {
-        contentHandler.ignorableWhitespace(ary,start,length);
+        contentHandler.ignorableWhitespace(ary, start, length);
     }
 
     /**
@@ -221,7 +228,7 @@ public final class URLRewriter implements XMLConsumer {
      */
     public void processingInstruction(String target, String data)
     throws SAXException {
-        contentHandler.processingInstruction(target,data);
+        contentHandler.processingInstruction(target, data);
     }
 
     /**
@@ -237,7 +244,7 @@ public final class URLRewriter implements XMLConsumer {
      */
     public void startDTD(String name, String public_id, String system_id)
             throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.startDTD(name,public_id,system_id);
+        if (lexicalHandler != null) lexicalHandler.startDTD(name, public_id, system_id);
     }
 
     /**
@@ -282,8 +289,7 @@ public final class URLRewriter implements XMLConsumer {
     public void comment(char ary[], int start, int length)
     throws SAXException {
         if (this.lexicalHandler != null) {
-            lexicalHandler.comment(ary,start,length);
+            lexicalHandler.comment(ary, start, length);
         }
     }
-
 }
