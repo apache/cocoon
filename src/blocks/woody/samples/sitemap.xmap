@@ -56,6 +56,7 @@
     <map:script src="flow/binding_example.js"/>
     <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
+    <map:script src="flow/customvalidationdemo.js"/>
   </map:flow>
 
  <map:pipelines>
@@ -428,6 +429,32 @@
          <map:parameter name="file" value="forms/countryselector_success.xsp"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
+       <map:serialize/>
+     </map:match>
+
+     <!--
+        | Custom validation example
+         -->
+
+     <map:match pattern="customvalidationdemo">
+       <map:call function="customValidationDemo"/>
+     </map:match>
+
+     <map:match pattern="customvalidationdemo-display-pipeline">
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/customvalidationdemo_template.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform> 
+       <map:transform src="resources/woody-samples-styling.xsl"/>
        <map:serialize/>
      </map:match>
      
