@@ -4,23 +4,28 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.32 2000-02-23 00:37:10 stefano Exp $
+  $Id: changes.xml,v 1.33 2000-02-23 14:02:13 stefano Exp $
 -->
 
 <changes title="History of Changes">
   <devs>
     <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
     <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
-    <person name="Ricardo Rocha" email="rrocha@apache.org" id="RR"/>
+    <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+    <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+    Fixed docs creation problem due to an XSLT problem that appeared after
+    updating Xalan.
+  </action>
   <action dev="SM" type="update">
     Cocoon2 docs update. Talks a little about the sitemap, it also gives
     a sneak preview of the new Cocoon logo.
   </action>
   <action dev="SM" type="update">
-    Updated Xalan to 0.19.3DO3 and FOP to 0.12.1. Xalan is much faster and less
+    Updated Xalan to 0.19.4 and FOP to 0.12.1. Xalan is much faster and less
     memory consuming. Great job guys!
   </action>
   <action dev="SM" type="fix">
