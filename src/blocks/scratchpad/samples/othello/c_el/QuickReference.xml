@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://osmosis.gr/osml/1.0
+C:\OSML\schema\main.xsd">
+	<head>
+		<osm:pageTitle>
+			<osm:text>quick reference</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">Γρήγορη αναφορά</p>
+		<p class="paratitle">Templates - Layout</p>
+		<p>home.xhtml | main.xhtml</p>
+		<p>XHTML templates for home (welcome) page [home.xhtml] and content pages [main.xhtml]. These files are editable with any xhtml editor (Dreamweaver MX, XML Spy ...)</p>
+		<p>Into these files content is placed using "block-copy" and "content-copy" elements</p>
+		<p><![CDATA[<osm:block-copy select="blockID"/>]]></p>
+		<p><![CDATA[<osm:content-copy select="content"/>]]></p>
+		<p class="notes"><![CDATA[i18n and osm namespaces must be declared.]]></p>
+		<p>
+			<pre><![CDATA[
+     <html xmlns="http://www.w3.org/1999/xhtml"  
+              xmlns:osm="http://osmosis.gr/osml/1.0"  
+              xmlns:i18n="http://apache.org/cocoon/i18n/2.1">]]></pre>
+		</p>
+		<p class="paratitle">Content</p>
+		<p>Content is coming form blocks or content files</p>
+		<p>in /blocks/blocks.xml are block that can be placed in any template file. There can be as many blocks as we want in any place in templates.</p>
+		<p>in /c_en (for english) /c_el (for greek) /c_mylanguage, are the content files. Content that will be diplayed is selected from URL.</p>
+		<p class="paratitle">i18n</p>
+		<p>Two different ways to have multilanguage content.</p>
+		<ul>
+			<li>Using dictionaries and i18n transformation for small phrases (or words) translation.</li>
+			<li>Different content files into /c_{locale} directory for each language.</li>
+		</ul>
+	</body>
+</html>

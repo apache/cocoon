@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+	<head>
+		<osm:pageTitle>
+			<osm:text>apache cocoon</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">Οι άνθρωποι του Apache Cocoon
+</p>
+		<p id="" class="" width="" height="">The Apache Cocoon Project Management Committee oversees the entire project, and consists of all willing committers on Cocoon and its subprojects. Its main concerns are community health, fostering the Apache Cocoon brand, and making sure all legal requirements are met when people contribute.</p>
+		<p id="" class="" width="" height="">The current Cocoon PMC members are:</p>
+		<osm:list>
+			<osm:listItem>Nicola Ken Barozzi</osm:listItem>
+			<osm:listItem>Marcus Crafter </osm:listItem>
+			<osm:listItem>David Crossley </osm:listItem>
+			<osm:listItem>Torsten Curdt </osm:listItem>
+			<osm:listItem>Bertrand Delacretaz </osm:listItem>
+			<osm:listItem>Bruno Dumon </osm:listItem>
+			<osm:listItem>Vadim Gritsenko</osm:listItem>
+			<osm:listItem>Christian Haul </osm:listItem>
+			<osm:listItem>Joerg Heinicke </osm:listItem>
+			<osm:listItem>Geoff Howard </osm:listItem>
+			<osm:listItem>Bernhard Huber </osm:listItem>
+			<osm:listItem>Ivelin Ivanov </osm:listItem>
+			<osm:listItem>Matthew Langham </osm:listItem>
+			<osm:listItem>Berin Loritsch </osm:listItem>
+			<osm:listItem>Stefano Mazzocchi </osm:listItem>
+			<osm:listItem>Michael Melhem </osm:listItem>
+			<osm:listItem>John Morrison </osm:listItem>
+			<osm:listItem>Steven Noels </osm:listItem>
+			<osm:listItem>Andrew C. Oliver </osm:listItem>
+			<osm:listItem>Giacomo Pati </osm:listItem>
+			<osm:listItem>Konstantin Piroumian </osm:listItem>
+			<osm:listItem>Ovidiu Predescu </osm:listItem>
+			<osm:listItem>Jeremy Quinn </osm:listItem>
+			<osm:listItem>Gianugo Rabellino </osm:listItem>
+			<osm:listItem>Peter Royal </osm:listItem>
+			<osm:listItem>Jeff Turner </osm:listItem>
+			<osm:listItem>Sylvain Wallez </osm:listItem>
+			<osm:listItem>Michael Wechner (for Lenya) </osm:listItem>
+		</osm:list>
+	</body>
+</html>

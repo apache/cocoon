@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with STYLEVISION v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<osm:blocks xmlns:osm="http://osmosis.gr/osml/1.0" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+	<osm:block blockID="cocoon">
+		<osm:xhtml>
+			<center>
+				<table width="180">
+					<tr>
+						<td colspan="2">Apache Cocoon Project</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="Cocoon">Cocoon Project</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="CocoonPeople">Cocoon People</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="http://cocoon.apache.org">Cocoon Web Site</a>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</osm:xhtml>
+	</osm:block>
+	<osm:block blockID="othello">
+		<osm:xhtml>
+			<center>
+				<table width="180">
+					<tr>
+						<td colspan="2">Othello </td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="Othello">Othello Project</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="OthelloPeople">Othello People</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="Livesites">Livesites</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="http://othello.osmosis.gr">Othello Web Site</a>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</osm:xhtml>
+	</osm:block>
+	<osm:block blockID="documentation">
+		<osm:xhtml>
+			<center>
+				<table width="180">
+					<tr>
+						<td colspan="2">
+							<i18n:text i18n:key="docs"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="Installation">Installation</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="QuickReference">Quick Reference</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="Steps">A site in few steps</a>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</osm:xhtml>
+	</osm:block>
+	<osm:block blockID="examples">
+		<osm:xhtml>
+			<center>
+				<table width="180">
+					<tr>
+						<td colspan="2">
+							<i18n:text i18n:key="examples"/>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="ExampleXHTML">XHTML</a>
+						</td>
+					</tr>
+					<tr>
+						<td width="10">-</td>
+						<td>
+							<a href="ExampleCustom">Custom</a>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</osm:xhtml>
+	</osm:block>
+	<osm:block blockID="changes">
+		<osm:xhtml>
+			<p class="title">Changes</p>
+			<p class="paratitle">2003.10.25</p>
+			<ul>
+				<li>core.xsl clean up</li>
+				<li>XHTML example added</li>
+				<li>custom element example added</li>
+			</ul>
+		</osm:xhtml>
+		<osm:xhtml/>
+	</osm:block>
+	<osm:block blockID="menu">
+		<osm:xhtml>
+			<table width="200" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<a href="Home">home</a>
+					</td>
+					<td>
+						<img src="static/themes/images/home_menu_sep.gif"/>
+					</td>
+					<td>
+						<a href="?locale=en">english</a>
+					</td>
+					<td>
+						<img src="static/themes/images/home_menu_sep.gif"/>
+					</td>
+					<td>
+						<a href="?locale=el">greek</a>
+					</td>
+					<td>
+						<img src="static/themes/images/home_menu_sep.gif"/>
+					</td>
+				</tr>
+			</table>
+		</osm:xhtml>
+	</osm:block>
+	<osm:block blockID="credits">
+		<osm:xhtml>
+			<div align="right" style="color:white;padding:3px;">Osmosis networks and consulting | greece |</div>
+		</osm:xhtml>
+	</osm:block>
+</osm:blocks>

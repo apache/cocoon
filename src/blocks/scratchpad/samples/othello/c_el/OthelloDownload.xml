@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<osm:container xmlns:osm="http://osmosis.gr/osml/1.0" contentID="content">
+	<osm:pageTitle>
+		<osm:text>othello download</osm:text>
+	</osm:pageTitle>
+	<p class="title">Othello Download</p>
+	<p class="paratitle">Version</p>
+	<p>Othello v1.0 beta (work in progress)</p>
+	<p notes="">last update: okt 25, 2003</p>
+	<p class="paratitle">Download Now<p>
+			<a href="static/download/othello.gr.zip">othello.gr.zip</a>
+		</p>
+	</p>
+</osm:container>

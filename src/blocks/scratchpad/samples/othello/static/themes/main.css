@@ -1,0 +1,168 @@
+/* elements --------------------------------------------- */
+
+BODY {
+	font-family: Verdana,  "Microsoft Sans Serif",  sans-serif;
+	background-color: White;
+    text-align: left;	
+	margin-top : 0px;	
+	margin-left : 0px;
+	margin-right : 0px;	
+}
+
+A {
+	font-family: Verdana,  "Microsoft Sans Serif",  sans-serif;
+	color: black;
+	font-size: 12px;
+	text-decoration: none;	
+}
+
+A:HOVER {
+	color: #FF6633;
+	text-decoration: none;		
+}
+
+A.aux {
+	color: black;
+}
+
+A.aux:visited {
+		color: black;
+}
+
+A.aux:hover {
+		color: #FF6633;
+}
+
+A.mainlinks {
+	color: white;
+}
+
+A.mainlinks:visited {
+	color: white;
+}
+
+A.mainlinks:hover {
+	color: silver;
+}
+
+A.bodylinks {
+	color: #5E5E5E;
+}
+
+A.bodylinks:visited {
+		color: #5E5E5E;
+}
+
+A.bodylinks:hover {
+		color: #FF6633;
+}
+
+P{		
+		font-size: 10px;
+		line-height: 150%;
+		text-align : justify;
+		padding-left:10px;
+		padding-right: 36px;
+}
+
+LI{
+		font-size: 10px;
+		line-height: 150%;
+		vertical-align:middle;
+		list-style-image : url(images/bullet.gif);
+}
+
+DIV{
+		font-size: 10px;
+}
+
+IMG {
+	display:block;
+}
+
+FORM table{
+	font-family : "Courier New";
+	font-size : 11px;
+	font-style : normal;
+}
+
+Table{
+	font-size: 11px;
+}
+
+/* classes fixed */
+
+.title{	/* page title */
+ 	font-family : Verdana;
+	width: 100%;
+	font-size : 160%;
+	font-weight : bold;
+	color : black;
+	letter-spacing : 1px;
+	vertical-align: top;
+	}
+	
+.subtitle{ /* page sub title */
+ 	font-family : Verdana;
+	width: 100%;
+	font-size : 130%;
+	font-weight : bold;
+	color : #5E5E5E;
+	letter-spacing : 1px;
+	}
+	
+.paratitle{ /*paragraph title */
+	font-family : Verdana;
+	width: 100%;
+	font-size : 110%;
+	font-weight : bold;
+	color : #5E5E5E;
+	text-align : left;
+	}
+	
+.parasubtitle{ /*paragraph title */
+	font-family : Verdana;
+	width: 100%;
+	font-size : 100%;
+	padding-top:20px;
+	padding-left:10px;
+	font-weight : bold;
+	color : navy;
+	letter-spacing : 1px;
+	
+	}	
+	
+.paragraph{	/*paragraph body */
+	font-size : 80%;
+	padding-left: 10px;
+	padding-right: 20px;	
+	padding-bottom : 10px;
+	padding-top : 10px;
+	line-height : 180%;
+	text-indent : 15px;
+	text-align : justify;
+}
+
+.notes{
+	font-family : Verdana, "Microsoft Sans Serif";
+	font-size : 11px;
+	padding-left: 25px;
+	padding-right: 25px;	
+	line-height : 180%;
+	text-align : left;
+	color : Gray;
+	font-style : italic;
+}
+
+/* classes ALPHA */
+.footLink{
+	color: silver;
+}
+
+
+.topbanner{
+	width:100%;
+	vertical-align:bottom;
+}
+
+.footer{ border-top: 1px solid #5E5E5E; }
