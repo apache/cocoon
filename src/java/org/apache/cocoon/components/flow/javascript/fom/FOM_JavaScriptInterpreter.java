@@ -56,6 +56,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ import org.apache.excalibur.source.SourceResolver;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.14 2003/12/27 07:30:42 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.15 2003/12/28 07:19:23 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable
@@ -134,7 +135,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     Global scope;
 
     CompilingClassLoader classLoader;
-    Map javaSource = new HashMap();
+    MyClassRepository javaClassRepository = new MyClassRepository();
     String[] javaSourcePath;
 
     /**
@@ -145,6 +146,66 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     JSErrorReporter errorReporter;
     boolean enableDebugger = false;
+
+    class MyClassRepository implements CompilingClassLoader.ClassRepository {
+        
+        Map javaSource = new HashMap();
+        Map javaClass = new HashMap();
+        Map sourceToClass = new HashMap();
+        Map classToSource = new HashMap();
+
+        public synchronized void addCompiledClass(String className,
+                                                  Source src,
+                                                  byte[] contents) {
+            javaSource.put(src.getURI(), src.getValidity());
+            javaClass.put(className, contents);
+            sourceToClass.put(src.getURI(), className);
+            classToSource.put(className, src.getURI());
+        }
+
+        public synchronized byte[] getCompiledClass(String className) {
+            return (byte[])javaClass.get(className);
+        }
+
+        public synchronized boolean upToDateCheck() throws Exception {
+            SourceResolver sourceResolver = (SourceResolver)
+                manager.lookup(SourceResolver.ROLE);
+            Iterator iter = javaSource.entrySet().iterator();
+            List invalid = new LinkedList();
+            while (iter.hasNext()) {
+                Map.Entry e = (Map.Entry)iter.next();
+                String uri = (String)e.getKey();
+                SourceValidity validity = 
+                    (SourceValidity)e.getValue();
+                int valid = validity.isValid();
+                if (valid == SourceValidity.UNKNOWN) {
+                    Source newSrc = null;
+                    try {
+                        newSrc = sourceResolver.resolveURI(uri);
+                        valid = newSrc.getValidity().isValid(validity);
+                    } catch (Exception ignored) {
+                    } finally {
+                        if (newSrc != null) {
+                            sourceResolver.release(newSrc);
+                        }
+                    }
+                }
+                if (valid != SourceValidity.VALID) {
+                    invalid.add(uri);
+                }
+            }
+            iter = invalid.iterator();
+            while (iter.hasNext()) {
+                String uri = (String)iter.next();
+                String className = (String)sourceToClass.get(uri);
+                sourceToClass.remove(className);
+                javaClass.remove(className);
+                javaSource.remove(uri);
+                classToSource.remove(className);
+            }
+            return invalid.size() == 0;
+        }
+    }
 
     /**
      * JavaScript debugger: there's only one of these: it can debug multiple
@@ -195,7 +256,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         if (reloadScripts) {
             String classPath 
                 = config.getChild("classpath").getValue(null);
-            synchronized (javaSource) {
+            synchronized (javaClassRepository) {
                 if (classPath == null) {
                     javaSourcePath = new String[]{""};
                 } else {
@@ -248,42 +309,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         if (!reloadScripts) {
             return Thread.currentThread().getContextClassLoader();
         }
-        synchronized (javaSource) {
-            SourceResolver sourceResolver = (SourceResolver)
-                manager.lookup(SourceResolver.ROLE);
+        synchronized (javaClassRepository) {
             boolean reload = needsRefresh || classLoader == null;
             if (needsRefresh && classLoader != null) {
-                reload = false;
-                Iterator iter = javaSource.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry e = (Map.Entry)iter.next();
-                    String uri = (String)e.getKey();
-                    SourceValidity validity = 
-                        (SourceValidity)e.getValue();
-                    int valid = validity.isValid();
-                    if (valid == SourceValidity.UNKNOWN) {
-                        Source newSrc = 
-                            sourceResolver.resolveURI(uri);
-                        valid = newSrc.getValidity().isValid(validity);
-                        sourceResolver.release(newSrc);
-                    }
-                    if (valid != SourceValidity.VALID) {
-                        reload = true;
-                        javaSource.clear();
-                        break;
-                    }
-                }
+                reload = !javaClassRepository.upToDateCheck();
             }
             if (reload) {
                 classLoader = 
                     new CompilingClassLoader(Thread.currentThread().getContextClassLoader(), 
-                                             sourceResolver);
+                                             (SourceResolver)manager.lookup(SourceResolver.ROLE),
+                                             javaClassRepository);
                 classLoader.addSourceListener(new CompilingClassLoader.SourceListener() {
                         public void sourceCompiled(Source src) {
-                            synchronized (javaSource) {
-                                javaSource.put(src.getURI(), 
-                                               src.getValidity());
-                            }
+                            // no action
                         }
 
                         public void sourceCompilationError(Source src,
@@ -366,7 +404,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     public static class ThreadScope extends ScriptableObject {
 
+        static final String[] builtinPackages = {"javax", "org", "com"};
+
         ClassLoader classLoader;
+
         /* true if this scope has assigned any global vars */
         boolean useSession = false;
 
@@ -423,6 +464,13 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 newPackages.setParentScope(this);
                 newPackages.setPrototype(ScriptableObject.getClassPrototype(this, "JavaPackage"));
                 super.put("Packages", this, newPackages);
+                for (int i = 0; i < builtinPackages.length; i++) {
+                    String pkgName = builtinPackages[i];
+                    Scriptable pkg = new NativeJavaPackage(pkgName, cl);
+                    pkg.setParentScope(this);
+                    pkg.setPrototype(ScriptableObject.getClassPrototype(this, "JavaPackage"));
+                    super.put(pkgName, this, pkg);
+                }
             }
         }
         
