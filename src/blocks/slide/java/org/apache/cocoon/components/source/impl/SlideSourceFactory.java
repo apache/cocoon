@@ -76,20 +76,19 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.12 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.13 2004/01/13 11:32:54 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="SourceFactory"
+ * @avalon.service type=SourceFactory
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=slide
  */
 public class SlideSourceFactory extends AbstractLogEnabled 
-implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
+implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
 
     private ServiceManager m_manager;
     private SlideRepository m_repository;
     private Context m_context;
-
 
     public SlideSourceFactory() {
     }
@@ -115,6 +114,7 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         m_manager = manager;
     }
 
+    
     /**
      * Get a <code>Source</code> object.
      *
@@ -170,6 +170,7 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         String version = queryParameters.getParameter("version",null);
         String scope   = queryParameters.getParameter("scope",
             nat.getNamespaceConfig().getFilesPath());
+        boolean eventCaching = queryParameters.getParameterAsBoolean("event-caching",false);
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("scheme: " + scheme);
@@ -178,9 +179,10 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
             getLogger().debug("path: " + path);
             getLogger().debug("version: " + version);
             getLogger().debug("scope: " + scope);
+            getLogger().debug("event-caching: " + eventCaching);
         }
 
-        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version);
+        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version,eventCaching);
 
         source.enableLogging(getLogger());
         source.contextualize(m_context);
