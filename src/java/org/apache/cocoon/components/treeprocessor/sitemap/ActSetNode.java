@@ -28,7 +28,7 @@ import java.util.Map;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActSetNode.java,v 1.3 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id: ActSetNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class ActSetNode extends SimpleParentProcessingNode
@@ -40,6 +40,10 @@ public class ActSetNode extends SimpleParentProcessingNode
     /** The action set to call */
     private ActionSetNode actionSet;
 
+    public ActSetNode() {
+        super(null);
+    }
+    
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
     }

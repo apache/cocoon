@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.5 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 
@@ -41,14 +41,23 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
     
     protected ComponentManager manager;
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Recomposable#recompose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void recompose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
+     */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
     }

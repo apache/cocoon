@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CallNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: CallNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class CallNode extends AbstractProcessingNode
@@ -54,6 +54,10 @@ public class CallNode extends AbstractProcessingNode
 
     private ProcessingNode resourceNode;
 
+    public CallNode() {
+        super(null);
+    }
+    
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }

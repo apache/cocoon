@@ -44,7 +44,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.4 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.5 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class AggregateNode extends AbstractProcessingNode {
@@ -63,6 +63,7 @@ public class AggregateNode extends AbstractProcessingNode {
     private Map viewNodes;
 
     public AggregateNode(VariableResolver element, VariableResolver nsURI, VariableResolver nsPrefix) throws PatternException {
+        super(null);
         this.element = element;
         this.nsURI = nsURI;
         this.nsPrefix = nsPrefix;

@@ -33,13 +33,12 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.7 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.8 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -61,8 +60,10 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
     protected boolean inActionSet;
 
-    public ActTypeNode(String type, VariableResolver source, String name,
-            boolean inActionSet) throws PatternException {
+    public ActTypeNode(String type, 
+                       VariableResolver source, 
+                       String name,
+                       boolean inActionSet)  {
         super(type);
         this.source = source;
         this.name = name;
@@ -117,13 +118,23 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeAction != null) {
-            actionResult = this.threadSafeAction.act(redirector, resolver,
-                    objectModel, resolvedSource, resolvedParams);
+            actionResult = this.executor.invokeAction(this, 
+                                             this.threadSafeAction, 
+                                             redirector, 
+                                             resolver, 
+                                             objectModel, 
+                                             resolvedSource, 
+                                             resolvedParams);
         } else {
             Action action = (Action)this.selector.select(this.componentName);
             try {
-                actionResult = action.act(redirector, resolver,
-                        objectModel, resolvedSource, resolvedParams);
+                actionResult = this.executor.invokeAction(this,
+                                                 action, 
+                                                 redirector, 
+                                                 resolver, 
+                                                 objectModel, 
+                                                 resolvedSource, 
+                                                 resolvedParams);
             } finally {
                 this.selector.release(action);
             }
@@ -159,10 +170,14 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         //}
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.threadSafeAction != null) {
             this.selector.release(this.threadSafeAction);
         }
         this.manager.release(this.selector);
     }
+
 }

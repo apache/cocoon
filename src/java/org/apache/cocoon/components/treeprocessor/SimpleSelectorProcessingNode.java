@@ -23,19 +23,16 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode {
-
-    /** The node component name (e.g. action name, selector name, etc) */
-    protected String componentName;
 
     /** Selector where to get components from */
     protected ComponentSelector selector;
 
     public SimpleSelectorProcessingNode(String componentName) {
-        this.componentName = componentName;
+        super(componentName);
     }
 
     public void setSelector(ComponentSelector selector) throws ComponentException {

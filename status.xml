@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.360 2004/06/09 09:41:16 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.361 2004/06/09 11:59:23 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -206,7 +206,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="CZ" type="fix">
+   <action dev="CZ" type="add">
+     Add profiling/debugging API for the sitemap.
+   </action>
+   <action dev="CZ" type="add">
      Add sitemap versioning support to tree processor and remove unused
      support for other tree based languages.
    </action>

@@ -29,7 +29,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Builds a generic container node.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CategoryNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: CategoryNodeBuilder.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
@@ -56,7 +56,7 @@ public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        CategoryNode node = new CategoryNode();
+        CategoryNode node = new CategoryNode(null);
         this.treeBuilder.setupNode(node, config);
 
         // Get all children and associate them to their name
