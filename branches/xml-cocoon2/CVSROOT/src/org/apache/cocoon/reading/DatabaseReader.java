@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -26,6 +27,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -38,6 +40,7 @@ import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.util.HashUtil;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
@@ -147,7 +150,8 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
         int contentLength = 0;
 
         try {
-            return this.serialize(object, response);
+            Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
+            return this.serialize(response);
         } catch (IOException ioe) {
             getLogger().debug("Assuming client reset stream");
 
@@ -231,9 +235,9 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
             throw new SQLException("The Blob is empty!");
         }
 
-        InputStream is = new BufferedInputStream(object.getBinaryStream());
+        InputStream is = new BufferedInputStream(this.resource.getBinaryStream());
 
-        int contentLength = (int) object.length();
+        int contentLength = (int) this.resource.length();
         long expires = parameters.getParameterAsInteger("expires", -1);
 
         if (expires > 0) {
@@ -284,10 +288,14 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
         this.lastModified = 0;
 
         if (this.con != null) {
-            if (this.doCommit) {
-                this.con.commit();
-            } else {
-                this.con.rollback();
+            try {
+                if (this.doCommit) {
+                    this.con.commit();
+                } else {
+                    this.con.rollback();
+                }
+            } catch (SQLException se) {
+                getLogger().warn("Could not commit or rollback connection", se);
             }
 
             try {
