@@ -12,15 +12,12 @@
    resources. The catalog manager facilitates the mapping between public
    identifiers or system identifiers and other system identifiers.
   </sample>
+ </group>
+
+ <group name="DocBook">
   <sample name="Simplified DocBook" href="sdocbook-demo.html">
    You will need the DocBook DTDs installed locally and the catalog
    properly configured.
-  </sample>
- </group>
-
- <group name="Other samples">
-  <sample name="S1" href="">FIXME: need a default third group, or this page
-   will not render.
   </sample>
  </group>
 
