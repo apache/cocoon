@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * </p>
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSource.java,v 1.5 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: CachingSource.java,v 1.6 2004/03/06 21:00:39 haul Exp $
  */
 public class CachingSource
 extends AbstractLogEnabled
@@ -109,7 +109,10 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
     protected Source source;
     
     /**
-     * Construct a new object
+     * Construct a new object. Syntax for cached source:
+     * "<code>cache-protocol</code>" + "<code>://</code>" + "<code>seconds</code>"
+     * + "<code>@</code>" + "<code>wrapped-URL</code>".
+     * 
      */
     public CachingSource( String location,
                           Map    parameters) 
@@ -313,6 +316,11 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
             SourceValidity expiresValidity = this.cachedResponse.getValidityObjects()[0];
             if ( this.expires != -1
                  && (this.expires == 0 || expiresValidity.isValid() != SourceValidity.VALID)) {
+                // TODO: according to SourceValidity.isValid() validity should be checked against 
+                //       new validity object if UNKNOWN is returned
+                //       maybe this is too expensive?
+                
+                // remove from cache if not valid anymore
                 this.cache.remove( this.streamKey );
                 this.cachedResponse = null;
             }
@@ -332,7 +340,7 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
     /** 
      * Initialize the cache
      */
-    protected void initCache(boolean alternative)
+    protected boolean initCache(boolean alternative)
     throws IOException, SAXException {
         this.initSource();
         boolean storeResponse = false;
@@ -356,10 +364,16 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
         if ( storeResponse && this.expires > 0 ) {
             try {
                 this.cache.store(this.streamKey, this.cachedResponse);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Storing response for "+this.streamKey.getKey());
+                }
             } catch (ProcessingException ignore) {
-                // we ignore this
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Ignoring exception when storing response.", ignore) ;
+                }
             }
         }
+        return storeResponse;
     }
     
     /**

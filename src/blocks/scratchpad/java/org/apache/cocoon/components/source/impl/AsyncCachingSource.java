@@ -40,7 +40,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * a given period of time
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AsyncCachingSource.java,v 1.4 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: AsyncCachingSource.java,v 1.5 2004/03/06 21:00:39 haul Exp $
  * @since 2.1.1
  */
 public class AsyncCachingSource
@@ -91,9 +91,19 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
             try {
                 this.cache.store(this.streamKey, this.cachedResponse);
             } catch (ProcessingException ignore) {
+                if (this.getLogger().isDebugEnabled()) {
+					this.getLogger().debug("Storing cached response, ignoring exception:",ignore);
+				}
             }
             
             response = this.cachedResponse.getResponse();
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Using fresh response for "+this.streamKey.getKey());
+            }
+        } else {
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Using cached response for "+this.streamKey.getKey());
+            }
         }
         return new ByteArrayInputStream(response);            
     }
