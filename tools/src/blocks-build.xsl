@@ -169,6 +169,15 @@
         <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api" packagelistloc="${resources.javadoc}/j2se"/>
         <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
 
+        <tag name="avalon.component"   scope="types"   description="Avalon component" />
+        <tag name="avalon.service"     scope="types"   description="Implements service:" />
+        <!-- FIXME: javadoc or ant seems to not understand these
+        <tag name="x-avalon.info"      scope="types"   description="Shorthand:" />
+        <tag name="x-avalon.lifestyle" scope="types"   description="Lifestyle:" />
+        -->
+        <tag name="avalon.context"     scope="methods" description="Requires entry:" />
+        <tag name="avalon.dependency"  scope="methods" description="Requires component:" />
+      
         <packageset dir="{string('${java}')}">
           <include name="**"/>
         </packageset>
@@ -180,10 +189,15 @@
             <include name="**"/>
           </packageset>
         </xsl:for-each>
-        <classpath refid="classpath"/>
-        <xsl:for-each select="$cocoon-blocks">
-          <classpath refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
-        </xsl:for-each>
+        <classpath>
+          <fileset dir="{string('${tools.lib}')}">
+            <include name="*.jar"/>
+          </fileset>
+          <path refid="classpath" />
+          <xsl:for-each select="$cocoon-blocks">
+            <path refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
+          </xsl:for-each>
+        </classpath>
       </javadoc>
     </target>
 
