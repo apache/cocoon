@@ -56,9 +56,6 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -70,12 +67,12 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: TestCronJob.java,v 1.3 2003/12/19 09:01:43 reinhard Exp $
+ * @version CVS $Id: TestCronJob.java,v 1.4 2003/12/22 13:25:12 joerg Exp $
  *
  * @since 2.1.1
  */
 public class TestCronJob extends AbstractPipelineCallingCronJob
-    implements CronJob, Configurable, ConfigurableCronJob, Composable {
+    implements CronJob, Configurable, ConfigurableCronJob {
     
     /** Parameter key for the message */
     public static final String PARAMETER_MESSAGE = "TestCronJob.Parameter.Message";
@@ -94,13 +91,6 @@ public class TestCronJob extends AbstractPipelineCallingCronJob
     
     /** The pipeline to be called */
     private String pipeline = null;
-
-    /** The service manager */
-    private ComponentManager manager;
-
-    public void compose( ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }    
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
