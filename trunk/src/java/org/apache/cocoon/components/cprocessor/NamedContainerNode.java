@@ -58,28 +58,28 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: NamedContainerNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: NamedContainerNode.java,v 1.2 2004/01/27 10:33:03 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="ProcessingNode"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="named-container-node"
+ * @avalon.service type=ProcessingNode
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=named-container-node
  */
 public class NamedContainerNode extends ContainerNode implements NamedProcessingNode {
 
     private static final String NAME_ATTR = "name";
     
-    private String name;
+    private String m_name;
 
     public NamedContainerNode() {
     }
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        config.getAttribute(NAME_ATTR);
+        m_name = config.getAttribute(NAME_ATTR);
     }
 
     public String getName() {
-        return this.name;
+        return m_name;
     }
 }

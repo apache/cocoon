@@ -58,12 +58,12 @@ import org.apache.cocoon.environment.Environment;
  * A generic container node that just invokes its children.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: ContainerNode.java,v 1.2 2004/01/27 10:33:02 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="ProcessingNode"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="container-node"
+ * @avalon.service type=ProcessingNode
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=container-node
  */
 public class ContainerNode extends SimpleParentProcessingNode {
 
@@ -72,8 +72,8 @@ public class ContainerNode extends SimpleParentProcessingNode {
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        if (getChildNodes().length == 0) {
-            String msg = "There must be at least one child at " + getConfigLocation(config);
+        if (!hasChildren()) {
+            String msg = "There must be at least one child at " + getLocation();
             throw new ConfigurationException(msg);
         }
     }

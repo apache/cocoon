@@ -63,15 +63,15 @@
   </xsl:template>
   
   <xsl:template match="map:view">
-    <xsl:param name="parent-id"/>
     <xsl:variable name="id">
-      <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
+      <xsl:text>v-</xsl:text>
+      <xsl:value-of select="@name"/>
     </xsl:variable>
-    <view-node id-ref="{$id}" logger="sitemap.processor">
+    <view-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
       <xsl:for-each select="map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
         <xsl:element name="{local-name()}">
-          <xsl:attribute name="id">
+          <xsl:attribute name="id-ref">
             <xsl:value-of select="$id"/>-<xsl:value-of select="position()"/>
           </xsl:attribute>
         </xsl:element>

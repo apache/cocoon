@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.cprocessor;
 
-import java.util.List;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.environment.Environment;
@@ -60,7 +58,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SimpleParentProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: SimpleParentProcessingNode.java,v 1.2 2004/01/27 10:33:02 unico Exp $
  */
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {    
     
@@ -71,8 +69,7 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        final List childNodes = getChildNodesList(config);
-        m_childNodes = (ProcessingNode[]) childNodes.toArray(new ProcessingNode[childNodes.size()]);
+        m_childNodes = super.getChildNodes(config);
     }
         
     /**

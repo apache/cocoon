@@ -67,7 +67,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.4 2004/01/27 10:33:05 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -128,7 +128,8 @@ implements ProcessingNode {
 
             if (viewNode != null) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Jumping to view " + cocoonView + " from generator at " + this.getLocation());
+                    getLogger().debug("Jumping to view " + cocoonView + 
+                        " from generator at " + getLocation());
                 }
                 return viewNode.invoke(env, context);
             }

@@ -52,6 +52,7 @@ package org.apache.cocoon.components.cprocessor.sitemap;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -66,19 +67,20 @@ import org.apache.cocoon.util.StringUtils;
 /**
  *
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.3 2004/01/27 10:33:05 unico Exp $
  */
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode
 implements Initializable {
 
     private String m_type;
+    private Map m_views = new HashMap();
     protected Collection m_labels;
     protected ComponentNode m_component;
-    protected Map m_views;
-    
     // TODO: implement pipeline hints
     protected Map m_pipelineHints;
+    
+    public PipelineEventComponentProcessingNode() {
+    }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
@@ -106,12 +108,16 @@ implements Initializable {
                     m_views.put(name,view);
                 }
                 else {
-                    // TODO: record no such view
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("view '" + name + "' not applicable " +                            "to statement at '" + getLocation() + "'");
+                    }
                     view = null;
                 }
             }
             catch (ServiceException e) {
-                // TODO: record no such view
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("no such view: '" + name + "'");
+                }
                 view = null;
             }
         }

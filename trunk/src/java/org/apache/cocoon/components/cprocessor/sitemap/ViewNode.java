@@ -106,4 +106,5 @@ public class ViewNode extends NamedContainerNode implements ProcessingNode {
     public String getLabel() {
         return m_label;
     }
+    
 }
