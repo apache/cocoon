@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
@@ -29,7 +30,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * Builds a &lt;map:pipeline&gt;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: PipelineNodeBuilder.java,v 1.4 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: PipelineNodeBuilder.java,v 1.5 2004/03/10 23:37:31 unico Exp $
  */
 
 public class PipelineNodeBuilder
@@ -43,7 +44,9 @@ public class PipelineNodeBuilder
 
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        PipelineNode node = new PipelineNode( config );
+        
+        String type = this.treeBuilder.getTypeForStatement(config, ProcessingPipeline.ROLE + "Selector");
+        PipelineNode node = new PipelineNode(type);
 
         this.treeBuilder.setupNode(node, config);
         node.setInternalOnly(config.getAttributeAsBoolean("internal-only", false));
@@ -66,9 +69,9 @@ public class PipelineNodeBuilder
                 if (builder instanceof HandleErrorsNodeBuilder) {
                     // Error handler : check type
                     HandleErrorsNode handler = (HandleErrorsNode)builder.buildNode(childConfig);
-                    int type = handler.getStatusCode();
+                    int status = handler.getStatusCode();
 
-					switch(type) {
+					switch(status) {
 					    case -1: // main handler (needs generator)
 					        if (mainHandler != null) {
 					            throw new ConfigurationException("Duplicate <handle-errors> at " + handler.getLocation());
