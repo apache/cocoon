@@ -153,12 +153,27 @@
        </map:call>
      </map:match>
 
+     <!--
+        | Start a flow scenario
+        -->
      <map:match pattern="do-*.flow">
        <map:call function="do_{1}"/>
      </map:match>
-
+     
+     <!--
+        | Continue a scenario, continuation id is in the URL
+        | (used in links or form actions)
+        -->
      <map:match pattern="*.continue">
        <map:call continuation="{1}"/>
+     </map:match>
+     
+     <!--
+        | Continue a scenario, continuation id is in a hidden input
+        | (used in form posts)
+        -->
+     <map:match pattern="continue">
+       <map:call continuation="{request-param:continuation-id}"/>
      </map:match>
 
      <!--
