@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-30 04:54:09 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-30 05:17:48 $
  */
 public class PhpGenerator extends ComposerGenerator {
 
@@ -121,7 +121,7 @@ public class PhpGenerator extends ComposerGenerator {
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
             php.init(new config(env.getContext()));
-            php.setInput(systemId);
+            php.setInput(systemId.substring(6));
             php.setOutput(new PipedOutputStream(input));
             php.setRequest(env.getRequest());
             php.setResponse(env.getResponse());
