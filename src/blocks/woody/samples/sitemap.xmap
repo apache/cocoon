@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:components>
 
   <map:generators default="file">   
     <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator" logger="woody"/>
-    <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content,data" logger="sitemap.generator.jx"/>
+    <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
   </map:generators>
 
   <map:transformers default="xalan">    
@@ -39,7 +40,7 @@
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="pretty-content" from-label="data">
+  <map:view from-label="content" name="pretty-content">
    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
    <map:serialize type="html"/>
   </map:view>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.13 2003/05/08 11:24:02 stephan Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.14 2003/07/29 03:15:47 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -30,7 +30,7 @@
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="pretty-content" from-label="data">
+  <map:view from-label="content" name="pretty-content">
     <map:transform src="context://stylesheets/system/xml2html.xslt"/>
     <map:serialize type="html"/>
   </map:view>

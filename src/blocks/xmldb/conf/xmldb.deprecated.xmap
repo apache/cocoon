@@ -7,11 +7,11 @@
     <!-- BEWARE: these are unmaintained XML:DB generators, going to be   -->
     <!-- removed soon.                                                   -->
     <!-- You might want  to use the XML:DB pseudo protocol instead.      -->
-    <map:generator name="xmldb" src="org.apache.cocoon.generation.XMLDBGenerator" label="content,data">
+    <map:generator name="xmldb" src="org.apache.cocoon.generation.XMLDBGenerator" label="content">
       <driver>org.apache.xindice.client.xmldb.DatabaseImpl</driver>
       <base>xmldb:xindice:///db/</base>
     </map:generator>
-    <map:generator name="xmldbcollection" src="org.apache.cocoon.generation.XMLDBCollectionGenerator" label="content,data">
+    <map:generator name="xmldbcollection" src="org.apache.cocoon.generation.XMLDBCollectionGenerator" label="content">
       <driver>org.apache.xindice.client.xmldb.DatabaseImpl</driver>
       <base>xmldb:xindice:///db/</base>
     </map:generator>

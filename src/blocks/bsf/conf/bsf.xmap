@@ -2,5 +2,8 @@
 
 <xmap xpath="/sitemap/components/generators"
       unless="generator[@name='script']">
-    <map:generator name="script" src="org.apache.cocoon.generation.ScriptGenerator" label="content,data"/>
+
+    <map:generator name="script"
+                   src="org.apache.cocoon.generation.ScriptGenerator"
+                   label="content"/>
 </xmap>
