@@ -100,6 +100,7 @@ implements RepositoryTransactionHelper, Serviceable, Disposable, Component {
 
         try {
             return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).lockMethod();
+            
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error locking " + uri, he);
         } catch (IOException ioe) {
@@ -117,6 +118,7 @@ implements RepositoryTransactionHelper, Serviceable, Disposable, Component {
         try {
             return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri))
                       .lockMethod(this.credentials.getPrincipal().getName(), timeout);
+                      
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error locking " + uri, he);
         } catch (IOException ioe) {
@@ -132,8 +134,8 @@ implements RepositoryTransactionHelper, Serviceable, Disposable, Component {
     public boolean unlock(String uri) {
 
         try {
-            WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).unlockMethod();
-            return true;
+            return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).unlockMethod();
+
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error unlocking " + uri, he);
         } catch (IOException ioe) {
