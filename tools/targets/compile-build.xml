@@ -161,7 +161,7 @@
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="patch-roles"/>
+         target="roles"/>
   </target>
 
   <!-- compiles and packages all blocks -->
