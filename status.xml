@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.84 2003/07/10 23:38:04 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.85 2003/07/11 08:59:03 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,14 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+   The cache used by the caching processing pipeline is now configurable
+   allowing to use different caches in different pipelines.
+  </action>
+  <action dev="CZ" type="update">
+   The cache uses now a configured store. This allows to use differently
+   configured caches at the same time.
+  </action>
   <action dev="JH" type="fix" fixes-bug="14327">
   	Reverted the encoding changes in the JSP engine. The fix should be done in
   	the JSPReader, that already contains a TODO.
