@@ -33,7 +33,7 @@
       <httpRequest href="${calc}/kont/${cont3}">
         <parameter name="operator" value="plus"/>
         <match>
-          <xpath select="html/body//form/p[contains(text(),'Result')]/b"
+          <xpath select="html/body//form/p/font[contains(text(),'Result')]/b"
 		 value="3.0"
 		 assign="result"/>
         </match>
@@ -50,7 +50,7 @@
       <httpRequest href="${calc}/kont/${cont4}">
         <parameter name="operator" value="minus"/>
         <match>
-          <xpath select="html/body//form/p[contains(text(),'Result')]/b"
+          <xpath select="html/body//form/p/font[contains(text(),'Result')]/b"
 		 value="-3.0"
 		 assign="result"/>
         </match>
@@ -61,7 +61,7 @@
 		   description="Simulate going back again in the browser">
         <parameter name="operator" value="divide"/>
         <match>
-          <xpath select="html/body//form/p[contains(text(),'Result')]/b"
+          <xpath select="html/body//form/p/font[contains(text(),'Result')]/b"
 		 value="0.25"
 		 assign="result"/>
         </match>
