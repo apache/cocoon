@@ -5,7 +5,12 @@
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
   
-  <xsl:param name="resources-uri">resources</xsl:param>
+  <!--+
+      | This sytlesheet is designed to be imported by 'woody-samples-styling.xsl'
+      | Uncomment this variable declaration if you need to use it by iteslf
+      |
+      |      <xsl:param name="resources-uri">resources</xsl:param>
+      +-->
 
   <!-- must be called in <head>  -->
   <xsl:template name="woody-field-head">
