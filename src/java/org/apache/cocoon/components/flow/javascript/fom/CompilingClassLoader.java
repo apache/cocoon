@@ -1,32 +1,19 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.flow.javascript.fom;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -40,9 +27,20 @@ import org.tempuri.javac.JavaSourceReader;
 import org.tempuri.javac.JavaSourceReaderFactory;
 import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;
 
-/*
- * CompilingClassLoader
- * CVS $Id: CompilingClassLoader.java,v 1.9 2004/03/23 20:03:15 stephan Exp $
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * @version CVS $Id$
  */
 public class CompilingClassLoader extends ClassLoader {
 
@@ -59,14 +57,14 @@ public class CompilingClassLoader extends ClassLoader {
 
     public interface ClassRepository {
         public byte[] getCompiledClass(String className);
-        public void addCompiledClass(String className, 
+        public void addCompiledClass(String className,
                                      Source source,
                                      byte[] contents);
     }
 
-    protected Class findClass(String className) 
-        throws ClassNotFoundException {
-        byte[] bytes = compile(className);
+    protected Class findClass(String className)
+    throws ClassNotFoundException {
+        final byte[] bytes = compile(className);
         return defineClass(className, bytes, 0, bytes.length);
     }
 
@@ -81,11 +79,9 @@ public class CompilingClassLoader extends ClassLoader {
     }
 
     static class ClassCompilationException extends ClassNotFoundException {
-
         public ClassCompilationException(String msg) {
             super(msg);
         }
-
     }
 
     public void addSourceListener(SourceListener listener) {
@@ -141,13 +137,14 @@ public class CompilingClassLoader extends ClassLoader {
             // inner class: use the parent
             className = className.substring(0, dollar);
         }
+
         synchronized (sourcePath) {
-            Iterator iter = sourcePath.iterator();
-            while (iter.hasNext()) {
-                String prefix = (String)iter.next();
+            Iterator i = sourcePath.iterator();
+            while (i.hasNext()) {
+                String prefix = (String) i.next();
                 if (prefix.length() > 0) {
                     if (!prefix.endsWith("/")) {
-                        prefix = prefix + "/";
+                        prefix += "/";
                     }
                 }
                 String uri = prefix + className.replace('.', '/') + ".java";
@@ -159,13 +156,15 @@ public class CompilingClassLoader extends ClassLoader {
                 } catch (IOException ignored) {
                     continue;
                 }
+
                 if (src.exists()) {
                     return src;
                 }
                 releaseSource(src);
             }
-            return null;
         }
+
+        return null;
     }
 
     private void releaseSource(Source src) {
@@ -173,9 +172,8 @@ public class CompilingClassLoader extends ClassLoader {
     }
 
     class SourceReaderFactory implements JavaSourceReaderFactory {
-        public JavaSourceReader 
-            getSourceReader(final String className) 
-            throws IOException {
+        public JavaSourceReader getSourceReader(final String className)
+        throws IOException {
             Source src = getSource(className);
             if (src == null) return null;
             try {
@@ -183,6 +181,7 @@ public class CompilingClassLoader extends ClassLoader {
                 if (is == null) {
                     return null;
                 }
+
                 byte[] buf = new byte[8192];
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 int count;
@@ -190,25 +189,23 @@ public class CompilingClassLoader extends ClassLoader {
                     baos.write(buf, 0, count);
                 }
                 baos.flush();
-                final Reader reader = 
-                    new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
 
+                final Reader reader = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()));
                 return new JavaSourceReader() {
-                        public Reader getReader() {
-                            return reader;
-                        }
-                        public String getClassName() {
-                            return className;
-                        }
-                    };
+                    public Reader getReader() {
+                        return reader;
+                    }
+                    public String getClassName() {
+                        return className;
+                    }
+                };
             } finally {
                 releaseSource(src);
             }
         }
     }
 
-    private String makeFileName(String className) 
-        throws IOException {
+    private String makeFileName(String className) {
         Source src = getSource(className);
         if (src != null) {
             String result = src.getURI();
@@ -217,62 +214,59 @@ public class CompilingClassLoader extends ClassLoader {
         }
         return className;
     }
-    
-    class ClassReaderFactory 
-        implements JavaClassReaderFactory {
-        
-        public JavaClassReader getClassReader(final String className) 
-                throws IOException {
+
+    class ClassReaderFactory implements JavaClassReaderFactory {
+        public JavaClassReader getClassReader(final String className)
+        throws IOException {
             final byte[] bytes = classRepository.getCompiledClass(className);
             if (bytes != null) {
                 return new JavaClassReader() {
                     public String getClassName() {
                         return className;
                     }
-                
+
                     public InputStream getInputStream() {
                         return new ByteArrayInputStream(bytes);
                     }
                 };
             }
+
             String classFile = className.replace('.', '/') + ".class";
             final InputStream is = getResourceAsStream(classFile);
-            if (is == null) {
-                return null;
+            if (is != null) {
+                return new JavaClassReader() {
+                    public String getClassName() {
+                        return className;
+                    }
+
+                    public InputStream getInputStream() {
+                        return is;
+                    }
+                };
             }
-            return new JavaClassReader() {
-                public String getClassName() {
-                    return className;
-                }
-                        
-                public InputStream getInputStream() {
-                    return is;
-                }
-            };
+
+            return null;
         }
     }
 
-    class ClassWriterFactory 
-        implements JavaClassWriterFactory {
-
+    class ClassWriterFactory implements JavaClassWriterFactory {
         public JavaClassWriter getClassWriter(final String className) {
             return new JavaClassWriter() {
                 public String getClassName() {
                     return className;
                 }
 
-                public void writeClass(InputStream contents) 
-                        throws IOException {
+                public void writeClass(InputStream contents)
+                throws IOException {
                     byte[] buf = new byte[2048];
-                    ByteArrayOutputStream s =
-                        new ByteArrayOutputStream();
+                    ByteArrayOutputStream s = new ByteArrayOutputStream();
+
                     int count;
-                    while ((count = 
-                        contents.read(buf, 0, 
-                              buf.length)) > 0) {
+                    while ((count = contents.read(buf, 0, buf.length)) > 0) {
                         s.write(buf, 0, count);
                     }
                     s.flush();
+
                     System.out.println("Compiled: " + className);
                     Source src = getSource(className);
                     classRepository.addCompiledClass(className,
@@ -284,11 +278,10 @@ public class CompilingClassLoader extends ClassLoader {
             };
         }
     }
-    
-    class ErrorHandler implements JavaCompilerErrorHandler {
 
+    class ErrorHandler implements JavaCompilerErrorHandler {
         List errList = new LinkedList();
-            
+
         public void handleError(String className,
                                 int line,
                                 int column,
@@ -300,6 +293,7 @@ public class CompilingClassLoader extends ClassLoader {
             } catch (Exception ignored) {
                 // oh well, I tried
             }
+
             if (line > 0) {
                 msg += ": Line " + line;
             }
@@ -316,9 +310,8 @@ public class CompilingClassLoader extends ClassLoader {
         }
     }
 
-
-    private byte[] compile(String className) 
-            throws ClassNotFoundException {
+    private byte[] compile(String className)
+    throws ClassNotFoundException {
         byte[] result = classRepository.getCompiledClass(className);
         if (result != null) {
             return result;
@@ -328,6 +321,7 @@ public class CompilingClassLoader extends ClassLoader {
         if (src == null) {
             throw new ClassNotFoundException(className);
         }
+
         try {
             // try to compile it
             ErrorHandler errorHandler = new ErrorHandler();
@@ -346,13 +340,11 @@ public class CompilingClassLoader extends ClassLoader {
                 }
                 notifyListeners(src, msg);
                 throw new ClassCompilationException(msg);
-                    
             }
+
             return classRepository.getCompiledClass(className);
         } finally {
             releaseSource(src);
         }
     }
 }
-
-
