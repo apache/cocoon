@@ -27,12 +27,12 @@
 						+ <xsl:apply-templates select="."/>
 					</xsl:when>
 					<xsl:otherwise>
-						+ "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+						+ "<xsl:value-of select="normalize-space(translate(.,'&#9;&#10;&#13;','   '))"/>"
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
 		</xsl:when>
-		<xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+		<xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
 
@@ -47,6 +47,11 @@
 </xsl:template>
 
 <xsl:template match="sql:execute-query">
+	<xsl:variable name="use-connection">
+		<xsl:call-template name="get-nested-string">
+			<xsl:with-param name="content" select="sql:use-connection"/>
+		</xsl:call-template>
+	</xsl:variable>
 	<xsl:variable name="driver">
 		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:driver"/>
@@ -179,7 +184,10 @@
 			column_formats.put(name,format);
 		}
 		</xsl:for-each>
-		Element result_elements[] = XSPSQLLibrary.processQuery(
+			Element result_elements[] = null;
+			if (String.valueOf(<xsl:copy-of select="$use-connection"/>) == "") {
+				result_elements = 
+				XSPSQLLibrary.executeQuery(
 			document,
 			String.valueOf(<xsl:copy-of select="$driver"/>),
 			String.valueOf(<xsl:copy-of select="$dburl"/>),
@@ -201,6 +209,28 @@
 			String.valueOf(<xsl:copy-of select="$namespace"/>),
 			String.valueOf(<xsl:copy-of select="$query"/>),
 			column_formats);
+ 			} else {
+ 				result_elements = 
+				XSPSQLLibrary.executeQuery(
+										   document,
+										   String.valueOf(<xsl:copy-of select="$use-connection"/>),
+										   String.valueOf(<xsl:copy-of select="$doc-element"/>),
+										   String.valueOf(<xsl:copy-of select="$row-element"/>),
+										   String.valueOf(<xsl:copy-of select="$tag-case"/>),
+										   String.valueOf(<xsl:copy-of select="$null-indicator"/>),
+										   String.valueOf(<xsl:copy-of select="$id-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$id-attribute-column"/>),
+										   max_rows,
+										   skip_rows,
+										   String.valueOf(<xsl:copy-of select="$count-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$query-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$skip-rows-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$max-rows-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$update-rows-attribute"/>),
+										   String.valueOf(<xsl:copy-of select="$namespace"/>),
+										   String.valueOf(<xsl:copy-of select="$query"/>),
+										   column_formats);
+ 			}
 		for (int i=0; i&lt;result_elements.length; i++) {
 			<xsp:content><xsp:expr>result_elements[i]</xsp:expr></xsp:content>
 		}

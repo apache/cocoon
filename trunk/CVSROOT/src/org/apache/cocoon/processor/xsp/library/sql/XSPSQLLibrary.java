@@ -55,17 +55,79 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.w3c.dom.*;
+import org.apache.turbine.util.db.pool.*;
+import org.apache.turbine.util.Log;
 
 /**
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.8 $ $Date: 2000-06-22 19:49:18 $
+ * @version $Revision: 1.9 $ $Date: 2000-07-06 03:40:22 $
  */
 
 public class XSPSQLLibrary {
 
-    public static Element[] processQuery(
+	static DBBroker pool = DBBroker.getInstance();
+
+	public static Element[] executeQuery(
+										 Document document,
+										 String connectionName,
+										 String doc_element_name,
+										 String row_element_name,
+										 String tag_case,
+										 String null_indicator,
+										 String id_attribute,
+										 String id_attribute_column,
+										 Integer max_rows,
+										 Integer skip_rows,
+										 String count_attribute,
+										 String query_attribute,
+										 String skip_rows_attribute,
+										 String max_rows_attribute,
+										 String update_rows_attribute,
+										 String namespace,
+										 String query,
+										 /** a table of Formats indexed by column name **/
+										 Hashtable column_formats
+										 )
+		throws SQLException,Exception
+	{
+		Connection connection = null;
+		DBConnection db = null;
+		//Log.note("executeQuery: connectionName = "+connectionName);
+		try {
+			db = pool.getConnection(connectionName);
+			connection = db.getConnection();
+			return processQuery( document,
+								 connection,
+								 doc_element_name,
+								 row_element_name,
+								 tag_case,
+								 null_indicator,
+								 id_attribute,
+								 id_attribute_column,
+								 max_rows,
+								 skip_rows,
+								 count_attribute,
+								 query_attribute,
+								 skip_rows_attribute,
+								 max_rows_attribute,
+								 update_rows_attribute,
+								 namespace,
+								 query,
+								/** a table of Formats indexed by column name **/
+								 column_formats
+								 );
+		} catch (SQLException e) {
+			throw(new SQLException(query + e));
+		} finally {
+			if (connection != null) {
+				pool.releaseConnection(db);
+			}
+		}
+	}
+	
+    public static Element[] executeQuery(
       Document document,
       String driver,
       String dburl,
@@ -88,7 +150,9 @@ public class XSPSQLLibrary {
       String query,
 	  /** a table of Formats indexed by column name **/
       Hashtable column_formats
-	) throws Exception {
+										 )
+		throws Exception
+	{
 
         Class.forName(driver).newInstance();
         Connection conn;
@@ -97,6 +161,55 @@ public class XSPSQLLibrary {
         } else {
             conn = DriverManager.getConnection(dburl,username,password);
         }
+ 		//Log.note("executeQuery: URL = "+dburl);
+ 		Element elm[] = processQuery( document,
+ 									  conn,
+ 									  doc_element_name,
+ 									  row_element_name,
+ 									  tag_case,
+ 									  null_indicator,
+ 									  id_attribute,
+ 									  id_attribute_column,
+ 									  max_rows,
+ 									  skip_rows,
+ 									  count_attribute,
+ 									  query_attribute,
+ 									  skip_rows_attribute,
+ 									  max_rows_attribute,
+ 									  update_rows_attribute,
+ 									  namespace,
+ 									  query,
+ 								/** a table of Formats indexed by column name **/
+ 									  column_formats
+ 									  );
+ 		conn.close();
+ 		return elm;
+ 	}
+ 	
+	public static Element[] processQuery(
+ 										 Document document,
+ 										 Connection conn,
+ 										 String doc_element_name,
+ 										 String row_element_name,
+ 										 String tag_case,
+ 										 String null_indicator,
+ 										 String id_attribute,
+ 										 String id_attribute_column,
+ 										 Integer max_rows,
+ 										 Integer skip_rows,
+ 										 String count_attribute,
+ 										 String query_attribute,
+ 										 String skip_rows_attribute,
+ 										 String max_rows_attribute,
+ 										 String update_rows_attribute,
+ 										 String namespace,
+ 										 String query,
+ 										 /** a table of Formats indexed by column name **/
+ 										 Hashtable column_formats
+ 										 )
+ 		throws Exception {
+ 			
+ 			//Log.note("Query:"+query);
         boolean create_row_elements = true;
         if (row_element_name.equals("")) {
             create_row_elements = false;
@@ -121,7 +234,8 @@ public class XSPSQLLibrary {
             results_element = createElement(document,namespace,doc_element_name);
 			results_node = results_element;
         }
-        if (results_element != null && !count_attribute.equals("")) {
+			if (results_element != null &&
+				!count_attribute.equals("")) {
             String count_query = getCountQuery(query);
             if (count_query != null) {
                 rs = st.executeQuery(count_query);
@@ -131,13 +245,16 @@ public class XSPSQLLibrary {
                 rs.close();
             }
         }
-        if (results_element != null && !query_attribute.equals("")) {
+			if (results_element != null &&
+				!query_attribute.equals("")) {
             results_element.setAttribute(query_attribute,URLEncoder.encode(query));
         }
-        if (results_element != null && !skip_rows_attribute.equals("")) {
+			if (results_element != null &&
+				!skip_rows_attribute.equals("")) {
             results_element.setAttribute(skip_rows_attribute,""+skip_rows);
         }
-        if (results_element != null && !max_rows_attribute.equals("")) {
+			if (results_element != null &&
+				!max_rows_attribute.equals("")) {
             results_element.setAttribute(max_rows_attribute,""+max_rows);
         }
         if (!st.execute(query)) {
@@ -176,7 +293,8 @@ public class XSPSQLLibrary {
                 if (create_row_elements) {
                     row_element = createElement(document,namespace,row_element_name);
                     row_node = row_element;
-                    if (create_id_attribute && id_attribute_column_index == -1) {
+						if (create_id_attribute &&
+							id_attribute_column_index == -1) {
                         row_element.setAttribute(id_attribute,"" + count);
                     }
                 }
@@ -197,15 +315,19 @@ public class XSPSQLLibrary {
 					} else {
 						formatted_value = format.format(value);
 					}
-                    if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
+						if (create_row_elements &&
+							create_id_attribute &&
+							id_attribute_column_index == i) {
                         row_element.setAttribute(id_attribute,formatted_value);
                         continue;
                     }
-                    if (value == null && !indicate_nulls) {
+						if (value == null &&
+							!indicate_nulls) {
 						continue;
 					}
                     column_element = createElement(document,namespace,columns[i].name);
-                    if (value == null && indicate_nulls) {
+						if (value == null &&
+							indicate_nulls) {
                         column_element.setAttribute("NULL","YES");
                         column_element.appendChild(document.createTextNode(""));
                     } else {
@@ -214,12 +336,14 @@ public class XSPSQLLibrary {
                     row_node.appendChild(column_element);
                 }
                 if (create_row_elements) results_node.appendChild(row_node);
-                if (max_rows.intValue() != -1 && count-skip_rows.intValue() == max_rows.intValue()-1) break;
+					if (max_rows.intValue() != -1 &&
+						count-skip_rows.intValue() == max_rows.intValue()-1) break;
                 count++;
             }
             rs.close();
         }
-        st.close(); conn.close();
+			st.close();
+			//conn.close();
 		if (results_element != null) {
 			Element ary[] = new Element[1];
 			ary[0] = results_element;
@@ -235,19 +359,26 @@ public class XSPSQLLibrary {
 		}
     }
 
-    protected static Column[] getColumns(ResultSetMetaData md, String tag_case) throws SQLException {
+    protected static Column[] getColumns(ResultSetMetaData md, String tag_case)
+		throws SQLException {
         Column columns[] = new Column[md.getColumnCount()];
         if (tag_case.equals("preserve")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1),md.getColumnType(i+1),md.getColumnTypeName(i+1));
+					columns[i] = new Column(md.getColumnName(i+1),
+											md.getColumnType(i+1),
+											md.getColumnTypeName(i+1));
             }
         } else if (tag_case.equals("lower")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1).toLowerCase(),md.getColumnType(i+1),md.getColumnTypeName(i+1));
+					columns[i] = new Column(md.getColumnName(i+1).toLowerCase(),
+											md.getColumnType(i+1),
+											md.getColumnTypeName(i+1));
             }
         } else if (tag_case.equals("upper")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1).toUpperCase(),md.getColumnType(i+1),md.getColumnTypeName(i+1));
+					columns[i] = new Column(md.getColumnName(i+1).toUpperCase(),
+											md.getColumnType(i+1),
+											md.getColumnTypeName(i+1));
             }
         }
         return columns;

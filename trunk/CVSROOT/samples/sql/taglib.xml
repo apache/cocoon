@@ -6,6 +6,7 @@
   language="java"
   xmlns:sql="http://www.apache.org/1999/SQL"
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:request="http://www.apache.org/1999/XSP/Request"
 >
 
   <page title="SQL Search Results">
@@ -13,7 +14,6 @@
   	<sql:execute-query>
 		<sql:driver>org.gjt.mm.mysql.Driver</sql:driver>
 		<sql:dburl>jdbc:mysql://localhost/test</sql:dburl>
-		<sql:query>select * from column_type_table</sql:query>
 		<sql:doc-element>things</sql:doc-element>
 		<sql:row-element>thing</sql:row-element>
 		<sql:column-format>
@@ -26,6 +26,7 @@
 			<sql:class>java.text.SimpleDateFormat</sql:class>
 			<sql:parameter>hh:mm (ss)</sql:parameter>
 		</sql:column-format>
+		<sql:query>select * from column_type_table where id = <request:get-parameter name="id"/></sql:query>
 	</sql:execute-query>
 
   </page>

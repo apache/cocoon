@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.7 2000-05-01 23:51:18 stefano Exp $ --
+/*-- $Id: Configurations.java,v 1.8 2000-07-06 03:40:11 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-05-01 23:51:18 $
+ * @version $Revision: 1.8 $ $Date: 2000-07-06 03:40:11 $
  */
 
 public class Configurations {
@@ -195,6 +195,13 @@ public class Configurations {
         return c;
     }
 
+    /**
+     * Get the Properties from the Configuration
+     */
+    public Properties getProperties() {
+        return this.properties;
+    }
+	
     public void setBasename(String baseName) {
         this.baseName = baseName;
     }
