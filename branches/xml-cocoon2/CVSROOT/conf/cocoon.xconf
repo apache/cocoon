@@ -4,7 +4,7 @@
 <!-- ===================== Cocoon Configurations =========================== -->
 
   <component  role="parser"    class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component  role="store"     class="org.apache.cocoon.components.store.MemoryStore/>
+  <component  role="store"     class="org.apache.cocoon.components.store.MemoryStore"/>
 
   <!-- Start XSP -->
   <component role="factory"
