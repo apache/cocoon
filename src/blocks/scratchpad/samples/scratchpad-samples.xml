@@ -104,6 +104,17 @@
     </sample>
   </group>  
 
+  <group name="WebServices with Flowscript">
+    <sample name="Random quote webservice" href="flow-webservices/randomQuoteWebService">
+      Remote service returns an xsd string that is mapped to a Javascript string.<br/>
+      (use: http://www.boyzoid.com/comp/randomQuote.cfc?wsdl)
+    </sample>
+    <sample name="Morgage rate" href="flow-webservices/mortgageIndexWebService">
+        Remote service returns an xsd complex type that is mapped to a Javascript object.<br/>
+        (use: http://www.webservicex.net/MortgageIndex.asmx?WSDL)
+    </sample>
+  </group>   
+
   <group name="XModule Source">
     <sample name="Create"
             href="xmodule-source/insert?file=test.xml&amp;url=xmodule:session-attr:test">
