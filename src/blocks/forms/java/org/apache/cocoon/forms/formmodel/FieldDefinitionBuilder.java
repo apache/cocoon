@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {FieldDefinition}s.
  *
- * @version $Id: FieldDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: FieldDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
  */
 public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
@@ -42,8 +42,9 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
         if (datatypeElement == null) {
-            throw new Exception("A nested datatype element is required for the widget at " +
-                                DomHelper.getLocation(widgetElement));
+            throw new Exception("A nested datatype element is required for the widget " 
+                                + widgetElement.getTagName() + " with id \"" + fieldDefinition.getId()
+                                + "\" at " + DomHelper.getLocation(widgetElement));
         }
 
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);

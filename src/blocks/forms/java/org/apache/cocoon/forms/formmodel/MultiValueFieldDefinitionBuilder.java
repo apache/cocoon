@@ -26,7 +26,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {@link MultiValueFieldDefinition}s.
  * 
- * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
@@ -37,8 +37,11 @@ public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefi
         setValidators(widgetElement, definition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+        if (datatypeElement == null) {
+            throw new Exception("A nested datatype element is required for the widget "
+                                + widgetElement.getTagName() + " with id \"" + definition.getId()
+                                + "\" at " + DomHelper.getLocation(widgetElement));
+        }
 
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
         definition.setDatatype(datatype);

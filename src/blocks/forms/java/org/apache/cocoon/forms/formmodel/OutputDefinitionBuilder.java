@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {@link OutputDefinition}s.
  * 
- * @version $Id: OutputDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: OutputDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
  */
 public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
@@ -33,8 +33,11 @@ public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBui
         setId(widgetElement, definition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+        if (datatypeElement == null) {
+            throw new Exception("A nested datatype element is required for the widget " 
+                                + widgetElement.getTagName() + " with id \"" + definition.getId()
+                                + "\" at " + DomHelper.getLocation(widgetElement));
+        }
 
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
         definition.setDatatype(datatype);
