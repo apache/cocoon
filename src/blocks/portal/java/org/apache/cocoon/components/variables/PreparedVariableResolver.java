@@ -18,6 +18,7 @@ package org.apache.cocoon.components.variables;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
@@ -34,10 +35,11 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.4 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PreparedVariableResolver 
-    extends NOPVariableResolver {
+    extends NOPVariableResolver
+    implements Disposable {
     
     protected ServiceManager  manager;
     protected ServiceSelector selector;
@@ -56,7 +58,6 @@ public class PreparedVariableResolver
     
     public PreparedVariableResolver(String expr, ServiceManager manager, Context context) 
     throws PatternException {
-        
         super(null);
         this.expression = expr;
         this.manager = manager;
@@ -216,8 +217,10 @@ public class PreparedVariableResolver
         
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        super.dispose();
         if (this.selector != null) {
             for (int i = 0; i < this.items.size(); i++) {
                 int type = ((Integer) this.items.get(i)).intValue();
