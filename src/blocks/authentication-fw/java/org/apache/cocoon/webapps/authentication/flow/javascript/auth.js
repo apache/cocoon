@@ -62,10 +62,7 @@ function auth_checkAuthentication(handler, application) {
 
         // do authentication
         authenticated = authMgr.checkAuthentication(null, handler, application);
-        if (authenticated) {
-            state = authMgr.getState();
-            map = state.getHandler().getContext().getContextInfo();
-        } else {
+        if (!authenticated) {
             cocoon.redirectTo(authMgr.getForwardingURI(handler));
         }
     } finally {
@@ -80,7 +77,8 @@ function auth_isAuthenticated(handler) {
         // ApplicationName, do we need it?
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         
-        return authMgr.isAuthenticated(handler);
+        var userHandler = authMgr.isAuthenticated(handler);
+        return (userHandler!=null);
     } finally {
         cocoon.releaseComponent(authMgr);
     }
