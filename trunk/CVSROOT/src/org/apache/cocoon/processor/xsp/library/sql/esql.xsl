@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.42 2001-01-16 03:30:53 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.43 2001-01-16 16:07:12 greenrd Exp $-->
 <!--
 
  ============================================================================
@@ -67,7 +67,7 @@
 <xsl:param name="language"/>
 
 <xsl:variable name="cocoon1-environment">Cocoon 1</xsl:variable>
-<xsl:variable name="cocoon2-environment">something else</xsl:variable>
+<xsl:variable name="cocoon2-environment">Cocoon 2</xsl:variable>
 
 <xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
 <xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
@@ -471,7 +471,12 @@
           String _esql_tagname = _esql_query.resultset_metadata.getColumnName(_esql_i);
           <xsp:element>
             <xsp:param name="name"><xsp:expr>_esql_tagname</xsp:expr></xsp:param>
-            <xsp:expr>_esql_query.resultset.getString(_esql_i)</xsp:expr>
+            <xsp:expr>
+              <xsl:call-template name="get-string-encoded">
+                <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
+                <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
+              </xsl:call-template>
+            </xsp:expr>
           </xsp:element>
         }
         this.characters("\n");
