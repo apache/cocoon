@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,31 +34,39 @@ import java.util.Collections;
 /**
  * A class that can record SAX events and replay them later.
  *
- * <p>Compared to XMLByteStreamCompiler, this class is many times faster at sending out the recorded
- * SAX events since it doesn't need to convert between byte and char representations etc.
+ * <p>Compared to {@link org.apache.cocoon.components.sax.XMLByteStreamCompiler},
+ * this class is many times faster at sending out the recorded SAX events since
+ * it doesn't need to convert between byte and char representations etc.
  * On the other hand, its data structure is more complex then a simple byte array,
  * making XMLByteStreamCompiler better in case the recorded SAX should be stored long-term.
  *
  * <p>Use this class if you need to frequently generate smaller amounts of SAX events,
- * or replay a set of recorded start events immediately.
+ * or replay a set of recorded start events immediately.</p>
  *
- * <p>Both ContentHandler and LexicalHandler are supported, the only exception is
- * that the setDocumentLocator event is not recorded.
- * 
- * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: SaxBuffer.java,v 1.15 2004/06/24 07:34:37 cziegeler Exp $
+ * <p>Both {@link ContentHandler} and {@link LexicalHandler} are supported, the only
+ * exception is that the setDocumentLocator event is not recorded.</p>
+ *
+ * @version CVS $Id$
  */
 public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializable {
 
     /**
      * Stores list of {@link SaxBit} objects.
      */
-    protected List saxbits = new ArrayList();
+    protected List saxbits;
 
     /**
      * Creates empty SaxBuffer
      */
     public SaxBuffer() {
+        this.saxbits = new ArrayList();
+    }
+
+    /**
+     * Creates SaxBuffer based on the provided bits list.
+     */
+    public SaxBuffer(List bits) {
+        this.saxbits = bits;
     }
 
     /**
@@ -68,13 +76,16 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         this.saxbits.addAll(saxBuffer.saxbits);
     }
 
+    //
+    // ContentHandler Interface
+    //
 
     public void skippedEntity(String name) throws SAXException {
         saxbits.add(new SkippedEntity(name));
     }
 
     public void setDocumentLocator(Locator locator) {
-        // don't record this event
+        // Don't record this event
     }
 
     public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
@@ -113,6 +124,10 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         saxbits.add(new StartPrefixMapping(prefix, uri));
     }
 
+    //
+    // LexicalHandler Interface
+    //
+
     public void endCDATA() throws SAXException {
         saxbits.add(EndCDATA.SINGLETON);
     }
@@ -141,29 +156,29 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         saxbits.add(new EndEntity(name));
     }
 
+    //
+    // Public Methods
+    //
 
     /**
-     * Adds a SaxBit to the bits list
+     * @return true if buffer is empty
      */
-    protected final void addBit(SaxBit bit) {
-        saxbits.add(bit);
-    }
-    
-    /**
-     * Iterates through the bits list
-     */
-    protected final Iterator bits() {
-        return saxbits.iterator();
-    }
-    
     public boolean isEmpty() {
         return saxbits.isEmpty();
     }
 
+    /**
+     * @return unmodifiable list of SAX bits
+     */
     public List getBits() {
         return Collections.unmodifiableList(saxbits);
     }
 
+    /**
+     * Stream this buffer into the provided content handler.
+     * If contentHandler object implements LexicalHandler, it will get lexical
+     * events as well.
+     */
     public void toSAX(ContentHandler contentHandler) throws SAXException {
         for (Iterator i = saxbits.iterator(); i.hasNext();) {
             SaxBit saxbit = (SaxBit)i.next();
@@ -171,32 +186,57 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         }
     }
 
-    /*
-     * NOTE: Used in i18n XML bundle implementation
+    /**
+     * @return String value of the buffer
      */
     public String toString() {
-        StringBuffer value = new StringBuffer();
+        // NOTE: This method is used in i18n XML bundle implementation
+        final StringBuffer value = new StringBuffer();
         for (Iterator i = saxbits.iterator(); i.hasNext();) {
-            SaxBit saxbit = (SaxBit)i.next();
+            final SaxBit saxbit = (SaxBit) i.next();
             if (saxbit instanceof Characters) {
-                ((Characters)saxbit).toString(value);
+                ((Characters) saxbit).toString(value);
             }
         }
-        
+
         return value.toString();
     }
 
+    /**
+     * Clear this buffer
+     */
     public void recycle() {
         saxbits.clear();
     }
 
+    /**
+     * Dump buffer contents into the provided writer.
+     */
     public void dump(Writer writer) throws IOException {
-        Iterator saxbitIt = saxbits.iterator();
-        while (saxbitIt.hasNext()) {
-            SaxBit saxbit = (SaxBit)saxbitIt.next();
+        Iterator i = saxbits.iterator();
+        while (i.hasNext()) {
+            final SaxBit saxbit = (SaxBit) i.next();
             saxbit.dump(writer);
         }
         writer.flush();
+    }
+
+    //
+    // Implementation Methods
+    //
+
+    /**
+     * Adds a SaxBit to the bits list
+     */
+    protected final void addBit(SaxBit bit) {
+        saxbits.add(bit);
+    }
+
+    /**
+     * Iterates through the bits list
+     */
+    protected final Iterator bits() {
+        return saxbits.iterator();
     }
 
     /**
@@ -208,7 +248,8 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     }
 
     public final static class StartDocument implements SaxBit, Serializable {
-        static public final StartDocument SINGLETON = new StartDocument();
+        public static final StartDocument SINGLETON = new StartDocument();
+
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.startDocument();
         }
@@ -219,7 +260,8 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     }
 
     public final static class EndDocument implements SaxBit, Serializable {
-        static public final EndDocument SINGLETON = new EndDocument();
+        public static final EndDocument SINGLETON = new EndDocument();
+
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.endDocument();
         }
@@ -269,7 +311,8 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     }
 
     public final static class EndDTD implements SaxBit, Serializable {
-        static public final EndDTD SINGLETON = new EndDTD();
+        public static final EndDTD SINGLETON = new EndDTD();
+
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endDTD();
@@ -421,7 +464,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.characters(ch, 0, ch.length);
         }
-        
+
         public void toString(StringBuffer value) {
             value.append(ch);
         }
@@ -451,7 +494,8 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     }
 
     public final static class StartCDATA implements SaxBit, Serializable {
-        static public final StartCDATA SINGLETON = new StartCDATA();
+        public static final StartCDATA SINGLETON = new StartCDATA();
+
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).startCDATA();
@@ -463,7 +507,8 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     }
 
     public final static class EndCDATA implements SaxBit, Serializable {
-        static public final EndCDATA SINGLETON = new EndCDATA();
+        public static final EndCDATA SINGLETON = new EndCDATA();
+
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endCDATA();
@@ -488,7 +533,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
         }
 
         public void dump(Writer writer) throws IOException {
-            writer.write("IgnorableWhitespace] ch=" + new String(ch) + "\n");
+            writer.write("[IgnorableWhitespace] ch=" + new String(ch) + "\n");
         }
     }
 }
