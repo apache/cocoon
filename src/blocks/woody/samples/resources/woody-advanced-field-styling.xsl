@@ -35,16 +35,6 @@
   <xsl:template match="wi:multivaluefield[wi:styling/@list-type='double-listbox']">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
-    <xsl:variable name="size">
-      <xsl:choose>
-        <xsl:when test="wi:styling/@listbox-size">
-          <xsl:value-of select="wi:styling/@listbox-size"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>5</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
 
     <span class="woody-doubleList" title="{wi:hint}">
       <table>
@@ -62,8 +52,9 @@
         <tr>
           <td>
             <!-- select for the unselected values -->
-            <select id="{@id}.unselected" name="{@id}.unselected" size="{$size}" multiple="multiple"
+            <select id="{@id}.unselected" name="{@id}.unselected" multiple="multiple"
                     ondblclick="opt{generate-id()}.transferRight()">
+              <xsl:apply-templates select="." mode="styling"/>
               <xsl:for-each select="wi:selection-list/wi:item">
                 <xsl:variable name="value" select="@value"/>
                 <xsl:if test="not($values[. = $value])">
@@ -97,7 +88,9 @@
           </td>
           <td>
             <!-- select for the selected values -->
-            <select ondblclick="opt{generate-id()}.transferLeft()" id="{@id}" name="{@id}" size="{$size}" multiple="multiple">
+            <select id="{@id}" name="{@id}" multiple="multiple"
+                    ondblclick="opt{generate-id()}.transferLeft()" >
+              <xsl:apply-templates select="." mode="styling"/>
               <xsl:for-each select="wi:selection-list/wi:item">
                 <xsl:variable name="value" select="@value"/>
                 <xsl:if test="$values[. = $value]">

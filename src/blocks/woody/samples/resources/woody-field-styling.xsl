@@ -34,19 +34,14 @@
       | Generic wi:field : produce an <input>
       +-->
   <xsl:template match="wi:field">
-    <input name="{@id}" id="{@id}" value="{wi:value}" title="{normalize-space(wi:hint)}">
-      <xsl:if test="wi:styling">
-        <xsl:copy-of select="wi:styling/@*[not(name() = 'submit-on-change')]"/>
-      </xsl:if>
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
+    <input name="{@id}" id="{@id}" value="{wi:value}" title="{wi:hint}">
+      <xsl:apply-templates select="." mode="styling"/>
     </input>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--+
-      | 
+      | Common stuff like wi:validation-message, @required or wi:help.
       +-->
   <xsl:template match="wi:*" mode="common">
     <!-- validation message -->
@@ -56,6 +51,45 @@
       <span class="woody-field-required"> * </span>
     </xsl:if>
     <xsl:apply-templates select="wi:help"/>
+  </xsl:template>
+
+  <!--+
+      | Handling the common styling. You may only add attributes to the output
+      | as following handling (e.g. checked/unchecked) might add attributes too.
+      +-->
+  <xsl:template match="wi:*" mode="styling">
+    <xsl:apply-templates select="wi:styling/@*" mode="styling"/>
+    <!--+ @listbox-size needs to be handled separately as even if it is not
+        | specified some output (@size) must be generated.
+        | Separating this out into this common styling looks a bit like
+        | over-separation, doesn't it?
+        +-->
+    <xsl:if test="self::wi:field[wi:selection-list][wi:styling/@list-type = 'listbox'] or
+                  self::wi:multivaluefield[not(wi:styling/@list-type = 'checkbox')]">
+      <xsl:variable name="size">
+        <xsl:value-of select="wi:styling/@listbox-size"/>
+        <xsl:if test="not(wi:styling/@listbox-size)">5</xsl:if>
+      </xsl:variable>
+      <xsl:attribute name="size">
+        <xsl:value-of select="$size"/>
+      </xsl:attribute>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="wi:styling/@*" mode="styling">
+    <xsl:copy-of select="."/>
+  </xsl:template>
+
+  <xsl:template match="wi:styling/@submit-on-change" mode="styling">
+    <xsl:if test=". = 'true'">
+      <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="wi:styling/@type | wi:styling/@list-type |
+                       wi:styling/@list-orientation | wi:styling/@listbox-size"
+                mode="styling">
+    <!-- They are just markers for the stylesheet and don't go through to HTML. -->
   </xsl:template>
 
   <!--+
@@ -83,9 +117,7 @@
       +-->
   <xsl:template match="wi:field[wi:styling/@type='hidden']" priority="2">
     <input type="hidden" name="{@id}" id="{@id}" value="{wi:value}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
+      <xsl:apply-templates select="." mode="styling"/>
     </input>
   </xsl:template>
 
@@ -94,14 +126,13 @@
       | radio-buttons oriented according to @list-orientation
       | ("horizontal" or "vertical" - default)
       +-->
-  <xsl:template match="wi:field[wi:selection-list and wi:styling/@list-type='radio']" priority="2">
+  <xsl:template match="wi:field[wi:selection-list][wi:styling/@list-type='radio']" priority="2">
+    <xsl:variable name="id" select="@id"/>
     <xsl:variable name="value" select="wi:value"/>
     <xsl:variable name="vertical" select="string(wi:styling/@list-orientation) != 'horizontal'"/>
     <xsl:choose>
       <xsl:when test="$vertical">
-        <table cellpadding="0" cellspacing="0" border="0" title="{normalize-space(wi:hint)}">
-          <xsl:variable name="id" select="@id"/>
-          <xsl:variable name="on-change" select="wi:styling/@submit-on-change"/>
+        <table cellpadding="0" cellspacing="0" border="0" title="{wi:hint}">
           <xsl:for-each select="wi:selection-list/wi:item">
             <tr>
               <td>
@@ -109,9 +140,7 @@
                   <xsl:if test="@value = $value">
                     <xsl:attribute name="checked">checked</xsl:attribute>
                   </xsl:if>
-                  <xsl:if test="$on-change='true'">
-                    <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-                  </xsl:if>
+                  <xsl:apply-templates select="." mode="styling"/>
                 </input>
               </td>
               <td>
@@ -127,16 +156,13 @@
         </table>
       </xsl:when>
       <xsl:otherwise>
-        <span title="{normalize-space(wi:hint)}">
-          <xsl:variable name="id" select="@id"/>
+        <span title="{wi:hint}">
           <xsl:for-each select="wi:selection-list/wi:item">
             <input type="radio" id="{generate-id()}" name="{$id}" value="{@value}">
               <xsl:if test="@value = $value">
                 <xsl:attribute name="checked">checked</xsl:attribute>
               </xsl:if>
-              <xsl:if test="wi:styling/@submit-on-change='true'">
-                <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-              </xsl:if>
+              <xsl:apply-templates select="." mode="styling"/>
             </input>
             <label for="{generate-id()}"><xsl:copy-of select="wi:label/node()"/></label>
           </xsl:for-each>
@@ -149,31 +175,16 @@
   <!--+
       | wi:field with a selection list (not 'radio' style)
       | Rendering depends on the attributes of wi:styling :
-      | - if @list-type is "listbox" : produce a list box with @list-size visible
+      | - if @list-type is "listbox" : produce a list box with @listbox-size visible
       |   items (default 5)
       | - otherwise, produce a dropdown menu
       +-->
   <xsl:template match="wi:field[wi:selection-list]" priority="1">
     <xsl:variable name="value" select="wi:value"/>
-    <xsl:variable name="liststyle" select="wi:styling/@list-type"/>
 
     <!-- dropdown or listbox -->
-    <select title="{normalize-space(wi:hint)}" id="{@id}" name="{@id}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
-      <xsl:if test="$liststyle='listbox'">
-        <xsl:attribute name="size">
-          <xsl:choose>
-            <xsl:when test="wi:styling/@listbox-size">
-              <xsl:value-of select="wi:styling/@listbox-size"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>5</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
-      </xsl:if>
+    <select title="{wi:hint}" id="{@id}" name="{@id}">
+      <xsl:apply-templates select="." mode="styling"/>
       <xsl:for-each select="wi:selection-list/wi:item">
         <option value="{@value}">
           <xsl:if test="@value = $value">
@@ -189,7 +200,7 @@
   <!--+
       | wi:field with a selection list and @type 'output'
       +-->
-  <xsl:template match="wi:field[wi:selection-list and wi:styling/@type='output']" priority="3">
+  <xsl:template match="wi:field[wi:selection-list][wi:styling/@type='output']" priority="3">
     <xsl:variable name="value" select="wi:value"/>
     <xsl:variable name="selected" select="wi:selection-list/wi:item[@value = $value]"/>
     <xsl:choose>
@@ -206,28 +217,18 @@
       | wi:field with @type 'textarea'
       +-->
   <xsl:template match="wi:field[wi:styling/@type='textarea']">
-    <textarea id="{@id}" name="{@id}" title="{normalize-space(wi:hint)}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
-      <xsl:copy-of select="wi:styling/@*[not(name() = 'type' or name() ='submit-on-change')]"/>
+    <textarea id="{@id}" name="{@id}" title="{wi:hint}">
+      <xsl:apply-templates select="." mode="styling"/>
       <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
-      <xsl:copy-of select="translate(wi:value/node(), '&#13;','')"/>
+      <xsl:copy-of select="translate(wi:value/node(), '&#13;', '')"/>
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--+
-      | wi:field with @type 'output' : rendered as text
+      | wi:field with @type 'output' and wi:output are both rendered as text
       +-->
-  <xsl:template match="wi:field[wi:styling/@type='output']" priority="2">
-    <xsl:copy-of select="wi:value/node()"/>
-  </xsl:template>
-
-  <!--+
-      | wi:output
-      +-->
-  <xsl:template match="wi:output">
+  <xsl:template match="wi:output | wi:field[wi:styling/@type='output']" priority="2">
     <xsl:copy-of select="wi:value/node()"/>
   </xsl:template>
 
@@ -235,12 +236,9 @@
       | wi:booleanfield : produce a checkbox
       +-->
   <xsl:template match="wi:booleanfield">
-    <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{normalize-space(wi:hint)}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
-      <xsl:copy-of select="@*[not(name() = 'submit-on-change')]"/>
-      <xsl:if test="wi:value/text() = 'true'">
+    <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{wi:hint}">
+      <xsl:apply-templates select="." mode="styling"/>
+      <xsl:if test="wi:value = 'true'">
         <xsl:attribute name="checked">checked</xsl:attribute>
       </xsl:if>
     </input>
@@ -265,9 +263,9 @@
       | wi:action
       +-->
   <xsl:template match="wi:action">
-    <input id="{@id}" type="submit" name="{@id}" title="{normalize-space(wi:hint)}">
+    <input id="{@id}" type="submit" name="{@id}" title="{wi:hint}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
-      <xsl:copy-of select="wi:styling/@*"/>
+      <xsl:apply-templates select="." mode="styling"/>
     </input>
   </xsl:template>
 
@@ -275,14 +273,11 @@
       | wi:continuation-id : produce a hidden "continuation-id" input
       +-->
   <xsl:template match="wi:continuation-id">
-    <xsl:choose>
-      <xsl:when test="@name">
-        <input name="{@name}" type="hidden" value="{.}"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <input name="continuation-id" type="hidden" value="{.}"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="name">
+      <xsl:value-of select="@name"/>
+      <xsl:if test="not(@name)">continuation-id</xsl:if>
+    </xsl:variable>
+    <input name="{$name}" type="hidden" value="{.}"/>
   </xsl:template>
 
   <!--+
@@ -292,7 +287,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
 
-    <span title="{normalize-space(wi:hint)}">
+    <span title="{wi:hint}">
       <xsl:for-each select="wi:selection-list/wi:item">
         <xsl:variable name="value" select="@value"/>
         <input id="{generate-id()}" type="checkbox" value="{@value}" name="{$id}">
@@ -314,18 +309,9 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
 
-    <span title="{normalize-space(wi:hint)}">
+    <span title="{wi:hint}">
       <select id="{@id}" name="{$id}" multiple="multiple">
-        <xsl:attribute name="size">
-          <xsl:choose>
-            <xsl:when test="wi:styling/@listbox-size">
-              <xsl:value-of select="wi:styling/@listbox-size"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>5</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
+        <xsl:apply-templates select="." mode="styling"/>
         <xsl:for-each select="wi:selection-list/wi:item">
           <xsl:variable name="value" select="@value"/>
           <option value="{$value}">
@@ -347,12 +333,12 @@
     <xsl:choose>
       <xsl:when test="wi:value">
         <!-- Has a value (filename): display it with a change button -->
-        <span title="{normalize-space(wi:hint)}">
+        <span title="{wi:hint}">
           [<xsl:value-of select="wi:value"/>] <input type="submit" id="{@id}" name="{@id}" value="..."/>
         </span>
       </xsl:when>
       <xsl:otherwise>
-        <input type="file" id="{@id}" name="{@id}" title="{normalize-space(wi:hint)}" accept="{@mime-types}"/>
+        <input type="file" id="{@id}" name="{@id}" title="{wi:hint}" accept="{@mime-types}"/>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="." mode="common"/>
@@ -405,8 +391,8 @@
       <xsl:apply-templates/>
       
       <!-- TODO: consider putting this in the xml stream from the generator? -->
-      <xsl:if test="local-name(.) = 'form-generated' ">
-        <input type="submit" />
+      <xsl:if test="self::wi:form-generated">
+        <input type="submit"/>
       </xsl:if>
     </form>
   </xsl:template>
@@ -419,12 +405,12 @@
       <xsl:for-each select="wi:children/*">
         <tr>
           <xsl:choose>
-            <xsl:when test="local-name(.) = 'repeater'">
+            <xsl:when test="self::wi:repeater">
               <td valign="top" colspan="2">
                 <xsl:apply-templates select="."/>
               </td>
             </xsl:when>
-            <xsl:when test="local-name(.) = 'booleanfield'">
+            <xsl:when test="self::wi:booleanfield">
               <td>&#160;</td>
               <td valign="top">
                 <xsl:apply-templates select="."/>
@@ -447,10 +433,8 @@
   </xsl:template>
 
   <xsl:template match="wi:aggregatefield">
-    <input id="{@id}" name="{@id}" value="{wi:value}" title="{normalize-space(wi:hint)}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
+    <input id="{@id}" name="{@id}" value="{wi:value}" title="{wi:hint}">
+      <xsl:apply-templates select="." mode="styling"/>
     </input>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
