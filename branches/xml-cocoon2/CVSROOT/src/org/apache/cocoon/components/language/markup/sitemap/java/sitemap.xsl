@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.107 2001-04-24 22:26:48 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.108 2001-04-25 07:55:46 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -421,6 +421,9 @@
         <!-- for each pipeline element generate a try/catch block -->
         <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
           <xsl:variable name="pipeline-position" select="position()"/>
+          <xsl:if test="@internal-only = 'yes' or @internal-only='true'">
+            if (internalRequest) {
+          </xsl:if>
           try {
             <xsl:apply-templates select="./*"/>
           } catch (ResourceNotFoundException rse) {
@@ -442,6 +445,9 @@
               </xsl:otherwise>
             </xsl:choose>
           }
+          <xsl:if test="@internal-only = 'yes' or @internal-only='true'">
+            }
+          </xsl:if>
         </xsl:for-each>
         return false;
       }
@@ -831,18 +837,20 @@
       environment.setStatus(<xsl:value-of select="@status-code"/>);
     </xsl:if>
 
-    if (!internalRequest) {
-      boolean result = false;
+    <xsl:if test="not(ancestor::map:pipeline[@internal-only='yes' or @internal-only='true'])">
+      if (!internalRequest) {
+        boolean result = false;
 
-      try {
-          result = pipeline.process(environment);
-      } catch (Exception pipelineException<xsl:value-of select="generate-id(.)"/>) {
-          getLogger().debug("Error processing pipeline", pipelineException<xsl:value-of select="generate-id(.)"/>);
-          throw pipelineException<xsl:value-of select="generate-id(.)"/>;
+        try {
+            result = pipeline.process(environment);
+        } catch (Exception pipelineException<xsl:value-of select="generate-id(.)"/>) {
+            getLogger().debug("Error processing pipeline", pipelineException<xsl:value-of select="generate-id(.)"/>);
+            throw pipelineException<xsl:value-of select="generate-id(.)"/>;
+        }
+
+        return result;
       }
-
-      return result;
-    }
+    </xsl:if>
     <!-- the if(true) prevents "unreachable statement" errors during compile -->
     if(true) return true;
 
@@ -857,19 +865,20 @@
       <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template>
 
-    <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
-    if (!internalRequest) {
-      boolean result = false;
+    <xsl:if test="not(ancestor::map:pipeline[@internal-only='yes' or @internal-only='true'])">
+      if (!internalRequest) {
+        boolean result = false;
 
-      try {
-          result = pipeline.process(environment);
-      } catch (Exception RpipelineException<xsl:value-of select="generate-id(.)"/>) {
-          getLogger().debug("Error processing pipeline", RpipelineException<xsl:value-of select="generate-id(.)"/>);
-          throw RpipelineException<xsl:value-of select="generate-id(.)"/>;
+        try {
+            result = pipeline.process(environment);
+        } catch (Exception RpipelineException<xsl:value-of select="generate-id(.)"/>) {
+            getLogger().debug("Error processing pipeline", RpipelineException<xsl:value-of select="generate-id(.)"/>);
+            throw RpipelineException<xsl:value-of select="generate-id(.)"/>;
+        }
+
+        return result;
       }
-
-      return result;
-    }
+    </xsl:if>
     <!-- the if(true) prevents "unreachable statement" errors during compile -->
     if(true)return true;
   </xsl:template> <!-- match="map:read" -->
