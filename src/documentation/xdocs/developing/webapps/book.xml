@@ -14,7 +14,7 @@
     <menu-item label="Overview" href="index.html"/>
     <menu-item label="Session Contexts" href="session.html"/>
     <menu-item label="Authentication" href="authentication.html"/>
-    <menu-item label="Form Handling" href="../../howto/xmlform-wizard/howto-xmlform-wizard.html"/>
+    <menu-item label="Form Handling" href="../../userdocs/concepts/xmlform.html"/>
     <menu-item label="Portal" href="portal.html"/>
   </menu>
 
