@@ -405,7 +405,8 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="package, webapp, docs, javadocs" description="Prepares the distribution">
+<!--  <target name="dist" depends="package, webapp, docs, javadocs" description="Prepares the distribution"> -->
+  <target name="dist" depends="package, webapp" description="Prepares the distribution">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/src"/>
@@ -417,7 +418,7 @@ waiting for? C'mon, dive in and have fun.
     <mkdir dir="${dist.dir}/xdocs"/>
 
     <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/lib/${name}.jar"/>
-    <copyfile src="${build.war}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
+    <copyfile src="${build.dir}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
 
     <copydir src="${build.src}"      dest="${dist.dir}/src"/>
     <copydir src="${webapp.dir}"     dest="${dist.dir}/conf" includes="*.x*" excludes="*/**"/>
@@ -428,13 +429,16 @@ waiting for? C'mon, dive in and have fun.
     <copydir src="${skins.dir}"      dest="${dist.dir}/skins"/>
     <copydir src="${lib.dir}"        dest="${dist.dir}/lib"/>
 
-    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, build.*, index.html" filtering="on"/>
+    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, index.html, *.sh, *.bat" filtering="on"/>
     <copydir src="${build.war}"      dest="${dist.dir}/webapp"/>
 
+    <chmod perm="+x" file="${dist.dir}/run.sh"/>
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
-    <fixcrlf srcdir="${dist.dir}" includes="build.sh"  cr="remove"/>
-    <fixcrlf srcdir="${dist.dir}" includes="build.bat" cr="add"/>
-    <fixcrlf srcdir="${dist.dir}" includes="lcp.bat"   cr="add"/>
+    <fixcrlf srcdir="${dist.dir}" includes="run.sh"       cr="remove"/>
+    <fixcrlf srcdir="${dist.dir}" includes="run.bat"      cr="add"/>
+    <fixcrlf srcdir="${dist.dir}" includes="build.sh"     cr="remove"/>
+    <fixcrlf srcdir="${dist.dir}" includes="build.bat"    cr="add"/>
+    <fixcrlf srcdir="${dist.dir}" includes="appendcp.bat" cr="add"/>
   </target>
 
   <!-- =================================================================== -->
