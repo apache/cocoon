@@ -86,7 +86,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.2 2003/05/20 11:59:22 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.3 2003/05/20 20:49:57 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -323,15 +323,18 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                     getLogger().debug("setDocumentLocator called " + locator.getSystemId());
                 }
 
-                Source source = resolver.resolveURI(locator.getSystemId());
-                try {
-                    xmlBaseSupport.setDocumentLocation(source.getURI());
-                    // only for the "root" XIncludePipe, we'll have to set the href here, in the other cases
-                    // the href is taken from the xi:include href attribute
-                    if (href == null)
-                        href = source.getURI();
-                } finally {
-                    resolver.release(source);
+                // When using SAXON to serialize a DOM tree to SAX, a locator is passed with a "null" system id
+                if (locator.getSystemId() != null) {
+                    Source source = resolver.resolveURI(locator.getSystemId());
+                    try {
+                        xmlBaseSupport.setDocumentLocation(source.getURI());
+                        // only for the "root" XIncludePipe, we'll have to set the href here, in the other cases
+                        // the href is taken from the xi:include href attribute
+                        if (href == null)
+                            href = source.getURI();
+                    } finally {
+                        resolver.release(source);
+                    }
                 }
             } catch (Exception e) {
                 throw new CascadingRuntimeException("Error in XIncludeTransformer while trying to resolve base URL for document", e);
