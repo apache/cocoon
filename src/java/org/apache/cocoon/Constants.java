@@ -24,7 +24,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.12 2004/03/08 12:07:40 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.13 2004/05/27 13:14:36 cziegeler Exp $
  */
 public final class Constants {
 
@@ -105,10 +105,6 @@ public final class Constants {
 
     /** The name of the class for the default XML parser to use */
     public static final String DEFAULT_PARSER  = "org.apache.excalibur.xml.impl.JaxpParser";
-
-    /** The name of the property holding the class for a XML parser
-     *  @deprecated This will be removed in future release */
-    public static final String DEPRECATED_PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
 
     /** The namespace for the XSP core logicsheet. */
     public static final String XSP_URI = "http://apache.org/xsp";
