@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-26 17:58:06 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-30 20:39:54 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -268,12 +268,12 @@ public class XSPRequestHelper extends XSPObjectHelper {
      * @param content The parameter value
      */
     public static void setSessionAttribute(Map objectModel, String name, Object content) {
-        
+
         Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
         Session session = request.getSession(false);
         session.setAttribute(name, content);
     }
-    
+
   /**
    * Return the given session attribute value or a user-provided default if
    * none was specified.
@@ -376,7 +376,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
 
-    
+
     /**
      * Output the login of the user making the request
      * Could be null if user is not authenticated.
@@ -605,6 +605,32 @@ public class XSPRequestHelper extends XSPObjectHelper {
     return request.getServerPort();
   }
 
+  public static String getRequestedURL(Map objectModel) {
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+      StringBuffer uribuf = null;
+      boolean isSecure = request.isSecure();
+      int port = request.getServerPort();
+
+      if (isSecure) {
+          uribuf = new StringBuffer("https://");
+      } else {
+          uribuf = new StringBuffer("http://");
+      }
+
+      uribuf.append(request.getServerName());
+      if (isSecure) {
+          if (port != 443) {
+              uribuf.append(":").append(port);
+          }
+      } else {
+          if (port != 80) {
+              uribuf.append(":").append(port);
+          }
+      }
+
+      uribuf.append(request.getRequestURI());
+      return uribuf.toString();
+  }
 
   /**
    * Get the session attribute names.

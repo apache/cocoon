@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-25 23:01:17 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-30 20:40:01 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -218,11 +218,11 @@
 
     <xsl:choose>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>new StringBuffer((XSPRequestHelper.isSecure(objectModel)) ? "https://" : "http://").append(XSPRequestHelper.getServerName(objectModel)).append(":").append(XSPRequestHelper.getServerPort(objectModel)).append("/").append(XSPRequestHelper.getUri(objectModel)).toString()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.getRequestedURL(objectModel)</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'xml'">
           <xsp-request:requested-url>
-            <xsp:expr>new StringBuffer((XSPRequestHelper.isSecure(objectModel)) ? "https://" : "http://").append(XSPRequestHelper.getServerName(objectModel)).append(":").append(XSPRequestHelper.getServerPort(objectModel)).append("/").append(XSPRequestHelper.getUri(objectModel)).toString()</xsp:expr>
+            <xsp:expr>XSPRequestHelper.getRequestedURL(objectModel)</xsp:expr>
           </xsp-request:requested-url>
         </xsl:when>
     </xsl:choose>
@@ -352,9 +352,9 @@
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
-  </xsl:template>  
-	
-	
+  </xsl:template>
+
+
   <xsl:template match="xsp-request:get-remote-host">
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
@@ -375,7 +375,7 @@
       </xsl:when>
     </xsl:choose>
   </xsl:template>
-  
+
    <xsl:template name="value-for-as">
     <xsl:param name="default"/>
     <xsl:choose>
@@ -404,7 +404,7 @@
       <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="@*|*|text()|processing-instruction()">
       <xsl:copy>
         <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
