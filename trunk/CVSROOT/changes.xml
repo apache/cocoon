@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.5 1999-12-03 23:46:16 stefano Exp $
+  $Id: changes.xml,v 1.6 1999-12-07 09:24:23 balld Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,9 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="DB" type="add" due-to="Ed Ward" due-to-email="ed@waterfall.freeserve.co.uk">
+  	Added new classes to SQLProcessor to do column-specific date formatting.
+  </action>
   <action dev="SM" type="add" due-to="Gerrit Hiddink" due-to-email="grit@wwcn.org">
     Add new producer for POST document processing, also useful for use of 
     Cocoon as a module (see EngineWrapper).
