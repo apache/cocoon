@@ -279,7 +279,8 @@ public class CocoonServlet extends HttpServlet {
         }
         this.workDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
-
+        this.settings.setWorkDirectory(this.workDir.getAbsolutePath());
+        
         String path = this.servletContextPath;
         // these two variables are just for debugging. We can't log at this point
         // as the logger isn't initialized yet.
@@ -360,6 +361,7 @@ public class CocoonServlet extends HttpServlet {
         }
         this.uploadDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
+        this.settings.setUploadDirectory(this.uploadDir.getAbsolutePath());
 
         String cacheDirParam = this.settings.getCacheDirectory();
         if (cacheDirParam != null) {
@@ -387,6 +389,7 @@ public class CocoonServlet extends HttpServlet {
         }
         this.cacheDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
+        this.settings.setCacheDirectory(this.cacheDir.getAbsolutePath());
 
         this.appContext.put(Constants.CONTEXT_CONFIG_URL,
                             this.getConfigFile(this.settings.getConfiguration()));
