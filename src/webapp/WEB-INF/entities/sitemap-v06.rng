@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" 
          xmlns:sch="http://www.ascc.net/xml/schematron"
          xmlns="http://relaxng.org/ns/structure/1.0" 
@@ -29,12 +44,6 @@ NOTES:
     default sitemaps?
   - What in the default sitemap.xmap files is mandatory versus optional?
   - What elements/attributes need their rules tightened?
-
-AUTHORS:
-  Jeffrey Ricker NG (Usonia Holdings) <rickerng@usonia.net>
-  David Crossley <crossley@apache.org>
-  Colin Paul Adams <colin@colina.demon.co.uk>
-  Bruno Dumon <bruno@outerthought.org>
 
 FIXME:
 - map:act is used in various contexts, so it has a loose definition
@@ -73,6 +82,8 @@ CHANGE HISTORY:
               implement their own actions this content cannot be foreseen. (BD)
 20030212 V0.6 Add TagTransformer contents (VG)
 20030219 V0.6 Add new i18nTransformer contents <catalogues> (DC)
+20030730 V0.6 Added new htmlGenerator contents <catalogues> (NKB)
+20040123 V0.6 Added <parameter>* to <generator> (NKB)
 
 ====================================================================
 -->
@@ -272,6 +283,11 @@ CHANGE HISTORY:
     </zeroOrMore>
   </define>
 
+<!-- CPA: contents confirmed by inspection of HtmlGenerator.java -->
+  <define name="htmlGenerator.contents">
+    <optional><ref name="jtidy-config"/></optional>
+  </define>
+
 <!-- CPA: contents confirmed by inspection of TraxTransformer.java -->
   <define name="traxTransformer.contents">
     <optional><ref name="use-request-parameters"/></optional>
@@ -320,6 +336,22 @@ CHANGE HISTORY:
           </zeroOrMore>
         </element>
       </choice>
+    </zeroOrMore>
+  </define>
+
+  <define name="IdGeneratorTransformer.contents">
+    <zeroOrMore>
+      <element name="element">
+        <text/>
+      </element>
+      <element name="id">
+        <text/>
+      </element>
+      <optional>
+        <element name="id-attr">
+          <text/>
+        </element>
+      </optional>
     </zeroOrMore>
   </define>
 
@@ -465,6 +497,12 @@ CHANGE HISTORY:
   <define name="map.generator">
     <element name="map:generator">
       <ref name="map.generator.attlist"/>
+      <interleave>
+        <ref name="htmlGenerator.contents"/>
+      </interleave>
+      <zeroOrMore> 
+        <ref name="parameter"/>
+      </zeroOrMore>
       <empty/>
     </element>
   </define>
@@ -473,6 +511,12 @@ CHANGE HISTORY:
     <ref name="name.attr"/>
     <ref name="src.attr"/>
     <ref name="component.attr"/>
+  </define>
+
+  <define name="jtidy-config">
+    <element name="jtidy-config">
+      <text/>
+    </element>
   </define>
 
 <!-- Transformers ====================================== -->
@@ -507,6 +551,7 @@ CHANGE HISTORY:
           <ref name="web3RfcTransformer.contents"/>
           <ref name="simpleFormExtractTransformer.contents"/>
           <ref name="tagTransformer.contents"/>
+          <ref name="IdGeneratorTransformer.contents"/>
           <optional><ref name="mapping"/></optional>
           <zeroOrMore>
            <ref name="parameter"/>
