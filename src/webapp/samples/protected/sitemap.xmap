@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: sitemap.xmap,v 1.6 2004/03/06 02:26:20 antonio Exp $ -->
+<!-- CVS: $Id: sitemap.xmap,v 1.7 2004/03/10 16:16:12 unico Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -104,7 +104,11 @@
           <map:parameter name="descriptor" value="descriptors/params.xml"/>
           <map:parameter name="validate" value="username,department_id,theme"/>
           <!-- generate protected content -->
-          <map:generate type="serverpages" src="docs/protected.xsp"/>
+          <map:generate type="jx" src="docs/protected.xml">
+            <map:parameter name="username" value="{session-attr:username}"/>
+            <map:parameter name="department_id" value="{session-attr:department_id}"/>
+            <map:parameter name="theme" value="{session-attr:theme}"/>
+          </map:generate>
           <map:transform src="stylesheets/{theme}-page2html.xsl">
             <map:parameter name="servletPath" value="{request:servletPath}"/>
             <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
