@@ -22,24 +22,24 @@
 >
 
   <menu label="Overview">
-    <menu-item label="Index" href="index.xsp"/>
+    <menu-item label="Index" href="index.html"/>
     <menu-item label="Sitemap" href="sitemap.xmap"/>    
   </menu>  
  
   <menu label="Modules">
-    <menu-item label="RequestModule" href="request.xsp"/>
-    <menu-item label="BaseLinkModule" href="baselink.xsp"/>
-    <menu-item label="RequestParameterModule" href="requestparam"/>
-    <menu-item label="DateInputModule" href="date.xsp"/>
-    <menu-item label="DefaultsModule" href="defaults.xsp"/>
-    <menu-item label="SessionModule" href="session.xsp"/>
-    <menu-item label="SessionAttributeModule" href="session-attr.xsp"/>
-    <menu-item label="SystemPropertyModule" href="system-property.xsp"/>
-    <menu-item label="XMLFileModule" href="xml.xsp"/>
-    <menu-item label="ChainMetaModule" href="chain.xsp"/>
-    <menu-item label="RandomNumberModule" href="randomnumber.xsp"/>
-    <menu-item label="RealPathModule" href="realpath.xsp"/>
-    <menu-item label="PropertiesFileModule" href="properties.xsp"/>
+    <menu-item label="RequestModule" href="request.html"/>
+    <menu-item label="BaseLinkModule" href="baselink.html"/>
+    <menu-item label="RequestParameterModule" href="requestparam.html"/>
+    <menu-item label="DateInputModule" href="date.html"/>
+    <menu-item label="DefaultsModule" href="defaults.html"/>
+    <menu-item label="SessionModule" href="session.html"/>
+    <menu-item label="SessionAttributeModule" href="session-attr.html"/>
+    <menu-item label="SystemPropertyModule" href="system-property.html"/>
+    <menu-item label="XMLFileModule" href="xml.html"/>
+    <menu-item label="ChainMetaModule" href="chain.html"/>
+    <menu-item label="RandomNumberModule" href="randomnumber.html"/>
+    <menu-item label="RealPathModule" href="realpath.html"/>
+    <menu-item label="PropertiesFileModule" href="properties.html"/>
   </menu>
 
   <menu label="Documentation">

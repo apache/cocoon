@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: sitemap.xmap,v 1.8 2004/03/06 02:26:06 antonio Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.9 2004/03/10 13:36:09 unico Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -27,8 +27,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
     <!-- This resource is used to create a composite page from menu and content -->
     <map:resource name="composite">
       <map:aggregate element="site">
-        <map:part src="cocoon:/menu/{../0}"/>
-        <map:part src="cocoon:/content/{../0}" label="content"/>
+        <map:part src="cocoon:/menu/{../1}.xml"/>
+        <map:part src="cocoon:/content/{../1}.xml" label="content"/>
       </map:aggregate>
       <map:transform src="site2html.xsl">
         <map:parameter name="page" value="{../0}" />
@@ -43,21 +43,20 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
 
       <!-- Default URL matcher. Matches '/' URLs-->
       <map:match pattern="">
-        <map:redirect-to uri="index.xsp" />
+        <map:redirect-to uri="index.html" />
       </map:match>
 
-      <!-- Generate dynamic output (simple.xsp) -->            
-      <map:match pattern="*.xsp">
+      <map:match pattern="*.html">
         <map:call resource="composite" />
       </map:match>                
 
-      <map:match pattern="content/index.xsp">
+      <map:match pattern="content/index.xml">
         <map:generate src="index.xhtml"/>
         <map:serialize/>
       </map:match>                            
 
-      <map:match pattern="content/request.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/request.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="attributeNames" value="{request:attributeNames}"/>
           <map:parameter name="authType" value="{request:authType}"/>
           <map:parameter name="characterEncoding" value="{request:characterEncoding}"/>
@@ -100,8 +99,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
-      <map:match pattern="content/baselink.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/baselink.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="(anything)" value="{baselink:}"/>
         </map:generate>
 
@@ -116,10 +115,10 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>               
 
       <map:match pattern="requestparam">
-        <map:redirect-to uri="requestparam.xsp?foo=foo+param&amp;bar=bar+param"/>
+        <map:redirect-to uri="requestparam.xml?foo=foo+param&amp;bar=bar+param"/>
       </map:match>
-      <map:match pattern="content/requestparam.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/requestparam.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="foo" value="{request-param:foo}"/>
           <map:parameter name="bar" value="{request-param:bar}"/>
         </map:generate>
@@ -132,8 +131,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
-      <map:match pattern="content/session.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/session.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="attributeNames" value="{session:attributeNames}"/>
           <map:parameter name="creationTime" value="{session:creationTime}"/>
           <map:parameter name="lastAccessedTime" value="{session:lastAccessedTime}"/>
@@ -149,8 +148,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>               
 
-      <map:match pattern="content/system-property.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/system-property.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="java.version" value="{system-property:java.version}"/>
           <map:parameter name="java.vendor" value="{system-property:java.vendor}"/>
           <map:parameter name="java.vendor.url" value="{system-property:java.vendor.url}"/>
@@ -186,8 +185,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>               
 
 
-      <map:match pattern="content/xml.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/xml.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="/forrestconf/@version" value="{myxml:/forrestconf/@version}"/>
           <map:parameter name="/forrestconf/skin" value="{myxml:/forrestconf/skin}"/>
           <map:parameter name="/*/base-url" value="{myxml:/*/base-url}"/>
@@ -205,8 +204,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
-      <map:match pattern="content/defaults.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/defaults.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="skin" value="{defaults:skin}"/>
           <map:parameter name="base-url" value="{defaults:base-url}"/>
         </map:generate>
@@ -220,8 +219,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>
 
 
-      <map:match pattern="content/chain.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/chain.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="skin" value="{chain:skin}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
@@ -239,8 +238,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>
 
 
-      <map:match pattern="content/date.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/date.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="date" value="{date:date}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
@@ -251,8 +250,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
-      <map:match pattern="content/session-attr.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/session-attr.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="fruit" value="{session-attr:fruit}"/>               
         </map:generate>
         <map:transform src="properties2html.xsl">
@@ -264,8 +263,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
-      <map:match pattern="content/randomnumber.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/randomnumber.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="x" value="{random:x}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
@@ -277,8 +276,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>
 
 
-      <map:match pattern="content/realpath.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/realpath.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="/" value="{realpath:/}"/>
           <map:parameter name="/images" value="{realpath:/images}"/>
           <map:parameter name="/WEB-INF" value="{realpath:/WEB-INF}"/>
@@ -291,8 +290,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>               
 
-      <map:match pattern="content/properties.xsp">
-        <map:generate type="serverpages" src="properties.xsp">
+      <map:match pattern="content/properties.xml">
+        <map:generate type="jx" src="properties.xml">
           <map:parameter name="name" value="{cocoon-properties:name}"/>
           <map:parameter name="Name" value="{cocoon-properties:Name}"/>
           <map:parameter name="fullname" value="{cocoon-properties:fullname}"/>
@@ -302,7 +301,7 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         </map:generate>
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="Properties File Module
-            (PropertiesFileModule)"/>  
+            (PropertiesFileModule)"/>
           <map:parameter name="description" value="PropertiesFileModule provides access
             to properties from a properties file. In this example the keys identify properties in
             resource://org/apache/cocoon/cocoon.properties"/>
