@@ -9,7 +9,9 @@
   <map:transformers default="xslt">
     <map:transformer name="linkrewriter"
       src="org.apache.cocoon.transformation.LinkRewriterTransformer">
-      <input-module name="linkmap" src="cocoon://samples/linkrewriter/sitedemo/linkmap" reloadable="true"/>
+      <input-module name="linkmap">
+        <file src="{src}" reloadable="true"/>
+      </input-module>
       <input-module name="site">
         <input-module name="linkmap">
           <file src="{src}" reloadable="true"/>
