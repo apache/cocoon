@@ -542,7 +542,7 @@
   </programming-languages>
 
   <!--+
-      | Logisheets
+      | Logicsheets
       |
       | This section defines the XSP logicsheets. A logicsheet is a special
       | XSLT stylesheet used to translate user-defined dynamic markup into
