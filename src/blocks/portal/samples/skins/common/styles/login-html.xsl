@@ -39,9 +39,10 @@
 	  <img height="1" src="images/space.gif" width="15"/>
     </td>
   </tr>
-  <tr>
-    <td bgColor="#ffffff" align="center">
-	  <br/>
+    <tr>
+      <td bgColor="#ffffff" align="center">
+      <br/>
+      <p>
          If you are not already registered, use this guest login:
 		 <br/><br/>
 		 User:	<b>guest</b>
@@ -53,9 +54,10 @@
 		 Password:
 		 <b>cocoon</b>
 	   <br/><br/>
+       </p>
      </td>
-   </tr>
-</tbody></table>
+    </tr>
+  </tbody></table>
 </xsl:template>
 
 <xsl:template match="form">
@@ -78,7 +80,7 @@
 <xsl:template match="field">
 	<tr>
 		<td align="left">
-			<xsl:value-of select="@description"/>:
+			<p><xsl:value-of select="@description"/>:</p>
 		</td>
 		<td align="left">
 			<input>
