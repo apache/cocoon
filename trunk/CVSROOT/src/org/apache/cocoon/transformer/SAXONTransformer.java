@@ -92,7 +92,7 @@ import com.icl.saxon.trace.SimpleTraceListener;
  * <a href="http:infozone-group.
  *
  * @author <a href="http://www.smb-tec.com/">SMB</a>
- * @version $Revision: 1.2 $Date: 2001/01/26 21:07:41 $
+ * @version $Revision: 1.3 $Date: 2001/03/10 14:09:47 $
  */
 public class SAXONTransformer extends AbstractActor implements Transformer, 
         Status, Configurable {
@@ -304,7 +304,7 @@ public class SAXONTransformer extends AbstractActor implements Transformer,
         
         DOMSource source = (sheetBase == null)
                 ?new DOMSource(sheet)
-                :new DOMSource(sheet, sheetBase);     
+                :new DOMSource(sheet, "file:" + sheetBase);     
 
         Templates templates = _factory.newTemplates(source);
 
