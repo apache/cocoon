@@ -89,7 +89,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.20 2003/09/09 17:32:36 joerg Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.21 2003/09/10 09:12:20 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -385,42 +385,42 @@ public class CocoonBean extends CocoonWrapper {
             }
         }
 
-        String filename;
+        String destinationURI;
         if (confirmExtension) {
-            filename = (String) allTranslatedLinks.get(suri);
-            if (filename == null) {
-                filename = mangle(suri);
+            destinationURI = (String) allTranslatedLinks.get(suri);
+            if (destinationURI == null) {
+                destinationURI = mangle(suri);
                 final String type = getType(deparameterizedURI, parameters);
-                final String ext = NetUtils.getExtension(filename);
+                final String ext = NetUtils.getExtension(destinationURI);
                 final String defaultExt = MIMEUtils.getDefaultExtension(type);
                 if (defaultExt != null) {
                     if ((ext == null) || (!ext.equals(defaultExt))) {
-                        filename += defaultExt;
+                        destinationURI += defaultExt;
                     }
                 }
-                allTranslatedLinks.put(suri, filename);
+                allTranslatedLinks.put(suri, destinationURI);
             }
         } else {
-            filename = suri;
+            destinationURI = suri;
         }
         // Store processed URI list to avoid eternal loop
         allProcessedLinks.put(target, target);
 
-        if ("".equals(filename)) {
+        if ("".equals(destinationURI)) {
             return new ArrayList();
         }
 
         // Process links
-        final List absoluteLinks = new ArrayList();
         final HashMap translatedLinks = new HashMap();
         List gatheredLinks = new ArrayList();
-
+        final List targets = new ArrayList();
         if (followLinks && confirmExtension) {
             final Iterator i =
                 this.getLinks(deparameterizedURI, parameters).iterator();
 
             while (i.hasNext()) {
                 String link = (String) i.next();
+                
                 // Fix relative links starting with "?"
                 String relativeLink = link;
                 if (relativeLink.startsWith("?")) {
@@ -452,7 +452,6 @@ public class CocoonBean extends CocoonWrapper {
                         allTranslatedLinks.put(
                             absoluteLink,
                             translatedAbsoluteLink);
-                        absoluteLinks.add(absoluteLink);
                     } catch (ProcessingException pe) {
                         this.sendBrokenLinkWarning(absoluteLink, pe.getMessage());
                     }
@@ -460,7 +459,12 @@ public class CocoonBean extends CocoonWrapper {
 
                 // I have to add also broken links to the absolute links
                 // to be able to generate the "broken link" page
-                absoluteLinks.add(absoluteLink);
+
+				Target derivedTarget = target.getDerivedTarget(absoluteLink);
+				if (derivedTarget != null) {
+					targets.add(derivedTarget);
+				}
+
                 final String translatedRelativeLink =
                     NetUtils.relativize(path, translatedAbsoluteLink);
                 translatedLinks.put(link, translatedRelativeLink);
@@ -476,7 +480,7 @@ public class CocoonBean extends CocoonWrapper {
                 status =
                     getPage(
                         deparameterizedURI,
-                        getLastModified(target, filename),
+                        getLastModified(target, destinationURI),
                         parameters,
                         confirmExtension ? translatedLinks : null,
                         gatheredLinks,
@@ -488,10 +492,8 @@ public class CocoonBean extends CocoonWrapper {
                 }
 
                 if (followLinks && !confirmExtension) {
-                    for (Iterator it = gatheredLinks.iterator();
-                        it.hasNext();
-                        ) {
-                        String link = (String) it.next();
+                    for (Iterator it = gatheredLinks.iterator();it.hasNext();) {
+					    String link = (String) it.next();
                         if (link.startsWith("?")) {
                             link = pageURI + link;
                         }
@@ -504,8 +506,11 @@ public class CocoonBean extends CocoonWrapper {
                                     NetUtils.deparameterize(absoluteLink, p),
                                     p);
                         }
-                        if (isIncluded(absoluteLink)) {
-                            absoluteLinks.add(absoluteLink);
+						Target derivedTarget = target.getDerivedTarget(absoluteLink);
+						if (isIncluded(absoluteLink)) {
+							if (derivedTarget != null) { 
+							    targets.add(derivedTarget);
+							}
                         } else {
                             // @TODO@ Log/report skipped link
                         }
@@ -517,14 +522,14 @@ public class CocoonBean extends CocoonWrapper {
             } catch (ProcessingException pe) {
                 output.close();
                 output = null;
-                this.resourceUnavailable(target, uri, filename);
+                this.resourceUnavailable(target, uri, destinationURI);
                 this.sendBrokenLinkWarning(
-                    filename,
+                    destinationURI,
                     DefaultNotifyingBuilder.getRootCause(pe).getMessage());
             } finally {
                 if (output != null && status != -1) {
 
-                    ModifiableSource source = getSource(target, filename);
+                    ModifiableSource source = getSource(target, destinationURI);
                     try {
                         OutputStream stream = source.getOutputStream();
 
@@ -544,14 +549,6 @@ public class CocoonBean extends CocoonWrapper {
             this.sendBrokenLinkWarning(deparameterizedURI, "URI not found");
         }
 
-        List targets = new ArrayList();
-        for (Iterator i = absoluteLinks.iterator(); i.hasNext();) {
-            String link = (String) i.next();
-            Target derivedTarget = target.getDerivedTarget(link);
-            if (derivedTarget != null) {
-                targets.add(target.getDerivedTarget(link));
-            }
-        }
 /*  Commenting out timestamp - will reimplement properly using the BeanListener interface
         double d = (System.currentTimeMillis()- startTimeMillis);
         String time = " [" + (d/1000) + " seconds]";
@@ -576,19 +573,19 @@ public class CocoonBean extends CocoonWrapper {
         HashMap parameters = new HashMap();
         String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
 
-        String filename = mangle(uri);
+        String destinationURI = mangle(uri);
         if (confirmExtension) {
             String type = getType(deparameterizedURI, parameters);
-            String ext = NetUtils.getExtension(filename);
+            String ext = NetUtils.getExtension(destinationURI);
             String defaultExt = MIMEUtils.getDefaultExtension(type);
             if (defaultExt != null) {
                 if ((ext == null) || (!ext.equals(defaultExt))) {
-                    filename += defaultExt;
+                    destinationURI += defaultExt;
                 }
             }
         }
 
-        return filename;
+        return destinationURI;
     }
 
     /**
@@ -597,10 +594,10 @@ public class CocoonBean extends CocoonWrapper {
      * @param target being unavailable
      * @exception IOException if an error occurs
      */
-    private void resourceUnavailable(Target target, String uri, String filename)
+    private void resourceUnavailable(Target target, String uri, String destinationURI)
         throws IOException, ProcessingException {
         if (brokenLinkGenerate) {
-            String brokenFile = NetUtils.decodePath(filename);
+            String brokenFile = NetUtils.decodePath(destinationURI);
             if (brokenLinkExtension != null) {
                 brokenFile = brokenFile + brokenLinkExtension;
             }
@@ -613,7 +610,7 @@ public class CocoonBean extends CocoonWrapper {
             n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
             n.addExtraDescription("missing-file", uri);
 
-            ModifiableSource source = getSource(target, filename);
+            ModifiableSource source = getSource(target, destinationURI);
             try {
                 OutputStream stream = source.getOutputStream();
 
@@ -649,9 +646,9 @@ public class CocoonBean extends CocoonWrapper {
         return uri;
     }
     
-    public ModifiableSource getSource(Target target, String filename)
+    public ModifiableSource getSource(Target target, String destinationURI)
         throws IOException, ProcessingException {
-        final String finalDestinationURI = target.getFinalURI(filename);
+        final String finalDestinationURI = target.getDestinationURI(destinationURI);
         Source src = sourceResolver.resolveURI(finalDestinationURI);
         if (!(src instanceof ModifiableSource)) {
             sourceResolver.release(src);
@@ -661,8 +658,8 @@ public class CocoonBean extends CocoonWrapper {
         return (ModifiableSource) src;
     }
 
-    public long getLastModified(Target target, String filename) throws IOException, ProcessingException {
-        return getSource(target, filename).getLastModified();
+    public long getLastModified(Target target, String destinationURI) throws IOException, ProcessingException {
+        return getSource(target, destinationURI).getLastModified();
     }
         
     public void releaseSource(ModifiableSource source) {
