@@ -49,6 +49,13 @@
     <copy file="status.xml"
       tofile="${build.context}/xdocs/status.xml" filtering="on"/>
 
+	<!-- generate sitemap components docs -->
+    <sitemap-components docDir="${build.context}/xdocs/userdocs">
+      <fileset dir="${java}">
+        <include name="**/*.java"/>
+      </fileset>
+    </sitemap-components>
+
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
     <move file="${build.context}/sitemap-localdocs.xmap"

@@ -26,7 +26,7 @@ import org.apache.tools.ant.Task;
  * in the specified directory.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/03/10 09:11:50 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/04/30 07:20:33 $
  */
 
 public final class ManifestToolTask extends Task {
@@ -44,15 +44,15 @@ public final class ManifestToolTask extends Task {
 
     public void execute() throws BuildException {
         if (this.manifest == null) {
-            throw new BuildException("manifest attribute is required", location);
+            throw new BuildException("manifest attribute is required", this.getLocation());
         }
         if (this.directory == null) {
-            throw new BuildException("directory attribute is required", location);
+            throw new BuildException("directory attribute is required", this.getLocation());
         }
 
         try {
             // process recursive
-            this.process(this.project.resolveFile(this.directory), this.manifest);
+            this.process(this.getProject().resolveFile(this.directory), this.manifest);
         } catch (IOException ioe) {
             throw new BuildException("IOException: " + ioe);
         }
@@ -66,7 +66,7 @@ public final class ManifestToolTask extends Task {
     throws IOException, BuildException {
 
         System.out.println("Writing: " + manifest);
-        FileWriter w = new FileWriter(this.project.resolveFile(manifest));
+        FileWriter w = new FileWriter(this.getProject().resolveFile(manifest));
         w.write("Manifest-Version: 1.0\n");
 
         if (directoryFile.exists() && directoryFile.isDirectory() ) {
