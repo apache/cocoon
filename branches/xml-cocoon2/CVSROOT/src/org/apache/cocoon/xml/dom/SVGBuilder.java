@@ -38,12 +38,11 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.css.CSSDocumentHandler;
 
 /**
- * The <code>SVGBuilder</code> is a utility class that will generate a W3C
- * DOM Document from SAX events.
+ * The <code>SVGBuilder</code> is a utility class that will generate a 
+ * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-04 16:03:09 $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-04 22:39:29 $
  */
 public class SVGBuilder extends SVGDocumentFactory implements XMLConsumer {
     protected Logger log = LogKit.getLoggerFor("cocoon");

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.17 2000-12-22 20:04:29 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.18 2001-01-04 22:39:20 dims Exp $
 -->
 
 <changes title="History of Changes">
@@ -18,9 +18,13 @@
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RB" type="add"> 
+   SVG serializer now uses Batik.
+  </action>
   <action dev="BL" type="add">
     I did a first stab at importing the util logicsheet from Cocoon 1.8.x.
   </action>

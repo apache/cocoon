@@ -17,7 +17,6 @@
 <separator/>
   <page id="sitemap" label="Sitemap" source="sitemap.xml"/>
   <page id="svg" label="SVG Serializer" source="svg-serializer.xml"/>
-  <page id="imageencoder" label="Image Encoders" source="image-encoders.xml"/>
 <separator/>
   <faqs     id="faqs"       label="FAQ File"   source="faq.xml"      />
   <changes id="changes" label="Changes" source="changes.xml"/>

@@ -263,16 +263,12 @@
          <encoding>UTF-8</encoding>
         </map:serializer>
 
-        <map:serializer type="svg2jpg" mime-type="image/jpg" 
+        <map:serializer type="svg2jpeg" mime-type="image/jpeg" 
           src="class:///org.apache.cocoon.serializer.SVGSerializer">
-         <format value="jpg"/>
-         <compression-level>80%</compression-level>
         </map:serializer>
 
         <map:serializer type="svg2png" mime-type="image/png" 
           src="class:///org.apache.cocoon.serializer.SVGSerializer">
-         <format>png</format>
-         <color-depth value="24"/>
         </map:serializer>
        </map:serializers>
       ]]>

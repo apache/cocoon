@@ -32,6 +32,12 @@ import org.apache.xml.serialize.OutputFormat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+/**
+ * A Batik based Serializer for generating PNG/JPG images
+ *
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-04 22:39:27 $
+ */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */

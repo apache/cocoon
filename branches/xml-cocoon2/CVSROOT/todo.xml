@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.14 2000-12-22 20:04:29 bloritsch Exp $
+  $Id: todo.xml,v 1.6.2.15 2001-01-04 22:39:21 dims Exp $
 -->
 
 
@@ -54,9 +54,6 @@
    for SAX2 final.
   </action>
 
-  <action context="code">
-   Finish writing SVGSerializer.
-  </action>
  </actions>
  
  <actions priority="medium">

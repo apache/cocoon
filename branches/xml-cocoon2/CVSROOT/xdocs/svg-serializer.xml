@@ -21,8 +21,7 @@
 			<p>So how does this serializer work?</p>
 			<ol>
 				<li>Parse and validate SVG document</li>
-				<li>Render the SVG to a <code>BufferedImage</code></li>
-				<li>Call an <code>ImageEncoder</code> (see Image Encoders) to encode this image as an image file, and return it to the user.</li>
+				<li>Call Batik's <code>Transcoder</code> to encode this image as an image file, and return it to the user.</li>
 			</ol>
 		</s2>
 
@@ -35,7 +34,6 @@ component role="jpeg-encoder" src="org.apache.cocoon.components.image.JPEGEncode
 
 <!-- this line goes inside the map:serializers tag -->
 <map:serializer name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
- 	<encoder>jpeg-encoder</encoder>
 </map:serializer>
 
 <!-- this node is inserted inside the map:pipline tag -->
@@ -55,9 +53,6 @@ component role="jpeg-encoder" src="org.apache.cocoon.components.image.JPEGEncode
 
 <!-- this line goes inside the map:serializers tag -->
 <map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
-  <encoder>jpeg-encoder</encoder>
-  <transparent>false</transparent>
-  <background>#FF0000</background>
 </map:serializer>
 
 <!-- this node is inserted inside the map:pipline tag -->

@@ -64,12 +64,6 @@
     <parameter name="auto-reload" value="true"/>
   </component>
 
-  <!-- these components are the image encoders for the SVG serializer -->
-  <component role="org.apache.cocoon.components.image.ImageEncoderSelector" class="org.apache.cocoon.CocoonComponentSelector">
-    <component-instance name="jpegencoder" class="org.apache.cocoon.components.image.JPEGEncoder"/>
-    <!--<component-instance name="pngencoder" class="org.apache.cocoon.components.image.PNGEncoder"/>-->
-  </component>
-
   <!-- these components is used as a PoolController for the sitemap component pools  -->
   <component role="org.apache.avalon.util.pool.PoolController" class="org.apache.cocoon.util.ComponentPoolController"/>
 

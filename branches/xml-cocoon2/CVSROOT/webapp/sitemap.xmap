@@ -44,7 +44,7 @@
    </map:serializer>
    <map:serializer name="svg2jpeg" mime-type="image/jpeg"     src="org.apache.cocoon.serialization.SVGSerializer">
    </map:serializer>
-   <map:serializer name="svg2png" mime-type="image/png"     src="org.apache.cocoon.serialization.SVGSerializer">
+   <map:serializer name="svg2png" mime-type="image/png"       src="org.apache.cocoon.serialization.SVGSerializer">
    </map:serializer>
   </map:serializers>
 
