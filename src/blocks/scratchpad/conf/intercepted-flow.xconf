@@ -18,8 +18,16 @@
           <function>woody.send()</function>
         </cont-creating-functions>
         <!-- the result script is copied in the same directory as the basescript 
-             if the file protocol is used to resolve the script -->
-        <copy-result-script>true</copy-result-script>
+             if the file protocol is used to resolve the script 
+             
+             WARNING:
+             the result script is streamed into the same directory as the basescript
+             with the only difference that "_intercepted.js" is appended. So make
+             sure that you don't create any files with the name 
+             [yourPath]/[yourBasescript-name]_intercepted.js which will be overwritten
+             
+         -->
+        <copy-result-script>false</copy-result-script>
     </component-instance>   
 
 </xconf>
