@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.6 2003/08/06 15:37:18 bruno Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.7 2003/08/14 21:48:40 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -576,7 +576,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
                 updateSession(environment, thrScope);
-                cocoon.invalidate();
+                if (cocoon != null) cocoon.invalidate();
                 Context.exit();
             }
         }
