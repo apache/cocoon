@@ -23,13 +23,13 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * This action adds the <code>Last-Modified</code>, <code>Expires</code> and
@@ -80,11 +80,10 @@ import java.util.TimeZone;
  * </p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version CVS $Id: HttpCacheAction.java,v 1.1 2004/06/30 16:38:41 pier Exp $
+ * @version CVS $Id: HttpCacheAction.java,v 1.2 2004/07/11 13:08:44 antonio Exp $
  */
 public class HttpCacheAction extends AbstractConfigurableAction implements ThreadSafe {
 
-    private TimeZone timezone = null;
     private SimpleDateFormat formatter = null;
     int days = 0;
     int hours = 0;
@@ -96,9 +95,8 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
         super.configure(configuration);
 
         /* RFC-822 Date with a GMT based time zone */
-        this.timezone = TimeZone.getTimeZone("GMT");
         this.formatter = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss zzz");
-        this.formatter.setTimeZone(this.timezone);
+        this.formatter.setTimeZone(DateUtils.UTC_TIME_ZONE);
         this.days = configuration.getChild("days").getValueAsInteger(0);
         this.hours = configuration.getChild("hours").getValueAsInteger(0);
         this.minutes = configuration.getChild("minutes").getValueAsInteger(0);
@@ -109,12 +107,12 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
                    Map objectModel, String source, Parameters parameters)
     throws Exception {
         Response response = ObjectModelHelper.getResponse(objectModel);
-        Calendar calendar = Calendar.getInstance(timezone);
+        Calendar calendar = Calendar.getInstance(DateUtils.UTC_TIME_ZONE);
         Map values = new HashMap(3);
 
         /* Get the current time and output as the last modified header */
         String value = this.formatter.format(calendar.getTime());
-        long maxage = calendar.getTimeInMillis();
+        long maxage = calendar.getTime().getTime();
         response.setHeader("Last-Modified", value);
         values.put("last-modified",  value);
 
@@ -125,7 +123,7 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
         calendar.add(Calendar.SECOND, this.seconds);
 
         /* Recalculate time and age to see what changed */
-        maxage = calendar.getTimeInMillis() - maxage;
+        maxage = calendar.getTime().getTime() - maxage;
 
         /* If we got more than one second everything is quite normal */
         if (maxage > 1000) {
