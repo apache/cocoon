@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.152 2000-11-20 18:35:55 greenrd Exp $ 
+  $Id: changes.xml,v 1.153 2000-11-20 22:37:23 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -19,7 +19,10 @@
 
  <release version="@version@" date="@date@">
   <action dev="RDG" type="fix">
-   Fixed response.sendRedirect problem with Tomcat
+   Fixed XSLTProcessor and XalanTransformer to allow embedded stylesheets.
+  </action>
+  <action dev="RDG" type="fix">
+   Fixed response.sendRedirect problem with Tomcat.
   </action>
   <action dev="RDG" type="update" due-to="Matt Sergeant"
    due-to-email="matt@sergeant.org">

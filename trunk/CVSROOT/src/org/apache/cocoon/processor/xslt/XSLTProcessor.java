@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.17 2000-11-20 01:43:55 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.18 2000-11-20 22:37:24 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.17 $ $Date: 2000-11-20 01:43:55 $
+ * @version $Revision: 1.18 $ $Date: 2000-11-20 22:37:24 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -107,7 +107,8 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
             Object resource = getResource(context, request, document, path, browser);
             Document stylesheet = getStylesheet(resource, request);
             Document result = this.parser.createEmptyDocument();
-            return transformer.transform(document, null, stylesheet, resource.toString(), result, params);
+            return transformer.transform(document, path, stylesheet, 
+              (resource == null) ? null : resource.toString(), result, params);
         } catch (PINotFoundException e) {
             return document;
         }
@@ -165,7 +166,9 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
                     Object local = null;
 
                     try {
-                        if (url.charAt(0) == '/') {
+                        if (url.charAt(0) == '#') {
+                            return null;
+                        } else if (url.charAt(0) == '/') {
                             local = new File(Utils.getRootpath(request, context) + url);
                         } else if (url.indexOf("://") < 0) {
                             local = new File(Utils.getBasepath(request, context) + url);
@@ -201,6 +204,8 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
     }
 
     private Document getStylesheet(Object resource, HttpServletRequest request) throws ProcessorException {
+
+        if (resource == null) return null;
 
         try {
             Object o = this.store.get(resource);
