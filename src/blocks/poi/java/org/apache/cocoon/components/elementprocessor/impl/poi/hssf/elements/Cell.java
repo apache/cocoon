@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -66,36 +65,39 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
  * internal representation of a Cell
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Cell.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: Cell.java,v 1.3 2003/06/14 00:24:59 joerg Exp $
  */
 // package scope
-class Cell
-{
+
+class Cell {
+
     private HSSFCell _cell;
 
     // original CellType value
-    private int      _celltype;
-    private Locale   locale; 
+    private int _celltype;
+    private Locale locale;
 
     /**
-     * Constructor Cell
+     * Constructor Cell.
+     * Only a hack as long as the POI stuff is not maintained in the POI CVS:
+     * Setting the encoding to UTF-16 for internationalization
+     * (<a href="http://jakarta.apache.org/poi/javadocs/org/apache/poi/hssf/usermodel/HSSFCell.html#getEncoding()">POI API</a>).
      *
      * @param cell
      */
-
-    Cell(final HSSFCell cell, final int cellType)
-    {
-        _cell     = cell;
+    Cell(final HSSFCell cell, final int cellType) {
+        _cell = cell;
         _celltype = cellType;
+        _cell.setEncoding(HSSFCell.ENCODING_UTF_16);
     }
 
     /**
      * if there is a locale that can be used for validation it is
-     * set here.  Cell expects a fully constructed locale.  It must 
+     * set here.  Cell expects a fully constructed locale.  It must
      * be passed in before SetContent can be called.
      */
     void setLocale(Locale locale) {
-          this.locale = locale;
+        this.locale = locale;
     }
 
     /**
@@ -105,54 +107,39 @@ class Cell
      *
      * @exception IOException
      */
-
-    void setContent(final String content)
-        throws IOException
-    {
-        if (content.charAt(0) == '=') {  //seems like a kludge but this is
-                                         //actually how gnumeric does it
+    void setContent(final String content) throws IOException {
+        if (content.charAt(0) == '=') {
+            //seems like a kludge but this is actually how gnumeric does it
             _cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
         }
-        
-        if (_cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC)
-        {
-            try
-            {
-                if (_celltype == CellType.CELL_TYPE_FLOAT)
-                {       // if there is a locale set then we'll use it to 
-                        // parse the string form of the number... otherwise
-                        // we'll use the default.
-                        NumberFormat form = null;
-                        if (locale == null) { 
-                            form = NumberFormat.getInstance(); 
-                        } else { 
-                            form = NumberFormat.getInstance(locale); 
-                        }
-                        _cell.setCellValue(form.parse(content).doubleValue());
-                }
-                else
-                {
+        if (_cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+            try {
+                if (_celltype == CellType.CELL_TYPE_FLOAT) {
+                    // if there is a locale set then we'll use it to parse the
+                    // string form of the number... otherwise we'll use the default.
+                    NumberFormat form = null;
+                    if (locale == null) {
+                        form = NumberFormat.getInstance();
+                    } else {
+                        form = NumberFormat.getInstance(locale);
+                    }
+                    _cell.setCellValue(form.parse(content).doubleValue());
+                } else {
                     _cell.setCellValue(Integer.parseInt(content));
                 }
-            }
-            catch (NumberFormatException e)
-            {
-                throw new CascadingIOException("Invalid value for a numeric cell: "
-                                      + content, e);
-            } 
-            catch (ParseException e) {
+            } catch (NumberFormatException e) {
+                throw new CascadingIOException("Invalid value for a numeric cell: " + content, e);
+            } catch (ParseException e) {
                 throw new CascadingIOException("Invalid value for a numberic cell: " + content, e);
             }
-        }
-        else if (_cell.getCellType() == HSSFCell.CELL_TYPE_STRING)
-        {
+        } else if (_cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
             _cell.setCellValue(content);
         } else if (_cell.getCellType() == HSSFCell.CELL_TYPE_FORMULA) {
-                _cell.setCellFormula(content.toUpperCase().substring(1));
+            _cell.setCellFormula(content.toUpperCase().substring(1));
         }
     }
-    
-    void setStyle (HSSFCellStyle style) {
+
+    void setStyle(HSSFCellStyle style) {
         if (style != null) {
             _cell.setCellStyle(style);
         }
@@ -161,27 +148,21 @@ class Cell
     /**
      * @return cell type
      */
-
-    int getCellType()
-    {
+    int getCellType() {
         return _cell.getCellType();
     }
 
     /**
      * @return string value
      */
-
-    String getStringValue()
-    {
+    String getStringValue() {
         return _cell.getStringCellValue();
     }
 
     /**
      * @return numeric value
      */
-
-    double getNumericValue()
-    {
+    double getNumericValue() {
         return _cell.getNumericCellValue();
     }
 }   // end package scope class Cell
