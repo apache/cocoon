@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.220 2003/12/31 01:28:50 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.221 2004/01/03 16:07:58 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -190,25 +190,29 @@
   <changes>
 
  <release version="@version@" date="@date@">
- <action dev="AG" type="update">
-     Updated jakarta-oro to 2.0.8
-   </action>
- <action dev="AG" type="update">
-     Updated Lucene to 1.3 final
-   </action>
-   <action dev="AG" type="fix"  fixes-bug="25664" due-to-email="karel.vervaeke@pandora.be" due-to="Karel Vervaeke">
-		build fails on windows without cygwin
+   <action dev="VG" type="update">
+     Woody expression manager supports registration of custom functions (see cocoon.xconf).
+     Added IsNull function.
    </action>
    <action dev="AG" type="update">
-     Updated Ant to 1.6.0
+     Updated Jakarta ORO to the version 2.0.8.
+   </action>
+   <action dev="AG" type="update">
+     Updated Lucene to 1.3 final.
+   </action>
+   <action dev="AG" type="fix"  fixes-bug="25664" due-to-email="karel.vervaeke@pandora.be" due-to="Karel Vervaeke">
+     Build fails on windows without cygwin.
+   </action>
+   <action dev="AG" type="update">
+     Updated Ant to 1.6.0.
    </action>
    <action dev="CZ" type="update">
-      Remove dependencies to Xalan (from portal-fw, authentication-fw, session-fw and core)
+     Remove dependencies to Xalan (from portal-fw, authentication-fw, session-fw and core)
    </action> 
    <action dev="CZ" type="update">
-      Portal-Engine: Added some new samples (for inter-coplet communication,
-      cleaned up the sample, fixed some bugs and added some new components
-      for developing own coplets.
+     Portal-Engine: Added some new samples (for inter-coplet communication,
+     cleaned up the sample, fixed some bugs and added some new components
+     for developing own coplets.
    </action> 
    <action dev="MPO" type="add" >
      Changed semantics on the cforms binding. Added a @direction (which replaces 
