@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: simple.xsp,v 1.2 2004/04/05 12:25:30 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
@@ -25,8 +25,8 @@
           xmlns:input="http://apache.org/cocoon/xsp/input/1.0">
 
   <page>
-  <log:logger name="xsp-sample" filename="xsp-sample.log"/>
-  <log:debug>Processing the beginning of the page</log:debug>
+   <log:logger name="xsp-sample" filename="xsp-sample.log"/>
+   <log:debug>Processing the beginning of the page</log:debug>
 
    <title>A Simple XSP Page</title>
 
@@ -98,11 +98,10 @@
    </para>
    
    <para>
-   	 Access to input modules configured in cocoon.xconf: 
-   	 <input:get-attribute module="cocoon-properties" name="fullname"/>
-   	 <input:get-attribute module="cocoon-properties" name="version"/>
+     Access to input modules configured in cocoon.xconf: 
+     <input:get-attribute module="cocoon-properties" name="fullname"/>
+     <input:get-attribute module="cocoon-properties" name="version"/>
    </para>
-   	 
 
    <xsp-request:get-header-names/>
 
