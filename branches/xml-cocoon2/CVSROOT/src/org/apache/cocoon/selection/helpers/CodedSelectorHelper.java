@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * variables for developer ease.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-15 20:29:58 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-06 21:03:37 $
  */
 public abstract class CodedSelectorHelper
 {
@@ -40,7 +40,7 @@ public abstract class CodedSelectorHelper
                   objectModel.get(Constants.REQUEST_OBJECT);
         response = (HttpServletResponse)
                    objectModel.get(Constants.RESPONSE_OBJECT);
-        session = request.getSession();
+        session = request.getSession(false);
     }
 
     protected ServletContext context;
