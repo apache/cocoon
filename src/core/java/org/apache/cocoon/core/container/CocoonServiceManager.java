@@ -432,5 +432,18 @@ implements ServiceManager, Configurable {
             throw new ServiceException( role, "Could not set up component handler.", e );
         }
     }
+    
+    void addComponentFromSelector(CocoonServiceSelector selector,
+                                  String                roleName,
+                                  String                key)
+    throws Exception {
+        if ( this.disposed ) {
+            throw new ServiceException( this.toString(),
+                    "Cannot add components to a disposed CocoonServiceManager." );           
+        }
+        final String role = roleName + '/' + key;
+        final ComponentHandler handler = new SelectorBasedComponentHandler(selector, key);
+        this.componentHandlers.put( role, handler );
+    }
 
 }
