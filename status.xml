@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="remove">
+     Remove jisp from distribution.
+   </action>
    <action dev="AG" type="fix" fixes-bug="31493" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
      XSP logicsheet jpath.xsl: incorrect call to JXPathContext.compile
    </action>
