@@ -249,6 +249,7 @@ function protected_changepwd() {
   var password = cocoon.request.getParameter("password");
   
   AdminHelper.changePassword(nat, principal, username, password);
+  cocoon.redirectTo("users");
 }
 
 // ---------------------------------------------- screens
