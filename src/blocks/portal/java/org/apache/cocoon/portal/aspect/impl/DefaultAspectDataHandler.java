@@ -67,7 +67,7 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDataHandler.java,v 1.4 2003/12/11 09:56:58 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDataHandler.java,v 1.5 2003/12/11 11:10:47 cziegeler Exp $
  */
 public class DefaultAspectDataHandler 
     implements AspectDataHandler {
@@ -118,7 +118,7 @@ public class DefaultAspectDataHandler
      * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
      */
     public Map getAspectDatas(Aspectalizable owner)  {
-        Map datas = new HashMap();
+        Map datas = new AspectDatasHashMap(owner, this);
         Iterator iter = this.description.getAspectDescriptions().iterator();
         while ( iter.hasNext() ) {
             AspectDescription current = (AspectDescription)iter.next();
@@ -195,4 +195,25 @@ public class DefaultAspectDataHandler
     public boolean isAspectSupported(String aspectName) {
         return (this.description.getAspectDescription(aspectName) != null);
     }
+}
+
+final class AspectDatasHashMap extends HashMap {
+    
+    protected AspectDataHandler handler;
+    protected Aspectalizable owner;
+    
+    public AspectDatasHashMap(Aspectalizable owner, AspectDataHandler handler) {
+        this.handler = handler;
+        this.owner = owner;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     */
+    public Object put(Object key, Object value) {
+        this.handler.setAspectData(this.owner, key.toString(), value);
+        value = this.handler.getAspectData(this.owner, key.toString());
+        return super.put(key, value);
+    }
+
 }

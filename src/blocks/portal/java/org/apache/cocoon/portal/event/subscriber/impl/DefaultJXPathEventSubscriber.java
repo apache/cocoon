@@ -60,7 +60,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * This subscriber processes JXPath events
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultJXPathEventSubscriber.java,v 1.1 2003/12/11 09:30:17 cziegeler Exp $
+ * @version CVS $Id: DefaultJXPathEventSubscriber.java,v 1.2 2003/12/11 11:10:47 cziegeler Exp $
  */
 public final class DefaultJXPathEventSubscriber 
     implements Subscriber {
@@ -87,8 +87,11 @@ public final class DefaultJXPathEventSubscriber
      */
     public void inform(Event e) {
         final JXPathEvent event = (JXPathEvent)e;
-        JXPathContext jxpathContext = JXPathContext.newContext(event.getTarget());
-        jxpathContext.setValue(event.getPath(), event.getValue());
+        final Object target = event.getTarget();
+        if ( target != null ) {
+            final JXPathContext jxpathContext = JXPathContext.newContext(target);
+            jxpathContext.setValue(event.getPath(), event.getValue());
+        }
     }
 
 }
