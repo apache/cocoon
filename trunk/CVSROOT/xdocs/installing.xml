@@ -1143,6 +1143,12 @@ You could also make these three configuration changes via
    <td>Sun JDK 1.3.0rc1</td>
   </tr>
   <tr>
+   <td>Linux Slackware 7.1</td>
+   <td>Apache 1.3.12</td>
+   <td>Tomcat 3.2.1</td>
+   <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
    <td>SuSE 6.2 Linux</td>
    <td>Apache 1.3.14 mod_ssl</td>
    <td>JServ 1.1.2</td>
