@@ -22,7 +22,7 @@ import org.apache.cocoon.environment.Environment;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public interface ProcessingNode extends ThreadSafe {

@@ -252,7 +252,8 @@
      Updated Apache Ant to 1.6.2.
    </action>
    <action dev="CZ" type="fix">
-     Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
+     Mail block: The mail transformer ignored configured toAddresses from a
+     pipeline parameter. This is fixed now.
    </action>
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
      Added support for stripping root elements in the CIncludeTransformer.
@@ -275,6 +276,9 @@
    <action dev="CZ" type="add">
      Add configuration support for log4j.
    </action>
+   <action dev="CZ" type="fix" fixes-bug="27066">
+     Apply patch to fix some memory leaks in the tree processor.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="29373">
      Portal: Fix NPE when non-caching pipelines are used for the portal profile.
    </action>
@@ -283,6 +287,11 @@
    </action>
    <action dev="CZ" type="fix" fixes-bug="28687">
      Portal: Fix problem with bookmarks and CachingURICoplet
+   </action>
+   <action dev="SW" type="fix" fixes-bug="27249">
+     Refactor TreeProcessor to avoid constant reloading of sitemap if its
+     modification date is in the future and occasional ECM-related exceptions
+     when a sitemap is reloaded.
    </action>
    <action dev="VG" type="add">
      Added instrumentation support to ContinuationsManager.

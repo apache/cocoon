@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 
