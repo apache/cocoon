@@ -18,14 +18,11 @@ package org.apache.cocoon.core.container;
 
 import java.lang.reflect.Method;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ServiceInfo;
 
 /**
@@ -37,23 +34,11 @@ public class ComponentFactory {
     
     protected final ServiceInfo serviceInfo;
     
-    /** The Context for the component
-     */
-    protected final Context context;
-
-    /** The service manager for this component
-     */
-    protected final ServiceManager serviceManager;
+    protected final ComponentEnvironment environment;
     
     /** The parameters for this component
      */
     protected Parameters parameters;
-    
-    protected final Logger logger;
-    
-    protected final LoggerManager loggerManager;
-
-    protected final RoleManager roleManager;
     
     /**
      * Construct a new component factory for the specified component.
@@ -64,27 +49,20 @@ public class ComponentFactory {
      * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
      *
      */
-    public ComponentFactory( final ServiceManager serviceManager,
-                             final Context context,
-                             final Logger logger,
-                             final LoggerManager loggerManager,
-                             final RoleManager roleManager,
+    public ComponentFactory( final ComponentEnvironment environment,
                              final ServiceInfo info) {
-        this.serviceManager = serviceManager;
-        this.context = context;
-        this.loggerManager = loggerManager;
-        this.roleManager = roleManager;
+        this.environment = environment;
         this.serviceInfo = info;
         
-        Logger actualLogger = logger;
+        Logger actualLogger = this.environment.logger;
         // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
-        if(loggerManager != null && this.serviceInfo.getConfiguration() != null) {
+        if( this.environment.loggerManager != null && this.serviceInfo.getConfiguration() != null) {
             final String category = this.serviceInfo.getConfiguration().getAttribute("logger", null);
             if(category != null) {
-                actualLogger = loggerManager.getLoggerForCategory(category);
+                actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
             }
         }
-        this.logger = actualLogger;
+        this.environment.logger = actualLogger;
     }
 
     /**
@@ -94,14 +72,14 @@ public class ComponentFactory {
     throws Exception {
         final Object component = this.serviceInfo.getServiceClass().newInstance();
 
-        if( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "ComponentFactory creating new instance of " +
+        if( this.environment.logger.isDebugEnabled() ) {
+            this.environment.logger.debug( "ComponentFactory creating new instance of " +
                     this.serviceInfo.getServiceClass().getName() + "." );
         }
 
-        ContainerUtil.enableLogging(component, this.logger);
-        ContainerUtil.contextualize( component, this.context );
-        ContainerUtil.service( component, this.serviceManager );
+        ContainerUtil.enableLogging(component, this.environment.logger);
+        ContainerUtil.contextualize( component, this.environment.context );
+        ContainerUtil.service( component, this.environment.serviceManager );
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 
         if( component instanceof Parameterizable ) {
@@ -132,8 +110,8 @@ public class ComponentFactory {
      */
     public void decommission( final Object component )
     throws Exception {
-        if( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "ComponentFactory decommissioning instance of " +
+        if( this.environment.logger.isDebugEnabled() ) {
+            this.environment.logger.debug( "ComponentFactory decommissioning instance of " +
                     this.serviceInfo.getServiceClass().getName() + "." );
         }
 

@@ -20,13 +20,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -458,20 +455,23 @@ implements ServiceSelector, Serviceable, Configurable {
      * A special factory that sets the RoleManager and LoggerManager after service()
      */
     public static class Factory extends ComponentFactory {
-        public Factory(ServiceManager serviceManager, Context context, Logger logger,
-                LoggerManager loggerManager, RoleManager roleManager, ServiceInfo info) {
-            super(serviceManager, context, logger, loggerManager, roleManager, info);
+        
+        private final RoleManager roleManager;
+        
+        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info) {
+            super(env, info);
+            this.roleManager = roleManager;
         }
         
         public Object newInstance()
         throws Exception {
             final StandaloneServiceSelector component = (StandaloneServiceSelector)this.serviceInfo.getServiceClass().newInstance();
 
-            ContainerUtil.enableLogging(component, this.logger);
-            ContainerUtil.contextualize(component, this.context);
-            ContainerUtil.service(component, this.serviceManager);
+            ContainerUtil.enableLogging(component, this.environment.logger);
+            ContainerUtil.contextualize(component, this.environment.context);
+            ContainerUtil.service(component, this.environment.serviceManager);
             
-            component.setLoggerManager(this.loggerManager);
+            component.setLoggerManager(this.environment.loggerManager);
             component.setRoleManager(this.roleManager);
             
             ContainerUtil.configure(component, this.serviceInfo.getConfiguration());

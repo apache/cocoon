@@ -16,14 +16,11 @@
  */
 package org.apache.cocoon.core.container;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -192,21 +189,22 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
      * <code>RoleManager</code> and its role name.
      */
     public static class Factory extends ComponentFactory {
-        private String role;
-
-        public Factory(ServiceManager serviceManager, Context context, Logger logger,
-                LoggerManager loggerManager, RoleManager roleManager, ServiceInfo info, String role) {
-            super(serviceManager, context, logger, loggerManager, roleManager, info);
+        private final String role;
+        private final RoleManager roleManager;
+        
+        public Factory(ComponentEnvironment env, RoleManager manager, ServiceInfo info, String role) {
+            super(env, info);
             this.role = role;
+            this.roleManager = manager;
         }
         
         public Object newInstance()
         throws Exception {
             final DefaultServiceSelector component = (DefaultServiceSelector)this.serviceInfo.getServiceClass().newInstance();
 
-            ContainerUtil.enableLogging(component, this.logger);
-            ContainerUtil.contextualize(component, this.context);
-            ContainerUtil.service(component, this.serviceManager);
+            ContainerUtil.enableLogging(component, this.environment.logger);
+            ContainerUtil.contextualize(component, this.environment.context);
+            ContainerUtil.service(component, this.environment.serviceManager);
             
             component.setRoleManager(this.roleManager);
             component.setRole(this.role);
