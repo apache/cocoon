@@ -427,6 +427,7 @@
 
       <!-- TODO - this is the wrong place for documentation, but currently blocks
            don't have own docs! -->
+      <mkdir dir="${{build.context}}/xdocs/userdocs"/>
       <!-- generate sitemap components docs -->
       <sitemap-components docDir="${{build.context}}/xdocs/userdocs" 
                           source="${{blocks}}/{$block-name}/java"
