@@ -3,7 +3,7 @@
 <!--+
     | Batik block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.6 2003/09/07 06:13:39 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.7 2003/09/30 17:05:57 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -59,12 +59,12 @@
       <!-- ========================== batik ================================ -->
 
       <map:match pattern="hello.jpeg">
-        <map:generate src="context://samples/hello-world/hello.svg"/>
+        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
         <map:serialize type="svg2jpeg"/>
       </map:match>
 
       <map:match pattern="hello.png">
-        <map:generate src="context://samples/hello-world/hello.svg"/>
+        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
         <map:serialize type="svg2png"/>
       </map:match>
 
