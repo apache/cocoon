@@ -33,9 +33,9 @@ import org.apache.excalibur.source.Source;
 /**
  * Service, that provides access to the user rights configuration.
  * 
- * @version CVS $Id$
+ * @version CVS $Id: UserRightsService.java 156704 2005-03-09 22:57:22Z antonio $
  */
-public class UserrightsService {
+public class UserRightsService {
     
     /** 
      * The properties' location.

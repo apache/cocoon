@@ -40,7 +40,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.tools.helper.PortalObjects;
-import org.apache.cocoon.portal.tools.service.UserrightsService;
+import org.apache.cocoon.portal.tools.service.UserRightsService;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.excalibur.source.ModifiableSource;
@@ -75,7 +75,7 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
 	private static final String i18nDir = "i18n/";
 	
 	private Configuration configuration;
-	private UserrightsService userRightsService;
+	private UserRightsService userRightsService;
 
     private ContextManager contextManager;
 
@@ -96,7 +96,7 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
 		    DefaultConfigurationBuilder confBuilder = new DefaultConfigurationBuilder();
 		    this.configuration = confBuilder.build(fSource.getInputStream());
 		    fSource = this.resolver.resolveURI(rootDir + authFile);
-		    this.userRightsService = new UserrightsService();
+		    this.userRightsService = new UserRightsService();
 		    this.userRightsService.setLocation(fSource);
 		    this.userRightsService.initialize();
 			this.init();
@@ -229,7 +229,7 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
         }
     }
     
-    public UserrightsService getUserRightsService() {
+    public UserRightsService getUserRightsService() {
     	return this.userRightsService;
     }
     
