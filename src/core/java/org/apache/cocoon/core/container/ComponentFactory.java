@@ -72,8 +72,8 @@ public class ComponentFactory {
         this.environment.logger = actualLogger;
         
         // now get the meta data for the component
-        // FIXME - load the class
-        this.serviceClass = this.serviceInfo.getServiceClass();
+        // FIXME - get the classloader from the environment
+        this.serviceClass = this.getClass().getClassLoader().loadClass(this.serviceInfo.getServiceClassName());
         if ( this.serviceInfo.getDestroyMethodName() != null ) {
             this.destroyMethod = this.serviceClass.getMethod(this.serviceInfo.getDestroyMethodName(), null);
         } else {
@@ -101,11 +101,11 @@ public class ComponentFactory {
      */
     public Object newInstance()
     throws Exception {
-        final Object component = this.serviceInfo.getServiceClass().newInstance();
+        final Object component = this.serviceClass.newInstance();
 
         if( this.environment.logger.isDebugEnabled() ) {
             this.environment.logger.debug( "ComponentFactory creating new instance of " +
-                    this.serviceInfo.getServiceClass().getName() + "." );
+                    this.serviceClass.getName() + "." );
         }
 
         ContainerUtil.enableLogging(component, this.environment.logger);
@@ -132,7 +132,7 @@ public class ComponentFactory {
     }
 
     public Class getCreatedClass() {
-        return this.serviceInfo.getServiceClass();
+        return this.serviceClass;
     }
 
     /**
@@ -142,7 +142,7 @@ public class ComponentFactory {
     throws Exception {
         if( this.environment.logger.isDebugEnabled() ) {
             this.environment.logger.debug( "ComponentFactory decommissioning instance of " +
-                    this.serviceInfo.getServiceClass().getName() + "." );
+                    this.serviceClass.getName() + "." );
         }
 
         ContainerUtil.stop( component );

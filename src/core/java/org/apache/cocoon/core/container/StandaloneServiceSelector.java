@@ -466,7 +466,7 @@ implements ServiceSelector, Serviceable, Configurable {
         
         public Object newInstance()
         throws Exception {
-            final StandaloneServiceSelector component = (StandaloneServiceSelector)this.serviceInfo.getServiceClass().newInstance();
+            final StandaloneServiceSelector component = (StandaloneServiceSelector)this.serviceClass.newInstance();
 
             ContainerUtil.enableLogging(component, this.environment.logger);
             ContainerUtil.contextualize(component, this.environment.context);
