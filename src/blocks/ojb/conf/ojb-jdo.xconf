@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="ojb-pb">
-  <!-- PersistenceBroker Interface -->
-  <ojb-pb logger="core.ojb.pb"/>
+<xconf xpath="/cocoon" unless="ojb-jdo">
+  <!-- Persistent Manager Factory for JDO -->
+  <ojb-jdo logger="core.ojb.jdo"/>
 </xconf>

@@ -15,63 +15,50 @@
  */
 package org.apache.cocoon.ojb.components;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.ojb.broker.accesslayer.ConnectionFactory;
 import org.apache.ojb.broker.accesslayer.LookupException;
 import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
- * OJBConnectionFactory implemenation to bridge into the Avalon DataSource Connection Pooling
- * Component defined in the Cocoon configuration.
+ * OJB ConnectionFactory implemenation to bridge into the Avalon DataSource
+ * connection pooling component defined in the Cocoon configuration.
  *
  * @author giacomo at apache.org
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
-public class ConnectionFactoryAvalonDataSource
-        implements ConnectionFactory {
+public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable, Disposable,
+                                              ConnectionFactory {
 
     /** The <code>ServiceManager</code> to be used */
     private static ServiceManager manager;
 
     /** The <code>ServiceSelector</code> to be used */
-    private static ServiceSelector dbselector;
+    private static ServiceSelector datasources;
 
-    /**
-     * Initializes this helper class with the <code>ServiceManager</code> to be used.  This method
-     * should be called from a Avalon Component configured into Cocoon at startup to supply the
-     * needed <code>ServiceManager</code>.
-     *
-     * @param serviceManager The ServiceManager
-     * @throws ServiceException In case we cannot obtain a DataSource
-     */
-    public static void initialize(final ServiceManager serviceManager)
-    throws ServiceException {
-        if (ConnectionFactoryAvalonDataSource.manager != null) {
-            throw new IllegalStateException("ConnectionFactoryAvalonDataSource is already initialized");
-        }
-
-        ConnectionFactoryAvalonDataSource.manager = serviceManager;
-        ConnectionFactoryAvalonDataSource.dbselector =
-            (ServiceSelector) ConnectionFactoryAvalonDataSource.manager.lookup(DataSourceComponent.ROLE +
-                                                                               "Selector");
+    public void service(ServiceManager manager) throws ServiceException {
+        ConnectionFactoryImpl.manager = manager;
+        ConnectionFactoryImpl.datasources = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
-    /**
-     * Signal disposal to this helper class.
-     */
-    public static void dispose() {
-        if (ConnectionFactoryAvalonDataSource.manager != null) {
-            ConnectionFactoryAvalonDataSource.manager.release(ConnectionFactoryAvalonDataSource.dbselector);
-            ConnectionFactoryAvalonDataSource.dbselector = null;
-            ConnectionFactoryAvalonDataSource.manager = null;
+    public void dispose() {
+        if (ConnectionFactoryImpl.manager != null) {
+            ConnectionFactoryImpl.manager.release(ConnectionFactoryImpl.datasources);
+            ConnectionFactoryImpl.datasources = null;
+            ConnectionFactoryImpl.manager = null;
         }
     }
 
@@ -80,12 +67,12 @@ public class ConnectionFactoryAvalonDataSource
      */
     public Connection lookupConnection(final JdbcConnectionDescriptor conDesc)
     throws LookupException {
-        if (ConnectionFactoryAvalonDataSource.manager == null) {
-            throw new LookupException("ConnectionFactoryAvalonDataSource is not initialized!");
+        if (ConnectionFactoryImpl.manager == null) {
+            throw new LookupException("ConnectionFactoryImpl is not initialized! Please check your cocoon.xconf");
         }
 
         try {
-            return ((DataSourceComponent) ConnectionFactoryAvalonDataSource.dbselector.select(conDesc.getJcdAlias())).getConnection();
+            return ((DataSourceComponent) ConnectionFactoryImpl.datasources.select(conDesc.getJcdAlias())).getConnection();
         } catch (final ServiceException e) {
             throw new LookupException("Cannot lookup DataSource named " +
                                       conDesc.getJcdAlias(), e);
