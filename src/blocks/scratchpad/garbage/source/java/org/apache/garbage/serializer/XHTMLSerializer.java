@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLSerializer.java,v 1.2 2004/03/05 10:07:22 bdelacretaz Exp $
+ * @version CVS $Id: XHTMLSerializer.java,v 1.3 2004/03/24 01:27:50 pier Exp $
  */
 public class XHTMLSerializer extends XMLSerializer {
 
@@ -111,7 +111,8 @@ public class XHTMLSerializer extends XMLSerializer {
         if (uri.length() == 0) uri = XHTML1_NAMESPACE;
 
         if (XHTML1_NAMESPACE.equals(uri)) {
-            if ((local.equalsIgnoreCase("script")) ||
+            if ((local.equalsIgnoreCase("textarea")) ||
+                (local.equalsIgnoreCase("script")) ||
                 (local.equalsIgnoreCase("style"))) {
                 this.closeElement(false);
             } else if (local.equalsIgnoreCase("head")) {
