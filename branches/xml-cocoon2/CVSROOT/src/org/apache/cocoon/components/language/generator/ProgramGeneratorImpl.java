@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-02-20 20:46:34 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-02-21 17:22:28 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -71,6 +71,12 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     /** The working directory */
     protected File workDir;
 
+    /** The context root */
+    protected String rootPath;
+
+    /** The root package */
+    protected String rootPackage;
+
     /** Set the Cache's logger */
     public void setLogger(Logger log) {
         super.setLogger(log);
@@ -80,6 +86,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     public void contextualize(Context context) {
        if (this.workDir == null) {
            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+           this.rootPath = (String) context.get(Constants.CONTEXT_ROOT_PATH);
        }
     }
 
@@ -110,6 +117,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     public void configure(Configuration conf) throws ConfigurationException {
         Parameters params = Parameters.fromConfiguration(conf);
         this.autoReload = params.getParameterAsBoolean("auto-reload", autoReload);
+        this.rootPackage = params.getParameter("root-package", "org.apache.cocoon");
     }
 
     /**
@@ -134,7 +142,10 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         // Create filesystem store
         // Set filenames
         String filename = IOUtils.getFullFilename(file);
-        String normalizedName = IOUtils.normalizedFilename(filename);
+        StringBuffer contextFilename = new StringBuffer(this.rootPackage.replace('.', File.separatorChar));
+        contextFilename.append(File.separator);
+        contextFilename.append(IOUtils.getContextFilePath(this.rootPath, filename));
+        String normalizedName = IOUtils.normalizedFilename(contextFilename.toString());
         // Ensure no 2 requests for the same file overlap
         Class program = null;
         CompiledComponent programInstance = null;
@@ -148,7 +159,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
         if (programInstance == null) {
             try {
-                program = generateResource(file, filename, normalizedName, markupLanguage, programmingLanguage, resolver);
+                program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
             } catch (LanguageException le) {
                 getLogger().debug("Language Exception", le);
             }
@@ -176,14 +187,13 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         }
 
         if (program == null) {
-            program = generateResource(file, filename, normalizedName, markupLanguage, programmingLanguage, resolver);
+            program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
         }
         // Instantiate
         return (CompiledComponent) this.cache.select(normalizedName);
     }
 
     private Class generateResource(File file,
-                                  String filename,
                                   String normalizedName,
                                   MarkupLanguage markupLanguage,
                                   ProgrammingLanguage programmingLanguage,
@@ -200,7 +210,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             code = codeFormatter.format(code, encoding);
         }
         // Store generated code
-        String sourceFilename = filename + "." + programmingLanguage.getSourceExtension();
+        String sourceFilename = normalizedName + "." + programmingLanguage.getSourceExtension();
         repository.store(sourceFilename, code);
         // [Compile]/Load generated program
         Class program = programmingLanguage.load(normalizedName, this.workDir, markupLanguage.getEncoding());

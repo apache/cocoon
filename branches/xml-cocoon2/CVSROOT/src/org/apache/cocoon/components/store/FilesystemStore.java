@@ -151,7 +151,8 @@ public class FilesystemStore extends AbstractLoggable implements Store, ThreadSa
   /* Utility Methods*/
   protected File fileFromKey(Object key) {
     String name = key.toString();
-
+    return IOUtils.createFile(this.directoryFile, name);
+/*
     name = IOUtils.getFullFilename(new File(name));
 
     String path = IOUtils.normalizedFilename(IOUtils.pathComponent(name));
@@ -170,7 +171,7 @@ public class FilesystemStore extends AbstractLoggable implements Store, ThreadSa
       filename += "." + extension;
     }
 
-    return new File(this.directoryPath + path + File.separator + filename);
+    return new File(this.directoryPath + path + File.separator + filename);*/
   }
 
   public String getString(Object key) throws IOException {

@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-21 14:54:35 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-21 17:22:31 $
  */
 public class IOUtils {
 
@@ -131,8 +131,8 @@ public class IOUtils {
         buffer.append(File.separator);
       }
 
-      buffer.append('_');
       char[] chars = path[i].toCharArray();
+      if (chars.length < 1) buffer.append('_');
 
       for (int j = 0; j < chars.length; j++) {
         if (StringUtils.isAlphaNumeric(chars[j])) {

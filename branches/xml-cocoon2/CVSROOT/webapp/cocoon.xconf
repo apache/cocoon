@@ -11,6 +11,11 @@
     <protocol name="context"  class="org.apache.cocoon.components.url.ContextURLFactory"/>
   </url-factory>
 
+  <program-generator>
+    <parameter name="auto-reload" value="true"/>
+    <parameter name="root-package" value="org.apache.cocoon"/>
+  </program-generator>
+
   <programming-languages>
     <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
@@ -70,10 +75,6 @@
       </target-language>
     </component-instance>
   </markup-languages>
-
-  <program-generator>
-    <parameter name="auto-reload" value="true"/>
-  </program-generator>
 
   <datasources>
     <component-instance name="personnel" class="org.apache.avalon.util.datasource.JdbcDataSource">
