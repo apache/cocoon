@@ -117,6 +117,9 @@ Form.prototype.getWidget = function(name) {
     }
 }
 
+/**
+ * @deprecated use showForm() instead
+ */
 Form.prototype.show = function(uri, validator, locale) {
     var lastWebCont = this.lastWebContinuation;
     // create a continuation, the invocation of which will resend
@@ -134,7 +137,7 @@ Form.prototype.show = function(uri, validator, locale) {
             handleInvalidContinuation();
             Woody.suicide();
         }
-        var thisWebCont = this._show(uri, locale, wk);
+        var thisWebCont = this._show(uri, locale, wk, {});
         // _show creates a continuation, the invocation of which
         // will return right here: it is used to implement 
         // automated "next" navigation
@@ -163,10 +166,72 @@ Form.prototype.show = function(uri, validator, locale) {
     }
 }
 
-Form.prototype._show = function(uri, locale, lastWebCont, timeToLive) {
+/**
+ * Manages the display of a form and its validation.
+ *
+ * This uses some additionnal propertied on the form object :
+ * - "locale" : the form locale (default locale is used if not set)
+ * - "validator" : additional validation function. This function receives
+ *   the form object as parameter and should return a boolean indicating
+ *   if the form handling is finished (true) or if the form should be
+ *   redisplayed again (false)
+ *
+ * @parameter uri the page uri (like in cocoon.sendPageAndWait())
+ * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
+ *            The "woody-form" and "locale" properties are added to this object.
+ */
+Form.prototype.showForm = function(uri, bizdata) {
+    var lastWebCont = this.lastWebContinuation;
+    // create a continuation, the invocation of which will resend
+    // the page: this will be used to implement automated "back"
+    // navigation
+    var wk = this.start(lastWebCont);
+
+    if (this.locale == null)
+        this.locale = java.util.Locale.getDefault();
+
+    while (true) {
+        if (cocoon.request == null) {
+            // this continuation has been invalidated
+            this.dead = true;
+            handleInvalidContinuation();
+            Woody.suicide();
+        }
+        var thisWebCont = this._show(uri, this.locale, wk, undefined, bizdata == undefined ? new Object() : bizdata);
+        // _show creates a continuation, the invocation of which
+        // will return right here: it is used to implement 
+        // automated "next" navigation
+        if (this.dead ||  cocoon.request == null) {
+            // this continuation has been invalidated
+            handleInvalidContinuation();
+            suicide();
+        }
+
+        var formContext = 
+            new Packages.org.apache.cocoon.woody.FormContext(this.woody.request, this.locale);
+        var finished = this.form.process(formContext);
+        var evt = formContext.getActionEvent();
+        if (evt != null) {
+            this.submitId = String(evt.getActionCommand());
+        } else {
+            this.submitId = undefined;
+        }
+        // If either validation was successfull or there was an event, call the validator
+        if ((finished ||this.submitId != null) && this.validator != undefined) {
+            finished = this.validator(this);
+        }
+        if (finished) {
+            break;
+        }
+    }
+}
+
+Form.prototype._show = function(uri, locale, lastWebCont, timeToLive, bizData) {
     var k = new Continuation();
     var wk = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
-    var bizData = { "woody-form": this.form, "locale" : locale };
+    bizData["woody-form"] = this.form;
+    bizData["locale"] = locale;
+    //var bizData = { "woody-form": this.form, "locale" : locale };
     this.lastWebContinuation = wk;
     this.woody.forwardTo(uri, bizData, wk);
     Woody.suicide();
