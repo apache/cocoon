@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.9 2004/07/11 14:00:57 cziegeler Exp $
+ * @version CVS $Id: Request.java,v 1.10 2004/07/12 06:33:26 cziegeler Exp $
  *
  */
 
@@ -45,12 +45,14 @@ public interface Request {
 
     /**
      * This constant defines an request wide scope for the request attribute.
+     * @since 2.2
      */
     public static final int GLOBAL_SCOPE = 1;
 
     /**
      * This constant defines the scope of the request attribute to be
      * private to the current (sub) request. 
+     * @since 2.2
      */
     public static final int REQUEST_SCOPE = 2;
 
