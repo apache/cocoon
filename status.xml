@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.362 2004/06/10 01:24:21 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.363 2004/06/11 12:05:48 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -156,7 +156,6 @@
     <action context="code" assigned-to="open">
       Finish moving the scratchpad stuff in main trunk.
     </action>
-
    </actions>
 
    <actions priority="medium">
@@ -199,7 +198,6 @@
     <action context="code" assigned-to="MPO">
       Remove ContainerWidget concept from cforms.
     </action>
-
    </actions>
   </todo>
 
@@ -267,7 +265,7 @@
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
    <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
-     Chaperon: Improvements for Chaperon JSPWiki to xdocs conversion:
+     Chaperon block: Improvements for Chaperon JSPWiki to xdocs conversion:
      <ul>
        <li>Handle nested bullet lists (number lists already supported)</li>
        <li>If 'name' parameter is specified, use it as title (and add spaces between
@@ -282,7 +280,8 @@
      </ul>
    </action>
    <action dev="CZ" type="update">
-     Session-fw: Remove deprecated class AbstractSessionComponent from session block.
+     Session-fw block: Remove deprecated class AbstractSessionComponent from session
+     block.
    </action>
    <action dev="CZ" type="update">
      Redesign the internal environment handling (request processing) and moved
