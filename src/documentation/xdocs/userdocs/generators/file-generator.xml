@@ -30,8 +30,14 @@
      ]]>
 </source>
    <p>
-    You can use an absolute filesystem pathname. See the explanation of
+    You can also use an absolute filesystem pathname. See the explanation of
     <link href="../concepts/sitemap.html#file-url">file: URLs</link>
+   </p>
+   <p>
+     Be careful to only request xml or xhtml documents, and not html documents.
+     You would get surprising results, including network trips for HTML DTDs
+     that are not provided by Cocoon, and xml parsing errors.
+     Use the "HTMLGenerator instead.
    </p>
 		</s1>
 	</body>
