@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-05-03 14:09:19 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-05-04 00:31:26 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -234,12 +234,6 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
         } else {
             if ( !this.checkPipeline() ) {
                 throw new ProcessingException("Attempted to process incomplete pipeline.");
-            }
-
-            try {
-                this.serializer.setup((EntityResolver) environment,environment.getObjectModel(),serializerSource,serializerParam);
-            } catch ( Exception e ) {
-                throw new ProcessingException("Error in serializer setup",e);
             }
 
             try {

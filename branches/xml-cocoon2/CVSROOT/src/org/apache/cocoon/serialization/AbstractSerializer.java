@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-05-03 14:09:28 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-05-04 00:31:27 $
  */
 
 public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {
@@ -32,13 +32,6 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
      * The <code>OutputStream</code> used by this serializer.
      */
     protected OutputStream output;
-
-    /**
-     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
-     * the source and sitemap <code>Parameters</code> used to process the request.
-     */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {}
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.

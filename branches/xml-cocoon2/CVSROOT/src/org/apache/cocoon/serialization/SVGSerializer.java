@@ -47,7 +47,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-05-03 14:09:35 $
+ * @version CVS $Revision: 1.1.2.38 $ $Date: 2001-05-04 00:31:28 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {
@@ -70,13 +70,6 @@ public class SVGSerializer extends SVGBuilder
     Transcoder transcoder = null;
     /** The Transcoder Factory to use */
     TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
-
-    /**
-     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
-     * the source and sitemap <code>Parameters</code> used to process the request.
-     */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {}
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.

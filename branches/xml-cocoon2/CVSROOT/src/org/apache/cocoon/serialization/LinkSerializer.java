@@ -23,20 +23,13 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-05-03 14:09:33 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-04 00:31:27 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, Poolable {
 
     private PrintStream out;
 
-    /**
-     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
-     * the source and sitemap <code>Parameters</code> used to process the request.
-     */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {}
-    
     /**
      * Set the <code>OutputStream</code> where the requested resource should
      * be serialized.
