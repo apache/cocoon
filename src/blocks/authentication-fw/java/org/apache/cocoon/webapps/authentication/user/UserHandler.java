@@ -27,7 +27,7 @@ import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.11 2004/03/19 13:59:21 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -65,9 +65,8 @@ implements java.io.Serializable {
     public boolean getApplicationsLoaded() {
         if ( this.handler.getApplications().isEmpty() ) {
             return true;
-        } else {
-            return this.appsLoaded;
         }
+        return this.appsLoaded;
     }
     
     /**
@@ -118,6 +117,14 @@ implements java.io.Serializable {
             }
         }
         return this.userID;
+    }
+    
+    /**
+     * Test if the user has a role
+     * @since 2.1.6
+     */
+    public boolean isUserInRole(String role) {
+        return this.context.isUserInRole(role);    
     }
     
     public void addApplicationContext(String name) {
