@@ -77,7 +77,7 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.1 2003/07/10 13:16:59 cziegeler Exp $
+ * @version CVS $Id: MapProfileLS.java,v 1.2 2003/07/29 06:30:07 cziegeler Exp $
  */
 public class MapProfileLS
     extends AbstractLogEnabled
@@ -112,7 +112,7 @@ public class MapProfileLS
                 if ( !first) {
                     buffer.append('/');
                 }
-                first = true;
+                first = false;
             }
             String append = entry.getValue().toString();
             if ( "?".equals(append) ) {

@@ -54,6 +54,9 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
@@ -65,14 +68,14 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: AbstractProfileManager.java,v 1.3 2003/07/29 06:30:07 cziegeler Exp $
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
-    implements Composable, ProfileManager, ThreadSafe {
+    implements Composable, Configurable, ProfileManager, ThreadSafe {
 
-    public static final String DEFAULT_LAYOUT_KEY = "portal";
-    
+    protected String defaultLayoutKey;
+
     protected ComponentManager manager;
 
     /**
@@ -111,7 +114,7 @@ public abstract class AbstractProfileManager
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             String defaultLayoutKey = (String)service.getAttribute("default-layout-key");
             if ( defaultLayoutKey == null ) {
-                return DEFAULT_LAYOUT_KEY;
+                return this.defaultLayoutKey;
             }
             return defaultLayoutKey;
         } catch (ComponentException ce) {
@@ -155,5 +158,9 @@ public abstract class AbstractProfileManager
         }
     }
 
-    
+    public void configure(Configuration configuration) throws ConfigurationException {
+        Configuration child = configuration.getChild("default-layout-key");
+        // get configured default LayoutKey
+        this.defaultLayoutKey = child.getValue("portal");
+    }
 }

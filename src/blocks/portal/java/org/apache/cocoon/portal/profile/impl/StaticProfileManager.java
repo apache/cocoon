@@ -58,12 +58,12 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -71,6 +71,7 @@ import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
@@ -79,55 +80,45 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.6 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.7 2003/07/29 06:30:07 cziegeler Exp $
  */
-public class StaticProfileManager
-    extends AbstractProfileManager
-    implements Configurable {
-
+public class StaticProfileManager extends AbstractProfileManager implements Configurable
+{
     protected String profilesPath;
 
-    protected String defaultLayoutGroup = null;
+    protected StaticBucketMap copletInstanceDataManagers = new StaticBucketMap();
 
-    protected static final String LAYOUTKEY_PREFIX =
-        StaticProfileManager.class.getName() + "/Layout/";
+    protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(String, String)
      */
-    public Layout getPortalLayout(String layoutKey, String layoutID) {
+    public Layout getPortalLayout(String layoutKey, String layoutID)
+    {
         PortalService service = null;
         ProfileLS adapter = null;
-        try {
+        try
+        {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-            if (null == layoutID) {
-                Layout l =
-                    (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT");
-                if (null != l) {
+            if (layoutKey == null)
+            {
+                Layout l = getEntryLayout();
+                if (null != l)
+                {
                     return l;
                 }
+                layoutKey = getDefaultLayoutKey();
             }
 
-            String serviceKey = null;
-            if (layoutKey == null) {
-                layoutKey = defaultLayoutGroup; // Default group to load
-            }
-            serviceKey =
-                LAYOUTKEY_PREFIX + service.getPortalName() + "/" + layoutKey;
-            if (layoutID == null) {
-                // look for the default key
-                // it is set with the id of the root layoutId of a layoutGroup
-                layoutID =
-                    (String) service.getAttribute(serviceKey + "defaultKey");
-            }
-
+            String serviceKey = LAYOUTKEY_PREFIX + layoutKey;
             Object[] objects = (Object[]) service.getAttribute(serviceKey);
 
             // check if the layout is already cached and still valid
             int valid = SourceValidity.INVALID;
             SourceValidity sourceValidity = null;
-            if (objects != null) {
+            if (objects != null)
+            {
                 sourceValidity = (SourceValidity) objects[1];
                 valid = sourceValidity.isValid();
                 Layout layout = null;
@@ -136,60 +127,56 @@ public class StaticProfileManager
                 if (layout != null)
                     return layout;
             }
-            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+
+            CopletInstanceDataManager copletInstanceDataManager = getCopletInstanceDataManager(service);
 
             Map parameters = new HashMap();
             parameters.put("profiletype", "layout");
-            
+            parameters.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
+
             Map map = new SequencedHashMap();
             map.put("base", this.profilesPath);
             map.put("portalname", service.getPortalName());
             map.put("profile", "layout");
             map.put("groupKey", layoutKey);
 
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
             SourceValidity newValidity = adapter.getValidity(map, parameters);
-            if (valid == SourceValidity.UNKNOWN) {
-                if (sourceValidity.isValid(newValidity)
-                    == SourceValidity.VALID) {
-                    // XXX what if objects is null ? Could it be ?
+            if (valid == SourceValidity.UNKNOWN)
+            {
+                if (sourceValidity.isValid(newValidity) == SourceValidity.VALID)
+                {
                     return (Layout) ((Map) objects[0]).get(layoutID);
                 }
             }
 
             // get Layout specified in the map
             Layout layout = (Layout) adapter.loadProfile(map, parameters);
-            Map layouts = null;
-            if (objects != null) {
-                layouts = (Map) objects[0];
-            } else {
-                layouts = new HashMap();
-            }
-            // save the root layout as default of an group if no key is given
-            service.setAttribute(serviceKey + "defaultKey", layout.getId());
+            Map layouts = new HashMap();
+
+            layouts.put(null, layout); //save root with null as key
             cacheLayouts(layouts, layout);
 
             LayoutFactory factory = service.getComponentManager().getLayoutFactory();
             factory.prepareLayout(layout);
 
             // store the new values in the service
-            if (newValidity != null) {
+            if (newValidity != null)
+            {
                 objects = new Object[] { layouts, newValidity };
                 service.setAttribute(serviceKey, objects);
             }
 
-            // is the default layout wanted ?
-            if ((layout.getId().equals(layoutID)) || layoutID == null) {
-                return layout;
-            }
-
-            // or a layout in the group ?
             return (Layout) layouts.get(layoutID);
-
-        } catch (Exception ce) {
+        }
+        catch (Exception ce)
+        {
             throw new CascadingRuntimeException("Unable to get layout.", ce);
-        } finally {
+        }
+        finally
+        {
             this.manager.release(service);
-            this.manager.release((Component)adapter);
+            this.manager.release((Component) adapter);
         }
     }
 
@@ -197,17 +184,22 @@ public class StaticProfileManager
      * @param layoutMap
      * @param layout
      */
-    private void cacheLayouts(Map layoutMap, Layout layout) {
-        if (layout != null) {
-            if (layout.getId() != null) {
+    private void cacheLayouts(Map layoutMap, Layout layout)
+    {
+        if (layout != null)
+        {
+            if (layout.getId() != null)
+            {
                 String layoutId = layout.getId();
                 layoutMap.put(layoutId, layout);
             }
-            if (layout instanceof CompositeLayout) {
+            if (layout instanceof CompositeLayout)
+            {
                 // step through all it's child layouts and cache them too
                 CompositeLayout cl = (CompositeLayout) layout;
                 Iterator i = cl.getItems().iterator();
-                while (i.hasNext()) {
+                while (i.hasNext())
+                {
                     Item current = (Item) i.next();
                     this.cacheLayouts(layoutMap, current.getLayout());
                 }
@@ -216,104 +208,149 @@ public class StaticProfileManager
 
     }
 
-    public CopletInstanceData getCopletInstanceData(String copletID) {
+    private CopletInstanceDataManager getCopletInstanceDataManager(PortalService service) throws Exception
+    {
+        String portalName = service.getPortalName();
+        CopletInstanceDataManager copletInstanceDataManager =
+            (CopletInstanceDataManager) this.copletInstanceDataManagers.get(portalName);
+        if (copletInstanceDataManager != null)
+            return copletInstanceDataManager;
+
+        ProfileLS adapter = null;
+        try
+        {
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+
+            Map parameters = new HashMap();
+            parameters.put("profiletype", "copletbasedata");
+            parameters.put("objectmap", null);
+
+            Map map = new SequencedHashMap();
+            map.put("base", this.profilesPath);
+            map.put("portalname", service.getPortalName());
+            map.put("profile", "coplet");
+            map.put("name", "basedata");
+            CopletBaseDataManager copletBaseDataManager = (CopletBaseDataManager) adapter.loadProfile(map, parameters);
+
+            //CopletData
+            parameters.clear();
+            parameters.put("profiletype", "copletdata");
+            parameters.put("objectmap", copletBaseDataManager.getCopletBaseData());
+
+            map.clear();
+            map.put("base", this.profilesPath);
+            map.put("portalname", service.getPortalName());
+            map.put("profile", "coplet");
+            map.put("name", "data");
+            CopletDataManager copletDataManager = (CopletDataManager) adapter.loadProfile(map, parameters);
+
+            //CopletInstanceData
+            parameters.clear();
+            parameters.put("profiletype", "copletinstancedata");
+            parameters.put("objectmap", copletDataManager.getCopletData());
+
+            map.clear();
+            map.put("base", this.profilesPath);
+            map.put("portalname", service.getPortalName());
+            map.put("profile", "coplet");
+            map.put("name", "instancedata");
+            copletInstanceDataManager = (CopletInstanceDataManager) adapter.loadProfile(map, parameters);
+
+            CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
+            Iterator iterator = copletDataManager.getCopletData().values().iterator();
+            while (iterator.hasNext())
+            {
+                CopletData cd = (CopletData) iterator.next();
+                copletFactory.prepare(cd);
+            }
+            iterator = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+            while (iterator.hasNext())
+            {
+                CopletInstanceData cid = (CopletInstanceData) iterator.next();
+                copletFactory.prepare(cid);
+            }
+
+            this.copletInstanceDataManagers.put(portalName, copletInstanceDataManager);
+            return copletInstanceDataManager;
+        }
+        finally
+        {
+            this.manager.release(service);
+            this.manager.release((Component) adapter);
+        }
+    }
+
+    public CopletInstanceData getCopletInstanceData(String copletID)
+    {
         PortalService service = null;
-        String attribute = null;
-        try {
+        try
+        {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-            attribute =
-                StaticProfileManager.class.getName()
-                    + "/"
-                    + service.getPortalName()
-                    + "/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager =
-                (CopletInstanceDataManager) service.getAttribute(attribute);
-
-            return copletInstanceDataManager.getCopletInstanceData(copletID);
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException(
-                "Unable to lookup portal service.",
-                e);
-        } finally {
+            return getCopletInstanceDataManager(service).getCopletInstanceData(copletID);
+        }
+        catch (Exception e)
+        {
+            throw new CascadingRuntimeException("Error in getCopletInstanceData", e);
+        }
+        finally
+        {
             this.manager.release(service);
         }
     }
 
-    public List getCopletInstanceData(CopletData data) {
+    public List getCopletInstanceData(CopletData data)
+    {
         List coplets = new ArrayList();
         PortalService service = null;
-        String attribute = null;
-        try {
+        try
+        {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-            attribute =
-                StaticProfileManager.class.getName()
-                    + "/"
-                    + service.getPortalName()
-                    + "/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager =
-                (CopletInstanceDataManager) service.getAttribute(attribute);
-
-            Iterator iter =
-                copletInstanceDataManager
-                    .getCopletInstanceData()
-                    .values()
-                    .iterator();
-            while (iter.hasNext()) {
+            Iterator iter = getCopletInstanceDataManager(service).getCopletInstanceData().values().iterator();
+            while (iter.hasNext())
+            {
                 CopletInstanceData current = (CopletInstanceData) iter.next();
-                if (current.getCopletData().equals(data)) {
+                if (current.getCopletData().equals(data))
+                {
                     coplets.add(current);
                 }
             }
             return coplets;
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException(
-                "Unable to lookup portal service.",
-                e);
-        } finally {
+        }
+        catch (Exception e)
+        {
+            throw new CascadingRuntimeException("Error in getCopletInstanceData", e);
+        }
+        finally
+        {
             this.manager.release(service);
         }
     }
 
-    public void register(CopletInstanceData coplet) {
+    public void register(CopletInstanceData coplet)
+    {
     }
 
-    public void unregister(CopletInstanceData coplet) {
+    public void unregister(CopletInstanceData coplet)
+    {
     }
 
-    public void register(Layout layout) {
+    public void register(Layout layout)
+    {
     }
 
-    public void unregister(Layout layout) {
+    public void unregister(Layout layout)
+    {
     }
 
-    public void saveUserProfiles() {
+    public void saveUserProfiles()
+    {
     }
 
-    public void configure(Configuration configuration)
-        throws ConfigurationException {
-        Configuration child = configuration.getChild("default-layout-group");
-        if (child != null) {
-            // get configured default LayoutGroup
-            defaultLayoutGroup = child.getValue();
-        }
-
-        if (this.defaultLayoutGroup == null) {
-            // if none is configured set it to "portal"
-            this.defaultLayoutGroup = "portal";
-        }
-        child = configuration.getChild("profiles-path");
-        if (child != null) {
-            this.profilesPath = child.getValue();
-        }
-        if ( this.profilesPath == null ) {
-            this.profilesPath = "context://samples/simple-portal/profiles";
-        }
+    public void configure(Configuration configuration) throws ConfigurationException
+    {
+        super.configure(configuration);
+        Configuration child = configuration.getChild("profiles-path");
+        this.profilesPath = child.getValue("cocoon:/profiles");
+        //this.profilesPath = "context://samples/simple-portal/profiles";
     }
-
-    public Layout getPortalLayout(String key) {
-        return getPortalLayout(null, key);
-    }
-
 }

@@ -65,6 +65,19 @@
          </aspects>
      </renderer>
      <renderer name="link" class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" logger="portal"/>
+     <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+         <aspects>
+            <aspect type="xslt">
+                <parameter name="style" value="{global:skin}styles/frame.xsl"/>
+            </aspect>
+            <aspect type="parameter">
+                <parameter name="tag-name" value="frame"/>
+            </aspect>
+            <aspect type="frame">
+                <parameter name="store" value="request"/>
+            </aspect>
+         </aspects>
+    </renderer>
  </component>
  
 <!-- Layout factory configuration -->
@@ -102,6 +115,25 @@
                 <renderer name="window"/>
             </renderers>
         </layout>
+        <layout name="link"
+                class="org.apache.cocoon.portal.layout.impl.LinkLayout"
+                create-id="true">
+            <renderers default="link">
+                <renderer name="link"/>
+            </renderers>
+            <aspects>
+               <aspect name="link-layout-key"
+                       class="java.lang.String"
+                       store="session"
+                       auto-create="false">
+               </aspect>
+               <aspect name="link-layout-id"
+                       class="java.lang.String"
+                       store="session"
+                       auto-create="false">
+               </aspect>
+            </aspects>
+         </layout>
     </layouts>
 </component>
 
