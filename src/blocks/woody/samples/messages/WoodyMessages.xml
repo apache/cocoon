@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- This catalogue file contains translations for built-in YAFF messages. -->
+<!-- This catalogue file contains translations for built-in Woody messages. -->
 <catalogue>
   <message key="general.field-required">This field is required.</message>
 
