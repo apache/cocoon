@@ -26,7 +26,7 @@
       <code>uri</code> is the relative URL of the page to be sent back to the client.
       </p>
       <p>
-       <code>bean</code> is a context object which can be accessed inside this page toextract various values and place them in the generated page.
+       <code>bean</code> is a context object which can be accessed inside this page to extract various values and place them in the generated page.
       </p>
     </s2>
     <s2 title = "sendPageAndWait">
