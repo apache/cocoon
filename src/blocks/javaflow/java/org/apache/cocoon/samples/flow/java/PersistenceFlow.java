@@ -33,7 +33,7 @@ public class PersistenceFlow extends AbstractFormFlow {
 
     public void doInsertEmployee() throws BindingException {
 
-				PersistenceBroker broker = getPersistenceBroker();
+        PersistenceBroker broker = getPersistenceBroker();
 
         // Create a empty Bean
         Employee employee = new Employee();
@@ -64,14 +64,14 @@ public class PersistenceFlow extends AbstractFormFlow {
         else
             throw new IllegalStateException("No parameter 'id'");
 
-				PersistenceBroker broker = getPersistenceBroker();
-				
+        PersistenceBroker broker = getPersistenceBroker();
+        
         // Create a empty Bean
         Employee employee = new Employee();
         // Fill some initial data to the bean
         employee.setId(id);
         // Load bean based on the given PrimaryKey
-				employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
+        employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
         // Load form descriptor
         Form form = loadForm("forms/employee.xml");
         // Load form binding
@@ -84,7 +84,7 @@ public class PersistenceFlow extends AbstractFormFlow {
         binding.saveFormToModel(form, employee);
 
         // Update Bean in Database
-				broker.store(employee);
+        broker.store(employee);
 
         // Send response to the user
         doShowEmployee();
@@ -105,8 +105,8 @@ public class PersistenceFlow extends AbstractFormFlow {
         Employee employee = new Employee();
         // Fill some initial data to the bean
         employee.setId(id);
-				// Load bean based on the given PrimaryKey
-			  employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
+        // Load bean based on the given PrimaryKey
+        employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
         // Remove bean
         broker.delete(employee);
         // Send response to the user
@@ -119,15 +119,15 @@ public class PersistenceFlow extends AbstractFormFlow {
 
         // Query all objects
         Set results = new HashSet();
-				QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
+        QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
         for(Iterator i=broker.getCollectionByQuery(query).iterator(); i.hasNext();) {
             results.add(i.next());
-				}
+        }
         // Send response to the user
         sendPage("page/employee-result", new VarMap().add("employee", results));
     }
 
     public PersistenceBroker getPersistenceBroker() {
         return ((PBFactory)getComponent(PBFactory.ROLE)).defaultPersistenceBroker();
-		}
+    }
 }
