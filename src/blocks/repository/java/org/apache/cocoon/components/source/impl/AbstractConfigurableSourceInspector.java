@@ -102,7 +102,10 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
             int index = property.indexOf('#');
             String namespace = property.substring(0,index);
             String name      = property.substring(index+1);
-            result.add(getSourceProperty(source,namespace,name));
+            SourceProperty sp = getSourceProperty(source,namespace,name);
+            if (sp != null) {
+                result.add(sp);
+            }
         }
         return (SourceProperty[]) result.toArray(new SourceProperty[result.size()]);
     }
@@ -111,6 +114,10 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
         throws SourceException {
         
         if (handlesProperty(namespace,name)) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Getting property " + namespace + "#" 
+                    + name + " for source " + source.getURI());
+            }
             return doGetSourceProperty(source,namespace,name);
         }
         return null;
