@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.122 2003/11/09 18:36:01 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.123 2003/11/19 01:18:58 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -490,7 +490,7 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>optional/jstyle.jar</lib>
-    <homepage>http://www.redrival.com/greenrd/java/jstyle/</homepage>
+    <homepage>http://astyle.sourceforge.net/</homepage>
   </file>
 
   <file>

@@ -536,13 +536,11 @@
 
      <note>
        Currently,
-       <link href="http://www.bigfoot.com/~davidsont/jstyle">Jstyle</link>
+       <link href="http://astyle.sourceforge.net/">Jstyle</link>
        is being used for Java source formatting. This open source project
        appears to be stagnated and lacks advanced formatting options
        present in other (unfortunately, not open-sourced) products like
-       <link href="http://home.wtal.de/software-solutions/jindent/">
-         Jindent
-       </link>.
+       <link href="http://www.jindent.com/">Jindent</link>.
      </note>
    </s2>
 
