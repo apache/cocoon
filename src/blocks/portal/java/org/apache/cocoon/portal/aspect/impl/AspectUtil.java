@@ -48,32 +48,40 @@
  Software Foundation, please see <http://www.apache.org/>.
 
  */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.aspect.impl;
 
+import java.lang.reflect.Constructor;
+
+import org.apache.cocoon.portal.aspect.AspectDescription;
+import org.apache.cocoon.util.ClassUtils;
 
 
 
 /**
- * A configured layout aspect
+ * Utility class for aspects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutAspectDescription.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: AspectUtil.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface LayoutAspectDescription  {
+public class AspectUtil { 
 
     /**
-     * @return
+     * Create a new instance
      */
-    String getClassName();
-
-    /**
-     * @return
-     */
-    String getName();
-
-    /**
-     * @return
-     */
-    String getPersistence();
+    public static Object createNewInstance(AspectDescription desc) {
+        // TODO - cache class
+        try {
+            Class clazz = ClassUtils.loadClass(desc.getClassName());
+            if ( clazz.getName().startsWith("java.lang.")) {
+                Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                return constructor.newInstance(new String[] {"0"});
+            } else {
+                return clazz.newInstance();
+            }
+        } catch (Exception ignore) {
+            return null;
+        }
+    }
+    
 }

@@ -47,27 +47,53 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.aspect;
+ */
+package org.apache.cocoon.portal.aspect.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.cocoon.portal.aspect.AspectDescription;
+import org.apache.cocoon.portal.aspect.AspectalizableDescription;
+
+
 /**
- * This interface is able to get a stored aspect
+ * 
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizableDescription.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface AspectDataHandler {
+public abstract class AbstractAspectalizableDescription
+    implements AspectalizableDescription  {
 
-    Object getAspectData(Aspectalizable owner, String aspectName);
-    
-    void setAspectData(Aspectalizable owner, String aspectName, Object data);
+    protected List aspects = new ArrayList();
 
-    List getAspectDatas(Aspectalizable owner);
+    /**
+     * @return
+     */
+    public List getAspects() {
+        return this.aspects;
+    }
+
+    public void addAspect(AspectDescription aspect) {
+        this.aspects.add(aspect);
+    }
     
-    boolean isAspectSupported(String aspectName);
+    /**
+     * Return the description for an aspect
+     */
+    public AspectDescription getAspect(String name) {
+        AspectDescription desc = null;
+        Iterator i = this.aspects.iterator();
+        while (desc == null && i.hasNext() ) {
+            AspectDescription current = (AspectDescription)i.next();
+            if ( name.equals(current.getName())) {
+                desc = current;
+            }
+        }
+        return desc;
+    }
     
 }

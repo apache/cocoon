@@ -50,24 +50,21 @@
 */
 package org.apache.cocoon.portal.aspect;
 
-import java.util.List;
-
 /**
- * This interface is able to get a stored aspect
+ * An aspect data store is a component that manages aspect data objects.
+ * For example, one implementation stores them temporary for the current
+ * request, another one in the session and a third one persistent.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AspectDataStore.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface AspectDataHandler {
+public interface AspectDataStore {
+    
+    String ROLE = AspectDataStore.class.getName();
 
     Object getAspectData(Aspectalizable owner, String aspectName);
     
     void setAspectData(Aspectalizable owner, String aspectName, Object data);
 
-    List getAspectDatas(Aspectalizable owner);
-    
-    boolean isAspectSupported(String aspectName);
-    
 }

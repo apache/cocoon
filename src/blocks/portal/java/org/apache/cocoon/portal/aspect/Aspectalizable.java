@@ -57,21 +57,39 @@ import java.util.List;
  * This interface marks an object that can be used by aspects.
  * An aspect can store any arbitrary information in an aspectalizable object.
  * 
- * TODO - check if this is ok
- * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.3 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: Aspectalizable.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
  */
 public interface Aspectalizable {
 
+    /**
+     * Get the data associated with an aspect
+     * @param aspectName The aspect name
+     * @return The data or null if the aspect is not associated with this object
+     */
     Object getAspectData(String aspectName);
     
+    /**
+     * Set the data associated with an aspect
+     * The data is only set if the object is associated with the given aspect
+     * @param aspectName The aspect name
+     * @param data The data
+     */
     void setAspectData(String aspectName, Object data);
     
+    /**
+     * Return all aspect datas
+     * @return A list of objects
+     */
     List getAspectDatas();
     
+    /**
+     * Is this aspect supported
+     */
+    boolean isAspectSupported(String aspectName);
+
     /**
      * This method is invoked once to set the handler
      */

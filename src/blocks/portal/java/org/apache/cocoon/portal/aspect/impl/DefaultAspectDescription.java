@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -47,92 +47,85 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.layout.impl;
+ */
+package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.cocoon.portal.aspect.AspectDescription;
 
-import org.apache.cocoon.portal.aspect.AspectDataHandler;
-import org.apache.cocoon.portal.aspect.Aspectalizable;
+
 
 /**
- *
+ * A configured aspect
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutAspectDataHandler.java,v 1.2 2003/05/19 13:16:34 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDescription.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public class LayoutAspectDataHandler 
-    implements AspectDataHandler {
+public class DefaultAspectDescription 
+    implements AspectDescription {
 
-    protected DefaultLayoutDescription description;
+    protected String name;
     
-    // TODO - Implement persistence
+    protected String className;
     
-    protected Map stati;
+    protected String persistence;
+
+    protected boolean autoCreate;
     
     /**
-     * Constructor
+     * @return
      */
-    public LayoutAspectDataHandler(DefaultLayoutDescription desc) {
-        this.description = desc;
-        this.stati = new HashMap();
+    public String getClassName() {
+        return className;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String)
+    /**
+     * @return
      */
-    public Object getAspectData(Aspectalizable owner, String aspectName) {
-        // is this aspect allowed?
-        DefaultLayoutAspectDescription aspectDesc = (DefaultLayoutAspectDescription)this.description.getAspect( aspectName );
-        if ( aspectDesc == null ) return null;
-        
-        Map datas = (Map)this.stati.get(owner);
-        if ( datas == null ) {
-            datas = new HashMap();
-            this.stati.put( owner, datas );
-        }
-        Object data = datas.get( aspectName );
-        if ( data == null ) {
-            data = aspectDesc.createNewInstance();
-            datas.put( aspectName, data );
-        }
-        return data;
+    public String getName() {
+        return name;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
+    /**
+     * @param string
      */
-    public List getAspectDatas(Aspectalizable owner) {
-        // TODO Auto-generated method stub
-        return null;
+    public void setClassName(String string) {
+        className = string;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#setAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String, java.lang.Object)
+    /**
+     * @param string
      */
-    public void setAspectData(Aspectalizable owner,
-                               String aspectName,
-                               Object data) {
-        // is this aspect allowed?
-        DefaultLayoutAspectDescription aspectDesc = (DefaultLayoutAspectDescription)this.description.getAspect( aspectName );
-        if ( aspectDesc == null ) return;
-
-        Map datas = (Map)this.stati.get(owner);
-        if ( datas == null ) {
-            datas = new HashMap();
-            this.stati.put( owner, datas );
-        }
-        datas.put( aspectName, data );
-        
+    public void setName(String string) {
+        name = string;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getDescription()
+    /**
+     * @return
      */
-    public Object getDescription() {
-        return this.description;
+    public String getStoreName() {
+        return persistence;
+    }
+
+    /**
+     * @param string
+     */
+    public void setPersistence(String string) {
+        persistence = string;
+    }
+
+    /**
+     * If the data is not available, create it automatically (or not)
+     */
+    public boolean isAutoCreate() {
+        return autoCreate;
+    }
+
+    /**
+     * Set auto create
+     */
+    public void setAutoCreate(boolean b) {
+        autoCreate = b;
     }
 
 }

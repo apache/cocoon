@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
+import java.util.List;
+
+import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
 
 /**
@@ -57,10 +60,37 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspectalizable.java,v 1.1 2003/05/07 06:22:30 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizable.java,v 1.2 2003/05/20 14:06:43 cziegeler Exp $
  */
 public abstract class AbstractAspectalizable 
     implements Aspectalizable {
 
+    transient protected AspectDataHandler aspectDataHandler;
+    
+    /**
+     * Is this aspect supported
+     */
+    public boolean isAspectSupported(String aspectName) {
+        return this.aspectDataHandler.isAspectSupported( aspectName );
+    }
+
+    public Object getAspectData(String aspectName) {
+        return this.aspectDataHandler.getAspectData(this, aspectName);
+    }
+    
+    public void setAspectData(String aspectName, Object data) {
+        this.aspectDataHandler.setAspectData(this, aspectName, data);
+    }
+    
+    public List getAspectDatas(){
+        return this.aspectDataHandler.getAspectDatas(this);
+    }
+    
+    /**
+     * This method is invoked once to set the handler
+     */
+    public void setAspectDataHandler(AspectDataHandler handler) {
+        this.aspectDataHandler = handler;
+    }
 
 }

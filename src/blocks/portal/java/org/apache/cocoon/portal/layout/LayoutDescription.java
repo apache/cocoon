@@ -50,7 +50,7 @@
  */
 package org.apache.cocoon.portal.layout;
 
-import java.util.List;
+import org.apache.cocoon.portal.factory.ProducibleDescription;
 
 
 
@@ -59,29 +59,10 @@ import java.util.List;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutDescription.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: LayoutDescription.java,v 1.2 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface LayoutDescription  {
-
-    /**
-     * @return
-     */
-    List getAspects();
-
-    /**
-     * Return the description for an aspect
-     */
-    LayoutAspectDescription getAspect(String name);
-    
-    /**
-     * @return
-     */
-    String getClassName();
-
-    /**
-     * @return
-     */
-    String getName();
+public interface LayoutDescription
+    extends ProducibleDescription  {
 
     /**
      * @return
