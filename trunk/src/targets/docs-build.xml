@@ -208,31 +208,3 @@
     </javadoc>
 
   </target>
-
-<!-- === Admin targets ========================================================= -->
-
-  <!-- The Gump Target  -->
-  <target name="gump" depends="package, javadocs"/>
-
-  <!-- Creates the web site  -->
-  <target name="site" depends="docs, javadocs">
-    <mkdir dir="${site}"/>
-    <copy todir="${site}" filtering="off">
-      <fileset dir="${build.docs}"/>
-    </copy>
-    <copy todir="${site}/apidocs" filtering="off">
-      <fileset dir="${build.javadocs}"/>
-    </copy>
-  </target>
-
-  <!-- Create the announcements -->
-  <target name="announcement" depends="prepare-docs">
-    <copy file="announcement.xml" tofile="${build.context}\xdocs\announcement.xml" filtering="on"/>
-    <xslt basedir="${build.context}\xdocs"
-           destdir="${build}"
-           style="${build.context}\stylesheets\announcement2txt.xsl"
-           includes="announcement.xml"
-           extension=".txt"
-           force="true"/>
-  </target>
-
