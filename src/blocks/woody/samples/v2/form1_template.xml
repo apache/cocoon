@@ -75,7 +75,7 @@
       <jx:forEach varStatus="loop" begin="0" end="${contacts.length - 1}">
           <jx:set var="row" value="${contacts.getRow(loop.index)}"/>
           <!-- do something with row... -->
-      <jx:forEach/>
+      </jx:forEach>
 
       <!-- manual layout of fieldw, without use of a wi:group -->
       <wt:widget-label id="contacts"/><br/>
