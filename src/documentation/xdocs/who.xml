@@ -36,7 +36,6 @@
     in strict alphabetical order.
     </p>
     <ul>
-      <li>Nicola Ken Barozzi (nicolaken.at.apache.org)</li>
       <li>Mark Butler (butlermh.at.apache.org)</li>
       <li>Guido Casper (gcasper.at.apache.org)</li>
       <li>Ugo Cei (ugo.at.apache.org)</li>
@@ -81,9 +80,11 @@
   <s2 title="Inactive Committers">
     <p>
     This list contains all inactive committers in strict alphabetical order.
-    They have not committed anything for three months.
+    They do not consider themselves active currently, but are still 
+    somewhat involved in Cocoon and hope to be active again soon.
     </p>
     <ul>
+      <li>Nicola Ken Barozzi (nicolaken.at.apache.org)</li>
       <li>Gerhard Froehlich (froehlich.at.apache.org)</li>
       <li>Berin Loritsch (bloritsch.at.apache.org)</li>
       <li>Martin Man (mman.at.apache.org)</li>
@@ -94,9 +95,9 @@
   <s2 title="Emeritus Committers">
     <p>
     This list contains all emeritus committers in strict alphabetical order.
-    They have not committed anything for six months, and so are considered to
-    have retired from active duty. We wish them well and hope to see them
-    return.
+    They have not committed anything for some time months, and consider 
+    themselves retired from active duty. 
+    We wish them well and hope to see them return.
     </p>
     <ul>
       <li>Zvi Avraham (zvia.at.apache.org)</li>
