@@ -23,6 +23,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
+import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -33,7 +34,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.3 2004/06/11 08:51:57 cziegeler Exp $
+ * @version CVS $Id: DefaultExecutor.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
@@ -75,6 +76,14 @@ public class DefaultExecutor
                                        Parameters        resolvedParams )
     throws PatternException {
         return matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public boolean invokeSelector(ExecutionContext context, Map objectModel,
+            Selector selector, String expression, Parameters parameters) {
+        return selector.select(expression, objectModel, parameters);
     }
     
     /* (non-Javadoc)
