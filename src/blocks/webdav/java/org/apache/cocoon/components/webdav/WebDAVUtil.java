@@ -72,15 +72,15 @@ public class WebDAVUtil {
     throws HttpException, IOException {
 
         HttpURL sourceURL = new HttpURL(uri);
-        System.out.println("WebDAVUtil ####### url="+uri + " content=" + content);
         final WebdavResource resource = new WebdavResource(sourceURL, 
-                                                                                                WebdavResource.NOACTION, 
-                                                                                                WebdavResource.getDefaultDepth());
+                                                           WebdavResource.NOACTION, 
+                                                           WebdavResource.getDefaultDepth());
                 
-        if(!resource.putMethod(content))
-                    throw new HttpException("Error creating resource: " + uri
-                    + " Status: " + resource.getStatusCode()
-                    + " Message: " + resource.getStatusMessage());
+        if(!resource.putMethod(content)) {
+            throw new HttpException("Error creating resource: " + uri
+                                    + " Status: " + resource.getStatusCode()
+                                    + " Message: " + resource.getStatusMessage());
+        }
     }
 
     /**
