@@ -215,11 +215,9 @@
                maxmemory="128m">
 
         <link packagelistloc="${{resources.javadoc}}/avalon-excalibur"
-              offline="true" href="http://avalon.apache.org/excalibur/api"/>
+              offline="true" href="http://excalibur.apache.org/apidocs"/>
         <link packagelistloc="${{resources.javadoc}}/avalon-framework"
               offline="true" href="http://avalon.apache.org/framework/api"/>
-        <link packagelistloc="${{resources.javadoc}}/avalon-logkit"
-              offline="true" href="http://avalon.apache.org/logkit/api"/>
         <link packagelistloc="${{resources.javadoc}}/j2ee"
               offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api"/>
         <link packagelistloc="${{resources.javadoc}}/j2se"
