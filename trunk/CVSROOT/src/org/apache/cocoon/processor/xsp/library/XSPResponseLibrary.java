@@ -121,13 +121,13 @@ public class XSPResponseLibrary {
 
   public static Element encodeRedirectURL(HttpServletResponse response, String url, Document document) {
     Element element = document.createElement("response:encode-redirect-url");
-    element.appendChild(document.createTextNode(response.encodeRedirectURL(url)));
+    element.appendChild(document.createTextNode(response.encodeRedirectUrl(url)));
     return element;
   }
 
   public static Element encodeURL(HttpServletResponse response, String url, Document document) {
     Element element = document.createElement("response:encode-url");
-    element.appendChild(document.createTextNode(response.encodeURL(url)));
+    element.appendChild(document.createTextNode(response.encodeUrl(url)));
     return element;
   }
 

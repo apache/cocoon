@@ -309,15 +309,15 @@
     <xsp:expr>
       <xsl:choose>
         <xsl:when test="$as = 'node'">
-          XSPResponseLibrary.encodeRedirectURL(
+          XSPResponseLibrary.encodeRedirectUrl(
             response,
             String.valueOf(<xsl:copy-of select="$url"/>),
             document
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          response.encodeRedirectURL(
-            String.valueOf(<xsl:copy-of select="$url"/>),
+          response.encodeRedirectUrl(
+            String.valueOf(<xsl:copy-of select="$url"/>)
           )
         </xsl:when>
       </xsl:choose>
