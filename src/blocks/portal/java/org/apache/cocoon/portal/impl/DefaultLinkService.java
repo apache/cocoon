@@ -37,6 +37,7 @@ import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.RequestEvent;
+import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.excalibur.source.SourceUtil;
 
 /**
@@ -57,6 +58,11 @@ public class DefaultLinkService
         StringBuffer  linkBase = new StringBuffer();
         boolean       hasParameters = false;
         ArrayList     comparableEvents = new ArrayList(5);
+
+        public String getBase(Boolean secure) {
+            //Todo actually implement secure
+            return linkBase.toString();
+        }
     }
     
     /** The converter used to convert an event into a request parameter */
@@ -65,7 +71,9 @@ public class DefaultLinkService
     protected ServiceManager manager;
     /** The cocoon context */
     protected Context context;
-    
+
+    protected Boolean eventsMarshalled = null;
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -98,35 +106,50 @@ public class DefaultLinkService
         }
         return info;
     }
-    
+
+    /* (non-Javadoc)
+    * @see org.apache.cocoon.portal.LinkService#isSecure()
+    */
+    public boolean isSecure() {
+        return ContextHelper.getRequest(this.context).isSecure();
+    }
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
      */
     public String getLinkURI(Event event) {
-        if ( event == null ) {
-            return this.getRefreshLinkURI();   
+        return this.getLinkURI(event, null);
+    }
+
+    /* (non-Javadoc)
+    * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, boolean)
+    */
+    public String getLinkURI(Event event, Boolean secure) {
+        if (event == null) {
+            return this.getRefreshLinkURI();
         }
         final Info info = this.getInfo();
-        final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
+        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
         boolean hasParams = info.hasParameters;
 
         // add comparable events
-        final boolean comparableEvent = event instanceof ComparableEvent;        
+        final boolean comparableEvent = event instanceof ComparableEvent;
         Iterator iter = info.comparableEvents.iterator();
         while (iter.hasNext()) {
-            Object[] objects = (Object[])iter.next();
-            ComparableEvent current = (ComparableEvent)objects[0];
-            if ( !comparableEvent || !current.equalsEvent((ComparableEvent)event)) {
-                if ( hasParams ) {
+            Object[] objects = (Object[]) iter.next();
+            ComparableEvent current = (ComparableEvent) objects[0];
+            if (!comparableEvent || !current.equalsEvent((ComparableEvent) event)) {
+                if (hasParams) {
                     buffer.append('&');
-                } else {
+                }
+                else {
                     buffer.append('?');
                 }
-                buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+                buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
                 hasParams = true;
             }
         }
-        
+
         // now add event
         hasParams = this.addEvent(buffer, event, hasParams);
 
@@ -143,15 +166,9 @@ public class DefaultLinkService
         } else {
             buffer.append('?');
         }
-        String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-        if (event instanceof RequestEvent ) {
-            final String eventParName = ((RequestEvent)event).getRequestParameterName();
-            if ( eventParName != null ) {
-                parameterName = eventParName;
-            }
-        }
-        final String value = this.converter.encode( event );
-        buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
+        StringBuffer value = new StringBuffer("");
+        String parameterName = processEvent(event, value);
+        buffer.append(parameterName).append('=').append(SourceUtil.encode(value.toString()));
         return true;
     }
     
@@ -159,53 +176,63 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
      */
     public String getLinkURI(List events) {
-        if ( events == null || events.size() == 0) {
-            return this.getRefreshLinkURI();   
+        return this.getLinkURI(events, null);
+    }
+
+    /* (non-Javadoc)
+    * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
+    */
+    public String getLinkURI(List events, Boolean secure) {
+        if (events == null || events.size() == 0) {
+            return this.getRefreshLinkURI();
         }
         final Info info = this.getInfo();
         boolean hasParams = info.hasParameters;
-        final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
-        
+        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
+
         // add comparable events
         Iterator iter = info.comparableEvents.iterator();
         while (iter.hasNext()) {
-            Object[] objects = (Object[])iter.next();
-            ComparableEvent current = (ComparableEvent)objects[0];
-            
+            Object[] objects = (Object[]) iter.next();
+            ComparableEvent current = (ComparableEvent) objects[0];
+
             Iterator eventIterator = events.iterator();
             boolean found = false;
             while (!found && eventIterator.hasNext()) {
                 final Object inEvent = eventIterator.next();
-                if ( inEvent instanceof ComparableEvent
-                     && current.equalsEvent((ComparableEvent)inEvent)) {
-                     found = true;
+                if (inEvent instanceof ComparableEvent
+                    && current.equalsEvent((ComparableEvent) inEvent)) {
+                    found = true;
                 }
             }
             if (!found) {
-                if ( hasParams ) {
+                if (hasParams) {
                     buffer.append('&');
-                } else {
+                }
+                else {
                     buffer.append('?');
                 }
-                buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+                buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
                 hasParams = true;
             }
         }
 
         // now add events
         iter = events.iterator();
-        while ( iter.hasNext()) {
+        while (iter.hasNext()) {
             final Object current = iter.next();
-            if ( current instanceof Event ) {
-                hasParams = this.addEvent(buffer, (Event)current, hasParams);
-            } else if ( current instanceof ParameterDescription ) {
-                if ( hasParams ) {
+            if (current instanceof Event) {
+                hasParams = this.addEvent(buffer, (Event) current, hasParams);
+            }
+            else if (current instanceof ParameterDescription) {
+                if (hasParams) {
                     buffer.append('&');
-                } else {
+                }
+                else {
                     buffer.append('?');
                     hasParams = true;
                 }
-                buffer.append(((ParameterDescription)current).parameters);
+                buffer.append(((ParameterDescription) current).parameters);
             }
         }
         return buffer.toString();
@@ -215,33 +242,27 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
      */
     public void addEventToLink(Event event) {
-        if ( event == null ) {
-            return;   
+        if (event == null) {
+            return;
         }
-        String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-        if (event instanceof RequestEvent ) {
-            final String eventParName = ((RequestEvent)event).getRequestParameterName();
-            if ( eventParName != null ) {
-                parameterName = eventParName;
-            }
-        }
-        final String value = this.converter.encode( event );
+        StringBuffer value = new StringBuffer("");
+        String parameterName = processEvent(event, value);
 
         final Info info = this.getInfo();
-        if ( event instanceof ComparableEvent) {
+        if (event instanceof ComparableEvent) {
             // search if we already have an event for this!
             final Iterator iter = info.comparableEvents.iterator();
             boolean found = false;
-            while ( !found && iter.hasNext() ) {
+            while (!found && iter.hasNext()) {
                 Object[] objects = (Object[])iter.next();
-                if ( ((ComparableEvent)objects[0]).equalsEvent((ComparableEvent)event) ) {
+                if (((ComparableEvent) objects[0]).equalsEvent((ComparableEvent) event)) {
                     found = true;
                     info.comparableEvents.remove(objects);
                 }
             }
-            info.comparableEvents.add( new Object[] {event, parameterName, value} );
+            info.comparableEvents.add(new Object[]{event, parameterName, value.toString()});
         } else {
-            this.addParameterToLink(parameterName, value);
+            this.addParameterToLink(parameterName, value.toString());
         }
     }
 
@@ -322,7 +343,6 @@ public class DefaultLinkService
             this.converter = null;
             this.manager = null;
         }
-
     }
 
     /* (non-Javadoc)
@@ -332,4 +352,40 @@ public class DefaultLinkService
         this.context = context;
     }
 
+    private boolean getEventsMarshalled() {
+        if (this.eventsMarshalled == null) {
+            this.eventsMarshalled = new Boolean(this.converter.isMarshallEvents());
+        }
+        return this.eventsMarshalled.booleanValue();
+    }
+
+    private String processEvent(Event event, StringBuffer value) {
+        String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
+        if (event instanceof ConvertableEvent && getEventsMarshalled()) {
+            final String eventParName = ((ConvertableEvent) event).getRequestParameterName();
+            String eventStr = ((ConvertableEvent) event).asString();
+            if (eventStr == null) {
+                // Could not convert the event
+                value.append(this.converter.encode(event));
+            } else {
+                String eventValue;
+                parameterName = DEFAULT_CONVERTABLE_EVENT_PARAMETER_NAME;
+                try {
+                    eventValue = SourceUtil.encode(eventStr, "utf-8");
+                } catch (Exception e) {
+                    eventValue = SourceUtil.encode(eventStr);
+                }
+                value.append(eventParName).append('(').append(eventValue).append(')');
+            }
+        } else {
+            if (event instanceof RequestEvent) {
+                final String eventParName = ((RequestEvent) event).getRequestParameterName();
+                if (eventParName != null) {
+                    parameterName = eventParName;
+                }
+            }
+            value.append(this.converter.encode(event));
+        }
+        return parameterName;
+    }
 }

@@ -57,6 +57,17 @@ public class PageLabelLinkService extends DefaultLinkService {
      * @return A URI
      */
     public String getLinkURI(Event event) {
+        return getLinkURI(event, null);
+    }
+
+    /**
+     * Get the uri for the coplet containing event
+     *
+     * @param event The event to find
+     * @param secure true if a secure protocol is required, false otherwise.
+     * @return A URI
+     */
+    public String getLinkURI(Event event, Boolean secure) {
         if (event == null) {
             return this.getRefreshLinkURI();
         }
@@ -81,7 +92,7 @@ public class PageLabelLinkService extends DefaultLinkService {
                 if (this.labelManager.getPageLabelEvents(key.toString()) != null) {
                     final Info info = this.getInfo();
                     boolean hasParams = info.hasParameters;
-                    final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
+                    final StringBuffer buffer = new StringBuffer(info.getBase(secure));
                     if (hasParams) {
                         buffer.append('&');
                     }
@@ -102,7 +113,7 @@ public class PageLabelLinkService extends DefaultLinkService {
 
         String label = this.labelManager.getCurrentLabel();
 
-        return getLink(super.getLinkURI(event), requestParameterName, label);
+        return getLink(super.getLinkURI(event, secure), requestParameterName, label);
     }
 
     /**
@@ -111,8 +122,17 @@ public class PageLabelLinkService extends DefaultLinkService {
      * @param events The events that will be processed by the generated uri.
      * @return A URI
      */
-    public String getLinkURI(List events)
-    {
+    public String getLinkURI(List events) {
+        return getLinkURI(events, null);
+    }
+
+    /**
+     * Get the uri for this coplet containing the additional events.
+     *
+     * @param events The events that will be processed by the generated uri.
+     * @return A URI
+     */
+    public String getLinkURI(List events, Boolean secure) {
         if (events == null || events.size() == 0) {
             return this.getRefreshLinkURI();
         }
@@ -122,7 +142,7 @@ public class PageLabelLinkService extends DefaultLinkService {
 
         String requestParameterName = this.labelManager.getRequestParameterName();
         final Info info = this.getInfo();
-        final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
+        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
         boolean hasParams = info.hasParameters;
         Iterator iter = events.iterator();
         StringBuffer value = new StringBuffer("");
@@ -152,7 +172,7 @@ public class PageLabelLinkService extends DefaultLinkService {
             else {
                 String label = this.labelManager.getCurrentLabel();
 
-                return getLink(super.getLinkURI(events), requestParameterName, label);
+                return getLink(super.getLinkURI(events, secure), requestParameterName, label);
             }
         }
 

@@ -23,7 +23,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventConverter.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface EventConverter extends Component {
 
@@ -54,4 +54,9 @@ public interface EventConverter extends Component {
      * This notifies the converter that an event processing phase ends
      */
     void finish();
+
+    /**
+     * Returns true if events are not to be returned as request parameters
+     */
+    boolean isMarshallEvents();
 }

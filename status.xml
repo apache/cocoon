@@ -202,6 +202,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RG" type="fix" fixes-bug="33091">
+      Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
+      now be configured to contain the data required to generated the required events.
+   </action>
    <action dev="AG" type="add">
      Add &lt;compiler-compliance-level&gt; parameter for java XSP compiler.
      This new parameter allow to specify the java code source version used to compile the XSP code.
