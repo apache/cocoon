@@ -292,7 +292,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (contextWidget != null) {
                     throwSAXException("Detected nested ft:form-template elements, this is not allowed.");
                 }
-                out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
                 // ====> Retrieve the form
                 // First look for the form using the location attribute, if any
@@ -327,6 +326,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     }
                 }
                 
+                out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
+
                 // we need to merge input.attrs with possible overruling attributes 
                 // from the pipeContext
                 input.addAttributes(pipeContext.getFormAttributes());
