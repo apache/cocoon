@@ -65,7 +65,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-15 13:56:03 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-15 16:34:43 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -273,40 +273,41 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             }
         }
 
-        try
-        {
-            /* Get the accept header; it's needed to get the browser type. */
-            String accept = request.getParameter("accept");
-            if (accept == null)
-                accept = request.getHeader("accept");
-
-            /* Get the user agent; it's needed to get the browser type. */
-            String agent = request.getParameter("user-Agent");
-            if (agent == null) 
-                agent = request.getHeader("user-Agent");
-            
-            /* add the accept param */
-            transformerHandler.getTransformer().setParameter("accept", accept);
-
-            /* add the user agent param */
-            transformerHandler.getTransformer().setParameter("user-agent", java.net.URLEncoder.encode(agent));
-
-            /* add the map param */
-            HashMap map = browser.getBrowser(agent, accept);
-            transformerHandler.getTransformer().setParameter("browser",map);
-
-            /* add the media param */
-            String browserMedia = browser.getMedia(map);
-            transformerHandler.getTransformer().setParameter("browser-media",map);
-
-            /* add the uaCapabilities param */
-            org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(map);
-            transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
-        } catch (Exception e) {
-            /** FIXME - i don't have a logger
-                (GP) now you have one :) */
-            getLogger().error("Error setting Browser info", e);
-        }
+// FIXME(DIMS): Commented out pending discussion.
+//        try
+//        {
+//            /* Get the accept header; it's needed to get the browser type. */
+//            String accept = request.getParameter("accept");
+//            if (accept == null)
+//                accept = request.getHeader("accept");
+//
+//            /* Get the user agent; it's needed to get the browser type. */
+//            String agent = request.getParameter("user-Agent");
+//            if (agent == null) 
+//                agent = request.getHeader("user-Agent");
+//            
+//            /* add the accept param */
+//            transformerHandler.getTransformer().setParameter("accept", accept);
+//
+//            /* add the user agent param */
+//            transformerHandler.getTransformer().setParameter("user-agent", java.net.URLEncoder.encode(agent));
+//
+//            /* add the map param */
+//            HashMap map = browser.getBrowser(agent, accept);
+//            transformerHandler.getTransformer().setParameter("browser",map);
+//
+//            /* add the media param */
+//            String browserMedia = browser.getMedia(map);
+//            transformerHandler.getTransformer().setParameter("browser-media",map);
+//
+//            /* add the uaCapabilities param */
+//            org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(map);
+//            transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
+//        } catch (Exception e) {
+//            /** FIXME - i don't have a logger
+//                (GP) now you have one :) */
+//            getLogger().error("Error setting Browser info", e);
+//        }
 
         super.setContentHandler(transformerHandler);
         if(transformerHandler instanceof Loggable) {
