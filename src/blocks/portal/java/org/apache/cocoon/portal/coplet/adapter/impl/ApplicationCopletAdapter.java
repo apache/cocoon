@@ -50,8 +50,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
         throws SAXException {
         try {
             super.streamContent(coplet, uri, contentHandler);
-        }
-        catch (SAXException se) {
+        } catch (SAXException se) {
             getLogger().error(
                 "ApplicationCopletAdapter: Exception while getting coplet resource",
                 se);
@@ -77,15 +76,13 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
             if ("createNewCopletInstance".equals(link)) {
                 try {
                     createNewInstance(coplet);
-                }
-                catch (ProcessingException ex) {
+                } catch (ProcessingException ex) {
                     getLogger().error("Could not create new coplet instance", ex);
                 }
-            }
-            else {
+            } else {
                 // this is a normal link event, so save the url in the instance data
                 // for ProxyTransformer
-                coplet.setAttribute(ProxyTransformer.LINK, event.getLink());
+                coplet.setTemporaryAttribute(ProxyTransformer.LINK, event.getLink());
             }
         }
     }
@@ -132,11 +129,9 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
             throw new ProcessingException(
                 "Unable to lookup profile manager.",
                 ce);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ProcessingException(e);
-        }
-        finally {
+        } finally {
             this.manager.release(profileManager);
         }
     }
