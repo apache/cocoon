@@ -51,10 +51,10 @@
     <depend project="avalon-framework-api"/>
     <depend project="avalon-framework-legacy"/>
     <depend project="avalon-framework-impl"/>
+    
     <depend project="excalibur-legacy" id="compatibility"/>
-    <depend project="excalibur-instrument-api"/>
-    <depend project="excalibur-instrument-mgr-api"/>
-    <depend project="excalibur-instrument-mgr-impl"/>
+    <depend project="excalibur-legacy" id="i18n"/>
+    <depend project="excalibur-instrument-legacy"/>
     <depend project="excalibur-sourceresolve"/>
     <depend project="excalibur-xmlutil"/>
     <depend project="excalibur-store"/>
@@ -63,7 +63,6 @@
     <depend project="excalibur-logger"/>
     <depend project="excalibur-event-api"/>
     <depend project="excalibur-event-impl"/>
-    <depend project="excalibur-legacy" id="i18n"/>
 
     <depend project="jakarta-regexp"/>
     <depend project="jakarta-servletapi-4"/>
