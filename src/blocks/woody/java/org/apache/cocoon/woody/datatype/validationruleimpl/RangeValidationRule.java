@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.Constants;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
 
@@ -109,7 +111,7 @@ public class RangeValidationRule extends AbstractValidationRule {
             BigDecimal max = (BigDecimal) result;
 
             if (decimal.compareTo(min) < 0 || decimal.compareTo(max) > 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.numeric.range", new String[]{min.toString(), max.toString()});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.range", new String[]{min.toString(), max.toString()}, Constants.I18N_CATALOGUE));
             return null;
         } else if (minExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
@@ -119,7 +121,7 @@ public class RangeValidationRule extends AbstractValidationRule {
                 return null;
             BigDecimal min = (BigDecimal) result;
             if (decimal.compareTo(min) < 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.numeric.min", new String[]{min.toString()});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.min", new String[]{min.toString()}, Constants.I18N_CATALOGUE));
             return null;
         } else if (maxExpr != null) {
             Object result = evaluateNumeric(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
@@ -129,7 +131,7 @@ public class RangeValidationRule extends AbstractValidationRule {
                 return null;
             BigDecimal max = (BigDecimal) result;
             if (decimal.compareTo(max) > 0)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.numeric.max", new String[]{max.toString()});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.numeric.max", new String[]{max.toString()}, Constants.I18N_CATALOGUE));
             return null;
         }
         return null;

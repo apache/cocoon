@@ -52,6 +52,7 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.util.I18nMessage;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.cocoon.woody.formmodel.AggregateFieldDefinition.SplitMapping;
@@ -59,6 +60,7 @@ import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.regex.MatchResult;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.outerj.expression.ExpressionException;
@@ -188,16 +190,16 @@ public class AggregateField extends AbstractWidget {
         validationError = null;
 
         if (enteredValue == null && isRequired()) {
-            validationError = new ValidationError("general.field-required");
+            validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
             return false;
         } else if (enteredValue == null)
             return true;
         else if (!fieldsHaveValues()) {
-            Object splitFailMessage = definition.getSplitFailMessage();
+            XMLizable splitFailMessage = definition.getSplitFailMessage();
             if (splitFailMessage != null)
                 validationError = new ValidationError(splitFailMessage);
             else
-                validationError = new ValidationError("aggregatedfield.split-failed", new String[] { definition.getSplitRegexp()});
+                validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed", new String[] { definition.getSplitRegexp()}, Constants.I18N_CATALOGUE));
             return false;
         } else {
             // validate my child fields

@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.Constants;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
 
@@ -98,7 +100,7 @@ public class ValueCountValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (array.length != length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.array.exact-valuecount", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.array.exact-valuecount", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (minExpr != null && maxExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "value-count");
@@ -116,7 +118,7 @@ public class ValueCountValidationRule extends AbstractValidationRule {
             int maxLength = ((BigDecimal)result).intValue();
 
             if (array.length < minLength || array.length > maxLength)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.array.range-valuecount", new String[] {String.valueOf(minLength), String.valueOf(maxLength)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.array.range-valuecount", new String[] {String.valueOf(minLength), String.valueOf(maxLength)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (minExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "value-count");
@@ -126,7 +128,7 @@ public class ValueCountValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (array.length < length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.array.min-valuecount", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.array.min-valuecount", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (maxExpr != null) {
             Object result = evaluateNumeric(maxExpr, expressionContext, "max", "value-count");
@@ -136,7 +138,7 @@ public class ValueCountValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (array.length > length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.array.max-valuecount", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.array.max-valuecount", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         }
         return null;

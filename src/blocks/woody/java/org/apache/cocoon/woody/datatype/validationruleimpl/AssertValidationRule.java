@@ -74,16 +74,16 @@ public class AssertValidationRule extends AbstractValidationRule {
         } catch (CannotYetResolveWarning w) {
             return null;
         } catch (ExpressionException e) {
-            return new ValidationError("Error evaluating expression on assert validation rule.");
+            return new ValidationError("Error evaluating expression on assert validation rule.", false);
         }
 
         if (!(expressionResult instanceof Boolean))
-            return new ValidationError("Got non-boolean result from expression on assert validation rule.");
+            return new ValidationError("Got non-boolean result from expression on assert validation rule.", false);
 
         if (((Boolean)expressionResult).booleanValue())
             return null;
         else
-            return hasFailMessage() ? getFailMessage() : new ValidationError("Assertion validation rule failed.");
+            return hasFailMessage() ? getFailMessage() : new ValidationError("Assertion validation rule failed.", false);
     }
 
     public boolean supportsType(Class clazz, boolean arrayType) {

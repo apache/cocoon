@@ -51,7 +51,8 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.validationruleimpl.AbstractValidationRule;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.Constants;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
@@ -76,7 +77,7 @@ public class RegExpValidationRule extends AbstractValidationRule {
     	if(matchesRegExp(string))
 	     	return null;   
 	    else
-	    	return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.regexp", new String[] {regexp});
+	    	return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.regexp", new String[] {regexp}, Constants.I18N_CATALOGUE));
     }
     
     private boolean matchesRegExp(String string) {
