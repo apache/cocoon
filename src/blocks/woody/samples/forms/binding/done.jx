@@ -30,8 +30,6 @@
     
     <blockquote>
       <dumpBean bean="#{./bean}" />
-	  <!-- BEAN = #{./bean} -->
-	  <!-- BEAN-simple = #{./bean/simple} -->
     </blockquote>
     
     <i>Same sample using different backend-models: 
