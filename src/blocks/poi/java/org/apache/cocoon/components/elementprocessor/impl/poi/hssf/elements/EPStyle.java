@@ -76,9 +76,10 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPStyle.java,v 1.4 2003/07/01 23:43:21 joerg Exp $
+ * @version CVS $Id: EPStyle.java,v 1.5 2003/11/07 09:29:52 antonio Exp $
  */
 public class EPStyle extends BaseElementProcessor {
+    private static final String _general_format = "General";
     private HorizontalAlignment     _h_align;
     private VerticalAlignment       _v_align;
     private BooleanResult           _wrap_text;
@@ -153,11 +154,14 @@ public class EPStyle extends BaseElementProcessor {
             style.setVerticalAlignment(cnvvalign);
             style.setFillPattern((short)getShade());
 
-
+			Workbook workbook = getWorkbook();
+			HSSFDataFormat dataformat = workbook.createDataFormat();
             if (getShade() == 1) {
                 // TODO: change to constant when upgrade to new HSSF
                 // solid w/foreground, bg doesn't matter
-                getLogger().debug("shade = 1");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("shade = 1");
+                }
                 HSSFColor color = (HSSFColor)colorhash.get(getBackgroundColor().toString());
                 if (color == null) {
                     getLogger().debug("s1 BG couldn't find color for " + getBackgroundColor().toString());
@@ -166,20 +170,26 @@ public class EPStyle extends BaseElementProcessor {
                 style.setFillForegroundColor(color.getIndex());
                 color = (HSSFColor)colorhash.get(getPatternColor().toString());
                 if (color == null) {
-                    getLogger().debug("s1 PC couldn't find color for " + getPatternColor().toString());
+					if (getLogger().isDebugEnabled()) {
+					    getLogger().debug("s1 PC couldn't find color for " + getPatternColor().toString());
+					}
                     color = new HSSFColor.BLACK();
                 }
                 style.setFillBackgroundColor(color.getIndex());
             } else {
                 HSSFColor color = (HSSFColor)colorhash.get(getBackgroundColor().toString());
                 if (color == null) {
-                    getLogger().debug("BG couldn't find color for " + getBackgroundColor().toString());
+					if (getLogger().isDebugEnabled()) {
+					    getLogger().debug("BG couldn't find color for " + getBackgroundColor().toString());
+					}
                     color = new HSSFColor.BLACK();
                 }
                 style.setFillBackgroundColor(color.getIndex());
                 color = (HSSFColor)colorhash.get(getPatternColor().toString());
                 if (color == null) {
-                    getLogger().debug("PC couldn't find color for " + getPatternColor().toString());
+					if (getLogger().isDebugEnabled()) {
+					    getLogger().debug("PC couldn't find color for " + getPatternColor().toString());
+					}
                     color = new HSSFColor.WHITE();
                 }
                 style.setFillForegroundColor(color.getIndex());
@@ -191,15 +201,21 @@ public class EPStyle extends BaseElementProcessor {
             try {
                 format = getFormat();
             } catch (NullPointerException e) {
-                format = "General";
+                format = _general_format;
             }
 
-            if (!format.equals("General")) {
+            if (!format.equals(_general_format)) {
+				short valuenumber;
                 format = kludgeForGnumericMisformats(format);
                 format = kludgeForGnumericDateDivergence(format);
-                short nformat = HSSFDataFormat.getBuiltinFormat(format);
-                getLogger().debug("setting format to " + nformat);
-                style.setDataFormat(nformat);
+				if (getLogger().isDebugEnabled()) {
+				    getLogger().debug("setting format to " + format);
+				}
+				Object o = workbook.getValidate(format, dataformat.getFormat(format));
+				Short sh = null;
+				sh = (Short) o;
+				valuenumber = sh.shortValue();
+				style.setDataFormat(valuenumber);
             }
         } else {
             invalid = true;
@@ -529,7 +545,6 @@ public class EPStyle extends BaseElementProcessor {
             default:
                 retval = HSSFCellStyle.ALIGN_GENERAL;
         }
-
         return retval;
     }
 
@@ -566,19 +581,25 @@ public class EPStyle extends BaseElementProcessor {
      */
     private String kludgeForGnumericMisformats(String format) {
         String retval = format;
-        getLogger().debug("going out of the format kludger " + retval);
-        getLogger().debug("first )=" + format.indexOf(')'));
-        getLogger().debug("first (=" + format.indexOf('('));
+		if (getLogger().isDebugEnabled()) {
+		    getLogger().debug("going out of the format kludger " + retval);
+		    getLogger().debug("first )=" + format.indexOf(')'));
+		    getLogger().debug("first (=" + format.indexOf('('));
+		}
         if ((format.indexOf(')') < format.indexOf('(')) && (format.indexOf(')') != -1)) {
             retval = "(" + format;
         }
-        getLogger().debug("going out of the format kludger " + retval);
+		if (getLogger().isDebugEnabled()) {
+		    getLogger().debug("going out of the format kludger " + retval);
+		}
         return retval;
     }
 
     private String kludgeForGnumericDateDivergence(String format) {
         String retval = format;
-        getLogger().debug("going into the format kludgeForGnumericDateDivergence" + retval);
+		if (getLogger().isDebugEnabled()) {
+		    getLogger().debug("going into the format kludgeForGnumericDateDivergence" + retval);
+		}
 
         if (retval.equals("mm/dd/yy")) {
             retval = "m/d/yy";
@@ -587,8 +608,9 @@ public class EPStyle extends BaseElementProcessor {
         } else if (retval.equals("dd-mmm")) {
             retval = "d-mmm";
         }
-
-        getLogger().debug("going out of the format kludgeForGnumericDateDivergence" + retval);
+		if (getLogger().isDebugEnabled()) {
+		    getLogger().debug("going out of the format kludgeForGnumericDateDivergence" + retval);
+		}
         return retval;
     }
 

@@ -53,8 +53,11 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -65,7 +68,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Workbook.java,v 1.4 2003/09/22 22:44:15 joerg Exp $
+ * @version CVS $Id: Workbook.java,v 1.5 2003/11/07 09:29:52 antonio Exp $
  */
 
 // package scope
@@ -73,6 +76,8 @@ class Workbook
 {
     private HSSFWorkbook _workbook;
     private int          _sheet_index;
+	private final static int REPEAT_CAPACITY = 91;
+	private Map       _repeat;
 
     /**
      * Constructor Workbook
@@ -82,8 +87,35 @@ class Workbook
     {
         _workbook    = new HSSFWorkbook();
         _sheet_index = 0;
+		_repeat        = new HashMap(REPEAT_CAPACITY);
+    }
+ 	/**
+     * Method createDataFormat
+     *
+     * @return newly created DataFormat
+     */
+
+    HSSFDataFormat createDataFormat()
+    {
+        return _workbook.createDataFormat();
     }
 
+    /**
+     * check if the format exists
+     *
+     * @param format and the value
+     *
+     * @return the format index
+     */
+
+    Object getValidate(String format, short value)
+    {
+    if (_repeat.containsKey(format) == false) {
+        _repeat.put(format, new Short(value));
+     }
+       return _repeat.get(format);
+     }
+    
     /**
      * Method getNextName
      *
@@ -150,12 +182,10 @@ class Workbook
      * create a font in the underlying HSSF model and return the reference
      */
     HSSFFont createFont() {
-        
         HSSFFont font = _workbook.createFont();
        
         return font;
     }
-    
 
     HSSFWorkbook getWorkbook() {
         return _workbook;
