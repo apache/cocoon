@@ -45,18 +45,6 @@
      <parameter name="use-store" value="true"/> 
   </xslt-processor>
 
-  <!-- URL Factory: THIS COMPONENT IS DEPRECATED AND SHOULD NOT BE USED ANYMORE -->
-  <url-factory logger="core.url-factory">
-    <protocol name="resource" class="org.apache.cocoon.components.url.ResourceURLFactory"/>
-    <protocol name="context"  class="org.apache.cocoon.components.url.ContextURLFactory"/>
-  </url-factory>
-
-  <!-- Source Handler: THIS COMPONENT IS DEPRECATED AND SHOULD NOT BE USED ANYMORE -->
-  <source-handler logger="core.source-handler">
-    <protocol class="org.apache.cocoon.components.source.FileSourceFactory" name="file"/>
-    <protocol class="org.apache.cocoon.components.source.ContextSourceFactory" name="context"/>
-  </source-handler>
-
   <!-- Source Factories -->
   <source-factories>
     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>

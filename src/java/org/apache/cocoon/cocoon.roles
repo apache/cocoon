@@ -68,7 +68,7 @@
   <!-- Stores: -->
   <role name="org.apache.excalibur.store.Store"
        shorthand="persistent-store"
-       default-class="org.apache.cocoon.components.store.impl.FilesystemStore"/>
+       default-class="org.apache.cocoon.components.store.impl.DefaultStore"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
