@@ -62,18 +62,18 @@ import java.util.Set;
  * This class extends the XLink semantic capabilities to understand those
  * elements that are have default linking semantics associated.
  *
- * This class reacts on 'href' and 'src' attributes and is able to understand
+ * <p>This class reacts on 'href' and 'src' attributes and is able to understand
  * the semantics of XHTML/WML/SMIL/SVG and all the rest of the languages that
- * use either XLink of the above attributes.
+ * use either XLink of the above attributes.</p>
  *
- * NOTE: this class is clearly a hack and is not future compatible, but
+ * <p>NOTE: this class is clearly a hack and is not future compatible, but
  * since many XML formats to date are not compatible with the XLink semantics
  * this is what we have to do to live in the bleeding edge. Once there will
- * be a way to remove this, that will be a happy day for XML and for Cocoon too.
+ * be a way to remove this, that will be a happy day for XML and for Cocoon too.</p>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:torstenknodt@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.2 2003/05/16 14:39:02 stephan Exp $
+ * @version CVS $Id: ExtendedXLinkPipe.java,v 1.3 2003/05/17 15:32:48 vgritsenko Exp $
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
