@@ -331,7 +331,6 @@ implements Source, XMLizable {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
             this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment);
-            this.environment.changeToLastContext();
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {

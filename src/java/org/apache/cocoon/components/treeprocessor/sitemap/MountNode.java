@@ -30,8 +30,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -101,7 +99,8 @@ public class MountNode extends AbstractProcessingNode
         String oldContext   = env.getContext();
         Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
         env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
-        boolean overwriteLastContext = false;
+
+        boolean pipelineWasBuilt = false;
         
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
@@ -111,29 +110,23 @@ public class MountNode extends AbstractProcessingNode
                 ProcessingPipeline pp = processor.buildPipeline(env);
                 if (pp != null) {
                     context.setProcessingPipeline( pp );
-                    return true;
+                    pipelineWasBuilt = true;
                 } else {
-                    overwriteLastContext = true;
-                    return false;
+                    pipelineWasBuilt = false;
                 }
             } else {
                 // Processor will create its own pipelines
-                return processor.process(env);
+                pipelineWasBuilt = processor.process(env);
             }
         } finally {
-            // Restore context
-            env.setContext(oldPrefix, oldURI, oldContext);
-            if ( overwriteLastContext ) {
-                EnvironmentWrapper wrapper = null;
-                if ( env instanceof EnvironmentWrapper ) {
-                    wrapper = (EnvironmentWrapper)env;
-                } else if ( env instanceof MutableEnvironmentFacade ) {
-                    wrapper = ((MutableEnvironmentFacade)env).getDelegate();
-                }
-                if ( wrapper != null ) {
-                    wrapper.changeLastContextToCurrent();
-                }                
+            // We restore the context only if no pipeline was built. This allows the pipeline
+            // environment to be left unchanged when we go back to ancestor processors.
+            // If no pipeline was built, we restore the context, so that the current processor
+            // continues executing the sitemap in the correct environment.
+            if (!pipelineWasBuilt) {
+                env.setContext(oldPrefix, oldURI, oldContext);
             }
+            
             if (oldPassThrough != null) {
                 env.setAttribute(COCOON_PASS_THROUGH, oldPassThrough);
             } else {
@@ -145,6 +138,8 @@ public class MountNode extends AbstractProcessingNode
             // Recompose pipelines which may have been recomposed by subsitemap
             // context.recompose(this.manager);
         }
+        
+        return pipelineWasBuilt;
     }
 
     private synchronized TreeProcessor getProcessor(String source, String prefix) throws Exception {
