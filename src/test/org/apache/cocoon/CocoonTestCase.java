@@ -43,12 +43,12 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             // Create configuration for source-factories
             final DefaultConfiguration df = new DefaultConfiguration("source-factories");
             DefaultConfiguration factory = new DefaultConfiguration("component-instance");
-            factory.addAttribute("class", ResourceSourceFactory.class.getName());
-            factory.addAttribute("name", "resource");
+            factory.setAttribute("class", ResourceSourceFactory.class.getName());
+            factory.setAttribute("name", "resource");
             df.addChild(factory);
             factory = new DefaultConfiguration("component-instance");
-            factory.addAttribute("class", URLSourceFactory.class.getName());
-            factory.addAttribute("name", "*");
+            factory.setAttribute("class", URLSourceFactory.class.getName());
+            factory.setAttribute("name", "*");
             df.addChild(factory);
             manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
                                  CocoonServiceSelector.class, 
