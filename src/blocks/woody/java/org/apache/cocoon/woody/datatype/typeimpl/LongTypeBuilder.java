@@ -50,7 +50,8 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import org.apache.cocoon.woody.datatype.*;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.w3c.dom.Element;
 
 /**
