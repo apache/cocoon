@@ -14,8 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
-This is a sample for the basket portlet.<br/>
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml" content="true">Add the content</basket:add-item>&#160;
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml">Add the link</basket:add-item>
-</p>
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:template match="action">
+  <option value="{@name}">
+    <xsl:value-of select="@name"/>
+  </option>
+</xsl:template>
+
+<xsl:template match="@*|node()" ><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
+</xsl:stylesheet>

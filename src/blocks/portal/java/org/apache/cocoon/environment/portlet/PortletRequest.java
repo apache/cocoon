@@ -84,6 +84,9 @@ public abstract class PortletRequest implements Request {
         this.environment = environment;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
     public Object get(String name) {
         // if the request has been wrapped then access its method
         if (request instanceof MultipartActionRequest) {
@@ -252,6 +255,9 @@ public abstract class PortletRequest implements Request {
         return this.portletRequestURI;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getSitemapURI()
+     */
     public String getSitemapURI() {
         return this.environment.getURI();
     }
