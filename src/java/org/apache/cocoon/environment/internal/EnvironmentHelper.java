@@ -40,7 +40,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.2 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.3 2004/05/29 17:39:38 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -201,6 +201,8 @@ implements SourceResolver, Serviceable, Disposable {
                 this.lastPrefix = this.lastPrefix + '/';
             }
             this.prefix = buffer.toString();
+        } else {
+            this.lastPrefix = null;
         }
 
         if (SourceUtil.getScheme(this.context).equals("zip")) {
