@@ -24,6 +24,7 @@
     <menu-item label="ChainMetaModule" href="chain.xsp"/>
     <menu-item label="RandomNumberModule" href="randomnumber.xsp"/>
     <menu-item label="RealPathModule" href="realpath.xsp"/>
+    <menu-item label="PropertiesFileModule" href="properties.xsp"/>
   </menu>
 
   <menu label="Documentation">
