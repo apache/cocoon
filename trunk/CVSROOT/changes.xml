@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.29 2000-02-14 01:03:23 stefano Exp $
+  $Id: changes.xml,v 1.30 2000-02-14 12:21:11 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -14,7 +14,7 @@
     <person name="Ricardo Rocha" email="rrocha@apache.org" id="RR"/>
   </devs>
 
- <release version="1.7-dev" date="Not yet released">
+ <release version="@version@" date="@date@">
   <action dev="SM" type="fix">
     Patched memory usage and tested under heavy load.
   </action>

@@ -58,9 +58,9 @@
   </p>
 
   <note>
-   Then Ant and Stylebook packages are only used in the build system and
+   The Ant and Stylebook packages are only used in the build system and
    are <strong>not</strong> used by Cocoon at run-time. So you can safely
-   leave them out of your servlet engine classpath.
+   ignore them in the installation.
   </note>
  </s1>
 
@@ -73,102 +73,12 @@
    servlet systems.
   </p>
 
-  <s2 title="General considerations">
-   <p>
-    There are some general considerations that apply to all systems.
-   </p>
-
-   <p>
-    Since there is no portable way, in a Java platform, to tell how much memory an object
-    is using, the memory cache works in a rather cumbersome manner:  you set up
-    a lower limit that the cache must always leave free for the JVM operation.
-    This means, that if the memory limit is 200Kb, Cocoon uses all your JVM
-    heap size to store pages in memory and makes sure that 200Kb are available
-    for other operations.
-   </p>
-
-   <p>
-    This does not impact the JVM operation, if enough memory is left for the
-    normal operation. You must be aware of the fact that leaving Cocoon with
-    too little memory for operation does impact peformance since the JVM
-    garbage collector has to do more work to keep up with execution and
-    memory cleanup. Sometimes, you may even end up having OutOfMemoryExceptions
-    if your limit is lower than the memory required for the operation.
-   </p>
-
-   <p>
-    A good way to control your memory is to setup your JVM with a fixed
-    heap limit and to give it enough memory to start. This is done by using
-    command line parameters for your java interpreter such as:
-   </p>
-
-   <ul>
-    <li>Startup heap size:
-     <sl>
-      <li>java 1.1 - <code>-ms[size]</code></li>
-      <li>java 1.2 - <code>-Xms[size]</code></li>
-     </sl>
-    </li>
-    <li>Maximum heap size:
-     <sl>
-      <li>java 1.1 - <code>-mx[size]</code></li>
-      <li>java 1.2 - <code>-Xmx[size]</code></li>
-     </sl>
-    </li>
-   </ul>
-
-   <p>
-    A well balanced system should have something like 8Mb start heap, 2Mb
-    Cocoon memory limit and 64Mb or greater max heap, but these depend heavily
-    on your system load/configuration to be generally meaningful.
-   </p>
-
-   <p>
-    To change the cocoon object store memory limit open you should change the
-    following property in the <code>cocoon.properties</code> file.
-   </p>
-
-<source>store.memory = 200000</source>
-
-   <p>
-    Another important part of Cocoon is the page compiler used inside the
-    XSP processor which store the generated/compiled pages on file system.
-    The default directory is <code>./repository</code> which is usually relative
-    to the web server or servlet engine working directory.
-   </p>
-
-   <p>
-    If you experience
-    troubles (such as not having reading/writing permissions) or you want to
-    locate this directory somewhere else, you have to change the
-   </p>
-
-<source>processor.xsp.repository = ./repository</source>
-
-   <p>
-    property in the cocoon configuration file.
-   </p>
-
-   <p><strong>Warning:</strong>
-    Since this directory may contain security sensible information, make sure
-    you deny access (even read-only) to untrusted users.
-   </p>
-  </s2>
-
   <s2 title="Installing Cocoon on Apache JServ">
-   <p>
-    Apache JServ has one configuration file for the whole engine (normally called
-    <code>jserv.properties</code>) and one for each servlet zone. Please, refer
-    to the Apache JServ documentation for more information on this.
-   </p>
-
    <p>
     First thing to do is to make sure that Cocoon and all the needed components
     (as explained in the previous section) are visible. This implies adding
-    this to the servlet engine classpath by adding a line like this in your
-    <code>jserv.properties</code> file for each jar package you have to install
-    (after substituting <em>[path-to-jar]</em> with the path to the jar file and
-    <em>[jar-name]</em> with the package file name).
+    this to the servlet engine classpath by adding a bunch of classpath lines
+    to your <code>jserv.properties</code> file for each jar package.
    </p>
 
 <source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
@@ -193,18 +103,14 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
 
    <p>
     At this point, you must set the Cocoon configurations. To do this, you
-    must choose the servlet zone(s) where you want Cocoon to reside (Note that
-    Cocoon can safely reside on different servlet zones with different
-    configuration files). If you don't know what a servlet zone is, you
-    probably want to open the <code>zone.properties</code> file that represents
-    the default servlet zone.
+    must choose the servlet zone(s) where you want Cocoon to reside.
+    If you don't know what a servlet zone is, open the
+    <code>zone.properties</code> file.
    </p>
 
    <p>
     To configure Cocoon, you must pass the <code>cocoon.properties</code>
-    file location to the servlet by adding the following to the
-    <code>zone.properties</code> file (or each servlet zone file you want
-    Cocoon to reside):
+    file location to the servlet by adding the following line to the servlet zone:
    </p>
 
 <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
@@ -221,50 +127,38 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
     Now your cocoon servlet is properly configured, but you should tell Apache
     to direct any call to an XML file (or any other file you want Cocoon to
     process) to the Cocoon servlet. To do this, you should add the following line
-    to your <code>mod_jserv.conf</code> or <code>jserv.conf</code> file:
+    to your <code>jserv.conf</code> file:
    </p>
 
 <source>Action cocoon /servlet/org.apache.cocoon.Cocoon
 AddHandler cocoon xml</source>
 
    <p>
-    where <em>xml</em> is the file extention you want to map to the servlet
+    where <em>xml</em> is the file extention you want Cocoon to handle
     and <em>/servlet/</em> is the mount point of your servlet zone (and the
     above is the standard name for servlet mapping for Apache JServ).
    </p>
 
    <p>
-    At this point, you should check if your system matches the global
-    considerations about Cocoon properties. Usually, you might want to give
-    the installation a try as it is and then read again that section if
-    something goes wrong. Most installations don't need any changes to
-    be operational.
+    Restart both Apache and Apache JServ and try accessing the Cocoon status page:
+   </p>
+
+<source>http://localhost/Cocoon.xml</source>
+
+   <p>
+    Cocoon will show you how it's configured.
    </p>
 
    <p>
-    Everything should be configured fine. Restart both Apache and Apache JServ
-    and try accessing the samples contained in the distribution to see
-    Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
-    status.
+    If the page above is working, place the samples contained in the distribution
+    (under <code>./samples</code>) in your web server URI space and call
+    <code>index.xml</code> to see Cocoon in action.
    </p>
 
-   <p>
-    <strong>Note</strong>: you may want Cocoon to handle two different
-    extentions with different configurations. To do this, you must set the two
-    different configurations in two different servlet zones, then associate the
-    extentions like this:
-   </p>
-
-<source>Action cocoon1 /zone1/org.apache.cocoon.Cocoon
-Action cocoon1 /zone2/org.apache.cocoon.Cocoon
-AddHandler cocoon1 xml1
-AddHandler cocoon2 xml2</source>
-
-   <p>
-    where <em>xml1</em> is handled by the Cocoon residing on <em>zone1</em>
-    and <em>xml2</em> is handled by the Cocoon residing on <em>zone2</em>
-    which have different configurations and thus different behavior.
-   </p>
+   <note>
+    For any problem, please go to the FAQ list before submitting a bug
+    report or a request for help on the mail lists. Thank you.
+   </note>
   </s2>
 
   <s2 title="Installing Cocoon on Apache Tomcat">
@@ -558,8 +452,9 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    like servlet engines and servlet execution.
   </note>
   <p>
-   Please, submit your feedback if you were able to install Cocoon on a
-   different combination not listed above. Thanks.
+   Please, submit your feedback on the cocoon user mail list (nowhere else!) if
+   you were able to install Cocoon on a different combination not listed above.
+   Thanks.
   </p>
  </s1>
 </body>

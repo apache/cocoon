@@ -5,21 +5,68 @@
 <faqs title="Frequently Asked Questions">
 
 <faq>
- <question>Previous Cocoon releases said that this product was to consider a 
- proof of concept rather than a working solution. I can't find that sentence
- anymore. What happened?</question>
+ <question>I keep on getting OutOfMemoryErrors but I've given the JVM
+ a lot of memory. Are you sure this is not a memory leak? How do I fix this, then?
+ </question>
  <answer>
-  <p>We believe that Cocoon has entered the final stage of its evolution but
-  as it stands today, it is ready to be used for a production environment.</p>
-  <p>Careful, we don't say it's perfect or bug-free, this is impossible to say,
-  but at least, we think this technology is good enough for you to try it out
-  against other solutions for web publishing.</p>
-  <p>Warning: this doesn't mean that Cocoon evolution came to an end, not at all,
-  but that we believe it's mature enough to be deployed in a working environment
-  with no particular problems.</p>
-  <p>Note, however, that this software comes "as is" so you should always be
-  aware of the risks as for any other open source software, but I think that
-  if you read this, you already know what we mean :)</p>
+  <p>This is not a memory leak but an expected behavior. Which means: you can
+  tune the Cocoon configurations to avoid this.</p>
+  <p>The key is the <code>store.memory</code> configuration. This tells cocoon
+  to leave that much memory to the system for normal operation. Everything
+  else is taken by the memory cache!</p>
+  <p>If the <code>store.memory</code> configuration is lower than the amount
+  of memory required to process the running requests (all of them together!)
+  it might happen (Cocoon tries to do some cache garbage collection if this
+  happens) that OutOfMemoryErrors are triggered.</p>
+  <p>If the problem persist even highering your store memory, then it's a bug
+  and it should not happen.</p>
+  <note>Since Cocoon 1.7, garbage collection was added to the cache system
+  and this should prevent these OutOfMemory on almost all the possible circumstances</note>
+ </answer>
+</faq>
+
+<faq>
+ <question>I can't get XSP to work. What might be wrong?</question>
+ <answer>
+  <p>
+   The XSP processor requires a single configuration that might cause problems:
+   the repository location for compiled server pages.
+  </p>
+
+<source>processor.xsp.repository = ./repository</source>
+
+  <p>
+   If the process that runs the servlet engine doesn't have both reading
+   and writing persmissions on that directory, the XSP processor won't work, so
+   make sure you locate that directory to a safe place.
+  </p>
+
+  <note><strong>Warning:</strong>
+    Since this directory may contain security sensible information, make sure
+    you deny access (even read-only) to untrusted users.
+  </note>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why the LDAP processor doesn't work?</question>
+ <answer>
+  <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">Sun JNDI API</link>
+   package installed in your classpath.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why DCP doesn't work with EcmaScript anymore?</question>
+ <answer>
+  <p>Since Cocoon now ships with all the required packages and Fesi is a
+  very big package, we decided to make Ecmascript support for DCP optional.</p>
+  <p>So, you should turn on the language interpretation in the cocoon
+  configurations and place the <link href="http://home.worldcom.ch/jmlugrin/fesi/download.html">
+  FESI</link> package in your classpath.</p>
+  <note>the DCP processor should be considered deprecated and we do not guarantee
+  that will be supported in future versions. We highly suggest you to
+  transfor all of your DCP pages into XSP pages.</note>
  </answer>
 </faq>
 
@@ -47,10 +94,10 @@
   since Cocoon is a servlet, there is no portable way for it to call
   your servlet and to process its output.</p>
   <p>The Cocoon Project is in close contact with the Servlet API Expert Group at
-  Sun (being Stefano Mazzocchi a member of that board) and will propose 
-  post-processing hooks for inclusion in the next Servlet API specifications. 
-  Since this is work in progress, please, don't fill up the mail list with 
-  questions about this: Cocoon will reflect the API changes as soon as they 
+  Sun (being Stefano Mazzocchi a member of that board) and will propose
+  post-processing hooks for inclusion in the next Servlet API specifications.
+  Since this is work in progress, please, don't fill up the mail list with
+  questions about this: Cocoon will reflect the API changes as soon as they
   are publicly available.</p>
  </answer>
 </faq>
@@ -93,7 +140,7 @@
 <faq>
  <question>Are there document translations to other languages?</question>
  <answer>
-  <p>Given the problems we already have with documentation (which is never big and good enough), 
+  <p>Given the problems we already have with documentation (which is never big and good enough),
   the Cocoon Project uses English as its standard and only documentation language. This is also
   the only language used in the mail lists. Also, the Cocoon distribution will contain
   English documentation only to reduce updating problems.</p>
@@ -120,11 +167,11 @@
   <p>You must apply this patch to Tomcat 3.0 and recompile it or it won't work.
   This patch is already present in latest CVS code but in case you don't want
   to download the latest code you can apply this:</p>
-  
+
   <source><![CDATA[ Index: RequestMapper.java
    ===================================================================
    RCS file: /home/cvs/jakarta-tomcat/src/share/org/apache/tomcat/core/RequestMapper.java,v
- 
+
    retrieving revision 1.5
    retrieving revision 1.6
    diff -u -r1.5 -r1.6
@@ -143,7 +190,7 @@
    -            }
    +            mapPath = this.resourceName;
             }
- 
+
             return mapPath;]]></source>
  </answer>
 </faq>
@@ -158,7 +205,7 @@
 </faq>
 
 <faq>
- <question>I see that Cocon 1.x has starting to incorporate features planned for 
+ <question>I see that Cocon 1.x has starting to incorporate features planned for
  Cocoon 2.x, why?</question>
  <answer>
   <p>We believe that smooth project evolution is much better than step-wise
@@ -188,7 +235,7 @@
   technology is rapidly changing and your books should warn you that the topic they are
   discussing is not even in W3C Recommendation state. Which means that more changes are on
   their way.</p>
-  <p>The current and proper way to associate a stylesheet with an XML document can be found at 
+  <p>The current and proper way to associate a stylesheet with an XML document can be found at
   <link href="http://www.w3.org/TR/xml-stylesheet">http://www.w3.org/TR/xml-stylesheet</link> and
   clearly indicates that <code>&lt;?xml-stylesheet ...?&gt;</code> is the proper way.</p>
  </answer>
@@ -223,9 +270,9 @@
 <question>What is WAP and how do I browse WML?</question>
 <answer>
   <p>WAP stands for Wireless Application Protocol and WML stands for Wireless
-    Markup Language. For more information about these two, please refer to the 
-    <link href="http://www.wapforum.org">WAP Forum</link>. For a client able 
-    to browse WML 1.1, Cocoon has been tested with the 
+    Markup Language. For more information about these two, please refer to the
+    <link href="http://www.wapforum.org">WAP Forum</link>. For a client able
+    to browse WML 1.1, Cocoon has been tested with the
     <link href="http://www.nokia.com">Nokia WAP Toolkit</link> which
     emulates a Nokia WAP cell phone on your desktop.</p>
 </answer>
@@ -234,9 +281,9 @@
 <faq>
 <question>What is VoxML and how do I browse VML?</question>
 <answer>
-  <p>VoxML is a voice markup language, designed to allow direct integration 
-    between voice recognition/synthesis software and web technologies. 
-    The Cocoon VML samples have been tested with the 
+  <p>VoxML is a voice markup language, designed to allow direct integration
+    between voice recognition/synthesis software and web technologies.
+    The Cocoon VML samples have been tested with the
     <link href="http://www.voxml.org">Motorola VoxML SDK 1.1</link>(for windows)
     which is freely available.</p>
 </answer>
@@ -245,7 +292,7 @@
 <faq>
 <question>Why is my Internet Explorer not showing PDF or VRML samples?</question>
 <answer>
-  <p>This is a long-time problem with internet explorer which, illegally, 
+  <p>This is a long-time problem with internet explorer which, illegally,
   reacts on URI extention rathen than returned MIME type. The only think you can
   do for now is to map .pdf or .wrl to Cocoon for handling, but we know that
   sucks. Don't worry, in the future, the sitemap proposal will allow you
