@@ -102,6 +102,17 @@
     </input>
   </xsl:template>
 
+  <xsl:template match="wi:continuation-id">
+    <xsl:choose>
+      <xsl:when test="@name">
+        <input name="{@name}" type="hidden" value="{.}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <input name="continuation-id" type="hidden" value="{.}"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="wi:multivaluefield">
     <xsl:if test="wi:validation-message">
       <xsl:call-template name="validation-message">
