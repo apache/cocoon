@@ -21,11 +21,11 @@
   <programming-languages>
     <java-language name="java" logger="core.language.java">
 
-      <!-- Specifies which formatter to use to format source code.
-           This parameter is optional.
-           It is commented out because of bug #5689: Java "code-formatter"
-           incorrectly formats double values -->
-      <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/-->
+      <!--+ Specifies which formatter to use to format source code.
+          | This parameter is optional.
+          | At the moment there is no implementation of a code formatter available.
+          +-->
+      <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.NullFormatter"/-->
 
       <!-- A singleton-like implementation of a ClassLoader -->
       <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>

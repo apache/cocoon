@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.208 2004/04/17 06:13:06 antonio Exp $
+    | CVS $Id: jars.xml,v 1.209 2004/04/21 22:03:53 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -558,17 +558,6 @@
     <used-by>EHCache Store</used-by>
     <lib>scratchpad/lib/ehcache-0.7.jar</lib>
     <homepage>http://ehcache.sourceforge.net/</homepage>
-  </file>
-
-  <file>
-    <title>Java Formatter</title>
-    <description>
-      This program formats Java code with consistent indentation and so
-      forth, to make it easier to read and maintain.
-    </description>
-    <used-by>Cocoon</used-by>
-    <lib>xsp/lib/jstyle.jar</lib>
-    <homepage>http://astyle.sourceforge.net/</homepage>
   </file>
 
   <file>
