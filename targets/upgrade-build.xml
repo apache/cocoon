@@ -126,18 +126,18 @@
       <include name="**/*.xmap"/> 
       <replacefilter 
         token="org.apache.cocoon.woody.generation.WoodyGenerator" 
-        value="org.apache.cocoon.forms.generation.FormsGenerator"/>      
+        value="org.apache.cocoon.forms.generation.FormGenerator"/>      
       <replacefilter 
         token="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" 
-        value="org.apache.cocoon.forms.transformation.FormsTemplateTransformer"/>     
+        value="org.apache.cocoon.forms.transformation.FormTemplateTransformer"/>     
       <!--+
-          | - hints for FormsTransformer and FormsGenerator
+          | - hints for FormTemplateTransformer and FormGenerator
           | - logger
           | - forms() function
           +-->
       <replacefilter 
         token="woody" 
-        value="forms"/>   
+        value="form"/>   
       <replacefilter 
         token="woody-samples-styling.xsl" 
         value="forms-samples-styling.xsl"/>                               
@@ -150,7 +150,7 @@
       <!-- Java packages -->    
       <replacefilter
         token="resource://org/apache/cocoon/woody/flow/javascript/woody2.js"
-        value="resource://org/apache/cocoon/forms/flow/javascript/forms.js"/>                              
+        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>                              
       <replacefilter 
         token="org/apache/cocoon/woody" 
         value="org/apache/cocoon/forms"/>  
