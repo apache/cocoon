@@ -13,6 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+/*
+  * CSS for Input Modules Demo
+  *
+  * SVN $Id: menu2content.xsl 36239 2004-08-11 18:28:06Z vgritsenko $
+  */
 body {  background-color: #FFFFFF; margin: 0px 0px 0px 0px; font-size: 10px; font-family: Verdana, Arial, Helvetica, sans-serif}
 form { margin: 0px; padding: 0px; border: 0px; }
 ul,ol { margin: 10px 5px 10px 40px; padding: 0px; }
