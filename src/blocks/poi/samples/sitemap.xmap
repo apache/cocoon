@@ -103,24 +103,6 @@
    </map:match>
 -->
 
-   <!-- ========================= Resources ================================ -->
-
-   <map:match pattern="sites/styles/**.css">
-    <map:read src="context://samples/resources/styles/{1}.css" mime-type="text/css"/>
-   </map:match>
-
-   <map:match pattern="images/**.gif">
-    <map:read src="context://samples/resources/images/{1}.gif" mime-type="image/gif"/>
-   </map:match>
-
-   <map:match pattern="images/**.jpg">
-    <map:read src="context://samples/resources/images/{1}.jpg" mime-type="image/jpg"/>
-   </map:match>
-
-   <map:match pattern="images/**.png">
-    <map:read src="context://samples/resources/images/{1}.png" mime-type="image/png"/>
-   </map:match>
-    
    <!-- delegate to parent sitemap 
    <map:handle-errors/> -->
 
