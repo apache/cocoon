@@ -13,5 +13,5 @@
   <todo id="todo" label="Todo" source="todo.xml"/>
 <separator/>
   <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
-  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
+  <!-- <external label="Bug Database" href="http://xml.apache.org/bugs/"/> -->
 </book>
