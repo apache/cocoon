@@ -127,7 +127,8 @@ public class MountNode extends AbstractProcessingNode
         }
     }
 
-    private synchronized TreeProcessor getProcessor(String source, String prefix) throws Exception {
+    private synchronized TreeProcessor getProcessor(String source, String prefix)
+    throws Exception {
 
         TreeProcessor processor = (TreeProcessor) processors.get(source);
         if (processor == null) {

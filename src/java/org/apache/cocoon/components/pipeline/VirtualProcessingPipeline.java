@@ -33,9 +33,11 @@ import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.cocoon.xml.SaxBuffer;
 
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
@@ -71,6 +73,10 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     protected String serializerSource;
     protected String serializerMimeType;
 
+    // Error handler stuff
+    private SitemapErrorHandler errorHandler;
+    private Processor.InternalPipelineDescription errorPipeline;
+
     /**
      * True when pipeline has been prepared.
      */
@@ -96,7 +102,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         this.resolver = (EnvironmentHelper) context.get(Constants.CONTEXT_ENV_HELPER);
     }
 
-    public void service (ServiceManager manager)
+    public void service(ServiceManager manager)
     throws ServiceException {
         this.manager = manager;
         this.newManager = manager;
@@ -105,7 +111,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     /**
      * Set the processor's service manager
      */
-    public void setProcessorManager (ServiceManager manager) {
+    public void setProcessorManager(ServiceManager manager) {
         this.newManager = manager;
     }
 
@@ -141,7 +147,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
      * @param param the parameters for the generator.
      * @throws org.apache.cocoon.ProcessingException if the generator couldn't be obtained.
      */
-    public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
+    public void setGenerator(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator != null) {
             throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
@@ -169,7 +175,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
      * @param param the parameters for the transfomer.
      * @throws org.apache.cocoon.ProcessingException if the generator couldn't be obtained.
      */
-    public void addTransformer (String role, String source, Parameters param, Parameters hintParam)
+    public void addTransformer(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator == null) {
             throw new ProcessingException ("Must set a generator before adding transformer '" + role +
@@ -189,7 +195,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
      * Set the serializer for this pipeline
      * @param mimeType Can be null
      */
-    public void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
+    public void setSerializer(String role, String source, Parameters param, Parameters hintParam, String mimeType)
     throws ProcessingException {
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
@@ -211,6 +217,15 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
         this.lastConsumer = this.serializer;
+    }
+
+    /**
+     * Sets error handler for this pipeline.
+     * Used for handling errors in the internal pipelines.
+     * @param errorHandler error handler
+     */
+    public void setErrorHandler(SitemapErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -326,7 +341,38 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     public void prepareInternal(Environment environment)
     throws ProcessingException {
         this.lastConsumer = null;
-        preparePipeline(environment);
+        try {
+            preparePipeline(environment);
+        } catch (ProcessingException e) {
+            prepareInternalErrorHandler(environment, e);
+        }
+    }
+
+    /**
+     * If prepareInternal fails, prepare internal error handler.
+     */
+    protected void prepareInternalErrorHandler(Environment environment, ProcessingException ex)
+    throws ProcessingException {
+        if (this.errorHandler != null) {
+            try {
+                this.errorPipeline = this.errorHandler.prepareErrorPipeline(ex);
+                if (this.errorPipeline != null) {
+                    this.errorPipeline.processingPipeline.prepareInternal(environment);
+                    return;
+                }
+            } catch (ProcessingException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ProcessingException("Failed to handle exception <" + ex + ">", e);
+            }
+        }
+    }
+
+    /**
+     * @return true if error happened during internal pipeline prepare call.
+     */
+    protected boolean isInternalError() {
+        return this.errorPipeline != null;
     }
 
     public void setReader(String role, String source, Parameters param, String mimeType) throws ProcessingException {
@@ -382,6 +428,13 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         this.serializer = null;
         this.processor = null;
         this.lastConsumer = null;
+
+        // Release error handler
+        this.errorHandler = null;
+        if (this.errorPipeline != null) {
+            this.errorPipeline.release();
+            this.errorPipeline = null;
+        }
     }
 
     /**
@@ -390,9 +443,46 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
      */
     public boolean process(Environment environment, XMLConsumer consumer)
     throws ProcessingException {
-        this.lastConsumer = consumer;
-        connectPipeline(environment);
-        return processXMLPipeline(environment);
+        // Exception happened during setup and was handled
+        if (this.errorPipeline != null) {
+            return this.errorPipeline.processingPipeline.process(environment, consumer);
+        }
+
+        // Have to buffer events if error handler is specified.
+        SaxBuffer buffer = null;
+        this.lastConsumer = this.errorHandler == null? consumer: (buffer = new SaxBuffer());
+        try {
+            connectPipeline(environment);
+            return processXMLPipeline(environment);
+        } catch (ProcessingException e) {
+            buffer = null;
+            return processErrorHandler(environment, e, consumer);
+        } finally {
+            if (buffer != null) {
+                try {
+                    buffer.toSAX(consumer);
+                } catch (SAXException e) {
+                    throw new ProcessingException("Failed to execute pipeline.", e);
+                }
+            }
+        }
+    }
+
+    protected boolean processErrorHandler(Environment environment, ProcessingException e, XMLConsumer consumer)
+    throws ProcessingException {
+        if (this.errorHandler != null) {
+            try {
+                this.errorPipeline = this.errorHandler.prepareErrorPipeline(e);
+                if (this.errorPipeline != null) {
+                    this.errorPipeline.processingPipeline.prepareInternal(environment);
+                    return this.errorPipeline.processingPipeline.process(environment, consumer);
+                }
+            } catch (Exception ignored) {
+                getLogger().debug("Exception in error handler", ignored);
+            }
+        }
+
+        throw e;
     }
 
     /**
