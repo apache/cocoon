@@ -25,7 +25,7 @@
 <!-- === Gump Targets ====================================================== -->
 
   <!-- compiles and packages the core classes and the deprecated classes -->
-  <target name="gump-core" depends="package-core, package-deprecated, javadocs, junit-tests"/>
+  <target name="gump-core" depends="package-core, package-deprecated, javadocs, validate-jars, junit-tests"/>
 
   <!-- compiles and packages the scratchpad classes -->
   <target name="gump-scratchpad" depends="package-scratchpad"/>
