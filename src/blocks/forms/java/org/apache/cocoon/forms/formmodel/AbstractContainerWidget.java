@@ -104,7 +104,6 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
         return super.validate() && valid;
     }
 
-
     /**
      * Subclass container widgets can call this super.generateItemSaxFragment(..)
      * to just insert the child-widget content wrapped in a @lt;fi:widgets@gt;
