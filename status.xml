@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.225 2004/01/19 07:50:04 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.226 2004/01/23 10:26:25 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,7 +196,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
- <action dev="AG" type="update">
+   <action dev="CZ" type="add">
+     First version of the JSR-168 support in the portal engine.
+   </action>
+   <action dev="AG" type="update">
      Updated commons-httpclient to the version 2.0-RC3
    </action>
    <action dev="UH" type="update">
