@@ -60,7 +60,7 @@ implements RoleMatcher {
     /** 
      * Overridden from superclass.
      * 
-     * @see com.vodafone.veap.util.RoleMatcher#matches(com.vodafone.veap.model.User)
+     * @see RoleMatcher#matches(PortalUser)
      */
     public boolean matches(PortalUser user) {
         // The user must have all roles
