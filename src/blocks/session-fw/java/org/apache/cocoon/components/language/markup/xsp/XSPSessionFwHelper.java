@@ -64,38 +64,38 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:agallardo@agsoftware.dnsalias.com">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.1 2003/09/03 13:13:27 cziegeler Exp $
+ * @version CVS $Id: XSPSessionFwHelper.java,v 1.2 2003/10/09 07:18:36 cziegeler Exp $
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
+
     /** GetXML Fragment from the given session context and path
-      *
-      *
-      * @param session The Session object
-      * @param context The Session context tha define where to search
-      * @param path The parameter path
-      * @param defaultValue Value to substitute in absence of the required Fragment
-     **/
-     public static DocumentFragment getXML(ComponentManager cm, String context, String path) throws ProcessingException {
+     *
+     *
+     * @param session The Session object
+     * @param context The Session context tha define where to search
+     * @param path The parameter path
+     * @param defaultValue Value to substitute in absence of the required Fragment
+    **/
+    public static Object getXML(ComponentManager cm, String context, String path) throws ProcessingException {
 
-         SessionManager sm = null;
-         DocumentFragment df = null;
-
-         try {
-             // Start looking up the manager
-             sm = (SessionManager)cm.lookup(SessionManager.ROLE);
-             // Make our work
-             df = sm.getContextFragment(context, path);
-             if (sm != null) {
-                 cm.release((Component)sm);
-             }
-         } catch (ComponentException ce) {
-             throw new ProcessingException("Error during lookup of SessionManager component.", ce);
-         } finally {
-             // End releasing the sessionmanager
-		     cm.release((Component)sm);
-	     }
-         return df;
+        SessionManager sessionManager = null;
+        try {
+            // Start looking up the manager
+            sessionManager = (SessionManager)cm.lookup(SessionManager.ROLE);
+            // Get the fragment
+            DocumentFragment df = sessionManager.getContextFragment(context, path);
+            if ( df != null ) {
+                return df;
+            } else {
+                return "";
+            }
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Error during lookup of SessionManager component.", ce);
+        } finally {
+            // End releasing the sessionmanager
+		    cm.release((Component)sessionManager);
+	    }
      }
 }
 
