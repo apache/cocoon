@@ -88,8 +88,16 @@ public class PageLabelLinkService extends DefaultLinkService {
                     else {
                         buffer.append('?');
                     }
-                    buffer.append(requestParameterName).append('=')
-                        .append(SourceUtil.encode(key.toString()));
+                    String encodedKey;
+                    try
+                    {
+                        encodedKey = SourceUtil.encode(key.toString(), "utf-8");
+                    }
+                    catch (Exception ex)
+                    {
+                        encodedKey = SourceUtil.encode(key.toString());
+                    }
+                    buffer.append(requestParameterName).append('=').append(encodedKey);
                     return buffer.toString();
                 }
             }
@@ -112,7 +120,7 @@ public class PageLabelLinkService extends DefaultLinkService {
             return this.getRefreshLinkURI();
         }
         if (this.labelManager == null) {
-            super.getLinkURI(events);
+            return super.getLinkURI(events);
         }
 
         String requestParameterName = this.labelManager.getRequestParameterName();
@@ -224,7 +232,16 @@ public class PageLabelLinkService extends DefaultLinkService {
         } else {
             uri.append('?');
         }
-        uri.append(parmName).append('=').append(SourceUtil.encode(label));
+        String encodedLabel;
+        try
+        {
+            encodedLabel = SourceUtil.encode(label.toString(), "utf-8");
+        }
+        catch (Exception e)
+        {
+            encodedLabel = SourceUtil.encode(label.toString());
+        }
+        uri.append(parmName).append('=').append(encodedLabel);
         return uri.toString();
     }
 }

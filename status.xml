@@ -457,6 +457,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="RG" type="fix" fixes-bug="32838" due-to="Roy Huang" due-to-email="lingererhuang@hotmail.com">
+     PageLabel url's were not properly encoded.
+   </action>
    <action dev="AG" type="update">
      Updated quartz to 1.4.3, nekodtd to 0.1.11, nekohtml to 0.9.4
      castor to 0.9.5.4, commons-digester to 1.6, groovy to 1.0-beta-8, asm to 1.5.2
