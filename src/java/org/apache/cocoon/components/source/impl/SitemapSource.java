@@ -77,6 +77,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
@@ -88,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.12 2003/10/08 20:18:34 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.13 2003/10/19 13:59:21 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -142,6 +143,9 @@ implements Source, XMLizable {
     /** The used protocol */
     private String protocol;
 
+    /** SourceResolver (for the redirect source) */
+    private SourceResolver sourceResolver;
+    
     /**
      * Construct a new object
      */
@@ -413,7 +417,10 @@ implements Source, XMLizable {
                 if (redirectURL.indexOf(":") == -1) {
                     redirectURL = this.protocol + ":/" + redirectURL;
                 }
-                this.redirectSource = this.environment.resolveURI(redirectURL);
+                if ( this.sourceResolver == null ) {
+                    this.sourceResolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                }
+                this.redirectSource = this.sourceResolver.resolveURI(redirectURL);
                 this.redirectValidity = this.redirectSource.getValidity();
             }
         } catch (SAXException e) {
@@ -485,7 +492,9 @@ implements Source, XMLizable {
         }
         this.processingPipeline = null;
         this.sourceValidity = null;
-        if (this.redirectSource != null) this.environment.release(this.redirectSource);
+        if (this.redirectSource != null) {
+            this.sourceResolver.release(this.redirectSource);
+        }
         this.environment.reset();
         this.redirectSource = null;
         this.redirectValidity = null;
@@ -499,6 +508,9 @@ implements Source, XMLizable {
      */
     public void recycle() {
         this.reset();
+        if ( this.sourceResolver != null ) {
+            this.manager.release( this.sourceResolver );
+        }
     }
 
     /**
