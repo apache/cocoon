@@ -7,6 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.generator;
 
+import java.io.File;
+
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
@@ -14,6 +16,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.CocoonComponentSelector;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -22,7 +25,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-21 15:52:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-21 16:11:51 $
  */
 public class GeneratorSelector extends CocoonComponentSelector {
     private ClassLoaderManager classManager;
@@ -31,7 +34,14 @@ public class GeneratorSelector extends CocoonComponentSelector {
         super.compose(manager);
 
         this.classManager = (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
+
+        try {
+            this.classManager.addDirectory((File) this.context.get(Constants.CONTEXT_WORK_DIR));
+        } catch (Exception e) {
+            throw new ComponentNotAccessibleException("Could not add repository to ClassLoaderManager", e);
+        }
     }
+
     public Component select(Object hint) throws ComponentManagerException {
         try {
             return super.select(hint);
@@ -44,14 +54,16 @@ public class GeneratorSelector extends CocoonComponentSelector {
 
     private void addGenerator(Object hint) throws ComponentManagerException {
         Class generator;
+        String className = hint.toString().replace(File.separatorChar, '.');
         try {
-            generator = classManager.loadClass((String) hint);
+            generator = this.classManager.loadClass(className);
         } catch (Exception e) {
-            throw new ComponentNotAccessibleException("Could not add component for class: " + hint.toString(), e);
+            throw new ComponentNotAccessibleException("Could not add component for class: " + className, e);
         }
 
         this.addGenerator(hint, generator);
     }
+
     public void addGenerator(Object hint, Class generator) {
         this.components.put(hint, generator);
     }
