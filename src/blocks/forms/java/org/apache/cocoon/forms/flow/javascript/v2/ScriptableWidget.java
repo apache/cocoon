@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.3 2004/03/20 19:19:49 coliver Exp $
+ * @version $Id: ScriptableWidget.java,v 1.4 2004/03/20 22:45:31 coliver Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -591,14 +591,12 @@ public class ScriptableWidget extends ScriptableObject {
                         deleteRow(repeater, i);
                     }
                 }
-            } else if (obj instanceof Number) {
+            } else {
                 int index = (int)Context.toNumber(obj);
-                if (index > 0 && index < repeater.getSize()) {
+                if (index >= 0 && index < repeater.getSize()) {
                     deleteRow(repeater, index);
                 }
-            } else {
-                //...
-            }
+            } 
         }
     }
 
