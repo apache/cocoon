@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<xsamples xpath="/samples" unless="group[@name='portal']">
+<xsamples xpath="/samples" unless="group[@name='Portal Engine']">
 
-  <group name="portal">
-    <sample name="Portal Engine" href="portal/portal">
+  <group name="Portal Engine">
+    <sample name="Demo Portal" href="portal/portal">
     This is a demo of the new powerfull portal engine based on Apache Cocoon.
    </sample>
   </group>
