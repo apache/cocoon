@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='mail']">
+
+  <group name="mail">
+     <sample name="Samples" href="mail/samples">
+       Continue to mail block samples.
+     </sample>
+
+  </group>
+  
+</xsamples>
