@@ -277,7 +277,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 // Field is required
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
             } else {
-                if (super.validate()) {
+                if (super.validate() && value != null) {
                     // New-style validators were successful. Check the old-style ones.
                     this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
                 }

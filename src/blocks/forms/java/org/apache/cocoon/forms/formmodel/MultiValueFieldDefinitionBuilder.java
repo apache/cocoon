@@ -26,13 +26,12 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {@link MultiValueFieldDefinition}s.
  * 
- * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.4 2004/04/22 14:44:31 mpo Exp $
+ * @version $Id$
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
+        setCommonProperties(widgetElement, definition);
         setDisplayData(widgetElement, definition);
         setValidators(widgetElement, definition);
 

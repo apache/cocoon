@@ -64,17 +64,37 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         this.widgetListenerBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetListenerBuilder.ROLE + "Selector");
     }
 
-    protected void setLocation(Element widgetElement, AbstractWidgetDefinition widgetDefinition) {
+    protected void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+        // location
         widgetDefinition.setLocation(DomHelper.getLocation(widgetElement));
-    }
-
-    protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
-        String id = DomHelper.getAttribute(widgetElement, "id");
-        if (id.length() < 1) {
-            throw new Exception("Missing id attribute on element '" + widgetElement.getTagName() + "' at " +
-                                DomHelper.getLocation(widgetElement));
+        
+        // id
+        if (widgetDefinition instanceof FormDefinition) {
+            // FormDefinition is the *only* kind of widget that has an optional id
+            widgetDefinition.setId(DomHelper.getAttribute(widgetElement, "id", ""));   
+        } else {
+            String id = DomHelper.getAttribute(widgetElement, "id");
+            if (id.length() < 1) {
+                throw new Exception("Missing id attribute on element '" + widgetElement.getTagName() + "' at " +
+                                    DomHelper.getLocation(widgetElement));
+            }
+            widgetDefinition.setId(id);
         }
-        widgetDefinition.setId(id);
+        
+        // attributes
+        Element attrContainer = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "attributes", false);
+        if (attrContainer != null) {
+            // There's a <fd:attributes> element. Get its <fd:attribute> children
+            Element[] attrs = DomHelper.getChildElements(attrContainer, Constants.DEFINITION_NS, "attribute");
+            if (attrs != null && attrs.length > 0) {
+                // We actually do have some
+                Map attrMap = new HashMap();
+                for (int i = 0; i < attrs.length; i++) {
+                    attrMap.put(DomHelper.getAttribute(attrs[i], "name"), DomHelper.getAttribute(attrs[i], "value"));
+                }
+                widgetDefinition.setAttributes(attrMap);
+            }
+        }
     }
 
     protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition) throws Exception {

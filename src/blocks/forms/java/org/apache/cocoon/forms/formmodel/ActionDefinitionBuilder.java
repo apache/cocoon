@@ -24,13 +24,12 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link ActionDefinition}s.
  * 
- * @version $Id: ActionDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         ActionDefinition actionDefinition = createDefinition();
-        setLocation(widgetElement, actionDefinition);
-        setId(widgetElement, actionDefinition);
+        setCommonProperties(widgetElement, actionDefinition);
         setDisplayData(widgetElement, actionDefinition);
 
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");

@@ -37,8 +37,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
     }
 
     protected void buildWidgetDefinition(FieldDefinition fieldDefinition, Element widgetElement) throws Exception {
-        setLocation(widgetElement, fieldDefinition);
-        setId(widgetElement, fieldDefinition);
+        setCommonProperties(widgetElement, fieldDefinition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
         if (datatypeElement == null) {

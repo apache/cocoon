@@ -20,13 +20,12 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link MessagesDefinition}s.
  * 
- * @version $Id: MessagesDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class MessagesDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MessagesDefinition messagesDefinition = new MessagesDefinition();
-        setLocation(widgetElement, messagesDefinition);
-        setId(widgetElement, messagesDefinition);
+        setCommonProperties(widgetElement, messagesDefinition);
         setDisplayData(widgetElement, messagesDefinition);
         return messagesDefinition;
     }

@@ -22,14 +22,13 @@ import org.w3c.dom.Element;
 /**
  * Builds {UnionDefinition}s.
  *
- * @version $Id: UnionDefinitionBuilder.java,v 1.3 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class UnionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         UnionDefinition definition = new UnionDefinition();
-        setLocation(element, definition);
-        setId(element, definition);
+        setCommonProperties(element, definition);
         definition.setCaseWidgetId(DomHelper.getAttribute(element, "case", ""));
         setDisplayData(element, definition);
         setValidators(element, definition);
