@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.17 2003/12/22 16:43:11 mpo Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.18 2003/12/22 21:01:30 vgritsenko Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -157,7 +157,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 gotStylingElement = true;
             }
             saxBuffer.startElement(namespaceURI, localName, qName, attributes);
-        } else if (namespaceURI.equals(Constants.WT_NS)) {
+        } else if (Constants.WT_NS.equals(namespaceURI)) {
             if (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET)) {
                 checkContextWidgetAvailable(qName);
                 inWidgetElement = true;
@@ -344,8 +344,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             throws SAXException {
 
         if (inWidgetElement) {
-            if (elementNestingCounter == widgetElementNesting &&
-                namespaceURI.equals(Constants.WT_NS)
+            if (elementNestingCounter == widgetElementNesting && Constants.WT_NS.equals(namespaceURI)
                 && (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET))) {
                     if (repeaterWidget) {
                         Repeater repeater = (Repeater)widget;
@@ -373,7 +372,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 } else {
                     saxBuffer.endElement(namespaceURI, localName, qName);
                 }
-        } else if (namespaceURI.equals(Constants.WT_NS)) {
+        } else if (Constants.WT_NS.equals(namespaceURI)) {
             if (localName.equals(WIDGET_LABEL) || localName.equals(REPEATER_WIDGET_LABEL)
                 || localName.equals(REPEATER_SIZE) || localName.equals(CONTINUATION_ID)) {
                 // Do nothing
