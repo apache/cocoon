@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!--+ $Id: login-html.xsl,v 1.2 2003/05/19 13:26:53 cziegeler Exp $ 
+<!--+ $Id: login-html.xsl,v 1.1 2003/05/27 09:40:34 cziegeler Exp $ 
     |
     | Description: Login page to HTML
     |
@@ -11,23 +11,20 @@
 <xsl:template match="content">
 <table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody>
   <tr>
-	<td bgColor="#cccccc" align="center">
+	<td bgColor="#ffffff" align="center">
 	  <br/>
-      <font face="Arial, Helvetica, sans-serif" size="2">
         <xsl:apply-templates/>
-      </font>
       <br/>
     </td>
   </tr>
   <tr>
-    <td bgColor="#cccccc" width="15">
+    <td bgColor="#ffffff" width="15">
 	  <img height="1" src="sunspotdemoimg-space.gif" width="15"/>
     </td>
   </tr>
   <tr>
-    <td bgColor="#cccccc" align="center">
+    <td bgColor="#ffffff" align="center">
 	  <br/>
-      <font face="Verdana, Arial, Helvetica, sans-serif" size="2">
          If you are not already registered, use this guest login:
 		 <br/><br/>
 		 User:	<b>guest</b>
@@ -38,7 +35,6 @@
 		 <b>cocoon</b>
 		 Password:
 		 <b>cocoon</b>
-	   </font>
 	   <br/><br/>
      </td>
    </tr>
@@ -58,7 +54,7 @@
 <xsl:template match="field">
 	<tr>
 		<td>
-			<font face="Arial, Helvetica, sans-serif" size="2"><xsl:value-of select="@description"/>:</font>
+			<xsl:value-of select="@description"/>:
 		</td>
 		<td>
 			<input>

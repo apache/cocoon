@@ -10,14 +10,15 @@
         <xsl:value-of select="@bgColor" />
     </xsl:when>
     <xsl:otherwise>
-      <xsl:text>#46627A</xsl:text>
+      <xsl:text>#294563</xsl:text>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
 
-<table border="0" cellSpacing="0" width="100%">
+<table cellSpacing="0" cellpadding="0" width="100%">
 	<tr vAlign="top">
-		<td bgColor="{$bgColor}">
+		<td width="5" style="background-color:#294563;" valign="top"><img src="sunspotdemoimg-window-top-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
+		<td bgColor="{$bgColor}" valign="middle">
 			<font>
 				<xsl:attribute name="color">#ffffff</xsl:attribute>
 				<xsl:attribute name="face">Arial</xsl:attribute>
@@ -59,14 +60,22 @@
 	  			</a>
 			</xsl:if>
 		</td>
+		<td width="5" style="background-color:#294563;" valign="top"><img src="sunspotdemoimg-window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
 	</tr>
 	<xsl:if test="status!=0">
 		<tr>
+			<td width="5" style="background-image:url(sunspotdemoimg-window-border-left.gif);"><img src="sunspotdemoimg-space.gif" border="0" width="5" height="5" alt="space"/></td>
 			<td colSpan="2">
                 <xsl:apply-templates select="content"/>
 			</td>
+			<td width="5" style="background-image:url(sunspotdemoimg-window-border-right.gif);"><img src="sunspotdemoimg-space.gif" border="0" width="5" height="5" alt="space"/></td>
 		</tr>
 	</xsl:if>
+	<tr>
+		<td width="5"><img src="sunspotdemoimg-window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
+		<td colspan="2" style="background-image:url(sunspotdemoimg-window-border-bottom.gif);"></td>
+		<td width="5"><img src="sunspotdemoimg-window-bottom-right.gif" border="0" width="5" height="5" alt="top-left"/></td>
+	</tr>
 </table>
 </xsl:template>
 
