@@ -20,7 +20,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.language.markup.xsp.XSPCookieHelper;
+import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -69,7 +69,7 @@ import java.util.Map;
  *  parameter "append-session" to "yes" or "true".
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.5 2004/03/30 01:12:47 antonio Exp $
+ * @version CVS $Id$
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -265,7 +265,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                  *  but not the value, we exit immediately do
                  *  that authorization fails authomatically
                  */
-                cookie_value = XSPCookieHelper.getCookie(objectModel, cookie_name, -1).getValue();
+                cookie_value = ObjectModelHelper.getCookie(objectModel, cookie_name, -1).getValue();
 
                 if (cookie_value == null || cookie_value.trim().equals("")) {
                     // value is null
@@ -342,6 +342,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         map.put(session_param, o);
                     }
                 } catch (Exception e) {
+                    // ignore
                 }
             }
             return map;

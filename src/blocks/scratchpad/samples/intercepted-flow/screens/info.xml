@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 -->
 
 <!--+
-    | CVS: $Id: info.xsp,v 1.3 2004/03/06 02:26:11 antonio Exp $
+    | CVS: $Id$
     | Author: Reinhard Poetz "reinhard (at) apache.org"
     | Date: March 23, 2002
     +-->
 
-<xsp:page language="java"
-          xmlns:xsp="http://apache.org/xsp"
-          xmlns:jpath="http://apache.org/xsp/jpath/1.0">
-  <page>
+<page>
     <resources>
       <resource type="file" href="basescript.js">Flowscript Base</resource>
       <resource type="file" href="aspects1.js">FS Aspects 1</resource>
@@ -37,5 +34,4 @@
         result flowscript.
       </p>
     </content>
-  </page>
-</xsp:page>
+</page>
