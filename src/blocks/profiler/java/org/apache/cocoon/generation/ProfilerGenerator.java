@@ -79,7 +79,7 @@ import java.util.Set;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerGenerator.java,v 1.3 2003/03/21 17:28:42 bruno Exp $
+ * @version CVS $Id: ProfilerGenerator.java,v 1.4 2003/05/16 08:49:19 bruno Exp $
  */
 public class ProfilerGenerator extends ComposerGenerator {
 
@@ -99,6 +99,8 @@ public class ProfilerGenerator extends ComposerGenerator {
     private static final String SESSIONATTRIBUTE_ELEMENT = "attribute";
     private static final String COMPONENT_ELEMENT = "component";
     private static final String FRAGMENT_ELEMENT = "fragment";
+    private static final String PREFIX = "profiler";
+    private static final String PREFIX_COLON = "profiler:";
 
     private Profiler profiler;
 
@@ -190,23 +192,23 @@ public class ProfilerGenerator extends ComposerGenerator {
                 generateSAXFragment(fragment, false);
             } else {
                 this.contentHandler.startDocument();
-                this.contentHandler.startPrefixMapping("", PROFILER_NS);
-                this.contentHandler.startElement(PROFILER_NS, "fragment-error", "fragment-error", new AttributesImpl());
+                this.contentHandler.startPrefixMapping(PREFIX, PROFILER_NS);
+                this.contentHandler.startElement(PROFILER_NS, "fragment-error", PREFIX_COLON + "fragment-error", new AttributesImpl());
                 char[] message = "Fragment is not available.".toCharArray();
                 this.contentHandler.characters(message, 0, message.length);
-                this.contentHandler.endElement(PROFILER_NS, "fragment-error", "fragment-error");
-                this.contentHandler.endPrefixMapping("");
+                this.contentHandler.endElement(PROFILER_NS, "fragment-error", PREFIX_COLON + "fragment-error");
+                this.contentHandler.endPrefixMapping(PREFIX);
                 this.contentHandler.endDocument();
             }
         } else {
             // Start the document and set the PROFILER_NS.
             this.contentHandler.startDocument();
-            this.contentHandler.startPrefixMapping("", PROFILER_NS);
+            this.contentHandler.startPrefixMapping(PREFIX, PROFILER_NS);
 
             generateProfilerInfo();
 
             // End the document.
-            this.contentHandler.endPrefixMapping("");
+            this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
         }
     }
@@ -224,7 +226,7 @@ public class ProfilerGenerator extends ComposerGenerator {
 
         atts.addAttribute("", "date", "date", "CDATA", dateTime);
         this.contentHandler.startElement(PROFILER_NS, PROFILERINFO_ELEMENT,
-                                         PROFILERINFO_ELEMENT, atts);
+                                         PREFIX_COLON + PROFILERINFO_ELEMENT, atts);
 
         Collection resultsKeys = profiler.getResultKeys();
 
@@ -238,7 +240,7 @@ public class ProfilerGenerator extends ComposerGenerator {
 
         // End root element.
         this.contentHandler.endElement(PROFILER_NS, PROFILERINFO_ELEMENT,
-                                       PROFILERINFO_ELEMENT);
+                                       PREFIX_COLON + PROFILERINFO_ELEMENT);
     }
 
     /**
@@ -274,7 +276,7 @@ public class ProfilerGenerator extends ComposerGenerator {
                           Long.toString(totalTimeSum));
         atts.addAttribute("", "key", "key", "CDATA", key.toString());
         this.contentHandler.startElement(PROFILER_NS, RESULTS_ELEMENT,
-                                         RESULTS_ELEMENT, atts);
+                                         PREFIX_COLON + RESULTS_ELEMENT, atts);
         atts.clear();
 
         // Generate average result
@@ -283,7 +285,7 @@ public class ProfilerGenerator extends ComposerGenerator {
                               Long.toString(totalTimeSum/count));
             this.contentHandler.startElement(PROFILER_NS,
                                              AVERAGERESULT_ELEMENT,
-                                             AVERAGERESULT_ELEMENT, atts);
+                                             PREFIX_COLON + AVERAGERESULT_ELEMENT, atts);
             atts.clear();
 
             // Total time of each component for all requests
@@ -316,15 +318,15 @@ public class ProfilerGenerator extends ComposerGenerator {
 
                 this.contentHandler.startElement(PROFILER_NS,
                                                  COMPONENT_ELEMENT,
-                                                 COMPONENT_ELEMENT, atts);
+                                                 PREFIX_COLON + COMPONENT_ELEMENT, atts);
                 atts.clear();
                 this.contentHandler.endElement(PROFILER_NS,
                                                COMPONENT_ELEMENT,
-                                               COMPONENT_ELEMENT);
+                                               PREFIX_COLON + COMPONENT_ELEMENT);
             }
             this.contentHandler.endElement(PROFILER_NS,
                                            AVERAGERESULT_ELEMENT,
-                                           AVERAGERESULT_ELEMENT);
+                                           PREFIX_COLON + AVERAGERESULT_ELEMENT);
         }
 
         for (int j = 0; j<count; j++) {
@@ -336,7 +338,7 @@ public class ProfilerGenerator extends ComposerGenerator {
         }
 
         this.contentHandler.endElement(PROFILER_NS, RESULTS_ELEMENT,
-                                       RESULTS_ELEMENT);
+                                       PREFIX_COLON + RESULTS_ELEMENT);
     }
 
     private void generateResult(int resultIndex, String[] roles,
@@ -353,7 +355,7 @@ public class ProfilerGenerator extends ComposerGenerator {
         atts.addAttribute("", "index", "index", "CDATA",
                           String.valueOf(resultIndex));
         this.contentHandler.startElement(PROFILER_NS, RESULT_ELEMENT,
-                                         RESULT_ELEMENT, atts);
+                                         PREFIX_COLON + RESULT_ELEMENT, atts);
         atts.clear();
 
         if (this.resultIndex!=-1) {
@@ -365,7 +367,7 @@ public class ProfilerGenerator extends ComposerGenerator {
                               processingTimes[i], fragments[i]);
         }
         this.contentHandler.endElement(PROFILER_NS, RESULT_ELEMENT,
-                                       RESULT_ELEMENT);
+                                       PREFIX_COLON + RESULT_ELEMENT);
     }
 
     private void generateComponent(int componentIndex, String role,
@@ -396,33 +398,33 @@ public class ProfilerGenerator extends ComposerGenerator {
                           Long.toString(setupTime+processingTime));
 
         this.contentHandler.startElement(PROFILER_NS, COMPONENT_ELEMENT,
-                                         COMPONENT_ELEMENT, atts);
+                                         PREFIX_COLON + COMPONENT_ELEMENT, atts);
         atts.clear();
 
         if (this.componentIndex==componentIndex) {
             this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT,
-                                             FRAGMENT_ELEMENT,
+                                             PREFIX_COLON + FRAGMENT_ELEMENT,
                                              new AttributesImpl());
             generateSAXFragment(fragment, true);
             this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT,
-                                           FRAGMENT_ELEMENT);
+                                           PREFIX_COLON + FRAGMENT_ELEMENT);
         }
 
         this.contentHandler.endElement(PROFILER_NS, COMPONENT_ELEMENT,
-                                       COMPONENT_ELEMENT);
+                                       PREFIX_COLON + COMPONENT_ELEMENT);
     }
 
     private void generateEnvironmentInfo(EnvironmentInfo environmentInfo)
       throws SAXException {
         this.contentHandler.startElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT,
-                                         ENVIROMENTINFO_ELEMENT,
+                                         PREFIX_COLON + ENVIROMENTINFO_ELEMENT,
                                          new AttributesImpl());
 
         if (environmentInfo!=null) {
             // Generate SAX events for the request parameters
             this.contentHandler.startElement(PROFILER_NS,
                                              REQUESTPARAMETERS_ELEMENT,
-                                             REQUESTPARAMETERS_ELEMENT,
+                                             PREFIX_COLON + REQUESTPARAMETERS_ELEMENT,
                                              new AttributesImpl());
 
             Map requestParameters = environmentInfo.getRequestParameters();
@@ -439,20 +441,20 @@ public class ProfilerGenerator extends ComposerGenerator {
                                   (String) entry.getValue());
                 this.contentHandler.startElement(PROFILER_NS,
                                                  REQUESTPARAMETER_ELEMENT,
-                                                 REQUESTPARAMETER_ELEMENT,
+                                                 PREFIX_COLON + REQUESTPARAMETER_ELEMENT,
                                                  atts);
                 this.contentHandler.endElement(PROFILER_NS,
                                                REQUESTPARAMETER_ELEMENT,
-                                               REQUESTPARAMETER_ELEMENT);
+                                               PREFIX_COLON + REQUESTPARAMETER_ELEMENT);
             }
             this.contentHandler.endElement(PROFILER_NS,
                                            REQUESTPARAMETERS_ELEMENT,
-                                           REQUESTPARAMETERS_ELEMENT);
+                                           PREFIX_COLON + REQUESTPARAMETERS_ELEMENT);
 
             // Generate SAX events for the session attributes
             this.contentHandler.startElement(PROFILER_NS,
                                              SESSIONATTRIBUTES_ELEMENT,
-                                             SESSIONATTRIBUTES_ELEMENT,
+                                             PREFIX_COLON + SESSIONATTRIBUTES_ELEMENT,
                                              new AttributesImpl());
 
             Map sessionAttributes = environmentInfo.getSessionAttributes();
@@ -469,26 +471,26 @@ public class ProfilerGenerator extends ComposerGenerator {
                                   (String) entry.getValue());
                 this.contentHandler.startElement(PROFILER_NS,
                                                  SESSIONATTRIBUTE_ELEMENT,
-                                                 SESSIONATTRIBUTE_ELEMENT,
+                                                 PREFIX_COLON + SESSIONATTRIBUTE_ELEMENT,
                                                  atts);
                 this.contentHandler.endElement(PROFILER_NS,
                                                SESSIONATTRIBUTE_ELEMENT,
-                                               SESSIONATTRIBUTE_ELEMENT);
+                                               PREFIX_COLON + SESSIONATTRIBUTE_ELEMENT);
             }
             this.contentHandler.endElement(PROFILER_NS,
                                            SESSIONATTRIBUTES_ELEMENT,
-                                           SESSIONATTRIBUTES_ELEMENT);
+                                           PREFIX_COLON + SESSIONATTRIBUTES_ELEMENT);
 
             // And the rest
-            this.contentHandler.startElement(PROFILER_NS, "uri", "uri",
+            this.contentHandler.startElement(PROFILER_NS, "uri", PREFIX_COLON + "uri",
                                              new AttributesImpl());
             this.contentHandler.characters(environmentInfo.getURI().toCharArray(),
                                            0, environmentInfo.getURI().length());
-            this.contentHandler.endElement(PROFILER_NS, "uri", "uri");
+            this.contentHandler.endElement(PROFILER_NS, "uri", PREFIX_COLON + "uri");
         }
 
         this.contentHandler.endElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT,
-                                       ENVIROMENTINFO_ELEMENT);
+                                       PREFIX_COLON + ENVIROMENTINFO_ELEMENT);
     }
 
     public void generateSAXFragment(Object fragment, boolean embed) throws SAXException {
