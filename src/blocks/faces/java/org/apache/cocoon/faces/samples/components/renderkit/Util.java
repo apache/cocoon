@@ -193,7 +193,7 @@ public class Util extends Object {
 
     /**
      * NOTE: Commented out to remove JSTL dependency.
-     * 
+     *
      * Return a Locale instance using the following algorithm: <P>
      *
      * <UL>
@@ -256,7 +256,7 @@ public class Util extends Object {
      * Render any boolean "passthru" attributes.
      * <P>
      *
-     * @see passthruAttributes
+     * @see #passthruAttributes
      */
 
     public static String renderBooleanPassthruAttributes(FacesContext context,
@@ -294,7 +294,7 @@ public class Util extends Object {
      *         Padded with leading and trailing ' '.  If there are no passthru
      *         attributes in the component, return the empty String.
      *
-     * @see passthruAttributes
+     * @see #passthruAttributes
      */
 
     public static String renderPassthruAttributes(FacesContext context,

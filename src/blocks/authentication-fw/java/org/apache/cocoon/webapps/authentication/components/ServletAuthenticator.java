@@ -48,7 +48,7 @@ public class ServletAuthenticator
 
     protected Context context;
     protected ServiceManager manager;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -62,26 +62,27 @@ public class ServletAuthenticator
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
-    
-    /** 
+
+    /**
      * Fill the authentication context.
      * This method can be overwritten to add any application specific data
      * to the user.
      * (Don't forget to call this implementation via super as well as it
      * adds the ID).
-     * @param context The context. This document has already the authentication
-     *                             root node.
+     *
+     * @param contextDoc The context. This document has already the authentication
+     *                   root node.
      */
     protected void fillContext(Document contextDoc) {
         final Request req = ContextHelper.getRequest(this.context);
         final Element root = contextDoc.getDocumentElement();
-        
+
         // append the ID
         final Element id = contextDoc.createElement("ID");
         id.appendChild(contextDoc.createTextNode(req.getRemoteUser()));
-        root.appendChild(id);        
+        root.appendChild(id);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.authentication.components.Authenticator#authenticate(org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration, org.apache.excalibur.source.SourceParameters)
      */

@@ -21,30 +21,29 @@ import org.xml.sax.SAXException;
 
 /**
  * Helper class for the implementation of the CForms template language with JXTemplate macros.
- * 
+ *
  * @version CVS $Id$
  */
 public class JXMacrosHelper {
-    
+
     private XMLConsumer cocoonConsumer;
     private ArrayStack stack = new ArrayStack();
-    
-    private Map classes = null; // lazily created
-    
+    private Map classes; // lazily created
+
     /**
      * Builds and helper object, given the generator's consumer.
-     * 
+     *
      * @param consumer the generator's consumer
      * @return a helper object
      */
     public static JXMacrosHelper createHelper(XMLConsumer consumer) {
         return new JXMacrosHelper(consumer);
     }
-    
+
     public JXMacrosHelper(XMLConsumer consumer) {
         this.cocoonConsumer = consumer;
     }
-    
+
     public void startForm(Map attributes) throws SAXException {
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
@@ -53,26 +52,25 @@ public class JXMacrosHelper {
             Map.Entry entry = (Map.Entry)iter.next();
             attrs.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
         }
-        
+
         this.cocoonConsumer.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
-        this.cocoonConsumer.startElement(
-                Constants.INSTANCE_NS,
-                "form-template",
-                Constants.INSTANCE_PREFIX_COLON + "form-template",
-                attrs);
+        this.cocoonConsumer.startElement(Constants.INSTANCE_NS,
+                                         "form-template",
+                                         Constants.INSTANCE_PREFIX_COLON + "form-template",
+                                         attrs);
     }
-    
+
     public void endForm() throws SAXException {
-        this.cocoonConsumer.endElement(
-                Constants.INSTANCE_NS,
-                "form-template",
-                Constants.INSTANCE_PREFIX_COLON + "form-template");
-        this.cocoonConsumer.endPrefixMapping(Constants.INSTANCE_PREFIX);        
+        this.cocoonConsumer.endElement(Constants.INSTANCE_NS,
+                                       "form-template",
+                                       Constants.INSTANCE_PREFIX_COLON + "form-template");
+        this.cocoonConsumer.endPrefixMapping(Constants.INSTANCE_PREFIX);
     }
-    
+
     /**
-     * Flush the root element name that has been stored in {@link #generateSaxFragment(Widget, Locale)}
-     * 
+     * Flush the root element name that has been stored in
+     * {@link #generateWidget(Widget, Locale)}.
+     *
      * @param obj the object that is terminated (widget or validation error)
      * @throws SAXException
      */
@@ -80,33 +78,32 @@ public class JXMacrosHelper {
         Object stackObj = stack.pop();
         if (stackObj != obj) {
             throw new IllegalStateException("Flushing on wrong widget (expected " + stackObj +
-                    ", got " + obj + ")");
+                                            ", got " + obj + ")");
         }
-        ((RootBufferingPipe)stack.pop()).flushRoot();
+        ((RootBufferingPipe) stack.pop()).flushRoot();
     }
-    
+
     /**
      * Get a child widget of a given widget, throwing an exception if no such child exists.
-     * 
+     *
      * @param currentWidget
      * @param id
-     * @return
      */
     public Widget getWidget(Widget currentWidget, String id) {
         Widget result = null;
-        
+
         if (currentWidget instanceof ContainerWidget) {
             result = ((ContainerWidget)currentWidget).getChild(id);
         }
-        
+
         if (result != null) {
             return result;
         } else {
             throw new IllegalArgumentException("Widget '" + currentWidget +
-                    "' has no child named '" + id + "'");
+                                               "' has no child named '" + id + "'");
         }
     }
-    
+
     public Repeater getRepeater(Widget currentWidget, String id) {
         Widget child = getWidget(currentWidget, id);
         if (child instanceof Repeater) {
@@ -115,11 +112,11 @@ public class JXMacrosHelper {
             throw new IllegalArgumentException("Widget '" + child + "' is not a repeater");
         }
     }
-    
+
     /**
      * Generate a widget's SAX fragment, buffering the root element's <code>endElement()</code>
      * event so that the template can insert styling information in it.
-     * 
+     *
      * @param widget
      * @param locale
      * @throws SAXException
@@ -131,19 +128,19 @@ public class JXMacrosHelper {
         this.stack.push(widget);
         widget.generateSaxFragment(pipe, locale);
     }
-    
+
     public void generateWidgetLabel(Widget widget, String id) throws SAXException {
         getWidget(widget, id).generateLabel(this.cocoonConsumer);
     }
-    
+
     public void generateRepeaterWidgetLabel(Widget widget, String id, String widgetId) throws SAXException {
         getRepeater(widget, id).generateWidgetLabel(widgetId, this.cocoonConsumer);
     }
-    
+
     public void generateRepeaterSize(Widget widget, String id) throws SAXException {
         getRepeater(widget, id).generateSize(this.cocoonConsumer);
     }
-    
+
     private static final String VALIDATION_ERROR = "validation-error";
 
     public void generateValidationError(ValidationError error) throws SAXException {
@@ -165,45 +162,45 @@ public class JXMacrosHelper {
         if (this.classes == null) {
             this.classes = new HashMap();
         }
-        
+
         // TODO: check if class doesn't already exist?
         this.classes.put(id, body);
     }
-    
+
     public Object getClassBody(String id) {
         Object result = this.classes == null ? null : this.classes.get(id);
-        
+
         if (result == null) {
             throw new IllegalArgumentException("No class '" + id + "' has been defined.");
         } else {
             return result;
         }
     }
-    
+
     public boolean isSelectedCase(Widget unionWidget, String caseValue) {
         String value = (String)unionWidget.getValue();
         return caseValue.equals(value != null ? value : "");
     }
-    
+
     /**
      * A SAX pipe that buffers the <code>endElement()</code> event of the root element.
      * This is needed by the generator version of the Woody transformer (see woody-jxmacros.xml).
-     * 
+     *
      * @version CVS $Id$
      */
     private static class RootBufferingPipe extends AbstractXMLPipe {
         private int depth = 0;
-        
+
         private String rootUri;
         private String rootLoc;
         private String rootRaw;
-        
+
         public RootBufferingPipe(XMLConsumer next) {
             this.setConsumer(next);
         }
-        
-        public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException
-        {
+
+        public void startElement(String uri, String loc, String raw, Attributes a)
+        throws SAXException {
             if (depth == 0) {
                 // Root element: keep its description
                 this.rootUri = uri;
@@ -213,16 +210,16 @@ public class JXMacrosHelper {
             depth++;
             super.startElement(uri, loc, raw, a);
         }
-        
-        public void endElement(String uri, String loc, String raw) throws SAXException
-        {
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
             depth--;
             if (depth > 0) {
                 // Propagate all but root element
                 super.endElement(uri, loc, raw);
             }
         }
-        
+
         public void flushRoot() throws SAXException {
             if (depth != 0) {
                 throw new IllegalStateException("Depth is not zero");
