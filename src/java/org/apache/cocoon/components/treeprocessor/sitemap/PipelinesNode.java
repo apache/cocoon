@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -61,7 +59,6 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
 
 /**
@@ -71,7 +68,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.7 2004/01/18 22:27:15 sylvain Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.8 2004/01/19 14:57:14 joerg Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
