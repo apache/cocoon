@@ -63,6 +63,7 @@ module cocoon {
     // Interfaces definitions.
     interface Cocoon;
     interface Context;
+    interface Continuation;
     interface Log;
     interface Request;
     interface Script;
@@ -70,6 +71,7 @@ module cocoon {
     // Interfaces inclusions.
     #include "cocoon/Cocoon.idl"
     #include "cocoon/Context.idl"
+    #include "cocoon/Continuation.idl"
     #include "cocoon/Log.idl"
     #include "cocoon/Request.idl"
     #include "cocoon/Script.idl"
