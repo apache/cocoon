@@ -14,7 +14,7 @@
     <s1 title="Sitemap">
     <p>The Cocoon <link href="../concepts/sitemap.html">Sitemap</link> provides two elements to specify interactions with your Flowscripts.</p>
       <s2 title="flow">
-     <p>The <code>flow</code> element defines a Flowscript interpreter for a sitemap. The <code>language</code> attribute specifies the target programming language. Currently the only supported language is <code>"JavaScript"</code>. Its embedded <code>script</code> elements allow you to specify the files that make up the flow for this sitemap. Each <code>script</code> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <code>src</code> attribute specifies the URI of the script.</p>
+     <p>The <code>flow</code> element defines a Flowscript interpreter for a sitemap. The <code>language</code> attribute specifies the target programming language. Currently the only supported language is <code>"javascript"</code>. Its embedded <code>script</code> elements allow you to specify the files that make up the flow for this sitemap. Each <code>script</code> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <code>src</code> attribute specifies the URI of the script.</p>
       <source><![CDATA[
         <map:flow language="Language">
            <map:script src="URI"/>+
@@ -22,7 +22,7 @@
       ]]></source>
     <p>Example:</p>
       <source><![CDATA[
-        <map:flow language="JavaScript">
+        <map:flow language="javascript">
            <map:script src="myApplication.js"/>
         </map:flow>
       ]]></source>
@@ -38,7 +38,7 @@
       ]]></source>
       <p>Example:</p>
       <source><![CDATA[
-        <map:flow language="JavaScript">
+        <map:flow language="javascript">
            <map:script src="myApplication.js"/>
         </map:flow>
         <map:pipelines>
