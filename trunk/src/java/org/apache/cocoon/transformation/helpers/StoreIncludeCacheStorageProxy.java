@@ -57,11 +57,11 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.excalibur.store.Store;
 
 /**
- * This is the interface between the {@link CacheManager} and the usual
+ * This is the interface between the {@link IncludeCacheManager} and the usual
  * store.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: StoreIncludeCacheStorageProxy.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: StoreIncludeCacheStorageProxy.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public final class StoreIncludeCacheStorageProxy
@@ -87,7 +87,7 @@ public final class StoreIncludeCacheStorageProxy
     }
     
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#get(java.lang.String)
+     * @see IncludeCacheStorageProxy#get(java.lang.String)
      */
     public Serializable get(String uri) {
         if (logger.isDebugEnabled()) {
@@ -103,7 +103,7 @@ public final class StoreIncludeCacheStorageProxy
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#put(java.lang.String, java.io.Serializable)
+     * @see IncludeCacheStorageProxy#put(java.lang.String, java.io.Serializable)
      */
     public void put(String uri, Serializable object) 
     throws IOException {
@@ -114,7 +114,7 @@ public final class StoreIncludeCacheStorageProxy
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#remove(java.lang.String)
+     * @see IncludeCacheStorageProxy#remove(java.lang.String)
      */
     public void remove(String uri) {
         if (logger.isDebugEnabled()) {
@@ -122,5 +122,4 @@ public final class StoreIncludeCacheStorageProxy
         }
         this.store.remove(this.getKey(uri));
     }
-
 }

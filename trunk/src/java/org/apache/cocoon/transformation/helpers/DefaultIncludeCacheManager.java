@@ -78,7 +78,7 @@ import org.apache.excalibur.store.Store;
 import org.xml.sax.SAXException;
 
 /**
- * Default implementation of a {@link CacheManager}.
+ * Default implementation of a {@link IncludeCacheManager}.
  * 
  * This implementation requires a configuration, if preemptive
  * loading is used:
@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager
@@ -113,7 +113,7 @@ public final class DefaultIncludeCacheManager
     private String            preemptiveLoaderURI;
     
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheManager#getSession(org.apache.avalon.framework.parameters.Parameters)
+     * @see IncludeCacheManager#getSession(org.apache.avalon.framework.parameters.Parameters)
      */
     public IncludeCacheManagerSession getSession(Parameters pars) {
         String sourceURI = pars.getParameter("source", null);
@@ -157,7 +157,7 @@ public final class DefaultIncludeCacheManager
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheManager#load(java.lang.String, boolean, de.sundn.prod.sunshine.transformation.CacheManagerSession)
+     * @see IncludeCacheManager#load(java.lang.String, IncludeCacheManagerSession)
      */
     public String load(String uri,
                         IncludeCacheManagerSession session) 
@@ -225,7 +225,7 @@ public final class DefaultIncludeCacheManager
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheManager#stream(java.lang.String, de.sundn.prod.sunshine.transformation.CacheManagerSession, org.xml.sax.ContentHandler)
+     * @see IncludeCacheManager#stream(java.lang.String, IncludeCacheManagerSession, XMLConsumer)
      */
     public void stream(String uri,
                         IncludeCacheManagerSession session,
@@ -396,7 +396,7 @@ public final class DefaultIncludeCacheManager
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheManager#terminateSession(de.sundn.prod.sunshine.transformation.CacheManagerSession)
+     * @see IncludeCacheManager#terminateSession(IncludeCacheManagerSession)
      */
     public void terminateSession(IncludeCacheManagerSession session) {
         if (this.getLogger().isDebugEnabled()) {

@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * for a given period of time.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: IncludeCacheManager.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: IncludeCacheManager.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public interface IncludeCacheManager {
@@ -74,7 +74,7 @@ public interface IncludeCacheManager {
     /**
      * Create a session for this request.
      * This should be invoked first and only one per request. It is required
-     * to terminate the session with {@link #terminateSession(CacheManagerSession)}
+     * to terminate the session with {@link #terminateSession(IncludeCacheManagerSession)}
      * @param pars The configuration
      * @return CacheManagerSession The session that should be used with all other commands.
      */
@@ -84,7 +84,7 @@ public interface IncludeCacheManager {
      * This informs the manager that a URI should be "loaded".
      * @param uri     The URI to load (maybe relative)
      * @param session The corresponding session created by {@link #getSession(Parameters)}
-     * @return String The absolute URI that must be used for {@link #stream(String, CacheManagerSession, XMLConsumer)}
+     * @return String The absolute URI that must be used for {@link #stream(String, IncludeCacheManagerSession, XMLConsumer)}
      * @throws IOException
      * @throws SourceException
      */
@@ -96,7 +96,7 @@ public interface IncludeCacheManager {
      * Stream the content of the absolute URI.
      * Depending on the configuration and state of the cache, the
      * content is either taken from the cache, fetched etc.
-     * @param uri     The absolute URI returned by {@link #load(String, CacheManagerSession)}
+     * @param uri     The absolute URI returned by {@link #load(String, IncludeCacheManagerSession)}
      * @param session The current session
      * @param handler The receiver of the SAX events
      * @throws IOException

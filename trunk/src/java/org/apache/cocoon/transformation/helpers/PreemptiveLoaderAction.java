@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This action starts the preemptive loader and runs forever.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public class PreemptiveLoaderAction 
@@ -71,7 +71,7 @@ public class PreemptiveLoaderAction
 
     /**
      * This action starts the preemptive loading
-     * It runs forever and is stopped by the {@link DefaultCacheManager}.
+     * It runs forever and is stopped by the {@link DefaultIncludeCacheManager}.
      * @see org.apache.cocoon.acting.Action#act(Redirector, SourceResolver, Map, String, Parameters)
      */
     public Map act(Redirector redirector,
@@ -87,5 +87,4 @@ public class PreemptiveLoaderAction
         }
         return null;
     }
-
 }

@@ -65,12 +65,12 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
- * This is the interface between the {@link CacheManager} and a
+ * This is the interface between the {@link IncludeCacheManager} and a
  * {@link Source} object that stores the cached content in a directory
  * manner.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: ModifiableSourceIncludeCacheStorageProxy.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: ModifiableSourceIncludeCacheStorageProxy.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public final class ModifiableSourceIncludeCacheStorageProxy
@@ -113,7 +113,7 @@ public final class ModifiableSourceIncludeCacheStorageProxy
     }
     
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#get(java.lang.String)
+     * @see IncludeCacheStorageProxy#get(java.lang.String)
      */
     public Serializable get(String uri) {
         if (logger.isDebugEnabled()) {
@@ -147,7 +147,7 @@ public final class ModifiableSourceIncludeCacheStorageProxy
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#put(java.lang.String, java.io.Serializable)
+     * @see IncludeCacheStorageProxy#put(java.lang.String, java.io.Serializable)
      */
     public void put(String uri, Serializable object) 
     throws IOException {
@@ -182,7 +182,7 @@ public final class ModifiableSourceIncludeCacheStorageProxy
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheStorageProxy#remove(java.lang.String)
+     * @see IncludeCacheStorageProxy#remove(java.lang.String)
      */
     public void remove(String uri) {
         if (logger.isDebugEnabled()) {
@@ -195,8 +195,8 @@ public final class ModifiableSourceIncludeCacheStorageProxy
             if (logger.isDebugEnabled()) {
                 logger.debug("WSCProxy: Resolved to " + child.getURI());
             }
-            OutputStream os;
-            if (child instanceof ModifiableSource) {                
+
+            if (child instanceof ModifiableSource) {
                 ((ModifiableSource)child).delete();
             } else {
                 throw new IOException("Source " + uri + " is not writeable.");
