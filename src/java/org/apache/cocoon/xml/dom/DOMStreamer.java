@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,8 +260,10 @@ public class DOMStreamer implements XMLProducer {
         }
 
         private final void dispatchChars(Node node) throws SAXException {
-            String data = ((Text) node).getData();
-            contentHandler.characters(data.toCharArray(), 0, data.length());
+            final String data = ((Text) node).getData();
+            if ( data != null ) {
+                contentHandler.characters(data.toCharArray(), 0, data.length());
+            }
         }
 
         /**
@@ -275,8 +277,10 @@ public class DOMStreamer implements XMLProducer {
                 case Node.COMMENT_NODE:
                     {
                         if (lexicalHandler != null) {
-                            String data = ((Comment) node).getData();
-                            lexicalHandler.comment(data.toCharArray(), 0, data.length());
+                            final String data = ((Comment) node).getData();
+                            if ( data != null ) {
+                                lexicalHandler.comment(data.toCharArray(), 0, data.length());
+                            }
                         }
                     }
                     break;
@@ -658,9 +662,8 @@ public class DOMStreamer implements XMLProducer {
                 }
                 if (parent != null) {
                     return parent.findPrefix(namespaceURI);
-                } else {
-                    return null;
                 }
+                return null;
             }
 
             /**
@@ -673,10 +676,10 @@ public class DOMStreamer implements XMLProducer {
                         return uri;
                     }
                 }
-                if (parent != null)
+                if (parent != null) {
                     return parent.findNamespaceURI(prefix);
-                else
-                    return null;
+                }
+                return null;
             }
         }
     }
