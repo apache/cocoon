@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.196 2003/11/16 18:47:13 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.197 2003/11/16 23:04:12 unico Exp $:-->
 
 <status>
  <developers>
@@ -61,6 +61,7 @@
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
   <person name="J&#246;rg Heinicke" email="joerg@apache.org" id="JH"/>
+  <person name="Unico Hommes" email="unico@apache.org" id="UH"/>
   <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
   <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
@@ -181,6 +182,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UH" type="add">
+     Add cocoon.sendStatus([Number] sc) and cocoon.response.setStatus([Number] sc)
+     to FOM.
+   </action>
     <action dev="AG" type="update">
      Updated Jetty to 4.2.14
    </action>
