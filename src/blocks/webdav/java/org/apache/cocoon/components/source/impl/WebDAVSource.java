@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.25 2004/03/27 17:40:11 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.26 2004/03/29 10:52:46 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
@@ -547,7 +547,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
             return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger());
         }
         catch (URIException e) {
-            throw new SourceException("Failure creating child", e);
+            throw new SourceException("Failed to create child", e);
         }        
     }
 
@@ -627,7 +627,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
             return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger());
         }
         catch (URIException e) {
-            throw new SourceException("Failure creating parent", e);
+            throw new SourceException("Failed to create parent", e);
         }
     }
 
@@ -745,7 +745,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
         
         private void cancel() {
             if (isClosed) {
-                throw new IllegalStateException("Cannot cancel: outputstrem is already closed");
+                throw new IllegalStateException("Cannot cancel: outputstream is already closed");
             }
             this.isClosed = true;
         }
@@ -761,10 +761,25 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
         initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
         if (this.resource.exists()) return;
     	try {
-            this.resource.mkcolMethod();
-        } catch (HttpException e) {
+            if (!this.resource.mkcolMethod()) {
+                int status = this.resource.getStatusCode();
+                // Ignore status 405 - Not allowed: collection already exists
+                if (status != 405) {
+                    final String msg = 
+                        "Unable to create collection " + getSecureURI()
+                        + ". Server responded " + this.resource.getStatusCode()
+                        + " (" + this.resource.getStatusMessage() + ")";
+                    throw new SourceException(msg);
+                }
+            }
+        }
+    	catch (HttpException e) {
             throw new SourceException("Unable to create collection(s) " + getSecureURI(), e);
-        } catch (IOException e) {
+        }
+    	catch (SourceException e) {
+            throw e;
+        }
+        catch (IOException e) {
             throw new SourceException("Unable to create collection(s)"  + getSecureURI(), e);			
         }
     }
