@@ -51,6 +51,10 @@
   </document>
  </xsl:template>
 
+ <xsl:template match="st:rows">
+  <xsl:apply-templates select="st:row"/>
+ </xsl:template>
+
  <xsl:template match="st:row">
   <tr>
    <td><xsl:number/></td>

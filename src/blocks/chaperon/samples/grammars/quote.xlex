@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
 <lexicon xmlns="http://chaperon.sourceforge.net/schema/lexicon/1.0">
 <!--This file was generated! Don't edit!-->
 <lexeme>
 <concat>
 <bol/>
 <cstring content="#"/>
-<concat minOccurs="0" maxOccurs="*">
+<concat maxOccurs="*" minOccurs="0">
 <cclass exclusive="true">
 <cset code="10"/>
 <cset code="13"/>
@@ -17,7 +18,7 @@
 <cstring content=","/>
 </lexeme>
 <lexeme symbol="Value">
-<concat minOccurs="1" maxOccurs="*">
+<concat maxOccurs="*" minOccurs="1">
 <cclass exclusive="true">
 <cset code="10"/>
 <cset code="13"/>
@@ -25,11 +26,11 @@
 </cclass>
 </concat>
 </lexeme>
-<lexeme symbol="SoftBreak">
+<lexeme symbol="Break">
 <alt>
 <concat>
 <cstring code="13"/>
-<concat minOccurs="0" maxOccurs="1">
+<concat maxOccurs="1" minOccurs="0">
 <cstring code="10"/>
 </concat>
 </concat>
