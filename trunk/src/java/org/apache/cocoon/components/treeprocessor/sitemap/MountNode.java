@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.3 2003/05/04 20:24:47 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.4 2003/07/06 11:44:30 sylvain Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -119,9 +119,9 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
-            if (context.isInternalRequest()) {
+            if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
-                ProcessingPipeline pp = processor.processInternal(env);
+                ProcessingPipeline pp = processor.buildPipeline(env);
                 if ( pp != null ) {
                     context.setProcessingPipeline( pp );
                     return true;

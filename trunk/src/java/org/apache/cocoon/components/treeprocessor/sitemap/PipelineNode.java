@@ -63,6 +63,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * Handles &lt;map:pipeline&gt;
@@ -72,7 +73,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.4 2003/04/11 13:14:51 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.5 2003/07/06 11:44:30 sylvain Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
@@ -150,13 +151,17 @@ public class PipelineNode
 
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
+        
+        Map objectModel = env.getObjectModel();
+        
+        boolean internalRequest = ObjectModelHelper.getRequest(objectModel).isInternal();
 
         // Always fail on external resquests if internal only.
-        if (this.internalOnly && !context.isInternalRequest()) {
+        if (this.internalOnly && !internalRequest) {
             return false;
         }
 
-        context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
+        context.inform(this.processingPipeline, this.parameters, objectModel);
 
         try {
             if (invokeNodes(children, env, context)) {
@@ -173,7 +178,7 @@ public class PipelineNode
             
         } catch(Exception ex) {
             
-            if (context.isInternalRequest()) {
+            if (internalRequest) {
                 // Propagate exception on internal requests
                 throw ex;
                 

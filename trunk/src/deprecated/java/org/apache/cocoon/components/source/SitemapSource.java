@@ -84,7 +84,7 @@ import java.net.MalformedURLException;
  *
  * @deprecated by the Avalon Excalibur Source Resolving
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.3 2003/05/16 07:12:29 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.4 2003/07/06 11:48:48 sylvain Exp $
  */
 public final class SitemapSource
 extends AbstractXMLConsumer
@@ -277,7 +277,7 @@ implements ModifiableSource {
         try {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.environment.setURI(this.prefix, this.uri);
-            this.processingPipeline = this.processor.processInternal(this.environment);
+            this.processingPipeline = this.processor.buildPipeline(this.environment);
             this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
             this.environment.changeToLastContext();
             String redirectURL = this.environment.getRedirectURL();

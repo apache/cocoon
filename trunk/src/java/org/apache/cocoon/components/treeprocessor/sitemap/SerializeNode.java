@@ -65,7 +65,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.2 2003/03/18 15:23:28 nicolaken Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.3 2003/07/06 11:44:30 sylvain Exp $
  */
 
 public class SerializeNode extends PipelineEventComponentProcessingNode {
@@ -145,7 +145,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
             env.setStatus(this.statusCode);
         }
 
-        if (! context.isInternalRequest()) {
+        if (! context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
 
