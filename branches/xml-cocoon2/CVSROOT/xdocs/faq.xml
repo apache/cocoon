@@ -3,7 +3,124 @@
 <!DOCTYPE faqs SYSTEM "./dtd/faq-v10.dtd">
 
 <faqs title="Frequently Asked Questions">
-
+<faq>
+  <question>
+    Why does nothing happen when I access 'http://localhost/cocoon/'?
+  </question>
+  <answer>
+    <p>
+      You might want to check a few things:
+    </p>
+    <ul>
+      <li>
+        is your server listening to port 80? if not, you have to call the right
+        port like in 'http://localhost:8080/cocoon/'. Note that Apache Tomcat
+        binds by default to port 8080, NOT 80.
+      </li>
+      <li>
+        did your servlet engine install the WAR file? you can check by making
+        sure the WAR file was unpacked or connecting to the administration tools
+        of your servlet engine.
+      </li>
+      <li>
+        did you restart the servlet engine? if not, do it.
+      </li>
+    </ul>
+  </answer>
+</faq>
+<faq>
+  <question>
+    Why does Cocoon take so long to start?
+  </question>
+  <answer>
+    <p>
+      Cocoon compiles sitemaps into java classes to increase runtime performance,
+      this is done only at startup and only if the sitemap file is modified, for 
+      all the other requests the compiled sitemap is executed. See question #7 
+      for information on how to pre-compile the sitemap and the XSP's.
+    </p>
+  </answer>
+</faq>
+<faq>
+  <question>
+    Why is cocoon.war so big?
+  </question>
+  <answer>
+    <p>
+      Cocoon.war includes all the libraries that it requires to run. They are 
+      several megabytes of Java classes and it also includes the JDK javac compiler
+      which must be present in the war file to allow page compilation without 
+      classloading problems.
+    </p>
+  </answer>
+</faq>
+<faq>
+  <question>
+    I get a java.lang.VerifyError when accessing 'http://localhost/cocoon/'.
+    What's wrong?
+  </question>
+  <answer>
+    <p>
+      Cocoon requires a JAXP 1.1 compliant parser. Recent servlet engines
+      (like Tomcat 3.2.1) use older xml parsers. You have to replace the xml
+      parser with a newer one (e.g. the Xerces 1.3.0).
+    </p>
+    <p>
+      For Tomcat 3.2.1 simply remove the jaxp.jar and the parser.jar from the
+      tomcat/lib directory and copy the xerces.jar to this directory and rename
+      it to parser.jar. Before you restart Tomcat make sure to remove the
+      tomcat/work directory beforehand.
+    </p>
+  </answer>
+</faq>
+<faq>
+  <question>
+    I'm still stuck, what do I do?
+  </question>
+  <answer>
+    <p>
+      Contact the Cocoon Users mail list (cocoon-users@xml.apache.org).
+      Please, do not contact developers directly for help since the user list are
+      normally much more responsive and users normally have more experience in
+      solving installation problems than developers do.
+    </p>
+    <p>
+      Cocoon has a log file that is stored in the context where you placed
+      Cocoon.  It is located in '{cocoon}/WEB-INF/logs/cocoon/log' where
+      {cocoon} is the context where Cocoon is installed.  Many times, the
+      information contained in that file will help others help you.
+    </p>
+  </answer>
+</faq>
+<faq>
+  <question>
+    What are the steps to pre-compile the sitemap and XSP's?
+  </question>
+  <answer>
+    <ol>
+      <li>Set the "work-directory" parameter in web.xml as follows:
+<code>
+  <![CDATA[
+      <init-param>
+       <param-name>work-directory</param-name>
+       <param-value>WEB-INF/classes</param-value>
+      </init-param>
+  ]]>
+</code>
+      </li>
+      <li>Set the auto-reload to false in your sitemap.xmap as follows:
+<code>
+  <![CDATA[
+      <parameter name="auto-reload" value="false"/>
+  ]]>
+</code>
+      </li>
+      <li>Use "-Dcompile.xsp=yes" in your build command line when you are
+        building your WAR file.
+      </li>
+    </ol>
+  </answer>
+</faq>
 <faq>
  <question>
    Cocoon won't start and I get a &quot;java.lang.NoSuchMethodError: org.apache.log.LogKit: method
@@ -35,19 +152,4 @@ javax.xml.transform.TransformerConfigurationException: Namespace not supported b
    </p>
  </answer>
 </faq>
-<faq>
- <question>
-   I have a J2EE server and I want to use the J2eeDataSource that the docs said was available.
-   When I try to use it, I get a ClassNotFoundException.
- </question>
- <answer>
-   <p>
-     When you build Cocoon, you need the package that has JNDI and the JDBC Extensions in
-     the classpath.  The build script automatically determines if they exist.  You can place
-     a copy directly in the &quot;lib&quot; directory and rebuild Cocoon.  The missing class
-     should now be there.
-   </p>
- </answer>
-</faq>
-
 </faqs>
