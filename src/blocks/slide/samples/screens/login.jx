@@ -14,7 +14,7 @@
         before trying these examples. You will also need enabled uploads in web.xml .
         </p>
         <table border="0" cellspacing="0" cellpadding="2">
-          <form action="${prefix}/login.cont" method="post">
+          <form action="${request.contextPath}${base}/login.cont" method="post">
             <input type="hidden" name="continuationId" value="${continuation.id}"/>
             <tr>
               <td>Username</td>
