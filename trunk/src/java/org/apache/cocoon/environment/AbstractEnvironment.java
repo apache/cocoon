@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.12 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.13 2003/05/16 07:12:29 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -365,8 +365,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                 try {
                     Class clazz = ClassUtils.loadClass("org.apache.cocoon.components.source.impl.AvalonToCocoonSource");
                     avalonToCocoonSourceWrapper = clazz.getConstructor(new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
-                                                                                    ClassUtils.loadClass("org.apache.excalibur.source.SourceResolver"),
-                                                                                    ClassUtils.loadClass("org.apache.cocoon.environment.Environment")});
+                                                                                    ClassUtils.loadClass(SourceResolver.class.getName()),
+                                                                                    ClassUtils.loadClass(Environment.class.getName()),
+                                                                                    ClassUtils.loadClass(ComponentManager.class.getName())});
                 } catch (Exception e) {
                     throw new ProcessingException("The deprecated resolve() method of the environment was called."
                                                   +"Please either update your code to use the new resolveURI() method or"
@@ -377,7 +378,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         try {
             org.apache.excalibur.source.Source source = this.resolveURI( systemId );
             Source wrappedSource;
-            wrappedSource = (Source)avalonToCocoonSourceWrapper.newInstance(new Object[] {source, this.sourceResolver, this});
+            wrappedSource = (Source)avalonToCocoonSourceWrapper.newInstance(new Object[] {source, this.sourceResolver, this, this.manager});
             return wrappedSource;
         } catch (SourceException se) {
             throw SourceUtil.handle(se);

@@ -84,7 +84,7 @@ import java.net.MalformedURLException;
  *
  * @deprecated by the Avalon Excalibur Source Resolving
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.2 2003/03/12 12:55:16 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.3 2003/05/16 07:12:29 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractXMLConsumer
@@ -331,7 +331,7 @@ implements ModifiableSource {
                 consumer = new ContentHandlerWrapper(contentHandler);
             }
             if (this.redirectSource != null) {
-                this.environment.toSAX(this.redirectSource, consumer);
+                SourceUtil.parse(this.manager, this.redirectSource, consumer);
             } else {
                 // We have to buffer the result in order to get
                 // clean environment stack handling.
