@@ -15,9 +15,21 @@
  */
 
 package org.apache.cocoon.forms.flow.javascript.v3;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
-import org.apache.cocoon.forms.event.*;
+import org.apache.cocoon.forms.event.ActionEvent;
+import org.apache.cocoon.forms.event.ActionListener;
+import org.apache.cocoon.forms.event.ActionListenerEnabled;
+import org.apache.cocoon.forms.event.ValueChangedEvent;
+import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
 import org.apache.cocoon.forms.formmodel.Action;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.BooleanField;
@@ -36,20 +48,15 @@ import org.apache.cocoon.forms.formmodel.WidgetState;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
+import org.apache.commons.lang.BooleanUtils;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @version $Id$
@@ -384,7 +391,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
             delegate.setValue(value);
         } else if (delegate instanceof BooleanField) {
             BooleanField field = (BooleanField)delegate;
-            field.setValue(new Boolean(Context.toBoolean(value)));
+            field.setValue(BooleanUtils.toBooleanObject(Context.toBoolean(value)));
         } else if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (value instanceof NativeArray) {
