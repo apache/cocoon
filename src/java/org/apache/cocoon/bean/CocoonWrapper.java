@@ -42,15 +42,15 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -239,9 +239,8 @@ public class CocoonWrapper {
         File conf = new File(filename);
         if (conf.canRead()) {
             return conf;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -529,11 +528,11 @@ public class CocoonWrapper {
                                       gatheredLinks, cliContext, null, log);
 
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
-        ProcessingPipeline pipeline = cocoon.buildPipeline(env);
-        CocoonComponentManager.enterEnvironment(env, cocoon.getComponentManager(), cocoon);
-        pipeline.prepareInternal(env);
-        CocoonComponentManager.leaveEnvironment();
-        pipeline.process(env, consumer);
+        Processor.InternalPipelineDescription pipeline = cocoon.buildPipeline(env);
+        EnvironmentHelper.enterProcessor(pipeline.lastProcessor, getServiceManager(), env);
+        pipeline.processingPipeline.prepareInternal(env);
+        EnvironmentHelper.leaveProcessor();
+        pipeline.processingPipeline.process(env, consumer);
 
         // if we get here, the page was created :-)
         int status = env.getStatus();
