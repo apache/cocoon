@@ -41,7 +41,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.6 2004/07/12 13:27:57 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class PortletRequest implements Request {
 
@@ -71,7 +71,7 @@ public abstract class PortletRequest implements Request {
     protected String portletRequestURI;
 
     private final Map attributes = new HashMap();
-    
+
     /**
      * Creates a PortletRequest based on a real PortletRequest object
      */
@@ -234,22 +234,25 @@ public abstract class PortletRequest implements Request {
     }
 
     public String getRequestURI() {
-        // TODO: getRequestURI
         if (this.portletRequestURI == null) {
-            this.portletRequestURI = this.request.getContextPath();
-            /*
-            this.portletRequestURI = this.request.getRequestURI();
-            if (this.portletRequestURI.equals("/")) {
-                String s = this.request.getServletPath();
-                final StringBuffer buffer = new StringBuffer();
-                if (null != s)
-                    buffer.append(s);
-                s = this.request.getPathInfo();
-                if (null != s)
-                    buffer.append(s);
-                this.portletRequestURI = buffer.toString();
+            final StringBuffer buffer = new StringBuffer();
+            buffer.append(this.request.getContextPath());
+
+            if (getServletPath() != null) {
+                if (buffer.charAt(buffer.length()-1) != '/') {
+                    buffer.append('/');
+                }
+                buffer.append(getServletPath());
             }
-            */
+
+            if (getPathInfo() != null) {
+                if (buffer.charAt(buffer.length()-1) != '/') {
+                    buffer.append('/');
+                }
+                buffer.append(getPathInfo());
+            }
+
+            this.portletRequestURI = buffer.toString();
         }
         return this.portletRequestURI;
     }
@@ -498,21 +501,21 @@ public abstract class PortletRequest implements Request {
     public Object getAttribute(String name) {
         return this.getAttribute(name, Request.GLOBAL_SCOPE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
         return this.getAttributeNames(Request.GLOBAL_SCOPE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
         this.setAttribute(name, value, Request.GLOBAL_SCOPE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
      */
@@ -530,7 +533,7 @@ public abstract class PortletRequest implements Request {
             return this.request.getAttribute(name);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
      */
@@ -541,7 +544,7 @@ public abstract class PortletRequest implements Request {
             return this.request.getAttributeNames();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
      */
@@ -552,7 +555,7 @@ public abstract class PortletRequest implements Request {
             this.request.setAttribute(name, value);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
      */
@@ -563,5 +566,5 @@ public abstract class PortletRequest implements Request {
             this.request.removeAttribute(name);
         }
     }
-    
+
 }
