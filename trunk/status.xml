@@ -181,22 +181,27 @@
   <changes>
 
  <release version="@version@" date="@date@">
-  <action dev="GP" type="iupdate">
+  <action dev="JH" type="fix">
+    Fixed some caching and logging issues in the DirectoryGenerator.
+    Fixed the root pattern handling (if not matching directory found leave out the ancestors).
+    Fixed empty src attribute handling.
+  </action>
+  <action dev="GP" type="update">
     Upgraded to new Axis 1.1 release
   </action>
   <action dev="CZ" type="add">
     Adding concept of parent-aware components, making e.g. the usage of 
     selectors with a component manager hierarchy much easier.
   </action>
-  <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="	maciejka@tiger.com.pl">
+  <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
     Added/fixed internationalization support for HSSFSerializer by setting the output encoding
     hardcoded to UTF-16. It's obviously only a hack, but so it's at least usable for more people.
   </action>
   <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
-    fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/>
+    Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/>
   </action>
   <action dev="JH" type="fix" fixes-bug="14977" due-to="Tony Culshaw" due-to-email="tony@cultech.com.au">
-    fixed NPE in SQLTransformer.serializeData()
+    Fixed NPE in SQLTransformer.serializeData()
   </action>
   <action dev="JH" type="add" fixes-bug="20477" due-to="Arje Cahn" due-to-email="arje@hippo.nl">
    Added cHTML/iMode "Hello World!" sample (provided by Arje Cahn)
