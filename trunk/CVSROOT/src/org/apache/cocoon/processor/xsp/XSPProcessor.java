@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.11 2000-03-01 16:09:25 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.12 2000-03-13 21:26:27 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,6 +61,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.cocoon.*;
+import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.transformer.*;
 import org.apache.cocoon.processor.*;
@@ -72,22 +73,23 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.11 $ $Date: 2000-03-01 16:09:25 $
+ * @version $Revision: 1.12 $ $Date: 2000-03-13 21:26:27 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
 {
   public static final String DEFAULT_LANGUAGE = "java";
+  public static final String LOGICSHEET_PI = "xml-logicsheet";
 
   protected Parser parser;
   protected Transformer transformer;
 
   protected Hashtable languages;
-  protected Hashtable libraries;
   protected File repositoryFile;
-  protected Hashtable pageCache;
 
-  protected XSPLibrary xspLibrary;
+  protected Store store;
+  protected Monitor monitor;
+  protected Hashtable byNamespace;
 
   protected XSPGlobal global;
   protected ServletContext servletContext;
@@ -99,6 +101,12 @@ public class XSPProcessor extends AbstractActor
   public void init(Director director) {
     super.init(director);
 
+    // Initialize Cocoon cache
+    this.store = (Store) director.getActor("store");
+
+    // Initialize Cocoon monitor
+    this.monitor = new Monitor(8);
+
     // Initialize DOM parser
     this.parser = (Parser) director.getActor("parser");
 
@@ -108,11 +116,8 @@ public class XSPProcessor extends AbstractActor
     // Initialize XSLT processor
     this.transformer = (Transformer) director.getActor("transformer");
 
-    // Initialize page cache
-    this.pageCache = new Hashtable();
-
-    // Initialize the library container
-    this.libraries = new Hashtable();
+    // Initialize the logicsheet hashtable indexed by language
+    this.byNamespace = new Hashtable();
 
     try {
       // Load configuration
@@ -126,15 +131,13 @@ public class XSPProcessor extends AbstractActor
 
       Element root = document.getDocumentElement();
 
-      // Load languages and XSP built-in library
-      this.xspLibrary = new XSPLibrary();
-      this.xspLibrary.setNamespace("xsp");
-
+      // Load languages and XSP built-in logicsheet
       this.languages = new Hashtable();
       NodeList languageList = root.getElementsByTagName("language");
       int languageCount = languageList.getLength();
 
       // Don't forget to set repository later, on init(conf)!
+      Hashtable xspLogicsheets = new Hashtable();
       for (int i = 0; i < languageCount; i++) {
         Element languageElement = (Element) languageList.item(i);
 
@@ -151,38 +154,41 @@ public class XSPProcessor extends AbstractActor
 
         this.languages.put(languageName, languageProcessor);
 
-        // Do template
+        // Do logicsheet
 /* START: Build XSP parameter dictionary */
 /* Add manager role key/value pairs */
 /* Add global XSP objects */
 /* END: Build XSP parameter dictionary */
 
-/* START: Create a new XSP core library given URI  */
+/* START: Create a new XSP core logicsheet given URI  */
 /* Pass global XSP parameter dictionary */
-        XSPTemplate template = new XSPTemplate(transformer, parser, null);
-        template.setLanguageName(languageName);
 
-        String templateName = languageElement.getAttribute("template");
-        Document templateStylesheet = this.parser.parse(
-          new InputSource(
+        XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
+
+        String logicsheetName = languageElement.getAttribute("template");
+        Document logicsheetStylesheet = this.parser.parse(
+          new InputSource(  
             new InputStreamReader(
-              this.getClass().getResourceAsStream(templateName)
+              this.getClass().getResourceAsStream(logicsheetName)
             )
           ), false
         );
-        template.setStylesheet(templateStylesheet);
+        logicsheet.setStylesheet(logicsheetStylesheet);
 
         String preprocessorName =
           languageElement.getAttribute("dom-preprocessor");
         if (preprocessorName.length() > 0) {
           XSPPreprocessor domPreprocessor =
             (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
-          template.setPreprocessor(domPreprocessor);
+          logicsheet.setPreprocessor(domPreprocessor);
         }
 
-        this.xspLibrary.addTemplate(template);
-/* END: Create a new XSP core library given URI  */
+        xspLogicsheets.put(languageName, logicsheet);
+/* END: Create a new XSP core logicsheet given URI  */
       }
+
+          // Add to namespace logicsheet list
+      this.byNamespace.put("xsp", xspLogicsheets);
     } catch (Exception e) {
       throw new RuntimeException("Error during initialization: " + e);
     }
@@ -230,92 +236,59 @@ public class XSPProcessor extends AbstractActor
         );
       }
     }
+/* START: Load namespace-mapped logicsheets */
+    // Load namespace-mapped logicsheets
+    Configurations lsConf = conf.getConfigurations("library");
+    Enumeration e = lsConf.keys();
+    if (!e.hasMoreElements()) {
+      lsConf = conf.getConfigurations("logicsheet");
+      e = lsConf.keys();
+    }
 
-/* START: Load external libraries */
-    // Load external libraries
-    conf = conf.getConfigurations("library");
-
-    Enumeration e = conf.keys();
     while (e.hasMoreElements()) {
       String str = (String) e.nextElement();
       String namespace = str.substring(0, str.indexOf('.'));
       String language = str.substring(str.indexOf('.') + 1);
-      String location = (String) conf.get(str);
+      String location = (String) lsConf.get(str);
 
       if (this.languages.get(language) == null) {
         throw new RuntimeException(
           "Unsupported language '" + language + "' " +
-          "in library '" + namespace + "'"
+          "in logicsheet '" + namespace + "'"
         );
       }
 
-      XSPLibrary library = (XSPLibrary) this.libraries.get(namespace);
-      if (library == null) {
-        library = new XSPLibrary();
-        library.setNamespace(namespace);
+      Hashtable byLanguage = (Hashtable) this.byNamespace.get(namespace);
+      if (byLanguage == null) {
+        byLanguage = new Hashtable();
       }
 
-      XSPTemplate template = new XSPTemplate(transformer, parser, location);
-      template.setLanguageName(language);
-
       try {
-        InputStream stream;
+		// FIXME: This works only with resources and absolute filenames!!!
+		Object resource = this.getLocationResource(location, "");
 
-        if (location.indexOf("://") > -1) {
-            URL url;
-
-            if (location.startsWith("resource://")) {
-                // this to avoid the portability issues with the URLHandling factories
-                url = ClassLoader.getSystemResource(location.substring("resource://".length()));
-            } else {
-                url = new URL(location);
-            }
-
-            if (url == null) {
-                throw new IOException("Resource not found: " + location);
-            } else {
-                stream = url.openStream();
-            }
-        } else {
-            stream = new FileInputStream(location);
-        }
-
-        Document stylesheet = this.parser.parse(new InputSource(stream), false);
-
-        template.setStylesheet(stylesheet);
-
-        String preprocessorName = (String) this.libraries.get(namespace + "." + language + ".preprocessor");
+        XSPPreprocessor preprocessor = null;
+        String preprocessorName =
+          (String) lsConf.get(namespace + "." + language + ".preprocessor");
         if (preprocessorName != null) {
-          XSPPreprocessor preprocessor = (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
-          template.setPreprocessor(preprocessor);
+          preprocessor = (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
         }
 
-        library.addTemplate(template);
+		// Store only after initialization completes successfully
+		this.refreshLogicsheet(resource, preprocessor);
+        byLanguage.put(language, this.store.get(resource.toString()));
       } catch (Exception ex) {
         throw new RuntimeException ("Error loading logicsheet: " + location + ". " + ex);
       }
 
-      this.libraries.put(namespace, library);
+      this.byNamespace.put(namespace, byLanguage);
     }
-/* END: Load external libraries */
+/* END: Load namespace-mapped logicsheets */
   }
 
   public Document process(Document document, Dictionary parameters)
     throws Exception
   {
-    // Retrieve servletContext and request objects from parameters
-    HttpServletRequest request =
-      (HttpServletRequest) parameters.get("request");
-
-    HttpServletResponse response =
-      (HttpServletResponse) parameters.get("response");
-
-    // Determine source document's absolute pathname
-    String filename = Utils.getBasename(request, servletContext);
-
-    File sourceFile = new File(filename);
-    filename = sourceFile.getCanonicalPath();
-
     // Determine page language
     Element root = document.getDocumentElement();
 
@@ -331,8 +304,21 @@ public class XSPProcessor extends AbstractActor
       throw new Exception("Unsupported language: " + languageName);
     }
 
-    // Get page from page
-    PageEntry pageEntry = (PageEntry) this.pageCache.get(filename);
+    // Retrieve servletContext and request objects from parameters
+    HttpServletRequest request =
+      (HttpServletRequest) parameters.get("request");
+
+    HttpServletResponse response =
+      (HttpServletResponse) parameters.get("response");
+
+    // Determine source document's absolute pathname
+    String filename = Utils.getBasename(request, servletContext);
+
+    File sourceFile = new File(filename);
+    filename = sourceFile.getCanonicalPath();
+
+    // Get page from Cocoon cache
+    PageEntry pageEntry = (PageEntry) this.store.get(filename);
 
     // New page?
     if (pageEntry == null) {
@@ -350,21 +336,43 @@ public class XSPProcessor extends AbstractActor
         targetFilename
       );
 
-      pageEntry = new PageEntry(sourceFile,targetFile);
+      pageEntry = new PageEntry(sourceFile, targetFile);
+      pageEntry.setLogicsheets(
+        this.getLogicsheets(document, (String) parameters.get("path"))
+      );
 
       // Was page created during a previous incarnation?
       if (targetFile.exists() && !pageEntry.hasChanged()) {
         this.loadPage(languageProcessor, pageEntry, targetFilename);
       }
 
-      this.pageCache.put(filename, pageEntry);
+      // Remember page entry
+      this.store.hold(filename, pageEntry);
     }
 
     // [Re]create page if necessary
     if (pageEntry.hasChanged()) {
-      // Collect used libraries
-      Vector libraryList = new Vector();
-/* START: Locate libraries used */
+      // Update logicsheets in page entry
+      pageEntry.setLogicsheets(
+        this.getLogicsheets(document, (String) parameters.get("path"))
+      );
+
+      // Build XSP parameters for logicsheet
+      Hashtable logicsheetParameters = new Hashtable();
+      logicsheetParameters.put("filename", filename);
+      logicsheetParameters.put("language", languageName);
+
+      // Apply each logicsheet in sequence
+      Vector logicsheetList = pageEntry.getLogicsheets();
+      int logicsheetCount = logicsheetList.size();
+      for (int i = 0; i < logicsheetCount; i++) {
+        Object resource = logicsheetList.elementAt(i);
+        XSPLogicsheet logicsheet =
+          (XSPLogicsheet) this.store.get(resource.toString());
+        document = logicsheet.apply(document, logicsheetParameters);
+      }
+
+      // Apply namespace-defined logicsheets
       NamedNodeMap attributes = root.getAttributes();
       int attrCount = attributes.getLength();
       for (int i = 0; i < attrCount; i++) {
@@ -378,39 +386,26 @@ public class XSPProcessor extends AbstractActor
         ) {
           String namespace = attrName.substring(6);
 
-          // Not xsp, it's implied
+          // Not xsp yet, it comes forecefully last
           if (!namespace.equals("xsp")) {
-            XSPLibrary library =
-              (XSPLibrary) this.libraries.get(attrName.substring(6));
-/* [Re]Load library given URI here */
-
-            if (library != null) {
-              libraryList.addElement(library);
+            Hashtable byLanguage = (Hashtable) this.byNamespace.get(namespace);
+            if (byLanguage != null) { // Is such a namespace mapped?
+              document =
+                ((XSPLogicsheet) byLanguage.get(languageName)).
+              apply(document, logicsheetParameters);
             }
           }
         }
       }
-/* END: Locate libraries used */
 
-      // The XSP built-in library always comes last
-      libraryList.addElement(this.xspLibrary);
+      // Now is the time... apply the implied, built-in logicsheet
+      document =
+        (
+         (XSPLogicsheet)
+         ((Hashtable) this.byNamespace.get("xsp")).get(languageName)
+        ).
+          apply(document, logicsheetParameters);
 
-      // Apply each library template
-      Hashtable templateParameters = new Hashtable();
-/* START: Build XSP parameters for library */
-      templateParameters.put("filename", filename);
-      templateParameters.put("language", languageName);
-/* END: Build XSP parameters for library */
-
-      int libraryCount = libraryList.size();
-      for (int i = 0; i < libraryCount; i++) {
-        XSPLibrary library = (XSPLibrary) libraryList.elementAt(i);
-/* START: Load/Reload library if necessary */
-/* Use Cocoon Object Store! */
-        XSPTemplate template = library.getTemplate(languageName);
-/* END: Load/Reload library if necessary */
-        if (template != null) document = template.apply(document, templateParameters);
-      }
 
       // Retrieve and format generated source code
       Element sourceElement = document.getDocumentElement();
@@ -460,6 +455,7 @@ public class XSPProcessor extends AbstractActor
     return pageEntry.getPage().getDocument(request, response);
   }
 
+  // FIXME: pageEntry.loadPage(languageProcessor, filename)
   protected XSPPage loadPage(
     XSPLanguageProcessor languageProcessor,
     PageEntry pageEntry,
@@ -477,6 +473,92 @@ public class XSPProcessor extends AbstractActor
     pageEntry.setPage(page);
 
     return page;
+  }
+
+  private void refreshLogicsheet(Object resource) throws Exception {
+    this.refreshLogicsheet(resource, null);
+  }
+
+  // FIXME: A common class with XSLProcessor?
+  private void refreshLogicsheet(Object resource, XSPPreprocessor preprocessor)
+    throws Exception
+  {
+	String name = resource.toString();
+    XSPLogicsheet logicsheet = (XSPLogicsheet) this.store.get(name);
+
+    // Parse logicsheet
+	if (logicsheet == null) {
+      logicsheet = new XSPLogicsheet(this.transformer, this.parser, name);
+	}
+
+    logicsheet.setStylesheet(getDocument(resource));
+    logicsheet.setPreprocessor(preprocessor);
+ 
+    // Hold logicsheet in store
+    this.store.hold(name, logicsheet);
+    this.monitor.invalidate(name);
+    this.monitor.watch(name, resource);
+  }
+
+  // FIXME: Utils.java: pass pi type as arg. Provide for sheet building
+  private Vector getLogicsheets(Document document, String path)
+    throws Exception
+  {
+    Vector vector = new Vector();
+
+    Enumeration pis = Utils.getAllPIs(document, LOGICSHEET_PI).elements();
+    while (pis.hasMoreElements()) {
+      Hashtable attributes =
+	    Utils.getPIPseudoAttributes((ProcessingInstruction) pis.nextElement());
+
+      String location = (String) attributes.get("href");
+      if (location != null) {
+        try {
+          XSPPreprocessor preprocessor = null;
+          String preprocessorName = (String) attributes.get("dom-preprocessor");
+          if (preprocessorName != null) {
+            preprocessor =
+              (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
+          }
+
+		  Object resource = getLocationResource(location, path);
+
+		  this.refreshLogicsheet(resource, preprocessor);
+
+          vector.addElement(resource);
+
+        } catch (MalformedURLException e) {
+          throw new ProcessorException(
+            "Could not associate logicsheet to document: " +
+            location + " is a malformed URL."
+          );
+        }
+      }
+    }
+
+    return vector;
+  }
+
+  // FIXME: Utils.java: return InputStream (getDocumentStream)
+  private Document getDocument(Object resource) throws Exception {
+    InputSource input = new InputSource();
+    input.setSystemId(resource.toString());
+
+    if (resource instanceof File) {
+      input.setCharacterStream(new FileReader(((File) resource)));
+    } else if (resource instanceof URL) {
+      input.setCharacterStream(
+        new InputStreamReader(((URL) resource).openStream())
+      );
+    } else {
+      // should never happen
+      throw new Error(
+        "Fatal error: Could not elaborate given resource: " + resource
+      );
+    }
+
+    // do not validate stylesheets
+    return this.parser.parse(input, false);
   }
 
   protected ServletContext getServletContext() {
@@ -499,16 +581,58 @@ public class XSPProcessor extends AbstractActor
     protected File source;
     protected File target;
     protected XSPPage page;
+    protected Vector logicsheets;
 
     public PageEntry(File source, File target) {
       this.source = source;
       this.target = target;
     }
 
-    public boolean hasChanged() {
-      return
+    public void setLogicsheets(Vector logicsheets) throws Exception {
+      this.logicsheets = logicsheets;
+
+      int logicsheetCount = this.logicsheets.size();
+      for (int i = 0; i < logicsheetCount; i++) {
+        Object resource = this.logicsheets.elementAt(i);
+        Object object = store.get(resource.toString());
+
+        if (object == null) {
+          refreshLogicsheet(resource);
+        }
+      }
+    }
+
+    public Vector getLogicsheets() {
+      return this.logicsheets;
+    }
+
+    public boolean hasChanged() throws Exception {
+      if (
         !this.target.exists() ||
-        this.target.lastModified() < this.source.lastModified();
+        this.target.lastModified() < this.source.lastModified()
+      ) {
+        return true;
+      }
+
+      if (this.logicsheets != null) {
+        int changeCount = 0;
+        int logicsheetCount = this.logicsheets.size();
+        for (int i = 0; i < logicsheetCount; i++) {
+          Object resource = this.logicsheets.elementAt(i);
+  
+          if (
+            monitor.hasChanged(resource.toString()) ||
+            this.target.lastModified() < monitor.timestamp(resource)
+          ) {
+            changeCount++;
+            refreshLogicsheet(resource);
+          }
+        }
+
+        return changeCount > 0;
+      }
+
+      return false;
     }
 
     public void setPage(XSPPage page) {
@@ -518,5 +642,24 @@ public class XSPProcessor extends AbstractActor
     public XSPPage getPage() {
       return this.page;
     }
+  }
+
+  // FIXME: Utils.java. Reuse in XSLTProcessor
+  private static Object getLocationResource(String location, String path)
+    throws MalformedURLException
+  {
+	Object resource = null;
+
+    if (location.indexOf("://") < 0) {
+      resource = new File(path + location);
+    } else if (location.startsWith("resource://")) {
+      resource = ClassLoader.getSystemResource(
+        location.substring("resource://".length())
+      );
+    } else {
+      resource = new URL(location);
+    }
+
+	return resource;
   }
 }
