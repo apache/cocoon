@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: cocoon.xconf,v 1.53 2004/07/09 10:26:17 joerg Exp $ -->
+<!-- CVS $Id: cocoon.xconf,v 1.54 2004/07/23 02:42:07 crossley Exp $ -->
 <cocoon version="2.2">
 
 <!--+
@@ -407,7 +407,7 @@
       | Saxon XSLT Processor
       | For old (6.5.2) Saxon use:
       |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-      | For new (7.x?) Saxon use:
+      | For new (7+) Saxon use:
       |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
   <component logger="core.xslt-processor"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
