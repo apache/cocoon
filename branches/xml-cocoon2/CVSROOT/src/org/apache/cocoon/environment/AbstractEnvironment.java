@@ -34,7 +34,7 @@ public abstract class AbstractEnvironment implements Environment {
     protected StringBuffer prefix = new StringBuffer();
 
     /** The View requested */
-    protected String view = "";
+    protected String view = null;
 
      /** The Context path */
     protected URL context = null;
@@ -85,7 +85,10 @@ public abstract class AbstractEnvironment implements Environment {
                 this.context = f.toURL();
             }
         } else {
-            //FIXME: should we throw an error here ?
+            throw new RuntimeException("The current URI (" 
+                + uri + ") doesn't start with given prefix (" 
+                + prefix + ")"
+            );
         }
     }
 
