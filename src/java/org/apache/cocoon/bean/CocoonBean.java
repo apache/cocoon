@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.37 2003/10/17 14:08:29 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.38 2003/10/21 21:48:32 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -497,6 +497,10 @@ public class CocoonBean extends CocoonWrapper {
                            }
                         }
                     }
+                } else {
+                    String originalURI = linkTarget.getOriginalSourceURI();
+                    linkTarget = crawler.getTranslatedLink(linkTarget);
+                    linkTarget.setOriginalURI(originalURI);
                 }
 
                 translatedLinks.put(linkTarget.getOriginalSourceURI(), linkTarget.getTranslatedURI(target.getPath()));

@@ -62,7 +62,7 @@ import org.apache.cocoon.ProcessingException;
  *   A simple Cocoon crawler
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Crawler.java,v 1.2 2003/10/09 17:37:32 cziegeler Exp $
+ * @version CVS $Id: Crawler.java,v 1.3 2003/10/21 21:48:32 upayavira Exp $
  */
 
 public class Crawler {
@@ -107,12 +107,17 @@ public class Crawler {
     }
     
     public void addTranslatedLink(Target target) throws ProcessingException {
-        allTranslatedLinks.put(target.getSourceURI(), target.getDestinationURI());
+        allTranslatedLinks.put(target.getSourceURI(), target);
     }
     
     public boolean hasTranslatedLink(Target link) {
         return allTranslatedLinks.get(link.getSourceURI())!=null;
     }
+    
+    public Target getTranslatedLink(Target link) {
+        return (Target) allTranslatedLinks.get(link.getSourceURI());
+    }
+    
     /**
      * Returns an iterator for reading targets
      */
