@@ -98,7 +98,7 @@ public class DynamicSelectionList implements SelectionList {
     void generateSaxFragment(ContentHandler contentHandler, Locale locale, Source source) throws ProcessingException, SAXException, IOException {
         SelectionListHandler handler = new SelectionListHandler(locale);
         handler.setContentHandler(contentHandler);
-        SourceUtil.toSAX(source, handler);
+        SourceUtil.toSAX(serviceManager, source, null, handler);
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {

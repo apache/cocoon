@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.14 2003/10/24 22:49:08 joerg Exp $
+ * @version CVS $Id: Field.java,v 1.15 2003/11/03 23:16:12 ugo Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -299,6 +299,10 @@ public class Field extends AbstractWidget {
         definition.generateLabel(contentHandler);
     }
 
+    /**
+     * Set this field's selection list.
+     * @param selectionList The new selection list.
+     */
     public void setSelectionList(SelectionList selectionList) {
         if (selectionList != null &&
             selectionList.getDatatype() != null &&
@@ -309,8 +313,37 @@ public class Field extends AbstractWidget {
         this.selectionList = selectionList;
     }
     
+    /**
+     * Read this field's selection list from an external source.
+     * All Cocoon-supported protocols can be used. 
+     * The format of the XML produced by the source should be the 
+     * same as in case of inline specification of the selection list,
+     * thus the root element should be a <code>wd:selection-list</code>
+     * element.
+     * @param uri The URI of the source. 
+     */
     public void setSelectionList(String uri) {
         setSelectionList(this.definition.buildSelectionList(uri));
+    }
+    
+    /**
+     * Set this field's selection list using values from an in-memory
+     * object. The <code>object</code> parameter should point to a collection
+     * (Java collection or array, or Javascript array) of objects. Each object
+     * belonging to the collection should have a <em>value</em> property and a
+     * <em>label</em> property, whose values are used to specify the <code>value</code>
+     * attribute and the contents of the <code>wd:label</code> child element
+     * of every <code>wd:item</code> in the list.
+     * <p>Access to the values of the above mentioned properties is done
+     * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
+     * @param model The collection used as a model for the selection list. 
+     * @param keyPath An XPath expression referring to the attribute used
+     * to populate the values of the list's items. 
+     * @param labelPath An XPath expression referring to the attribute used
+     * to populate the labels of the list's items.
+     */
+    public void setSelectionList(Object model, String valuePath, String labelPath) {
+        setSelectionList(this.definition.buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
     public Datatype getDatatype() {
