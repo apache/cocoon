@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.ArrayStack;
-import org.apache.commons.collections.StaticBucketMap;
+import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -87,7 +87,7 @@ import org.xml.sax.SAXException;
  * Transformer which implements the dynamic Tag functionalty.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: TagTransformer.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: TagTransformer.java,v 1.4 2004/02/05 10:47:24 cziegeler Exp $
  */
 public class TagTransformer
     extends AbstractXMLProducer

@@ -55,12 +55,13 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.cocoon.components.RequestLifecycleComponent;
-import org.apache.cocoon.environment.Context;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpRequest;
 import org.apache.cocoon.environment.http.HttpSession;
@@ -94,14 +95,15 @@ import org.apache.commons.jxpath.servlet.KeywordVariables;
  * JXPath does not automatically create sessions.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: JXPathCocoonContexts.java,v 1.3 2003/07/11 14:17:44 cziegeler Exp $
+ * @version CVS $Id: JXPathCocoonContexts.java,v 1.4 2004/02/05 10:47:24 cziegeler Exp $
  */
-public final class JXPathCocoonContexts implements RequestLifecycleComponent, Component, Recyclable {
+public final class JXPathCocoonContexts implements Component, Contextualizable, Recyclable {
+    
     public static final String ROLE = JXPathCocoonContexts.class.getName();
     private static JXPathContextFactory factory;
-    private Map objectModel;
     private JXPathContext variableContext;
-
+    private Context context;
+    
     static {
         factory = JXPathContextFactory.newInstance();
         JXPathIntrospector.registerDynamicClass(HttpRequest.class, CocoonRequestHandler.class);
@@ -109,6 +111,14 @@ public final class JXPathCocoonContexts implements RequestLifecycleComponent, Co
         JXPathIntrospector.registerDynamicClass(HttpContext.class, CocoonContextHandler.class);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context)
+    throws ContextException {
+        this.context = context;
+    }
+
     public final JXPathContext getVariableContext() {
         if (variableContext == null) {
             JXPathContext parentContext = getRequestContext();
@@ -122,10 +132,11 @@ public final class JXPathCocoonContexts implements RequestLifecycleComponent, Co
      * within the request itself.
      */
     public final JXPathContext getRequestContext() {
+        Map objectModel = ContextHelper.getObjectModel(this.context);
         Request request = ObjectModelHelper.getRequest(objectModel);
         JXPathContext context = (JXPathContext) request.getAttribute(Constants.JXPATH_CONTEXT);
         if (context == null) {
-            Context cocoonContext = ObjectModelHelper.getContext(objectModel);
+            org.apache.cocoon.environment.Context cocoonContext = ObjectModelHelper.getContext(objectModel);
             JXPathContext parentContext = null;
             Session session = request.getSession(false);
             if (session != null) {
@@ -146,7 +157,7 @@ public final class JXPathCocoonContexts implements RequestLifecycleComponent, Co
      * Returns a JXPathContext bound to the "session" scope. Caches that context
      * within the session itself.
      */
-    public final JXPathContext getSessionContext(Session session, Context cocoonContext) {
+    public final JXPathContext getSessionContext(Session session, org.apache.cocoon.environment.Context cocoonContext) {
         JXPathContext context = (JXPathContext) session.getAttribute(Constants.JXPATH_CONTEXT);
         if (context == null) {
             if (session.getClass() != HttpSession.class)
@@ -163,7 +174,7 @@ public final class JXPathCocoonContexts implements RequestLifecycleComponent, Co
      * Returns a JXPathContext bound to the "application" scope. Caches that context
      * within the servlet context itself.
      */
-    public final JXPathContext getApplicationContext(Context cocoonContext) {
+    public final JXPathContext getApplicationContext(org.apache.cocoon.environment.Context cocoonContext) {
         JXPathContext context = (JXPathContext) cocoonContext.getAttribute(Constants.JXPATH_CONTEXT);
         if (context == null) {
             if (cocoonContext.getClass() != HttpContext.class)
@@ -176,17 +187,9 @@ public final class JXPathCocoonContexts implements RequestLifecycleComponent, Co
     }
     
     /*
-     * @see RequestLifecycleComponent#setup(SourceResolver, Map)
-     */
-    public void setup(SourceResolver resolver, Map objectModel) {
-        this.objectModel = objectModel;
-    }
-    
-    /*
      * @see Recyclable#recycle()
      */
     public void recycle() {
-        this.objectModel = null;
         this.variableContext = null;
     }
 }
