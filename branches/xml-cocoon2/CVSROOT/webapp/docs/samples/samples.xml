@@ -42,6 +42,14 @@
    <sample name="scalable vector graphics" href="svg">
     An example of a SVG file rendered to a PNG image.
    </sample>
+   <sample name="Javascript Generator" href="scripts/hello.js">
+    An example of the ScriptGenerator producing XML out of a Javascript program.
+   </sample>
+   <sample name="Python Generator" href="scripts/hello.py">
+    An example of the ScriptGenerator producing XML out of a Python program.
+    You should make sure that you have the Jython interpreter (jython.jar) from
+    www.jython.org in the WEB-INF/lib directory of your Cocoon 2 webapp context.
+   </sample>
    <sample name="slides" href="slides/slides">
     Example of complex XSLT usage.
    </sample>
