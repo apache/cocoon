@@ -46,6 +46,7 @@
     import java.util.List;
     import java.util.ArrayList;
     import java.util.Map;
+    import java.util.Stack;
 
     import javax.servlet.http.HttpServletRequest;
 
@@ -73,7 +74,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.52 $ $Date: 2000-10-23 21:17:46 $
+     * @version CVS $Revision: 1.1.2.53 $ $Date: 2000-10-24 17:46:32 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -187,9 +188,9 @@
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
       public void configure(Configuration conf) throws ConfigurationException {
+        Stack stack = new Stack();
 	DefaultConfiguration cconf;
-	DefaultConfiguration current;
-	DefaultConfiguration nested;
+	DefaultConfiguration temp;
 
         this.sitemapManager = new Manager(super.sitemapComponentManager);
         this.sitemapManager.compose(this.manager);
@@ -713,14 +714,15 @@
       <xsl:variable name="is-factory-component"
         select="(@factory and ($name = 'matcher' or $name = 'selector')) or (@src and ($name = 'matcher' or $name = 'selector') and java:isFactory($factory-loader, string(@src)))"/>
       <xsl:if test="$is-factory-component=false()">
-        cconf = new DefaultConfiguration("");
+        stack.clear();
 
-        current = new DefaultConfiguration("<xsl:value-of select="translate(@name, '- ', '__')"/>");
+        cconf = new DefaultConfiguration("<xsl:value-of select="translate(@name, '- ', '__')"/>");
         <xsl:for-each select="attribute::*[name(.)!=$qname]">
-          current.addAttribute ("<xsl:value-of select="name(.)"/>",
+          cconf.addAttribute ("<xsl:value-of select="name(.)"/>",
                                 "<xsl:value-of select="."/>");
         </xsl:for-each>
 
+        stack.push(cconf);
         <!-- get nested configuration definitions -->
         <xsl:call-template name="nested-config-components">
           <xsl:with-param name="name" select="$name"/>
@@ -730,8 +732,7 @@
           <xsl:with-param name="ns" select="$ns"/>
         </xsl:call-template>
 
- 	cconf.addChild(current);
-
+        stack.pop();
         <xsl:choose>
           <xsl:when test="@mime-type">
             load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf, "<xsl:value-of select="@mime-type"/>");
@@ -759,16 +760,22 @@
 
     <!-- process content -->
     <xsl:for-each select="$components">
-      nested = new DefaultConfiguration("<xsl:value-of select="name(.)"/>");
+      temp = new DefaultConfiguration("<xsl:value-of select="name(.)"/>");
       <xsl:for-each select="attribute::*[name(.)!=$qname]">
-        nested.addAttribute ("<xsl:value-of select="name(.)"/>", "<xsl:value-of select="."/>");
+        temp.addAttribute ("<xsl:value-of select="name(.)"/>", "<xsl:value-of select="."/>");
       </xsl:for-each>
       <xsl:for-each select="attribute::*[name(.)=$qname]">
-        nested.appendValueData("<xsl:value-of select="."/>");
+        temp.appendValueData("<xsl:value-of select="."/>");
       </xsl:for-each>
       <xsl:if test="normalize-space(text())">
-        nested.appendValueData("<xsl:value-of select="text()"/>");
+        temp.appendValueData("<xsl:value-of select="text()"/>");
       </xsl:if>
+      if (!stack.empty()) {
+          DefaultConfiguration p = (DefaultConfiguration) stack.peek();
+	  p.addChild(temp);
+      }
+ 
+      stack.push(temp);
       <xsl:variable name="newsubname">
         <xsl:choose>
           <xsl:when test="not($subname)"><xsl:value-of select="position()"/></xsl:when>
@@ -783,7 +790,7 @@
         <xsl:with-param name="ns"><xsl:value-of select="namespace-uri(.)"/></xsl:with-param>
         <xsl:with-param name="subname"><xsl:value-of select="$newsubname"/></xsl:with-param>
       </xsl:call-template>
-      current.addChild(nested);
+      stack.pop();
     </xsl:for-each>
   </xsl:template>
 
