@@ -12,7 +12,7 @@ import org.apache.cocoon.CodeFactory;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.traversal.NodeIterator;
+import org.w3c.dom.NodeList;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
@@ -24,7 +24,7 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-02-15 21:09:50 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-02-20 13:50:22 $
  */
 
 public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
@@ -47,7 +47,7 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
     /**
      * Generates the matcher parameter level source code
      */
-    public String generateParameterSource (NodeIterator conf)
+    public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "int []";
     }
@@ -61,7 +61,7 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
     /**
      * Generates the matcher method level source code
      */
-    public String generateMethodSource (NodeIterator conf)
+    public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
                //"String uri = ((org.apache.cocoon.environment.http.HttpRequest) objectModel.get(Constants.REQUEST_OBJECT)).getRequestURI();" +
         return "HashMap map = new HashMap();" +
@@ -77,7 +77,7 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
      * Generates the matcher class level source code
      */
     public String generateClassSource (String prefix, String pattern,
-                                       NodeIterator conf)
+                                       NodeList conf)
     throws ConfigurationException {
         StringBuffer result = new StringBuffer();
         try {

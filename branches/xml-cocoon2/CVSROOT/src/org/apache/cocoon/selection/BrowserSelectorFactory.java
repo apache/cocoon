@@ -9,7 +9,7 @@ package org.apache.cocoon.selection;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.traversal.NodeIterator;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.TreeWalker;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.Node;
@@ -26,18 +26,18 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-15 21:10:01 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-20 13:50:26 $
 */
 
 
 public class BrowserSelectorFactory implements CodeFactory {
 
-    public String generateParameterSource (NodeIterator conf)
+    public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "String []";
     }
 
-    public String generateClassSource (String prefix, String test, NodeIterator conf)
+    public String generateClassSource (String prefix, String test, NodeList conf)
     throws ConfigurationException {
         Node node = null;
         Node nodeattrname  = null;
@@ -48,7 +48,9 @@ public class BrowserSelectorFactory implements CodeFactory {
         sb.append("static String [] ")
           .append(prefix)
           .append("_expr = {");
-        while ((node = conf.nextNode()) != null) {
+        int count = conf.getLength();
+        for(int k = 0; k < count;k++) {
+            node = conf.item(k);
             if (node.getNodeName().equals("browser") &&
                 node.getNodeType() == Node.ELEMENT_NODE) {
                 nm = node.getAttributes();
@@ -67,7 +69,7 @@ public class BrowserSelectorFactory implements CodeFactory {
         return sb.append("};").toString();
     }
 
-    public String generateMethodSource (NodeIterator conf)
+    public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
          sb.append("if (pattern != null && objectModel.get(Constants.REQUEST_OBJECT) != null) {")

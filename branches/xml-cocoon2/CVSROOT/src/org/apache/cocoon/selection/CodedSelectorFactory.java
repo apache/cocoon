@@ -9,7 +9,7 @@ package org.apache.cocoon.selection;
 
 
 import org.apache.avalon.ConfigurationException;
-import org.w3c.dom.traversal.NodeIterator;
+import org.w3c.dom.NodeList;
 import org.apache.cocoon.CodeFactory;
 
 
@@ -18,20 +18,20 @@ import org.apache.cocoon.CodeFactory;
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-14 11:39:50 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-20 13:50:27 $
  */
 public class CodedSelectorFactory extends java.lang.Object
         implements CodeFactory {
 
 
-    public String generateParameterSource( NodeIterator conf )
+    public String generateParameterSource( NodeList conf )
             throws ConfigurationException {
         return "org.apache.cocoon.selection.helpers.CodedSelectorHelper";
     }
 
 
     public String generateClassSource( String prefix, String test,
-            NodeIterator conf ) throws ConfigurationException {
+            NodeList conf ) throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
         sb.append("static org.apache.cocoon.selection.helpers.CodedSelectorHelper " )
           .append( prefix )
@@ -45,7 +45,7 @@ public class CodedSelectorFactory extends java.lang.Object
     }
 
 
-    public String generateMethodSource( NodeIterator conf )
+    public String generateMethodSource( NodeList conf )
             throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
 

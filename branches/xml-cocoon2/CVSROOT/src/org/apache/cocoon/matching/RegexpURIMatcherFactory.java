@@ -15,7 +15,7 @@ import org.apache.regexp.RESyntaxException;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.traversal.NodeIterator;
+import org.w3c.dom.NodeList;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
@@ -26,13 +26,13 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-15 21:09:47 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-20 13:50:22 $
  */
 
 public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
     protected Logger log;
 
-    public String generateParameterSource (NodeIterator conf)
+    public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "RE";
     }
@@ -44,7 +44,7 @@ public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
     }
 
     public String generateClassSource (String prefix, String pattern,
-                                       NodeIterator conf)
+                                       NodeList conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         try {
@@ -98,7 +98,7 @@ public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
         }
     }
 
-    public String generateMethodSource (NodeIterator conf)
+    public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("HashMap map = new HashMap ();")

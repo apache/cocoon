@@ -9,7 +9,7 @@ package org.apache.cocoon.matching;
 
 import java.util.Stack;
 
-import org.w3c.dom.traversal.NodeIterator;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
 
@@ -23,12 +23,12 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-31 15:48:37 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-20 13:50:20 $
  */
 
 public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {
 
-    public String generateMethodSource (NodeIterator conf)
+    public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
         Node node = null;
@@ -36,7 +36,9 @@ public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {
         NamedNodeMap nm = null;
 
         sb.append ("/*\n");
-        while ((node = conf.nextNode()) != null) {
+        int count = conf.getLength();
+        for(int k = 0; k < count;k++) {
+            node = conf.item(k);
             sb.append("name=")
               .append(node.getNodeName())
               .append(" type=")
@@ -57,12 +59,12 @@ public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {
     }
 
     public String generateClassSource (String prefix, String pattern,
-                                       NodeIterator conf)
+                                       NodeList conf)
     throws ConfigurationException {
         return "\n// Dummy values\nstatic String " + prefix + "_expr = \"" + pattern + "\";\n";
     }
 
-    public String generateParameterSource (NodeIterator conf)
+    public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "String";
     }
