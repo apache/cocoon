@@ -96,7 +96,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.7 2003/09/03 15:00:57 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.8 2003/09/25 12:54:21 vgritsenko Exp $
  */
 public final class SourceUtil {
 
@@ -271,7 +271,6 @@ public final class SourceUtil {
     /**
      * Generates a DOM from the given source
      * @param source The data
-     * @param manager Component manager.
      *
      * @return Created DOM document.
      *
@@ -280,15 +279,13 @@ public final class SourceUtil {
      * @throws SAXException If a SAX exception occurs.
      */
     static public Document toDOM(Source source)
-                                   throws SAXException, IOException,
-                                          ProcessingException {
+            throws SAXException, IOException, ProcessingException {
         DOMBuilder builder = new DOMBuilder();
 
         toSAX(source, builder);
 
         Document document = builder.getDocument();
-
-        if (document==null) {
+        if (document == null) {
             throw new ProcessingException("Could not build DOM for '"+
                                           source.getURI()+"'");
         }
@@ -458,12 +455,11 @@ public final class SourceUtil {
      * @param typeParameters Type of Source query.  Currently, only
      * <code>method</code> parameter (value typically <code>GET</code> or
      * <code>POST</code>) is recognized.  May be <code>null</code>.
-     * @param resourceParameters Parameters (e.g. URL params) of the source.
+     * @param parameters Parameters (e.g. URL params) of the source.
      * May be <code>null</code>
      * @param frag DOM fragment to serialize to the Source
      * @param resolver Resolver for the source.
      * @param serializerName
-     * @param manager
      *
      * @throws ProcessingException
      */
