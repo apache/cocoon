@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 
 <cocoon version="2.0">
-  <component  role="parser"     class="org.apache.cocoon.components.parser.XercesParser"/>
-  <generator  name="generator"  class="org.apache.cocoon.components.parser.XercesParser"/>
-  <filter     name="filter"     class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component  role="serializer" class="org.apache.cocoon.serializers.XMLSerializer"/>
+  <component  role="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
+
+  <generator  name="file"    class="org.apache.cocoon.generators.FileGenerator"/>
+  <generator  name="request" class="org.apache.cocoon.generators.RequestGenerator"/>
+  <serializer name="xml"     class="org.apache.cocoon.serializers.XMLSerializer"/>
   
   <sitemap>
     <partition>
-      <process uri="*.jpg" source="*.jpg">
-        <generator name="file"/>
-        <serializer name="xml"/>
+      <process uri="*.txt" source="*.xml">
+        <generator name="request">
+          <parameter name="testName" value="testValue"/>
+         </generator>
+        <serializer name="xml">
+          <parameter name="contentType" value="text/xml"/>
+        </serializer>
       </process>
     </partition>
   </sitemap>
