@@ -25,7 +25,7 @@ import org.apache.cocoon.util.IOUtils;
  *
  * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: IOUtilsTestCase.java,v 1.5 2004/04/20 16:10:52 ugo Exp $
+ * @version CVS $Id: IOUtilsTestCase.java,v 1.6 2004/05/05 22:28:22 ugo Exp $
  */
 public class IOUtilsTestCase extends TestCase
 {
