@@ -82,7 +82,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.19 2004/06/24 01:11:49 vgritsenko Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.20 2004/06/25 14:18:29 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -158,21 +158,23 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
                     src = resolver.resolveURI(this.uri);
                     this.validity = src.getValidity();
                     this.document = SourceUtil.toDOM(src);
-                } else {
-                    if (this.reloadable) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Document cached... checking validity of uri " + this.uri);
-                        }
-                        if (this.validity != null && this.validity.isValid() == SourceValidity.UNKNOWN) {
-                            src = resolver.resolveURI(this.uri);
-                            SourceValidity valid = src.getValidity();
-                            if (this.validity.isValid(valid) != SourceValidity.VALID) {
-                                if (logger.isDebugEnabled()) {
-                                    logger.debug("Reloading document... uri " + this.uri);
-                                }
-                                this.validity = valid;
-                                this.document = SourceUtil.toDOM(src);
+                } else if (this.reloadable) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Document cached... checking validity of uri " + this.uri);
+                    }
+
+                    int valid = this.validity == null? SourceValidity.INVALID: this.validity.isValid();
+                    if (valid != SourceValidity.VALID) {
+                        // Get new source and validity
+                        src = resolver.resolveURI(this.uri);
+                        SourceValidity newValidity = src.getValidity();
+                        // If already invalid, or invalid after validities comparison, reload
+                        if (valid == SourceValidity.INVALID || this.validity.isValid(newValidity) != SourceValidity.VALID) {
+                            if (logger.isDebugEnabled()) {
+                                logger.debug("Reloading document... uri " + this.uri);
                             }
+                            this.validity = newValidity;
+                            this.document = SourceUtil.toDOM(src);
                         }
                     }
                 }
