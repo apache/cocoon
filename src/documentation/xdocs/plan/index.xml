@@ -61,10 +61,14 @@
 
   <ul>
    <li><link href="release.html">Release Plan</link>
-    - major things to do before the next release</li>
+    - major things to do before the next release.</li>
    <li><link href="review-sitemap-docs.html">Review Sitemap Docs</link>
     - a coordinated review of the generated documentation for sitemap
-     components
+     components.
+   </li>
+   <li><link href="http://wiki.apache.org/cocoon/22NewDocuments">New Cocoon 2.2 Documentation</link>
+    - a coordinated review of all documentation, to prepare for the
+    Cocoon-2.2 release.
    </li>
   </ul>
 

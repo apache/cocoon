@@ -20,7 +20,9 @@
       </p>
       <p>
         This review focusses only on this set of documentation, as part of
-        the overall documentation review. This set is a key part, because it
+        the overall documentation
+        <link href="http://wiki.apache.org/cocoon/22NewDocuments">review</link>.
+        This set is a key part, because it
         addresses the heart of Cocoon - the sitemap components. Having a
         well-defined "User Guide" will assist both users and developers to
         be more productive.
@@ -1330,15 +1332,6 @@
 </tr>
 <tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceDescriptionGenerator.html">TraversableSourceDescriptionGenerator</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>repository</td>
-  <!-- C --><td>n</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceGenerator.html">TraversableSourceGenerator</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
