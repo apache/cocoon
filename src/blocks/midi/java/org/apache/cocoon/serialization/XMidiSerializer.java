@@ -52,11 +52,9 @@ package org.apache.cocoon.serialization;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.midi.xmidi.Utils;
 import org.apache.cocoon.components.midi.xmidi.Constants;
-
+import org.apache.cocoon.components.midi.xmidi.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

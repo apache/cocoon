@@ -12,26 +12,15 @@
     <map:matchers default="wildcard"/>
   </map:components>
 
-
 <!-- =========================== Views =================================== -->
-
-<!--
-  The debug view can be used to output an intermediate 
-  snapshot of the pipeline.
-  Pass cocoon-view=debug as a URL parameter to see
-  the pipeline output produced by the transformer
-  labeled "debug". You can move the label to different
-  transformers to understand each processing
-  stage better.
--->
-<map:views>
-  <map:view name="debug" from-label="debug">
-    <map:serialize type="xml"/>
-  </map:view>
-  <map:view name="xml" from-label="xml">
-    <map:serialize type="xml"/>
-  </map:view>
-</map:views>
+  <map:views>
+    <map:view name="debug" from-label="debug">
+      <map:serialize type="xml"/>
+    </map:view>
+    <map:view name="xml" from-label="xml">
+      <map:serialize type="xml"/>
+    </map:view>
+  </map:views>
 
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines> 
@@ -65,12 +54,3 @@
   </map:pipelines> 
   
 </map:sitemap>
-<!-- end of file -->
-
-
-
-
-
-
-
-
