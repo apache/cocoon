@@ -180,11 +180,6 @@
       (samples/precept/app/example1.html)
       and then to the xmlform example (samples/xmlform/wizard).
     </action>
-
-    <action context="code">
-      You got a ArrayIndexOutOfBoundsException from the profiler example, if
-      you try to get the SAX fragments.
-    </action>
    </actions>
   </todo>
 
