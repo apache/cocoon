@@ -55,6 +55,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 
 /**
  * Builds all nodes below the top-level &lt;sitemap&gt; element, and returns the
@@ -62,24 +63,53 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  * occurs at this level.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapNodeBuilder.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: SitemapNodeBuilder.java,v 1.2 2003/08/12 15:48:02 sylvain Exp $
  */
 
 public class SitemapNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
+    
+    // Name of children that have to be built in a particular order.
+    // For example, views have to be built before resources and both before pipelines.
+    private static final String[] orderedNames = { "components", "views", "resources" };
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
-
-        ProcessingNode[] children = this.buildChildNodes(config);
-
+        
+        // Start by explicitely ordered children
+        for (int i = 0; i < orderedNames.length; i++) {
+            Configuration childConfig = config.getChild(orderedNames[i], false);
+            if (childConfig != null) {
+                ProcessingNodeBuilder builder = this.treeBuilder.createNodeBuilder(childConfig);
+                // Don't build them since "pipelines" is not present in this list
+                builder.buildNode(childConfig);
+            }
+        }
+        
         ProcessingNode pipelines = null;
 
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] instanceof PipelinesNode) {
-                if (pipelines != null) {
-                    String msg = "Only one 'pipelines' is allowed, at " + config.getLocation();
-                    throw new ConfigurationException(msg);
+        // Now build all those that have no particular order
+        Configuration[] childConfigs = config.getChildren();
+        
+        loop: for (int i = 0; i < childConfigs.length; i++) {
+            
+            Configuration childConfig = childConfigs[i];
+            if (isChild(childConfig)) {
+                // Is it in the ordered list ?
+                for (int j = 0; j < orderedNames.length; j++) {
+                    if (orderedNames[j].equals(childConfig.getName())) {
+                        // yep : already built above
+                        continue loop;
+                    }
                 }
-                pipelines = children[i];
+                
+                ProcessingNodeBuilder builder = this.treeBuilder.createNodeBuilder(childConfig);
+                ProcessingNode node = builder.buildNode(childConfig);
+                if (node instanceof PipelinesNode) {
+                    if (pipelines != null) {
+                        String msg = "Only one 'pipelines' is allowed, at " + childConfig.getLocation();
+                        throw new ConfigurationException(msg);
+                    }
+                    pipelines = node;
+                }
             }
         }
 

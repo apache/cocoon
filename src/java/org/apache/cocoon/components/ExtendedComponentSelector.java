@@ -67,7 +67,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.3 2003/08/04 03:19:22 joerg Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.4 2003/08/12 15:48:02 sylvain Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -94,6 +94,9 @@ public class ExtendedComponentSelector
 
     /** The default hint */
     protected String defaultHint;
+
+    /** This selector's location (used for debugging purposes) */
+    private String location;
 
     public ExtendedComponentSelector()
     {
@@ -210,6 +213,9 @@ public class ExtendedComponentSelector
      */
     public void configure(Configuration config) throws ConfigurationException {
 
+        // Store location
+        this.location = config.getLocation();
+
         this.roleName = getRoleName(config);
 
         // Pass a copy of the top-level object to superclass so that
@@ -321,12 +327,26 @@ public class ExtendedComponentSelector
         }
     }
 
+    /**
+     * Does this selector or its parent have the given hint ?
+     */
     public boolean hasComponent(Object hint) {
         boolean exists = super.hasComponent( hint );
         if ( !exists && this.parentSelector != null ) {
             exists = this.parentSelector.hasComponent( hint );
         }
         return exists;
+    }
+    
+    /**
+     * Does this selector declare a given hint? Check is performed on the components declared for this
+     * selector only, and <strong>not</strong> those potentially inherited from the parent selector.
+     * 
+     * @param hint the hint to check for
+     * @return <code>true</code> if this selector has the specified hint
+     */
+    protected boolean hasDeclaredComponent(Object hint) {
+        return super.hasComponent(hint);
     }
 
     /* (non-Javadoc)
