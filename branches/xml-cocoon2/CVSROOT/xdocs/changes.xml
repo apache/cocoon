@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.1.2.1 2000-11-20 11:56:05 dims Exp $
+  $Id: changes.xml,v 1.1.2.2 2000-11-29 16:55:22 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -20,7 +20,7 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
  </devs>
 
- <release version="2.0a3" date="November 20 2000">
+ <release version="2.0a3" date="November 29 2000">
   <action dev="DB" type="add">
    added esql logicsheet to c2
   </action>

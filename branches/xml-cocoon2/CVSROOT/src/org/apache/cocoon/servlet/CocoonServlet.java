@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.StringTokenizer;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -52,7 +54,7 @@ import org.apache.log.LogEntry;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.31 $ $Date: 2000-11-17 20:28:34 $
+ * @version CVS $Revision: 1.1.4.32 $ $Date: 2000-11-29 16:55:19 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -82,7 +84,7 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             String path = "file://" +
-	                  this.context.getRealPath("/") +
+                      this.context.getRealPath("/") +
                           "/WEB-INF/logs/cocoon.log";
             log = LogKit.createLogger("cocoon", path, "DEBUG");
         } catch (Exception e) {
@@ -116,6 +118,24 @@ public class CocoonServlet extends HttpServlet {
 
         this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
 
+        String forceLoading = conf.getInitParameter("force-load");
+        if (forceLoading != null) {
+            StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoading, ",", false);
+
+            while (fqcnTokenizer.hasMoreTokens()) {
+                String fqcn = fqcnTokenizer.nextToken();
+
+                try {
+                    Class.forName(fqcn);
+                } catch (Exception e) {
+                    log.error("Could not force-load class: " + fqcn, e);
+                    this.context.log("Could not force-load  class: " + fqcn, e);
+                    throw new ServletException("Could not force-load the required class: " +
+                              fqcn + "\n" + e.getMessage(), e);
+                }
+            }
+        }
+
         String configFileName = conf.getInitParameter("configurations");
         if (configFileName == null) {
             throw new ServletException("Servlet initialization argument 'configurations' not specified");
@@ -125,7 +145,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            this.configFile = new File(this.context.getRealPath(configFileName));
+            this.configFile = new File(this.context.getResource(configFileName).getFile());
         } catch (Exception mue) {
             this.context.log("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);

@@ -7,7 +7,6 @@
   <page id="install" label="Install" source="installing.xml"/>
 <separator/>
   <page id="overview" label="Overview" source="overview.xml"/>
-  <page id="landscape" label="Landscapes" source="emotional-landscapes.xml"/>
   <page id="httprequest" label="HttpRequest" source="httprequest.xml"/>
   <page id="avalon" label="Avalon" source="avalon.xml"/>
   <page id="extending" label="Extending" source="extending.xml"/>

@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-29 12:17:59 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-29 16:55:14 $
  */
-public class PhpGenerator extends ServletGenerator, Poolable {
+public class PhpGenerator extends ServletGenerator implements Poolable {
 
     /**
      * Stub implementation of Servlet Config
@@ -83,7 +83,7 @@ public class PhpGenerator extends ServletGenerator, Poolable {
         }
 
         /******************************************************************/
-        /*                       runnable interface                       */ 
+        /*                       runnable interface                       */
         /******************************************************************/
 
         public void run() {
@@ -116,7 +116,7 @@ public class PhpGenerator extends ServletGenerator, Poolable {
         try {
             // construct both ends of the pipe
             PipedInputStream input = new PipedInputStream();
-        
+
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
             php.init(new config(context));
@@ -141,5 +141,5 @@ public class PhpGenerator extends ServletGenerator, Poolable {
         } catch (Exception e) {
             throw new IOException(e.toString());
         }
-    }    
+    }
 }
