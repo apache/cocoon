@@ -23,6 +23,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
+import org.apache.cocoon.selection.Selector;
 
 /**
  * The sitemap executor executes all sitemap statements, so it actually
@@ -33,7 +34,7 @@ import org.apache.cocoon.matching.PreparableMatcher;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.3 2004/06/11 08:51:57 cziegeler Exp $
+ * @version CVS $Id: SitemapExecutor.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
  */
 public interface SitemapExecutor {
     
@@ -48,8 +49,8 @@ public interface SitemapExecutor {
                      Action           action, 
                      Redirector       redirector, 
                      SourceResolver   resolver, 
-                     String           resolvedSource, 
-                     Parameters       resolvedParams )
+                     String           source, 
+                     Parameters       parameters )
     throws Exception;
     
     /**
@@ -59,7 +60,7 @@ public interface SitemapExecutor {
                       Map              objectModel,
                       Matcher          matcher,
                       String           pattern,
-                      Parameters       resolvedParams )
+                      Parameters       parameters )
     throws PatternException;
     
     /**
@@ -69,9 +70,24 @@ public interface SitemapExecutor {
                       Map               objectModel,
                       PreparableMatcher matcher,
                       Object            preparedPattern,
-                      Parameters        resolvedParams )
+                      Parameters        parameters )
     throws PatternException;
 
+    /**
+     * Invoke a selector
+     * @param context
+     * @param objectModel
+     * @param selector
+     * @param expression
+     * @param parameters
+     * @return
+     */
+    boolean invokeSelector(ExecutionContext context,
+            Map               objectModel,
+            Selector selector, 
+            String expression, 
+            Parameters parameters);
+    
     /**
      * Push map of information on the context stack.
      * @param context The execution context

@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
+import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -34,7 +35,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * Sampe sitemap executor that prints out everything to a logger
  * 
  * @since 2.2
- * @version CVS $Id: SimpleSitemapExecutor.java,v 1.2 2004/06/11 08:51:57 cziegeler Exp $
+ * @version CVS $Id: SimpleSitemapExecutor.java,v 1.3 2004/06/17 13:52:35 cziegeler Exp $
  */
 public class SimpleSitemapExecutor 
     extends AbstractLogEnabled
@@ -102,6 +103,21 @@ public class SimpleSitemapExecutor
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.selection.Selector, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public boolean invokeSelector(ExecutionContext context, Map objectModel,
+            Selector selector, String expression, Parameters parameters) {
+        this.getLogger().info("- Invoking selector '" + context.getType() + "' (" +
+                context.getLocation() + ").");
+        final boolean result = selector.select(expression, objectModel, parameters);
+        if ( result ) {
+            this.getLogger().info("- Selector '" + context.getType() + "' succeeded.");
+        } else {
+            this.getLogger().info("- Selector '" + context.getType() + "' failed.");            
+        }
+        return result;
+    }
     /* (non-Javadoc)
      * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
      */

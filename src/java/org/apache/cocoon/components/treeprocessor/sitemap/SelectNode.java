@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNode.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SelectNode.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
  */
 public class SelectNode extends SimpleSelectorProcessingNode
                         implements ParameterizableProcessingNode, Composable, Disposable {
@@ -68,6 +68,9 @@ public class SelectNode extends SimpleSelectorProcessingNode
         this.otherwhiseNodes = otherwhiseNodes;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         setSelector((ComponentSelector)manager.lookup(Selector.ROLE + "Selector"));
@@ -76,6 +79,9 @@ public class SelectNode extends SimpleSelectorProcessingNode
         this.threadSafeSelector = (Selector)this.getThreadSafeComponent();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
@@ -83,16 +89,16 @@ public class SelectNode extends SimpleSelectorProcessingNode
         super.invoke(env, context);
 
         // Prepare data needed by the action
-        Map objectModel = env.getObjectModel();
-        Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        final Map objectModel = env.getObjectModel();
+        final Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeSelector != null) {
 
             for (int i = 0; i < this.whenTests.length; i++) {
-                if (this.threadSafeSelector.select(
+                if ( this.executor.invokeSelector(this, objectModel,
+                        this.threadSafeSelector,
                         whenTests[i].resolve(context, objectModel),
-                        objectModel,
                         resolvedParams)) {
                     return invokeNodes(this.whenNodes[i], env, context);
                 }
@@ -105,13 +111,13 @@ public class SelectNode extends SimpleSelectorProcessingNode
             return false;
 
         } else {
-            Selector selector = (Selector)this.selector.select(this.componentName);
+            final Selector selector = (Selector)this.selector.select(this.componentName);
             try {
 
                 for (int i = 0; i < this.whenTests.length; i++) {
-                    if (selector.select(
+                    if ( this.executor.invokeSelector(this, objectModel,
+                            selector,
                             whenTests[i].resolve(context, objectModel),
-                            objectModel,
                             resolvedParams)) {
                         return invokeNodes(this.whenNodes[i], env, context);
                     }
@@ -128,6 +134,9 @@ public class SelectNode extends SimpleSelectorProcessingNode
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.threadSafeSelector != null) {
             this.selector.release(this.threadSafeSelector);
