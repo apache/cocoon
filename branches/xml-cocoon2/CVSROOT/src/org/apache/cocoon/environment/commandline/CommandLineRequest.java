@@ -27,7 +27,7 @@ import org.apache.cocoon.environment.Request;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-30 17:14:26 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-12 06:32:56 $
  */
 
 /*
@@ -46,6 +46,15 @@ public class CommandLineRequest implements Request {
         }
         public Object nextElement() {
             return iterator.next();
+        }
+    }
+
+    private class EmptyEnumeration implements Enumeration {
+        public boolean hasMoreElements() {
+            return false;
+        }
+        public Object nextElement() {
+            return null;
         }
     }
 
@@ -113,8 +122,12 @@ public class CommandLineRequest implements Request {
         return (parameters != null) ? new IteratorWrapper(parameters.keySet().iterator()) : null;
     }
     public String[] getParameterValues(String name) {
-        throw new RuntimeException (this.getClass().getName() + ".getParameterValues(String name) method not yet implemented!");
-    } // FIXME
+        Object [] obj = parameters.values().toArray();
+        String [] str = new String [obj.length];
+        for (int i = 0; i < obj.length; i++)
+            str[i] = (String)obj[i];
+        return str;
+    }
 
     public String getHeader(String name) {
         return (headers != null) ? (String) headers.get(name) : null;
@@ -127,12 +140,16 @@ public class CommandLineRequest implements Request {
         //FIXME
         //throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
         return 0;
-    } 
+    }
     public Enumeration getHeaders(String name) {
-        throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
+        //throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
+        return new EmptyEnumeration();
     } // FIXME
     public Enumeration getHeaderNames() {
-        return (headers != null) ? new IteratorWrapper(headers.keySet().iterator()) : null;
+        if (headers != null)
+            return new IteratorWrapper(headers.keySet().iterator());
+        else
+            return new EmptyEnumeration();
     }
 
     public BufferedReader getReader() throws IOException { return null; }
