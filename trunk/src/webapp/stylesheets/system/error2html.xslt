@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.9 2003/09/03 10:50:48 bruno Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.10 2004/02/02 16:34:26 stevenn Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -49,9 +49,8 @@
     <a href="http://cocoon.apache.org/2.1/faq/">Cocoon FAQ</a>.<br/>
     If you still don't find the answers you need,
     can send a mail to the
-    <a>
-    <xsl:attribute name="href">mailto:users@cocoon.apache.org?subject=[HELP]<xsl:value-of select="error:message"/>&amp;body=Description:<xsl:value-of select="error:description"/></xsl:attribute>
-    Cocoon users mailing list</a>,
+   <a href="http://cocoon.apache.org/community/mail-lists.html">
+    Cocoon mailing lists</a>,
     remembering to:
    </p>
 
