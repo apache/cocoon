@@ -17,24 +17,46 @@ package org.apache.cocoon.xml;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This class implements a ContentHandler for embedding a full SAX
  * event stream into an existing stream of SAX events. An instance of
  * this class will pass unmodified all the SAX events to the linked
- * ContentHandler, but will ignore the startDocument and endDocument
- * events.
+ * ContentHandler, but it will ignore the startDocument/endDocument
+ * and startDTD/endDTD events, as well as all comment events within
+ * the DTD.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @version CVS $Id$
  */
 public class EmbeddedXMLPipe extends AbstractXMLPipe {
 
+    private boolean inDTD;
+
+    /**
+     * Creates an EmbeddedXMLPipe that writes into the given XMLConsumer.
+     */
+    public EmbeddedXMLPipe(XMLConsumer consumer) {
+        setConsumer(consumer);
+    }
+
     /**
      * Creates an EmbeddedXMLPipe that writes into the given ContentHandler.
      */
     public EmbeddedXMLPipe(ContentHandler handler) {
         setContentHandler(handler);
+        if (handler instanceof LexicalHandler) {
+            setLexicalHandler((LexicalHandler) handler);
+        }
+    }
+
+    /**
+     * Creates an EmbeddedXMLPipe that writes into the given ContentHandler.
+     */
+    public EmbeddedXMLPipe(ContentHandler contentHandler, LexicalHandler lexicalHandler) {
+        setContentHandler(contentHandler);
+        setLexicalHandler(lexicalHandler);
     }
 
     /**
@@ -51,5 +73,39 @@ public class EmbeddedXMLPipe extends AbstractXMLPipe {
      * @exception SAXException if an error occurs
      */
     public void endDocument() throws SAXException {
+    }
+
+    /**
+     * Ignore the <code>startDTD</code> event: this method does nothing.
+     *
+     * @exception SAXException if an error occurs
+     */
+    public void startDTD(String name, String publicId, String systemId)
+    throws SAXException {
+        // Ignored
+        this.inDTD = true;
+    }
+
+    /**
+     * Ignore the <code>endDTD</code> event: this method does nothing.
+     *
+     * @exception SAXException if an error occurs
+     */
+    public void endDTD() throws SAXException {
+        // Ignored
+        this.inDTD = false;
+    }
+
+    /**
+     * Ignore all <code>comment</code> events if between
+     * startDTD/endDTD events.
+     *
+     * @exception SAXException if an error occurs
+     */
+    public void comment(char ch[], int start, int len)
+    throws SAXException {
+        if (!inDTD) {
+            super.comment(ch, start, len);
+        }
     }
 }
