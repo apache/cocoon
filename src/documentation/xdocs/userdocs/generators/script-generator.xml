@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
 "../../dtd/document-v10.dtd">
 <!--
-  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.6 2004/04/04 04:44:09 antonio Exp $ 
+  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.7 2004/04/21 00:35:27 crossley Exp $ 
   ]]>
 --><document>
   <header>
@@ -253,10 +253,6 @@
     </s1>
     <s1 title="History">
       <p>07-24-03: initial creation</p>
-    </s1>
-    <s1 title="Copyright">
-      <p>Copyright (C) 1999-2003 The Apache Software Foundation. All rights
-      reserved.</p>
     </s1>
     <s1 title="See also">
       <p><!-- Links to related components pages. -->A general documentation
