@@ -105,7 +105,7 @@ import org.apache.excalibur.source.SourceResolver;
  * </p>
  *    
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: I18nMatcher.java,v 1.2 2004/07/11 21:28:58 antonio Exp $
+ * @version CVS $Id: I18nMatcher.java,v 1.3 2004/07/12 02:25:31 antonio Exp $
  */
 public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Configurable {
 
@@ -117,7 +117,7 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
     private boolean useLocales;
     private Locale defaultLocale;
     private boolean testBlankLocale;
-    
+
     private static final boolean DEFAULT_USE_LOCALE = true;
     private static final boolean DEFAULT_USE_LOCALES = true;
     private static final String DEFAULT_DEFAULT_LANG = "en";
@@ -125,7 +125,7 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
     private static final String DEFAULT_DEFAULT_VARIANT = null;
     private static final String DEFAULT_REQUEST_PARAM_NAME = null;
     private static final boolean DEFAULT_TEST_BLANK_LOCALE = true;
-    
+
     private static final String MAP_LOCALE = "locale";
     private static final String MAP_LOCALES = "locales";
     private static final String MAP_MATCHED_LOCALE = "matched-locale";
@@ -134,7 +134,7 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
     private static final String MAP_LANGUAGE ="language";
     private static final String MAP_VARIANT = "variant";
     private static final String MAP_ENCODING = "encoding";
-    
+
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
@@ -172,11 +172,11 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         if (country == null) {
             return new Locale(lang, "");
         }
-        
+
         if (variant == null) {
             return new Locale(lang, country);
         }
-        
+
         return new Locale(lang, country, variant);
     }
 
@@ -187,21 +187,19 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         Enumeration locales = request.getLocales();
         String requestParameter = request.getParameter(requestParameterName);
         String sitemapParameter = parameters.getParameter("locale", null);
-        
-        String matchingUrl = null;
-        
+
         if (requestParameter != null && isValidResource(pattern, new Locale(requestParameter, ""), map)) {
              return map;
         }
-        
+
         if (sitemapParameter != null && isValidResource(pattern, new Locale(sitemapParameter, ""), map)) {
               return map;
         }
-        
+
         if (useLocale && !useLocales && isValidResource(pattern, locale, map)) {
             return map;
         }
-        
+
         if (useLocales) {
             for (; locales.hasMoreElements();) {
                 Locale l = (Locale)locales.nextElement();
@@ -210,25 +208,24 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
                 }
             }
         }
-        
+
         if (defaultLocale != null && isValidResource(pattern, defaultLocale, map)) {
             return map;
         }
-        
+
         if (testBlankLocale && isValidResource(pattern, null, map)) {
             return map;   
         }
-        
         return null;
     }    
-    
+
     private boolean isValidResource(String pattern, Locale locale, Map map) {
         Locale testLocale;
-        
+
         if (locale == null) {
             return isValidResource(pattern, null, null, map);   
         }
-        
+
         testLocale = locale;
         if (isValidResource(pattern, locale, testLocale.toString(), map)) {
             return true;        
@@ -238,19 +235,18 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         if (isValidResource(pattern, locale, testLocale.toString(), map)) {
             return true;        
         }
-        
+
         testLocale = new Locale(locale.getLanguage(), ""); 
         if (isValidResource(pattern, locale, testLocale.toString(), map)) {
             return true;        
         }
-               
+
         return false;
-        
     }
-    
+
     private boolean isValidResource(String pattern, Locale locale, String localeString, Map map) {
         Source source;
-        
+
         String url;
         if (localeString!=null) {
             url = StringUtils.replace(pattern, "*", localeString);
@@ -275,8 +271,6 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
                     map.put(MAP_COUNTRY, locale.getCountry());
                     map.put(MAP_VARIANT, locale.getVariant());
                 }
-                //map.put(MAP_ENCODING, "???");
-
                 result = true;
             }
             resolver.release(source);
