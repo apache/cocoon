@@ -1,0 +1,162 @@
+#----------------------------------------------
+#  Cocoon Build Properties
+#----------------------------------------------
+
+# NOTE: don't modify this file directly but copy the properties you need
+# to modify over to a file named 'local.build.properties' and modify that. 
+# The build system will override these properties with the ones in the 
+# 'local.build.properties' file.
+
+# ---- Webapp ------------------------------------------------------------------
+
+exclude.webapp.documentation=true
+exclude.webapp.javadocs=true
+#exclude.webapp.samples=true
+
+# ---- Build Exclusions --------------------------------------------------------
+
+exclude.deprecated=true
+exclude.javadocs=true
+
+# ---- Configuration -----------------------------------------------------------
+
+#include.driver.oracle=true
+#include.driver.postgre=true
+#include.driver.odbc=true
+#config.allow-reloads=true
+#config.enable-uploads=true
+
+# ---- Validation --------------------------------------------------------------
+
+#exclude.validate.config=true
+#exclude.validate.xdocs=true
+#exclude.validate.jars=true
+
+# ---- Forrest -----------------------------------------------------------------
+
+# set $FORREST_HOME and $PATH as instructed by Forrest
+
+# ---- Anteater ----------------------------------------------------------------
+
+anteater.home = /default-from-build.properties/anteater-0.9.16
+anteater.target.host = localhost
+anteater.target.port = 8888
+anteater.target.base.path = /
+anteater.option.haltonerror = true
+
+# disable some long-running tests by default
+# anteater.test.bug26186InternalRequestMemoryLeak.enabled = true
+
+# ---- Build -------------------------------------------------------------------
+
+build.root=build
+build=${build.root}/${name}-${version}
+build.dest=${build}/classes
+build.mocks=${build}/mocks
+build.test=${build}/test
+build.docs=${build}/docs
+build.docs.printer=${build}/printer-docs
+build.site=${build}/site
+build.xdocs=${build}/xdocs
+build.javadocs=${build}/javadocs
+build.context=${build}/documentation
+build.context.printer=${build}/printer-documentation
+build.blocks=${build}/blocks
+build.deprecated=${build}/deprecated
+build.samples=${build}/samples
+build.temp=${build}/temp
+build.mounttable=../../mount-table.xml
+
+build.docs.loglevel=ERROR
+build.docs.printer.loglevel=ERROR
+
+# ------ Webapp Build Properties -----------------------------------------------
+
+build.webapp=${build.root}/webapp
+build.webapp.webinf=${build.webapp}/WEB-INF
+build.webapp.classes=${build.webapp.webinf}/classes
+build.webapp.lib=${build.webapp.webinf}/lib
+build.webapp.samples=${build.webapp}/samples
+build.webapp.docs=${build.webapp}/docs
+build.webapp.javadocs=${build.webapp}/api/java
+build.webapp.loglevel=INFO
+build.war=${build}/${name}.war
+
+# ------ Standalone-demo Build Properties --------------------------------------
+build.standalone.demo=${build.root}/standalone-demo
+
+# ---- Compilation -------------------------------------------------------------
+
+compiler=modern
+compiler.debug=on
+compiler.optimize=on
+compiler.deprecation=off
+compiler.nowarn=on
+
+
+# ------ System Properties -----------------------------------------------------
+
+# WARNING: you shouldn't need to modify anything below here since there is a
+# very high change of breaking the build system. Do it only if you know what
+# you're doing.
+
+packages=org.apache
+
+# Project descriptor
+gump.descriptor=gump.xml
+
+# Directory Layout
+src=src
+java=${src}/java
+mocks=${src}/mocks
+test=${src}/test
+resources=${src}/resources
+resources.styles=${resources}/styles
+resources.logos=${resources}/logos
+resources.javadoc=${resources}/javadoc
+documentation=${src}/documentation
+docs=${documentation}/xdocs
+images=${documentation}/images
+blocks=${src}${file.separator}blocks
+samples=${src}/samples
+webapp=${src}/webapp
+webapp.samples=${webapp}/samples
+customconf=${src}/confpatch
+
+# Deprecated Stuff
+deprecated=${src}/deprecated
+deprecated.src=${deprecated}/java
+deprecated.conf=${deprecated}/conf
+
+# Tools
+tools=tools
+tools.lib=${tools}/lib
+tools.src=${tools}/src
+tools.tasks.src=${tools.src}/anttasks
+tools.tasks.dest=${tools}/anttasks
+tools.loader.src=${tools.src}/loader
+tools.loader.dest=${tools}/loader
+tools.jetty=${tools}/jetty
+
+# IDE
+ide.eclipse.outputdir=${build.root}/eclipse/classes
+ide.eclipse.export.libs=false
+
+# Libraries
+lib=lib
+lib.core=${lib}/core
+lib.endorsed=${lib}/endorsed
+lib.optional=${lib}/optional
+lib.local=${lib}/local
+
+# Distribution Directories
+dist.root=dist
+dist=${dist.root}/${name}-${version}
+dist.name=${name}-${version}
+dist.target=${dist.root}
+
+# Site Directory
+site=../cocoon-site/site/2.1
+
+# Legal
+legal=legal
