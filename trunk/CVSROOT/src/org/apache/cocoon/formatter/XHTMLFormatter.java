@@ -1,4 +1,4 @@
-/*-- $Id: HTMLFormatter.java,v 1.6 2000-04-20 22:12:04 stefano Exp $ -- 
+/*-- $Id: XHTMLFormatter.java,v 1.1 2000-04-20 22:12:04 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,32 +57,30 @@ import org.apache.xml.serialize.*;
 import org.apache.cocoon.framework.*;
 
 /**
- * This formatter is used to serialize HTML content. The difference between
+ * This formatter is used to serialize XHTML content. The difference between
  * this formatter and the XMLFormatter is that while the XML formatter doesn't
  * have any semantic information about the document type being formatted,
  * this class handles tags like <em>&lt;br/&gt;</em> and transforms them to
- * HTML that non-XML-aware browsers can understand. Note that this creates
- * markap that is non-well-formed XML. If you want to be able to send HTML 
- * code to old-browser but still create well-formed XML, use the XHTMLFormatter
- * instead.
+ * XHTML that non-XML-aware browsers can understand 
+ * (for example, <em>&lt; br/&gt;</em>).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-04-20 22:12:04 $
+ * @version $Revision: 1.1 $ $Date: 2000-04-20 22:12:04 $
  */
 
-public class HTMLFormatter extends AbstractFormatter {
+public class XHTMLFormatter extends AbstractFormatter {
 
     SerializerFactory factory;
 
-    public HTMLFormatter () {
-        this.factory = SerializerFactory.getSerializerFactory(Method.HTML);
-        super.MIMEtype = "text/html";
-        super.statusMessage = "HTML Formatter";
+    public XHTMLFormatter () {
+        this.factory = SerializerFactory.getSerializerFactory(Method.XHTML);
+        super.MIMEtype = "text/xhtml";
+        super.statusMessage = "XHTML Formatter";
     }       
         
     public void init(Configurations conf) {
         super.init(conf);
-        format.setMethod(Method.HTML);
+        format.setMethod(Method.XHTML);
         format.setOmitXMLDeclaration(true);
     }       
         
