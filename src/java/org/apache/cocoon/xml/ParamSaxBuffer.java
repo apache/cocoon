@@ -61,10 +61,10 @@ import org.xml.sax.SAXException;
  *
  * Any <code>{name}</code> expression inside of the character events can be
  * replaced by the content of another SaxBuffer if it is present in the map
- * passed to the {@link toSAX(ContentHandler, Map)} method.
+ * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.1 2003/12/09 21:05:42 vgritsenko Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.2 2004/02/19 22:13:27 joerg Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 

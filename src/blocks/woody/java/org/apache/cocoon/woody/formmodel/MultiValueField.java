@@ -74,12 +74,12 @@ import java.util.Locale;
  *
  * <p>A MultiValueField also has a {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
  * associated with it. In case of MultiValueFields, this Datatype will always be an array
- * type, thus {@link org.apache.cocoon.woody.datatype.Datatype#isArrayType Datatype#isArrayType} will
+ * type, thus {@link org.apache.cocoon.woody.datatype.Datatype#isArrayType()} will
  * always return true, and this in return has an influence on the kind of validation rules that
  * can be used with the Datatype (see {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.16 2004/02/11 10:43:30 antonio Exp $
+ * @version $Id: MultiValueField.java,v 1.17 2004/02/19 22:13:27 joerg Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;

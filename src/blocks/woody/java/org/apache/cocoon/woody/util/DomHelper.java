@@ -81,15 +81,15 @@ import org.xml.sax.SAXNotSupportedException;
  * accurate model of an XML file (no mixed content, no namespaced attributes, no namespace declarations, ...).
  *
  * <p>This class depends specifically on the Xerces DOM implementation to be able to provide
- * information about the location of elements in their source XML file. See the {@link #getLocation} method.
+ * information about the location of elements in their source XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id: DomHelper.java,v 1.11 2003/12/31 10:27:18 antonio Exp $
+ * @version CVS $Id: DomHelper.java,v 1.12 2004/02/19 22:13:28 joerg Exp $
  */
 public class DomHelper {
 
     /**
      * Retrieves the location of an element node in the source file from which the Document was created.
-     * This will only work for Document's created with the method {@link #parse} of this class.
+     * This will only work for Document's created with the method {@link #parse(InputSource)} of this class.
      */
     public static String getLocation(Element element) {
         String location = null;
@@ -292,7 +292,7 @@ public class DomHelper {
 
     /**
      * Creates a W3C Document that remembers the location of each element in the source file.
-     * The location of element nodes can then be retrieved using the {@link #getLocation} method.
+     * The location of element nodes can then be retrieved using the {@link #getLocation(Element)} method.
      */
     public static Document parse(InputSource inputSource) throws SAXException, SAXNotSupportedException, IOException {
         DOMParser domParser = new LocationTrackingDOMParser();

@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetValidatorBuilder.java,v 1.1 2004/02/04 17:25:58 sylvain Exp $
+ * @version CVS $Id: WidgetValidatorBuilder.java,v 1.2 2004/02/19 22:13:29 joerg Exp $
  */
 public interface WidgetValidatorBuilder {
     
@@ -69,7 +69,7 @@ public interface WidgetValidatorBuilder {
      * @param definition the widget definition the validator will have to validate.
      *        This may be used to check applicability of the validator to the widget.
      * @return A {@link WidgetValidator}
-     * @throws if some problem occurs
+     * @throws Exception if some problem occurs
      */
     WidgetValidator build(Element validationRuleElement, WidgetDefinition definition) throws Exception;
 }

@@ -117,7 +117,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.17 2004/01/27 14:31:40 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.18 2004/02/19 22:13:28 joerg Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -668,7 +668,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
         /**
          * Can the data sent to an <code>OutputStream</code> returned by
-         * {@link #getOutputStream()} be cancelled ?
+         * {@link SlideSource#getOutputStream()} be cancelled ?
          *
          * @return true if the stream can be cancelled
          */
@@ -678,7 +678,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
         /**
          * Cancel the data sent to an <code>OutputStream</code> returned by
-         * {@link #getOutputStream()}.
+         * {@link SlideSource#getOutputStream()}.
          * <p>
          * After cancel, the stream should no more be used.
          *

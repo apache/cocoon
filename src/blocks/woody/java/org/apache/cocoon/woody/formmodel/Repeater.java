@@ -70,10 +70,10 @@ import org.xml.sax.SAXException;
  * containing the actual repeated widgets. However, in practice, you won't need
  * to use the RepeaterRow widget directly.
  *
- * <p>Using the methods {@link #getSize} and {@link #getWidget(int, java.lang.String)}
+ * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.19 2004/02/12 07:32:29 antonio Exp $
+ * @version $Id: Repeater.java,v 1.20 2004/02/19 22:13:27 joerg Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;

@@ -57,10 +57,10 @@ import java.util.Locale;
 /**
  * Map using Locale objects as keys.
  *
- * <p>This map should be filled once using calls to {@link #put}, before any calls
- * are made to {@link #get}.
+ * <p>This map should be filled once using calls to {@link #put(Locale, Object)},
+ * before any calls are made to {@link #get(Locale)}.
  *
- * @version CVS $Id: LocaleMap.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
+ * @version CVS $Id: LocaleMap.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public class LocaleMap {
     private FastHashMap map = new FastHashMap();

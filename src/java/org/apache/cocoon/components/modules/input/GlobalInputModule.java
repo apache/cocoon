@@ -67,7 +67,7 @@ import java.util.Map;
  * extended there.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalInputModule.java,v 1.2 2004/01/07 10:33:54 cziegeler Exp $
+ * @version CVS $Id: GlobalInputModule.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public final class GlobalInputModule 
     extends AbstractLogEnabled
@@ -85,10 +85,10 @@ public final class GlobalInputModule
     /**
      * Standard access to an attribute's value. If more than one value
      * exists, the first is returned. If the value does not exist,
-     * null is returned. To get all values, use {@link
-     * #getAttributeValues getAttributeSet} or {@link
-     * #getAttributeNames getAttributeNames} and {@link #getAttribute
-     * getAttribute} to get them one by one.
+     * null is returned. To get all values, use
+     * {@link #getAttributeValues(String, Configuration, Map)} or
+     * {@link #getAttributeNames(Configuration, Map)} and
+     * {@link #getAttribute(String, Configuration, Map)} to get them one by one.
      * @param name a String that specifies what the caller thinks
      * would identify an attribute. This is mainly a fallback if no
      * modeConf is present.
@@ -135,9 +135,10 @@ public final class GlobalInputModule
     /**
      * Returns an array of String objects containing all of the values
      * the given attribute has, or null if the attribute does not
-     * exist. As an alternative, {@link #getAttributeNames
-     * getAttributeNames} together with {@link #getAttribute
-     * getAttribute} can be used to get the values one by one.
+     * exist. As an alternative,
+     * {@link #getAttributeNames(Configuration, Map)} together with
+     * {@link #getAttribute(String, Configuration, Map)} can be used to get the
+     * values one by one.
      * @param name a String that specifies what the caller thinks
      * would identify an attributes. This is mainly a fallback
      * if no modeConf is present.

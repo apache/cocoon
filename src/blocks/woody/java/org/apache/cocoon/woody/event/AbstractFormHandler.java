@@ -52,10 +52,10 @@ package org.apache.cocoon.woody.event;
 
 /**
  * Abstract implementation of {@link FormHandler}, which checks the type
- * of the WidgetEvent and calls the more specific {@link #handleActionEvent}
- * or {@link #handleValueChangedEvent} methods.
+ * of the WidgetEvent and calls the more specific {@link #handleActionEvent(ActionEvent)}
+ * or {@link #handleValueChangedEvent(ValueChangedEvent)} methods.
  * 
- * @version CVS $Id: AbstractFormHandler.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
+ * @version CVS $Id: AbstractFormHandler.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public abstract class AbstractFormHandler implements FormHandler {
 

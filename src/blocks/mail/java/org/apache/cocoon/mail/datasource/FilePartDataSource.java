@@ -62,7 +62,7 @@ import org.apache.cocoon.servlet.multipart.Part;
  *
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FilePartDataSource.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
+ * @version CVS $Id: FilePartDataSource.java,v 1.4 2004/02/19 22:13:28 joerg Exp $
  */
 public class FilePartDataSource implements DataSource {
     private Part part;
@@ -133,7 +133,7 @@ public class FilePartDataSource implements DataSource {
     
     /** Returns the name for this <CODE>DataSource</CODE> object. This is
      * what is returned by
-     * {@link Part#getFileName}.
+     * {@link Part#getFileName()}.
      * @return the name for this <CODE>DataSource</CODE> object.
      */    
     public String getName() {
