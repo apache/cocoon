@@ -122,7 +122,7 @@
     
    <slide>
     <title>Hard to believe?</title>
-    <p><fork uri="http://localhost/cocoon/samples/index.xml">Let's take the tour.</fork></p>
+    <p><fork uri="../index.xml">Let's take the tour.</fork></p>
    </slide>
   </section>
 
@@ -213,7 +213,7 @@
      <li>creates structured content</li>
      <li>examples: XSLT processor, SQL processor, LDAP processor</li>
      <li>there is not such </li>
-     <li>Cocoon producers are the XML equivalent of Servlets</li>
+     <li>Cocoon proocessors are the XML equivalent of Servlet Chaining</li>
     </ul>
    </slide>
 
@@ -322,17 +322,17 @@
    <slide>
     <title>Possible different scenarios</title>
     <ul>
-     <li><link uri="/cocoon/samples/xsp/view-source.xml?filename=page.xml">integrated xsp tags</link></li>
-     <li><link uri="/cocoon/samples/xsp/view-source.xml?filename=clean-page.xml">custom tags transformed by your stylesheets</link></li>
-     <li><link uri="/cocoon/samples/xsp/view-source.xml?filename=lib-page.xml">use of cocoon taglibs</link></li>
+     <li><link uri="../xsp/view-source.xml?filename=page.xml">integrated xsp tags</link></li>
+     <li><link uri="../xsp/view-source.xml?filename=clean-page.xml">custom tags transformed by your stylesheets</link></li>
+     <li><link uri="../xsp/view-source.xml?filename=lib-page.xml">use of cocoon taglibs</link></li>
     </ul>
    </slide>
 
    <slide>
     <title>Other dynamic possibilities</title>
     <ul>
-     <li><link uri="/cocoon/samples/xsp/view-source.xml?filename=../sql/database-page.xml">SQLProcessor</link></li>
-     <li><link uri="/cocoon/samples/xsp/view-source.xml?filename=../ldap/ldap.xml">LDAPProcessor</link></li>
+     <li><link uri="../xsp/view-source.xml?filename=../sql/database-page.xml">SQLProcessor</link></li>
+     <li><link uri="../xsp/view-source.xml?filename=../ldap/ldap.xml">LDAPProcessor</link></li>
      <li>... add yours</li>
     </ul>
    </slide>
@@ -403,9 +403,9 @@
    <slide>
     <title>Where do I get more info?</title>
     <ul>
-     <li>Cocoon: <strong>http://xml.apache.org/cocoon/</strong></li>
-     <li>XML and related info: <strong>http://www.xmlinfo.com/</strong></li>
-     <li>XML and related specs: <strong>http://www.w3c.org/</strong></li>
+     <li>Cocoon: <fork uri="http://xml.apache.org/cocoon"><strong>http://xml.apache.org/cocoon</strong></fork></li>
+     <li>XML and related info: <fork uri="http://www.xmlinfo.com"><strong>http://www.xmlinfo.com</strong></fork></li>
+     <li>XML and related specs: <fork uri="http://www.w3c.org"><strong>http://www.w3c.org</strong></fork></li>
     </ul>
    </slide>
 

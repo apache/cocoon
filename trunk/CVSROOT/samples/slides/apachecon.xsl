@@ -93,13 +93,13 @@
   </xsl:template>
 
   <xsl:template match="fork">
-   <a href="" target="_blank">
+   <a href="{@uri}" target="_blank">
     <xsl:apply-templates/>
    </a>
   </xsl:template>
 
   <xsl:template match="link">
-   <a href="">
+   <a href="{@uri}">
     <xsl:apply-templates/>
    </a>
   </xsl:template>
