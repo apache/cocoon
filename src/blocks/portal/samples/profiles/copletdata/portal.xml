@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coplets>
-   <coplet-data id="Newsweek">
+   <coplet-data id="Newsweek" name="standard">
       <title>Newsweek</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -11,10 +10,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="NYTBusiness">
+   <coplet-data id="NYTBusiness" name="standard">
       <title>NYT Business</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -22,10 +20,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="BBCNews">
+   <coplet-data id="BBCNews" name="standard">
       <title>BBC News</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -33,10 +30,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CNET News">
+   <coplet-data id="CNET News" name="standard">
       <title>CNET News</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -44,10 +40,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CNET Business">
+   <coplet-data id="CNET Business" name="standard">
       <title>CNET Business News</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -55,10 +50,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CSTNews">
+   <coplet-data id="CSTNews" name="standard">
       <title>Chicago Sunday Times</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -66,10 +60,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CNNEurope">
+   <coplet-data id="CNNEurope" name="standard">
       <title>CNN Europe</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -77,10 +70,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="ML Weblog">
+   <coplet-data id="ML Weblog" name="standard">
       <title>ML's Weblog</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -88,10 +80,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CZ Weblog">
+   <coplet-data id="CZ Weblog" name="standard">
       <title>CZ's Weblog</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -99,10 +90,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="Weblog">
+   <coplet-data id="Weblog" name="standard">
       <title>Another Weblog</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -110,10 +100,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="Introduction">
+   <coplet-data id="Introduction" name="standard">
       <title>Cocoon Introduction</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -121,10 +110,9 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="Overview">
+   <coplet-data id="Overview" name="standard">
       <title>Cocoon Overview</title>
       <maxpageable>true</maxpageable>
-      <removable>true</removable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>

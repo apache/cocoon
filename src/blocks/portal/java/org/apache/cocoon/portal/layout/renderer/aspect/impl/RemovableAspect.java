@@ -52,12 +52,10 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.status.MandatoryStatus;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -67,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemovableAspect.java,v 1.1 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: RemovableAspect.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
  */
 public class RemovableAspect extends AbstractAspect {
 
@@ -82,11 +80,8 @@ public class RemovableAspect extends AbstractAspect {
         
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        if (cid.getCopletData().isRemovable()) {
-        } 
-
-        MandatoryStatus mandatory = (MandatoryStatus) this.getStatus(MandatoryStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletData().getId());
-        if ( mandatory == null || !mandatory.isMandatory()) {
+        Boolean mandatory = (Boolean)cid.getCopletData().getAspectData("mandatory");
+        if ( !mandatory.booleanValue() ) {
             LayoutRemoveEvent lre = new LayoutRemoveEvent(layout, 0);
             XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
         }

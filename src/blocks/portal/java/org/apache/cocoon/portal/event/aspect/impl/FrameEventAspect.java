@@ -67,8 +67,8 @@ import org.apache.cocoon.portal.event.Publisher;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.event.impl.*;
-import org.apache.cocoon.portal.layout.aspect.FrameStatus;
+import org.apache.cocoon.portal.event.impl.FrameSourceEvent;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.2 2003/05/08 13:38:10 cziegeler Exp $
+ * @version CVS $Id: FrameEventAspect.java,v 1.3 2003/05/22 12:32:48 cziegeler Exp $
  */
 public class FrameEventAspect
     extends AbstractLogEnabled
@@ -149,23 +149,16 @@ public class FrameEventAspect
         ProfileManager profileManager = null;
         try {
             profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-            FrameStatus status =
-                (FrameStatus) profileManager.getAspectStatus(
-                    FrameStatus.class,
-                    ProfileManager.REQUEST_STATUS,
-                    layoutID);
+            // TODO - does this work?
+            Layout layout = profileManager.getPortalLayout( layoutID );
+            String status = (String)layout.getAspectData("frame");
             String link = statusEvent.getLink();
             if (status == null) {
                 if (link != null) {
-                    status = new FrameStatus();
-                    status.setLink(link);
-                    profileManager.setAspectStatus(ProfileManager.REQUEST_STATUS, layoutID, status);
+                    layout.setAspectData("frame", link);
                 }
             } else if (link != null) {
-                status.setLink(link);
-            } else {
-                // remove status if link == null
-                profileManager.setAspectStatus(ProfileManager.REQUEST_STATUS, layoutID, null);
+                layout.setAspectData("frame", link);
             }
         } catch (ComponentException ce) {
             // ignore

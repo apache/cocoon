@@ -171,8 +171,23 @@
         <coplet name="standard"
                 class="org.apache.cocoon.portal.coplet.CopletData">
             <coplet-data-aspects>
+                <aspect name="sizable"
+                        class="java.lang.Boolean"
+                        store="persistent"
+                        auto-create="true"
+                        value="true"/>
+                <aspect name="mandatory"
+                        class="java.lang.Boolean"
+                        store="persistent"
+                        auto-create="true"
+                        value="false"/>
             </coplet-data-aspects>
+            
             <coplet-instance-data-aspects>
+                <aspect name="size"
+                        class="org.apache.cocoon.portal.aspect.AspectStatus"
+                        store="session"
+                        auto-create="true"/>
             </coplet-instance-data-aspects>
         </coplet>
     </coplets>

@@ -2,6 +2,19 @@
 <mapping>
 	<description>Coplet data mapping file</description>
 
+	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+    </class>
+
+	<class name="org.apache.cocoon.portal.factory.impl.AbstractProducible"
+	       extends="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+        <field name="name" type="java.lang.String">
+            <bind-xml name="name" node="attribute" />
+        </field>
+        <field name="id" type="java.lang.String" >
+            <bind-xml name="id" node="attribute" />
+        </field>
+    </class>
+
 	<class name="org.apache.cocoon.portal.profile.impl.CopletDataManager">
 		<map-to xml="coplets" />
 
@@ -10,12 +23,9 @@
 		</field>
 	</class>
 
-	<class name="org.apache.cocoon.portal.coplet.CopletData">
+	<class name="org.apache.cocoon.portal.coplet.CopletData"
+	       extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
 		<map-to xml="coplet-data" />
-
-		<field name="id" type="java.lang.String">
-			<bind-xml name="id" node="attribute" />
-		</field>
 
 		<field name="title" type="java.lang.String">
 			<bind-xml name="title"/>
@@ -23,10 +33,6 @@
 
 		<field name="maxpageable" type="java.lang.Boolean">
 			<bind-xml name="maxpageable" />
-		</field>
-
-		<field name="removable" type="java.lang.Boolean">
-			<bind-xml name="removable" />
 		</field>
 
 		<field name="attributes" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.profile.impl.AttributesFieldHandler">

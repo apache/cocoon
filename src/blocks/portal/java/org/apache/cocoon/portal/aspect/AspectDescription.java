@@ -56,7 +56,7 @@ package org.apache.cocoon.portal.aspect;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectDescription.java,v 1.2 2003/05/21 13:06:05 cziegeler Exp $
+ * @version CVS $Id: AspectDescription.java,v 1.3 2003/05/22 12:32:47 cziegeler Exp $
  */
 public interface AspectDescription  {
 
@@ -79,5 +79,10 @@ public interface AspectDescription  {
      * If the data is not available, create it automatically (or not)
      */
     boolean isAutoCreate();
+    
+    /**
+     * Default value
+     */
+    String getDefaultValue();
 
 }

@@ -48,37 +48,29 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.aspect;
+package org.apache.cocoon.portal.coplet;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
+import org.apache.cocoon.ProcessingException;
 
 /**
- * Is this layout maximizable?
+ * This factory is for creating and managing coplet objects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MaximizableLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
+ * @version CVS $Id: CopletFactory.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
  */
-public class MaximizableLayoutStatus 
-implements AspectStatus {
-
-    protected boolean maximizable;
-
-    public MaximizableLayoutStatus() {
-    }
+public interface CopletFactory  {
     
-    /**
-     * @return
-     */
-    public boolean isMaximizable() {
-        return maximizable;
-    }
-
-    /**
-     * @param b
-     */
-    public void setMaximizable(boolean b) {
-        maximizable = b;
-    }
-
+    String ROLE = CopletFactory.class.getName();
+    
+	// TODO - define the interface
+    void prepare(CopletData copletData)
+    throws ProcessingException;
+    
+    void prepare(CopletInstanceData copletInstanceData)
+    throws ProcessingException;
+    
+    CopletInstanceData newInstance(String name)
+    throws ProcessingException;
+    
 }

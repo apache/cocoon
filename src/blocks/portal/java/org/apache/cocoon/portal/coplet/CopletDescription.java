@@ -47,59 +47,21 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.coplet.status;
+ */
+package org.apache.cocoon.portal.coplet;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
+import org.apache.cocoon.portal.factory.ProducibleDescription;
+
+
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * A configured layout
  * 
- * @version CVS $Id: SizeableStatus.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: CopletDescription.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
  */
-public final class SizeableStatus implements AspectStatus {
+public interface CopletDescription
+    extends ProducibleDescription  {
 
-    protected boolean minimizable;
-
-    protected boolean maximizable;
-
-    public SizeableStatus() {
-        this.maximizable = true;
-        this.minimizable = true;
-    }
-    
-    /**
-     * Returns the maximizable.
-     * @return boolean
-     */
-    public boolean isMaximizable() {
-        return maximizable;
-    }
-
-    /**
-     * Returns the minimizable.
-     * @return boolean
-     */
-    public boolean isMinimizable() {
-        return minimizable;
-    }
-
-    /**
-     * Sets the maximizable.
-     * @param maximizable The maximizable to set
-     */
-    public void setMaximizable(boolean maximizable) {
-        this.maximizable = maximizable;
-    }
-
-    /**
-     * Sets the minimizable.
-     * @param minimizable The minimizable to set
-     */
-    public void setMinimizable(boolean minimizable) {
-        this.minimizable = minimizable;
-    }
-    
 }
