@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.113 2000-09-19 23:01:36 greenrd Exp $
+  $Id: changes.xml,v 1.114 2000-09-22 21:58:54 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,32 +17,51 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="RDG" type="fix">
-   Changed XSPPage to only clone nodes where necessary, enhancing performance
-   for complex pages.
-  </action>
   <action dev="RDG" type="update">
    Cleaned up docs, especially how-it-works and FAQ; added new questions
    and answers to FAQ.
   </action>
   <action dev="RDG" type="fix">
-   Reversed Stefano's &lt;xsp:pi&gt; change to avoid breaking existing code;
-   changed docs to match the syntax people are actually using.
+   Changed XSPPage to only clone nodes where necessary, enhancing performance
+   for complex pages.
+  </action>
+  <action dev="RDG" type="fix">
+   Changed &lt;xsp:pi&gt; back to use target= instead of name= in order
+   not to break existing users' code (which there is a lot of!).
+   Changed XSP docs to reflect correct usage.
   </action>
   <action dev="RDG" type="add">
    Added very primitive profiler (see cocoon.properties)
   </action>
   <action dev="RDG" type="fix">
-   Fixed some synchronization errors in Engine.
+   Fixed some synchronization errors in Engine. You can now call a Cocoon
+   page from a Cocoon page, if you really want (this is inefficient and a
+   bad architecture, but it's possible.)
   </action>
   <action dev="RDG" type="fix">
    Made response taglib work on Servlet API 2.0 engines
   </action>
   <action dev="DB" type="add">
-   Added esql logicsheet
+   Added xspdoc comments to esql logicsheet and added xspdoc to document convertor in the xml.apache.org site skin directory. god only knows how i'm supposed to add it to the build procedure... help?
   </action>
   <action dev="DB" type="add">
-   Upgraded xalan to 1_2_D01
+   Added error handling to esql logicsheet and documented its use in esql sample.
+  </action>
+  <action dev="DB" type="fix" due-to="Tagunov Anthony" due-to-email="atagunov@nnt.ru">
+   Fixed encoding problem with xinclude processor
+  </action>
+  <action dev="SM" type="fix" due-to="Kevin Sonney" due-to-email="kevin@webslingerz.com">
+   Fixed problem with XSP and PIs (now follows the correct name="xml-stylesheet" syntax)
+  </action>
+  <action dev="SM" type="update">
+   Upgraded Xerces to 1.2 because previous version had a bug which meant it couldn't build
+   the Cocoon documentation.
+  </action>
+  <action dev="DB" type="add">
+   Added esql logicsheet
+  </action>
+  <action dev="DB" type="update">
+   Upgraded xalan to 1_2_D02
   </action>
   <action dev="SM" type="add" due-to="Paul Terray" due-to-email="terray@4dconcept.fr">
    Added installation instructions for iPlanet.
@@ -69,7 +88,7 @@
    Added Solaris8 and improved Win2k installation case documentation.
   </action>
   <action dev="DB" type="fix">
-   Made XSP SQL processor to array to string conversion when using a Format object on a text column
+   Made XSP SQL processor do array to string conversion when using a Format object on a text column
   </action>
   <action dev="DB" type="update">
    Brought XInclude processor into conformance (mostly) with the 2000-07-17 version of the working draft.
@@ -140,7 +159,7 @@
    some nice guy will improve them)
   </action>
  </release>
-
+ 
  <release version="1.7.4" date="May 19 2000">
   <action dev="SM" type="fix">
    fixed xpath position() problem that caused the slideshow example to behave strangely. Weird.
