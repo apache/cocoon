@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.8 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.9 2004/03/16 09:16:59 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -56,6 +56,9 @@ extends AbstractSAXTransformer {
      */
     public static final String PORTAL_NAME_PARAM = "portalName";
 
+    /** The portal service */
+    private PortalService _portalService;
+    
     /**
      * Try to get the coplet instance data belonging to the current request
      * @return The coplet instance data
@@ -70,6 +73,39 @@ extends AbstractSAXTransformer {
         return cid;
     }
     
+    
+    /**
+     * Get the portal service
+     */
+    protected PortalService getPortalService()
+    throws SAXException {
+        if ( this._portalService == null ) {
+            try {
+                this._portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+                
+                if ( this._portalService.getPortalName() == null ) {
+                    // set portal name
+                    String portalName = this.parameters.getParameter(PORTAL_NAME_PARAM, 
+                                                                    (String)this.objectModel.get(Constants.PORTAL_NAME_KEY));
+                    if ( portalName == null ) {
+                        final Map context = (Map)this.objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+                        if ( context != null ) {
+                            portalName = (String) context.get(Constants.PORTAL_NAME_KEY);
+                        }
+                    }
+                    if ( portalName == null ) {
+                        throw new SAXException("portalName must be passed as parameter or in the object model.");
+                    }
+                    this._portalService.setPortalName(portalName);
+                }
+            } catch (ServiceException se) {
+                throw new SAXException("Unable to get portal service.", se);
+            }
+        }
+        return this._portalService;
+    }
+    
+    
     /**
      * Try to get the coplet instance data with the given id
      * @param copletId  The id of the coplet instance or null if this transformer
@@ -79,47 +115,38 @@ extends AbstractSAXTransformer {
      */
     protected CopletInstanceData getCopletInstanceData(String copletId) 
     throws SAXException {
-        PortalService portalService = null;
-        try {
-
-            portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-
-            final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-            
-            if ( portalService.getPortalName() == null && context == null) {
-                // set portal name
+        final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+        
+        if ( copletId == null ) {
+            // determine coplet id
+            if (context != null) {
+                copletId = (String)context.get(Constants.COPLET_ID_KEY);
+            } else {
                 try {
-                    portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
+                    copletId = this.parameters.getParameter(COPLET_ID_PARAM);
+                        
                 } catch (ParameterException e) {
-                    throw new SAXException("portalName must be passed as parameter or in the object model within the parent context.");
+                    throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
                 }
             }
-            
-            if ( copletId == null ) {
-                // determine coplet id
-                if (context != null) {
-                    copletId = (String)context.get(Constants.COPLET_ID_KEY);
-                } else {
-                    try {
-                        copletId = this.parameters.getParameter(COPLET_ID_PARAM);
-                            
-                    } catch (ParameterException e) {
-                        throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
-                    }
-                }
-            }
-            if (copletId == null) {
-                throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
-            }
-
-
-            CopletInstanceData object = portalService.getComponentManager().getProfileManager().getCopletInstanceData( copletId );
-                
-            return object;
-        } catch (ServiceException e) {
-            throw new SAXException("Error getting portal service.", e);
-        } finally {
-            this.manager.release( portalService );
         }
+        if (copletId == null) {
+            throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
+        }
+
+        CopletInstanceData object = this.getPortalService().getComponentManager().getProfileManager().getCopletInstanceData( copletId );
+            
+        return object;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
+    public void recycle() {
+        if ( this._portalService != null ) {
+            this.manager.release( this._portalService );
+            this._portalService = null;            
+        }
+        super.recycle();
     }
 }

@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.transformation;
 
 import java.util.Stack;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
@@ -50,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.7 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.8 2004/03/16 09:16:59 cziegeler Exp $
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {
@@ -169,21 +168,14 @@ extends AbstractCopletTransformer {
                     // if attribute found that contains a link
                     if (link != null) {
                         CopletInstanceData cid = this.getCopletInstanceData();                       
-                        LinkService linkService = null;
-                        try {
-                            linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
+                        LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
         
-                            // create event link
-                            CopletLinkEvent event = new CopletLinkEvent(cid, link);
-                            String eventLink = linkService.getLinkURI(event);
-        
-                            // insert event link
-                            attr.setValue(index, eventLink);
-                        } catch (ServiceException e) {
-                            throw new SAXException(e);
-                        } finally {
-                            this.manager.release(linkService);
-                        }
+                        // create event link
+                        CopletLinkEvent event = new CopletLinkEvent(cid, link);
+                        String eventLink = linkService.getLinkURI(event);
+    
+                        // insert event link
+                        attr.setValue(index, eventLink);
                     }
                 }
                 
@@ -195,18 +187,11 @@ extends AbstractCopletTransformer {
                     String link = this.endTextRecording();
 
                     CopletInstanceData cid = this.getCopletInstanceData();                       
-                    LinkService linkService = null;
-                    try {
-                        linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
-        
-                        // create event link
-                        CopletLinkEvent event = new CopletLinkEvent(cid, link);
-                        eventLink = linkService.getLinkURI(event);
-                    } catch (ServiceException e) {
-                        throw new SAXException(e);
-                    } finally {
-                        this.manager.release(linkService);
-                    }
+                    LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+
+                    // create event link
+                    CopletLinkEvent event = new CopletLinkEvent(cid, link);
+                    eventLink = linkService.getLinkURI(event);
                 } else {
                     fragment = this.endRecording();
                 }

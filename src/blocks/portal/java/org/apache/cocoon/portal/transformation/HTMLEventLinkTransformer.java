@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -35,11 +34,10 @@ import org.xml.sax.SAXException;
  * Current we only support POSing of forms.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.3 2004/03/11 09:44:02 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.4 2004/03/16 09:16:59 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer 
-extends AbstractCopletTransformer 
-implements Serviceable {
+extends AbstractCopletTransformer {
     
     /** The temporary attribute used to store the uri */
     protected String attributeName;
