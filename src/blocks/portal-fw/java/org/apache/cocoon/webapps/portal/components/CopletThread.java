@@ -84,7 +84,7 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.1 2003/03/09 00:05:17 pier Exp $
+ * @version CVS $Id: CopletThread.java,v 1.2 2003/05/16 07:19:44 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
@@ -207,7 +207,7 @@ public final class CopletThread implements Runnable {
                                                           null, 
                                                           (handlesParameters == true ? p : null), 
                                                           resolver);
-                            resolver.toSAX(source, xc);
+                            SourceUtil.toSAX(source, xc);
                         } finally {
                             resolver.release(source);
                         }
