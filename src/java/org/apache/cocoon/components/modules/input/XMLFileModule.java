@@ -78,15 +78,15 @@ import java.util.Map;
  *
  * <p>Caching and reloading can be turned on / off (default: on)
  * through <code>&lt;reloadable&gt;false&lt;/reloadable&gt;</code> and
- * <code>&lt;cachable&gt;false&lt;/cachable&gt;</code>. The file
+ * <code>&lt;cacheable&gt;false&lt;/cacheable&gt;</code>. The file
  * (source) to use is specified through <code>&lt;file
  * src="protocol:path/to/file.xml" reloadable="true"
- * cachable="true"/&gt;</code> optionally overriding defaults for
+ * cacheable="true"/&gt;</code> optionally overriding defaults for
  * caching and or reloading.</p>
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: XMLFileModule.java,v 1.2 2003/03/12 15:04:38 jefft Exp $
+ * @version $Id: XMLFileModule.java,v 1.3 2003/03/13 05:52:09 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -111,7 +111,7 @@ public class XMLFileModule extends AbstractJXPathModule
     protected class DocumentHelper {
 
         private boolean reloadable = true;
-        private boolean cachable = true;
+        private boolean cacheable = true;
         /** source location */
         private String uri = null;
         /** cached DOM */
@@ -127,7 +127,7 @@ public class XMLFileModule extends AbstractJXPathModule
          */
         public DocumentHelper(boolean reload, boolean cache, String src) {
             this.reloadable = reload;
-            this.cachable = cache;
+            this.cacheable = cache;
             this.uri = src;
             // deferr loading document
         }
@@ -174,7 +174,7 @@ public class XMLFileModule extends AbstractJXPathModule
                 }
                 dom = this.document;
             }
-            if (!this.cachable) {
+            if (!this.cacheable) {
                 if (logger.isDebugEnabled())
                     logger.debug("not caching document cached... uri "+this.uri);
                 this.srcVal = null;
@@ -206,7 +206,11 @@ public class XMLFileModule extends AbstractJXPathModule
 
         super.configure(config);
         this.reloadAll = config.getChild("reloadable").getValueAsBoolean(this.reloadAll);
-        this.cacheAll = config.getChild("cachable").getValueAsBoolean(this.cacheAll);
+        if (config.getChild("cachable", false) != null) {
+            throw new ConfigurationException(
+                    "Bzzt! Wrong spelling at "+config.getChild("cachable").getLocation()+": please use 'cacheable', not 'cachable'");
+        }
+        this.cacheAll = config.getChild("cacheable").getValueAsBoolean(this.cacheAll);
 
         Configuration[] files = config.getChildren("file");
         if (this.documents == null)
@@ -214,7 +218,7 @@ public class XMLFileModule extends AbstractJXPathModule
 
         for (int i = 0; i < files.length; i++) {
             boolean reload = files[i].getAttributeAsBoolean("reloadable", this.reloadAll);
-            boolean cache  = files[i].getAttributeAsBoolean("cachable", this.cacheAll);
+            boolean cache  = files[i].getAttributeAsBoolean("cacheable", this.cacheAll);
             this.src = files[i].getAttribute("src");
             // by assigning the source uri to this.src the last one will be the default
             // OTOH caching / reload parameters can be specified in one central place
@@ -242,8 +246,14 @@ public class XMLFileModule extends AbstractJXPathModule
 
         if (!this.documents.containsKey(src)) {
             if (modeConf != null) {
-                reload = modeConf.getChild("file").getAttributeAsBoolean("reloadable",reload);
-                cache = modeConf.getChild("file").getAttributeAsBoolean("cachable",cache);
+                final Configuration fileConf = modeConf.getChild("file");
+                reload = fileConf.getAttributeAsBoolean("reloadable",reload);
+                cache = fileConf.getAttributeAsBoolean("cacheable",cache);
+                if (fileConf.getAttribute("cachable", null) != null) {
+                    throw new ConfigurationException(
+                            "Bzzt! Wrong spelling at "+fileConf.getLocation()+": please use 'cacheable', not 'cachable'");
+                }
+
             }
             this.documents.put(src, new DocumentHelper(reload, cache, src));
         }
