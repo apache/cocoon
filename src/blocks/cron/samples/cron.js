@@ -44,6 +44,7 @@ function cron( realPath )
     var cronexpr = "";
     var intervalexpr = "";
     var atexpr = "";
+    var i = 0;
     while( ! done )
     {
         var jobnames = scheduler.getJobNames();
