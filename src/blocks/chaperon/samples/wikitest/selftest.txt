@@ -1,0 +1,65 @@
+This wiki document is a self-describing test of the Cocoon Chaperon wiki grammar. Reading what follows 
+should tell you if the tests are successful.
+
+The page http://wiki.cocoondev.org/Wiki.jsp?page=ChaperonTestPage should be kept in sync with this so as
+to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax
+used by the Cocoon wiki.
+
+Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
+
+-- 1.TITLES --
+
+! Test 1.1 Small heading
+
+!! Test 1.2 Medium-sized heading
+
+!!! Test 1.3 Big heading
+
+-- 2.NUMBERED LISTS --
+
+Test 2.1 This should be followed by a list that counts from one to four:
+# one
+#  two
+# three
+#four
+
+-- 3.BULLET LISTS --
+
+Test 3.1 This should be followed by four bullet points:
+* Bullet one
+* Bullet two
+* Bullet three with a longer text, something like the quick brown fox stuff that you know and like
+* Bullet four, last one
+
+-- 4.TEXT ATTRIBUTES --
+
+Test 4.1 The words __bold__, ''italic'' and {{monospaced}} in this phrase should be displayed with the corresponding attributes.
+
+Test 4.2 In test 4.1 all words of the phrase should be followed by a space. 
+
+Test 4.3 Same as 4.1 but words with attributes are repeated twice: __bold bold__, ''italic italic'' and {{monospaced monospaced}}.
+
+Test 4.4 The block of text that follows should be shown in the source code style:
+
+
+{{{
+	boolean didThisWork() {
+	  return !failed();
+	}
+}}}
+
+-- 5.LINKS --
+
+Test 5.1 Here a link to this same page: [selftest.html]
+
+Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org]
+
+-- 6.MISCELLANEOUS --
+
+Test 6.1 This paragraph should be followed by a horizontal ruler line.
+----
+
+Test 6.2 There should be a line break between the words one and two that follow: 
+
+ONE\\TWO.
+
