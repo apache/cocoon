@@ -167,6 +167,7 @@
     <component-instance logger="core.modules.input" name="datemeta"     class="org.apache.cocoon.components.modules.input.DateMetaInputModule"/>
     <component-instance logger="core.modules.input" name="jxpath"       class="org.apache.cocoon.components.modules.input.JXPathMetaModule"/>
     <component-instance logger="core.modules.input" name="simplemap"    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"/>
+    <component-instance logger="core.modules.input" name="locate"       class="org.apache.cocoon.components.modules.input.LocateResource"/>
     <component-instance logger="core.modules.input" name="chain"    class="org.apache.cocoon.components.modules.input.ChainMetaModule">
       <input-module name="request-param"/>
       <input-module name="request-attr"/>
