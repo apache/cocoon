@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
+   </action>
    <action dev="AG" type="update">
      Updated jexl to 1.0, lucene to 1.4.1
    </action>

@@ -24,14 +24,12 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
-import org.apache.cocoon.util.NullOutputStream;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Map;
 
@@ -45,12 +43,9 @@ import java.util.Map;
  */
 public class QuartzJobExecutor implements Job {
 
-    /** Shared instance (no state, as it does nothing) */
-    static final OutputStream NULL_OUTPUT = new NullOutputStream();
-
     /* (non-Javadoc)
-    * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
-    */
+     * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+     */
     public void execute(final JobExecutionContext context)
     throws JobExecutionException {
         final JobDataMap data = context.getJobDetail().getJobDataMap();
@@ -97,6 +92,7 @@ public class QuartzJobExecutor implements Job {
             throw new JobExecutionException(e);
         }
 
+        Object key = CocoonComponentManager.startProcessing(env);
         CocoonComponentManager.enterEnvironment(env, new WrapperComponentManager(manager), processor);
         boolean release = false;
         try {
@@ -136,10 +132,12 @@ public class QuartzJobExecutor implements Job {
             data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
 
             CocoonComponentManager.leaveEnvironment();
-            manager.release(processor);
+            CocoonComponentManager.endProcessing(env, key);
+
             if (release) {
                 manager.release(job);
             }
+            manager.release(processor);
         }
     }
 }
