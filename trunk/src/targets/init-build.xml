@@ -142,6 +142,17 @@
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
     <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
 
+    <!-- compile the loader, used to change classpath especially for the CLI and Jetty -->
+    <mkdir dir="${tools.loader.dest}"/>
+    <javac srcdir="${tools.loader.src}"
+           destdir="${tools.loader.dest}"
+           debug="off"
+           optimize="on"
+           deprecation="on"
+           target="1.3"
+           nowarn="on"
+           compiler="${compiler}"/>
+
     <echo>... done.</echo>
   </target>
   

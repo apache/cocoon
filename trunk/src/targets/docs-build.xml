@@ -209,6 +209,9 @@
 
 <!-- === Admin targets ========================================================= -->
 
+  <!-- The Gump Target  -->
+  <target name="gump" depends="package, javadocs"/>
+
   <!-- Creates the web site  -->
   <target name="site" depends="docs, javadocs">
     <mkdir dir="${site}"/>
