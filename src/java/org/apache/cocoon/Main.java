@@ -50,12 +50,11 @@
 */
 package org.apache.cocoon;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -72,6 +71,7 @@ import org.apache.commons.cli.HelpFormatter;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.bean.CocoonBean;
+import org.apache.cocoon.bean.BeanListener;
 
 /**
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
@@ -80,8 +80,8 @@ import org.apache.cocoon.bean.CocoonBean;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: Main.java,v 1.7 2003/06/24 16:59:24 cziegeler Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
+ * @version CVS $Id: Main.java,v 1.8 2003/06/27 13:50:37 upayavira Exp $
  */
 public class Main {
 
@@ -165,6 +165,9 @@ public class Main {
     private static final String ATTR_URI_DESTURI = "dest";
 
     private static Options options;
+    private static List brokenLinks = new ArrayList();
+    private static String brokenLinkReportFile = null;
+    private static String brokenLinkReportType = "text";
 
     private static void setOptions() {
         options = new Options();
@@ -289,7 +292,9 @@ public class Main {
 
         Main.setOptions();
         CommandLine line = new PosixParser().parse( options, args );
+        CLIListener listener = new Main.CLIListener();
         CocoonBean cocoon = new CocoonBean();
+        cocoon.addListener(listener);
 
         if (line.hasOption(HELP_OPT)) {
              printUsage();
@@ -341,7 +346,7 @@ public class Main {
             cocoon.setDefaultFilename(line.getOptionValue(DEFAULT_FILENAME_OPT));
         }
         if (line.hasOption(BROKEN_LINK_FILE_OPT)) {
-            cocoon.setBrokenLinkReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
+            brokenLinkReportFile = line.getOptionValue(BROKEN_LINK_FILE_OPT);
         }
         if (line.hasOption(URI_FILE_OPT)) {
             cocoon.addTargets(processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
@@ -359,10 +364,12 @@ public class Main {
         cocoon.addTargets(line.getArgList(), destDir);
 
         System.out.println(getProlog());
-        
+
         cocoon.initialize();
         cocoon.process();
         cocoon.dispose();
+
+        listener.outputBrokenLinks();
 
         long duration = System.currentTimeMillis() - startTimeMillis;
         System.out.println("Total time: " + (duration / 60000) + " minutes " + (duration % 60000)/1000 + " seconds");
@@ -508,10 +515,10 @@ public class Main {
 
     private static void parseBrokenLinkNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_FILE)) {
-            cocoon.setBrokenLinkReportFile(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE));
+            brokenLinkReportFile = Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE);
         }
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_TYPE)) {
-            cocoon.setBrokenLinkReportType(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE));
+            brokenLinkReportType = Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE);
         }
         if (Main.hasAttribute(node, ATTR_BROKEN_LINK_GENERATE)) {
         cocoon.setBrokenLinkGenerate(Main.getBooleanAttributeValue(node, ATTR_BROKEN_LINK_GENERATE));
@@ -641,7 +648,7 @@ public class Main {
         msg.append("------------------------------------------------------------------------ ").append(lSep).append(lSep);
         return msg.toString();
     }
-         
+
     /**
      * Print the usage message and exit
      */
@@ -654,12 +661,93 @@ public class Main {
                             "Note: the context directory defaults to '"+ Constants.DEFAULT_CONTEXT_DIR + "'");
         System.exit(0);
     }
-    
+
     /**
      * Print the version string and exit
      */
     private static void printVersion() {
         System.out.println(Constants.VERSION);
         System.exit(0);
-    }    
+    }
+    public static class CLIListener implements BeanListener {
+        public void pageGenerated(String uri, int linksInPage, int pagesRemaining) {
+            if (linksInPage == -1) {
+                this.print("* " + uri);
+            } else {
+                this.print("* ["+linksInPage + "] "+uri);
+            }
+        }
+        public void messageGenerated(String msg) {
+            this.print(msg);
+        }
+
+        public void warningGenerated(String uri, String warning) {
+            this.print("Warning: "+warning + " when generating " + uri);
+        }
+
+        public void brokenLinkFound(String uri, String message) {
+            brokenLinks.add(uri + "\t" + message);
+        }
+
+        public void outputBrokenLinks() {
+            if (brokenLinkReportFile == null) {
+                return;
+            } else if ("text".equalsIgnoreCase(brokenLinkReportType)) {
+                outputBrokenLinksAsText();
+            } else if ("xml".equalsIgnoreCase(brokenLinkReportType)) {
+                outputBrokenLinksAsXML();
+            }
+        }
+        private void outputBrokenLinksAsText() {
+            PrintWriter writer;
+            try {
+                writer =
+                        new PrintWriter(
+                                new FileWriter(new File(brokenLinkReportFile)),
+                                true);
+                for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
+                    writer.println((String) i.next());
+                }
+                writer.close();
+            } catch (IOException ioe) {
+                this.print("Broken link file does not exist: " + brokenLinkReportFile);
+            }
+        }
+        private void outputBrokenLinksAsXML() {
+            PrintWriter writer;
+            try {
+                writer =
+                        new PrintWriter(
+                                new FileWriter(new File(brokenLinkReportFile)),
+                                true);
+                writer.println("<broken-links>");
+                for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
+                    String linkMsg = (String) i.next();
+                    String uri = linkMsg.substring(0,linkMsg.indexOf('\t'));
+                    String msg = linkMsg.substring(linkMsg.indexOf('\t')+1);
+                    writer.println("  <link message=\"" + msg + "\">" + uri + "</link>");
+                }
+                writer.println("</broken-links>");
+                writer.close();
+            } catch (IOException ioe) {
+                this.print("Could not create broken link file: " + brokenLinkReportFile);
+            }
+        }
+        private void print(String message) {
+            int screenWidth = 67;
+            int messageWidth = screenWidth - 6;
+
+            int messageLength = message.length(), currentStart = -messageWidth, currentEnd = 0;
+            do {
+                currentStart += messageWidth;
+                currentEnd   += messageWidth;
+
+                if (currentEnd>messageLength) {
+                    currentEnd=messageLength;
+                }
+
+                System.out.println(message.substring(currentStart, currentEnd));
+            } while(currentEnd < messageLength);
+        }
+    }
 }
