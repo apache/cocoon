@@ -29,6 +29,8 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Loggable;
@@ -38,9 +40,10 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-15 18:18:25 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-16 22:07:46 $
  */
-public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Processor {
+public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
+    private Context context;
 
     /** the configuration */
     private Configuration conf;
@@ -49,7 +52,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     private ComponentManager manager;
 
     /** the parent sitemap component manager */
-    private ComponentManager parentSitemapComponentManager;
+    private SitemapComponentManager parentSitemapComponentManager;
 
     /** the source of this sitemap */
     private String source;
@@ -87,7 +90,11 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         this.conf = conf;
     }
 
-    protected Handler (ComponentManager sitemapComponentManager, String source, boolean check_reload)
+    public void contextualize (Context context) {
+        this.context = context;
+    }
+
+    protected Handler (SitemapComponentManager sitemapComponentManager, String source, boolean check_reload)
     throws FileNotFoundException {
         this.parentSitemapComponentManager = sitemapComponentManager;
         this.check_reload = check_reload;
@@ -168,8 +175,6 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
-            if (smap instanceof Loggable) ((Loggable)smap).setLogger(getLogger());
-            if (smap instanceof Composer) smap.compose(this.manager);
             smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
             if (smap instanceof Configurable) smap.configure(this.conf);
 

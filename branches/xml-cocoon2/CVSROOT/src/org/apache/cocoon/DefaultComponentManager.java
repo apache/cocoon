@@ -40,9 +40,9 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-16 20:28:55 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-16 22:07:31 $
  */
-public class DefaultComponentManager implements ComponentManager, Configurable, Loggable {
+public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
     protected Logger log;
 

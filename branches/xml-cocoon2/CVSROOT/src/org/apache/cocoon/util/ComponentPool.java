@@ -32,18 +32,12 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller) throws Exception {
         super(factory, controller, DEFAULT_POOL_SIZE/2, DEFAULT_POOL_SIZE);
-        if (factory instanceof ComponentFactory) {
-            ((ComponentFactory) factory).setPool(this);
-        }
     }
 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller,
                          final int initial) throws Exception {
         super(factory, controller, initial, initial);
-        if (factory instanceof ComponentFactory) {
-            ((ComponentFactory) factory).setPool(this);
-        }
     }
 
     public ComponentPool(final ObjectFactory factory,
@@ -51,9 +45,6 @@ public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable 
                          final int initial,
                          final int maximum) throws Exception {
         super(factory, controller, initial, maximum);
-        if (factory instanceof ComponentFactory) {
-            ((ComponentFactory) factory).setPool(this);
-        }
     }
 
     public void setLogger(Logger log) {

@@ -21,10 +21,11 @@ import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
 import org.apache.cocoon.components.url.URLFactory;
 
 import java.io.IOException;
@@ -40,11 +41,11 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-16 18:34:00 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-16 22:07:39 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, Poolable
+  implements ContentHandler, LexicalHandler, ThreadSafe
 {
   /**
    * The sitemap-defined server pages program generator
@@ -132,10 +133,10 @@ public class ServerPagesGenerator
         );
     }
 
-    Generator generator = null;
+    XSPGenerator generator = null;
 
     try {
-      generator = (Generator)
+      generator = (XSPGenerator)
         programGenerator.load(file, this.markupLanguage, this.programmingLanguage, this.resolver);
     } catch (Exception e) {
       getLogger().warn("ServerPagesGenerator.generate()", e);
@@ -192,7 +193,7 @@ public class ServerPagesGenerator
       }
     }
 
-    ((CompiledComponent) generator).recycle();
+    generator.returnToPool();
   }
 
   /* Handlers */

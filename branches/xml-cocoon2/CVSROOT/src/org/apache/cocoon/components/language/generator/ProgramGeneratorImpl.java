@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-02-16 16:29:21 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-02-16 22:07:34 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -159,12 +159,9 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                         // Store loaded program in cache
                         this.cache.addGenerator(filename, program);
                     }
-                    // Instantiate program
-                    programInstance = programmingLanguage.instantiate(program);
-                    if (programInstance instanceof Loggable) {
-                        ((Loggable)programInstance).setLogger(getLogger());
-                    }
-                    programInstance.compose(this.manager);
+
+                    programInstance = (CompiledComponent) this.cache.select(filename);
+
                 } catch (LanguageException le) {
                     getLogger().debug("Language Exception", le);
                 }
@@ -202,7 +199,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                     this.cache.addGenerator(filename, program);
                 }
                 // Instantiate
-                programInstance = programmingLanguage.instantiate(program);
+                programInstance = (CompiledComponent) this.cache.select(filename);
             }
             return programInstance;
     }

@@ -15,13 +15,14 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.HashMap;
 
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
-//import org.apache.log.Logger;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -35,9 +36,11 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 00:59:08 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-16 22:07:46 $
  */
-public class Manager extends AbstractLoggable implements Configurable, Composer {
+public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
+
+    private Context context;
 
     /** The vectors of sub sitemaps */
     private HashMap sitemaps = new HashMap();
@@ -49,14 +52,18 @@ public class Manager extends AbstractLoggable implements Configurable, Composer 
     private ComponentManager manager;
 
     /** The parent sitemap component manager */
-    private ComponentManager parentSitemapComponentManager;
+    private SitemapComponentManager parentSitemapComponentManager;
 
-    public Manager (ComponentManager sitemapComponentManager) {
+    public Manager (SitemapComponentManager sitemapComponentManager) {
         this.parentSitemapComponentManager = sitemapComponentManager;
     }
 
     public void configure (Configuration conf) {
         this.conf = conf;
+    }
+
+    public void contextualize (Context context) {
+        this.context = context;
     }
 
     public void compose (ComponentManager manager) {
@@ -86,6 +93,7 @@ public class Manager extends AbstractLoggable implements Configurable, Composer 
             }
         } else {
             sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
+            sitemapHandler.contextualize(this.context);
             sitemapHandler.setLogger(getLogger());
             sitemapHandler.compose(this.manager);
             sitemapHandler.configure(this.conf);

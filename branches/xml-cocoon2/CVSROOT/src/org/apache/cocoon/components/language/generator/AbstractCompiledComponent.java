@@ -17,7 +17,7 @@ import org.apache.cocoon.PoolClient;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-16 19:09:04 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-16 22:07:33 $
  */
 public abstract class AbstractCompiledComponent extends AbstractLoggable implements PoolClient, CompiledComponent {
     private Pool pool;
@@ -28,7 +28,7 @@ public abstract class AbstractCompiledComponent extends AbstractLoggable impleme
         }
     }
 
-    public void recycle() {
+    public void returnToPool() {
        this.pool.put(this);
     }
 }

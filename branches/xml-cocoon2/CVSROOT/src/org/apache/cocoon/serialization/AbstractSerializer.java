@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
@@ -16,14 +16,14 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-12 13:30:45 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-16 22:07:42 $
  */
- 
+
 public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {
 
     /**
      * The <code>OutputStream</code> used by this serializer.
-     */    
+     */
     protected OutputStream output;
 
     /**
@@ -35,7 +35,7 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
 
     /**
      * Get the mime-type of the output of this <code>Serializer</code>
-     * This default implementation returns null to indicate that the 
+     * This default implementation returns null to indicate that the
      * mime-type specified in the sitemap is to be used
      */
     public String getMimeType() {
@@ -43,7 +43,7 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
     }
 
     /**
-     * Recycle serializer by removing references 
+     * Recycle serializer by removing references
      */
     public void recycle() {
         this.output = null;

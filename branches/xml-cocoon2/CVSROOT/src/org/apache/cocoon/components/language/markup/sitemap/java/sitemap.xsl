@@ -84,7 +84,6 @@
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.selection.Selector;
     import org.apache.cocoon.sitemap.AbstractSitemap;
-    import org.apache.cocoon.sitemap.ComponentHolder;
     import org.apache.cocoon.sitemap.ResourcePipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
@@ -95,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.77 2001-02-15 20:34:39 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.78 2001-02-16 22:07:35 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -191,7 +190,6 @@
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
       public void configure(Configuration conf) throws ConfigurationException {
-        super.configure(conf);
         this.sitemapManager = new Manager(super.sitemapComponentManager);
         this.sitemapManager.setLogger(getLogger());
         this.sitemapManager.compose(this.manager);
@@ -490,7 +488,7 @@
           <xsl:value-of select="$matcher-name2"/>
         </xsl:when>
         <xsl:otherwise>
-          ((Matcher)((ComponentHolder)super.sitemapComponentManager.lookup("matcher:<xsl:value-of select="$matcher-type"/>")).get()).match
+          ((Matcher)super.sitemapComponentManager.lookup("matcher:<xsl:value-of select="$matcher-type"/>")).match
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -563,7 +561,7 @@
             <xsl:value-of select="$selector-name2"/>
           </xsl:when>
           <xsl:otherwise>
-            ((Selector)((ComponentHolder)super.sitemapComponentManager.lookup("selector:<xsl:value-of select="$selector-type"/>")).get()).select
+            ((Selector)super.sitemapComponentManager.lookup("selector:<xsl:value-of select="$selector-type"/>")).select
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -608,7 +606,7 @@
 
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).get()).act
+      ((Action)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->
@@ -668,7 +666,7 @@
 
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).get()).act
+      ((Action)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->

@@ -13,14 +13,16 @@ import java.util.Enumeration;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import org.apache.avalon.Poolable;
+
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:50 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-16 22:07:38 $
  */
-public class RequestGenerator extends ServletGenerator {
+public class RequestGenerator extends ServletGenerator implements Poolable {
 
     /** The URI of the namespace of this generator. */
     private String URI="http://xml.apache.org/cocoon/2.0/RequestGenerator";
@@ -33,7 +35,7 @@ public class RequestGenerator extends ServletGenerator {
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);
         AttributesImpl attr=new AttributesImpl();
-        
+
         this.attribute(attr,"target",this.request.getRequestURI());
         this.attribute(attr,"source",this.source);
         this.start("request",attr);
@@ -109,11 +111,11 @@ public class RequestGenerator extends ServletGenerator {
         this.contentHandler.endPrefixMapping("");
         this.contentHandler.endDocument();
     }
-    
+
     private void attribute(AttributesImpl attr, String name, String value) {
         attr.addAttribute("",name,name,"CDATA",value);
     }
-    
+
     private void start(String name, AttributesImpl attr)
     throws SAXException {
         super.contentHandler.startElement(URI,name,name,attr);
@@ -124,7 +126,7 @@ public class RequestGenerator extends ServletGenerator {
     throws SAXException {
         super.contentHandler.endElement(URI,name,name);
     }
-    
+
     private void data(String data)
     throws SAXException {
         super.contentHandler.characters(data.toCharArray(),0,data.length());

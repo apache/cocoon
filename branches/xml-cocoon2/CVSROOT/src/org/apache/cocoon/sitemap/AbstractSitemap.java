@@ -17,11 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.ComponentNotFoundException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -30,7 +33,6 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.ComponentHolderFactory;
 import org.apache.cocoon.sitemap.SitemapComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -40,9 +42,10 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-16 18:11:53 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-16 22:07:44 $
  */
 public abstract class AbstractSitemap extends AbstractCompiledComponent implements Sitemap {
+    private Context context;
 
     private static final int BYTE_ARRAY_SIZE = 1024;
 
@@ -65,33 +68,30 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void setParentSitemapComponentManager(ComponentManager parentSitemapComponentManager) {
+    public void setParentSitemapComponentManager(SitemapComponentManager parentSitemapComponentManager) {
         this.sitemapComponentManager = new SitemapComponentManager (parentSitemapComponentManager);
-        try {
-            this.sitemapComponentManager.setURLFactory((URLFactory)manager.lookup(Roles.URL_FACTORY));
-        } catch (Exception e) {
-            getLogger().warn("cannot obtain URLFactory", e);
-        }
+        this.sitemapComponentManager.contextualize(this.context);
+        this.sitemapComponentManager.setLogger(getLogger());
+        this.sitemapComponentManager.addComponentInstance(Roles.URL_FACTORY, this.urlFactory);
     }
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager)  throws ComponentManagerException {
         this.manager = manager;
-    }
 
-    /**
-     * Configure this instance
-     */
-    public void configure(Configuration conf) throws ConfigurationException {
         try {
             this.urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
-            throw new ConfigurationException ("cannot obtain the URLFactory", e);
+            throw new ComponentNotFoundException ("cannot obtain the URLFactory", e);
         }
+    }
+
+    public void contextualize(Context context) {
+        this.context = context;
     }
 
     /**
@@ -135,11 +135,14 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
         if (!Component.class.isAssignableFrom(clazz)) {
             throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
-        this.sitemapComponentManager.put(
-            type, ComponentHolderFactory.getComponentHolder(
-                getLogger(), clazz, configuration, this.manager, mime_type
-            )
-        );
+
+        if (this.sitemapComponentManager == null) {
+            this.sitemapComponentManager = new SitemapComponentManager();
+            this.sitemapComponentManager.contextualize(this.context);
+            this.sitemapComponentManager.setLogger(getLogger());
+        }
+
+        this.sitemapComponentManager.addSitemapComponent(type, clazz, configuration, mime_type);
     }
 
     private byte [] getByteArrayFromStream (InputStream stream) {

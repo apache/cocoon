@@ -37,7 +37,7 @@ import java.io.ByteArrayOutputStream;
  * A Batik based Serializer for generating PNG/JPG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-01-11 19:12:32 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-16 22:07:42 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable {
 
@@ -122,7 +122,7 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
     public void notify(Document doc) throws SAXException {
         try {
             TranscoderFactory transcoderFactory =
-	            ConcreteTranscoderFactory.getTranscoderFactoryImplementation();
+                ConcreteTranscoderFactory.getTranscoderFactoryImplementation();
             AbstractTranscoder transcoder = (AbstractTranscoder)
                 transcoderFactory.createTranscoder(mimetype);
             transcoder.transcodeToStream(doc,this.output);
