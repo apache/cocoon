@@ -62,7 +62,7 @@ import java.io.FileInputStream;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: MIMEUtils.java,v 1.2 2003/05/15 08:30:02 stephan Exp $
+ * @version CVS $Id: MIMEUtils.java,v 1.3 2003/05/30 15:30:19 crossley Exp $
  */
 public class MIMEUtils {
 
@@ -131,6 +131,8 @@ public class MIMEUtils {
             put("video/quicktime", ".mov");
             put("audio/midi", ".mid");
             put("audio/mpeg", ".mp3");
+            put("text/javascript", ".js");
+            put("text/vbscript", ".vbs");
             put("text/x-vcard", ".vcf");
             put("text/rdf", ".rdf");
         }
