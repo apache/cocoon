@@ -9,6 +9,7 @@
   </map:generators>
   <map:transformers default="xslt">
     <map:transformer name="htmlroot" src="org.apache.cocoon.portal.transformation.HTMLRootTransformer" logger="sitemap.transformer.htmlroot" />
+    <map:transformer name="rss" src="org.apache.cocoon.portal.transformation.RSSTransformer" logger="sitemap.transformer.rss" />
   </map:transformers>
   <map:readers default="resource"/>
   <map:serializers default="html"/>
