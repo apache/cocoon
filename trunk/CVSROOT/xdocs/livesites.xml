@@ -13,7 +13,8 @@
  <body>
   <s1 title="Live Sites powered by Cocoon">
    <p>
-    Here is a list of web sites that are proudly powered by Cocoon (in chronological order):
+    Here is a list of web sites that are proudly powered by Cocoon 
+    (in chronological order):
    </p>
    
    <ul>
@@ -31,8 +32,7 @@
     <li><link href="http://politics.smallworld.com/">http://politics.smallworld.com</link></li>
     <li><link href="http://www.methodsystems.com/">http://www.methodsystems.com</link></li>
     <li><link href="http://www.intelinet.com.br/">http://www.intelinet.com.br</link></li>
-    <li><link href="http://www.artonline.it/casa/">http://www.artonline.it/casa/</link></li>
-    <li><link href="http://mail-archives.apache.org">http://mail-archives.apache.org</link></li>
+    <li><link href="http://www.linuxtv.org/">http://www.linuxtv.org/</link></li>
 <!--<li><link href=""></link></li>-->
    </ul>
 
