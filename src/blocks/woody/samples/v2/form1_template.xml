@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<!-- The only difference between this file and the form1_template_action.xml
-     is the value of the action attribute on the wt:form-template element -->
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" 
+      xmlns:wi="http://apache.org/cocoon/woody/instance/1.0" 
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <title>Sample form</title>
   <content>
-    <wt:form-template action="#{$continuation/id}.continue" method="POST">
+    <wt:form-template action="${cocoon.continuation.id}.continue" method="POST">
     <table align="center">
      <tr><td>
      
@@ -58,7 +59,6 @@
               </wi:items>
             </wi:group>
             
-            <p>Checkout the <a href="form1">form1 action page</a> for another way of formatting panels</p>
 
       <wi:group>
         <wi:styling layout="columns"/>
@@ -71,6 +71,11 @@
         </wi:items>
       </wi:group>
 
+      <!-- It's possible to access repeater rows using jx like this: -->
+      <jx:forEach varStatus="loop" begin="0" end="${contacts.length - 1}">
+          <jx:set var="row" value="${contacts.getRow(loop.index)}"/>
+          <!-- do something with row... -->
+      <jx:forEach/>
 
       <!-- manual layout of fieldw, without use of a wi:group -->
       <wt:widget-label id="contacts"/><br/>
@@ -103,8 +108,11 @@
           </td>
         </tr>
       </table>
-
-      <input type="submit"/>
+      <!-- 
+           You can access properties you set on the form or other widgets 
+           using jx: 
+      -->
+      <input type="submit" value="${buttonName}"/>
      </td></tr>
     </table>
     </wt:form-template>
