@@ -58,10 +58,13 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -76,11 +79,11 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.2 2003/05/06 17:08:26 cziegeler Exp $
+ * @version CVS $Id: DefaultFormManager.java,v 1.3 2003/05/23 09:53:46 cziegeler Exp $
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
-implements Composable, Component, FormManager, ThreadSafe
+implements Composable, Component, FormManager, ThreadSafe, Contextualizable
      /*,RequestProcessingListener, SitemapProcessingListener*/ {
 
     /** This session attribute is used to store the information for the inputxml tags */
@@ -89,6 +92,9 @@ implements Composable, Component, FormManager, ThreadSafe
     /** The <code>ComponentManager</code> */
     private ComponentManager manager;
 
+    /** The context */
+    private Context context;
+    
     /**
      * Avalon Composer Interface
      */
@@ -157,8 +163,7 @@ implements Composable, Component, FormManager, ThreadSafe
         if (context == null) {
             throw new ProcessingException("SessionManager.registerInputField: Context not found " + contextName);
         }
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest( objectModel );
+        final Request request = ContextHelper.getRequest(this.context);
         Session session = request.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.registerInputField: Session is required for context " + contextName);
@@ -240,7 +245,7 @@ implements Composable, Component, FormManager, ThreadSafe
     }
 
     public void processInputFields() {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         this.processInputFields( objectModel ) ;
     }
     
@@ -257,4 +262,12 @@ implements Composable, Component, FormManager, ThreadSafe
 
     public void requestProcessingEnded(Map objectModel) {
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
 }
