@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,17 +16,14 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.Constants;
+
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -34,19 +31,44 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.7 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
 public class FlowNode extends AbstractProcessingNode
-        implements Serviceable, Contextualizable, Disposable {
+                      implements Serviceable, Disposable {
 
-    ServiceManager manager;
-    String language;
-    Context context;
-    Interpreter interpreter;
-    ServiceSelector interpreterSelector;
+    private ServiceManager manager;
+    private String language;
+    private Interpreter interpreter;
+    private ServiceSelector interpreterSelector;
 
     public FlowNode(String language) {
         this.language = language;
+    }
+
+    /**
+     * Lookup an flow {@link org.apache.cocoon.components.flow.Interpreter}
+     * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
+     * in the sitemap.
+     *
+     * @param manager a <code>ServiceManager</code> value
+     * @exception ServiceException if no flow interpreter could be obtained
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+
+        try {
+            this.interpreterSelector = (ServiceSelector) manager.lookup(Interpreter.ROLE);
+            // Obtain the Interpreter instance for this language
+            this.interpreter = (Interpreter) this.interpreterSelector.select(language);
+            // Set interpreter ID as location of the flow node (which includes full sitemap file path)
+            this.interpreter.setInterpreterID(this.location);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(language,
+                                       "FlowNode: Couldn't obtain a flow interpreter for '" + language +
+                                       "' at " + getLocation(), e);
+        }
     }
 
     /**
@@ -63,53 +85,23 @@ public class FlowNode extends AbstractProcessingNode
         return true;
     }
 
-    public void contextualize(org.apache.avalon.framework.context.Context context)
-        throws ContextException {
-        this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-    }
-
-    /**
-     *
-     * Lookup an flow {@link org.apache.cocoon.components.flow.Interpreter}
-     * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
-     * in the sitemap.
-     *
-     * @param manager a <code>ServiceManager</code> value
-     * @exception ServiceException if no flow interpreter could be obtained
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-
-        try {
-            this.interpreterSelector = (ServiceSelector)manager.lookup(Interpreter.ROLE);
-            // Obtain the Interpreter instance for this language
-            this.interpreter = (Interpreter)this.interpreterSelector.select(language);
-        } catch (ServiceException ce) {
-            throw ce;
-        } catch (Exception ex) {
-            throw new ServiceException(language,
-                "ScriptNode: Couldn't obtain a flow interpreter for " + language +
-                " at " + getLocation(), ex);
-        }
+    public Interpreter getInterpreter() {
+        return interpreter;
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            if ( this.interpreterSelector != null ) {
-                this.interpreterSelector.release(this.interpreter );
+        if (this.manager != null) {
+            if (this.interpreterSelector != null) {
+                this.interpreterSelector.release(this.interpreter);
                 this.interpreter = null;
-                this.manager.release( this.interpreterSelector );
+
+                this.manager.release(this.interpreterSelector);
                 this.interpreterSelector = null;
             }
             this.manager = null;
         }
-
-    }
-
-    public Interpreter getInterpreter() {
-        return interpreter;
     }
 }
