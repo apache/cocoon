@@ -60,7 +60,7 @@ import java.util.ArrayList;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerData.java,v 1.2 2003/03/20 15:04:14 stephan Exp $
+ * @version CVS $Id: ProfilerData.java,v 1.3 2003/09/24 22:00:34 cziegeler Exp $
  */
 public class ProfilerData {
 
@@ -75,7 +75,7 @@ public class ProfilerData {
         public long time;
         public Object fragment;
 
-        private Entry(String role, String source) {
+        protected Entry(String role, String source) {
             this.role = role;
             this.source = source;
         }

@@ -85,7 +85,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: AO_FOM_Cocoon.java,v 1.2 2003/09/12 18:16:37 reinhard Exp $
+ * @version CVS $Id: AO_FOM_Cocoon.java,v 1.3 2003/09/24 22:00:34 cziegeler Exp $
  */
 
 public class AO_FOM_Cocoon extends ScriptableObject {
@@ -850,7 +850,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
     }
 
     // unwrap Wrapper's and convert undefined to null
-    private static Object unwrap(Object obj) {
+    protected static Object unwrap(Object obj) {
         if (obj instanceof Wrapper) {
             obj = ((Wrapper)obj).unwrap();
         } else if (obj == Undefined.instance) {
@@ -976,7 +976,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
-                                           (WebContinuation)(parent == null ? null : parent.getWebContinuation()),
+                                           (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);

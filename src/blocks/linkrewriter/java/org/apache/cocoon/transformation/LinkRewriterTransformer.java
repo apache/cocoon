@@ -179,7 +179,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.7 2003/06/19 11:31:05 jefft Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.8 2003/09/24 22:04:40 cziegeler Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
@@ -193,9 +193,6 @@ public class LinkRewriterTransformer
     /** List containing schemes (protocols) of links to log */
     private Set inSchemes;
     private Set outSchemes;
-
-    /** Links matching one of the acceptable schemes. */
-    private Set links;
 
     /** Configuration passed to the component once through configure(). */
     private Configuration origConf; 
@@ -235,7 +232,6 @@ public class LinkRewriterTransformer
         throws ProcessingException, SAXException, IOException
     {
         super.setup(resolver, objectModel, src, parameters);
-        this.links = new HashSet();
         this.badLinkStr = parameters.getParameter("bad-link-str",    // per-request config
                 origConf.getChild("bad-link-str"). // else fall back to per-instance config
                 getValue(null)                     // else use hardcoded default
@@ -277,7 +273,6 @@ public class LinkRewriterTransformer
     public void recycle() {
         super.recycle();
         this.resolver = null;
-        this.links = null;
         this.linkAttrs = null;
         this.inSchemes = null;
         this.outSchemes = null;

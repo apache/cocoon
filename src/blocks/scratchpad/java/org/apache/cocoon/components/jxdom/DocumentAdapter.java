@@ -67,10 +67,10 @@ public class DocumentAdapter implements Document {
         GET_SELF = JXPathContext.compile(".");
     private static final CompiledExpression 
         GET_ATTRS = JXPathContext.compile("@*");
-    private static final CompiledExpression 
+    protected static final CompiledExpression 
         GET_CHILD_NODES = JXPathContext.compile("*");
 
-    private static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
+    protected static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
             public Node getNamedItem(String name) {
                 return null;
             }
@@ -107,7 +107,7 @@ public class DocumentAdapter implements Document {
             }
         };
 
-    private static final NodeList EMPTY_NODE_LIST = new NodeList() {
+    protected static final NodeList EMPTY_NODE_LIST = new NodeList() {
             public int getLength() {
                 return 0;
             }
@@ -119,11 +119,11 @@ public class DocumentAdapter implements Document {
     private static final JXPathContextFactory jxpathContextFactory = 
         JXPathContextFactory.newInstance();
 
-    private static void notSupported() throws DOMException {
+    protected static void notSupported() throws DOMException {
         throw new UnsupportedOperationException("Not Supported");
     }
 
-    private static JXPathContext newContext(Object obj) {
+    protected static JXPathContext newContext(Object obj) {
         return jxpathContextFactory.newContext(null, obj);
     }
 
@@ -495,7 +495,7 @@ public class DocumentAdapter implements Document {
         public Node getFirstChild() {
             getChildNodes();
             if (childNodes.getLength() > 0) {
-                return (Node)childNodes.item(0);
+                return childNodes.item(0);
             }
             return null;
         }
@@ -503,7 +503,7 @@ public class DocumentAdapter implements Document {
         public Node getLastChild() {
             getChildNodes();
             if (childNodes.getLength() > 0) {
-                return (Node)childNodes.item(childNodes.getLength()-1);
+                return childNodes.item(childNodes.getLength()-1);
             }
             return null;
         }
@@ -577,7 +577,7 @@ public class DocumentAdapter implements Document {
             public Element getOwnerElement() {
                 return ElementAdapter.this;
             }
-        };
+        }
 
         
         public NamedNodeMap getAttributes() {

@@ -88,7 +88,7 @@ import org.xml.sax.helpers.LocatorImpl;
 
 public class JXFormsGenerator extends ServiceableGenerator {
 
-    private static final JXPathContextFactory 
+    protected static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
 
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
@@ -104,7 +104,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
             }
         };
 
-    private static final Locator NULL_LOCATOR = new LocatorImpl();
+    protected static final Locator NULL_LOCATOR = new LocatorImpl();
 
     public final static String NS = 
         "http://apache.org/cocoon/jxforms/1.0";
@@ -235,7 +235,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
      * Compile a single XPath expression
      */
 
-    static private XPathExpr
+    static protected XPathExpr
         compileExpr(String expr, Locator location) 
         throws SAXParseException {
         if (expr == null) return null;
@@ -451,7 +451,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
         HINT, VALUE, HELP, LABEL
     };
 
-    private static boolean isInputControl(String name) {
+    protected static boolean isInputControl(String name) {
         for (int i = 0; i < INPUT_CONTROLS.length; i++) {
             if (INPUT_CONTROLS[i].equals(name)) {
                 return true;
@@ -460,7 +460,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
         return false;
     }
 
-    private static boolean isReadonlyInputControl(String name) {
+    protected static boolean isReadonlyInputControl(String name) {
         for (int i = 0; i < READONLY_INPUT_CONTROLS.length; i++) {
             if (READONLY_INPUT_CONTROLS[i].equals(name)) {
                 return true;
@@ -1175,10 +1175,9 @@ public class JXFormsGenerator extends ServiceableGenerator {
     private XMLConsumer consumer;
     private Source inputSource;
     private WebContinuation kont;
-    private Object bean;
     private Map objectModel;
 
-    private XMLConsumer getConsumer() {
+    protected XMLConsumer getConsumer() {
         return consumer;
     }
 
@@ -1186,7 +1185,6 @@ public class JXFormsGenerator extends ServiceableGenerator {
         super.recycle();
         consumer = null;
         inputSource = null;
-        bean = null;
         kont = null;
         objectModel = null;
     }
@@ -1212,7 +1210,6 @@ public class JXFormsGenerator extends ServiceableGenerator {
                 }
             }
         }
-        bean = FlowHelper.getContextObject(objectModel);
         kont = FlowHelper.getWebContinuation(objectModel);
         this.objectModel = objectModel;
     }
@@ -1248,7 +1245,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
                 null);
     }
 
-    private void execute(final XMLConsumer consumer,
+    protected void execute(final XMLConsumer consumer,
                          Form form,
                          String currentView,
                          String contextPath,
@@ -1269,8 +1266,7 @@ public class JXFormsGenerator extends ServiceableGenerator {
                 consumer.endDocument();
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
-                StartElement startElement = 
-                    (StartElement)endElement.startElement;
+                StartElement startElement = endElement.startElement;
                 consumer.endElement(startElement.namespaceURI,
                                     startElement.localName,
                                     startElement.raw);

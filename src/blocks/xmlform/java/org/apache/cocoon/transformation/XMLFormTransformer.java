@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.7 2003/08/04 03:16:34 joerg Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.8 2003/09/24 22:04:40 cziegeler Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer {
 
@@ -580,7 +580,6 @@ public class XMLFormTransformer extends AbstractSAXTransformer {
             getLogger().error(error);
             throw new IllegalStateException(error);
         }
-        ;
 
         formStack.push(currentForm);
 

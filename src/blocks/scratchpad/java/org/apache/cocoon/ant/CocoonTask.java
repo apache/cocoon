@@ -96,7 +96,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.3 2003/09/09 19:21:45 joerg Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.4 2003/09/24 22:00:34 cziegeler Exp $
  */
 public class CocoonTask extends Task {
 
@@ -158,7 +158,7 @@ public class CocoonTask extends Task {
         this.logkitXconf = null;
 
         this.destDir = null;
-        File workDirParent = new File((String) System.getProperty("java.io.tmpdir", "."));
+        File workDirParent = new File(System.getProperty("java.io.tmpdir", "."));
         this.workDir = new File(workDirParent, "work");
 
         this.contextDir = null;
@@ -255,7 +255,7 @@ public class CocoonTask extends Task {
         final String delimiter = DEFAULT_DELIM;
         StringTokenizer st = new StringTokenizer(targets, delimiter);
         while (st.hasMoreTokens()) {
-            String target = (String) st.nextToken();
+            String target = st.nextToken();
             this.targets.add(target);
         }
     }
@@ -578,7 +578,6 @@ public class CocoonTask extends Task {
         private LogKitLoggerManager logKitLoggerManager;
         private Logger logger;
         private DefaultContext ctx;
-        private ClassLoader classLoader;
 
 
         /**
@@ -608,7 +607,6 @@ public class CocoonTask extends Task {
         public void contextualize(Context context) throws ContextException {
             this.ctx = new DefaultContext(context);
 
-            classLoader = (ClassLoader) this.ctx.get(Constants.CONTEXT_CLASS_LOADER);
             File contextDir = (File) this.ctx.get("context-root");
             File workDir = (File) this.ctx.get(Constants.CONTEXT_WORK_DIR);
 
