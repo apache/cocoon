@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 
-<!-- Written by James Birchfield "jmbirchfield@proteus-technologies.com" -->
-
 <?cocoon-process type="ldap"?>
 <?cocoon-format type="text/xml"?>
 

@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Written by James Birchfield "jmbirchfield@proteus-technologies.com" -->
-
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSLT/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
 
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
