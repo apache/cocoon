@@ -14,7 +14,10 @@ import org.w3c.dom.traversal.TreeWalker;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
+
 import org.apache.xerces.dom.TreeWalkerImpl;
+
+import org.apache.cocoon.CodeFactory;
 
 /**
  * This class generates source code which tests a specific browser pattern
@@ -22,11 +25,11 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  *
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-07 21:38:37 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-08 21:07:34 $
 */
 
 
-public class BrowserSelectorFactory implements SelectorFactory {
+public class BrowserSelectorFactory implements CodeFactory {
 
     public String generateClassSource (String test, String prefix, DocumentFragment conf)
     throws ConfigurationException {
