@@ -22,7 +22,7 @@
         <s1 title="Introduction">
                 <p>
                 Developing and maintaining multi-language sites is a common problem for web developers.
-                The usage of XML and XSL makes this task much more easier, especially with 
+                The usage of XML and XSL makes this task much easier, especially with 
                 content, logic and presentation separation concept.
                 </p>
                 <dl>
