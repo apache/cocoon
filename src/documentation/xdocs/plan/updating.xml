@@ -51,7 +51,7 @@
     In general, a good advice is that you avoid any calls to private or deprecated
     API. If you are calling deprecated API, look up for an alternative. In most 
     case this is documented in the java docs. If not or if you are calling private
-    API please ask on the mailing lists for a the "right way".
+    API please ask on the mailing lists for the "right way".
    </p>
   </s1>
   <s1 title="Updating Your Application">
