@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.104 2004/01/21 07:57:48 stephan Exp $
+    | CVS $Id: gump.xml,v 1.105 2004/01/21 09:12:57 unico Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1058,7 +1058,6 @@
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
-    <work nested="build/cocoon-@@DATE@@/blocks/jms/mocks"/>
 
     <jar name="blocks/jms-block.jar"/>
 
