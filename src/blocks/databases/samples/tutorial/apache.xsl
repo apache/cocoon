@@ -85,7 +85,7 @@
               <div width="120" style="background-color: #a0a0a0;">
                 <font face="arial,helvetica,sanserif" color="#ffffff" size="-1">
                 <img width="120" height="14" src="images/join.gif" hspace="0" vspace="0" border="0"/><br/>
-                <xsl:apply-templates select="document('../menu.xml')"/>
+                <xsl:apply-templates select="document('menu.xml')"/>
                 <img width="120" height="14" src="images/close.gif" hspace="0" vspace="0" border="0"/><br/>
                 </font>
               </div>
