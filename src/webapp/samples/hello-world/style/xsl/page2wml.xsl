@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: page2wml.xsl,v 1.4 2004/05/08 03:47:14 crossley Exp $ -->
+<!-- CVS $Id: page2wml.xsl,v 1.5 2004/05/08 04:12:42 crossley Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -37,7 +37,7 @@
      <br/>
      <br/>
      <small>
-      Copyright &#xA9; 2000-2004<br/>
+      Copyright &#xA9; @year@<br/>
       Apache Software Foundation.<br/>
       All rights reserved.
      </small>
