@@ -15,60 +15,60 @@
   limitations under the License.
 -->
 
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 	<site signOn="false" view="woody">
-		<wt:form-template action="#{$continuation/id}.kont" method="POST">
-			<wi:form layout="yellow">
-				<wi:group>
-					<wi:label>Payment Details</wi:label>
-					<wi:widgets>
-						<wt:widget id="cardType">
-							 <wi:styling size="30" maxlength="20" type="text" />
-						</wt:widget>
-						<wt:widget id="creditCard">
-							 <wi:styling size="30" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="expiryDate">
-							 <wi:styling size="30" maxlength="100" type="text" />
-						</wt:widget>
-					</wi:widgets>
-				</wi:group>
-				<wi:group>
-					<wi:label>Billing Address</wi:label>
-					<wi:widgets>
-						<wt:widget id="billToFirstName">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billToLastName">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billAddress1">
-							 <wi:styling size="40" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billAddress2">
-							 <wi:styling size="40" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billCity">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billState">
-							 <wi:styling size="4" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billZip">
-							 <wi:styling size="10" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="billCountry">
-							 <wi:styling size="15" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="shippingAddressRequired">
-						</wt:widget>
-					</wi:widgets>
-				</wi:group>
-		</wi:form>
+		<ft:form-template action="#{$continuation/id}.kont" method="POST">
+			<fi:form layout="yellow">
+				<fi:group>
+					<fi:label>Payment Details</fi:label>
+					<fi:widgets>
+						<ft:widget id="cardType">
+							 <fi:styling size="30" maxlength="20" type="text" />
+						</ft:widget>
+						<ft:widget id="creditCard">
+							 <fi:styling size="30" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="expiryDate">
+							 <fi:styling size="30" maxlength="100" type="text" />
+						</ft:widget>
+					</fi:widgets>
+				</fi:group>
+				<fi:group>
+					<fi:label>Billing Address</fi:label>
+					<fi:widgets>
+						<ft:widget id="billToFirstName">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billToLastName">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billAddress1">
+							 <fi:styling size="40" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billAddress2">
+							 <fi:styling size="40" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billCity">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billState">
+							 <fi:styling size="4" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billZip">
+							 <fi:styling size="10" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="billCountry">
+							 <fi:styling size="15" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="shippingAddressRequired">
+						</ft:widget>
+					</fi:widgets>
+				</fi:group>
+		</fi:form>
 		<br />
 		<p>
 			<input border="0" type="image" src="images/button_submit.gif" name="submit" />
 		</p>
-	 </wt:form-template>
+	 </ft:form-template>
 	</site>
 </page>

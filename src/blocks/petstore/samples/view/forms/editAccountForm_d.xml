@@ -14,140 +14,140 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<wd:form
-	xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
-	<wd:widgets>
+	<fd:widgets>
 
-		<wd:field id="message" required="false">
-			<wd:label>message:</wd:label>
-			<wd:datatype base="string">
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="message" required="false">
+			<fd:label>message:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
 
-		<wd:field id="username">
-			<wd:label>User ID</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="username">
+			<fd:label>User ID</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 
-		<wd:booleanfield id="changePwdOption">
-			<wd:label>I want to change my Password.</wd:label>
-		</wd:booleanfield>
+		<fd:booleanfield id="changePwdOption">
+			<fd:label>I want to change my Password.</fd:label>
+		</fd:booleanfield>
 		
-		<wd:field id="password" >
-			<wd:label>New Password:</wd:label>
-			<wd:datatype base="string">
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="password" >
+			<fd:label>New Password:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
 	
-		<wd:field id="retypepassword" >
-			<wd:label>Re-enter New password:</wd:label>
-			<wd:datatype base="string">
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="retypepassword" >
+			<fd:label>Re-enter New password:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
 		
 		
-		<wd:field id="firstname" required="true">
-			<wd:label>First Name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="firstname" required="true">
+			<fd:label>First Name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="lastname" required="true">
-			<wd:label>Last Name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="lastname" required="true">
+			<fd:label>Last Name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="email" required="true">
-			<wd:label>Email</wd:label>
-			<wd:datatype base="string">
-				<wd:validation>
-					<wd:email>
-						<wd:failmessage>
+		<fd:field id="email" required="true">
+			<fd:label>Email</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:email>
+						<fd:failmessage>
 							Please enter a valid e-mail address!
-						</wd:failmessage>
-					</wd:email>
-				</wd:validation>
-			</wd:datatype>
-		</wd:field>
+						</fd:failmessage>
+					</fd:email>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
 
-		<wd:field id="phone" required="true">
-			<wd:label>Phone</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="phone" required="true">
+			<fd:label>Phone</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 
-		<wd:field id="addr1" required="true">
-			<wd:label>Address 1</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="addr1" required="true">
+			<fd:label>Address 1</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
 	
-		<wd:field id="addr2" required="false">
-			<wd:label>Address 2</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="addr2" required="false">
+			<fd:label>Address 2</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="city" required="true">
-			<wd:label>City</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="city" required="true">
+			<fd:label>City</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="state" required="true">
-			<wd:label>State</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="state" required="true">
+			<fd:label>State</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="zip" required="true">
-			<wd:label>Zip</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="zip" required="true">
+			<fd:label>Zip</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="country" required="true">
-			<wd:label>Country</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="country" required="true">
+			<fd:label>Country</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 
 
-		<wd:field id="langpref">
-			<wd:label>Language Preference</wd:label>
-			<wd:datatype base="string"/>
-				<wd:selection-list>
-					<wd:item value="english">
-						<wd:label>english</wd:label>
-					</wd:item>
-					<wd:item value="japanese">
-						<wd:label>japanese</wd:label>
-					</wd:item>
-				</wd:selection-list>
-		</wd:field>
+		<fd:field id="langpref">
+			<fd:label>Language Preference</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="english">
+						<fd:label>english</fd:label>
+					</fd:item>
+					<fd:item value="japanese">
+						<fd:label>japanese</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
 
-		<wd:field id="favcategory">
-			<wd:label>Favourite Category</wd:label>
-			<wd:datatype base="string"/>
-				<wd:selection-list>
-					<wd:item value="FISH">
-						<wd:label>FISH</wd:label>
-					</wd:item>
-					<wd:item value="DOGS">
-						<wd:label>DOGS</wd:label>
-					</wd:item>
-					<wd:item value="CATS">
-						<wd:label>CATS</wd:label>
-					</wd:item>
-					<wd:item value="BIRDS">
-						<wd:label>BIRDS</wd:label>
-					</wd:item>
-				</wd:selection-list>
-		</wd:field>
+		<fd:field id="favcategory">
+			<fd:label>Favourite Category</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="FISH">
+						<fd:label>FISH</fd:label>
+					</fd:item>
+					<fd:item value="DOGS">
+						<fd:label>DOGS</fd:label>
+					</fd:item>
+					<fd:item value="CATS">
+						<fd:label>CATS</fd:label>
+					</fd:item>
+					<fd:item value="BIRDS">
+						<fd:label>BIRDS</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
 
-		<wd:booleanfield id="mylistopt">
-			<wd:label>Enable MyList</wd:label>
-		</wd:booleanfield>
+		<fd:booleanfield id="mylistopt">
+			<fd:label>Enable MyList</fd:label>
+		</fd:booleanfield>
 
-		<wd:booleanfield id="banneropt">
-			<wd:label>Enable MyBanner</wd:label>
-		</wd:booleanfield>
+		<fd:booleanfield id="banneropt">
+			<fd:label>Enable MyBanner</fd:label>
+		</fd:booleanfield>
 
 
-	</wd:widgets>
-</wd:form>
+	</fd:widgets>
+</fd:form>

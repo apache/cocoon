@@ -15,78 +15,78 @@
   limitations under the License.
 -->
 
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 	<site signOn="false" view="woody">
-		<wt:form-template action="#{$continuation/id}.kont" method="POST">
-			<wi:form layout="grey">
-				<wi:group>
-					<wi:label>User Information</wi:label>
-					<wi:widgets>
-						<wt:widget id="message">
-							 <wi:styling class="warnoutput" />
-						</wt:widget>
-						<wt:widget id="username">
-							 <wi:styling class="output" />
-						</wt:widget>
-						<wt:widget id="changePwdOption" />
-						<wt:widget id="password">
-							 <wi:styling  size="20" type="password"/>
-						</wt:widget>
-						<wt:widget id="retypepassword">
-							 <wi:styling  size="20" type="password"/>
-						</wt:widget>
-					</wi:widgets>
-				</wi:group>
-				<wi:group>
-					<wi:label>Account Information</wi:label>
-					<wi:widgets>
-						<wt:widget id="firstname">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="lastname">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="email">
-							 <wi:styling size="40" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="phone">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="addr1">
-							 <wi:styling size="40" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="addr2">
-							 <wi:styling size="40" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="city">
-							 <wi:styling maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="state">
-							 <wi:styling size="4" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="zip">
-							 <wi:styling size="10" maxlength="100" type="text" />
-						</wt:widget>
-						<wt:widget id="country">
-							 <wi:styling size="15" maxlength="100" type="text" />
-						</wt:widget>
-					</wi:widgets>
-				</wi:group>
-				<wi:group>
-					<wi:label>Profile Information</wi:label>
-					<wi:widgets>
-						<wt:widget id="langpref" />
-						<wt:widget id="favcategory" />
-						<wt:widget id="mylistopt" />
-						<wt:widget id="banneropt" />
-					</wi:widgets>
-				</wi:group>
-		</wi:form>
+		<ft:form-template action="#{$continuation/id}.kont" method="POST">
+			<fi:form layout="grey">
+				<fi:group>
+					<fi:label>User Information</fi:label>
+					<fi:widgets>
+						<ft:widget id="message">
+							 <fi:styling class="warnoutput" />
+						</ft:widget>
+						<ft:widget id="username">
+							 <fi:styling class="output" />
+						</ft:widget>
+						<ft:widget id="changePwdOption" />
+						<ft:widget id="password">
+							 <fi:styling  size="20" type="password"/>
+						</ft:widget>
+						<ft:widget id="retypepassword">
+							 <fi:styling  size="20" type="password"/>
+						</ft:widget>
+					</fi:widgets>
+				</fi:group>
+				<fi:group>
+					<fi:label>Account Information</fi:label>
+					<fi:widgets>
+						<ft:widget id="firstname">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="lastname">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="email">
+							 <fi:styling size="40" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="phone">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="addr1">
+							 <fi:styling size="40" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="addr2">
+							 <fi:styling size="40" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="city">
+							 <fi:styling maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="state">
+							 <fi:styling size="4" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="zip">
+							 <fi:styling size="10" maxlength="100" type="text" />
+						</ft:widget>
+						<ft:widget id="country">
+							 <fi:styling size="15" maxlength="100" type="text" />
+						</ft:widget>
+					</fi:widgets>
+				</fi:group>
+				<fi:group>
+					<fi:label>Profile Information</fi:label>
+					<fi:widgets>
+						<ft:widget id="langpref" />
+						<ft:widget id="favcategory" />
+						<ft:widget id="mylistopt" />
+						<ft:widget id="banneropt" />
+					</fi:widgets>
+				</fi:group>
+		</fi:form>
 		<br />
 		<center>
 			<input border="0" type="image" src="images/button_submit.gif" name="submit" value="Save Account Information" />
 		</center>
-	 </wt:form-template>
+	 </ft:form-template>
 	 <p><center><b><a href="listOrders.do">My Orders</a></b></center></p>
 	</site>
 </page>
