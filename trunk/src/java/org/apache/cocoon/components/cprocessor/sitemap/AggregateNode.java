@@ -68,6 +68,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.sitemap.ContentAggregator;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.util.StringUtils;
@@ -90,7 +91,7 @@ import org.apache.cocoon.util.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.4 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.5 2004/02/22 15:08:56 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -138,7 +139,7 @@ public class AggregateNode extends AbstractProcessingNode {
             }
 
             checkNamespace(childConfig);
-            Collection labels = splitLabels(childConfig.getAttribute("label"));
+            Collection labels = splitLabels(childConfig.getAttribute("label",null));
 
             try {
                 AggregateNode.Part part = new AggregateNode.Part(

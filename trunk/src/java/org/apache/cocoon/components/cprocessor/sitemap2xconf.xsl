@@ -364,9 +364,9 @@
     </aggregate-node>
   </xsl:template>
   
-  <xsl:template match="map:part">
+  <xsl:template match="map:part" mode="copy">
     <part>
-      <xsl:apply-templates select="@*" />
+      <xsl:apply-templates select="@*" mode="copy"/>
     </part>
   </xsl:template>
   
