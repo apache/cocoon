@@ -37,7 +37,7 @@ import java.util.Locale;
  * &lt;/fb:value&gt;
  * </code></pre>
  *
- * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -61,8 +61,8 @@ public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
             Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.DEFINITION_NS, "convertor");
             if (convertorEl != null) {
                 String datatype = DomHelper.getAttribute(convertorEl, "datatype");
-                String localeStr = convertorEl.getAttribute("datatype");
-                if (!localeStr.equals("")) {
+                String localeStr = convertorEl.getAttribute("locale");
+                if (localeStr != null && !localeStr.equals("")) {
                     convertorLocale = I18nUtils.parseLocale(localeStr);
                 }
 
