@@ -18,19 +18,15 @@ package org.apache.cocoon;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -41,26 +37,22 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.core.container.ConfigurationBuilder;
 import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.lang.SystemUtils;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
-import org.apache.excalibur.xml.sax.SAXParser;
-
 import org.xml.sax.InputSource;
 
 /**
@@ -88,9 +80,6 @@ public class Cocoon
 
     /** The configuration file */
     private Source configurationFile;
-
-    /** The configuration tree */
-    private Configuration configuration;
 
     /** The logger manager */
     private LoggerManager loggerManager;
@@ -206,34 +195,7 @@ public class Cocoon
         // Log the System Properties.
         dumpSystemProperties();
 
-        // Setup the default parser, for parsing configuration.
-        // If one need to use a different parser, set the given system property
-        String parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Using parser: " + parser);
-            getLogger().debug("Classpath = " + classpath);
-            getLogger().debug("Work directory = " + workDir.getCanonicalPath());
-        }
-
-        CocoonServiceManager startupManager = new CocoonServiceManager(null);
-        ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
-        ContainerUtil.contextualize(startupManager, this.context);
-        startupManager.setLoggerManager(this.loggerManager);
-
-        try {
-            startupManager.addComponent(SAXParser.ROLE,
-                                        ClassUtils.loadClass(parser),
-                                        new DefaultConfiguration("", "empty"));
-        } catch (Exception e) {
-            throw new ConfigurationException("Could not load parser " + parser, e);
-        }
-
-        ContainerUtil.initialize(startupManager);
-
-        this.configure(startupManager);
-
-        ContainerUtil.dispose(startupManager);
-        startupManager = null;
+        this.configure();
 
         // add the logger manager to the component locator
 
@@ -291,43 +253,12 @@ public class Cocoon
      * @exception ConfigurationException if an error occurs
      * @exception ContextException if an error occurs
      */
-    public void configure(CocoonServiceManager startupManager) throws ConfigurationException, ContextException {
-        SAXParser p = null;
-        Configuration roleConfig = null;
+    private void configure() throws Exception {
+        InputSource is = SourceUtil.getInputSource(this.configurationFile);
 
-        try {
-            this.configurationFile.refresh();
-            p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new SAXConfigurationHandler();
-            InputStream inputStream = ClassUtils.getResource("org/apache/cocoon/cocoon.roles").openStream();
-            InputSource is = new InputSource(inputStream);
-            is.setSystemId(this.configurationFile.getURI());
-            p.parse(is, b);
-            roleConfig = b.getConfiguration();
-        } catch (Exception e) {
-            throw new ConfigurationException("Error trying to load configurations", e);
-        } finally {
-            if (p != null) startupManager.release(p);
-        }
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        Configuration conf = builder.build(is);
 
-        RoleManager drm = new RoleManager();
-        ContainerUtil.enableLogging(drm, getLogger().getChildLogger("roles"));
-        ContainerUtil.configure(drm, roleConfig);
-        roleConfig = null;
-
-        try {
-            p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new SAXConfigurationHandler();
-            InputSource is = SourceUtil.getInputSource(this.configurationFile);
-            p.parse(is, b);
-            this.configuration = b.getConfiguration();
-        } catch (Exception e) {
-            throw new ConfigurationException("Error trying to load configurations",e);
-        } finally {
-            if (p != null) startupManager.release(p);
-        }
-
-        Configuration conf = this.configuration;
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Root configuration: " + conf.getName());
         }
@@ -341,27 +272,24 @@ public class Cocoon
             throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
         }
 
+        RoleManager drm = null;
         String userRoles = conf.getAttribute("user-roles", "");
         if (!"".equals(userRoles)) {
+            Configuration roleConfig;
             try {
-                p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-                SAXConfigurationHandler b = new SAXConfigurationHandler();
                 org.apache.cocoon.environment.Context context =
                     (org.apache.cocoon.environment.Context) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
                 URL url = context.getResource(userRoles);
                 if (url == null) {
                     throw new ConfigurationException("User-roles configuration '"+userRoles+"' cannot be found.");
                 }
-                InputSource is = new InputSource(new BufferedInputStream(url.openStream()));
+                is = new InputSource(new BufferedInputStream(url.openStream()));
                 is.setSystemId(this.configurationFile.getURI());
-                p.parse(is, b);
-                roleConfig = b.getConfiguration();
+                roleConfig = builder.build(is);
             } catch (Exception e) {
                 throw new ConfigurationException("Error trying to load user-roles configuration", e);
-            } finally {
-                startupManager.release(p);
             }
-
+            
             RoleManager urm = new RoleManager(drm);
             ContainerUtil.enableLogging(urm, getLogger().getChildLogger("roles").getChildLogger("user"));
             ContainerUtil.configure(urm, roleConfig);
