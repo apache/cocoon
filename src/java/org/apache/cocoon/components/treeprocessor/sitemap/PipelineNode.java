@@ -72,11 +72,11 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.8 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.9 2003/09/08 18:58:01 bruno Exp $
  */
 public class PipelineNode
-    extends AbstractParentProcessingNode
-    implements Composable, ParameterizableProcessingNode {
+        extends AbstractParentProcessingNode
+        implements Composable, ParameterizableProcessingNode {
 
     // TODO : handle a 'fail-hard' environment attribute
     // can be useful to stop off-line generation when there's an error
@@ -86,10 +86,12 @@ public class PipelineNode
     private ProcessingNode error404;
 
     private ProcessingNode error500;
-    
+
     private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
-    
+
     private ComponentManager manager;
+
+    protected Logger handledErrorsLogger;
 
     private boolean internalOnly = false;
 
@@ -118,11 +120,11 @@ public class PipelineNode
         errorHandlerHelper.compose(manager);
     }
 
-	public void enableLogging(Logger logger)
-	{
-		super.enableLogging(logger);
-		errorHandlerHelper.enableLogging(logger);
-	}
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        errorHandlerHelper.enableLogging(logger);
+        handledErrorsLogger = logger.getChildLogger("handled-errors");
+    }
 
     public void setChildren(ProcessingNode[] nodes) {
         this.children = nodes;
@@ -149,8 +151,8 @@ public class PipelineNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-    throws Exception {
-        
+            throws Exception {
+
         boolean externalRequest = env.isExternal();
 
         // Always fail on external resquests if internal only.
@@ -172,25 +174,27 @@ public class PipelineNode
         } catch (ConnectionResetException cre) {
             // Will be reported by CocoonServlet, rethrowing
             throw cre;
-            
-        } catch(Exception ex) {
-            
+
+        } catch (Exception ex) {
+
             if (!externalRequest) {
                 // Propagate exception on internal requests
                 throw ex;
-                
+
             } else if (error404 != null && ex instanceof ResourceNotFoundException) {
-			    // Invoke 404-specific handler
-			    return errorHandlerHelper.invokeErrorHandler(error404, ex, env);
-			    
-			} else if (error500 != null) {
+                // Invoke 404-specific handler
+                handledErrorsLogger.error(ex.getMessage(), ex);
+                return errorHandlerHelper.invokeErrorHandler(error404, ex, env);
+
+            } else if (error500 != null) {
                 // Invoke global handler
+                handledErrorsLogger.error(ex.getMessage(), ex);
                 return errorHandlerHelper.invokeErrorHandler(error500, ex, env);
-                
-			} else {
-			    // No handler : propagate
-			    throw ex;
-			}
+
+            } else {
+                // No handler : propagate
+                throw ex;
+            }
         }
     }
 }
