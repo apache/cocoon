@@ -14,8 +14,8 @@
     <link href="http://jakarta.apache.org/velocity">Velocity</link>
     <link href="../generators/velocity-generator.html">Generator</link>
     provides access to the immediate properties of the context object passed to
-    <link href="api.html#sendPage"><code>sendPage</code></link> and
-    <link href="api.html#sendPageAndWait"><code>sendPageAndWait</code></link>. In addition,
+    <link href="api.html#sendPage"><code>cocoon.sendPage</code></link> and
+    <link href="api.html#sendPageAndWait"><code>cocoon.sendPageAndWait</code></link>. In addition,
     the current <link href="api.html#WebContinuation"><code>WebContinuation</code></link>
     is also available as a variable named <code>$continuation</code>. You would typically access
     its <code>id</code>:</p>

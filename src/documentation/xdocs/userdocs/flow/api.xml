@@ -15,8 +15,13 @@
 	  <p>Cocoon provides a JavaScript API to manage control flow based on an
         <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link>
         version of <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> that supports continuations.</p>
+  <s2 title="Table of Contents">
+   <p><link href="#Java">Calling Java</link></p>
+   <p><link href="#FOM">Flow Object Model</link></p>
+  </s2>
+   <p/>
     </s1>
-    <s1 title="Calling Java from JavaScript">
+    <anchor id="Java"/><s1 title="Calling Java">
     <p>
     You can easily call any Java code from your Flowscripts, for example:
     </p>
@@ -67,10 +72,11 @@
               var d = new java.util.Date();
               d.year = 2003;    // same effect as d.setYear(2003);
       </source>     
+      <p/>
     </s1>
-    <s1 title="Flow Object Model">
-      <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the Flow Object Model (<em>FOM</em>).
-      The Flow Object Model contains following objects:</p>
+    <anchor id="FOM"/><s1 title="Flow Object Model">
+      <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the <em>Flow Object Model</em> (FOM).
+      The Flow Object Model consists of the following objects:</p>
     <ul>
       <li><link href="#cocoon">Cocoon</link></li>
       <li><link href="#request">Request</link></li>
@@ -623,7 +629,7 @@
     </s3>
     </s2>
     <s2 title="Log Object"><anchor id="log"/>
-    <p> The <code>log</code> object provides an interface to the Cocoon logging system.
+    <p> The <code>Log</code> object provides an interface to the Cocoon logging system.
     </p>
     <p>
         It supports the following functions:
@@ -702,6 +708,10 @@
     <p>
        <code>WebContinuation</code> objects support the following functions and properties:
     </p>
+    <s3 title="id">
+    <p><em>Property</em> <code>[String] id</code></p>
+    <p>Returns the unique string identifier of this continuation.</p>
+    </s3>
     <s3 title="getParent">
     <p>
         <em>Function</em> <code>[WebContinuation] getParent()</code>
@@ -729,10 +739,6 @@
       <code>WebContinuation</code> invalidates all the
       <code>WebContinuation</code>s which are children of it.    
     </p>
-    </s3>
-    <s3 title="id">
-    <p><em>Property</em> <code>[String] id</code></p>
-    <p>Returns the unique string identifier of this continuation</p>
     </s3>
     </s2>
     </s1>

@@ -18,9 +18,9 @@
 		
   <s2 title="Table of Contents">
    <p><link href="#Overview">Overview</link></p>
-   <p><link href="#Sitemap">Sitemap</link></p>
    <p><link href="#Controls">Form Controls</link></p>
    <p><link href="#JSAPI">JavaScript API</link></p>
+   <p><link href="#Sitemap">Sitemap</link></p>
    <p><link href="#Validation">Validation</link></p>
    <p><link href="#HTML">Conversion to HTML</link></p>
   </s2>
@@ -96,30 +96,6 @@ intentionally defaulted the JXForms namespace prefix here):</p>
    </p>
   </s1>
 
- <s1 title="Sitemap"><anchor id="Sitemap"/>
-<p>To use JXForms, you will need to add several elements to your Cocoon <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
-<source>
-&lt;map:generators&gt;
-  &lt;map:generator label="content,data" 
-      logger="sitemap.generator.jxforms" name="jxforms" 
-         src="org.apache.cocoon.generation.JXFormsGenerator"/&gt;
-&lt;/map:generators&gt;
- </source>
- <p>To invoke your form use the Sitemap's <code>&lt;map:call&gt;</code> operation to invoke the <code>jxForm</code> Flowscript function, for example like this:</p>
-<source><![CDATA[
-   <map:match pattern="feedBackWizard">
-     <map:call function="jxForm">
-        <map:parameter name="function" value="{1}"/>
-        <map:parameter name="id" value="form-feedback"/>
-        <map:parameter name="validator-schema-namespace" value="http://www.ascc.net/xml/schematron"/>
-        <map:parameter name="validator-schema" value="schematron/wizard-xmlform-sch-report.xml"/>
-     </map:call>
-   </map:match>
-]]></source>
-
-  <p>
-  </p>
- </s1>  
  <s1 title="Form Controls"><anchor id="Controls"/>
  <p>The JXForms tags are defined in the following namespace:</p>
  <source>http://apache.org/cocoon/jxforms/1.0</source>
@@ -137,6 +113,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       <xf:label>First Name</xf:label>
       <xf:violations class="error"/>
     </xf:input>
+     ...
   </xf:form>
       ]]></source> 
  <p></p>
@@ -146,24 +123,54 @@ intentionally defaulted the JXForms namespace prefix here):</p>
    <li><code>view</code></li>
  </ul>
  <p>
- The <code>id</code> attribute must match the <code>id</code> Sitemap parameter passed to the <code>jxForm</code> function in <code>&lt;map:call&gt;</code>. The <code>view</code> attribute must match the <code>id</code> of a <code>&lt;phase&gt;</code> element in your Schematron validation rules.
+ The <code>id</code> attribute must match the <code>id</code> Sitemap parameter passed to the <link href="#jxForm">jxForm</link> function in <link href="#Sitemap">&lt;map:call&gt;</link>. The <code>view</code> attribute must match the <code>id</code> of a <code>&lt;phase&gt;</code> element in your Schematron <link href="#validation">validation</link> rules.
  </p>
  </s2>
  <s2 title="error">
- <p>JXForms <code>&lt;error&gt;</code> has no counterpart in W3C XForms. If present under the <code>form</code> element it serves as a placeholder for validation error messages associated with the entire form.
+ <p>The JXForms <code>&lt;error&gt;</code> element has no counterpart in W3C XForms. If present under the <code>form</code> element it serves as a placeholder for validation error messages associated with the entire form.
  </p>
  </s2>
  <s2 title="violations">
- <p>JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms.</p>
+ <p>The JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms. It is a placeholder used by the JXForms generator. For each validation error that occur with respect to its containing element, the JXForms generator inserts a <link href="violation">violation</link> element containing the validation error message.</p>
  <p>Example:</p>
       <source><![CDATA[
+    <xf:input ref="/age">
+      <xf:label>Age</xf:label>
+      <xf:violations class="error"/>
+    </xf:input>
       ]]></source> 
  <p></p>
  </s2>
- <s2 title="violation">
- <p>JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms.</p>
+ <anchor id="violation"/><s2 title="violation">
+ <p>The JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms. The JXForms generator inserts a <code>violation</code> element for each validation error that occurs with respect to a <code>violations</code> element.</p>
  <p>Example:</p>
+    <p>Assuming you had a Schematron validation rule such as:</p>
       <source><![CDATA[
+<rule context="/age">
+    <assert test="number() &gt; 0 and number(.) &lt; 200">
+    Age should be a reasonably big positive number.
+    </assert>
+</rule>
+      ]]></source> 
+      <p>
+      And a JXForms element such as:</p>
+      <source><![CDATA[
+    <xf:input ref="/age">
+      <xf:label>Age</xf:label>
+      <xf:violations class="error"/>
+    </xf:input>
+      ]]></source> 
+      <p>
+      After executing the JXForms generator the element would be transformed into the following:</p>
+      <source><![CDATA[
+    <xf:input ref="/age">
+      <xf:label>Age</xf:label>
+      <xf:violations class="error">
+       <xf:violation>
+Age should be a reasonably big positive number.
+       </xf:violation>
+      </xf:violations>
+    </xf:input>
       ]]></source> 
  <p></p>
  </s2>
@@ -305,23 +312,34 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p/>
  </s2>
  </s1>  
- <s1 title="JavaScript API"><anchor id="JSAPI"/>
+<anchor id="JSAPI"/><s1 title="JavaScript API">
   <p>
   JXForms provides a JavaScript <code>JXForm</code> object that provides methods for you to manage your form's <em>model</em> and to invoke its associated <em>view</em> and any validation rules you've specified.
   </p>
   <p>
-  To use JXForms in a Flowscript you must load <code>resource://org/apache/cocoon/components/flow/javascript/JXForm.js</code> into your script and define a function that takes one argument (the argument passed to your function will be a JavaScript representation of your form), for example like this:</p>
+  To use JXForms in a Flowscript you must load</p><p>          <code>resource://org/apache/cocoon/components/flow/javascript/JXForm.js</code></p><p>into your script and define a function that takes one argument to provide the form's page flow (the argument passed to your function will be a JavaScript representation of your form), for example like this:</p>
   <source>
 
     cocoon.load("resource://org/apache/cocoon/components/flow/javascript/JXForm.js");
 
     function myFormHandler(form) {
+       form.setModel(...);
+       form.sendView("page1.xml");
        ...
     }
   </source>
   <p>
   </p>
-  <s2 title="JXForm Object">
+  <anchor id="jxForm"/><s2 title="jxForm">
+      <p> 
+      The entry point from the Cocoon <link href="#Sitemap">Sitemap</link> to your form is the <code>jxForm</code> function:
+      </p>
+      <p>
+      <em>Function</em> <code>jxForm([String] functionName, [String] id, [String] validationSchema, [String] validationDocument)</code>
+      </p>
+      <p>
+      This function creates a new <code>JXForm</code> object with the provided <code>id</code>, <code>validationSchema</code>, and <code>validationDocument</code>, and then invokes the function identified by <code>functionName</code> to process the form, passing the newly created <code>JXForm</code> object as the argument to the function. Currently, the only supported validation schema is <link href="http://www.ascc.net/xml/resource/schematron/Schematron2000.html">Schematron</link> which is identified by the namespace <code>http://www.ascc.net/xml/schematron</code>. The <code>validationDocument</code> if provided, should be a url that can be resolved by the Cocoon source resolver.
+      </p>
   <p>
     The <code>JXForm</code> object passed to your function has the following properties and functions:</p>
     <s3 title = "setModel"><anchor id="setModel"/>
@@ -380,9 +398,35 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       <p>
       <em>Function</em> <code>finish([String] uri)</code>
       </p>
-      <p>Forwards to <code>uri</code> and then releases all resources associated with this form.</p>
+      <p>Forwards to <code>uri</code> (if provided) and then releases all resources associated with this form.</p>
     </s3>
   </s2>
+ </s1>  
+ <anchor id="Sitemap"/><s1 title="Sitemap">
+<p>To use JXForms, you will need to add several elements to your Cocoon <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
+<source>
+&lt;map:generators&gt;
+  &lt;map:generator label="content,data" 
+      logger="sitemap.generator.jxforms" name="jxforms" 
+         src="org.apache.cocoon.generation.JXFormsGenerator"/&gt;
+&lt;/map:generators&gt;
+ </source>
+ <p>To invoke your form use the Sitemap's <link href="sitemap.html#call">&lt;map:call&gt;</link> operation to invoke the <code>jxForm</code> Flowscript function, for example like this:</p>
+<source><![CDATA[
+   <map:match pattern="feedBackWizard">
+     <map:call function="jxForm">
+        <map:parameter name="function" value="{1}"/>
+        <map:parameter name="id" value="form-feedback"/>
+        <map:parameter name="validator-schema-namespace" 
+                 value="http://www.ascc.net/xml/schematron"/>
+        <map:parameter name="validator-schema" 
+               value="schematron/wizard-xmlform-sch-report.xml"/>
+     </map:call>
+   </map:match>
+]]></source>
+
+  <p>
+  </p>
  </s1>  
  <s1 title="Validation"><anchor id="Validation"/>
  <p>
@@ -390,8 +434,27 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  </p>
  </s1>  
  <s1 title="Conversion to HTML"><anchor id="HTML"/>
- <p>For conversion of JXForms controls to XHTML, JXForms provides two XSLT stylesheets that must be applied to the output of JXFormsGenerator: <code>jxforms-default.xsl</code> and <code>jxforms2html.xsl</code>. The former performs formatting of validation error messages. The latter converts the result to XHTML.
- </p>
+ <p>For conversion of JXForms controls to XHTML, JXForms provides two XSLT stylesheets that must be applied to the output of JXFormsGenerator: <code>jxforms-default.xsl</code> and <code>jxforms2html.xsl</code>. The former performs formatting of validation error messages. The latter converts the result to XHTML.</p>
+ <p>A typical JXForms pipeline would look like this:</p>
+<source><![CDATA[
+      <map:match pattern="view/*.xml">
+	      <!-- original JXForms document -->
+	      <map:generate type="jxforms" src="view/{1}.xml"/>
+	
+	      <!-- Personalize the look and feel of the form controls  -->
+	      <map:transform type="xslt" src="stylesheets/mystyle.xsl" />
+
+	      <!-- Transform the JXForms controls to HTML controls -->
+
+	      <map:transform type="xslt" src="stylesheets/jxforms-default.xsl" />
+	
+	      <map:transform type="xslt" src="stylesheets/jxforms2html.xsl" />
+	      
+	      <!-- sending the HTML back to the browser -->
+	      <map:serialize type="html"/>
+      </map:match>	      
+]]></source>
+ <p/>
  </s1>  
  </body>
 </document>
