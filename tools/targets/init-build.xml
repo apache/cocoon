@@ -126,9 +126,6 @@
           <include name="*.jar"/>
         </fileset>
       -->
-      <fileset dir="${lib.optional}">
-        <include name="*.jar"/>
-      </fileset>
       <path location="${build.mocks}"/>
       <path location="${build.dest}"/>
     </path>
