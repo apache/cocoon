@@ -69,7 +69,7 @@ import java.util.Map;
  * <strong>NOTE:</strong> The module does not create a new session.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: SessionModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: SessionModule.java,v 1.3 2004/01/14 18:59:03 joerg Exp $
  */
 public class SessionModule extends AbstractJXPathModule
     implements ThreadSafe {
@@ -77,6 +77,6 @@ public class SessionModule extends AbstractJXPathModule
     protected Object getContextObject(Configuration modeConf,
                                       Map objectModel) {
 
-        return ObjectModelHelper.getRequest(objectModel).getSession();
+        return ObjectModelHelper.getRequest(objectModel).getSession(false);
     }
 }
