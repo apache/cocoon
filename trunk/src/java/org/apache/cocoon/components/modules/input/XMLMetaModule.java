@@ -57,6 +57,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -65,6 +68,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.cocoon.xml.dom.DocumentWrapper;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -121,16 +125,17 @@ import org.w3c.dom.Node;
  * <p>Produces Objects of type {@link org.apache.cocoon.xml.dom.DocumentWrapper DocumentWrapper}</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XMLMetaModule.java,v 1.1 2003/03/09 00:09:04 pier Exp $
+ * @version CVS $Id: XMLMetaModule.java,v 1.2 2003/12/18 14:46:21 cziegeler Exp $
  */
 public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
 
     protected String rootName = "root";
-    protected String ignore = null;
-    protected String use = null;
-    protected String strip = null;
-    protected Object config = null;
-
+    protected String ignore;
+    protected String use;
+    protected String strip;
+    protected Object config;
+    protected XPathProcessor xpathProcessor;
+    
     protected static final String CACHE_OBJECT_NAME = "org.apache.cocoon.component.modules.input.XMLMetaModule";
 
     final static Vector returnNames;
@@ -259,7 +264,7 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
                 if (value.length > 0) {
                     // add new node from xpath 
                     // (since the names are in a set, the node cannot exist already)
-                    Node node = DOMUtil.selectSingleNode(doc.getDocumentElement(), aName);
+                    Node node = DOMUtil.selectSingleNode(doc.getDocumentElement(), aName, this.xpathProcessor);
                     node.appendChild( node.getOwnerDocument().createTextNode(value[0].toString()));
 
                     if (value.length > 1) {
@@ -347,6 +352,25 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         Object[] values = new Object[1];
         values[0] = this.getAttribute(name, modeConf, objectModel);
         return values;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        super.compose(manager);
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release((Component)this.xpathProcessor);
+            this.xpathProcessor = null;
+        }
+        super.dispose();
     }
 
 }

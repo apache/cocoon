@@ -51,13 +51,11 @@
 package org.apache.cocoon.xml.dom;
 
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.xpath.XPathAPI;
 import org.apache.excalibur.xml.xpath.NodeListImpl;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.excalibur.xml.xpath.XPathUtil;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -69,12 +67,10 @@ import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 /**
@@ -82,7 +78,7 @@ import javax.xml.transform.TransformerException;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.7 2003/12/18 14:46:21 cziegeler Exp $
 */
 public final class DOMUtil {
 
@@ -185,12 +181,11 @@ public final class DOMUtil {
      * @param defaultValue Default boolean value.
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueOfNodeAsBoolean(
-        XPathProcessor processor,
-        Node root,
-        String path,
-        boolean defaultValue)
-        throws ProcessingException {
+    public static boolean getValueOfNodeAsBoolean(XPathProcessor processor,
+                                                  Node root,
+                                                  String path,
+                                                  boolean defaultValue)
+    throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value == null) {
             return defaultValue;
@@ -623,14 +618,17 @@ public final class DOMUtil {
      *
      * @param contextNode The node to start searching from.
      * @param str A valid XPath string.
+     * @param processor The XPath processor to use
      * @return The first node found that matches the XPath, or null.
      *
      * @throws TransformerException
      */
-    public static Node getSingleNode(Node contextNode, String str) throws TransformerException {
+    public static Node getSingleNode(Node contextNode, String str, 
+                                     XPathProcessor processor) 
+    throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
-            return XPathAPI.selectSingleNode(contextNode, str);
+            return processor.selectSingleNode(contextNode, str); 
         } else {
             return getFirstNodeFromPath(contextNode, pathComponents, false);
         }
@@ -654,12 +652,14 @@ public final class DOMUtil {
      * a very simple XPath parser which is not able to parse all kinds of selectors
      * correctly.
      *
-     * @param rootNode The node to start the search.
-     * @param path     XPath expression for searching the node.
-     * @return         The node specified by the path.
+     * @param rootNode  The node to start the search.
+     * @param path      XPath expression for searching the node.
+     * @param processor The XPath processor to use
+     * @return          The node specified by the path.
      * @throws ProcessingException If no path is specified or the XPath engine fails.
      */
-    public static Node selectSingleNode(Node rootNode, String path) throws ProcessingException {
+    public static Node selectSingleNode(Node rootNode, String path, XPathProcessor processor)
+    throws ProcessingException {
         // Now we have to parse the string
         // First test:  path? rootNode?
         if (path == null) {
@@ -674,7 +674,7 @@ public final class DOMUtil {
         // now the first "quick" test is if the node exists using the
         // full XPathAPI
         try {
-            Node testNode = getSingleNode(rootNode, path);
+            Node testNode = getSingleNode(rootNode, path, processor);
             if (testNode != null)
                 return testNode;
         } catch (javax.xml.transform.TransformerException local) {
@@ -720,7 +720,7 @@ public final class DOMUtil {
 
             Node singleNode;
             try {
-                singleNode = getSingleNode(parent, nodeName);
+                singleNode = getSingleNode(parent, nodeName, processor);
             } catch (javax.xml.transform.TransformerException localException) {
                 throw new ProcessingException(
                     "XPathUtil.selectSingleNode: " + localException.getMessage(),
@@ -812,9 +812,11 @@ public final class DOMUtil {
      *
      * @param root The node to start the search.
      * @param path XPath search expression.
+     * @param processor The XPath processor to use
      * @return     The value of the node or <CODE>null</CODE>
      */
-    public static String getValueOf(Node root, String path) throws ProcessingException {
+    public static String getValueOf(Node root, String path,
+                                    XPathProcessor processor) throws ProcessingException {
         if (path == null) {
             throw new ProcessingException("Not a valid XPath: " + path);
         }
@@ -827,7 +829,7 @@ public final class DOMUtil {
         }
 
         try {
-            Node node = getSingleNode(root, path);
+            Node node = getSingleNode(root, path, processor);
             if (node != null) {
                 return getValueOfNode(node);
             }
@@ -847,11 +849,13 @@ public final class DOMUtil {
      * @param root The node to start the search.
      * @param path XPath search expression.
      * @param defaultValue The default value if the node does not exist.
+     * @param processor The XPath Processor
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static String getValueOf(Node root, String path, String defaultValue)
-        throws ProcessingException {
-        String value = getValueOf(root, path);
+    public static String getValueOf(Node root, String path, String defaultValue,
+                                    XPathProcessor processor)
+    throws ProcessingException {
+        String value = getValueOf(root, path, processor);
         if (value == null)
             value = defaultValue;
 
@@ -866,11 +870,14 @@ public final class DOMUtil {
      *
      * @param root The node to start the search.
      * @param path XPath search expression.
+     * @param processor The XPath Processor
      * @return     The boolean value of the node.
      * @throws ProcessingException If the node is not found.
      */
-    public static boolean getValueAsBooleanOf(Node root, String path) throws ProcessingException {
-        String value = getValueOf(root, path);
+    public static boolean getValueAsBooleanOf(Node root, String path,
+                                              XPathProcessor processor) 
+    throws ProcessingException {
+        String value = getValueOf(root, path, processor);
         if (value == null) {
             throw new ProcessingException("No such node: " + path);
         }
@@ -887,11 +894,13 @@ public final class DOMUtil {
      * @param root The node to start the search.
      * @param path XPath search expression.
      * @param defaultValue Default boolean value.
+     * @param processor The XPath Processor
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue)
-        throws ProcessingException {
-        String value = getValueOf(root, path);
+    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue,
+                                              XPathProcessor processor)
+    throws ProcessingException {
+        String value = getValueOf(root, path, processor);
         if (value == null) {
             return defaultValue;
         }
@@ -919,15 +928,16 @@ public final class DOMUtil {
      *
      *  @param contextNode The node to start searching from.
      *  @param str A valid XPath string.
+     *  @param processor The XPath Processor
      *  @return A NodeIterator, should never be null.
      *
      * @throws TransformerException
      */
-    public static NodeList selectNodeList(Node contextNode, String str)
-        throws TransformerException {
+    public static NodeList selectNodeList(Node contextNode, String str, XPathProcessor processor)
+    throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
-            return XPathAPI.selectNodeList(contextNode, str);
+            return processor.selectNodeList(contextNode, str); 
         } else {
             return getNodeListFromPath(contextNode, pathComponents);
         }
@@ -1167,69 +1177,6 @@ public final class DOMUtil {
                 }
             }
         }
-    }
-
-    /**
-     * Converts a org.w3c.dom.Node to a String. Uses {@link javax.xml.transform.Transformer}
-     * to convert from a Node to a String.
-     * 
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @return String representation of the document
-     * @deprecated Use {@link XMLUtils#serializeNodeToXML(Node)} instead.
-     */
-    public static String node2String(Node node) {
-        try {
-            return XMLUtils.serializeNodeToXML(node);
-        } catch (ProcessingException e) {
-        }
-        return "";
-    }
-
-    /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @param pretty a <code>boolean</code> value whether to format the XML
-     * @return a <code>String</code> value
-     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
-     */
-    public static String node2String(Node node, boolean pretty) {
-        try {
-            if (pretty) {
-                Properties props = new Properties();
-                props.setProperty(OutputKeys.INDENT, "yes");
-                return XMLUtils.serializeNode(node, props);
-            } else {
-                return XMLUtils.serializeNodeToXML(node);
-            }
-        } catch (ProcessingException e) {
-        }
-        return "";
-    }
-
-    /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @return a <code>StringBuffer</code> value
-     * @deprecated Please use {@link XMLUtils#serializeNodeToXML(Node)} instead.
-     */
-    public static StringBuffer node2StringBuffer(Node node) {
-        return new StringBuffer(node2String(node));
-    }
-
-    /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @param pretty a <code>boolean</code> value whether to format the XML
-     * @param indent a <code>String</code> value containing spaces as
-     * initial indent, if null defaults to empty string.
-     * @return a <code>StringBuffer</code> value
-     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
-     */
-    public static StringBuffer node2StringBuffer(Node node, boolean pretty, String indent) {
-        return new StringBuffer(node2String(node, pretty));
     }
 
 }
