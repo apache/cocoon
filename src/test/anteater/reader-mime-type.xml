@@ -30,8 +30,18 @@
                 <header name="Content-type" value="text/html"/>
             </match>
         </httpRequest>
+        <httpRequest href="${baseUrl}/test10.html" description="Check content-type (cached)">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
 
         <httpRequest href="${baseUrl}/test20.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+        <httpRequest href="${baseUrl}/test20.html" description="Check content-type (cached)">
             <match>
                 <header name="Content-type" value="text/html"/>
             </match>
@@ -42,8 +52,18 @@
                 <header name="Content-type" value="text/html"/>
             </match>
         </httpRequest>
+        <httpRequest href="${baseUrl}/test30.html" description="Check content-type (cached)">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
 
         <httpRequest href="${baseUrl}/test40.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+        <httpRequest href="${baseUrl}/test40.html" description="Check content-type (cached)">
             <match>
                 <header name="Content-type" value="text/html"/>
             </match>
@@ -54,8 +74,18 @@
                 <header name="Content-type" value="text/html"/>
             </match>
         </httpRequest>
+        <httpRequest href="${baseUrl}/test50.html" description="Check content-type (cached)">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
 
         <httpRequest href="${baseUrl}/test60.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+        <httpRequest href="${baseUrl}/test60.html" description="Check content-type (cached)">
             <match>
                 <header name="Content-type" value="text/html"/>
             </match>
@@ -66,7 +96,11 @@
                 <header name="Content-type" value="text/html"/>
             </match>
         </httpRequest>
+        <httpRequest href="${baseUrl}/test70.html" description="Check content-type (cached)">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
 
     </target>
-
 </project>
