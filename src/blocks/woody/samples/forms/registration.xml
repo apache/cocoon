@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <wd:widgets>
+    <wd:field id="name" required="true">
+      <wd:label>Name:</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:length min="2"/>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="email" required="true">
+      <wd:label>Email address:</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:email/>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="age">
+      <wd:label>Your age:</wd:label>
+      <wd:datatype base="long">
+        <wd:validation>
+          <wd:range min="0" max="150"/>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="password" required="true">
+      <wd:label>Password:</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:length min="5" max="20"/>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="confirmPassword" required="true">
+      <wd:label>Re-enter password:</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:assert test="password = confirmPassword">
+            <wd:failmessage>The two passwords are not equal.</wd:failmessage>
+          </wd:assert>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:booleanfield id="spam">
+      <wd:label>Send me spam</wd:label>
+    </wd:booleanfield>
+  </wd:widgets>
+
+</wd:form>
