@@ -123,10 +123,22 @@
 </coplets>
 ...]]>
           </source>
+          <p>
+          The coplet instance data refers to its coplet data by specifying the
+          unique ID. The instance itself has a unique ID as well that is referenced
+          from the portal view.
+          </p>
+          <p>
+          In addition, a coplet instance data could have own configuration information.
+          </p>
         </s3>
       </s2>
       <s2 title="Configuring the arrangement of the defined Coplets">
         <p>
+        The portal view defines the ordering and arrangement of the coplets. This
+        view is defined in a hierarchical manner by nesting layout objects. At
+        each place, a coplet is located, a reference to a coplet instance data
+        is included.
         </p>
       </s2>
       <s2 title="...">
