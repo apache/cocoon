@@ -59,7 +59,7 @@
       <s2 title="Download a development snapshot">
        <p>
         You also can download one of the development snapshots from the
-        <link href="http://xml.apache.org/from-cvs/cocoon-2.1/">CVS snapshots</link>
+        <link href="http://xml.apache.org/cocoon/mirror.cgi#nightly">CVS snapshots</link>
         directory.
        </p>
       </s2>
