@@ -16,7 +16,6 @@
 package org.apache.cocoon;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -84,12 +83,6 @@ public class Cocoon
     /** The logger manager */
     private LoggerManager loggerManager;
 
-    /** The classpath (null if not available) */
-    private String classpath;
-
-    /** The working directory (null if not available) */
-    private File workDir;
-
     /** The parent service manager. */
     private ServiceManager parentServiceManager;
 
@@ -150,8 +143,6 @@ public class Cocoon
             this.context = new ComponentContext(context);
             ((DefaultContext)this.context).makeReadOnly();
 
-            this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
-            this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             try {
                 // FIXME : add a configuration option for the refresh delay.
                 // for now, hard-coded to 1 second.
@@ -547,6 +538,7 @@ public class Cocoon
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
+            //Core.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
         }

@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.ComponentFactory;
 
 /**
@@ -156,7 +157,7 @@ extends AbstractFactoryHandler {
      * @throws Exception An exception may be thrown as described above or if there is an exception
      *  thrown by the ObjectFactory's newInstance() method.
      */
-    protected Object doGet() throws Exception {
+    protected Object getFromPool() throws Exception {
         Object poolable;
         synchronized( this.semaphore ) {
             // Look for a Poolable at the end of the m_ready list
@@ -183,7 +184,22 @@ extends AbstractFactoryHandler {
             this.logger.debug( "Got a " + poolable.getClass().getName() + " from the pool." );
         }
 
-        return createProxy(poolable);
+        return poolable;
+    }
+
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doGet()
+     */
+    protected Object doGet() throws Exception {
+        return this.createProxy();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doPut(java.lang.Object)
+     */
+    protected void doPut(Object component) throws Exception {
+        // nothing to do
     }
 
     /**
@@ -191,7 +207,7 @@ extends AbstractFactoryHandler {
      *
      * @param poolable Poolable to return to the pool.
      */
-    protected void doPut( final Object poolable ) {
+    protected void putIntoPool( final Object poolable ) {
         try {
             this.factory.enteringPool(poolable);
         } catch (Exception ignore) {
@@ -235,11 +251,10 @@ extends AbstractFactoryHandler {
         // nothing to do here
     }
     
-    protected Object createProxy(Object component) {
-        Proxy.newProxyInstance(component.getClass().getClassLoader(), 
-                               this.guessWorkInterfaces(component.getClass()), 
-                               new ProxyHandler(component));
-        return component;
+    protected Object createProxy() {
+        return Proxy.newProxyInstance(this.factory.getCreatedClass().getClassLoader(), 
+                                      this.guessWorkInterfaces(this.factory.getCreatedClass()), 
+                                      new ProxyHandler(this));
     }
 
     /**
@@ -290,12 +305,13 @@ extends AbstractFactoryHandler {
         }
     }
 
-    protected static final class ProxyHandler implements InvocationHandler {
+    protected static final class ProxyHandler implements InvocationHandler, Core.CleanupTask {
         
-        private final Object component;
+        private ThreadLocal componentHolder = new InheritableThreadLocal();
+        private final NewPoolableComponentHandler handler;
         
-        public ProxyHandler(Object component) {
-            this.component = component;
+        public ProxyHandler(NewPoolableComponentHandler handler) {
+            this.handler = handler;
         }
         
         /* (non-Javadoc)
@@ -303,11 +319,33 @@ extends AbstractFactoryHandler {
          */
         public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
+            if ( method.getName().equals("hashCode") && args == null ) {
+                return new Integer(this.hashCode());
+            }
+            if ( this.componentHolder.get() == null ) {
+                this.componentHolder.set(this.handler.getFromPool());
+                Core.addCleanupTask(this);
+            }
             try {
-                return method.invoke(component, args);
+                return method.invoke(this.componentHolder.get(), args);
             } catch (InvocationTargetException ite) {
                 throw ite.getTargetException();
             }
         }
+        
+        
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.core.Core.CleanupTask#invoke()
+         */
+        public void invoke() {
+            try {
+                this.handler.putIntoPool(this.componentHolder.get());
+            } catch (Exception ignore) {
+                // we ignore this
+            }
+            this.componentHolder.set(null);
+        }
     }
+    
+    
 }
