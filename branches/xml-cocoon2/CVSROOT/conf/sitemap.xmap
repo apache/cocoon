@@ -111,7 +111,7 @@
  
    <map:match pattern="^status$"> 
     <map:generate type="status" src="status"/> 
-    <map:transform src="stylesheets/simple-status.xsl"/> 
+    <map:transform src="stylesheets/cool-status.xsl"/> 
     <map:serialize> 
      <parameter name="contentType" value="text/html"/> 
     </map:serialize> 
@@ -125,8 +125,14 @@
     </map:serialize> 
    </map:match>
     
+   <map:match pattern="^generror$"> 
+    <map:generate src="documents/error-giving-page.xml"/> 
+    <map:transform src="stylesheets/simple-welcome2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+    
    <map:handle-errors> 
-    <map:transform src="stylesheets/simple-error2html.xsl"/> 
+    <map:transform src="stylesheets/cool-error2html.xsl"/> 
     <map:serialize/>   
    </map:handle-errors> 
 

@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.utils.Parameters;
 
@@ -30,7 +31,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-08-04 21:12:11 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-08-16 05:08:19 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -62,10 +63,7 @@ public class ResourcePipeline implements Composer {
                               Configuration conf, Parameters param) 
     throws InstantiationException, IllegalAccessException {
         this.generator = (Generator)generator.getClass().newInstance();
-        if (this.generator instanceof Composer) 
-            ((Composer)this.generator).setComponentManager (manager);
-        if (this.generator instanceof Configurable) 
-            ((Configurable)this.generator).setConfiguration (conf);
+        this.initComponent (this.generator, conf);
         this.generatorSource = source;
         this.generatorParam = param;
     }
@@ -84,10 +82,7 @@ public class ResourcePipeline implements Composer {
                            Configuration conf, Parameters param, String mimeType) 
     throws InstantiationException, IllegalAccessException {
         this.reader = (Reader)reader.getClass().newInstance();
-        if (this.reader instanceof Composer) 
-            ((Composer)this.reader).setComponentManager (manager);
-        if (this.reader instanceof Configurable) 
-            ((Configurable)this.reader).setConfiguration (conf);
+        this.initComponent (this.reader, conf);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
@@ -103,10 +98,7 @@ public class ResourcePipeline implements Composer {
                                Configuration conf, Parameters param, String mimeType) 
     throws InstantiationException, IllegalAccessException {
         this.serializer = (Serializer)serializer.getClass().newInstance();
-        if (this.serializer instanceof Composer) 
-            ((Composer)this.serializer).setComponentManager (manager);
-        if (this.serializer instanceof Configurable) 
-            ((Configurable)this.serializer).setConfiguration (conf);
+        this.initComponent (this.serializer, conf);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
@@ -116,10 +108,7 @@ public class ResourcePipeline implements Composer {
                                Configuration conf, Parameters param) 
     throws InstantiationException, IllegalAccessException {
         Transformer transfmr = (Transformer)transformer.getClass().newInstance();
-        if (transfmr instanceof Composer) 
-            ((Composer)transfmr).setComponentManager (manager);
-        if (transfmr instanceof Configurable) 
-            ((Configurable)transfmr).setConfiguration (conf);
+        this.initComponent (transfmr, conf);
         this.transformers.add (transfmr);
         this.transformerSources.add (source);
         this.transformerParams.add (param);
@@ -127,11 +116,17 @@ public class ResourcePipeline implements Composer {
 
     public boolean process (Environment environment)
                             throws ProcessingException, IOException, SAXException {
+        String mime_type=null;
         if (generator == null) {
             if (reader != null) {
-                if (readerMimeType != null)
-                    environment.setContentType (readerMimeType);
                 reader.setup ((EntityResolver)environment, environment.getObjectModel(), readerSource, readerParam);
+                mime_type = this.reader.getMimeType();
+                if (mime_type != null) {
+                    environment.setContentType (mime_type);
+                } else if (readerMimeType != null) {
+                    environment.setContentType (readerMimeType);
+                } else {
+                }
                 reader.setOutputStream (environment.getOutputStream());
                 reader.generate();
             } else {
@@ -155,12 +150,28 @@ public class ResourcePipeline implements Composer {
                 producer = transformer;
             }
 
-            if (serializerMimeType != null)
+            mime_type = this.serializer.getMimeType();
+            if (mime_type != null)
+                    environment.setContentType (mime_type);
+            else if (serializerMimeType != null)
                     environment.setContentType (serializerMimeType); 
             serializer.setOutputStream (environment.getOutputStream());
             producer.setConsumer (serializer);
             generator.generate();
         }
         return true;
+    }
+
+    /**
+     * Initializes a Component (inversion of control)
+     *
+     * @param comp <code>Component</code> to initialize
+     * @param conf <code>Configuration</code> of the <code>Component</code>
+     */
+    private void initComponent (Component comp, Configuration conf) {
+        if (comp instanceof Composer) 
+            ((Composer)comp).setComponentManager (manager);
+        if (comp instanceof Configurable) 
+            ((Configurable)comp).setConfiguration (conf);
     }
 } 

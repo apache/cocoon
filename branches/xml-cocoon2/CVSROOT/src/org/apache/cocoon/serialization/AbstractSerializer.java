@@ -18,7 +18,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:01 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-16 05:08:17 $
  */
 public abstract class AbstractSerializer extends AbstractXMLConsumer 
 implements Serializer {
@@ -30,5 +30,14 @@ implements Serializer {
      */
     public void setOutputStream(OutputStream out) {
         this.output=new BufferedOutputStream(out);
+    }
+
+    /**
+     * Get the mime-type of the output of this <code>Serializer</code>
+     * This default implementation returns null to indicate that the 
+     * mime-type specified in the sitemap is to be used
+     */
+    public String getMimeType() {
+        return null;
     }
 }

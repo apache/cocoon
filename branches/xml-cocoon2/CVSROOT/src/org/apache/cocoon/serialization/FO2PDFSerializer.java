@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:12:01 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-16 05:08:17 $
  *
  */
 public class FO2PDFSerializer extends DocumentHandlerWrapper 
@@ -65,4 +65,13 @@ public class FO2PDFSerializer extends DocumentHandlerWrapper
             throw new SAXException (e); 
         } 
     } 
+
+    /**
+     * Get the mime-type of the output of this <code>Serializer</code>
+     * This default implementation returns null to indicate that the 
+     * mime-type specified in the sitemap is to be used
+     */
+    public String getMimeType() {
+        return null;
+    }
 }

@@ -50,7 +50,7 @@ import org.w3c.dom.Text;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:02 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-16 05:08:17 $
  */
 public class ImageSerializer extends DOMBuilder implements Serializer, Composer {
    
@@ -342,5 +342,14 @@ public class ImageSerializer extends DOMBuilder implements Serializer, Composer 
             if(newy>=i.getHeight()) break;
         }
         return(true);
+    }
+
+    /**
+     * Get the mime-type of the output of this <code>Serializer</code>
+     * This default implementation returns null to indicate that the 
+     * mime-type specified in the sitemap is to be used
+     */
+    public String getMimeType() {
+        return null;
     }
 }

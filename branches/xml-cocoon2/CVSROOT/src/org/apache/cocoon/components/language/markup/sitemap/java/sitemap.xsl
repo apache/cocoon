@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-08-04 21:11:14 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-08-16 05:08:14 $
 -->
 
 <xsl:stylesheet 
@@ -61,8 +61,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     } 
     
     private Parameters emptyParam = new Parameters(); 
-
-    private Generator generator_error_handler = new ErrorGenerator();
+    private Generator generator_error_handler = null;
+    private Configuration generator_config_error_handler = null;
 
     <!-- generate variables for all components -->
     /** The generators */
@@ -157,6 +157,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       this.sitemapManager.setConfiguration(conf);
       try {
       <!-- configure all components -->
+      /* Configure special ErrorGenerator */
+      confBuilder.startDocument ();
+      confBuilder.endDocument ();
+      Configuration cconf2 = confBuilder.getConfiguration();
+      generator_config_error_handler = cconf2;
+      generator_error_handler =
+        (Generator) load_component ("org.apache.cocoon.sitemap.ErrorGenerator", cconf2);
+
       /* Configure generators */
       <xsl:call-template name="config-components">
         <xsl:with-param name="name">generator</xsl:with-param>
@@ -229,6 +237,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       List listOfLists = (List)(new ArrayList());
       List list = null;
       Parameters param = null; 
+      Dictionary objectModel = environment.getObjectModel(); 
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         <xsl:variable name="pipeline-position" select="position()"/>
         try {
@@ -237,7 +246,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           <xsl:choose>
           <xsl:when test="(./map:handle-errors)">
             try {
-              return error_process_<xsl:value-of select="$pipeline-position"/> (environment, e);
+              return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
             } catch (Exception ex) {
               System.out.println (ex.toString());
               ex.printStackTrace(System.out);
@@ -256,7 +265,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
       <xsl:variable name="pipeline-position" select="position()"/>
       <xsl:if test="(./map:handle-errors)">
-        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Exception e) 
+        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Dictionary objectModel, Exception e) 
         throws Exception { 
           ResourcePipeline pipeline = new ResourcePipeline ();
           pipeline.setComponentManager (this.manager);
@@ -310,7 +319,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment.getObjectModel())) != null) {
+    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", objectModel)) != null) {
       listOfLists.add (list);  
       <xsl:apply-templates/>
     }
@@ -352,7 +361,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:choose>
         </xsl:for-each>
       </xsl:variable>
-      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", environment.getObjectModel())) {
+      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", objectModel)) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -378,24 +387,74 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="method">addTransformer</xsl:with-param>
       <xsl:with-param name="prefix">transformer</xsl:with-param>
     </xsl:call-template>
-  </xsl:template> <!-- match="map:transormer" -->
+  </xsl:template> <!-- match="map:transformer" -->
 
   <xsl:template match="map:serialize">
+    <xsl:variable name="default-serializer-type">
+      <xsl:value-of select="/map:sitemap/map:components/map:serializers/@default"/>
+    </xsl:variable>
+    <xsl:variable name="this-type">
+      <xsl:choose>
+        <xsl:when test="@type">
+          <xsl:value-of select="@type"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$default-serializer-type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="default-mime-type">
+      <xsl:value-of select="/map:sitemap/map:components/map:serializers/map:serializer[@name=$this-type]/@mime-type"/>
+    </xsl:variable>
     <xsl:call-template name="setup-component">
-      <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:serializers/@default"/>
+      <xsl:with-param name="default-component" select="$default-serializer-type"/>
       <xsl:with-param name="method">setSerializer</xsl:with-param>
       <xsl:with-param name="prefix">serializer</xsl:with-param>
-      <xsl:with-param name="mime-type" select="@mime-type"/>
+      <xsl:with-param name="mime-type">
+        <xsl:choose>
+          <xsl:when test="@mime-type">
+            <xsl:value-of select="@mime-type"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$default-mime-type"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
     </xsl:call-template> 
     return pipeline.process (environment);
   </xsl:template> <!-- match="map:serialize" --> 
 
   <xsl:template match="map:read">
+    <xsl:variable name="default-reader-type">
+      <xsl:value-of select="/map:sitemap/map:components/map:readers/@default"/>
+    </xsl:variable>
+    <xsl:variable name="this-type">
+      <xsl:choose>
+        <xsl:when test="@type">
+          <xsl:value-of select="@type"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$default-reader-type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="default-mime-type">
+      <xsl:value-of select="/map:sitemap/map:components/map:readers/map:reader[@name=$this-type]/@mime-type"/>
+    </xsl:variable>
     <xsl:call-template name="setup-component">
       <xsl:with-param name="default-component" select="/map:sitemap/map:components/map:readers/@default"/>
       <xsl:with-param name="method">setReader</xsl:with-param>
       <xsl:with-param name="prefix">reader</xsl:with-param>
-      <xsl:with-param name="mime-type" select="@mime-type"/>
+      <xsl:with-param name="mime-type">
+        <xsl:choose>
+          <xsl:when test="@mime-type">
+            <xsl:value-of select="@mime-type"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$default-mime-type"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
     </xsl:call-template> 
     return pipeline.process (environment);
   </xsl:template> <!-- match="map:read" --> 

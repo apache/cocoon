@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.PrintWriter;
-//import java.io.*;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -32,8 +31,8 @@ import org.apache.cocoon.generation.ComposerGenerator;
  * Generates an XML representation of the current notification.
  *
  * @author     <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @created    31 luglio 2000
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-02 22:48:29 $
+ * @created    31 July 2000
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-16 05:08:19 $
  */
 public class ErrorGenerator extends ComposerGenerator {
 
@@ -57,10 +56,10 @@ public class ErrorGenerator extends ComposerGenerator {
     }
 
     /**
-     *  Generate the status information in XML format.
+     *  Generate the notification information in XML format.
      *
-     *@exception  SAXException  Description of Exception
-     *@throws                   SAXException when there is a problem creating the
+     *@exception  SAXException  Description of problem there is creating the output SAX events.
+     *@throws       SAXException when there is a problem creating the
      *      output SAX events.
      */
     public void generate() throws SAXException {
@@ -69,10 +68,10 @@ public class ErrorGenerator extends ComposerGenerator {
 
 
     /**
-      *  Generate the status information in XML format.
+     *  Start generation of the notification information of a <code>Throwable</code> in XML format.
       *
-      *@param  t                 Description of Parameter
-      *@exception  SAXException  Description of Exception
+      *@param  t    The Exception to report
+      *@exception  SAXException   Description of problem there is creating the output SAX events.
       *@throws                   SAXException when there is a problem creating the
       *      output SAX events.
       */
@@ -93,11 +92,11 @@ public class ErrorGenerator extends ComposerGenerator {
 
 
     /**
-      *  Generate the main status document.
+      *  Generate the notification information of a <code>Throwable</code> in XML format.
       *
-      *@param  ch                Description of Parameter
-      *@param  t                 Description of Parameter
-      *@exception  SAXException  Description of Exception
+      *@param  ch               The ContentHandler to use.
+      *@param  t                  The Exception to report
+      *@exception  SAXException   Description of problem there is creating the output SAX events.
       */
     private void genError(ContentHandler ch,
             Throwable t) throws SAXException {
@@ -141,16 +140,17 @@ public class ErrorGenerator extends ComposerGenerator {
 
 
     /**
-      *  Description of the Method
+      *  Generate notification information in XML format.
       *
-      *@param  ch                 Description of Parameter
-      *@param  type               Description of Parameter
-      *@param  title              Description of Parameter
-      *@param  source             Description of Parameter
-      *@param  message            Description of Parameter
-      *@param  description        Description of Parameter
-      *@param  extraDescriptions  Description of Parameter
-      *@exception  SAXException   Description of Exception
+      *@param  ch               The ContentHandler to use.
+      *@param  type            The type of notification.
+      *@param  title             The title of the notification.
+      *@param  source         The source where the notification comes from.
+      *@param  message     The notification.
+      *@param  description  A more detailed description of the notification.  
+      *@param  extraDescriptions  A Hashtable containing extra notifications that do not fit
+      *   in other parameters. The keys are the parameter names, the values are the notifications.
+      *@exception  SAXException   Description of problem there is creating the output SAX events.
       */
     private void genNotify(ContentHandler ch, String type,
             String title, String source, String message, String description,
@@ -173,11 +173,12 @@ public class ErrorGenerator extends ComposerGenerator {
         ch.endElement(URI, "source", "source");
 
         ch.startElement(URI, "message", "message", new AttributesImpl());
-        ch.characters(message.toCharArray(), 0, message.length());
+        if (message != null)
+            ch.characters(message.toCharArray(), 0, message.length());
         ch.endElement(URI, "message", "message");
 
         ch.startElement(URI, "description", "description",
-                new AttributesImpl());
+         new AttributesImpl());
         ch.characters(description.toCharArray(), 0, description.length());
         ch.endElement(URI, "description", "description");
 
@@ -194,10 +195,7 @@ public class ErrorGenerator extends ComposerGenerator {
             ch.startElement(URI, "extra", "extra", atts);
             ch.characters(extra.toCharArray(), 0, extra.length());
             ch.endElement(URI, "extra", "extra");
-
         }
-
-
 
         // End root element.
         ch.endElement(URI, "notify", "notify");
@@ -206,21 +204,21 @@ public class ErrorGenerator extends ComposerGenerator {
 
 
     /**
-      *  Description of the Class
+      *  A thread that prints the stackTrace of a <code>Throwable</code> object
+      *  to a PrintWriter.
       *
-      *@author     nicola_ken
-      *@created    31 luglio 2000
+      * @author     <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
+      * @created    31 July 2000
       */
     class ReadThread extends Thread {
         PrintWriter CurrentWriter;
         Throwable t;
 
-
         /**
          *  Constructor for the ReadThread object
          *
-         *@param  CurrentWriter  Description of Parameter
-         *@param  t              Description of Parameter
+         *@param  CurrentWriter  The <code>PrintWriter</code> to print the stacktrace to.
+         *@param  t  The <code>Throwable</code> object containing the stackTrace.
          */
         ReadThread(PrintWriter CurrentWriter, Throwable t) {
             this.CurrentWriter = CurrentWriter;
@@ -229,7 +227,9 @@ public class ErrorGenerator extends ComposerGenerator {
 
 
         /**
-          *  Main processing method for the ReadThread object
+          *  Main processing method for the ReadThread object. 
+          *  A thread that prints the stackTrace of a <code>t</code>
+          *     to <code>CurrentWriter</code>.
           */
         public void run() {
             t.printStackTrace(CurrentWriter);
@@ -238,4 +238,3 @@ public class ErrorGenerator extends ComposerGenerator {
     }
 
 }
-

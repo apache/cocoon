@@ -17,7 +17,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-04 21:11:55 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-16 05:08:15 $
  */
 public abstract class AbstractReader implements Reader {
     /** The current <code>EntityResolver</code>. */
@@ -47,5 +47,14 @@ public abstract class AbstractReader implements Reader {
      */
     public void setOutputStream(OutputStream out) {
         this.out=out;
+    }
+
+    /**
+     * Get the mime-type of the output of this <code>Serializer</code>
+     * This default implementation returns null to indicate that the 
+     * mime-type specified in the sitemap is to be used
+     */
+    public String getMimeType() {
+        return null;
     }
 }

@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import java.util.Dictionary;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 import org.apache.cocoon.ProcessingException;
 
@@ -25,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-04 21:11:56 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-16 05:08:16 $
  */
 public class ResourceReader extends AbstractReader {
 
@@ -59,5 +60,16 @@ public class ResourceReader extends AbstractReader {
         res.setDateHeader("Last-Modified", file.lastModified());
         res.setHeader("Accept-Ranges","bytes");
         out.write ( buffer );
+    }
+    /**
+     * Returns the mime-type of the resource in process.
+     */
+    public String getMimeType () {
+        ServletContext ctx = (ServletContext) objectModel.get("context");
+        if (ctx != null) {
+           return ctx.getMimeType(this.source);
+        } else {
+           return null;
+        }
     }
 }

@@ -23,8 +23,16 @@
    </sample>
   </group>
   <group name="Dynamic Content Examples">
+   <sample name="Status Page" url="status">
+    Simple status page example.
+   </sample>
    <sample name="Simple XSP" url="simple_dynamic_page">
     Simple XSP example.
+   </sample>
+  </group>
+  <group name="Error Page Example">
+   <sample name="Error Page" url="generror">
+    Simple error page example.
    </sample>
   </group>
  </samples>

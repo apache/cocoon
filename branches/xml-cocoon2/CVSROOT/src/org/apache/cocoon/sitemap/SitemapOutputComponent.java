@@ -15,7 +15,7 @@ import org.apache.avalon.Component;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-04 21:12:12 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-16 05:08:19 $
  */
 public interface SitemapOutputComponent extends Component {
 
@@ -24,4 +24,9 @@ public interface SitemapOutputComponent extends Component {
      * be serialized.
      */
     public void setOutputStream(OutputStream out) throws IOException;
+
+    /**
+     * Get the mime-type of the output of this <code>Component</code>.
+     */
+    public String getMimeType();
 }
