@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.60 2000-04-26 13:43:48 stefano Exp $
+  $Id: changes.xml,v 1.61 2000-04-27 17:53:48 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+   Cleaned the docs a little, fixed some typos and extended the cocoon2 sitemap example.
+  </action>
   <action dev="SM" type="add" due-to="Manfred Riem" due-to-email="mriem@win.tue.nl">
    Patched engine creation to allow several instances of Cocoon in the same JVM.
   </action>
