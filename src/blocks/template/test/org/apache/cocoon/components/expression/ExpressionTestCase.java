@@ -45,7 +45,7 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertEquals("bar", context.getContextBean());
     }
 
-    public void testFactory() throws ExpressionException, ServiceException {
+    public void testFactoryJexl() throws ExpressionException, ServiceException {
         ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
         assertNotNull("Test lookup of expression factory", factory);
 
@@ -54,4 +54,15 @@ public class ExpressionTestCase extends CocoonTestCase {
 
         assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
     }
+
+    public void testFactoryJXPath() throws ExpressionException, ServiceException {
+        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+        assertNotNull("Test lookup of expression factory", factory);
+
+        Expression expression = factory.getExpression("jxpath", "1+2");
+        assertNotNull("Test expression compilation", expression);
+
+        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+    }
 }
+
