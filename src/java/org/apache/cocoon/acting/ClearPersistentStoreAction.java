@@ -27,7 +27,7 @@ import java.util.Map;
  * Simple action which ensures the persistent store is cleared.
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: ClearPersistentStoreAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id: ClearPersistentStoreAction.java,v 1.4 2004/05/19 08:44:26 cziegeler Exp $
  */
 public class ClearPersistentStoreAction extends ServiceableAction implements ThreadSafe {
 
@@ -37,7 +37,7 @@ public class ClearPersistentStoreAction extends ServiceableAction implements Thr
                     String src,
                     Parameters par
     ) throws Exception {
-        Store store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
+        Store store_persistent = (Store)this.manager.lookup(Store.ROLE);
 
         try {
             store_persistent.clear();

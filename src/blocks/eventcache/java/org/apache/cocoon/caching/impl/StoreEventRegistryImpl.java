@@ -28,7 +28,7 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.7 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.8 2004/05/19 08:44:26 cziegeler Exp $
  */
 public class StoreEventRegistryImpl
     extends AbstractDoubleMapEventRegistry
@@ -54,7 +54,7 @@ public class StoreEventRegistryImpl
 	 */
     public void service(ServiceManager manager) throws ServiceException {
         this.m_manager = manager;
-        this.m_persistentStore = (Store) manager.lookup(Store.PERSISTENT_STORE);
+        this.m_persistentStore = (Store) manager.lookup(Store.ROLE);
     }
 
     /**

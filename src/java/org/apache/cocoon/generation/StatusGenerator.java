@@ -64,7 +64,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.5 2004/04/01 12:11:26 antonio Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.6 2004/05/19 08:44:27 cziegeler Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -101,7 +101,7 @@ public class StatusGenerator extends ServiceableGenerator {
         super.service(manager);
         try {
             this.storejanitor = (StoreJanitor)manager.lookup(StoreJanitor.ROLE);
-            this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
+            this.store_persistent = (Store)this.manager.lookup(Store.ROLE);
         } catch(ServiceException ce) {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
