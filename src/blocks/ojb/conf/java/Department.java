@@ -56,7 +56,7 @@ import java.io.Serializable;
  *  Department's Bean
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: Department.java,v 1.1 2003/09/28 04:31:11 antonio Exp $
+ * @version CVS $Id: Department.java,v 1.1 2004/02/03 11:12:04 antonio Exp $
 */
 public class Department implements Serializable {
 
