@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the wt:form-template element -->
 <page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
   <title>Sample form</title>
   <content>
-    <form action="form1" method="POST">
+    <wt:form-template action="form1" method="POST">
       <table border="1">
         <tr>
           <td valign="top"><wt:widget-label id="email"/></td>
@@ -97,6 +99,6 @@
       </table>
 
       <input type="submit"/>
-    </form>
+    </wt:form-template>
   </content>
 </page>
