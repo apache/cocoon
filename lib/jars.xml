@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.146 2004/01/13 17:09:40 coliver Exp $
+    | CVS $Id: jars.xml,v 1.147 2004/01/13 21:12:53 ugo Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -600,7 +600,7 @@
     <title>Jakarta Commons Jexl</title>
     <description>JSTL Expression Language</description>
     <used-by>JXTemplateGenerator</used-by>
-    <lib>core/commons-jexl-1.0-beta-1-20030113.jar</lib>
+    <lib>core/commons-jexl-1.0-beta-1-20040113.jar</lib>
     <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
   </file>
 
