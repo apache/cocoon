@@ -54,7 +54,7 @@ package org.apache.cocoon.caching.validity;
  * (not necessarily useful) could include "Easter" or "Shutdown"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $CVS$
+ * @version $Id: NamedEvent.java,v 1.3 2003/07/01 03:54:13 ghoward Exp $
  */
 public class NamedEvent extends Event {
     

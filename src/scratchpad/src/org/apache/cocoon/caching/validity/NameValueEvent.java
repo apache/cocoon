@@ -54,7 +54,7 @@ package org.apache.cocoon.caching.validity;
  * An example might be "table_name", "primary_key"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $CVS$
+ * @version $Id: NameValueEvent.java,v 1.3 2003/07/01 03:54:13 ghoward Exp $
  */
 public class NameValueEvent extends Event {
 

@@ -56,7 +56,7 @@ import org.apache.excalibur.source.SourceValidity;
  * external events.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $CVS$ 
+ * @version $Id: EventValidity.java,v 1.3 2003/07/01 03:54:13 ghoward Exp $ 
  */
 public class EventValidity implements SourceValidity {
     
