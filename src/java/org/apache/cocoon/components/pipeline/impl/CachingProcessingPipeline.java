@@ -72,7 +72,7 @@ import java.util.Iterator;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.2 2003/03/13 05:58:28 jefft Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.3 2003/08/07 08:52:15 cziegeler Exp $
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -88,15 +88,13 @@ public class CachingProcessingPipeline
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent(),
                                           expiresObj);
-                this.cache.store(environment.getObjectModel(),
-                                 this.toCacheKey,
+                this.cache.store(this.toCacheKey,
                                  response);
             } else {
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           (byte[])this.xmlSerializer.getSAXFragment(),
                                           expiresObj);
-                this.cache.store(environment.getObjectModel(),
-                                 this.toCacheKey,
+                this.cache.store(this.toCacheKey,
                                  response);
             }
         }

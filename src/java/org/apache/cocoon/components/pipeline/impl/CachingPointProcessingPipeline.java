@@ -78,7 +78,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.2 2003/03/13 05:58:28 jefft Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.3 2003/08/07 08:52:15 cziegeler Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline implements Configurable {
@@ -217,8 +217,7 @@ public class CachingPointProcessingPipeline
                 }
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent());
-                this.cache.store(environment.getObjectModel(),
-                                 this.toCacheKey.copy(),
+                this.cache.store(this.toCacheKey.copy(),
                                  response);
         //
         // Scan back along the pipelineCacheKey for
@@ -246,8 +245,7 @@ public class CachingPointProcessingPipeline
                     XMLSerializer serializer = (XMLSerializer) itt.previous();
                     CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                               (byte[])serializer.getSAXFragment());
-                    this.cache.store(environment.getObjectModel(),
-                                     this.toCacheKey.copy(),
+                    this.cache.store(this.toCacheKey.copy(),
                                      response);
 
                     if (this.getLogger().isDebugEnabled()) {

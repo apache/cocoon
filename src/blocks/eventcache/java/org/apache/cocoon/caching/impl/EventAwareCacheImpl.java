@@ -46,7 +46,6 @@
 package org.apache.cocoon.caching.impl;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -73,7 +72,7 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * TODO: Handle MultiThreading
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.3 2003/07/20 21:08:06 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.4 2003/08/07 08:52:15 cziegeler Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 
@@ -100,8 +99,7 @@ public class EventAwareCacheImpl
      * 
      * <code>AggregatedValidity</code> is handled recursively.
 	 */
-	public void store(Map objectModel,
-                		PipelineCacheKey key,
+	public void store(PipelineCacheKey key,
                 		CachedResponse response)
                 		throws ProcessingException {
         SourceValidity[] validities = response.getValidityObjects();
@@ -109,7 +107,7 @@ public class EventAwareCacheImpl
             SourceValidity val = validities[i];
 			examineValidity(val, key);
         }
-		super.store(objectModel, key, response);
+		super.store(key, response);
 	}
 
     /**

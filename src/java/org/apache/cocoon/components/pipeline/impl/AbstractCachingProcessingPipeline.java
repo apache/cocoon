@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.10 2003/07/31 12:39:04 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.11 2003/08/07 08:52:15 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -813,7 +813,6 @@ public abstract class AbstractCachingProcessingPipeline
                 // store the response
                 if (pcKey != null) {
                     this.cache.store(
-                        environment.getObjectModel(),
                         pcKey,
                         new CachedResponse( new SourceValidity[] {readerValidity},
                                             ((CachingOutputStream)outputStream).getContent())
