@@ -75,7 +75,8 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertBeanJXPathBinding
      */
-    public InsertBeanJXPathBinding(String className, String addMethod) {
+    public InsertBeanJXPathBinding(boolean loadEnabled, boolean saveEnabled, String className, String addMethod) {
+        super(loadEnabled, saveEnabled);
         this.className = className;
         this.addMethodName = addMethod;
     }
@@ -83,7 +84,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
     /**
      * Do-nothing implementation of the interface.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         // doesn't do a thing when loading.
     }
 
@@ -93,7 +94,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
      * The factory will insert a new instance of the specified bean (classname) 
      * inside this object into the target objectmodel.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         jxpc.setFactory(new AbstractFactory() {
             public boolean createObject(JXPathContext context, Pointer pointer,
                                         Object parent, String name, int index) {

@@ -69,8 +69,9 @@ public class DeleteNodeJXPathBindingBuilder
     /**
      * Creates an instance of {@link DeleteNodeJXPathBinding}.
      */
-    public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) {
-
-        return new DeleteNodeJXPathBinding();
+    public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
+        DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+        
+        return new DeleteNodeJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled);
     }
 }

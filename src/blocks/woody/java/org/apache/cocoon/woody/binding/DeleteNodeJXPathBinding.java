@@ -63,8 +63,12 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  */
 public class DeleteNodeJXPathBinding extends JXPathBindingBase {
+    
+    public DeleteNodeJXPathBinding(boolean loadEnabled, boolean saveEnabled) {
+        super(loadEnabled, saveEnabled);
+    }
 
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         // doesn't do a thing when loading.
     }
 
@@ -72,7 +76,7 @@ public class DeleteNodeJXPathBinding extends JXPathBindingBase {
     /** 
      * Removes the current context-bean from the jxpath context.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void doSave(Widget frmModel, JXPathContext jxpc) {
         // get rid of the contextbean
         jxpc.removePath(".");
     }

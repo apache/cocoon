@@ -67,7 +67,8 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * 
      * @param childBindings sets the array of childBindings
      */
-    protected ComposedJXPathBindingBase(JXPathBindingBase[] childBindings) {
+    protected ComposedJXPathBindingBase(boolean loadEnabled, boolean saveEnabled, JXPathBindingBase[] childBindings) {
+        super(loadEnabled, saveEnabled);
         this.subBindings = childBindings;
     }
 
@@ -88,7 +89,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * Actively performs the binding from the ObjectModel to the Woody-form
      * by passing the task onto it's children.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         if (this.subBindings != null) {
             int size = this.subBindings.length;
             for (int i = 0; i < size; i++) {
@@ -101,7 +102,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * Actively performs the binding from the Woody-form to the ObjectModel 
      * by passing the task onto it's children.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (this.subBindings != null) {
             int size = this.subBindings.length;
             for (int i = 0; i < size; i++) {

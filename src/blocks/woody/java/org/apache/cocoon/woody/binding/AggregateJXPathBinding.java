@@ -75,8 +75,8 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public AggregateJXPathBinding(String widgetId, String xpath, JXPathBindingBase[] childBindings) {
-        super(childBindings);
+    public AggregateJXPathBinding(boolean loadEnabled, boolean saveEnabled, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+        super(loadEnabled, saveEnabled, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;
     }
@@ -86,10 +86,10 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context 
      * before continuing the binding over the child-bindings.
      */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
         AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.loadFormFromModel(aggregate, subContext);
+        super.doLoad(aggregate, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done loading " + toString());
         }
@@ -100,10 +100,10 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context 
      * before continuing the binding over the child-bindings.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.saveFormToModel(aggregate, subContext);
+        super.doSave(aggregate, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done saving " + toString());
         }

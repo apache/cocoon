@@ -76,11 +76,13 @@ public class SetAttributeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
+            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            
             String attName = DomHelper.getAttribute(bindingElm, "name");
             String attValue = DomHelper.getAttribute(bindingElm, "value");
 
             SetAttributeJXPathBinding attBinding =
-                new SetAttributeJXPathBinding(attName, attValue);
+                new SetAttributeJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, attName, attValue);
 
             return attBinding;
         } catch (BindingException e) {

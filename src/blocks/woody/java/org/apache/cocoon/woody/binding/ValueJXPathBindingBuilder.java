@@ -82,7 +82,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            boolean readonly = DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false);
+            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
@@ -104,7 +104,8 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
             }
 
             ValueJXPathBinding fieldBinding =
-                    new ValueJXPathBinding(widgetId, xpath, readonly, updateBindings, convertor, convertorLocale);
+                    new ValueJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, 
+                            widgetId, xpath, updateBindings, convertor, convertorLocale);
 
             return fieldBinding;
         } catch (BindingException e) {

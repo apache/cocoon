@@ -52,8 +52,10 @@ package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
+import org.w3c.dom.Node;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the 
@@ -66,13 +68,44 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Avalon Logger to use in all subclasses.
      */
     private Logger logger;
+    
+    /**
+     * Flag indicating if the nested load-binding on this level should be performed.
+     */
+    private final boolean loadEnabled;
+    
+    /**
+     * Flag indicating if the nested save-binding on this level should be performed.
+     */    
+    private final boolean saveEnabled;
+
+
+    private JXPathBindingBase() {
+        this(true, true);
+    }
+    
+    protected JXPathBindingBase(boolean loadEnabled, boolean saveEnabled) {
+        this.loadEnabled = loadEnabled;
+        this.saveEnabled = saveEnabled;
+    }
+    
+    /**
+     * Performs the actual load binding regardless of the flag {@see #loadEnabled}.
+     * Abstract method that subclasses need to implement for specific activity.
+     */
+    public abstract void doLoad(Widget frmModel, JXPathContext jxpc);
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather 
      * then on generic objects.
-     * Abstract method that subclasses need to implement for specific activity.
+     * Executes the actual loading {@see #doLoad(Widget, JXPathContext)} 
+     * depending on the value of {@see #loadEnabled}
      */
-    public abstract void loadFormFromModel(Widget frmModel, JXPathContext jxpc);
+    public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+        if (this.loadEnabled) {
+            doLoad(frmModel, jxpc);
+        }    
+    }
 
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
@@ -87,6 +120,10 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
+            
+            if (objModel instanceof Node) {
+                jxpc.setFactory(new DOMFactory());
+            }
         } else {
             jxpc = (JXPathContext) objModel;
         }
@@ -94,12 +131,23 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     }
 
     /**
-     * Redefines the Binding action as working on a JXPathContext Type rather 
-     * then on generic objects.
+     * Performs the actual save binding regardless of the flag {@see #saveEnabled}.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException;
-
+    public abstract void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException;
+    
+    /**
+     * Redefines the Binding action as working on a JXPathContext Type rather 
+     * then on generic objects.
+     * Executes the actual saving {@see #doSave(Widget, JXPathContext)} 
+     * depending on the value of {@see #saveEnabled}
+     */
+    public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
+        if (this.saveEnabled) {
+            doSave(frmModel, jxpc);
+        }    
+    }
+    
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
