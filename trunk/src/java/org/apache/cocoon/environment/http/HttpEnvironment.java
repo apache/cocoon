@@ -68,7 +68,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.8 2003/05/16 07:04:56 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.9 2003/05/26 07:45:42 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -250,7 +250,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
         if (lastModified != 0) {
             long if_modified_since = this.request.getDateHeader("If-Modified-Since");
             this.response.setDateHeader("Last-Modified", lastModified);
-            return (if_modified_since < lastModified);
+            return (if_modified_since / 1000 < lastModified  / 1000);
         }
         return true;
     }
