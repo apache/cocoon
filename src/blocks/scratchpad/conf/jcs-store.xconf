@@ -8,7 +8,7 @@
                     logger="core.store.persistent">
     <parameter name="region-name" value="indexedRegion1"/>
     <parameter name="group-name" value="indexedDiskCache"/>
-    <parameter name="config-file" value="context://WEB-INF/TestDiskCache.ccf"/> 
+    <parameter name="config-file" value="/TestDiskCache.ccf"/> 
   </persistent-store>
   -->
 </xconf>
