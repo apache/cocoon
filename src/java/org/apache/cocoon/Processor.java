@@ -61,7 +61,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.5 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: Processor.java,v 1.6 2003/08/22 23:42:53 joerg Exp $
  */
 public interface Processor extends Component {
 
@@ -93,11 +93,11 @@ public interface Processor extends Component {
      * @since 2.1
      */
     Map getComponentConfigurations();
-    
+
     /**
      * Get the root processor parent of this processor.
      *
-     * @sicne 2.1.1
+     * @since 2.1.1
      */
     Processor getRootProcessor();
 }
