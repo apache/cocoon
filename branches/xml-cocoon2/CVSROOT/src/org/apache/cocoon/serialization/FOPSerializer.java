@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.Recyclable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
@@ -29,15 +29,15 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-22 17:10:42 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-21 09:58:10 $
  *
  */
-public class FOPSerializer extends AbstractSerializer implements MessageListener, Poolable {
+public class FOPSerializer extends AbstractSerializer implements MessageListener, Recyclable {
 
     /**
      * The FOP driver
      */
-    private Driver driver = null;
+    private Driver driver;
 
     /**
      * Create the FOP driver
@@ -67,17 +67,14 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
     public void endDocument() throws SAXException {
         super.endDocument();
         try {
-            driver.format();
-            driver.render();
+            this.driver.format();
+            this.driver.render();
         } catch (IOException e) {
             getLogger().error("FOPSerializer.endDocument()", e);
             throw new SAXException (e);
         } catch (FOPException e) {
             getLogger().error("FOPSerializer.endDocument()", e);
             throw new SAXException (e);
-        } finally {
-            driver = null;
-            MessageHandler.removeListener(this);
         }
     }
 
@@ -96,4 +93,14 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         // we should consume the events in some meaningful way
         // for example formatting them on the metapipeline
     }
+    
+    /**
+     * Recycle the component and remove it from the MessageList
+     */
+    public void recycle() {
+        super.recycle();
+        MessageHandler.removeListener(this);
+        this.driver = null;
+    }
+
 }
