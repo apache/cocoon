@@ -63,8 +63,8 @@ import org.w3c.dom.DocumentFragment;
 /**
  * The <code>Session-fw</code> object helper
  *
- * @author <a href="mailto:agallardo@agsoftware.dnsalias.com">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.2 2003/10/09 07:18:36 cziegeler Exp $
+ * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
+ * @version CVS $Id: XSPSessionFwHelper.java,v 1.3 2003/10/11 00:02:55 antonio Exp $
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
