@@ -168,10 +168,10 @@ public class AggregateField extends AbstractWidget {
         Iterator fieldsIt = fields.iterator();
         while (fieldsIt.hasNext()) {
             Field field = (Field)fieldsIt.next();
-            if (field.getValue() != null)
-                return true;
+            if (field.getValue() == null)
+                return false;
         }
-        return false;
+        return true;
     }
 
     public boolean validate(FormContext formContext) {
