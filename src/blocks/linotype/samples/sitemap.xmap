@@ -146,7 +146,7 @@
 
 <!-- ========================== Flowscript ================================= -->
 
-  <map:flow language="JavaScript">
+  <map:flow language="javascript">
     <map:script src="flow.js"/>
   </map:flow>
 
@@ -300,6 +300,7 @@
     <map:match pattern="private/edit/news/*/*">
       <map:call function="main">
         <map:parameter name="page" value="edit"/>
+        <map:parameter name="root" value="{realpath:/}"/>
         <map:parameter name="id" value="{1}"/>
         <map:parameter name="type" value="news"/>
         <map:parameter name="subpage" value="{2}"/>
@@ -309,6 +310,7 @@
     <map:match pattern="private/**">
       <map:call function="main">
         <map:parameter name="page" value="{1}"/>
+        <map:parameter name="root" value="{realpath:/}"/>
       </map:call>
     </map:match>
 

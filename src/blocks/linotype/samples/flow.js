@@ -11,22 +11,22 @@
  * Yeah, I know that hardwiring those is hacky as hell. But I'll try to
  * fix this with link translation later on.
  */
-var home = cocoon.context.getRealPath("/") + "samples/linotype/";
 
-var stream = new java.io.FileInputStream(home + "linotype.users.properties");
-var users = new Packages.org.apache.cocoon.components.UserManager.getInstance(stream);
 var repo = new Packages.org.apache.cocoon.components.Repository.getInstance();
 
+var users;
+var home;
 var userid = "";
 var username = "";
 
 /*
  * Main entry point for the flow. This is where user authorization takes place.
  */
-function main(action) {
-    var args = new Array(arguments.length - 1);
-    for (var i = 1; i < arguments.length; i++) {
-        args[i-1] = arguments[i];
+function main(action, root) {
+	home = root + "samples/linotype/";
+    var args = new Array(arguments.length - 2);
+    for (var i = 2; i < arguments.length; i++) {
+        args[i-2] = arguments[i];
     }            
 
     if ((userid == undefined) || (userid == "")) {
@@ -46,10 +46,15 @@ function login(action, args) {
     var passError = "";
 
     while (true) {
-        sendPageAndWait("screen/login", { username : name, userError : userError, passError : passError});
+        cocoon.sendPageAndWait("screen/login", { username : name, userError : userError, passError : passError});
 
         name = cocoon.request.getParameter("username");
         password = cocoon.request.getParameter("password");
+        
+        if (users == undefined) {
+			var stream = new java.io.FileInputStream(home + "linotype.users.properties");
+			users = new Packages.org.apache.cocoon.components.UserManager.getInstance(stream);
+		}
                 
         if (users.isValidName(name)) {
             if (users.isValidPassword(name,password)) {
@@ -66,7 +71,7 @@ function login(action, args) {
         }
     }
         
-    cocoon.createSession();
+    // cocoon.createSession();
 }
 
 /*
@@ -81,7 +86,7 @@ function invoke(action, args) {
     if (func != undefined) {
         func.apply(this,args);
     } else {
-        sendPage("screen/" + action, {"user" : username});
+        cocoon.sendPage("screen/" + action, {"user" : username});
     }
 }
 
@@ -93,7 +98,7 @@ function invoke(action, args) {
  */
 function logout() {
     userid = "";
-    sendPage("screen/logout");
+    cocoon.sendPage("screen/logout");
 }
    
 /*
@@ -105,15 +110,15 @@ function edit(id,type,subpage) {
     if (id == "template") {
         id = repo.getID(repository);
         repo.copy(repository + "template", repository + id);
-        redirect("../" + id + "/");
+        cocoon.redirectTo("../" + id + "/");
     } else if ((subpage != undefined) && (subpage != "")) {
-        sendPage("edit/" + type + "/" + id + "/" + subpage,{});
+        cocoon.sendPage("edit/" + type + "/" + id + "/" + subpage,{});
     } else {
         var document = repository + id;
 
         while (true) {
             var versions = repo.getVersions(document);
-            sendPageAndWait("edit/" + type + "/" + id + "/", { 
+            cocoon.sendPageAndWait("edit/" + type + "/" + id + "/", { 
                 userid : userid, 
                 username : username, 
                 versions : versions,
@@ -128,14 +133,14 @@ function edit(id,type,subpage) {
                 repo.revertFrom(document,version);
             } else {
                 var output = repo.getOutputStream(document);
-                process("samples/linotype/action/save-" + type,{},output);
+                cocoon.processPipelineTo("/samples/linotype/action/save-" + type,{},output);
                 output.close();
-                repo.save(cocoon.request, document);
+                repo.fomSave(cocoon, document);
                 if (action == "finish") break;
             }                   
         }
 
-        redirect("../../../" + type);
+        cocoon.redirectTo("../../../" + type);
     }
 }
 

@@ -59,6 +59,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.servlet.multipart.Part;
 
@@ -112,6 +113,10 @@ public class Repository {
             }
         }
     }
+
+	public static void fomSave(FOM_Cocoon cocoon, String dirName) throws Exception {
+		save(cocoon.getRequest(), dirName);
+	}
     
     public static void save(Request request, String param, String file) throws Exception {
         Part part = (Part) request.get(param);
