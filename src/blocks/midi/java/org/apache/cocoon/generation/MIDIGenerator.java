@@ -221,8 +221,6 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
   private String[] fArray;
   private int numTracks;
   private int trkCount;
-  private String parserName;
-  private String debugFile;
   private String[] notes;
   private int[] register;
   private Hashtable contHash;
@@ -731,7 +729,6 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     int offset = 0;
 
     // initialize variables
-    int dlen = 0;
     String edata = null;
     String snam = null;
     String nmData = "";
@@ -1302,7 +1299,6 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
   {
     int l = end - strt + 1;
     char[] c = new char[l];
-    int i = 0;
     for (int j = 0; j < l; j++)
     {
       c[j] = (char) b[j];
