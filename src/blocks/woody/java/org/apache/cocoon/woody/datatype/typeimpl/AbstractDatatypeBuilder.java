@@ -144,8 +144,8 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Compos
             SelectionList selectionList;
             String src = selectionListElement.getAttribute("src");
             if (src.length() > 0) {
-                boolean cache = DomHelper.getAttributeAsBoolean(selectionListElement, "cache", true);
-                if (cache) {
+                boolean dynamic = DomHelper.getAttributeAsBoolean(selectionListElement, "dynamic", false);
+                if (!dynamic) {
                     selectionListElement = readSelectionList(src);
                     selectionList = SelectionListBuilder.build(selectionListElement, datatype);
                 } else {
