@@ -98,7 +98,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: TraxTransformer.java,v 1.1.2.30 2001-05-04 13:49:32 giacomo Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.1.2.31 2001-05-09 12:09:16 cziegeler Exp $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -138,12 +138,12 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     private EntityResolver resolver;
 
     TransformerHandler getTransformerHandler(EntityResolver resolver)
-      throws SAXException, ProcessingException, IOException, TransformerConfigurationException {
-        Templates templates = getTemplates(systemID, xsluri);
+    throws SAXException, ProcessingException, IOException, TransformerConfigurationException {
+        Templates templates = getTemplates();
         if(templates == null) {
             getLogger().debug("Creating new Templates in " + this + " for" + systemID + ":" + xsluri);
-            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
-            putTemplates (systemID, xsluri, templates);
+            templates = getTransformerFactory().newTemplates(new SAXSource(this.inputSource));
+            putTemplates (templates);
         } else {
             getLogger().debug("Reusing Templates in " + this + " for" + systemID + ":" + xsluri);
         }
@@ -152,8 +152,8 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         if(handler == null) {
             /* If there is a problem in getting the handler, try using a brand new Templates object */
             getLogger().debug("Re-creating new Templates in " + this + " for" + systemID + ":" + xsluri);
-            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
-            putTemplates (systemID, xsluri, templates);
+            templates = getTransformerFactory().newTemplates(new SAXSource(resolver.resolveEntity(null, this.xsluri)));
+            putTemplates (templates);
             handler = getTransformerFactory().newTransformerHandler(templates);
         }
 
@@ -161,54 +161,49 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         return handler;
     }
 
-    private Templates getTemplates (String systemID, String xsluri)
-       throws IOException {
+    private Templates getTemplates ()
+    throws IOException {
         Templates templates = null;
         if (this.useStore == false)
             return null;
 
-        // Only local files are checked for modification for compatibility reasons!
-        // Using the entity resolver we get the filename of the current file:
-        // The systemID if such a resource starts with file://.
+        // only stylesheets with a last modification date are stored
+        if (this.xslFileLastModified != 0) {
 
-        // Is this a local file
-        if (systemID.startsWith(FILE) == true) {
             // Stored is an array of the template and the caching time
             if (store.containsKey(xsluri) == true) {
                 Object[] templateAndTime = (Object[])store.get(xsluri);
                 if(templateAndTime != null && templateAndTime[1] != null) {
-                    File xslFile = new File(systemID.substring(FILE.length()));
                     long storedTime = ((Long)templateAndTime[1]).longValue();
-                    if (storedTime < xslFile.lastModified()) {
-                        templates = null;
+                    if (storedTime < this.xslFileLastModified) {
+                        store.remove(xsluri);
                     } else {
                         templates = (Templates)templateAndTime[0];
                     }
                 }
             }
         } else {
-            // only the template is stored
+            // remove an old template if it exists
             if (store.containsKey(xsluri) == true) {
-               templates = (Templates)store.get(xsluri);
+               store.remove(xsluri);
             }
         }
         return templates;
     }
 
-    private void putTemplates (String systemID, String xsluri, Templates templates)
-       throws IOException {
+    private void putTemplates (Templates templates)
+    throws IOException {
         if (this.useStore == false)
             return;
 
-        // Is this a local file
-        if (systemID.startsWith(FILE) == true) {
+        // only stylesheets with a last modification date are stored
+        if (this.xslFileLastModified != 0) {
+
             // Stored is an array of the template and the current time
             Object[] templateAndTime = new Object[2];
             templateAndTime[0] = templates;
-            templateAndTime[1] = new Long(System.currentTimeMillis());
-            store.hold(xsluri, templateAndTime);
-        } else {
-            store.hold(xsluri,templates);
+            templateAndTime[1] = new Long(this.xslFileLastModified);
+            store.hold(this.xsluri, templateAndTime);
         }
     }
 
@@ -275,10 +270,13 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         this.inputSource = resolver.resolveEntity(null, this.xsluri);
         this.systemID = inputSource.getSystemId();
         this.resolver = resolver;
-        if (this.systemID.startsWith("file:") == true) {
-            File xslFile = new File(this.systemID.substring("file:".length()));
+
+        this.xslFileLastModified = 0;
+        if (this.systemID.startsWith(FILE) == true) {
+            File xslFile = new File(this.systemID.substring(FILE.length()));
             this.xslFileLastModified = xslFile.lastModified();
         }
+        getLogger().debug("Using stylesheet: '"+this.xsluri+"' in " + this + ", last modified: " + this.xslFileLastModified);
     }
 
     /**
@@ -288,7 +286,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
      * @return The generated key hashes the src
      */
     public long generateKey() {
-        if (this.systemID.startsWith("file:") == true) {
+        if (this.xslFileLastModified != 0) {
             return HashUtil.hash(this.xsluri);
         } else {
             return 0;
@@ -302,9 +300,8 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
      *         component is currently not cacheable.
      */
     public CacheValidity generateValidity() {
-        HashMap map = getLogicSheetParameters();
-
         if (this.xslFileLastModified != 0) {
+            HashMap map = getLogicSheetParameters();
             if (map == null) {
                 return new TimeStampCacheValidity(this.xslFileLastModified);
             } else {
@@ -519,7 +516,6 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         this.systemID = null;
         this.xsluri = null;
         this.resolver = null;
-        this.xslFileLastModified = 0;
         super.recycle();
     }
 }
