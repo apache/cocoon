@@ -274,6 +274,53 @@
       </javadoc>
     </target>
 
+    <target name="published-api">
+      <mkdir dir="${{build}}/published-api-xml"/>
+      <mkdir dir="${{build}}/published-api-html"/>
+      <pubapidocs destdir="${{build}}/published-api-xml"
+               usagetag="cocoon.usage"
+               tagvalue="published">
+        <fileset dir="${{java}}">
+          <include name="**/*.java"/>
+        </fileset>
+        <fileset dir="${{deprecated.src}}">
+          <include name="**/*.java"/>
+        </fileset>
+        <xsl:for-each select="$cocoon-blocks">
+          <fileset dir="${{blocks}}/{substring-after(@name,'cocoon-block-')}/java">
+            <include name="**/*.java"/>
+          </fileset>
+        </xsl:for-each>
+      </pubapidocs>
+      <xslt basedir="${{build}}/published-api-xml"
+            destdir="${{build}}/published-api-html"
+            includes="allclasses-frame.xml"
+            extension=".html"
+            style="tools/src/anttasks/doclets/stylesheets/allclasses2html.xsl"/>
+      <xslt basedir="${{build}}/published-api-xml"
+            destdir="${{build}}/published-api-html"
+            includes="overview-frame.xml"
+            extension=".html"
+            style="tools/src/anttasks/doclets/stylesheets/allpackages2html.xsl"/>
+      <xslt in="${{build}}/published-api-xml/overview-frame.xml"
+            out="${{build}}/published-api-html/overview-summary.html"
+            style="tools/src/anttasks/doclets/stylesheets/allpackages2overviewhtml.xsl"/>
+      <xslt basedir="${{build}}/published-api-xml"
+            destdir="${{build}}/published-api-html"
+            includes="**/package-frame.xml"
+            extension=".html"
+            style="tools/src/anttasks/doclets/stylesheets/package2html.xsl"/>
+      <xslt basedir="${{build}}/published-api-xml"
+            destdir="${{build}}/published-api-html"
+            includes="**/*.xml"
+            excludes="**/*frame*"
+            extension=".html"
+            style="tools/src/anttasks/doclets/stylesheets/class2html.xsl">
+       <param name="rooturl" expression="${{build}}/published-api-html"/>
+      </xslt>          
+      <copy file="tools/src/anttasks/doclets/resources/index.html" todir="${{build}}/published-api-html"/>
+    </target>
+
     <xsl:apply-templates select="$cocoon-blocks"/>
   </xsl:template>
 
