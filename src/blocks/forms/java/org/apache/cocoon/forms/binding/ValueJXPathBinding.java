@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.JXPathException;
  * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.6 2004/05/07 13:42:09 mpo Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.7 2004/05/11 08:22:54 bruno Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -93,6 +93,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
                 ConversionResult conversionResult = convertor.convertFromString((String)value, convertorLocale, null);
                 if (conversionResult.isSuccessful())
                     value = conversionResult.getResult();
+                else
+                    value = null;
             } else {
                 getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
             }
