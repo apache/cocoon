@@ -953,9 +953,13 @@ xspCurrentNode.appendChild(
   
           <p>
             The order in which <code>xmlns:</code> attributes appear
-            dictates library processing order. The XSP built-in
+            does not necessarily affect the library processing order
+            (which is unspecified, so you should always attempt to make
+            logicsheets applicable in any order, if possible - if this
+            is not possible, see the FAQ). The XSP built-in
             library, though, is always applied last, regardless of its
-            position in the <code>xmlns:</code> attribute list.
+            position in the <code>xmlns:</code> attribute list - that is because
+            it generates the actual Java source file rather than XML.
           </p>
     
           <p>
