@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,13 +45,13 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current status of Cocoon.
- * 
+ *
  * @cocoon.sitemap.component.name   status
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.status
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  16
- * 
+ *
  * Potted DTD:
  *
  * <code>
@@ -80,7 +80,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StatusGenerator 
     extends ServiceableGenerator 
@@ -137,7 +137,7 @@ public class StatusGenerator
             getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -236,18 +236,20 @@ public class StatusGenerator
         // END operating system
 
         String classpath = SystemUtils.JAVA_CLASS_PATH;
-        List paths = new ArrayList();
-        StringTokenizer tokenizer = new StringTokenizer(classpath, SystemUtils.PATH_SEPARATOR);
-        while (tokenizer.hasMoreTokens()) {
-            paths.add(tokenizer.nextToken());
+        if (classpath != null) {
+            List paths = new ArrayList();
+            StringTokenizer tokenizer = new StringTokenizer(classpath, SystemUtils.PATH_SEPARATOR);
+            while (tokenizer.hasMoreTokens()) {
+                paths.add(tokenizer.nextToken());
+            }
+            addMultilineValue("classpath", paths);
         }
-        addMultilineValue("classpath", paths);
         // END ClassPath
 
         // BEGIN Cache
-        if ( this.storejanitor != null ) {
+        if (this.storejanitor != null) {
             startGroup("Store-Janitor");
-    
+
             // For each element in StoreJanitor
             Iterator i = this.storejanitor.iterator();
             while (i.hasNext()) {
@@ -258,13 +260,13 @@ public class StatusGenerator
                 atts.clear();
                 atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
                 this.xmlConsumer.startElement(namespace, "value", "value", atts);
-                // For each element in Store
-                Enumeration e = store.keys();
+
                 atts.clear();
-                while(e.hasMoreElements()) {
+                Enumeration e = store.keys();
+                while (e.hasMoreElements()) {
                     size++;
-                    Object key  = e.nextElement();
-                    Object val  = store.get( key );
+                    Object key = e.nextElement();
+                    Object val = store.get(key);
                     String line = null;
                     if (val == null) {
                         empty++;
@@ -282,31 +284,32 @@ public class StatusGenerator
                     this.xmlConsumer.endElement(namespace, "line", "line");
                 }
                 this.xmlConsumer.endElement(namespace, "value", "value");
-    
+
                 addValue("size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
                 endGroup();
             }
             endGroup();        
         }
-        
+
         if (this.store_persistent != null) {
-            startGroup( store_persistent.getClass().getName()+" (hash = 0x"+Integer.toHexString(store_persistent.hashCode())+")");
+            startGroup(store_persistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(store_persistent.hashCode()) + ")");
             int size = 0;
             int empty = 0;
             atts.clear();
             atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
             this.xmlConsumer.startElement(namespace, "value", "value", atts);
-            Enumeration enumer = this.store_persistent.keys();
-            while (enumer.hasMoreElements()) {
+
+            atts.clear();
+            Enumeration e = this.store_persistent.keys();
+            while (e.hasMoreElements()) {
                 size++;
-    
-                Object key  = enumer.nextElement();
-                Object val  = store_persistent.get(key);
+                Object key = e.nextElement();
+                Object val = store_persistent.get(key);
                 String line = null;
                 if (val == null) {
                     empty++;
                 } else {
-                    line = key + " (class: " + val.getClass().getName() +  ")";
+                    line = key + " (class: " + val.getClass().getName() + ")";
                     this.xmlConsumer.startElement(namespace, "line", "line", atts);
                     this.xmlConsumer.characters(line.toCharArray(), 0, line.length());
                     this.xmlConsumer.endElement(namespace, "line", "line");
@@ -320,7 +323,7 @@ public class StatusGenerator
             }
             this.xmlConsumer.endElement(namespace, "value", "value");
 
-            addValue("size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
+            addValue("size", size + " items in cache (" + empty + " are empty)");
             endGroup();
         }
         // END Cache
@@ -380,7 +383,8 @@ public class StatusGenerator
     }
 
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
-    private void startGroup(String name, Attributes atts) throws SAXException {
+    private void startGroup(String name, Attributes atts)
+    throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts); 
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         this.xmlConsumer.startElement(namespace, "group", "group", ai);
@@ -392,7 +396,8 @@ public class StatusGenerator
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(String name, String value) throws SAXException {
+    private void addValue(String name, String value)
+    throws SAXException {
         addValue(name, value, null);
     }
 
@@ -449,7 +454,8 @@ public class StatusGenerator
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addValue(String name, String value, Attributes atts) throws SAXException {
+    private void addValue(String name, String value, Attributes atts)
+    throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         this.xmlConsumer.startElement(namespace, "value", "value", ai);
@@ -464,12 +470,14 @@ public class StatusGenerator
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addMultilineValue(String name, List values) throws SAXException {
+    private void addMultilineValue(String name, List values)
+    throws SAXException {
         addMultilineValue(name, values, null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addMultilineValue(String name, List values, Attributes atts) throws SAXException {
+    private void addMultilineValue(String name, List values, Attributes atts)
+    throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         this.xmlConsumer.startElement(namespace, "value", "value", ai);
