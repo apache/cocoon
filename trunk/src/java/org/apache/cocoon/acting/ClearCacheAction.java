@@ -63,7 +63,7 @@ import java.util.Map;
  * cached results
  *
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.1 2003/03/09 00:08:38 pier Exp $
+ * @version CVS $Id: ClearCacheAction.java,v 1.2 2003/08/07 13:28:50 cziegeler Exp $
  */
 public class ClearCacheAction extends ComposerAction implements ThreadSafe {
 
@@ -73,14 +73,16 @@ public class ClearCacheAction extends ComposerAction implements ThreadSafe {
                     String src,
                     Parameters par
     ) throws Exception {
-        Cache cache = (Cache)this.manager.lookup(Cache.ROLE);
+        final String cacheRole = par.getParameter("cache-role", Cache.ROLE);
+        Cache cache = null;
 
         try {
+            cache = (Cache)this.manager.lookup(cacheRole);
             cache.clear();
             return EMPTY_MAP;
         } catch (Exception ex) {
-	    if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("Exception while trying to Clear Cache", ex);
+	        if (this.getLogger().isDebugEnabled()) {
+                getLogger().debug("Exception while trying to clear Cache with role " + cacheRole, ex);
             }
             return null;
         } finally {
