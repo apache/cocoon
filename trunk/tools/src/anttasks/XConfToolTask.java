@@ -89,7 +89,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.8 $ $Date: 2003/06/21 06:53:55 $
+ * @version CVS $Revision: 1.9 $ $Date: 2003/11/26 06:47:58 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -215,7 +215,10 @@ public final class XConfToolTask extends MatchingTask {
         } catch (ParserConfigurationException e) {
             throw new BuildException("ParserConfigurationException: "+e);
         } catch (UnknownHostException e) {
-            throw new BuildException("UnknownHostException.  Probable cause: The parser is " +                "trying to resolve a dtd from the internet and no connection exists.\n" +                "You can either connect to the internet during the build, or patch \n" +                "XConfToolTask.java to ignore DTD declarations when your parser is in use.");
+            throw new BuildException("UnknownHostException.  Probable cause: The parser is " +
+              "trying to resolve a dtd from the internet and no connection exists.\n" +
+              "You can either connect to the internet during the build, or patch \n" +
+              "XConfToolTask.java to ignore DTD declarations when your parser is in use.");
         } catch (IOException ioe) {
             throw new BuildException("IOException: "+ioe);
         }
