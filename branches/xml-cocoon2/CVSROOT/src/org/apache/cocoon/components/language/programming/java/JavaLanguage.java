@@ -27,7 +27,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:23 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-19 00:27:17 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
     
@@ -145,11 +145,8 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     
       compiler.setDestination(baseDirectory);
     
-      compiler.setClasspath(
-        System.getProperty("java.class.path") + File.pathSeparator +
-        baseDirectory
-      );
-    
+      compiler.setClasspath(classpath + File.pathSeparator + baseDirectory);
+      
       if (encoding != null) {
         compiler.setEncoding(encoding);
       }

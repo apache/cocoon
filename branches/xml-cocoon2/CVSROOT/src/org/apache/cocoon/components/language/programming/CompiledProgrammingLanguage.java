@@ -15,6 +15,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -24,7 +25,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:23 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-19 00:27:14 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -35,6 +36,9 @@ public abstract class CompiledProgrammingLanguage
 
   /** The component manager */
   protected ComponentManager manager;
+
+  /** The local classpath */
+  protected String classpath;
 
   /** The source deletion option */
   protected boolean deleteSources = false;
@@ -68,6 +72,7 @@ public abstract class CompiledProgrammingLanguage
    */
   public void setComponentManager(ComponentManager manager) {
     this.manager = manager;
+    this.classpath = ((Cocoon) this.manager.getComponent("cocoon")).getClasspath();
   }
 
   /**
