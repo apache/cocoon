@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
 <document>
   <header>
     <title>Apache Cocoon</title>
@@ -59,6 +60,12 @@
         through a powerful, commandline interface. The deliberate design of its abstract
         environment gives you the freedom to extend its functionality to meet your
         special needs in a highly modular fashion.
+      </p>
+    </s1>
+    <s1 title="Cocoon Features">
+      <p>
+        You want to get an overview of all available features of Cocoon in 5 minutes?
+        Read the <link href="features.html">features list</link>!
       </p>
     </s1>
     <s1 title="Where can I find it?">
