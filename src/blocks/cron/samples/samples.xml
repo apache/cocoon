@@ -15,32 +15,28 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.6 2004/04/05 12:25:34 antonio Exp $ -->
+<!-- CVS: $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Cron Block Samples">
 
-    <group name="Back">
-        <sample name="Back" href="../..">to Cocoon Samples main page</sample>
-        <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
-    </group>
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
 
-    <group name="Documentation">
-        <note>
-            The Cron component/block is a utility component to manage execute immediate,
-            once at some future time, and periodic execution of a Java class or Avalon Component.
-        </note>
-        <sample name="Cron Component documentation" href="docs.html">
-            Documentation for the Cron component.
-        </sample>
-    </group>
+  <group name="Documentation">
+    <note>
+      The Cron component/block is a utility component to manage execute immediate,
+      once at some future time, and periodic execution of a Java class or Avalon Component.
+    </note>
+    <sample name="Cron Component documentation" href="docs.html">
+      Documentation for the Cron component.
+    </sample>
+  </group>
 
-    <group name="Cron Sample">
-        <sample name="Cron" href="cron.html" xlink:role="dynamic">
-            Cron samples.
-        </sample>
-    </group>
-
-    <group name="">
-    </group>
-  
+  <group name="Cron Sample">
+    <sample name="Cron" href="cron.html" xlink:role="dynamic">
+      Cron samples.
+    </sample>
+  </group>
 </samples>
