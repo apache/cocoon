@@ -2,7 +2,8 @@
   unless="comment()[contains(., 'Definition and configuration of Slide')]" 
   insert-after="servlet[servlet-name = 'Cocoon']">
 
-    <!-- Definition and configuration of Slide's WebDAV servlet.
+    <!-- Definition and configuration of Slide's WebDAV servlet. -->
+    <!--
     <servlet>
         <servlet-name>webdav</servlet-name>
         <display-name>Slide DAV Server</display-name>
