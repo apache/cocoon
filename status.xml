@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.255 2004/03/03 14:35:49 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.256 2004/03/04 06:53:26 antonio Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated POI to 2.5-final-20040302
+   </action>
    <action dev="CZ" type="update">
      Pass notification object to coplet error pipelines so it can react on it.
    </action>
