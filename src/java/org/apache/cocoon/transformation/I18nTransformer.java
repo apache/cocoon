@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,36 @@
  */
 package org.apache.cocoon.transformation;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.i18n.Bundle;
+import org.apache.cocoon.i18n.BundleFactory;
+import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.xml.ParamSaxBuffer;
+import org.apache.cocoon.xml.SaxBuffer;
+
+import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,32 +59,17 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.i18n.Bundle;
-import org.apache.cocoon.i18n.BundleFactory;
-import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.xml.ParamSaxBuffer;
-import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.excalibur.source.SourceValidity;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 /**
+ * @cocoon.sitemap.component.documentation
  * Internationalization transformer is used to transform i18n markup into text
  * based on a particular locale.
+ * 
+ * @cocoon.sitemap.component.name   i18n
+ * @cocoon.sitemap.component.logger sitemap.transformer.i18n
+ * @cocoon.sitemap.component.documentation.caching
+ *               TBD
+ *
+ *
  *
  * <h3>i18n transformer</h3>
  * <p>The <strong>i18n transformer</strong> works by obtaining the users locale
@@ -238,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.25 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -867,9 +877,6 @@ public class I18nTransformer extends AbstractTransformer
     // Current parameter value (translated or not)
     private String param_value;
 
-    // Message formatter for param substitution.
-    private MessageFormat formatter;
-
     // Current locale
     protected Locale locale;
 
@@ -940,7 +947,7 @@ public class I18nTransformer extends AbstractTransformer
     public void configure(Configuration conf) throws ConfigurationException {
         // read in the config options from the transformer definition
         Configuration cataloguesConf = conf.getChild("catalogues", false);
-        
+
         if (cataloguesConf == null) {
             throw new ConfigurationException("I18NTransformer needs a 'catalogues' configuration at " + conf.getLocation());
         }
@@ -1077,9 +1084,6 @@ public class I18nTransformer extends AbstractTransformer
                 getLogger().debug("Using default catalogue " + defaultCatalogue);
             }
 
-            // Create and initialize a formatter
-            this.formatter = new MessageFormat("");
-            this.formatter.setLocale(locale);
         } catch (Exception e) {
             getLogger().debug("exception generated, leaving unconfigured");
             throw new ProcessingException(e.getMessage(), e);
@@ -2143,17 +2147,17 @@ public class I18nTransformer extends AbstractTransformer
      * usage. It is important that releaseCatalog is called when the transformer is recycled.
      */
     private final class CatalogueInfo {
-        PreparedVariableResolver name;
-        PreparedVariableResolver[] locations;
+        VariableResolver name;
+        VariableResolver[] locations;
         String resolvedName;
         String[] resolvedLocations;
         Bundle catalogue;
 
         public CatalogueInfo(String name, String[] locations) throws PatternException {
-            this.name = new PreparedVariableResolver(name, manager);
-            this.locations = new PreparedVariableResolver[locations.length];
+            this.name = VariableResolverFactory.getResolver(name, manager);
+            this.locations = new VariableResolver[locations.length];
             for (int i=0; i < locations.length; ++i) {
-                this.locations[i] = new PreparedVariableResolver(locations[i], manager);
+                this.locations[i] = VariableResolverFactory.getResolver(locations[i], manager);
             }
         }
 
