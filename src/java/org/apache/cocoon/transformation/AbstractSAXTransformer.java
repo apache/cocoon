@@ -121,7 +121,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.4 2003/06/19 11:19:25 jefft Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.5 2003/08/09 19:48:54 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -197,9 +197,11 @@ implements Composable, Configurable, Recyclable {
      */
     protected AttributesImpl emptyAttributes = new AttributesImpl();
 
-    /** The namespaces */
+    /** The namespaces and their prefixes */
     private List namespaces = new ArrayList(5);
-
+    /** The current prefix for our namespace */
+    private String ourPrefix;
+    
     /**
      * Avalon Configurable Interface
      */
@@ -270,6 +272,7 @@ implements Composable, Configurable, Recyclable {
         this.parameters = null;
         this.source = null;
         this.namespaces.clear();
+        this.ourPrefix = null;
     }
 
     /**
@@ -739,6 +742,20 @@ implements Composable, Configurable, Recyclable {
      * Send SAX events to the next pipeline component.
      * The startElement event for the given element is send
      * to the next component in the current pipeline.
+     * The element has the namespace of the transformer,
+     * but not attributes
+     * @param localname The name of the event.
+     */
+    public void sendStartElementEventNS(String localname)
+    throws SAXException {
+        this.startElement(this.namespaceURI, 
+                          localname, this.ourPrefix+':' + localname, emptyAttributes);
+    }
+
+    /**
+     * Send SAX events to the next pipeline component.
+     * The startElement event for the given element is send
+     * to the next component in the current pipeline.
      * The element has no namespace.
      * @param localname The name of the event.
      * @param attr The Attributes of the element
@@ -746,6 +763,20 @@ implements Composable, Configurable, Recyclable {
     public void sendStartElementEvent(String localname, Attributes attr)
     throws SAXException {
         this.startElement("", localname, localname, attr);
+    }
+
+    /**
+     * Send SAX events to the next pipeline component.
+     * The startElement event for the given element is send
+     * to the next component in the current pipeline.
+     * The element has the namespace of the transformer.
+     * @param localname The name of the event.
+     * @param attr The Attributes of the element
+     */
+    public void sendStartElementEventNS(String localname, Attributes attr)
+    throws SAXException {
+        this.startElement(this.namespaceURI, 
+                          localname, this.ourPrefix+':' + localname, attr);
     }
 
     /**
@@ -758,6 +789,19 @@ implements Composable, Configurable, Recyclable {
     public void sendEndElementEvent(String localname)
     throws SAXException {
         this.endElement("", localname, localname);
+    }
+
+    /**
+     * Send SAX events to the next pipeline component.
+     * The endElement event for the given element is send
+     * to the next component in the current pipeline.
+     * The element has the namespace of the transformer.
+     * @param localname The name of the event.
+     */
+    public void sendEndElementEventNS(String localname)
+    throws SAXException {
+        this.endElement(this.namespaceURI,
+                         localname, this.ourPrefix+':' + localname);
     }
 
     /**
@@ -854,6 +898,9 @@ implements Composable, Configurable, Recyclable {
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
         if (prefix != null) this.namespaces.add(new String[] {prefix, uri});
+        if ( this.namespaceURI != null && this.namespaceURI.equals(uri)) {
+            this.ourPrefix = prefix;
+        }
         if (this.ignoreEventsCount == 0) super.startPrefixMapping(prefix, uri);
     }
 
@@ -868,18 +915,37 @@ implements Composable, Configurable, Recyclable {
             int l = this.namespaces.size();
             int i = l-1;
             String currentPrefix;
-            while (found == false && i >= 0) {
+            while (!found && i >= 0) {
                 currentPrefix = ((String[])this.namespaces.get(i))[0];
-                if (currentPrefix.equals(prefix) == true) {
+                if (currentPrefix.equals(prefix)) {
                     found = true;
                 } else {
                     i--;
                 }
             }
-            if (found == false) {
+            if (!found) {
                 throw new SAXException("Namespace for prefix '"+ prefix + "' not found.");
             }
             this.namespaces.remove(i);
+            if ( prefix.equals(this.ourPrefix) ) {
+                this.ourPrefix = null;
+                // now search if we have a different prefix for our namespace
+                found = false;
+                l = this.namespaces.size();
+                i = l-1;
+                String currentNS;
+                while (!found && i >= 0) {
+                    currentNS = ((String[])this.namespaces.get(i))[1];
+                    if (currentNS.equals(this.namespaceURI)) {
+                        found = true;
+                    } else {
+                        i--;
+                    }
+                }
+                if ( found ) {
+                    this.ourPrefix = ((String[])this.namespaces.get(i))[0];
+                }
+            }
         }
         if (this.ignoreEventsCount == 0) super.endPrefixMapping(prefix);
     }
