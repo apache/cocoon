@@ -82,6 +82,8 @@ class CocoonComponentHandler implements Initializable, Disposable, Loggable {
      * Initialize the ComponentHandler.
      */
     public void init() {
+        if (this.initialized) return;
+
         switch (this.type) {
             case CocoonComponentHandler.THREADSAFE:
                 try {

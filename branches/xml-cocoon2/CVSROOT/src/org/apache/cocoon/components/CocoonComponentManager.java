@@ -23,6 +23,7 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.DefaultConfiguration;
+import org.apache.avalon.Initializable;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.RoleUtils;
@@ -33,9 +34,9 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-16 20:13:50 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-16 21:46:04 $
  */
-public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
+public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable, Initializable {
 
     protected Logger log;
 
@@ -43,7 +44,7 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
      */
     private Context context;
 
-    /** Static component handlers.
+    /** Static component mapping handlers.
      */
     private Map componentMapping;
 
@@ -71,6 +72,15 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         }
     }
 
+    public void init() {
+        Iterator i = this.componentHandlers.keySet().iterator();
+
+        while (i.hasNext()) {
+            CocoonComponentHandler handler = (CocoonComponentHandler) this.componentHandlers.get(i.next());
+            handler.init();
+        }
+    }
+
     /** Return an instance of a component.
      */
     public Component lookup( String role )
@@ -86,42 +96,41 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
 
         handler = (CocoonComponentHandler) this.componentHandlers.get(role);
         // Retrieve the instance of the requested component
-        if ( handler != null ) {
+        if ( handler == null ) {
+            this.log.debug("Could not find ComponentHandler, attempting to create one for role: " + role);
+            Class componentClass = null;
+            Configuration config = new DefaultConfiguration("", "-");
+
             try {
-                component = handler.get();
+                componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
+
+                handler = new CocoonComponentHandler(componentClass, config, this, this.context);
+                handler.setLogger(this.log);
+                handler.init();
             } catch (Exception e) {
-                throw new ComponentManagerException("Could not access the Component for you", e);
+                log.error("CocoonComponentManager Could not find component for role: " + role, e);
+                throw new ComponentManagerException("Could not find component for role: " + role, e);
             }
-        }
-
-        if (component != null) {
-            this.componentMapping.put(component, handler);
-            return component;
-        }
-
-        Class componentClass = null;
-        Configuration config = new DefaultConfiguration("", "-");
-
-        try {
-            componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
-        } catch (Exception e) {
-            log.error("CocoonComponentManager Could not find component for role: " + role, e);
-            throw new ComponentManagerException("Could not find component for role: " + role, e);
-        }
-
-        try {
-            handler = new CocoonComponentHandler(componentClass, config, this, this.context);
-            handler.setLogger(this.log);
-            handler.init();
 
             this.componentHandlers.put(role, handler);
-            component = handler.get();
-            this.componentMapping.put(component, handler);
-
-            return component;
-        } catch (Exception e) {
-            throw new ComponentManagerException("Could not access the component for role: " + role, e);
         }
+
+        try {
+            component = handler.get();
+        } catch (IllegalStateException ise) {
+            handler.init();
+
+            try {
+                component = handler.get();
+            } catch (Exception ee) {
+                throw new ComponentManagerException("Could not access the Component for you", ee);
+            }
+        } catch (Exception e) {
+            throw new ComponentManagerException("Could not access the Component for you", e);
+        }
+
+        this.componentMapping.put(component, handler);
+        return component;
     }
 
     public void configure(Configuration conf) throws ConfigurationException {
@@ -193,7 +202,6 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this, this.context);
             handler.setLogger(this.log);
-            handler.init();
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {
             throw new ComponentManagerException ("Could not set up Component for role: " + role, e);
@@ -208,7 +216,6 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         try {
             CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
             handler.setLogger(this.log);
-            handler.init();
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {
             this.log.warn("Could not set up Component for role: " + role, e);
