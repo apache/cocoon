@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:19:57 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:03 $
  */
 public class ConfigurationImpl extends AbstractConfiguration {
 

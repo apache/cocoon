@@ -11,7 +11,7 @@ package org.apache.cocoon;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 01:25:35 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 01:33:04 $
  */
 public class ProcessingException extends Exception {
 

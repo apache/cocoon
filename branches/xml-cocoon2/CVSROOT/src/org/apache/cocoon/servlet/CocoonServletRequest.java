@@ -15,7 +15,7 @@ import org.apache.cocoon.Request;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.1 $ $Date: 2000-02-27 01:25:39 $
+ * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:08 $
  */
 public class CocoonServletRequest implements Request {
     

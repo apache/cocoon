@@ -15,7 +15,7 @@ import org.apache.cocoon.xml.XMLProducer;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.1 $ $Date: 2000-02-27 01:25:37 $
+ * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:06 $
  */
 public interface Filter extends XMLProducer, XMLConsumer, SitemapComponent {
 }

@@ -20,7 +20,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:25:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:11 $
  */
 public interface XMLProducer {
 

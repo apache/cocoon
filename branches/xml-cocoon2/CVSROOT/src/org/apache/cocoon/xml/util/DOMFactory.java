@@ -15,7 +15,7 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:25:43 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
  */
 public interface DOMFactory {
     /** 

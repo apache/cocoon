@@ -15,7 +15,7 @@ package org.apache.arch;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:18:59 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:02 $
  */
 public interface Modifiable {
 
