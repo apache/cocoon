@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.5 2003/05/04 20:30:56 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.6 2003/05/04 20:43:23 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -97,11 +97,9 @@ implements java.io.Serializable {
     /**
      * Create a new handler object.
      */
-    public UserHandler(HandlerConfiguration handler) 
-    throws ProcessingException {
+    public UserHandler(HandlerConfiguration handler) {
         this.handler = handler;
         this.context = new AuthenticationContext(this);
-        this.userID = (String) this.context.getContextInfo().get("ID");
     }
 
     /**
@@ -217,6 +215,13 @@ implements java.io.Serializable {
      * Get the unique user id
      */
     public String getUserId() {
-        return this.getUserId();
+        if ( null == this.userID) {
+            try {
+                this.userID = (String) this.context.getContextInfo().get("ID");
+            } catch (ProcessingException ignore) {
+                this.userID = "";
+            }
+        }
+        return this.userID;
     }
 }
