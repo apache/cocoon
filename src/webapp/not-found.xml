@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--+
+    | This a simple message page that is shown when a resource is not found.
+    |
+    | CVS $Id: not-found.xml,v 1.1 2003/04/01 21:25:10 sylvain Exp $
+    +-->
+<welcome>
+ <message>
+   Sorry, Cocoon coudln't find the resource you requested.
+ </message>
+  
+</welcome>

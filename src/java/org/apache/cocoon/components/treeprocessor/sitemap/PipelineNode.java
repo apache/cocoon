@@ -63,6 +63,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Map;
 
@@ -72,7 +73,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
@@ -86,7 +87,7 @@ public class PipelineNode
     private ProcessingNode error404;
 
     private ProcessingNode error500;
-
+    
     private ComponentManager manager;
 
     private boolean internalOnly = false;
@@ -161,22 +162,25 @@ public class PipelineNode
         } catch (ConnectionResetException cre) {
             // Will be reported by CocoonServlet, rethrowing
             throw cre;
-        } catch(ResourceNotFoundException rnfe) {
-            if (error404 != null) {
-                // There's a handler
-                return invokeErrorHandler(error404, rnfe, env);
-            } else {
-                // No handler : propagate
-                throw rnfe;
-            }
-        } catch(Exception e) {
-            // Rethrow exception for internal requests
-            if (error500 != null && !context.isInternalRequest()) {
-                return invokeErrorHandler(error500, e, env);
-            } else {
-                // No handler : propagate
-                throw e;
-            }
+            
+        } catch(Exception ex) {
+            
+            if (context.isInternalRequest()) {
+                // Propagate exception on internal requests
+                throw ex;
+                
+            } else if (error404 != null && ex instanceof ResourceNotFoundException) {
+			    // Invoke 404-specific handler
+			    return invokeErrorHandler(error404, ex, env);
+			    
+			} else if (error500 != null) {
+                // Invoke global handler
+                return invokeErrorHandler(error500, ex, env);
+                
+			} else {
+			    // No handler : propagate
+			    throw ex;
+			}
         }
     }
 
@@ -203,8 +207,12 @@ public class PipelineNode
                 this.manager.release(notifyingBuilder);
             }
 
+			Map objectModel = env.getObjectModel();
             // Add it to the object model
-            env.getObjectModel().put(Constants.NOTIFYING_OBJECT, currentNotifying );
+            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
+            
+            // Also add the exception
+            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
 
             // <notifier> is added in HandleErrorsNode
             return node.invoke(env, errorContext);

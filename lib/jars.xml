@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.21 2003/04/01 16:34:17 stephan Exp $
+    | CVS $Id: jars.xml,v 1.22 2003/04/01 21:25:08 sylvain Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -757,10 +757,15 @@
  </file>
 
  <file>
-  <title>???</title>
-  <description>???</description>
-  <used-by>Database block</used-by>
-  <lib>databases/lib/commons-lang-1.0.1.jar</lib>
-  <homepage>???</homepage>
+  <title>Jakarta Commons lang</title>
+  <description>
+   Part of jakarta-commons, it's a package that
+   provides extended services on base classes of the JDK,
+   such as unrolling exceptions.
+  </description>
+  <used-by>Cocoon</used-by>
+  <lib>core/commons-lang-1.0.1.jar</lib>
+  <homepage>http://jakarta.apache.org/commons/lang/</homepage>
  </file>
+
 </jars>

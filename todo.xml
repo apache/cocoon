@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.9 2003/03/23 07:17:16 crossley Exp $
+  CVS $Id: todo.xml,v 1.10 2003/04/01 21:25:08 sylvain Exp $
 -->
 
 <todo title="Things To Do">
@@ -72,12 +72,6 @@
    as a NotifyingBuilder.
   </action>  
   
-  <action context="code" assigned-to="SW">
-   Change the handle-errors to enable use of any Generator.
-   DOUBLE CHECK THAT REDIRECTS ARE FORBIDDEN.
-   http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=102633389301850&amp;w=2
-  </action>  
-
   <action context="code" assigned-to="open">
    Finish the design and contracts of flow. Add more tests and samples and
    documentation.

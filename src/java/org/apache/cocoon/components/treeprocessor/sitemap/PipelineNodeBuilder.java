@@ -62,14 +62,14 @@ import java.util.*;
  * Builds a &lt;map:pipeline&gt;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: PipelineNodeBuilder.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: PipelineNodeBuilder.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
  */
 
 public class PipelineNodeBuilder
     extends AbstractParentProcessingNodeBuilder
     implements ThreadSafe {
 
-    /** This builder has no parameters -- return <code>false</code> */
+    /** This builder can have parameters -- return <code>true</code> */
     protected boolean hasParameters() {
         return true;
     }
@@ -80,8 +80,14 @@ public class PipelineNodeBuilder
 
         this.treeBuilder.setupNode(node, config);
         node.setInternalOnly(config.getAttributeAsBoolean("internal-only", false));
+        
+        // Main (with no "type" attribute) error handler : new in Cocoon 2.1, must have a generator
+        ProcessingNode mainHandler = null;
+        
+        // 404 & 500 error handlers as in Cocoon 2.0.x, have an implicit generator
         ProcessingNode error404Handler = null;
         ProcessingNode error500Handler = null;
+        
         Configuration[] childConfigs = config.getChildren();
         List children = new ArrayList();
         for (int i = 0; i < childConfigs.length; i++) {
@@ -95,20 +101,43 @@ public class PipelineNodeBuilder
                     HandleErrorsNode handler = (HandleErrorsNode)builder.buildNode(childConfig);
                     int type = handler.getStatusCode();
 
-                    if ( (type == 404 && error404Handler != null) ||
-                         (type == 500 && error500Handler != null) ) {
-                        String msg = "Duplicate handle-errors at " + handler.getLocation();
-                        throw new ConfigurationException(msg);
-                    }
-
-                    if (type == 404) {
-                        error404Handler = handler;
-                    } else if (type == 500) {
-                        error500Handler = handler;
-                    } else {
-                        String msg = "Unknown handle-errors type (" + type + ") at " + handler.getLocation();
-                        throw new ConfigurationException(msg);
-                    }
+					switch(type) {
+					    case -1: // main handler (needs generator)
+					        if (mainHandler != null) {
+					            throw new ConfigurationException("Duplicate <handle-errors> at " + handler.getLocation());
+					        } else if (error500Handler != null || error404Handler != null) {
+					            throw new ConfigurationException("Cannot mix <handle-errors> with and without 'type' attribute at " +
+					          	    handler.getLocation());
+					        } else {
+					            mainHandler = handler;
+					        }
+					    break;
+					    
+					    case 404:
+					        if (error404Handler != null) {
+					            throw new ConfigurationException("Duplicate <handle-errors type='404' at " + handler.getLocation());
+					        } else if(mainHandler != null) {
+                                throw new ConfigurationException("Cannot mix <handle-errors> with and without 'type' attribute at " +
+                                    handler.getLocation());
+					        } else {
+					            error404Handler = handler;
+					        }
+					    break;
+					    
+					    case 500:
+					    	if (error500Handler != null) {
+                                throw new ConfigurationException("Duplicate <handle-errors type='500' at " + handler.getLocation());
+					    	} else if (mainHandler != null) {
+                                throw new ConfigurationException("Cannot mix <handle-errors> with and without 'type' attribute at " +
+                                    handler.getLocation());
+                            } else {
+                                error500Handler = handler;
+                            }
+					    break;
+					    
+					    default:
+					    	throw new ConfigurationException("Unknown handle-errors type (" + type + ") at " + handler.getLocation());
+					}
                 } else {
                     // Regular builder
                     children.add(builder.buildNode(childConfig));
@@ -117,7 +146,8 @@ public class PipelineNodeBuilder
         }
         node.setChildren(toNodeArray(children));
         node.set404Handler(error404Handler);
-        node.set500Handler(error500Handler);
+        // Set either main or error500 handler as only one can exist
+        node.set500Handler(error500Handler == null ? mainHandler : error500Handler);
         return node;
     }
 
