@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<samplesxconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.profile.ProfileManager']">
+<samplesxconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.profile.ProfileManager/Auth']">
 
  <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
  </component>
