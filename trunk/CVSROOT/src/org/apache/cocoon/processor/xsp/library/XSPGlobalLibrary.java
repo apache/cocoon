@@ -67,31 +67,19 @@ import org.apache.cocoon.framework.XObject;
 
 public class XSPGlobalLibrary {
   // XSPGlobal
-  public static Object getAttribute(XSPGlobal global, String name) {
-    if (name == null || name.length() == 0) {
-      return null;
-    }
-
-    return global.getAttribute(name);
-  }
-
   public static Element getAttribute(XSPGlobal global, String name, Document document) {
-    Object value = getAttribute(global, name);
-
-    if (value == null) {
-      return null;
-    }
-
+    Object value = global.getAttribute(name);
     Element element = document.createElement("global:attribute");
-
     element.setAttribute("name", name);
 
-    if (value instanceof XObject) {
-      DocumentFragment fragment = document.createDocumentFragment();
-      ((XObject) value).toDOM(fragment);
-      element.appendChild(fragment);
-    } else {
-      element.appendChild(document.createTextNode(value.toString()));
+    if (value != null) {
+      if (value instanceof XObject) {
+        DocumentFragment fragment = document.createDocumentFragment();
+        ((XObject) value).toDOM(fragment);
+        element.appendChild(fragment);
+      } else {
+        element.appendChild(document.createTextNode(value.toString()));
+      }
     }
 
     return element;
@@ -107,7 +95,6 @@ public class XSPGlobalLibrary {
 
     String[] attributeNames = new String[v.size()];
     v.copyInto(attributeNames);
-    Arrays.sort(attributeNames); // Since Java2
 
     return attributeNames;
   }
