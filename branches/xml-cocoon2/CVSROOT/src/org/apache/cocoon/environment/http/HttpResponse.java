@@ -103,7 +103,7 @@ public class HttpResponse implements HttpServletResponse {
     }
 
     /**
-     * @deprecated	As of version 2.1, use 
+     * @deprecated	As of version 2.1, use
      *			encodeRedirectURL(String url) instead
      */
     public String encodeRedirectUrl(String url) {
@@ -111,8 +111,8 @@ public class HttpResponse implements HttpServletResponse {
     }
 
     /**
-     * @deprecated As of version 2.1, due to ambiguous meaning of the 
-     * message parameter. To set a status code 
+     * @deprecated As of version 2.1, due to ambiguous meaning of the
+     * message parameter. To set a status code
      * use <code>setStatus(int)</code>, to send an error with a description
      * use <code>sendError(int, String)</code>.
      */
@@ -121,24 +121,17 @@ public class HttpResponse implements HttpServletResponse {
     }
 
     /* The ServletResponse interface methods */
-  
+
     public String getCharacterEncoding() {
         return this.res.getCharacterEncoding();
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        //FIXME: How to query if a Serializer/Reader is calleng this ?
-        if (1==1 /* is the calling object not a serializer/reader ? */) {
-            throw new IllegalStateException ("you are not a serializer or reader");
-        }
-        return this.res.getOutputStream();
+        throw new IllegalStateException ("you are not a serializer or reader");
     }
 
     public PrintWriter getWriter() throws IOException {
-        if (1==1 /* is the calling object not a serializer/reader ? */) {
-            throw new IllegalStateException ("you are not a serializer or reader");
-        }
-        return this.res.getWriter();
+        throw new IllegalStateException ("you are not a serializer or reader");
     }
 
     public void setContentLength(int len) {
