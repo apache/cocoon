@@ -25,7 +25,7 @@
         </p>
         
         <form action="findIt">
-          <input type="text" name="queryString" size="60" value="{@search:query-string}"/>
+          <input type="text" name="queryString" size="60" value="{@query-string}"/>
           &#160;
           <input type="submit" name="Search" value="Search"/>
         </form>
@@ -72,16 +72,16 @@
 
   <xsl:template match="search:hits">
     <p>
-      Total Hits <xsl:value-of select="@search:total-count"/>
-      Pages <xsl:value-of select="@search:count-of-pages"/>
+      Total Hits <xsl:value-of select="@total-count"/>
+      Pages <xsl:value-of select="@count-of-pages"/>
     </p>
     <p>
       Page:
       <xsl:for-each select="/search:results/search:navigation/search:navigation-page">
         <xsl:call-template name="navigation-link"> 
-          <xsl:with-param name="query-string" select="/search:results/@search:query-string"/>
-          <xsl:with-param name="page-length" select="/search:results/@search:page-length"/>
-          <xsl:with-param name="start-index" select="@search:start-index"/>
+          <xsl:with-param name="query-string" select="/search:results/@query-string"/>
+          <xsl:with-param name="page-length" select="/search:results/@page-length"/>
+          <xsl:with-param name="start-index" select="@start-index"/>
           <xsl:with-param name="link-text" select="position()"/>
         </xsl:call-template>
       </xsl:for-each>
@@ -89,12 +89,12 @@
     
     <p>
     <xsl:call-template name="navigation-paging-link">
-      <xsl:with-param name="query-string" select="/search:results/@search:query-string"/>
-      <xsl:with-param name="page-length" select="/search:results/@search:page-length"/>
-      <xsl:with-param name="has-previous" select="/search:results/search:navigation/@search:has-previous"/>
-      <xsl:with-param name="has-next" select="/search:results/search:navigation/@search:has-next"/>
-      <xsl:with-param name="previous-index" select="/search:results/search:navigation/@search:previous-index"/>
-      <xsl:with-param name="next-index" select="/search:results/search:navigation/@search:next-index"/>
+      <xsl:with-param name="query-string" select="/search:results/@query-string"/>
+      <xsl:with-param name="page-length" select="/search:results/@page-length"/>
+      <xsl:with-param name="has-previous" select="/search:results/search:navigation/@has-previous"/>
+      <xsl:with-param name="has-next" select="/search:results/search:navigation/@has-next"/>
+      <xsl:with-param name="previous-index" select="/search:results/search:navigation/@previous-index"/>
+      <xsl:with-param name="next-index" select="/search:results/search:navigation/@next-index"/>
     </xsl:call-template>
     </p>
     <hr/>
@@ -110,12 +110,12 @@
   <xsl:template match="search:navigation">
     <p>
     <xsl:call-template name="navigation-paging-form">
-      <xsl:with-param name="query-string"><xsl:value-of select="/search:results/@search:query-string"/></xsl:with-param>
-      <xsl:with-param name="page-length"><xsl:value-of select="/search:results/@search:page-length"/></xsl:with-param>
-      <xsl:with-param name="has-previous"><xsl:value-of select="@search:has-previous"/></xsl:with-param>
-      <xsl:with-param name="has-next"><xsl:value-of select="@search:has-next"/></xsl:with-param>
-      <xsl:with-param name="previous-index"><xsl:value-of select="@search:previous-index"/></xsl:with-param>
-      <xsl:with-param name="next-index"><xsl:value-of select="@search:next-index"/></xsl:with-param>
+      <xsl:with-param name="query-string"><xsl:value-of select="/search:results/@query-string"/></xsl:with-param>
+      <xsl:with-param name="page-length"><xsl:value-of select="/search:results/@page-length"/></xsl:with-param>
+      <xsl:with-param name="has-previous"><xsl:value-of select="@has-previous"/></xsl:with-param>
+      <xsl:with-param name="has-next"><xsl:value-of select="@has-next"/></xsl:with-param>
+      <xsl:with-param name="previous-index"><xsl:value-of select="@previous-index"/></xsl:with-param>
+      <xsl:with-param name="next-index"><xsl:value-of select="@next-index"/></xsl:with-param>
     </xsl:call-template>
     </p>
   </xsl:template>
@@ -123,14 +123,14 @@
   <xsl:template match="search:hit">
     <tr>
       <td>
-        <xsl:value-of select="format-number( @search:score, '### %' )"/>
+        <xsl:value-of select="format-number( @score, '### %' )"/>
       </td>
       <td>
-        <xsl:value-of select="@search:rank"/>
+        <xsl:value-of select="@rank"/>
       </td>
       <td>
-        <a target="_blank" href="{@search:uri}">
-          <xsl:value-of select="@search:uri"/>
+        <a target="_blank" href="{@uri}">
+          <xsl:value-of select="@uri"/>
         </a>
       </td>
     </tr>

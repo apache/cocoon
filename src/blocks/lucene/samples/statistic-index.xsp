@@ -33,21 +33,34 @@
         throw new ProcessingException( "Exception in init()!", e );
       }
     }
+
+    void closeReader( IndexReader reader ) {
+      if (reader != null) {
+        try {
+          reader.close();
+        } catch (IOException ioe) {
+        }
+      }
+    }
     
     int numDocs() throws ProcessingException {
+      IndexReader reader = null;
       try {
-        IndexReader reader = IndexReader.open( directory );
+        reader = IndexReader.open( directory );
         int num_docs;
         num_docs = reader.numDocs();
         return num_docs;
       } catch (Exception e) {
         throw new ProcessingException( "Exception in numDocs()!", e );
+      } finally {
+        closeReader(reader);
       }
     }
     
     Map allDocuments() throws ProcessingException {
+      IndexReader reader = null;
       try {
-        IndexReader reader = IndexReader.open( directory );
+        reader = IndexReader.open( directory );
         
         HashMap fieldsStatistic = new HashMap();
         
@@ -76,12 +89,15 @@
         //map.keySet();
       } catch (Exception e) {
         throw new ProcessingException( "Exception allDocuments()!", e );
+      } finally {
+        closeReader(reader);
       }
     }
 
     Map allTerms() throws ProcessingException {
+      IndexReader reader = null;
       try {
-        IndexReader reader = IndexReader.open( directory );
+        reader = IndexReader.open( directory );
         
         TermEnum te = reader.terms();
         HashMap all_fields = new HashMap();
@@ -103,6 +119,8 @@
         return all_fields;
       } catch (Exception e) {
         throw new ProcessingException( "Exception allDocuments()!", e );
+      } finally {
+        closeReader(reader);
       }
     }
     Map sort( Map map ) {
@@ -117,6 +135,11 @@
     </xsp:logic>
     <title>Index Statistics</title>
     <content>
+      <para>
+        <font size="-1">
+          <a href="welcome">Welcome</a>
+        </font>
+      </para>
       <para>
         Statistics:
       </para>

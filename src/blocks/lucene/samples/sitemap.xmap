@@ -78,7 +78,9 @@
         "[...] All <map:parameter> declarations will be made
         available in the XSLT stylesheet as xsl:variables. [...]" 
       -->
-      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl"/>
+      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize/>
     </map:match>
 
