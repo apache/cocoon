@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * </bookmarks>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BookmarkAction.java,v 1.2 2003/12/12 10:13:34 cziegeler Exp $
+ * @version CVS $Id: BookmarkAction.java,v 1.3 2003/12/12 11:53:50 cziegeler Exp $
 */
 public class BookmarkAction
 extends ServiceableAction
@@ -211,12 +211,16 @@ implements ThreadSafe, Parameterizable {
                 // get the history
                 final List history = (List)session.getAttribute("portal-history");
                 if ( history != null ) {
-                    final List state = (List)history.get(Integer.parseInt(historyValue));
+                    final int index = Integer.parseInt(historyValue);
+                    final List state = (List)history.get(index);
                     if ( state != null ) {
                         final Iterator iter = state.iterator();
                         while ( iter.hasNext() ) {
                             Mapping m = (Mapping)iter.next();
                             events.add(m.getEvent(service, null));
+                        }
+                        while (history.size() > index ) {
+                            history.remove(history.size()-1);
                         }
                     }
                 }
