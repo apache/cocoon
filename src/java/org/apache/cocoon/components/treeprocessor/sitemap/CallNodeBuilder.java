@@ -71,38 +71,37 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
         }
 
         this.treeBuilder.setupNode(this.node, config);
-        if (node instanceof Configurable)
+        if (node instanceof Configurable) {
             ((Configurable)this.node).configure(config);
+        }
 
         return this.node;
     }
 
-    public void linkNode()
-        throws Exception
-    {
-      if (resourceName != null) {
-        // We have a <map:call resource="..."/>
-        CategoryNode resources
-            = CategoryNodeBuilder.getCategoryNode(treeBuilder, "resources");
+    public void linkNode() throws Exception {
+        if (resourceName != null) {
+            // We have a <map:call resource="..."/>
+            CategoryNode resources
+                    = CategoryNodeBuilder.getCategoryNode(treeBuilder, "resources");
 
-        if (resources == null)
-            throw new ConfigurationException("This sitemap contains no resources. Cannot call at " + node.getLocation());
+            if (resources == null)
+                throw new ConfigurationException("This sitemap contains no resources. Cannot call at " + node.getLocation());
 
-        ((CallNode)this.node).setResource(resources, this.resourceName);
-      }
-      else {
-        // We have a <map:call> with either "function" or
-        // "continuation", or both specified
+            ((CallNode)this.node).setResource(resources, this.resourceName);
+        }
+        else {
+            // We have a <map:call> with either "function" or
+            // "continuation", or both specified
 
-        // Check to see if a flow has been defined in this sitemap
-        FlowNode flow = (FlowNode)treeBuilder.getRegisteredNode("flow");
-        if (flow == null)
-            throw new ConfigurationException("This sitemap contains no control flows defined, cannot call at " + node.getLocation() + ". Define a control flow using <map:flow>, with embedded <map:script> elements.");
+            // Check to see if a flow has been defined in this sitemap
+            FlowNode flow = (FlowNode)treeBuilder.getRegisteredNode("flow");
+            if (flow == null)
+                throw new ConfigurationException("This sitemap contains no control flows defined, cannot call at " + node.getLocation() + ". Define a control flow using <map:flow>, with embedded <map:script> elements.");
 
-        // Get the Interpreter instance and set it up in the
-        // CallFunctionNode function
-        Interpreter interpreter = flow.getInterpreter();
-        ((CallFunctionNode)node).setInterpreter(interpreter);
-      }
+            // Get the Interpreter instance and set it up in the
+            // CallFunctionNode function
+            Interpreter interpreter = flow.getInterpreter();
+            ((CallFunctionNode)node).setInterpreter(interpreter);
+        }
     }
 }
