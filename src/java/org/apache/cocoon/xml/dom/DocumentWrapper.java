@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.5 2004/03/17 12:09:52 cziegeler Exp $
+ * @version CVS $Id: DocumentWrapper.java,v 1.6 2004/06/11 11:34:32 joerg Exp $
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
@@ -813,7 +813,14 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node removeChild(Node oldChild) throws DOMException {
         return this.document.removeChild(oldChild);
     }
-    
+
+    /**
+     * @since DOM Level 3
+     */
+    public Node renameNode(Node node, String namespaceURI, String qualifiedName) throws DOMException {
+        throw new UnsupportedOperationException("This method was just added for providing future compatibility to JDK 1.5's DOM level 3 Document interface.");
+    }
+
     /** Replaces the child node <code>oldChild</code> with <code>newChild</code>
      *  in the list of children, and returns the <code>oldChild</code> node.
      * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
