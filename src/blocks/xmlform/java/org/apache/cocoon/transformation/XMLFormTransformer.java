@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.6 2003/05/19 10:30:24 stephan Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.7 2003/08/04 03:16:34 joerg Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer {
 
@@ -93,7 +93,7 @@ public class XMLFormTransformer extends AbstractSAXTransformer {
     private final static String NS_PREFIX = "xf";
 
     public final static Attributes NOATTR = new AttributesImpl();
-    private final static String XMLNS_PREFIX = "xmlns";
+    // private final static String XMLNS_PREFIX = "xmlns";
 
     /**
      * The main tag in the XMLForm namespace
