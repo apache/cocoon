@@ -65,80 +65,91 @@ import java.util.*;
  */
 class ColumnFormatter {
 
-	protected Properties formats_by_name = new Properties();
-	protected Properties formats_by_type = new Properties();
+    protected Properties formats_by_name = new Properties();
+    protected Properties formats_by_type = new Properties();
 
-	protected ColumnFormatter(Element query_element) {
-		NodeList children = query_element.getElementsByTagName("column");
-		Element ary[] = new Element[children.getLength()];
-		for (int i=0; i<ary.length; i++) {
-			ary[i] = (Element)children.item(i);
-		}
-		for (int i=0; i<ary.length; i++) {
-			Element element = ary[i];
-			String name = element.getAttribute("name");
-			String type = element.getAttribute("type");
-			String format = element.getAttribute("format");
-			putFormat(name,type,format);
-		}
-	}
+    protected ColumnFormatter(Element query_element) {
+        NodeList children = query_element.getElementsByTagName("column");
+        Element ary[] = new Element[children.getLength()];
+        for (int i=0; i<ary.length; i++) {
+            ary[i] = (Element)children.item(i);
+        }
+        for (int i=0; i<ary.length; i++) {
+            Element element = ary[i];
+            String name = element.getAttribute("name");
+            String type = element.getAttribute("type");
+            String format = element.getAttribute("format");
+            putFormat(name,type,format);
+        }
+    }
 
-	protected void putFormat(String name, String type, String format) {
-		if (format == null || format.equals("")) {
-			return;
-		}
-		if (name == null || name.equals("") && (type != null && !type.equals(""))) {
-			formats_by_type.put(type,format);
+    protected void putFormat(String name, String type, String format) {
+        if (format == null || format.equals("")) {
+            return;
+        }
+        if (name == null || name.equals("") && (type != null && !type.equals(""))) {
+            formats_by_type.put(type,format);
+        } else {
+            formats_by_name.put(name,format);
+        }
+    }
+
+    protected String getFormat(Column column) {
+        String format = formats_by_name.getProperty(column.name);
+        if (format == null) {
+            format = formats_by_type.getProperty(column.type);
+        }
+        return format;
+    }
+
+    protected void addColumnNode(Document document, Element parent, Column column, Object value, int i) throws SQLException {
+        String format = getFormat(column);
+        if (format != null) {
+            if (column.type.equals("timestamp") || column.type.equals("time") || column.type.equals("date") || column.type.equals("datetime")) {
+                if (value instanceof java.util.Date) {
+                    SimpleDateFormat date_format = new SimpleDateFormat(format);
+                    parent.appendChild(document.createTextNode(date_format.format((java.util.Date)value)));
+                }
+                else {
+                    //We can't format this object as a Date 'cos it isn't one!
+                    //Fall back to simple String format
+                    parent.appendChild(document.createTextNode(value.toString()));
+                }
+                return;
+            } else if (column.type.equals("varchar") || column.type.equals("text")) {
+				String strvalue = getStringValue(value);
+                if (format.equals("br")) {
+                    StringBuffer sb = new StringBuffer();
+                    StringCharacterIterator iter = new StringCharacterIterator(strvalue);
+                    for (char c = iter.first(); c != iter.DONE; c = iter.next()) {
+                        if (c == '\n') {
+                            if (sb.length() > 0) {
+                                parent.appendChild(document.createTextNode(sb.toString()));
+                                sb.setLength(0);
+                            }
+                            parent.appendChild(document.createElement("br"));
+                        } else {
+                            sb.append(c);
+                        }
+                    }
+                    if (sb.length() > 0) {
+                        parent.appendChild(document.createTextNode(sb.toString()));
+                    }
+                    return;
+                }
+            }
+        }
+        parent.appendChild(document.createTextNode(getStringValue(value)));
+    }
+
+	protected static String getStringValue(Object value) {
+		if (value instanceof byte[]) {
+			return new String((byte[])value);
+		} else if (value instanceof char[]) {
+			return new String((char[])value);
 		} else {
-			formats_by_name.put(name,format);
+			return value.toString();
 		}
-	}
-
-	protected String getFormat(Column column) {
-		String format = formats_by_name.getProperty(column.name);
-		if (format == null) {
-			format = formats_by_type.getProperty(column.type);
-		}
-		return format;
-	}
-
-	protected void addColumnNode(Document document, Element parent, Column column, Object value, int i) throws SQLException {
-		String format = getFormat(column);
-		if (format != null) {
-			if (column.type.equals("timestamp") || column.type.equals("time") || column.type.equals("date") || column.type.equals("datetime")) {
-                                if (value instanceof java.util.Date) {
-				    SimpleDateFormat date_format = new SimpleDateFormat(format);
-				    parent.appendChild(document.createTextNode(date_format.format((java.util.Date)value)));
-                                }
-                                else {
-            	                    //We can't format this object as a Date 'cos it isn't one!
-    	                            //Fall back to simple String format
-				    parent.appendChild(document.createTextNode(value.toString()));
-                                }
-				return;
-			} else if (column.type.equals("varchar") || column.type.equals("text")) {
-				if (format.equals("br")) {
-					StringBuffer sb = new StringBuffer();
-					StringCharacterIterator iter = new StringCharacterIterator(value.toString());
-					for (char c = iter.first(); c != iter.DONE; c = iter.next()) {
-						if (c == '\n') {
-							if (sb.length() > 0) {
-								parent.appendChild(document.createTextNode(sb.toString()));
-								sb.setLength(0);
-							}
-							parent.appendChild(document.createElement("br"));
-						} else {
-							sb.append(c);
-						}
-					}
-					if (sb.length() > 0) {
-						parent.appendChild(document.createTextNode(sb.toString()));
-					}
-					return;
-				}
-			}
-		}
-                parent.appendChild(document.createTextNode(value.toString()));
 	}
 
 }
