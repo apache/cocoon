@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Apache Cocoon Kernel" default="javadoc">
+
+    <description>Apache Cocoon Kernel</description>
+
+    <property file="build.properties"/>   
+
+    <property name="source.dir"             value="${basedir}/sources"/>
+    <property name="source.classes.dir"     value="${source.dir}/classes"/>
+    <property name="source.javadoc.dir"     value="${source.dir}/javadoc"/>
+
+    <property name="build.dir"              value="${basedir}/build"/>
+    <property name="build.classes.dir"      value="${build.dir}/classes"/>
+    <property name="build.javadoc.dir"      value="${build.dir}/javadoc"/>
+
+    <path id="classpath">
+        <fileset dir="${basedir}/lib">
+            <include name="*.jar"/>
+            <exclude name="**/.*"/>
+            <include name="**/*~"/>
+        </fileset>
+    </path>
+
+    <target name="prepare" description="Initialize the build environment">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.javadoc.dir}"/>
+    </target>
+
+    <target name="javadoc" depends="prepare" description="Build API documentation">
+        <copy filtering="true" tofile="${build.javadoc.dir}/overview.tmp.html"
+                file="${source.javadoc.dir}/overview.html">
+            <filterset>
+                <filtersfile file="build.properties"/>
+            </filterset>
+        </copy>
+
+        <javadoc destdir="${build.javadoc.dir}" classpathref="classpath" author="true"
+                version="true" windowtitle="${project.name} ${project.version}"
+                overview="${build.javadoc.dir}/overview.tmp.html" additionalparam="-breakiterator">
+            <packageset dir="${source.classes.dir}"/>
+            <link packagelistloc="${source.javadoc.dir}/j2se-1.4"
+                    offline="true" href="http://java.sun.com/j2se/1.4/docs/api"/>   
+            <link packagelistloc="${source.javadoc.dir}/j2ee-1.4"
+                    offline="true" href="http://java.sun.com/j2ee/1.4/docs/api"/>   
+        </javadoc>
+        <delete file="${build.javadoc.dir}/overview.tmp.html"/>
+    </target>
+
+</project>
