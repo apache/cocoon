@@ -316,10 +316,10 @@ public class QuartzJobScheduler extends AbstractLogEnabled
             // we cannot create the same scheduler again
             final String runID = new Date().toString().replace(' ', '_');
             final QuartzThreadPool pool = createThreadPool(this.config.getChild("thread-pool"));
-            final JobStore store = createJobStore(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, this.config.getChild("store"));
-            DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool, store);
+            final JobStore store = createJobStore(DEFAULT_QUARTZ_SCHEDULER_NAME + runID, runID, this.config.getChild("store"));
+            DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME + runID, runID, pool, store);
             // scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
-            scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
+            scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME + runID);
         } catch (final SchedulerException se) {
             throw new ConfigurationException("cannot create a quartz scheduler", se);
         }
