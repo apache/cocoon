@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="index.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<samples>
+ <group name="General Examples">
+  <sample name="Hello World" url="hello/hello-page.xml">
+   This is a very simple demostration of how to use Cocoon. A simple XML page
+   is transformed into an HTML page.
+  </sample>
+  <sample name="Hello World (with external message)" url="entities/entities-page.xml">
+   This is a very simple demostration of how to use Cocoon. Same page as above,
+   but some of its content is included using XML external entities.
+  </sample>
+  <sample name="Hello World (with imported stylesheet)" url="import/import-page.xml">
+   This is a very simple demostration of how to use Cocoon. Same page as above,
+   but its stylesheet is an extention of the previous one and changes some
+   of its properties.
+  </sample>
+ </group>
+ 
+ <group name="XML-ized web sites">
+  <sample name="java.apache.org" url="sites/java.apache.org/news-page.xml">
+   This page shows a much more complex example that shows how powerful 
+   is the style separation and how powerful XML+XSL can be even for
+   static web publishing.
+  </sample>
+  <sample name="jakarta.apache.org" url="sites/jakarta.apache.org/index-page.xml">
+   This pages shows the same thing for the Apache Jakarta web site.
+  </sample>
+ </group>
+
+ <group name="Dynamic content Generation">
+  <sample name="First XSP Page" url="xsp/page.xml?message=Hello%20World!">
+   This page shows the power of XSP technology with Java logic. In this page
+   logic and content are mixed.
+  </sample>
+  
+  <sample name="First XSP Page (pure content version)" url="xsp/clean-page.xml?message=Hello%20World!">
+   This page generates the exact same output, but it's created by XSL-transforming
+   a pure-content page into an XSP page, thus providing a complete separation
+   between content and logic. Note that the transformation needed to generate
+   the XSP page is compiled in, and for this reason it's not executed at request
+   time. This is due to the fact that unlike other server pages technologies,
+   XSP are written to be fully integrated with the XML model and languages.
+  </sample>
+
+  <sample name="First XSP Page (namespace library version)" url="xsp/lib-page.xml?message=Hello%20World!">
+   This page generates the exact same output, but it's created by applying
+   namespace-driven element libraries instead of applying directly an XSLT
+   logicsheet. This allows easier reuse of what is usually called a "tag library"
+   to create equivalent functionalities of other logic-free tag-driven
+   dynamic content generation technologies (such as, for example, 
+   Allaire's ColdFusion or Ricoh's PIA).
+  </sample>
+
+  <sample name="DCP using Java" url="dcp/java/sample-page.xml">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger Java logic execution.
+  </sample>
+
+  <sample name="DCP using ECMAScript" url="dcp/ecmascript/sample-page.xml">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger ECMAScript logic execution.
+  </sample>
+  
+  <sample name="Special Producer" url="dummy.xml?producer=dummy">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger ECMAScript logic execution.
+  </sample>
+ </group>
+ 
+ <group name="Formatting Object Rendering">
+  <sample name="Simple FO Example" url="fo/test-fo.xml">
+   This page shows some potentials of the XSL Formatting Object specifications
+   tranformed into PDF (we suggest you to install Adobe Acrobat Reader as your
+   browser plugin for smoother integration)
+  </sample>
+  
+  <sample name="More complex FO + SVG Example" url="fo/test2-fo.xml">
+   This page shows higher potentials of the XSL Formatting Object specifications
+   when mixed with other graphic outline specification such as SVG (Scalable
+   Vector Graphics). Both are interpreted by FOP and rendered into PDF as
+   area and vector graphics.
+  </sample>
+    
+  <sample name="Novel FO formatting" url="fo/darkness-novel.xml">
+   In this example, part of Joseph Conrad's "The Heart of Darkness" novel
+   is taken from its orginal style-free XML format and rendered into PDF
+   using an XML->FO stylesheet.
+  </sample>
+ </group>
+ 
+ <group name="New media for your web site">
+  <sample name="VRML" url="vrml/hello.xml">
+   In this example, we show how Cocoon is able to generate virtual reality
+   models by applying the appropriate stylesheet to an XML page.
+  </sample>
+
+  <sample name="Web and WAP" url="wap/example-portfolio.xml">
+   In this example, we show how Cocoon is able to understand which browser
+   is requesting the page and applies a different stylesheet to the same
+   XML page to render on the different clients. This page is formatted in 
+   WML (Wireless Markup Language) if the Nokia Wap Toolkit 1.2 browser (which 
+   you could get for free from <a href="http://www.nokia.com">Nokia</a>)
+   requests this page. Look into the example source to change this for your
+   favorite WAP browser/cell-phone/PDA.
+  </sample>
+
+  <sample name="VoiceML" url="vml/hello-page.xml">
+   This page has the same exact source file as the hello world example, but
+   the stylesheet formats it using the VoiceML language. You page has been tested
+   with the Motorola VoiceML SDK which you get for free from 
+   <a href="http://www.motorola.com">Motorola</a>, but should work with any
+   other VoiceML browser.
+  </sample>
+ </group>
+</samples>

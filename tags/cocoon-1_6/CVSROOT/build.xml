@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+
+<!-- ===========================================================================
+
+ Cocoon build file 
+ 
+Authors:
+ Stefano Mazzocchi <stefano@apache.org>
+ 
+Todo:
+ - write the target rule that reacts on class presence.
+ 
+Legal: 
+  Copyright (c) 1999 The Apache Software Foundation. All Rights Reserved.
+
+================================================================================
+
+
+                             How to build Cocoon
+                             ===================
+                             
+                           
+Cocoon is an highly componentized software and for its full compilation 
+requires many different packages to be present in the compiler classpath.
+
+This is the main reason why the distribution includes a precompiled version
+that should be handy for most users, but power users willing to further tune
+the software or developers willing to play around with it, must be able
+to compile it and test it.
+
+The Cocoon build system is based on Jakarta Ant, which is a Java building tool
+originally developed for the Jakarta Tomcat project but now used in many other
+Apache projects and extended by many developers, myself included.
+
+Ant is a little but very handy tool that uses a build file written in XML 
+(this file) as building instructions. There are targets (like in make) and
+tasks. Each task is indicated by an element and it's implemented by a 
+dynamically loaded class which is "introspected" at runtime with the 
+element attributes, using bean-like 'setter' methods.
+
+First thing you should do to be able to compile Cocoon or generate its 
+documentation, is to install Ant on your system. Unfortunately, there is no
+Ant distribution (but we're planning to create one soon), so you have to 
+use CVS to checkout the "jakarta-tools" module under the jakarta.apache.org
+CVS repository.
+
+Once, you've done the checkout, check into the "/ant" directory where you'll 
+find
+
+  - ant.jar
+  - projectx-tr2.jar
+  - servlet-2.2.0.jar
+  
+that you should place into your classpath.
+
+Ok, at this point, you need to make the java compiler available so you should
+either add
+ 
+  - tools.jar
+
+that you find in your <java_home>/lib/ directory in case you have Java 1.2 or
+later. If you have Java 1.1.x, the required javac classes are located in your
+classes.zip file and should already be in your classpath (otherwise, make sure).
+
+Now that the build tool is in place, you need to download the following
+packages from the indicated URL:
+
+ Apache Xerces 1.0.1+   - http://xml.apache.org/dist/
+ Apache Xalan 0.19.1+   - http://xml.apache.org/dist/
+ Apache FOP 0.12.0+     - http://xml.apache.org/dist/
+ 
+ Sun ProjectX (TR2)     - jakarta-tools CVS at jakarta.apache.org
+ Sun Servlet API (2.2+) - jakarta-tools CVS at jakarta.apache.org
+ Sun JNDI API (1.2.1+)  - http://java.sun.com/products/jndi/index.html
+
+ James Clark XT         - ftp://ftp.jclark.com/pub/xml/xt.zip
+ FESI (1.21+)           - http://home.worldcom.ch/jmlugrin/fesi/download.html
+ GNU RegExp (1.0.8+)    - http://www.cacas.org/java/gnu/regexp/
+
+ StyleBook (1.0b1+)     - xml-stylebook CVS at xml.apache.org
+ 
+[stylebook is required only for documentation generation, not for compilation]
+ 
+once you have placed all the ".jar" files in your classpath, you're ready to
+build the whole thing.
+
+To do this, make your current working directory the one where this very file
+if located and type
+
+  java org.apache.tools.ant.Main
+
+if everything is right and all the required packages are visible, this action
+will generate a file called "Cocoon.jar" in the "./build" directory. Note, that
+if you do further development, compilation time is reduced since Ant is able
+to detect which files have changed an to recompile them at need.
+
+Also, you'll note that reusing a single JVM instance for each task, increases
+tremendously the performance of the whole build system, compared to other
+tools (i.e. make or shell scripts) where a new JVM is started for each task.
+
+These are the meaningful targets for this build file:
+
+ - package -> creates ./build/Cocoon.jar
+ - docs -> generates the HTML documentation in ./build/docs (requires StyleBook)
+ - javadocs -> generates the API documentation in ./build/javadocs
+ - dist -> generates the Cocoon distribution
+ - site -> generates the web site [useful only for site maintainers]
+
+    ================================ FAQ ================================
+
+1) do I really need to download all these packages?
+ 
+No, the core Cocoon classes only require the Servlet API for compilation, but
+each Cocoon module requires one of more of the above packages. We are working
+to allow Ant to execute a target if a specified class is found in the classpath:
+this will allow you to place only the packages you care about, leaving the
+unsupported classes out of the compilation. For now, it's easier to download
+all the required packages or to remove/rename the Cocoon modules you don't use.
+
+2) why is the "javadoc2" task not working?
+
+There are problems with javadoc in the java 1.2 platform and Ant due to some
+security manager problems. While the Ant team works a solution around it,
+you should go into the "AntSecurityManager.java" class, remove the commented 
+out methods, recompile ant under java 1.2 and it works. Or, wait for a new
+version of ant that is already scheduled to fix that problem.
+
+3) why not using make or more standard stuff?
+
+ - performance: Ant is faster because it allows a single JVM to be reused
+ - portability: Ant is pure java, very small, works every java platform and can
+   be easily tuned for special needs.
+ - fitness: unlike other tools, Ant is specifically developed for java building
+   and it adds features that are found in every java building process 
+   transparently reducing verbosity, increasing visibility and reducing 
+   management and portability costs.
+ - simplicity: Ant is not as flexible as other systems on purpose. This is done
+   to allow newbies, expecially from the non-Unix world to be up to speed
+   sooner, without requiring to learn other languages and paradigms.
+   
+4) can I use Ant for my stuff?
+
+Sure. We highly welcome you to do so, but please, if you clone or copy parts
+of build files, give credits to the original authors. Thank you.
+
+============================================================================ -->
+
+<project default="package" basedir=".">
+
+  <property name="name" value="Cocoon"/>
+  <property name="version" value="1.6"/>
+  <property name="year" value="1999-2000"/>
+
+  <property name="build.compiler" value="classic"/>
+  <!-- <property name="build.compiler" value="jikes"/> -->
+  <property name="debug" value="off"/>
+  <property name="optimize" value="on"/>
+  <property name="deprecation" value="off"/>
+
+  <property name="src.dir" value="./src"/>
+  <property name="dtd.dir" value="./dtd"/>
+  <property name="docs.dir" value="./docs"/>
+  <property name="sheets.dir" value="./stylesheets"/>
+  <property name="images.dir" value="./resources"/>
+  <property name="samples.dir" value="./samples"/>
+  <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
+  <property name="packages" value="org.apache.cocoon.*"/>
+
+  <property name="sbk.docs" value="./build/sbkdocs"/>
+  <property name="style" value="../xml-site/style/"/>
+  <property name="xslt" value="org.apache.xalan.xslt.Process"/>
+  <property name="xslt.params" value="-xml -validate -indent 1"/>
+  <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
+
+  <property name="build.dir" value="./build"/>
+  <property name="build.src" value="./build/src"/>
+  <property name="build.dest" value="./build/classes"/>
+  <property name="build.docs" value="./build/docs"/>
+  <property name="build.javadocs" value="./build/javadocs"/>
+
+  <property name="dist.dir" value="./dist"/>
+
+  <property name="site.dir" value="../xml-site/sources/cocoon"/>
+  <property name="site.docs" value="../xml-site/targets/cocoon"/>
+
+  <!-- =================================================================== -->
+  <!-- Help on usage                                                       -->
+  <!-- =================================================================== -->
+  <target name="usage">
+    <echo message=""/>
+    <echo message=""/>
+    <echo message="Cocoon Build file"/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=" available targets are:"/>
+    <echo message=""/>
+    <echo message="   package  --> generates the Cocoon.jar file (default)"/>
+    <echo message="   compile  --> compiles the source code"/>
+    <echo message="   docs     --> generates the HTML documentation"/>
+    <echo message="   javadocs --> generates the API documentation (java 1.2 only)"/>
+    <echo message="   dist     --> generates the Cocoon distribution"/>
+    <echo message="   clean    --> cleans up the directory"/>
+    <echo message="   site     --> generates the Cocoon web site"/>
+    <echo message=""/>
+    <echo message=" See the comments inside the build.xml file for more details."/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=""/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="prepare-src" depends="prepare">
+    <!-- create directories -->
+    <mkdir dir="${build.src}"/>
+    <mkdir dir="${build.dest}"/>
+
+    <!-- copy src files -->
+    <copydir src="${src.dir}" dest="${build.src}"/>
+
+    <!-- substitute tokens as needed -->
+    <replace file="${build.src}/${version.file}" token="@@version@@" value="${version}"/>
+    <replace file="${build.src}/${version.file}" token="@@year@@" value="${year}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare-src">
+    <javac srcdir="${build.src}" destdir="${build.dest}" classpath="${classpath}" debug="${debug}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the class package                                           -->
+  <!-- =================================================================== -->
+  <target name="package" depends="compile">
+    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/Manifest.mf" items="org"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Converts Docs to Stylebook DTDs                                     -->
+  <!-- =================================================================== -->
+  <target name="docs-convert" depends="prepare">
+    <mkdir dir="${sbk.docs}"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${sbk.docs}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${sbk.docs}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${sbk.docs}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/xspprocessor.xml -out ${sbk.docs}/xspprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${sbk.docs}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${sbk.docs}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${sbk.docs}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${sbk.docs}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${sbk.docs}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${sbk.docs}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/technologies.xml -out ${sbk.docs}/technologies-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dynamic.xml -out ${sbk.docs}/dynamic-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/faq.xml -out ${sbk.docs}/faq-sbk.xml -xsl ${sheets.dir}/faq-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/WD-xsp.xml -out ${sbk.docs}/WD-xsp-sbk.xml -xsl ${sheets.dir}/spec-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in changes.xml -out ${sbk.docs}/changes-sbk.xml -xsl ${sheets.dir}/changes-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in todo.xml -out ${sbk.docs}/todo-sbk.xml -xsl ${sheets.dir}/todo-stylebook.xsl"/>
+    <copydir src="${images.dir}" dest="${sbk.docs}/images"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Generate HTML docs                                                  -->
+  <!-- =================================================================== -->
+  <target name="docs" depends="docs-convert">
+    <mkdir dir="${build.docs}"/>
+    <copyfile src="${docs.dir}/docs-book.xml" dest="${sbk.docs}/book.xml"/>
+    <java class="${doc.generator}" args="targetDirectory=${build.docs} ${sbk.docs}/book.xml ${style}"/>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Creates the API documentation                                       -->
+  <!-- =================================================================== -->
+  <target name="javadocs" depends="prepare-src">
+    <mkdir dir="${build.javadocs}"/>
+    <javadoc2 packagenames="${packages}"
+              sourcepath="${build.src}"
+              destdir="${build.javadocs}"
+              author="true"
+              version="true"
+              use="true"
+              windowtitle="${name} API"
+              doctitle="${name}"
+              bottom="Copyright &#169; ${year} Apache XML Project. All Rights Reserved."
+    />
+    <copyfile src="${stylesheets}/javadoc.css" dest="{$build.javadocs}/stylesheet.css"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the distribution                                            -->
+  <!-- =================================================================== -->
+  <target name="dist" depends="package, docs, javadocs">
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}/bin"/>
+    <mkdir dir="${dist.dir}/src"/>
+    <mkdir dir="${dist.dir}/conf"/>
+    <mkdir dir="${dist.dir}/docs"/>
+    <mkdir dir="${dist.dir}/docs/api"/>
+    <mkdir dir="${dist.dir}/samples"/>
+    <mkdir dir="${dist.dir}/xdocs"/>
+    <mkdir dir="${dist.dir}/xdocs/DTD"/>
+    <mkdir dir="${dist.dir}/xdocs/stylesheets"/>
+
+    <copydir src="${build.src}" dest="${dist.dir}/src" ignore="cocoon.properties"/>
+    <copyfile src="${src.dir}/org/apache/cocoon/cocoon.properties" dest="${dist.dir}/conf/cocoon.properties"/>
+    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
+    <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
+    <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
+    <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
+    <replace file="${samples.dir}/index.xsl" token="@@year@@" value="${year}"/>
+    <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" ignore="docs-book.xml, site-book.xml"/>
+    <copydir src="${dtd.dir}" dest="${dist.dir}/xdocs/DTD"/>
+    <copydir src="${sheets.dir}" dest="${dist.dir}/xdocs/stylesheets" ignore="javadoc.css"/>
+
+    <copyfile src="README" dest="${dist.dir}/README"/>
+    <replace file="${dist.dir}/README" token="@@version@@" value="${version}"/>
+    <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
+    <copyfile src="build.xml" dest="${dist.dir}/build.xml"/>
+
+    <jar jarfile="${name}-${version}.jar" basedir="${dist.dir}" items="."/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Cleans everything                                                   -->
+  <!-- =================================================================== -->
+  <target name="clean">
+    <deltree dir="${build.dir}"/>
+    <deltree dir="${dist.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the web site                                                -->
+  <!-- =================================================================== -->
+  <target name="site">
+    <mkdir dir="${site.dir}"/>  
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${site.dir}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${site.dir}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/xspprocessor.xml -out ${site.dir}/xspprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${site.dir}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${site.dir}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${site.dir}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${site.dir}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${site.dir}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${site.dir}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/technologies.xml -out ${site.dir}/technologies-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dynamic.xml -out ${site.dir}/dynamic-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/faq.xml -out ${site.dir}/faq-sbk.xml -xsl ${sheets.dir}/faq-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/WD-xsp.xml -out ${site.dir}/WD-xsp-sbk.xml -xsl ${sheets.dir}/spec-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in changes.xml -out ${site.dir}/changes-sbk.xml -xsl ${sheets.dir}/changes-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in todo.xml -out ${site.dir}/todo-sbk.xml -xsl ${sheets.dir}/todo-stylebook.xsl"/>  
+    <copydir src="${images.dir}" dest="${site.dir}/images"/>
+    <copyfile src="${docs.dir}/site-book.xml" dest="${site.dir}/../cocoon.xml"/>
+    <java class="${doc.generator}" args="targetDirectory=${site.docs} ${site.dir}/../cocoon.xml ${style}"/>
+  </target>
+
+</project>
+
+
+<!-- End of file -->
