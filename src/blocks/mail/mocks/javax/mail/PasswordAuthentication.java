@@ -15,40 +15,29 @@
 */
 package javax.mail;
 
-import java.net.InetAddress;
-
 /**
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  *
- * @version CVS $Id$
+ * @version CVS $Id:
  */
-public class Authenticator {
-    final PasswordAuthentication requestPasswordAuthentication(InetAddress inetaddress, int i, String s, String s1, String s2) {
-        return null;
+public final class PasswordAuthentication {
+    private String userName;
+    private String password;
+
+    public PasswordAuthentication(String s, String s1)
+    {
+        userName = s;
+        password = s1;
     }
 
-    protected final InetAddress getRequestingSite() {
-        return null;
+    public String getUserName()
+    {
+        return userName;
     }
 
-    protected final int getRequestingPort() {
-        return 0;
-    }
-
-    protected final String getRequestingProtocol() {
-        return null;
-    }
-
-    protected final String getRequestingPrompt() {
-        return null;
-    }
-
-    protected final String getDefaultUserName() {
-        return null;
-    }
-
-    protected PasswordAuthentication getPasswordAuthentication() {
-        return null;
+    public String getPassword()
+    {
+        return password;
     }
 }
