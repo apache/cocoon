@@ -297,6 +297,24 @@
     </span>
     <xsl:call-template name="woody-field-common"/>
   </xsl:template>
+  
+  <!--
+    wi:upload
+  -->
+  <xsl:template match="wi:upload">
+    <xsl:choose>
+      <xsl:when test="wi:value">
+        <!-- Has a value (filename): display it with a change button -->
+        <span title="{wi:hint}">
+          [<xsl:value-of select="wi:value"/>] <input type="submit" id="{@id}" name="{@id}" value="..."/>
+        </span>
+      </xsl:when>
+      <xsl:otherwise>
+        <input type="file" id="{@id}" name="{@id}" title="{wi:hint}" accept="{@mime-types}"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:call-template name="woody-field-common"/>
+  </xsl:template>
 
   <!--
     wi:repeater

@@ -9,8 +9,24 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
 
-  <xsl:template match="wi:field">
+  <xsl:template match="wi:upload">
+    <input name="{@id}" value="{wi:value}" type="file">
+      <xsl:if test="wi:styling">
+        <xsl:copy-of select="wi:styling/@*"/>
+      </xsl:if>
+    </input>
 
+    <xsl:if test="wi:validation-message">
+      <xsl:call-template name="validation-message">
+        <xsl:with-param name="message" select="wi:validation-message"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="@required='true'">
+      <b>*</b>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="wi:field">
     <xsl:choose>
       <xsl:when test="wi:selection-list">
         <xsl:call-template name="field-with-selection-list">
@@ -142,6 +158,27 @@
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:template match="wi:upload">
+    <input name="{@id}" type="file">
+      <xsl:if test="wi:styling">
+        <xsl:copy-of select="wi:styling/@*"/>
+      </xsl:if>
+    </input>
+    
+    <xsl:if test="string-length(wi:value)&gt;0">
+      [<xsl:value-of select="wi:value"/>]
+    </xsl:if>
+    
+    <xsl:if test="wi:validation-message">
+      <xsl:call-template name="validation-message">
+        <xsl:with-param name="message" select="wi:validation-message"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="@required='true'">
+      <b>*</b>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="wi:repeater">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
     <table border="1">
@@ -175,6 +212,7 @@
   </xsl:template>
   
   <xsl:template match="wi:form">
+  FORM
     <table border="1">
       <xsl:for-each select="wi:children/*">
         <tr>

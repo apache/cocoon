@@ -18,6 +18,7 @@
   <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
+  <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
  </group>
 
  <group name="Binding Samples">
