@@ -15,11 +15,6 @@
  */
 package org.apache.cocoon.ojb.broker.components;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ojb.components.AbstractOjbImpl;
 import org.apache.ojb.broker.PBFactoryException;
@@ -31,25 +26,20 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
 * Implementation of the JdoPMF. Create one PMF and store it for future use
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PBFactoryImpl.java,v 1.3 2004/03/23 19:21:33 stephan Exp $
+ * @version CVS $Id: PBFactoryImpl.java,v 1.4 2004/06/25 14:49:56 cziegeler Exp $
 */
-public class PBFactoryImpl extends AbstractOjbImpl implements PBFactory, Configurable, Initializable, Disposable, ThreadSafe {
+public class PBFactoryImpl 
+extends AbstractOjbImpl 
+implements PBFactory, ThreadSafe {
 	
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration myconf) throws ConfigurationException {
-        if (this.getLogger().isDebugEnabled())
-            this.getLogger().debug("OJB-JDO: configuration");
-    }
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         super.dispose();
-        if (this.getLogger().isDebugEnabled())
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("OJB-PB: Disposed OK!");
+        }
     }
 
     /* (non-Javadoc)

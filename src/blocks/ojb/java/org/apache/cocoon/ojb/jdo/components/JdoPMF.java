@@ -15,22 +15,23 @@
  */
 package org.apache.cocoon.ojb.jdo.components;
 
-import org.apache.avalon.framework.component.Component;
 import javax.jdo.PersistenceManager;
+
+import org.apache.avalon.framework.component.Component;
 
 /**
  *  Interface of the JDO Persistent Manager Factory.
  * It is used to get the Persistence Manager to interact with JDO using OJB
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: JdoPMF.java,v 1.2 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id: JdoPMF.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
 */
-public interface JdoPMF extends Component
-{
+public interface JdoPMF extends Component {
+    
     String ROLE = JdoPMF.class.getName();
 	
     /**
     * get a Persitence Manager.
 	*/
-    public PersistenceManager getPersistenceManager();
+    PersistenceManager getPersistenceManager();
 }

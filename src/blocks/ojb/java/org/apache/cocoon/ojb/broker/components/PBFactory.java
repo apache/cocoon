@@ -26,10 +26,10 @@ import org.apache.ojb.broker.PersistenceBroker;
  * The PersistenceBroker API provides the lowest level access to OJB's persistence engine.
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PBFactory.java,v 1.2 2004/03/05 13:02:01 bdelacretaz Exp $
+ * @version CVS $Id: PBFactory.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
 */
-public interface PBFactory extends Component
-{
+public interface PBFactory extends Component {
+    
     /**
      * The <code>ROLE</code>
      */
@@ -40,7 +40,7 @@ public interface PBFactory extends Component
      * @return a PersistenceBroker Object
      * @throws PBFactoryException - If the operation failed.
      */
-    public PersistenceBroker defaultPersistenceBroker()
+    PersistenceBroker defaultPersistenceBroker()
         throws PBFactoryException;
     
     /**
@@ -53,7 +53,7 @@ public interface PBFactory extends Component
      * @return a PersistenceBroker Object
      * @throws PBFactoryException - If the operation failed.
      */
-    public PersistenceBroker createPersistenceBroker(String jcdAlias,
+    PersistenceBroker createPersistenceBroker(String jcdAlias,
             String user, String password) throws PBFactoryException;
     
     /**
@@ -62,6 +62,6 @@ public interface PBFactory extends Component
      * @return a PersistenceBroker Object
      * @throws PBFactoryException - If the operation failed.
      */
-    public PersistenceBroker createPersistenceBroker(PBKey key)
+    PersistenceBroker createPersistenceBroker(PBKey key)
         throws PBFactoryException;
 }

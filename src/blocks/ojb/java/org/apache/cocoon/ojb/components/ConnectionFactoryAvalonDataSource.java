@@ -34,10 +34,11 @@ import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
  * Component defined in the Cocoon configuration.
  *
  * @author giacomo at apache.org
- * @version $Id: ConnectionFactoryAvalonDataSource.java,v 1.3 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version $Id: ConnectionFactoryAvalonDataSource.java,v 1.4 2004/06/25 14:49:56 cziegeler Exp $
  */
 public class ConnectionFactoryAvalonDataSource
     implements ConnectionFactory {
+    
     /** The <code>ServiceManager</code> to be used */
     private static ServiceManager manager;
 
@@ -54,7 +55,7 @@ public class ConnectionFactoryAvalonDataSource
      * @throws ServiceException In case we cannot obtain a DataSource
      */
     public static void initialize(final ServiceManager serviceManager)
-        throws ServiceException {
+    throws ServiceException {
         ConnectionFactoryAvalonDataSource.manager = serviceManager;
         ConnectionFactoryAvalonDataSource.dbselector =
             (ServiceSelector)ConnectionFactoryAvalonDataSource.manager.lookup(DataSourceComponent.ROLE +
@@ -72,7 +73,7 @@ public class ConnectionFactoryAvalonDataSource
      * @see org.apache.ojb.broker.accesslayer.ConnectionFactory#lookupConnection(org.apache.ojb.broker.metadata.JdbcConnectionDescriptor)
      */
     public Connection lookupConnection(final JdbcConnectionDescriptor conDesc)
-        throws LookupException {
+    throws LookupException {
         if (null == ConnectionFactoryAvalonDataSource.manager) {
             throw new LookupException("ServiceManager was not set!");
         }

@@ -29,11 +29,12 @@ import org.apache.avalon.framework.service.Serviceable;
  * the OJB Configuration
  *
  * @author giacomo
- * @version $Id: AbstractOjbImpl.java,v 1.2 2004/03/05 13:02:01 bdelacretaz Exp $
+ * @version $Id: AbstractOjbImpl.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
  */
 public class AbstractOjbImpl
     extends AbstractLogEnabled
     implements Initializable, Disposable, Serviceable {
+    
     /** The <code>ServiceManager</code> instance */
     protected ServiceManager manager;
 
@@ -41,7 +42,7 @@ public class AbstractOjbImpl
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize()
-        throws Exception {
+    throws Exception {
         ConnectionFactoryAvalonDataSource.initialize(this.manager);
     }
 
@@ -56,7 +57,7 @@ public class AbstractOjbImpl
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(final ServiceManager manager)
-        throws ServiceException {
+    throws ServiceException {
         this.manager = manager;
     }
 }
