@@ -5,3 +5,4 @@
 /Selector.html
 /Serializer.html
 /Transformer.html
+Pipeline.html
