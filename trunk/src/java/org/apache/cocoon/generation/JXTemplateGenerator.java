@@ -75,7 +75,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -352,7 +351,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.25 2004/01/05 08:17:31 cziegeler Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.26 2004/02/16 21:31:02 vgritsenko Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator
@@ -1127,7 +1126,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
 
     static class TextEvent extends Event {
-        TextEvent(Locator location, 
+        TextEvent(Locator location,
                   char[] chars, int start, int length) 
             throws SAXException {
             super(location);
@@ -1228,7 +1227,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class Characters extends TextEvent {
-        Characters(Locator location, 
+        Characters(Locator location,
                    char[] chars, int start, int length) 
             throws SAXException {
             super(location, chars, start, length);
@@ -1251,7 +1250,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class EndElement extends Event {
-        EndElement(Locator location, 
+        EndElement(Locator location,
                    StartElement startElement) {
             super(location);
             this.startElement = startElement;
@@ -1268,7 +1267,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
     
     static class IgnorableWhitespace extends TextEvent {
-        IgnorableWhitespace(Locator location, 
+        IgnorableWhitespace(Locator location,
                             char[] chars, int start, int length) 
             throws SAXException {
             super(location, chars, start, length);
@@ -1667,12 +1666,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 if (e instanceof StartParameter) {
                     StartParameter startParam = (StartParameter)e;
                     if (!params) {
-                        throw new SAXParseException("<parameter> not allowed here: \""+startParam.name +"\"", startParam.location, null);
+                        throw new SAXParseException("<parameter> not allowed here: \"" + startParam.name + "\"",
+                                                    startParam.location,
+                                                    null);
                     }
                     Object prev = 
                         parameters.put(startParam.name, startParam);
                     if (prev != null) {
-                        throw new SAXParseException("duplicate parameter: \""+startParam.name +"\"", location, null);
+                        throw new SAXParseException("duplicate parameter: \"" + startParam.name + "\"",
+                                                    location,
+                                                    null);
                     }
                     e = startParam.endInstruction.next;
                 } else if (e instanceof IgnorableWhitespace) {
@@ -2803,8 +2806,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             // FIXME (VG): Is this required (what it's used for - examples)?
             // Here I use Rhino's live-connect objects to allow Jexl to call
             // java constructors
-            Object javaPkg = JavaScriptFlow.getJavaPackage(objectModel);
-            Object pkgs = JavaScriptFlow.getPackages(objectModel);
+            Object javaPkg = FOM_JavaScriptFlowHelper.getJavaPackage(objectModel);
+            Object pkgs = FOM_JavaScriptFlowHelper.getPackages(objectModel);
             map.put("java", javaPkg);
             map.put("Packages", pkgs);
         }

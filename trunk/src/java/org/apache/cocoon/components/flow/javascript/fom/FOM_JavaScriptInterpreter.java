@@ -100,7 +100,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.13 2003/12/26 18:43:39 unico Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.14 2004/02/16 21:31:02 vgritsenko Exp $
  * 
  * @avalon.component
  * @avalon.service type=Interpreter
@@ -334,10 +334,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             context.newObject(thrScope, "FOM_Cocoon", args);
         cocoon.setParentScope(thrScope);
         thrScope.put("cocoon", thrScope, cocoon);
-        ((ScriptableObject)thrScope).defineProperty(LAST_EXEC_TIME,
-                                                    new Long(0),
-                                                    ScriptableObject.DONTENUM |
-                                                    ScriptableObject.PERMANENT);
+        thrScope.defineProperty(LAST_EXEC_TIME,
+                                new Long(0),
+                                ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
         
         thrScope.reset();
         return thrScope;
