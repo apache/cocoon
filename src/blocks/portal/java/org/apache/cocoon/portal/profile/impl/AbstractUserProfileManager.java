@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.7 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
@@ -222,6 +223,9 @@ public abstract class AbstractUserProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void register(CopletInstanceData coplet) {
         String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
@@ -241,6 +245,9 @@ public abstract class AbstractUserProfileManager
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void unregister(CopletInstanceData coplet) {
         String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
@@ -368,5 +375,39 @@ public abstract class AbstractUserProfileManager
                                             LayoutFactory layoutFactory,
                                             ServiceSelector adapterSelector) 
     throws Exception;
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
+     */
+    public Collection getCopletDatas() {
+        final String layoutKey = this.getDefaultLayoutKey();
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            CopletDataManager manager = (CopletDataManager)service.getAttribute("CopletData:" + layoutKey);
+            return manager.getCopletData().values();
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Error in getCopletDatas.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
+     */
+    public Collection getCopletInstanceDatas() {
+        final String layoutKey = this.getDefaultLayoutKey();
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            CopletInstanceDataManager manager = (CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey);
+            return manager.getCopletInstanceData().values();
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Error in getCopletInstanceDatas.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
     
 }

@@ -302,7 +302,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-portal-fw" status="stable">
+  <project name="cocoon-block-portal-fw" status="deprecated">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -821,7 +821,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
     </project>
 
-  <project name="cocoon-block-portal" status="unstable">
+  <project name="cocoon-block-portal" status="stable">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
