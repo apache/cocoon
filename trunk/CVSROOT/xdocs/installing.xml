@@ -1339,6 +1339,12 @@ You could also make these three configuration changes via
    <td>JDK 1.3</td>
   </tr>
   <tr>
+   <td>Windows 2000 Advanced Server</td>
+   <td>JRun 3.0</td>
+   <td>IIS 5.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
    <td>MacOS 8.5+</td>
    <td colspan="2">Resin 1.1b</td>
    <td>MRJ 2.2</td>
