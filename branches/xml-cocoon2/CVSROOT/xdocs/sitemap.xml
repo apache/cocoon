@@ -373,20 +373,15 @@
     </p>
     <source>
      <![CDATA[
-      <map:resources">
-      </map:components">
+      <map:resources>
+       <map:resource name="Access refused">
+        <map:generator src="./error-pages/restricted.xml"/>
+        <map:filter src="./stylesheets/general-browser.xsl"/>
+        <map:serializer status-code="401"/>
+       </map:resource>
+      </map:resources>
      ]]>
     </source>
- -->
- <map:resources>
-  
-  <map:resource name="Access refused">
-   <map:generator src="./error-pages/restricted.xml"/>
-   <map:filter src="./stylesheets/general-browser.xsl"/>
-   <map:serializer status-code="401"/>
-  </map:resource>
-    
- </map:resources>
 
     <s3 title="Common Attributes of Components">
      <p>
