@@ -53,7 +53,7 @@
  * woody.js in the future.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.5 2004/01/17 14:55:17 vgritsenko Exp $
+ * @version CVS $Id: woody2.js,v 1.6 2004/01/22 13:19:17 joerg Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -199,17 +199,25 @@ Form.prototype.save = function(object) {
     this.binding.saveFormToModel(this.form, object);
 }
 
-
-function woody(form_function, form_definition) {
+function woody() {
     var form = new Form(cocoon.parameters["form-definition"]);
-    
+
     var args = [form];
 
     // set the binding on the form if there's any
     var bindingURI = cocoon.parameters["bindingURI"];
-    if (bindingURI != null)
+    if (bindingURI != null) {
         form.createBinding(bindingURI);
+    }
 
-    this[cocoon.parameters["function"]].apply(this, args);
+    var funcName = cocoon.parameters["function"];
+    var func = this[funcName];
+
+    if (!func) {
+        throw "Function \"" + funcName + "\" is not defined.";
+    } else if (!(func instanceof Function)) {
+        throw "\"" + funcName + "\" is not a function.";
+    }
+
+    func.apply(this, args);
 }
-
