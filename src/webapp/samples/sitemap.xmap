@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.28 2004/07/07 02:37:01 vgritsenko Exp $ -->
+<!-- CVS $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -59,6 +59,11 @@
     </map:component-configurations>
 
     <map:pipeline>
+      <map:match pattern="v">
+        <map:generate type="virtual"/>
+        <map:serialize type="xhtml"/>
+      </map:match>
+
       <map:match pattern="">
         <map:generate src="samples.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">

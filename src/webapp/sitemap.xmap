@@ -77,6 +77,16 @@
     <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
          representation of the exception that caused the error handler to be executed -->
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
+
+    <!--
+      - Virtual Pipeline Generator: Composed of other pipeline components.
+      -->
+    <map:generator name="virtual" src="org.apache.cocoon.generation.VirtualPipelineGenerator">
+      <map:generate src="welcome.xml"/>
+      <map:transform src="welcome.xslt">
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+    </map:generator>
   </map:generators>
 
 
@@ -552,6 +562,12 @@
           | serializer, which will produce an XHTML representation of the
           | SAX stream.
           +-->
+      <map:serialize type="xhtml"/>
+    </map:match>
+
+    <!-- FIXME Remove later -->
+    <map:match pattern="v">
+      <map:generate type="virtual"/>
       <map:serialize type="xhtml"/>
     </map:match>
 
