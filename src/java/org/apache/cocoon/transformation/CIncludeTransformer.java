@@ -15,11 +15,11 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
@@ -31,12 +31,14 @@ import org.apache.cocoon.transformation.helpers.IncludeCacheManagerSession;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
@@ -57,12 +59,12 @@ import java.util.Map;
  * With the attributes <code>element</code>, <code>ns</code> and
  * <code>prefix</code> it is possible to specify an element
  * which surrounds the included content.
- * 
+ *
  * @cocoon.sitemap.component.name   cinclude
  * @cocoon.sitemap.component.logger sitemap.transformer.cinclude
  * @cocoon.sitemap.component.documentation.caching
  *               See documentation for further information.
- * 
+ *
  * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
  * @cocoon.sitemap.component.pooling.grow  2
@@ -199,8 +201,8 @@ implements Disposable, CacheableProcessingComponent {
         }
         this.compiling = false;
         this.supportCaching = parameters.getParameterAsBoolean("support-caching", false);
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Starting CIncludeTransformer with session " + this.cachingSession);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Starting, session " + this.cachingSession);
             this.startTime = System.currentTimeMillis();
         }
     }
@@ -244,7 +246,7 @@ implements Disposable, CacheableProcessingComponent {
         this.configurationParameters = null;
         this.resourceParameters = null;
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Finishing CachingCIncludeTransformer, time: " +
+            getLogger().debug("Finishing, time: " +
                               (System.currentTimeMillis() - this.startTime));
             this.startTime = 0;
         }
@@ -253,20 +255,20 @@ implements Disposable, CacheableProcessingComponent {
 
     public void startTransformingElement(String uri, String name, String raw, Attributes attr)
     throws ProcessingException ,IOException, SAXException {
-        if (name.equals(CINCLUDE_INCLUDE_ELEMENT)) {
-
-            String stripRootValue = attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_STRIP_ROOT_ATTRIBUTE); 
-            boolean stripRoot = StringUtils.equals( stripRootValue, "true" );
-            
-            this.processCIncludeElement(attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE),
-                                        attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_ELEMENT_ATTRIBUTE),
-                                        attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_SELECT_ATTRIBUTE),
-                                        attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_NS_ATTRIBUTE),
-                                        attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_PREFIX_ATTRIBUTE),
-                                        stripRoot, 
-                                        false);
-
         // Element: include
+        if (name.equals(CINCLUDE_INCLUDE_ELEMENT)) {
+            String stripRootValue = attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_STRIP_ROOT_ATTRIBUTE);
+            boolean stripRoot = StringUtils.equals(stripRootValue, "true");
+
+            processCIncludeElement(attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE),
+                                   attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_ELEMENT_ATTRIBUTE),
+                                   attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_SELECT_ATTRIBUTE),
+                                   attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_NS_ATTRIBUTE),
+                                   attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_PREFIX_ATTRIBUTE),
+                                   stripRoot,
+                                   false);
+
+        // Element: includexml
         } else if (name.equals(CINCLUDE_INCLUDEXML_ELEMENT)
                    && this.state == STATE_OUTSIDE) {
             this.state = STATE_INCLUDE;
@@ -312,13 +314,13 @@ implements Disposable, CacheableProcessingComponent {
 
        } else if (name.equals(CINCLUDE_CACHED_INCLUDE_ELEMENT)) {
 
-           String src = this.processCIncludeElement(attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE),
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    false,
-                                                    this.cacheManager != null);
+           String src = processCIncludeElement(attr.getValue("", CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE),
+                                               null,
+                                               null,
+                                               null,
+                                               null,
+                                               false,
+                                               this.cacheManager != null);
            if (this.compiling) {
                this.srcAttributes.addAttribute("", CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE, CINCLUDE_SRC_ELEMENT, "CDATA", src);
                super.startTransformingElement(uri,
@@ -348,8 +350,8 @@ implements Disposable, CacheableProcessingComponent {
 
             final boolean ignoreErrors = stack.pop().equals("true");
 
-            if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("Processing CIncludexml element: src=" + resource
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Processing includexml element: src=" + resource
                               + ", ignoreErrors=" + ignoreErrors
                               + ", configuration=" + this.configurationParameters
                               + ", parameters=" + this.resourceParameters);
@@ -466,7 +468,7 @@ implements Disposable, CacheableProcessingComponent {
     protected String processCIncludeElement(String src, String element,
                                             String select, String ns, String prefix,
                                             boolean stripRoot,
-                                            boolean cache )
+                                            boolean cache)
     throws SAXException, IOException {
 
         if (src == null) {
@@ -478,14 +480,14 @@ implements Disposable, CacheableProcessingComponent {
         if (ns == null) ns="";
         if (prefix == null) prefix="";
 
-        if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("Processing CInclude element: src=" + src
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Processing include element: src=" + src
                           + ", element=" + element
                           + ", select=" + select
                           + ", ns=" + ns
                           + ", prefix=" + prefix
                           + ", stripRoot=" + stripRoot
-                          + ", caching="+cache);
+                          + ", caching=" + cache);
         }
 
         if (cache) {
@@ -545,17 +547,16 @@ implements Disposable, CacheableProcessingComponent {
                 }
             } else {
                 String mimeType = null;
-                if ( null != this.configurationParameters ) {
+                if (null != this.configurationParameters) {
                     mimeType = this.configurationParameters.getParameter("mime-type", mimeType);
                 }
-                if ( this.compiling ) {
+                if (this.compiling) {
                     SourceUtil.toSAX(source, mimeType, new IncludeXMLConsumer(this.contentHandler, this.lexicalHandler));
                 } else {
-                    this.filter.setIgnoreRootElement( stripRoot );
+                    this.filter.setIgnoreRootElement(stripRoot);
                     SourceUtil.toSAX(source, mimeType, this.filter);
                 }
             }
-
 
         } catch (SourceException se) {
             throw new SAXException("Exception in CIncludeTransformer",se);
