@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <!--
 
  ============================================================================
@@ -55,7 +54,7 @@
 
 
 <xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
   xmlns:context="http://apache.org/DTD/XSP/context"
 >
@@ -63,56 +62,12 @@
 
   <!-- Import Global XSP Templates -->
   <!-- <xsl:import href="base-library.xsl"/> -->
-  <!-- Default copy-over's -->
-  <xsl:template match="@*|node()" priority="-1">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
-  </xsl:template>
 
-  <!-- *** Utility Templates *** -->
-  <!-- Retrieve "name" parameter as either attribute or element -->
-  <xsl:template name="value-for-name">
-    <xsl:choose>
-      <!-- As attribute (String constant) -->
-      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-      <!-- As nested (presumably dynamic) element -->
-      <xsl:when test="name">
-        <!-- Recursively evaluate nested expression -->
-        <xsl:call-template name="get-nested-content">
-          <xsl:with-param name="content" select="name"/>
-        </xsl:call-template>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Return nested element content as expression or constant -->
-  <xsl:template name="get-nested-content">
-    <xsl:choose>
-      <!-- Nested element -->
-      <xsl:when test="$content/*">
-        <xsl:apply-templates select="$content/*"/>
-      </xsl:when>
-      <!-- Plain Text -->
-      <xsl:otherwise>"<xsl:value-of select="normalize($content)"/>"</xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Ensure attribute "as" has a value -->
-  <xsl:template name="value-for-as">
-    <xsl:choose>
-      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <!-- context.getAttribute -->
   <xsl:template match="context:get-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -138,9 +93,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getAttributeNames -->
   <xsl:template match="context:get-attribute-names">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -159,14 +112,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getInitParameter -->
-  <xsl:template match="context:get-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
+  <xsl:template match="context:get-init-parameter">
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -192,9 +142,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getInitParameterNames -->
-  <xsl:template match="context:get-attribute-names">
-    <!-- Ensure attribute "as" has a value -->
+  <xsl:template match="context:get-init-parameters">
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -213,9 +161,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getMajorVersion -->
   <xsl:template match="context:get-major-version">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -242,16 +188,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getMimeType -->
   <xsl:template match="context:get-mime-type">
-    <!-- Get "file" parameter as either attribute or nested element -->
     <xsl:variable name="file">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@file">"<xsl:value-of select="@file"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="file">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="file"/>
           </xsl:call-template>
@@ -259,7 +200,6 @@
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -284,9 +224,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getMinorVersion -->
   <xsl:template match="context:get-minor-version">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -313,16 +251,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getRealPath -->
   <xsl:template match="context:get-real-path">
-    <!-- Get "path" parameter as either attribute or nested element -->
     <xsl:variable name="path">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@path">"<xsl:value-of select="@path"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="path">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="path"/>
           </xsl:call-template>
@@ -330,7 +263,6 @@
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -355,16 +287,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getResource -->
   <xsl:template match="context:get-resource">
-    <!-- Get "path" parameter as either attribute or nested element -->
     <xsl:variable name="path">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@path">"<xsl:value-of select="@path"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="path">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="path"/>
           </xsl:call-template>
@@ -379,16 +306,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getResourceAsStream -->
   <xsl:template match="context:get-resource-as-stream">
-    <!-- Get "path" parameter as either attribute or nested element -->
     <xsl:variable name="path">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@path">"<xsl:value-of select="@path"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="path">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="path"/>
           </xsl:call-template>
@@ -403,9 +325,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.getServerInfo -->
   <xsl:template match="context:get-server-info">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -427,16 +347,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- context.log -->
   <xsl:template match="context:log">
-    <!-- Get "message" parameter as either attribute or nested element -->
     <xsl:variable name="message">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@message">"<xsl:value-of select="@message"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="message">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="message"/>
           </xsl:call-template>
@@ -451,9 +366,7 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- context.removeAttribute -->
   <xsl:template match="context:remove-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
@@ -465,14 +378,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- context.setAttribute -->
   <xsl:template match="context:set-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Recursively evaluate nested attribute value -->
     <xsl:variable name="content">
       <xsl:call-template name="get-nested-content">
         <xsl:with-param name="content">
@@ -487,6 +397,41 @@
         <xsl:copy-of select="$content"/>
       );
     </xsp:logic>
+  </xsl:template>
+
+  <xsl:template name="value-for-name">
+    <xsl:choose>
+      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
+      <xsl:when test="name">
+        <xsl:call-template name="get-nested-content">
+          <xsl:with-param name="content" select="name"/>
+        </xsl:call-template>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="get-nested-content">
+    <xsl:param name="content"/>
+    <xsl:choose>
+      <xsl:when test="$content/*">
+        <xsl:apply-templates select="$content/*"/>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="value-for-as">
+    <xsl:param name="default"/>
+    <xsl:choose>
+      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@*|*|text()|processing-instruction()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
+    </xsl:copy>
   </xsl:template>
 
 </xsl:stylesheet>

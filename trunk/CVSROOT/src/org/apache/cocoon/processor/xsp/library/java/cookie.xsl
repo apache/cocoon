@@ -1,66 +1,99 @@
 <?xml version="1.0"?>
+<!--
+
+ ============================================================================
+                   The Apache Software License, Version 1.1
+ ============================================================================
+
+    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without modifica-
+ tion, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of  source code must  retain the above copyright  notice,
+    this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+ 3. The end-user documentation included with the redistribution, if any, must
+    include  the following  acknowledgment:  "This product includes  software
+    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+    Alternately, this  acknowledgment may  appear in the software itself,  if
+    and wherever such third-party acknowledgments normally appear.
+
+ 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
+    endorse  or promote  products derived  from this  software without  prior
+    written permission. For written permission, please contact
+    apache@apache.org.
+
+ 5. Products  derived from this software may not  be called "Apache", nor may
+    "Apache" appear  in their name,  without prior written permission  of the
+    Apache Software Foundation.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
+ APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
+ ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
+ (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
+-->
+
+<!-- written by Ricardo Rocha "ricardo@apache.org" -->
+
 
 <xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
   xmlns:cookie="http://apache.org/DTD/XSP/cookie"
 >
-  <!-- *** Cookie Templates *** -->
+  <!-- *** ServletResponse Templates *** -->
 
   <!-- Import Global XSP Templates -->
   <!-- <xsl:import href="base-library.xsl"/> -->
-  <!-- Default copy-over's -->
-  <xsl:template match="@*|node()" priority="-1">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+
+  <xsl:template match="cookie:create">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsl:variable name="value">
+      <xsl:choose>
+        <xsl:when test="@value">"<xsl:value-of select="@value"/>"</xsl:when>
+        <xsl:when test="value">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="value"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsp:expr>
+      new Cookie(
+        String.valueOf(<xsl:copy-of select="$name"/>),
+        String.valueOf(<xsl:copy-of select="$value"/>)
+      )
+    </xsp:expr>
   </xsl:template>
 
-  <!-- *** Utility Templates *** -->
-  <!-- Retrieve "name" parameter as either attribute or element -->
-  <xsl:template name="value-for-name">
-    <xsl:choose>
-      <!-- As attribute (String constant) -->
-      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-      <!-- As nested (presumably dynamic) element -->
-      <xsl:when test="name">
-        <!-- Recursively evaluate nested expression -->
-        <xsl:call-template name="get-nested-content">
-          <xsl:with-param name="content" select="name"/>
-        </xsl:call-template>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Return nested element content as expression or constant -->
-  <xsl:template name="get-nested-content">
-    <xsl:choose>
-      <!-- Nested element -->
-      <xsl:when test="$content/*">
-        <xsl:apply-templates select="$content/*"/>
-      </xsl:when>
-      <!-- Plain Text -->
-      <xsl:otherwise>"<xsl:value-of select="normalize($content)"/>"</xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Ensure attribute "as" has a value -->
-  <xsl:template name="value-for-as">
-    <xsl:choose>
-      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <!-- cookie.clone -->
   <xsl:template match="cookie:clone">
     <xsp:expr>
       cookie.clone()
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getComment -->
   <xsl:template match="cookie:get-comment">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -82,9 +115,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getDomain -->
   <xsl:template match="cookie:get-domain">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -106,9 +137,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getMaxAge -->
   <xsl:template match="cookie:get-max-age">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -133,9 +162,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getName -->
   <xsl:template match="cookie:get-name">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -157,9 +184,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getPath -->
   <xsl:template match="cookie:get-path">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -181,9 +206,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getSecure -->
   <xsl:template match="cookie:get-secure">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -208,9 +231,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getValue -->
   <xsl:template match="cookie:get-value">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -232,9 +253,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.getVersion -->
   <xsl:template match="cookie:get-version">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -259,16 +278,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- cookie.setComment -->
   <xsl:template match="cookie:set-comment">
-    <!-- Get "purpose" parameter as either attribute or nested element -->
     <xsl:variable name="purpose">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@purpose">"<xsl:value-of select="@purpose"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="purpose">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="purpose"/>
           </xsl:call-template>
@@ -285,16 +299,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setDomain -->
   <xsl:template match="cookie:set-domain">
-    <!-- Get "pattern" parameter as either attribute or nested element -->
     <xsl:variable name="pattern">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@pattern">"<xsl:value-of select="@pattern"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="pattern">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="pattern"/>
           </xsl:call-template>
@@ -311,16 +320,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setMaxAge -->
   <xsl:template match="cookie:set-max-age">
-    <!-- Get "expiry" parameter as either attribute or nested element -->
     <xsl:variable name="expiry">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@expiry">"<xsl:value-of select="@expiry"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="expiry">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="expiry"/>
           </xsl:call-template>
@@ -339,16 +343,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setPath -->
   <xsl:template match="cookie:set-path">
-    <!-- Get "path" parameter as either attribute or nested element -->
     <xsl:variable name="path">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@path">"<xsl:value-of select="@path"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="path">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="path"/>
           </xsl:call-template>
@@ -365,16 +364,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setSecure -->
   <xsl:template match="cookie:set-secure">
-    <!-- Get "flag" parameter as either attribute or nested element -->
     <xsl:variable name="flag">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@flag">"<xsl:value-of select="@flag"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="flag">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="flag"/>
           </xsl:call-template>
@@ -393,16 +387,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setValue -->
   <xsl:template match="cookie:set-value">
-    <!-- Get "new-value" parameter as either attribute or nested element -->
     <xsl:variable name="new-value">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@new-value">"<xsl:value-of select="@new-value"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="new-value">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="new-value"/>
           </xsl:call-template>
@@ -419,16 +408,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- cookie.setVersion -->
   <xsl:template match="cookie:set-version">
-    <!-- Get "value" parameter as either attribute or nested element -->
     <xsl:variable name="value">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@value">"<xsl:value-of select="@value"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="value">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="value"/>
           </xsl:call-template>
@@ -446,4 +430,40 @@
       );
     </xsp:logic>
   </xsl:template>
+
+  <xsl:template name="value-for-name">
+    <xsl:choose>
+      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
+      <xsl:when test="name">
+        <xsl:call-template name="get-nested-content">
+          <xsl:with-param name="content" select="name"/>
+        </xsl:call-template>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="get-nested-content">
+    <xsl:param name="content"/>
+    <xsl:choose>
+      <xsl:when test="$content/*">
+        <xsl:apply-templates select="$content/*"/>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="value-for-as">
+    <xsl:param name="default"/>
+    <xsl:choose>
+      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@*|*|text()|processing-instruction()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
+    </xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>
