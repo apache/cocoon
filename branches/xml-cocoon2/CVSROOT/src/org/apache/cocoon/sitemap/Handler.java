@@ -21,6 +21,8 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Roles;
@@ -40,7 +42,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-12 12:30:35 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-12 16:00:57 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;
@@ -145,14 +147,24 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
 
     public boolean process (Environment environment)
     throws Exception {
+        checkSanity();
+        return sitemap.process(environment);
+    }
+
+    public boolean process (Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
+    throws Exception {
+        checkSanity();
+        return sitemap.process(environment, pipeline, eventPipeline);
+    }
+
+    private void checkSanity () throws Exception {
         throwEventualException();
         if (sitemap == null) {
             getLogger().fatalError("Sitemap is not set for the Handler!!!!");
             throw new RuntimeException("The Sitemap is null, this should never be!");
         }
-        return sitemap.process(environment);
     }
-
+    
     public void setBasePath (String basePath) {
         this.basePath = basePath;
     }
@@ -160,16 +172,19 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     /** Generate the Sitemap class */
     public void run() {
         Sitemap smap;
-        //InputSource inputSource = new InputSource (sourceFile.getPath());
-        //String systemId = inputSource.getSystemId();
-
-        //File file = new File(systemId);
 
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
 
         ProgramGenerator programGenerator = null;
         try {
+            /* FIXME: Workaround -- set the logger XSLTFactoryLoader used to generate source
+             * within the sitemap generation phase.
+             * Needed because we never have the opportunity to handle the lifecycle of the
+             * XSLTFactoryLoader, since it is created by the Xalan engine.
+             */
+            XSLTFactoryLoader.setLogger(getLogger());
+            
             programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
 

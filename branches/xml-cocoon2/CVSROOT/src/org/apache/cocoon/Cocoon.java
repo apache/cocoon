@@ -28,6 +28,8 @@ import org.apache.avalon.configuration.SAXConfigurationHandler;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Initializable;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.store.FilesystemStore;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
@@ -50,7 +52,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.71 $ $Date: 2001-04-12 12:30:32 $
+ * @version CVS $Revision: 1.4.2.72 $ $Date: 2001-04-12 16:00:54 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -188,8 +190,8 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
         this.sitemapManager = new Manager();
-        this.sitemapManager.contextualize(this.context);
         this.sitemapManager.setLogger(getLogger());
+        this.sitemapManager.contextualize(this.context);
         this.sitemapManager.compose(this.componentManager);
         this.sitemapManager.configure(conf);
         this.sitemapFileName = sconf.getAttribute("file");
@@ -242,6 +244,16 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     throws Exception {
         if (disposed) throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true);
+    }
+
+    /**
+     * Process the given <code>Environment</code> to assemble 
+     * a <code>StreamPipeline</code> and an <code>EventPipeline</code>.
+     */
+    public boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
+    throws Exception {
+        if (disposed) throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
+        return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true, pipeline, eventPipeline);
     }
 
     /**

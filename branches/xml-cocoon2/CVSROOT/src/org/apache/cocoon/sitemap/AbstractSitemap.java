@@ -30,8 +30,10 @@ import org.apache.avalon.component.DefaultComponentSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -41,7 +43,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-11 12:41:28 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-12 16:00:57 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;
@@ -239,5 +241,12 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
      * This method is supplied by the generated Sitemap.
      */
     public abstract boolean process (Environment environment)
+    throws Exception;
+
+    /**
+     * Constructs a resource for the <code>Environment</code> arguments.
+     * This method is supplied by the generated Sitemap.
+     */
+    public abstract boolean process (Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
     throws Exception;
 }

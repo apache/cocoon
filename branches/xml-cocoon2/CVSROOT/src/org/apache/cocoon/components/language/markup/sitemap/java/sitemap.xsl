@@ -95,7 +95,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.94 2001-04-04 15:42:40 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.95 2001-04-12 16:00:56 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -303,12 +303,12 @@
          * @exception Exception If an error occurs during request evaluation and production
          */
         private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
-            EventPipeline eventPipeline, List listOfMaps, Environment environment, String cocoon_view)
+            EventPipeline eventPipeline, List listOfMaps, Environment environment, String cocoon_view, boolean internalRequest)
         throws Exception {
           Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
-          return false;
+          return internalRequest;
         }
       </xsl:for-each>
 
@@ -323,12 +323,12 @@
          * @exception Exception If an error occurs during request evaluation and production
          */
         private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
-            EventPipeline eventPipeline, List listOfMaps, Environment environment)
+            EventPipeline eventPipeline, List listOfMaps, Environment environment, boolean internalRequest)
         throws Exception {
           Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
-          return false;
+          return internalRequest;
         }
       </xsl:for-each>
 
@@ -378,7 +378,7 @@
         pipeline.setEventPipeline(eventPipeline);
         boolean result = false;
         try {
-           result = process (environment, pipeline, eventPipeline);
+           result = process (environment, pipeline, eventPipeline, false);
         } catch (Exception e) {
           getLogger().error("processing of resource failed", e);
           throw e;
@@ -392,7 +392,17 @@
       /**
        * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
        */
-      private final boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
+      public boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
+      throws Exception {
+        getLogger().debug("processing internal sitemap request");
+        return process (environment, pipeline, eventPipeline, true);
+      }
+
+      /**
+       * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
+       */
+      private final boolean process(Environment environment, StreamPipeline pipeline, 
+                                    EventPipeline eventPipeline, boolean internalRequest)
       throws Exception {
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values
            delivered from matchers and selectors to replace occurences of
@@ -419,7 +429,7 @@
             <xsl:choose>
               <xsl:when test="(./map:handle-errors)">
                 try {
-                  return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
+                  return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e, internalRequest);
                 } catch (Exception ex) {
                   getLogger().warn("Sitemap Error Process", ex);
                 }
@@ -437,7 +447,7 @@
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         <xsl:variable name="pipeline-position" select="position()"/>
         <xsl:if test="(./map:handle-errors)">
-          private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e)
+          private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e, boolean internalRequest)
           throws Exception {
             StreamPipeline pipeline = null;
             EventPipeline eventPipeline = null;
@@ -825,8 +835,7 @@
       environment.setStatus(<xsl:value-of select="@status-code"/>);
     </xsl:if>
 
-    <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
-    {
+    if (!internalRequest) {
       boolean result = false;
 
       try {
@@ -836,8 +845,11 @@
           throw pipelineException<xsl:value-of select="generate-id(.)"/>;
       }
 
-      if(true) return result;
+      return result;
     }
+    <!-- the if(true) prevents "unreachable statement" errors during compile -->
+    if(true) return true;
+
   </xsl:template> <!-- match="map:serialize" -->
 
   <!-- generate the code to invoke a reader -->
@@ -850,7 +862,7 @@
     </xsl:call-template>
 
     <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
-    {
+    if (!internalRequest) {
       boolean result = false;
 
       try {
@@ -860,8 +872,10 @@
           throw RpipelineException<xsl:value-of select="generate-id(.)"/>;
       }
 
-      if(true) return result;
+      return result;
     }
+    <!-- the if(true) prevents "unreachable statement" errors during compile -->
+    if(true)return true;
   </xsl:template> <!-- match="map:read" -->
 
   <!-- generate the code to invoke a sub sitemap  -->
@@ -886,7 +900,10 @@
     </xsl:variable>
 
     <!-- generate the code to invoke the sitemapManager which handles delegation of control to sub sitemaps -->
-    if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+    if (internalRequest)
+      return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, pipeline, eventPipeline);
+    else
+      if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
   </xsl:template> <!-- match="map:mount" -->
 
   <!-- generate the code to redirect a request -->
@@ -895,7 +912,7 @@
 
       <!-- redirect to a internal resource definition -->
       <xsl:when test="@resource">
-        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, eventPipeline, listOfMaps, environment, cocoon_view);
+        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, eventPipeline, listOfMaps, environment, cocoon_view, internalRequest);
       </xsl:when>
 
       <!-- redirect to a external resource definition with optional session mode attribute. Let the environment do the redirect -->
@@ -927,7 +944,7 @@
   <xsl:template match="map:label">
     <xsl:apply-templates/>
     if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
-      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
+      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment, internalRequest);
   </xsl:template> <!-- match="map:label" -->
 
   <!-- collect parameter definitions -->
@@ -1054,7 +1071,7 @@
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='last']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
             getLogger().debug("View <xsl:value-of select="@name"/>");
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment, internalRequest);
           }
         </xsl:for-each>
         // performing link translation
@@ -1151,14 +1168,14 @@
       <xsl:if test="$component-label">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-label=$component-label]">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment, internalRequest);
           }
         </xsl:for-each>
       </xsl:if>
       <xsl:if test="$prefix='generator'">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='first']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment, internalRequest);
           }
         </xsl:for-each>
       </xsl:if>

@@ -24,6 +24,8 @@ import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.Handler;
 import org.apache.cocoon.sitemap.XSLTFactoryLoader;
@@ -36,7 +38,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-12 05:55:24 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-12 16:00:58 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 
@@ -51,35 +53,100 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
     /** The component manager */
     private ComponentManager manager;
 
+    /** get a configuration
+     * @param conf the configuration
+     */    
     public void configure (Configuration conf) {
         this.conf = conf;
     }
 
+    /** get a context
+     * @param context the context object
+     */    
     public void contextualize (Context context) {
         this.context = context;
     }
 
+    /** get a component manager
+     * @param manager the component manager
+     */    
     public void compose (ComponentManager manager) {
         this.manager = manager;
     }
 
+    /** invokes the sitemap handler to process a request
+     * @param environment the environment
+     * @param uri_prefix the prefix to the URI
+     * @param source the source of the sitemap
+     * @param check_reload should the sitemap be automagically reloaded
+     * @throws Exception there may be several excpetions thrown
+     * @return states if the requested resource was produced
+     */    
     public boolean invoke (Environment environment, String uri_prefix,
                            String source, boolean check_reload)
     throws Exception {
+        
         // make sure the uri_prefix ends with a slash
-        String prefix;
-        if (uri_prefix.length() > 0)
-            prefix = (uri_prefix.charAt(uri_prefix.length() - 1) == '/' ? uri_prefix : uri_prefix + "/");
-        else
-            prefix = uri_prefix;
-        Handler sitemapHandler = (Handler) sitemaps.get(source);
+        String prefix = this.getPrefix(uri_prefix);
 
-        /* FIXME: Workaround -- set the logger XSLTFactoryLoader used to generate source
-         * within the sitemap generation phase.
-         * Needed because we never have the opportunity to handle the lifecycle of the
-         * XSLTFactoryLoader, since it is created by the Xalan engine.
-         */
-        XSLTFactoryLoader.setLogger(getLogger());
+        // get a sitemap handler
+        Handler sitemapHandler = getHandler(environment, source, check_reload);
+
+        // setup to invoke the processing
+        setupProcessing(environment, sitemapHandler, uri_prefix, source);
+        return sitemapHandler.process(environment);
+    }
+
+    /** invokes the sitemap handler to process a request
+     * @param environment the environment
+     * @param uri_prefix the prefix to the URI
+     * @param source the source of the sitemap
+     * @param check_reload should the sitemap be automagically reloaded
+     * @throws Exception there may be several excpetions thrown
+     * @return states if the requested resource was produced
+     */    
+    public boolean invoke (Environment environment, String uri_prefix,
+                           String source, boolean check_reload, 
+                           StreamPipeline pipeline, EventPipeline eventPipeline)
+    throws Exception {
+        
+        // make sure the uri_prefix ends with a slash
+        String prefix = this.getPrefix(uri_prefix);
+        
+        // get a sitemap handler
+        Handler sitemapHandler = getHandler(environment, source, check_reload);
+
+        // setup to invoke the processing
+        setupProcessing(environment, sitemapHandler, uri_prefix, source);
+        return sitemapHandler.process(environment, pipeline, eventPipeline);
+    }
+
+    /** has the sitemap changed
+     * @return whether the sitemap file has changed
+     */    
+    public boolean hasChanged() {
+        Handler sitemapHandler = null;
+        Iterator iter = sitemaps.values().iterator();
+        while (iter.hasNext()) {
+            sitemapHandler = (Handler) iter.next();
+            if ((sitemapHandler != null) && (sitemapHandler.hasChanged())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /** make sure the uri_prefix ends with a slash */
+    private String getPrefix (String uri_prefix) {
+        if (uri_prefix.length() > 0)
+            return (uri_prefix.charAt(uri_prefix.length() - 1) == '/' ? uri_prefix : uri_prefix + "/");
+        else
+            return uri_prefix;
+    }
+    
+    private Handler getHandler(final Environment environment, final String source, final boolean check_reload) 
+            throws Exception {
+        Handler sitemapHandler = (Handler) sitemaps.get(source);
         
         if (sitemapHandler != null) {
             if (sitemapHandler.available()) {
@@ -100,22 +167,13 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
             sitemapHandler.regenerate(environment);
             sitemaps.put(source, sitemapHandler);
         }
+        return sitemapHandler;
+    }
 
+    private void setupProcessing (Environment environment, Handler sitemapHandler, String uri_prefix, String source) 
+            throws Exception {
         environment.changeContext(uri_prefix, source);
         if (! sitemapHandler.available())
             throw new ProcessingException("The sitemap handler's sitemap is not available.");
-        return sitemapHandler.process(environment);
-    }
-
-    public boolean hasChanged() {
-        Handler sitemapHandler = null;
-        Iterator iter = sitemaps.values().iterator();
-        while (iter.hasNext()) {
-            sitemapHandler = (Handler) iter.next();
-            if ((sitemapHandler != null) && (sitemapHandler.hasChanged())) {
-                return true;
-            }
-        }
-        return false;
     }
 }
