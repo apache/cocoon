@@ -53,6 +53,7 @@ package org.apache.cocoon.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 import java.util.BitSet;
 import java.util.Enumeration;
@@ -67,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.1 2003/03/09 00:09:43 pier Exp $
+ * @version CVS $Id: NetUtils.java,v 1.2 2003/05/23 13:08:35 bruno Exp $
  */
 
 public class NetUtils {
@@ -122,19 +123,56 @@ public class NetUtils {
     }
 
     /**
-     * Decode a path
+     * Decode a path.
+     *
+     * <p>Interprets %XX (where XX is hexadecimal number) as UTF-8 encoded bytes.
+     * <p>The validity of the input path is not checked (i.e. characters that were not encoded will
+     * not be reported as errors).
+     * <p>This method differs from URLDecoder.decode in that it always uses UTF-8 (while URLDecoder
+     * uses the platform default encoding, often ISO-8859-1), and doesn't translate + characters to spaces.
      *
      * @param path the path to decode
      * @return the decoded path
      */
     public static String decodePath(String path) {
-        // VG: JDK1.2 MEthods throws an exception; JDK1.3 - not.
-        // http://java.sun.com/products/jdk/1.2/docs/api/java/net/URLDecoder.html#decode(java.lang.String)
-        try {
-            return java.net.URLDecoder.decode( path );
-        } catch (Exception e) {
-            return path;
+        StringBuffer translatedPath = new StringBuffer(path.length());
+        byte[] encodedchars = new byte[path.length() / 3];
+        int i = 0;
+        int length = path.length();
+        int encodedcharsLength = 0;
+        while (i < length) {
+            if (path.charAt(i) == '%') {
+                // we must process all consecutive %-encoded characters in one go, because they represent
+                // an UTF-8 encoded string, and in UTF-8 one character can be encoded as multiple bytes
+                while (i < length && path.charAt(i) == '%') {
+                    if (i + 2 < length) {
+                        try {
+                            byte x = (byte)Integer.parseInt(path.substring(i + 1, i + 3), 16);
+                            encodedchars[encodedcharsLength] = x;
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("NetUtils.decodePath: illegal hex characters in pattern %" + path.substring(i + 1, i + 3));
+                        }
+                        encodedcharsLength++;
+                        i += 3;
+                    } else {
+                        throw new IllegalArgumentException("NetUtils.decodePath: % character should be followed by 2 hexadecimal characters.");
+                    }
+                }
+                try {
+                    String translatedPart = new String(encodedchars, 0, encodedcharsLength, "UTF-8");
+                    translatedPath.append(translatedPart);
+                } catch (UnsupportedEncodingException e) {
+                    // the situation that UTF-8 is not supported is quite theoretical, so throw a runtime exception
+                    throw new RuntimeException("Problem in decodePath: UTF-8 encoding not supported.");
+                }
+                encodedcharsLength = 0;
+            } else {
+                // a normal character
+                translatedPath.append(path.charAt(i));
+                i++;
+            }
         }
+        return translatedPath.toString();
     }
 
     /**
