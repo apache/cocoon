@@ -572,7 +572,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
         jobDataMap.put(DATA_MAP_CONTEXT, this.context);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
-        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, concurent? Boolean.TRUE: Boolean.FALSE);
+        jobDataMap.put(DATA_MAP_RUN_CONCURRENT,
+            concurent? Boolean.TRUE.booleanValue(): Boolean.FALSE.booleanValue());
         if (null != params) {
             jobDataMap.put(DATA_MAP_PARAMETERS, params);
         }
@@ -606,15 +607,16 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         m_shutdownGraceful = poolConfig.getChild("shutdown-graceful").getValueAsBoolean(true);
         final int shutdownWaitTimeMs = poolConfig.getChild("shutdown-wait-time-ms").getValueAsInteger(-1);
         final RunnableManager runnableManager = (RunnableManager)this.manager.lookup(RunnableManager.ROLE);
-        final QuartzThreadPool pool = new QuartzThreadPool(runnableManager.createPool(queueSize, 
-                                                                                      maxPoolSize, 
-                                                                                      minPoolSize,
-                                                                                      Thread.NORM_PRIORITY,
-                                                                                      false, // no daemon
-                                                                                      keepAliveTimeMs, 
-                                                                                      blockPolicy, 
-                                                                                      m_shutdownGraceful, 
-                                                                                      shutdownWaitTimeMs));
+        this.executor = runnableManager.createPool(queueSize,
+                                                   maxPoolSize,
+                                                   minPoolSize,
+                                                   Thread.NORM_PRIORITY,
+                                                   false, // no daemon
+                                                   keepAliveTimeMs,
+                                                   blockPolicy,
+                                                   m_shutdownGraceful,
+                                                   shutdownWaitTimeMs);
+        final QuartzThreadPool pool = new QuartzThreadPool(this.executor);
         return pool;
     }
 
