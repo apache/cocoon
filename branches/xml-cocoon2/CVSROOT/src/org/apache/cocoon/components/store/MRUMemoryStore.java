@@ -9,13 +9,12 @@ package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
@@ -36,7 +35,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  */
 
-public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable {
+public class MRUMemoryStore extends AbstractLoggable implements Store, Configurable, ThreadSafe, Runnable {
   /**
    * Indicates how much memory should be left free in the JVM for
    * normal operation.
@@ -73,8 +72,7 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
    * Indicates the max. object in the cache
    */
   private int maxobjects;
-
-
+  
   /**
    * The heart of the cache
    */
@@ -161,13 +159,14 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
    * create the MRU.
    */
   public void hold(Object key, Object value) {
+    getLogger().debug("Holding object in memory. Key: " + key);
     /** ...first test if the max. objects in cache is reached... */
     if(this.mrulist.size() >= this.maxobjects) {
       /** ...ok, heapsize is reached, remove the last element... */
       this.free();
     }
     /** ..put the new object in the cache, on the top of course ... */
-    this.cache.put(key, new CacheObject(value,System.currentTimeMillis()));
+ 	  this.cache.put(key, new CacheObject(value,System.currentTimeMillis()));
     this.mrulist.addFirst(key);
   }
 
@@ -223,7 +222,7 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
     this.cache.remove(this.mrulist.getLast());
     this.mrulist.removeLast();
   }
-
+  
   /**
    * Container object for the documents.
    */
@@ -237,11 +236,11 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
     }
 
     public Object getCacheObject() {
-      return cacheObject;
+      return this.cacheObject;
     }
 
     public long getCreateTime() {
-      return time;
+      return this.time;
     }
   }
 }

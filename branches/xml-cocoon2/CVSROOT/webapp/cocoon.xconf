@@ -3,6 +3,21 @@
 
 <!-- ===================== General Components =========================== -->
 
+  <!-- Caching:
+       freememory: Indicates how much memory should be left free in the 
+                   JVM for normal operation.
+       heapsize: Indicates how big the heap size can grow to before the 
+                 cleanup thread kicks in.
+       objectlifetime: Indicates how long (seconds) a cache object will 
+                       be hold in memory. The object will be thrown out, 
+                       when the time is over. 
+       interval: Indicates the interval of the cleanup thread in seconds.
+       maxobjects: Indicates how many objects will be hold in the cache.
+                   When the number of maxobjects has been reached. The
+                   last object in the cache will be thrown out.
+       usethread: Indicates whether we use a cleanup thread or not.
+       threadpriority: Indicates the priority of the cleanup thread.
+  -->
   <store class="org.apache.cocoon.components.store.MRUMemoryStore">
      <parameter name="freememory" value="1000000"/>
      <parameter name="heapsize" value="60000000"/>
