@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: welcome.xslt,v 1.8 2003/10/21 09:43:32 joerg Exp $ -->
+<!-- CVS $Id: welcome.xslt,v 1.9 2003/12/28 21:04:10 unico Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                               xmlns="http://www.w3.org/1999/xhtml">
 
-  <xsl:param name="contextPath" select="'/cocoon'"/>
+  <xsl:param name="contextPath"/>
 
   <xsl:template match="welcome">
     <html xml:lang="en" lang="en">
