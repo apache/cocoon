@@ -167,7 +167,7 @@ implements SourceInspector, Configurable {
      * Check if this inspector is configured to handle properties of 
      * the given type.
      */
-    protected final boolean handlesProperty(String namespace, String name) {
+    public final boolean handlesProperty(String namespace, String name) {
         return m_properties.contains(namespace + "#" + name);
     }
     
