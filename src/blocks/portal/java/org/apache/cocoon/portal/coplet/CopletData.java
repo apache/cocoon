@@ -44,9 +44,13 @@ implements DeltaApplicable {
 
     protected Map attributes = new HashMap();
 
-    protected String roles;
+    protected String allowedRoles;
     
-    protected transient List rolesList;
+    protected String deniedRoles;
+    
+    protected transient List allowedRolesList;
+    
+    protected transient List deniedRolesList;
     
 	/**
 	 * Signals whether a delta has been applied.
@@ -57,6 +61,7 @@ implements DeltaApplicable {
      * Constructor
      */
     public CopletData() {
+        // Nothing to do
     }
 
     /**
@@ -163,44 +168,81 @@ implements DeltaApplicable {
 	}
     
     /**
-     * @return Returns the roles.
+     * @return Returns the allowed roles.
      */
-    public String getRoles() {
-        return roles;
+    public String getAllowedRoles() {
+        return this.allowedRoles;
     }
     /**
-     * @param roles The roles to set.
+     * @param roles The allowed roles to set.
      */
-    public void setRoles(String roles) {
-        this.roles = roles;
-        this.rolesList = null;
+    public void setAllowedRoles(String roles) {
+        this.allowedRoles = roles;
+        this.allowedRolesList = null;
     }
     
+    /**
+     * @return Returns the denied roles.
+     */
+    public String getDeniedRoles() {
+        return this.deniedRoles;
+    }
+    /**
+     * @param roles The allowed roles to set.
+     */
+    public void setDeniedRoles(String roles) {
+        this.deniedRoles = roles;
+        this.deniedRolesList = null;
+    }
+
     /**
      * Return the list of roles that are allowed to access this coplet
      * @return A list of roles or null if everyone is allowed.
      */
-    public List getAllowedRoles() {
-        if ( StringUtils.isBlank(this.roles) ) {
+    public List getAllowedRolesList() {
+        if ( StringUtils.isBlank(this.allowedRoles) ) {
             return null;
         }
-        if ( this.rolesList == null ) {
-            this.rolesList = new ArrayList();
-            final StringTokenizer tokenizer = new StringTokenizer(this.roles, ",");
+        if ( this.allowedRolesList == null ) {
+            this.allowedRolesList = new ArrayList();
+            final StringTokenizer tokenizer = new StringTokenizer(this.allowedRoles, ",");
             while ( tokenizer.hasMoreElements() ) {
                 String token = (String)tokenizer.nextElement();
-                this.rolesList.add(token);
+                this.allowedRolesList.add(token);
             }
-            if ( this.rolesList.size() == 0 ) {
-                this.roles = null;
-                this.rolesList = null;
+            if ( this.allowedRolesList.size() == 0 ) {
+                this.allowedRoles = null;
+                this.allowedRolesList = null;
             }
         }
-        return this.rolesList;
+        return this.allowedRolesList;
     }
     
-    public void addAllowedRole(String role) {
-        List l = this.getAllowedRoles();
+    /**
+     * Return the list of roles that are denied to access this coplet
+     * @return A list of roles or null if everyone is allowed.
+     */
+    public List getDeniedRolesList() {
+        if ( StringUtils.isBlank(this.deniedRoles) ) {
+            return null;
+        }
+        if ( this.deniedRolesList == null ) {
+            this.deniedRolesList = new ArrayList();
+            final StringTokenizer tokenizer = new StringTokenizer(this.deniedRoles, ",");
+            while ( tokenizer.hasMoreElements() ) {
+                String token = (String)tokenizer.nextElement();
+                this.deniedRolesList.add(token);
+            }
+            if ( this.deniedRolesList.size() == 0 ) {
+                this.deniedRoles = null;
+                this.deniedRolesList = null;
+            }
+        }
+        return this.deniedRolesList;
+    }
+
+    public void addToAllowedRoles(String role) {
+        List l = this.getAllowedRolesList();
         if ( l == null ) {
             l = new ArrayList();
             l.add(role);
@@ -209,24 +251,54 @@ implements DeltaApplicable {
                 l.add(role);
             }
         }
-        this.buildRolesString(l);
+        this.buildRolesString(l, true);
     }
     
-    public void removeAllowedRole(String role) {
-        List l = this.getAllowedRoles();
+    public void removeFromAllowedRoles(String role) {
+        List l = this.getAllowedRolesList();
         if ( l != null && l.contains(role) ) {
             l.remove(role);
             if ( l.size() == 0 ) {
-                this.roles = null;
-                this.rolesList = null;
+                this.allowedRoles = null;
+                this.allowedRolesList = null;
             } else {
-                this.buildRolesString(l);
+                this.buildRolesString(l, true);
             }
         }
     }
     
-    protected void buildRolesString(List fromList) {
-        this.rolesList = fromList;
+    public void addToDeniedRoles(String role) {
+        List l = this.getDeniedRolesList();
+        if ( l == null ) {
+            l = new ArrayList();
+            l.add(role);
+        } else {
+            if ( !l.contains(role) ) {
+                l.add(role);
+            }
+        }
+        this.buildRolesString(l, false);
+    }
+    
+    public void removeFromDeniedRoles(String role) {
+        List l = this.getDeniedRolesList();
+        if ( l != null && l.contains(role) ) {
+            l.remove(role);
+            if ( l.size() == 0 ) {
+                this.deniedRoles = null;
+                this.deniedRolesList = null;
+            } else {
+                this.buildRolesString(l, false);
+            }
+        }
+    }
+
+    protected void buildRolesString(List fromList, boolean allow) {
+        if ( allow ) {
+            this.allowedRolesList = fromList;
+        } else {
+            this.deniedRolesList = fromList;
+        }
         StringBuffer buffer = new StringBuffer();
         boolean first = true;
         Iterator i = fromList.iterator();
@@ -238,6 +310,10 @@ implements DeltaApplicable {
             first = false;
             buffer.append(role);
         }
-        this.roles = buffer.toString();
+        if ( allow ) {
+            this.allowedRoles = buffer.toString();
+        } else {
+            this.deniedRoles = buffer.toString();
+        }
     }
 }

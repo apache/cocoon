@@ -357,10 +357,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         }
 
         // Process the redirect
-// No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
-//        context.reset();
+        // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
+        // context.reset();
         // The following is a fix for bug #26854 and #26571
         final boolean result = processor.process(newEnv, context);
+        if ( facade != null ) {
+            newEnv = facade.getDelegate();
+        }
         if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
             environment.redirect( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL(), false, false);
         }
