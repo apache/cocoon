@@ -347,9 +347,11 @@ public class MockRequest implements Request {
     public void clearSession() {
         this.session = null;
     }
+
     public void setIsRequestedSessionIdFromURL( boolean isRequestedSessionIdFromURL ) {
         this.isRequestedSessionIdFromURL = isRequestedSessionIdFromURL;
     }
+    
     public void setIsRequestedSessionIdFromCooki( boolean isRequestedSessionIdFromCookie ) {
         this.isRequestedSessionIdFromCookie = isRequestedSessionIdFromCookie;
     }
