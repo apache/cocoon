@@ -53,6 +53,8 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
@@ -68,13 +70,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: WindowAspect.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
+ * @version CVS $Id: WindowAspect.java,v 1.3 2003/06/15 16:56:08 cziegeler Exp $
  */
 public final class WindowAspect extends AbstractAspect {
-
-    protected String getTagName(RendererAspectContext context) {
-        return context.getAspectParameters().getParameter("tag-name", "window");
-    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
@@ -84,7 +82,9 @@ public final class WindowAspect extends AbstractAspect {
                         PortalService service,
                         ContentHandler contenthandler)
     throws SAXException {
+        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
+
         AttributesImpl attributes = new AttributesImpl();
         Map parameter = layout.getParameters();
 		Map.Entry entry;
@@ -92,14 +92,32 @@ public final class WindowAspect extends AbstractAspect {
 			entry = (Map.Entry) iter.next();
 			attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
 		}
-        XMLUtils.startElement(contenthandler, this.getTagName(context), attributes);
+        XMLUtils.startElement(contenthandler, config.tagName, attributes);
         int status = copletInstanceData.getStatus();
         XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
         XMLUtils.createElement(contenthandler, "status", "" + status);
 
         context.invokeNext( layout, service, contenthandler );
 
-        XMLUtils.endElement(contenthandler, this.getTagName(context));
+        XMLUtils.endElement(contenthandler, config.tagName);
+    }
+
+    protected class PreparedConfiguration {
+        public String tagName;
+        
+        public void takeValues(PreparedConfiguration from) {
+            this.tagName = from.tagName;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        PreparedConfiguration pc = new PreparedConfiguration();
+        pc.tagName = configuration.getParameter("tag-name", "window");
+        return pc;
     }
 
 }

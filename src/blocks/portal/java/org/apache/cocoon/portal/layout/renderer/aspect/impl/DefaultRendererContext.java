@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
@@ -67,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultRendererContext.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: DefaultRendererContext.java,v 1.2 2003/06/15 16:56:09 cziegeler Exp $
  */
 public final class DefaultRendererContext implements RendererAspectContext {
 
@@ -75,7 +74,7 @@ public final class DefaultRendererContext implements RendererAspectContext {
     
     private Iterator iterator;
     private Iterator configIterator;
-    private Parameters config;
+    private Object config;
     private Map attributes;
     
     public DefaultRendererContext(RendererAspectChain chain) {
@@ -92,7 +91,7 @@ public final class DefaultRendererContext implements RendererAspectContext {
                     		ContentHandler handler)
 	throws SAXException {
 		if (iterator.hasNext()) {
-            this.config = (Parameters) this.configIterator.next();
+            this.config = this.configIterator.next();
             final RendererAspect aspect = (RendererAspect) iterator.next();
             aspect.toSAX(this, layout, service, handler);
 		}
@@ -102,7 +101,7 @@ public final class DefaultRendererContext implements RendererAspectContext {
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
 	 */
-	public Parameters getAspectParameters() {
+	public Object getAspectConfiguration() {
 		return this.config;
 	}
 

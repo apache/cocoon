@@ -55,6 +55,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
@@ -73,9 +74,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.7 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.8 2003/06/15 16:56:09 cziegeler Exp $
  */
-public class TabContentAspect extends CompositeContentAspect {
+public class TabContentAspect 
+    extends CompositeContentAspect {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
@@ -86,6 +88,8 @@ public class TabContentAspect extends CompositeContentAspect {
                         ContentHandler handler)
     throws SAXException {
         if (layout instanceof CompositeLayout) {
+            TabPreparedConfiguration config = (TabPreparedConfiguration)context.getAspectConfiguration();
+
             AttributesImpl attributes = new AttributesImpl();
             Map parameter = layout.getParameters();
 			Map.Entry entry;
@@ -93,7 +97,7 @@ public class TabContentAspect extends CompositeContentAspect {
 				entry = (Map.Entry) iter.next();
 				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
 			}
-            XMLUtils.startElement(handler, this.getTagName(context), attributes);
+            XMLUtils.startElement(handler, config.tagName, attributes);
 
             PortalService portalService = null;
             try {
@@ -102,7 +106,7 @@ public class TabContentAspect extends CompositeContentAspect {
                 CompositeLayout tabLayout = (CompositeLayout) layout;
 
                 // selected tab
-                Integer data = (Integer) layout.getAspectData(context.getAspectParameters().getParameter("aspect-name", "tab"));
+                Integer data = (Integer) layout.getAspectData(config.aspectName);
                 int selected = data.intValue();
                 
                 // loop over all tabs
@@ -130,7 +134,7 @@ public class TabContentAspect extends CompositeContentAspect {
             } finally {
                 this.manager.release(portalService);
             }
-            XMLUtils.endElement(handler, this.getTagName(context));
+            XMLUtils.endElement(handler, config.tagName);
         } else {
             throw new SAXException("Wrong layout type, TabLayout expected: " + layout.getClass().getName());
         }
@@ -142,14 +146,39 @@ public class TabContentAspect extends CompositeContentAspect {
      * Return the aspects required for this renderer
      * @return An iterator for the aspect descriptions or null.
      */
-    public Iterator getAspectDescriptions(Parameters configuration) {
+    public Iterator getAspectDescriptions(Object configuration) {
+        TabPreparedConfiguration pc = (TabPreparedConfiguration)configuration;
+        
         DefaultAspectDescription desc = new DefaultAspectDescription();
-        desc.setName(configuration.getParameter("aspect-name", "tab"));
+        desc.setName(pc.aspectName);
         desc.setClassName("java.lang.Integer");
-        desc.setPersistence(configuration.getParameter("store", "session"));
+        desc.setPersistence(pc.store);
         desc.setAutoCreate(true);
         
         return Collections.singletonList(desc).iterator();
+    }
+
+    protected class TabPreparedConfiguration extends PreparedConfiguration {
+        public String aspectName;
+        public String store;
+        
+        public void takeValues(TabPreparedConfiguration from) {
+            super.takeValues(from);
+            this.aspectName = from.aspectName;
+            this.store = from.store;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        TabPreparedConfiguration pc = new TabPreparedConfiguration();
+        pc.takeValues((PreparedConfiguration)super.prepareConfiguration(configuration));
+        pc.aspectName = configuration.getParameter("aspect-name", "tab");
+        pc.store = configuration.getParameter("store");
+        return pc;
     }
 
 }
