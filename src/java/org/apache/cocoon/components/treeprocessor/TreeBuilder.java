@@ -31,6 +31,16 @@ public interface TreeBuilder {
 
     String ROLE = TreeBuilder.class.getName();
 
+    public static class EventComponent {
+        
+        public final Object component;
+        public final boolean releaseUsingManager;
+        
+        public EventComponent(Object c, boolean releaseUsingManager) {
+            this.component = c;
+            this.releaseUsingManager = releaseUsingManager;
+        }
+    }
 
     void setParentProcessorManager(ServiceManager manager);
     
@@ -114,13 +124,16 @@ public interface TreeBuilder {
     /**
      * Return all event listers that are registered for the
      * {@link org.apache.cocoon.sitemap.EnterSitemapEvent}.
+     * @return A list of {@link EventComponent}s.
      */
     List getEnterSitemapEventListeners();
     
     /**
      * Return all event listers that are registered for the
      * {@link org.apache.cocoon.sitemap.LeaveSitemapEvent}.
+     * @return A list of {@link EventComponent}s.
      */
     List getLeaveSitemapEventListeners();
     
+
 }
