@@ -63,6 +63,7 @@ import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.excalibur.source.SourceUtil;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.6 2003/07/31 17:30:13 gianugo Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.7 2003/08/06 15:54:13 bruno Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
@@ -177,9 +178,18 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             throw new NullPointerException("No outputstream specified for process");
         }
 
+        // if the uri starts with a slash, then assume that the uri contains an absolute
+        // path, starting from the root sitemap. Otherwise, the uri is relative to the current
+        // sitemap.
+        if (uri.length() > 0 && uri.charAt(0) == '/') {
+            uri = uri.substring(1);
+        } else {
+            uri = env.getURIPrefix() + uri;
+        }
+
         // Create a wrapper environment for the subrequest to be processed.
         EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
-        wrapper.setURI("",uri);
+        wrapper.setURI("", uri);
         wrapper.setOutputStream(out);
         wrapper.setAttribute("bean-dict", biz);
 
@@ -217,6 +227,11 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
                           Environment environment)
             throws Exception
     {
+        if (SourceUtil.indexOfSchemeColon(uri) != -1)
+            throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
+
+        uri = "cocoon:/" + uri;
+
         Map objectModel = environment.getObjectModel();
         FlowHelper.setContextObject(objectModel, bizData);
         FlowHelper.setWebContinuation(objectModel, continuation);

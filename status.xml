@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.104 2003/08/06 14:45:02 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.105 2003/08/06 15:54:13 bruno Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="fix">
+    IMPORTANT: Flow: cleaned up the situation with regards to the "uri" argument to the
+    sendPage, sendPageAndWait, and processPipelineTo functions.  URI's starting
+    with a slash are resolved against the root sitemap, URI's not starting with
+    a slash are resolved against the current sitemap. Specifying a scheme is not
+    allowed.
+  </action>
   <action dev="BRD" type="fix" fixes-bug="19841">
     I18nTransformer: if content of i18n:text is empty and translation is not
     found, use untranslated-text.

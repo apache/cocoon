@@ -58,7 +58,6 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.excalibur.source.SourceUtil;
 
 /**
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
@@ -148,12 +147,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
             env.redirect(false, res.getURI());
         } else {
             String uri = res.getURI();
-            if (SourceUtil.indexOfSchemeColon(uri) == -1) {
-                uri = "cocoon:/" + uri;
-            }
-
             getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData());
-
             this.forwardTo(uri, res.getData(), wk, env);
         }
 

@@ -72,8 +72,8 @@
           <map:parameter name="binding-src" value="context://samples/woody/forms/form2_bind_xml.xml"/>
           <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.Form1Handler"/>
           <map:parameter name="documentURI" value="context://samples/woody/forms/form2_data.xml"/>
-          <map:parameter name="form-pipe" value="cocoon://samples/woody/form2-display-pipeline"/>
-          <map:parameter name="valid-pipe" value="cocoon://samples/woody/form2-success-pipeline"/>
+          <map:parameter name="form-pipe" value="/samples/woody/form2-display-pipeline"/>
+          <map:parameter name="valid-pipe" value="/samples/woody/form2-success-pipeline"/>
         </map:call>
       </map:match>
 
