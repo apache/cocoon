@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.4 2004/03/17 16:20:08 vgritsenko Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.5 2004/03/18 23:59:12 vgritsenko Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -49,6 +49,8 @@ public class ParamSaxBuffer extends SaxBuffer {
     /**
      * Parses text and extracts <code>{name}</code> parameters for later
      * substitution.
+     *
+     * FIXME: This method throws exception when '{' and '}' are separated onto two character events
      */
     public void characters(char ch[], int start, int length) throws SAXException {
         final int end = start + length;
