@@ -60,10 +60,7 @@ import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 public class MockEnvironment implements Environment {
 
@@ -91,14 +88,6 @@ public class MockEnvironment implements Environment {
         return uriprefix;
     }
 
-    public String getRootContext() {
-        return rootcontext;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
     public String getView() {
         return view;
     }
@@ -107,15 +96,11 @@ public class MockEnvironment implements Environment {
         return action;
     }
 
-    public void setContext(String prefix, String uri, String context) {
+    public void setURI(String prefix, String uri) {
         throw new AssertionFailedError("Not implemented");
     }
 
-    public void changeContext(String uriprefix, String context) throws Exception {
-        throw new AssertionFailedError("Not implemented");
-    }
-
-    public void redirect(boolean sessionmode, String url) throws IOException {
+    public void redirect(String url, boolean global, boolean permanent) throws IOException {
         throw new AssertionFailedError("Use Redirector.redirect instead!");
     }
 
@@ -141,11 +126,6 @@ public class MockEnvironment implements Environment {
 
     public int getStatus() {
         return status;
-    }
-
-    public OutputStream getOutputStream() throws IOException {
-        outputstream = new ByteArrayOutputStream();
-        return outputstream;
     }
 
     public OutputStream getOutputStream(int bufferSize) throws IOException {
@@ -199,14 +179,6 @@ public class MockEnvironment implements Environment {
     
     public void finishingProcessing() {
         throw new AssertionFailedError("Not implemented");
-    }
-
-
-    public void toSAX(org.apache.excalibur.source.Source source,
-                ContentHandler handler)
-      throws SAXException, IOException, ProcessingException {
-
-        throw new AssertionFailedError("Not not use deprecated methods!");
     }
 
     /**
