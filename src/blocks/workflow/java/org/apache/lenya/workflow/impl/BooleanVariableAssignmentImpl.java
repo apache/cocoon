@@ -1,5 +1,5 @@
 /*
-$Id: BooleanVariableAssignmentImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: BooleanVariableAssignmentImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -74,7 +74,6 @@ public class BooleanVariableAssignmentImpl implements BooleanVariableAssignment 
      * @param value The value.
      */
     protected BooleanVariableAssignmentImpl(BooleanVariableImpl variable, boolean value) {
-        assert variable != null;
         this.variable = variable;
 
         this.value = value;

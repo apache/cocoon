@@ -1,5 +1,5 @@
 /*
-$Id: AbstractCondition.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: AbstractCondition.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -72,7 +72,6 @@ public abstract class AbstractCondition implements Condition {
      * @see org.apache.lenya.workflow.impl.AbstractCondition#setExpression(java.lang.String)
      */
     public void setExpression(String expression) throws WorkflowException {
-        assert expression != null;
         this.expression = expression.trim();
     }
 

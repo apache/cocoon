@@ -1,5 +1,5 @@
 /*
-$Id: WorkflowImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: WorkflowImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -107,7 +107,6 @@ public class WorkflowImpl implements Workflow {
      * @param transition The transition.
      */
     protected void addTransition(TransitionImpl transition) {
-        assert transition != null;
         transitions.add(transition);
         addState(transition.getSource());
         addState(transition.getDestination());
@@ -127,8 +126,6 @@ public class WorkflowImpl implements Workflow {
      *
      */
     protected State getDestination(Transition transition) {
-        assert transition instanceof TransitionImpl;
-
         return ((TransitionImpl) transition).getDestination();
     }
 
@@ -188,7 +185,6 @@ public class WorkflowImpl implements Workflow {
      * @param event An event.
      */
     protected void addEvent(EventImpl event) {
-        assert event != null;
         events.put(event.getName(), event);
     }
 
@@ -216,7 +212,6 @@ public class WorkflowImpl implements Workflow {
      * @param variable A variable.
      */
     protected void addVariable(BooleanVariableImpl variable) {
-        assert variable != null;
         variables.put(variable.getName(), variable);
     }
 

@@ -1,5 +1,5 @@
 /*
-$Id: WorkflowInstanceImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: WorkflowInstanceImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -215,7 +215,6 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
      * @param state The state to set.
      */
     protected void setCurrentState(State state) {
-        assert (state != null) && ((WorkflowImpl) getWorkflow()).containsState(state);
         this.currentState = state;
     }
 
@@ -231,7 +230,6 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
      * @param workflow A workflow object.
      */
     protected void setWorkflow(WorkflowImpl workflow) {
-        assert workflow != null;
         this.workflow = workflow;
         setCurrentState(getWorkflow().getInitialState());
         initVariableInstances();
@@ -243,7 +241,6 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
      * @throws WorkflowException if something goes wrong.
      */
     protected void setWorkflow(String workflowName) throws WorkflowException {
-        assert (workflowName != null) && !"".equals(workflowName);
         setWorkflow(getWorkflow(workflowName));
     }
 

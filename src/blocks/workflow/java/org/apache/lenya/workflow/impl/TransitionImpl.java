@@ -1,5 +1,5 @@
 /*
-$Id: TransitionImpl.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: TransitionImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -82,9 +82,6 @@ public class TransitionImpl implements Transition {
      * @param destinationState The destination state.
      */
     protected TransitionImpl(StateImpl sourceState, StateImpl destinationState) {
-        assert sourceState != null;
-        assert destinationState != null;
-
         source = sourceState;
         destination = destinationState;
     }
@@ -107,7 +104,6 @@ public class TransitionImpl implements Transition {
      * @param action DOCUMENT ME!
      */
     public void addAction(Action action) {
-        assert action != null;
         actions.add(action);
     }
 
@@ -128,7 +124,6 @@ public class TransitionImpl implements Transition {
      * @param condition DOCUMENT ME!
      */
     public void addCondition(Condition condition) {
-        assert condition != null;
         conditions.add(condition);
     }
 
@@ -149,7 +144,6 @@ public class TransitionImpl implements Transition {
      * @param anEvent DOCUMENT ME!
      */
     public void setEvent(Event anEvent) {
-        assert anEvent != null;
         event = anEvent;
     }
 

@@ -1,5 +1,5 @@
 /*
-$Id: History.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: History.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
 <License>
 
  ============================================================================
@@ -447,7 +447,9 @@ public abstract class History implements WorkflowListener {
      * @throws WorkflowException when something went wrong.
      */
     protected Version restoreVersion(NamespaceHelper helper, Element element) throws WorkflowException {
-        assert element.getLocalName().equals(VERSION_ELEMENT);
+        if (!element.getLocalName().equals(VERSION_ELEMENT)) {
+            throw new WorkflowException("Invalid history XML!");
+        }
         
         Event event = null;
         String eventId = element.getAttribute(EVENT_ATTRIBUTE);
