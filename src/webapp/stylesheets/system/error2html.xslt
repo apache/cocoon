@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.12 2003/12/08 15:17:02 vgritsenko Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.13 2003/12/10 16:32:42 giacomo Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:error="http://apache.org/cocoon/error/2.1">
 
-  <xsl:param name="contextPath" select="string('/cocoon')"/>
+  <xsl:param name="contextPath"/>
 
   <!-- let sitemap override default page title -->
   <xsl:param name="pageTitle" select="//error:notify/error:title"/>
