@@ -53,25 +53,10 @@
         <istrue value="${exclude.webapp.idldocs}"/>
       </or>
     </condition>
-    <condition property="unless.exclude.webapp.scratchpad">
-      <or>
-        <istrue value="${exclude.scratchpad}"/>
-        <istrue value="${exclude.webapp.scratchpad}"/>
-      </or>
-    </condition>
     <condition property="unless.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
     
-    <condition property="unless.exclude.scratchpad">
-      <istrue value="${exclude.scratchpad}"/>
-    </condition>
-    <condition property="unless.exclude.scratchpad.samples">
-      <or>
-        <istrue value="${unless.exclude.webapp.samples}"/>
-        <istrue value="${unless.exclude.scratchpad}"/>
-      </or>
-    </condition>
     <condition property="unless.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
     </condition>
@@ -125,13 +110,6 @@
       <path location="${build.dest}"/>
     </path>
 
-    <!-- Set classpath for scratchpad -->
-    <path id="scratchpad.classpath">
-      <path refid="classpath"/>
-      <fileset dir="./src/scratchpad/lib">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
   </target>
 
   <target name="init-tasks" depends="init">

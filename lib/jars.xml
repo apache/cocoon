@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.88 2003/09/04 08:28:39 bruno Exp $
+    | CVS $Id: jars.xml,v 1.89 2003/09/04 12:42:45 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -523,9 +523,16 @@
 
   <file>
     <title>Servlet API</title>
-    <description></description>
+    <description>Servlet API Version 2.2</description>
     <used-by>Cocoon</used-by>
     <lib>optional/servlet_2_2.jar</lib>
+    <homepage>http://jakarta.apache.org/tomcat/</homepage>
+  </file>
+  <file>
+    <title>Servlet API</title>
+    <description>Servlet API Version 2.2</description>
+    <used-by>Cocoon</used-by>
+    <lib>scratchpad/lib/servlet-2_3.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
@@ -802,4 +809,11 @@
     <homepage>http://quartz.sf.net/</homepage>
    </file>
 
+   <file>
+    <title>Garbage</title>
+    <description>Garbage</description>
+    <used-by>Scratchpad block</used-by>
+    <lib>scratchpad/lib/apache-garbage-0.0.jar</lib>
+    <homepage>http://cocoon.apache.org/</homepage>
+   </file>
 </jars>

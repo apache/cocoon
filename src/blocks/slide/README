@@ -11,7 +11,7 @@
 
 3. Install the Web Application via in Tomcat
 
- ./build.sh -Dinstall.war=$TOMCAT_HOME/webapps -Dinclude.scratchpad.libs=yes install
+ ./build.sh -Dinstall.war=$TOMCAT_HOME/webapps install
 
 4. Start Tomcat
 

@@ -280,6 +280,10 @@
       </target>
 
       <target name="{$block-name}-prepare">
+         <xsl:if test="depend">
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of
+select="substring-after(@project,'cocoon-block-')"/>-prepare</xsl:for-each></xsl:attribute>
+         </xsl:if>
 
          <!-- Test if this block has mocks -->
          <available property="{$block-name}.has.mocks" type="dir" file="{string('${blocks}')}/{$block-name}/mocks/"/>
@@ -299,6 +303,9 @@
                <include name="*.jar"/>
             </fileset>
             <pathelement location="{string('${build.blocks}')}/{$block-name}/mocks"/>
+            <xsl:for-each select="depend[contains(@project,'cocoon-block-')]">
+            <path refid="{substring-after(@project,'cocoon-block-')}.classpath"/>
+            </xsl:for-each>
          </path>
       </target>
 
@@ -398,6 +405,7 @@
          <copy filtering="off" todir="{string('${build.webapp.lib}')}">
             <fileset dir="{string('${blocks}')}/{$block-name}/lib">
                <include name="*.jar"/>
+               <exclude name="servlet*.jar"/>
             </fileset>
          </copy>
       </target>

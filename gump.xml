@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.77 2003/09/03 16:04:01 giacomo Exp $
+  CVS $Id: gump.xml,v 1.78 2003/09/04 12:42:43 cziegeler Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -93,10 +93,11 @@
     *************************************
   -->
 
-  <project name="cocoon-scratchpad">
+  <project name="cocoon-block-scratchpad">
     <package>org.apache.cocoon</package>
 
-    <ant target="gump-scratchpad">
+    <ant target="gump-block">
+      <property name="block-name" value="scratchpad"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
 
@@ -105,11 +106,13 @@
     <depend project="commons-jexl" inherit="all"/>
     <depend project="jakarta-velocity" inherit="all"/>
     <depend project="jakarta-servletapi-4"/>
+    <depend project="cocoon-block-velocity"/>
+    <depend project="cocoon-block-cron"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="cocoon-scratchpad.jar"/>
+    <jar name="blocks/scratchpad-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
