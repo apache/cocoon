@@ -180,6 +180,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="add" fixes-bug="19894" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
+    I18nTransformer: support a dec-and-grp-locale attribute on i18n:number.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="19881" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
+    Fixed synchronisation problem in I18nTransformer when retrieving catalogues.
+  </action>
   <action dev="BRD" type="fix" fixes-bug="19423 and 15525">
     Improved XPointer support in the XIncludeTransformer. Meanwhile improved the way xml:base
     attributes are handled, added support for the xi:fallback element, do XInclude processing
