@@ -57,7 +57,7 @@ import java.net.URLEncoder;
 import org.hsqldb.Trigger;
 
 /**
- * @version CVS $Id: HTTPTrigger.java,v 1.3 2003/10/20 07:19:33 cziegeler Exp $
+ * @version CVS $Id: HTTPTrigger.java,v 1.4 2003/11/07 14:25:07 vgritsenko Exp $
  * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
  */
 public class HTTPTrigger implements Trigger {
@@ -72,10 +72,11 @@ public class HTTPTrigger implements Trigger {
      */
     public void fire(String triggerName, String tableName, Object[] row) {
         try {
+            // FIXME: Method URLEncoder.encode(triggerName.toLowerCase(), "UTF-8") is absent on JDK1.3
             HttpURLConnection con = (HttpURLConnection) new URL(this.protocol, this.hostname, this.port, this.path+"?trigger="
-                            + URLEncoder.encode(triggerName.toLowerCase(), "UTF-8")
+                            + URLEncoder.encode(triggerName.toLowerCase())
                             + "&table="
-                            + URLEncoder.encode(tableName.toLowerCase(), "UTF-8")).openConnection();
+                            + URLEncoder.encode(tableName.toLowerCase())).openConnection();
             con.connect();
             con.getContent();
             con.disconnect();

@@ -53,11 +53,12 @@ package org.apache.cocoon.woody.datatype.convertor;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.woody.datatype.Enum;
 
 /**
  * Description of EnumConvertor.
- * @version CVS $Id: EnumConvertor.java,v 1.2 2003/11/06 23:03:50 ugo Exp $
+ * @version CVS $Id: EnumConvertor.java,v 1.3 2003/11/07 14:28:05 vgritsenko Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -82,7 +83,7 @@ public class EnumConvertor implements Convertor {
             // FIXME: I'd like to throw a o.a.c.ProcessingException here,
             // but unfortunately it's a checked exception.
             // Checked exceptions are evil, aren't they?
-            throw new RuntimeException(e);
+            throw new CascadingRuntimeException("Got exception trying to convert " + value, e);
         }
     }
 
@@ -108,8 +109,7 @@ public class EnumConvertor implements Convertor {
             // FIXME: I'd like to throw a o.a.c.ProcessingException here,
             // but unfortunately it's a checked exception.
             // Checked exceptions are evil, aren't they?
-            throw new RuntimeException("Class " + className + " not found", e);
+            throw new CascadingRuntimeException("Class " + className + " not found", e);
         }
     }
-
 }
