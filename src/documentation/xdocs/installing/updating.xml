@@ -239,5 +239,27 @@
      </p>
    </s2>
   </s1>
+  <s1 title="Components from the scratchpad">
+    <p>Cocoon 2.0.x had some components in the scratchpad area that have now moved into
+       the main trunk as blocks. With this move some things have changed.
+    </p>
+    <s2 title="Session, Authentication and Portal">
+      <p>The session framework (sunShine), the authentication framework (sunRise)
+         and the portal framework (sunSpot) are now blocks (session-fw, authentication-fw
+         and portal-fw).
+      </p>
+      <p>The <em>sunShine transformer</em> has been renamed to <em>session transformer</em>. 
+        All sitemap components starting with <em>sunrise-</em> have been changed to
+        start now with <em>auth-</em>. The <em>sunrise-auth</em> action has been
+        renamed to <em>auth-protect</em>.
+      </p>
+      <p>
+      The transformer namespace has changed from <em>http://cocoon.apache.org/sunshine/1.0</em>
+      to <em>http://apache.org/cocoon/session/1.0</em> and the context names have changed
+      from <em>sunshine</em> to <em>session</em> and from <em>sunrise</em> to
+      <em>authentication</em>.
+      </p>
+    </s2>
+  </s1>
  </body>
 </document>
