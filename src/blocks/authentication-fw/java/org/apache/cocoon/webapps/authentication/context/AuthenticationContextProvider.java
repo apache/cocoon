@@ -57,6 +57,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
@@ -68,7 +69,7 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.6 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.7 2003/11/24 04:07:22 antonio Exp $
 */
 public final class AuthenticationContextProvider
 extends AbstractLogEnabled
@@ -85,7 +86,7 @@ implements SessionContextProvider, ThreadSafe, Component, Serviceable {
     public SessionContext getSessionContext(String name)
     throws ProcessingException {
         AuthenticationContext context = null;
-        if (name.equals(org.apache.cocoon.webapps.authentication.AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
+        if (name.equals(AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
             
             AuthenticationManager authManager = null;
             RequestState state = null;
