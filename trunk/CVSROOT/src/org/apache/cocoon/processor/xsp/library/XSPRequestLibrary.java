@@ -203,8 +203,9 @@ public class XSPRequestLibrary {
     return element;
   }
 
-  public static Element getParameter(HttpServletRequest request, String name, Document document) {
-    String value = request.getParameter(name);
+  public static Element getParameter(HttpServletRequest request, String name, String defaultValue, Document document) {
+    String value = getParameter(request, name, defaultValue);
+
     Element element = document.createElement("request:parameter");
     element.setAttribute("name", name);
 
@@ -213,6 +214,15 @@ public class XSPRequestLibrary {
     }
 
     return element;
+  }
+
+  public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      value = defaultValue;
+    }
+
+    return value;
   }
 
   public static Element getParameterValues(HttpServletRequest request, String name, Document document) {
