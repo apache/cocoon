@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  * does not cache! (If it would cache, the response would be cached twice!)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-30 14:17:12 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-05-03 11:33:07 $
  */
 public final class CachingEventPipeline
 extends AbstractEventPipeline
@@ -144,17 +144,23 @@ implements Disposable, CacheableEventPipeline {
                 CachedEventObject cachedObject = (CachedEventObject)this.eventCache.get(this.pipelineCacheKey);
 
                 if (cachedObject != null) {
-                    getLogger().debug("Found cached content.");
+                    getLogger().debug("Found cached content for '" + environment.getURI() + "'.");
                     Iterator validityIterator = validityObjects.keySet().iterator();
                     ComponentCacheKey validityKey;
                     boolean valid = true;
                     while (validityIterator.hasNext() == true && valid == true) {
                         validityKey = (ComponentCacheKey)validityIterator.next();
                         valid = cachedObject.isValid(validityKey, (CacheValidity)validityObjects.get(validityKey));
+                        if (getLogger().isDebugEnabled() == true) {
+                            CacheValidity cachedValidity = cachedObject.getCacheValidity(validityKey);
+                            getLogger().debug("Compared cached validity '" + cachedValidity +
+                                "' with new validity '" + validityObjects.get(validityKey) +
+                                "' : " + (valid == true ? "valid" : "changed"));
+                        }
                     }
                     if (valid == true) {
 
-                        getLogger().debug("Using valid cached content.");
+                        getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
                         // get all transformers which are not cacheable
                         int transformerSize = this.transformers.size();
                         while (this.firstNotCacheableTransformerIndex < transformerSize) {
@@ -182,14 +188,14 @@ implements Disposable, CacheableEventPipeline {
                                 this.manager.release((Component)deserializer);
                         }
                     } else {
-                        getLogger().debug("Cached content is invalid.");
+                        getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
                         // remove invalid cached object
                         this.eventCache.remove(this.pipelineCacheKey);
                         cachedObject = null;
                     }
                 }
                 if (cachedObject == null) {
-                    getLogger().debug("Caching content for further requests.");
+                    getLogger().debug("Caching content for further requests of '" + environment.getURI() + "'.");
                     xmlSerializer = (XMLSerializer)this.manager.lookup(Roles.XML_SERIALIZER);
                 }
             }

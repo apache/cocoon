@@ -13,7 +13,7 @@ import java.util.Map;
  * This is an cached object as it is stored in the <code>StreamCache</code>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:32:50 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-05-03 11:33:06 $
  */
 public final class CachedStreamObject {
 
@@ -43,6 +43,14 @@ public final class CachedStreamObject {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get the validity object
+     * @return The <CODE>CacheValidity</CODE> object or <CODE>null</CODE>.
+     */
+    public CacheValidity getCacheValidity(ComponentCacheKey componentKey) {
+        return (CacheValidity)this.validityObjects.get(componentKey);
     }
 
     /**

@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-30 14:17:12 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-05-03 11:33:08 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -158,7 +158,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                 CachedStreamObject cachedObject = (CachedStreamObject)this.streamCache.get(pcKey);
 
                 if (cachedObject != null) {
-                    getLogger().debug("Found cached response.");
+                    getLogger().debug("Found cached response for '" + environment.getURI() + "'.");
 
                     Iterator validityIterator = validityObjects.keySet().iterator();
                     ComponentCacheKey validityKey;
@@ -166,9 +166,15 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                     while (validityIterator.hasNext() == true && valid == true) {
                         validityKey = (ComponentCacheKey)validityIterator.next();
                         valid = cachedObject.isValid(validityKey, (CacheValidity)validityObjects.get(validityKey));
+                        if (getLogger().isDebugEnabled() == true) {
+                            CacheValidity cachedValidity = cachedObject.getCacheValidity(validityKey);
+                            getLogger().debug("Compared cached validity '" + cachedValidity +
+                                "' with new validity '" + validityObjects.get(validityKey) +
+                                "' : " + (valid == true ? "valid" : "changed"));
+                        }
                     }
                     if (valid == true) {
-                        getLogger().debug("Using valid cached content.");
+                        getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
 
                         usedCache = true;
                         byte[] response = cachedObject.getResponse();
@@ -177,7 +183,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                             environment.setContentLength(response.length);
                         }
                     } else {
-                        getLogger().debug("Cached content is invalid.");
+                        getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
 
                         // remove invalid cached object
                         this.streamCache.remove(pcKey);
@@ -185,7 +191,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                     }
                 }
                 if (cachedObject == null) {
-                    getLogger().debug("Caching content for further requests.");
+                    getLogger().debug("Caching content for further requests of '" + environment.getURI() + "'.");
                     outputStream = new CachingOutputStream(outputStream);
                 }
             }
@@ -269,7 +275,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                     CachedStreamObject cachedObject = (CachedStreamObject)this.streamCache.get(pcKey);
 
                     if (cachedObject != null) {
-                        getLogger().debug("Found cached response.");
+                        getLogger().debug("Found cached response for '" + environment.getURI() + "'.");
 
                         Iterator validityIterator = validityObjects.keySet().iterator();
                         ComponentCacheKey validityKey;
@@ -277,15 +283,21 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                         while (validityIterator.hasNext() == true && valid == true) {
                             validityKey = (ComponentCacheKey)validityIterator.next();
                             valid = cachedObject.isValid(validityKey, (CacheValidity)validityObjects.get(validityKey));
+                            if (getLogger().isDebugEnabled() == true) {
+                                CacheValidity cachedValidity = cachedObject.getCacheValidity(validityKey);
+                                getLogger().debug("Compared cached validity '" + cachedValidity +
+                                    "' with new validity '" + validityObjects.get(validityKey) +
+                                    "' : " + (valid == true ? "valid" : "changed"));
+                            }
                         }
                         if (valid == true) {
 
-                            getLogger().debug("Using valid cached content.");
+                            getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
                             usedCache = true;
                             outputStream.write(cachedObject.getResponse());
                         } else {
 
-                            getLogger().debug("Cached content is invalid.");
+                            getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
 
                             // remove invalid cached object
                             this.streamCache.remove(pcKey);
@@ -293,7 +305,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                         }
                     }
                     if (cachedObject == null) {
-                        getLogger().debug("Caching content for further requests.");
+                        getLogger().debug("Caching content for further requests of '" + environment.getURI() + "'.");
                         outputStream = new CachingOutputStream(outputStream);
                     }
                 }
