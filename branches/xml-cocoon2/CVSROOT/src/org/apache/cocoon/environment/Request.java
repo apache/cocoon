@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  * Defines an interface to provide client request information .  
  * 
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-30 17:14:25 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 11:15:47 $
  *
  */
 
@@ -240,8 +240,7 @@ public interface Request {
     /**
      *
      * Stores an attribute in this request.
-     * Attributes are reset between requests.  This method is most
-     * often used in conjunction with {@link RequestDispatcher}.
+     * Attributes are reset between requests.  
      *
      * <p>Attribute names should follow the same conventions as
      * package names. Names beginning with <code>java.*</code>,
@@ -591,14 +590,10 @@ public interface Request {
      * </table>
      * </blockquote>
      *
-     * <p>To reconstruct an URL with a scheme and host, use
-     * {@link HttpUtils#getRequestURL}.
-     *
      * @return		a <code>String</code> containing
      *			the part of the URL from the 
      *			protocol name up to the query string
      *
-     * @see		HttpUtils#getRequestURL
      *
      */
 
@@ -683,7 +678,6 @@ public interface Request {
      *
      * @see			#getRequestedSessionId
      * @see			#getSession
-     * @see			HttpSessionContext
      *
      */
 
@@ -719,15 +713,4 @@ public interface Request {
      */
     
     public boolean isRequestedSessionIdFromURL();
-    
-    /**
-     *
-     * @deprecated		As of Version 2.1 of the Java Servlet
-     *				API, use {@link #isRequestedSessionIdFromURL}
-     *				instead.
-     *
-     */
-
-    public boolean isRequestedSessionIdFromUrl();
-
 }

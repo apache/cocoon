@@ -18,7 +18,7 @@ import javax.servlet.http.Cookie;
  * Defines an interface to provide client response information .  
  * 
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-30 17:14:25 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 11:15:47 $
  *
  */
 
@@ -60,15 +60,9 @@ public interface Response {
      * the client. The content type may include the type of character
      * encoding used, for example, <code>text/html; charset=ISO-8859-4</code>.
      *
-     * <p>If obtaining a <code>PrintWriter</code>, this method should be 
-     * called first.
-     *
      *
      * @param type 	a <code>String</code> specifying the MIME 
      *			type of the content
-     *
-     * @see 		#getOutputStream
-     * @see 		#getWriter
      *
      */
 
@@ -76,8 +70,7 @@ public interface Response {
     
     /**
      * Sets the locale of the response, setting the headers (including the
-     * Content-Type's charset) as appropriate.  This method should be called
-     * before a call to {@link #getWriter}.  By default, the response locale
+     * Content-Type's charset) as appropriate.  By default, the response locale
      * is the default locale for the server.
      * 
      * @param loc  the locale of the response
@@ -160,31 +153,9 @@ public interface Response {
      * 			the unchanged URL otherwise.
      *
      * @see #sendRedirect
-     * @see #encodeUrl
      */
 
     public String encodeRedirectURL(String url);
-
-    /**
-     * @deprecated	As of version 2.1, use encodeURL(String url) instead
-     *
-     * @param	url	the url to be encoded.
-     * @return		the encoded URL if encoding is needed; 
-     * 			the unchanged URL otherwise.
-     */
-
-    public String encodeUrl(String url);
-    
-    /**
-     * @deprecated	As of version 2.1, use 
-     *			encodeRedirectURL(String url) instead
-     *
-     * @param	url	the url to be encoded.
-     * @return		the encoded URL if encoding is needed; 
-     * 			the unchanged URL otherwise.
-     */
-
-    public String encodeRedirectUrl(String url);
 
     /**
      * Sends a temporary redirect response to the client using the
@@ -269,32 +240,14 @@ public interface Response {
     /**
      * Sets the status code for this response.  This method is used to
      * set the return status code when there is no error (for example,
-     * for the status codes SC_OK or SC_MOVED_TEMPORARILY).  If there
-     * is an error, the <code>sendError</code> method should be used
-     * instead.
+     * for the status codes SC_OK or SC_MOVED_TEMPORARILY).  
      *
      * @param	sc	the status code
      *
-     * @see #sendError
      */
 
     public void setStatus(int sc);
   
-    /**
-     * @deprecated As of version 2.1, due to ambiguous meaning of the 
-     * message parameter. To set a status code 
-     * use <code>setStatus(int)</code>, to send an error with a description
-     * use <code>sendError(int, String)</code>.
-     *
-     * Sets the status code and message for this response.
-     * 
-     * @param	sc	the status code
-     * @param	sm	the status message
-     */
-
-    public void setStatus(int sc, String sm);
-
-    
 }
 
 
