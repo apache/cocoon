@@ -22,10 +22,17 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
 
   <map:view name="pretty-content" from-label="data">
     <map:transform src="common/style/xsl/html/simple-xml2html.xsl"/>
     <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
   </map:view>
   
  </map:views>
