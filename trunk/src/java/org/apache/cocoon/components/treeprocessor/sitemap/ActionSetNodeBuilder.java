@@ -57,13 +57,12 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
-import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNodeBuilder.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: ActionSetNodeBuilder.java,v 1.3 2003/08/07 11:08:06 cziegeler Exp $
  */
 
 public class ActionSetNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
