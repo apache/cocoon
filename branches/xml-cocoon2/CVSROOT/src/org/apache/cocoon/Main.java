@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-09-03 17:45:45 $
+ * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-09-16 00:18:28 $
  */
 
 public class Main {
@@ -215,7 +215,7 @@ public class Main {
      * this method is the following:
      *
      * <ul>
-     *  <li>the link view of the given URI is called and the resourced linked
+     *  <li>the link view of the given URI is called and the resources linked
      *      to the requested one are obtained.</li>
      *  <li>for each link, this method is recursively called and returns
      *      the file used to save the resource on disk.</li>
@@ -223,7 +223,7 @@ public class Main {
      *      view of the resource is called to obtain a link-translated version
      *      of the resource with the given link map</li>
      *  <li>the resource is saved on disk and the URI MIME type is checked for 
-     *      consistenci with the URI and, if the extention is inconsistent
+     *      consistency with the URI and, if the extention is inconsistent
      *      or absent, the file is renamed</li>
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
@@ -244,7 +244,7 @@ public class Main {
         String type = getPage(uri, translatedLinks, output);
         output.close();
         
-        if (!matchesExtention(uri, type)) {
+        if (!matchesExtension(uri, type)) {
             outputFile.renameTo(getFile(uri, type));
         }
         
@@ -271,7 +271,7 @@ public class Main {
         return new File(destDir, uri + File.separator + getExtension(type));
     }
     
-    boolean matchesExtention(String uri, String type) {
+    boolean matchesExtension(String uri, String type) {
         int dotindex = uri.lastIndexOf('.');
         int slashindex = uri.indexOf('/', dotindex);
         if ((dotindex != -1) && (slashindex == -1)) {
