@@ -49,7 +49,10 @@
     <class name="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
            extends="org.apache.cocoon.portal.layout.AbstractLayout">
         <map-to xml="composite-layout"/>
-        <field name="items" type="org.apache.cocoon.portal.layout.Item" collection="collection" set-method="addItem">
+        <field name="items" type="org.apache.cocoon.portal.layout.Item" 
+               collection="collection" 
+               set-method="addItem"
+               get-method="getItems">
             <bind-xml auto-naming="deriveByClass" />
         </field>
     </class>

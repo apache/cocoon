@@ -82,7 +82,7 @@ import org.exolab.castor.xml.Marshaller;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.1 2003/05/27 11:54:18 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.2 2003/05/27 14:07:16 cziegeler Exp $
  */
 public class StaticProfileManager 
     extends AbstractLogEnabled 
@@ -280,4 +280,11 @@ public class StaticProfileManager
 
     public void saveUserProfiles() {
     }
+    
+    public void login() {
+    }
+    
+    public void logout() {
+    }
+    
 }

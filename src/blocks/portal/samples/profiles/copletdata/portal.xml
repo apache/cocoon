@@ -86,6 +86,14 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/liverss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>error-uri</name>
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CZ_weblog.rss</value>
       </attribute>
    </coplet-data>
