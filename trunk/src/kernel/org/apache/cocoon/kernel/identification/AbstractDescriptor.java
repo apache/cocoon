@@ -32,7 +32,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * interface .</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public abstract class AbstractDescriptor extends ParsedIdentifier
 implements Descriptor {
@@ -81,6 +81,13 @@ implements Descriptor {
     public AbstractDescriptor(Configuration configuration)
     throws ConfigurationException, IdentificationException {
         super(configuration.getStringAttribute("id"));
+        
+        /* Check the namespace */
+        if (!NAMESPACE.equals(configuration.namespace())) {
+            throw new ConfigurationException("Invalid descriptor namespace \""
+                                             + configuration.namespace()
+                                             + "\"", configuration);
+        }
         
         /* The identifier of the block we extend */
         String idstring = configuration.getStringAttribute("extends", null);
