@@ -19,13 +19,7 @@
 
  <map:components>
 
-  <map:generators default="file">   
-    <map:generator name="form" src="org.apache.cocoon.forms.generation.FormGenerator" logger="forms"/>
-    <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
-  </map:generators>
-
   <map:transformers default="xalan">    
-    <map:transformer name="form" src="org.apache.cocoon.forms.transformation.FormTemplateTransformer" logger="forms"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="forms">
         <catalogue id="other" name="OtherMessages" location="messages"/>
@@ -44,10 +38,6 @@
     <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>
     <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms"/>
   </map:actions>
-
-  <map:pipes default="caching">
-  </map:pipes>
-
  </map:components>
 
  <map:views>
