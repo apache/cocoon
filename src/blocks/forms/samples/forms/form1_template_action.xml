@@ -94,54 +94,32 @@
               </fi:items>
             </fi:group>
             
-            
             <!-- manual layout of fields, without use of a fi:group -->
-            <ft:widget-label id="contacts"/>
-            <br/>
+            <ft:widget-label id="contacts"/><br/>
             <ft:repeater-size id="contacts"/>
             <table border="1">
               <tr>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="firstname"/>
-                </th>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="lastname"/>
-                </th>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="phone"/>
-                </th>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="email"/>
-                </th>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="birthdate"/>
-                </th>
-                <th>
-                  <ft:repeater-widget-label id="contacts" widget-id="select"/>
-                </th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="firstname"/></th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="lastname"/></th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="phone"/></th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="email"/></th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="birthdate"/></th>
+                <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
               </tr>
               <!-- The contents of the repeater-widget element is a template that will
-        be applied to each row in the repeater. -->
+                   be applied to each row in the repeater. -->
               <ft:repeater-widget id="contacts">
                 <tr>
+                  <td><ft:widget id="firstname"/></td>
+                  <td><ft:widget id="lastname"/></td>
+                  <td><ft:widget id="phone"/></td>
+                  <td><ft:widget id="email"/></td>
                   <td>
-                    <ft:widget id="firstname"/>
+                    <ft:widget id="birthdate">
+                      <fi:styling type="date" format="dd/MM/yyyy"/>
+                    </ft:widget>
                   </td>
-                  <td>
-                    <ft:widget id="lastname"/>
-                  </td>
-                  <td>
-                    <ft:widget id="phone"/>
-                  </td>
-                  <td>
-                    <ft:widget id="email"/>
-                  </td>
-                  <td>
-                    <ft:widget id="birthdate"/>
-                  </td>
-                  <td>
-                    <ft:widget id="select"/>
-                  </td>
+                  <td><ft:widget id="select"/></td>
                 </tr>
               </ft:repeater-widget>
               <tr>
@@ -158,3 +136,4 @@
     </ft:form-template>
   </content>
 </page>
+
