@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.359 2004/06/08 21:44:42 tony Exp $:-->
+<!-- CVS $Id: status.xml,v 1.360 2004/06/09 09:41:16 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -206,6 +206,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+     Add sitemap versioning support to tree processor and remove unused
+     support for other tree based languages.
+   </action>
    <action dev="ATC" type="add" due-to="Leszek Gawron">
      New Input modules: URLEncodeModule and URLDecodeModule
    </action>

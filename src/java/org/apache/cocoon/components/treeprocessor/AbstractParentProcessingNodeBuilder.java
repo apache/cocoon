@@ -30,7 +30,7 @@ import java.util.List;
  * children nodes.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: AbstractParentProcessingNodeBuilder.java,v 1.4 2004/06/09 09:41:15 cziegeler Exp $
  */
 
 public abstract class AbstractParentProcessingNodeBuilder extends AbstractProcessingNodeBuilder implements Configurable {
@@ -90,8 +90,8 @@ public abstract class AbstractParentProcessingNodeBuilder extends AbstractProces
     }
 
     protected boolean isParameter(Configuration config) throws ConfigurationException {
-        String name = config.getName();
-        if (name.equals(this.treeBuilder.getParameterName())) {
+        final String name = config.getName();
+        if (name.equals("parameter")) {
             if (this.hasParameters()) {
                 return true;
             } else {
