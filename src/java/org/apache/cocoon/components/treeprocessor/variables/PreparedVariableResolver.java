@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.4 2004/04/02 20:22:07 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.5 2004/04/03 20:41:26 upayavira Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -77,51 +77,83 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         tokens = new ArrayList();
         int pos=0;
         int i;
+        boolean escape = false;
         for (i=0;i< expr.length();i++) {
             char c = expr.charAt(i);
-            if (c=='{' || c=='}' || c==':') {
+            if (escape) {
+                escape = false;
+            } else if (c=='\\' && i< expr.length()) {
+                char nextChar = expr.charAt(i+1);
+                if (nextChar == '{' || nextChar == '}') {
+                    expr = expr.substring(0, i) + expr.substring(i+1);
+                    escape = true;
+                    i--;
+                }
+            } else if (c=='{') {
                 if (i> pos) {
                     tokens.add(new Token(expr.substring(pos, i)));
                 }
-                if (c=='{') {
-                    openCount++;
-                    tokens.add(OPEN_TOKEN);
-                    int colonPos = indexOf(expr, ":", i);
-                    int closePos = indexOf(expr, "}", i);
-                    int openPos  = indexOf(expr, "{", i);
-                    if (openPos < colonPos && openPos < closePos) {
-                        throw new PatternException("Invalid '{' at position "+ i + " in expression " + expr);
-                    } else if (colonPos < closePos) {
-                        // we've found a module
-                        Token token;
-                        String module = expr.substring(i+1, colonPos);
-                        
-                        if (module.equals("sitemap")) {
-                            // Explicit prefix for sitemap variable
-                            needsMapStack = true;
-                            token = new Token(PREFIXED_SITEMAP_VAR);
-                        } else if (module.startsWith("#")) {
-                            // anchor syntax refering to a name result level
-                            needsMapStack = true;
-                            token = new Token(ANCHOR_VAR, module.substring(1));
-                        } else {
-                            // Module used
-                            token = getNewModuleToken(module);
-                        }
-                        tokens.add(token);
-                        i = colonPos-1;
-                    } else {
-                        // Unprefixed name : sitemap variable
+                openCount++;
+                tokens.add(OPEN_TOKEN);
+                int colonPos = indexOf(expr, ":", i);
+                int closePos = indexOf(expr, "}", i);
+                int openPos  = indexOf(expr, "{", i);
+                if (openPos < colonPos && openPos < closePos) {
+                    throw new PatternException("Invalid '{' at position "+ i + " in expression " + expr);
+                } else if (colonPos < closePos) {
+                    // we've found a module
+                    Token token;
+                    String module = expr.substring(i+1, colonPos);
+                    
+                    if (module.equals("sitemap")) {
+                        // Explicit prefix for sitemap variable
                         needsMapStack = true;
-                        tokens.add(getNewSitemapToken(expr.substring(i+1, closePos)));
-                        i = closePos-1;
+                        token = new Token(PREFIXED_SITEMAP_VAR);
+                    } else if (module.startsWith("#")) {
+                        // anchor syntax refering to a name result level
+                        needsMapStack = true;
+                        token = new Token(ANCHOR_VAR, module.substring(1));
+                    } else {
+                        // Module used
+                        token = getNewModuleToken(module);
                     }
-                } else if (c=='}') {
-                    closeCount++;
-                    tokens.add(CLOSE_TOKEN);
-                } else if (c==':') {
-                    tokens.add(COLON_TOKEN);
+                    tokens.add(token);
+                    i = colonPos-1;
+                } else {
+                    // Unprefixed name : sitemap variable
+                    needsMapStack = true;
+                    tokens.add(getNewSitemapToken(expr.substring(i+1, closePos)));
+                    i = closePos-1;
                 }
+                pos=i+1;
+            } else if (c=='}') {
+                if (i>0 && expr.charAt(i-1) == '\\') {
+                    continue;
+                }
+                if (i> pos) {
+                    tokens.add(new Token(expr.substring(pos, i)));
+                }
+                closeCount++;
+                tokens.add(CLOSE_TOKEN);
+                pos=i+1;
+            } else if (c==':') {
+                if (tokens.size()>0) {
+                    int lastTokenType = ((Token)tokens.get(tokens.size()-1)).getType();
+                    if (lastTokenType != PREFIXED_SITEMAP_VAR &&
+                        lastTokenType != ANCHOR_VAR &&
+                        lastTokenType != THREADSAFE_MODULE &&
+                        lastTokenType != STATEFUL_MODULE) {
+                            continue;
+                    }
+                }
+                if (i != pos) {
+                    // this colon isn't part of a module reference 
+                    continue;
+                }
+                if (i> pos) {
+                    tokens.add(new Token(expr.substring(pos, i)));
+                }
+                tokens.add(COLON_TOKEN);
                 pos=i+1;
             }
         }
