@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,7 @@ public class XMLResourceBundleFactory
        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
     protected Map cache = Collections.synchronizedMap(new HashMap());
-    
+
     /**
      * Should we load bundles to cache on startup or not?
      */
@@ -79,7 +79,7 @@ public class XMLResourceBundleFactory
      * Service Manager
      */
     protected ServiceManager manager = null;
-    
+
     /**
      * Source resolver
      */
@@ -255,33 +255,27 @@ public class XMLResourceBundleFactory
             synchronized (this) {
                 bundle = selectCached(fileName);
                 if (bundle == null) {
+                    boolean localeAvailable = (locale != null && !locale.getLanguage().equals(""));
+                    index++;
                     XMLResourceBundle parentBundle = null;
-                    if (locale != null && !locale.getLanguage().equals("")) {
-                        if (++index == directories.length)
-                        {
-                            parentBundle = _select(directories, 0, name, getParentLocale(locale));
-                        }
-                        else
-                        {
-                            parentBundle = _select(directories, index, name, locale);
-                        }
-                    } else if (++index < directories.length) {
+                    if (localeAvailable && index == directories.length) {
+                        // all directories have been searched with this locale,
+                        // now start again with the first directory and the parent locale
+                        parentBundle = _select(directories, 0, name, getParentLocale(locale));
+                    } else if (index < directories.length) {
+                        // there are directories left to search for with this locale
                         parentBundle = _select(directories, index, name, locale);
                     }
-
                     if (!isNotFoundBundle(fileName)) {
                         bundle = _loadBundle(name, fileName, locale, parentBundle);
-
                         updateCache(fileName, bundle);
                     }
-
                     if (bundle == null) {
                         return parentBundle;
                     }
                 }
             }
         }
-
         return bundle;
     }
 
@@ -372,7 +366,7 @@ public class XMLResourceBundleFactory
                 throw new CascadingRuntimeException("Cannot resolve " + base, ioe);
             }
         }
-        
+
         sb.append(name);
 
         if (locale != null) {
