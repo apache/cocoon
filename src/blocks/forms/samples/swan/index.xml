@@ -96,8 +96,7 @@
         <a href="template.flow?file=form_model_gui_template_data.xml">template</a><br/>
       </div>
     </div>
-    <h3>== Profiling Data ==</h3>
-    <a href="profile.html">profile.html</a><br/>
+    <a href="profile.html">Profiling Data</a><br/>
   </body>
 </html>
 
