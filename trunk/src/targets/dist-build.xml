@@ -56,11 +56,6 @@
          includes="${dist.name}/**">
     </zip>
 
-<!--    <tar tarfile="${dist.target}/${dist.name}.tar" 
-         longfile="gnu"
-         basedir="${dist.root}"
-         includes="${dist.name}/**">
-    </tar> -->
     <tar tarfile="${dist.target}/${dist.name}.tar" 
          longfile="gnu">
          <tarfileset dir="${dist.root}">
