@@ -14,10 +14,19 @@
   <s1 title="Important Notice">
 
    <p><strong>IMPORTANT: Before posting a question or problem to any mailing list,
-    </strong>please first look at the <connect href="faq.xml">FAQs</connect>
-    and the <connect href="mail-archives.xml">mailing list
-    archives</connect> to avoid asking a question which has already been
-    asked and answered dozens of times before!
+    </strong>please first look at the following resources in this order:</p>
+   <ol>
+    <li><connect href="faq.xml">FAQs</connect> - statistically speaking, the answer
+     to your question has a good chance of being in here.</li>
+    <li><link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">ODP XML links</link>
+     - a wealth of general XML information.</li>
+    <li><connect href="mail-archives.xml">Mailing list archives</connect> - 
+     a veritable goldmine of Cocoon-specific information - if you know where to look!</li>
+   </ol>
+   <p>
+    Recently, over 50% of questions asked on cocoon users have already been
+    asked and answered several times before - often the same
+    day or a few days ago!
    </p>
 
   </s1>
@@ -33,8 +42,9 @@
 
    <p><strong>This is not an appropriate list for general XSL questions.</strong> 
     Instead
-    look at the FAQ for XML/XSL links (such as the excellent
-    <link href="http://www.zvon.org/xxl/XSLTutorial/Books/Book1/index.html">
+    look at the <link href="http://dmoz.org/">ODP</link> for 
+    <link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">XML/XSL links</link>
+    (such as the excellent <link href="http://www.zvon.org/xxl/XSLTutorial/Books/Book1/index.html">
     XSL tutorial at Zvon.org</link>) or try the 
     <link href="http://www.mulberrytech.com/xsl/">Mulberrytech XSL list</link>.</p>
 
@@ -51,7 +61,7 @@
 
    <p>Please also have some consideration for the other users on the list - this is a
     busy list and we do not appreciate getting the exact same message posted impatiently
-    several times a day! Doing so is only likely to make your question answered more
+    several times a day/week! Doing so is only likely to make your question answered more
     slowly, or not at all, not faster.</p>
 
    <p>If you would like to make commercial solicitations, please ask permission from
@@ -75,7 +85,7 @@
 
    <p>Note this is <strong>NOT</strong> for general Cocoon 1 questions like "Why
     isn't Cocoon working on my machine?" - 
-    please ask those sorts of questions cocoon users (after reading the
+    please ask those sorts of questions on cocoon-users (after reading the
     FAQ first, of course).</p>
 
    <note>This list is moderated, so the first time you post, there will be a
@@ -97,7 +107,28 @@
 
   </s1>
 
+  <s1 title="XSP Dev">
+   <p><link href="mailto:xsp-dev-subscribe@xml.apache.org">Subscribe</link>
+     <link href="mailto:xsp-dev-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>This list began life on November 2000, and was created to discuss the
+    standardisation and implementation of the dynamic content language XSP,
+    which is used not only in Cocoon but in other software such as AxKit.
+    You are recommended to have a strong working knowledge of XSP before joining
+    this list.</p>
+
+   <p>Note this is <strong>NOT</strong> for general XSP questions like
+    "Why doesn't my XSP page work?" - please ask those sorts of questions on
+    the relevant list for your XSP software (e.g. cocoon-users if you're using
+    Cocoon) - after checking the FAQ first of course!
+   </p>
+  </s1>
+
   <s1 title="Related Mailing Lists">
+
+   <p>(See also <link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
+    ODP XML links</link> for related websites.)</p>
    <ul>
     <li><link href="http://www.mulberrytech.com/xsl/">Mulberrytech XSL list</link> -
       more appropriate than Cocoon Users for general XSL questions.</li>
