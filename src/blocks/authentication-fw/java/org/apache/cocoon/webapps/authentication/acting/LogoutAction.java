@@ -67,7 +67,7 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  This action logs the current user out of a given handler
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LogoutAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: LogoutAction.java,v 1.3 2003/05/23 12:13:13 cziegeler Exp $
 */
 public final class LogoutAction
 extends ComposerAction
@@ -101,7 +101,7 @@ implements ThreadSafe {
         // logout
         AuthenticationManager authManager = null;
         try {
-            RequestState state = RequestState.getState();
+            RequestState state = authManager.getState();
             
             authManager = (AuthenticationManager) this.manager.lookup(AuthenticationManager.ROLE);
             final String handlerName = par.getParameter("handler",

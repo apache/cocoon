@@ -60,10 +60,12 @@ import org.apache.cocoon.ProcessingException;
  * per request, an authentication context once per session etc.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProvider.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: SessionContextProvider.java,v 1.3 2003/05/23 12:13:13 cziegeler Exp $
 */
 public interface SessionContextProvider {
 
+    String ROLE = SessionContextProvider.class.getName();
+    
     /**
      * Get the context
      * @param name The name of the context

@@ -52,9 +52,17 @@ package org.apache.cocoon.webapps.session.context;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.session.SessionConstants;
 
@@ -63,11 +71,16 @@ import org.apache.cocoon.webapps.session.SessionConstants;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.3 2003/05/23 12:13:13 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
-implements SessionContextProvider {
+extends AbstractLogEnabled
+implements SessionContextProvider, ThreadSafe, Contextualizable, Composable, Component {
 
+    protected Context context;
+    
+    protected ComponentManager manager;
+    
     /**
      * Get the context
      * @param name The name of the context
@@ -76,8 +89,7 @@ implements SessionContextProvider {
      */
     public SessionContext getSessionContext(String name)
     throws ProcessingException {
-        final ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Map objectModel = ContextHelper.getObjectModel( this.context );
         
         // get the context from the object model
         SessionContext context = this.getContext( objectModel, name );
@@ -88,7 +100,7 @@ implements SessionContextProvider {
             } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
                 context = new RequestSessionContext();
                 context.setup(name, null, null);
-                ((RequestSessionContext)context).setup( objectModel, manager );
+                ((RequestSessionContext)context).setup( objectModel, this.manager );
             } else if ( name.equals(SessionConstants.RESPONSE_CONTEXT) ) {
                 context = new ResponseSessionContext();
                 context.setup(name, null, null);
@@ -104,7 +116,7 @@ implements SessionContextProvider {
      */
     public boolean existsSessionContext(String name)
     throws ProcessingException {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         return (this.getContext( objectModel, name) != null);
     }
 
@@ -127,4 +139,19 @@ implements SessionContextProvider {
         }
         return context; 
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+    }
+
 }

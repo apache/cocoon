@@ -22,4 +22,9 @@
         shorthand="session-transaction-manager"
         default-class="org.apache.cocoon.webapps.session.components.DefaultTransactionManager"/>
 
+  <role name="org.apache.cocoon.webapps.session.context.SessionContextProviderSelector"
+        shorthand="session-context-providers"
+        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+  </role>
+
 </xroles>
