@@ -736,8 +736,8 @@
       binding, Java-to-SQL persistence.
     </description>
     <used-by>CastorTransformer and precept</used-by>
-    <lib>optional/castor-0.9.5.4-xml.jar</lib>
-    <homepage>http://castor.exolab.org/</homepage>
+    <lib>optional/castor-0.9.6-xml.jar</lib>
+    <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
   <!-- Currently only used by the build
