@@ -60,7 +60,20 @@ import org.xml.sax.SAXException;
  * the Widget's themselves.
  */
 public interface WidgetDefinition {
+
+    /**
+     * Gets source location of this widget definition.
+     */
+    public String getLocation();
+
+    /**
+     * Gets id of this widget definition.
+     */
     public String getId();
+
+    /**
+     * Creates and returns a widget based on this widget definition.
+     */
     public Widget createInstance();
 
     /**

@@ -76,7 +76,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.18 2003/11/27 02:14:08 vgritsenko Exp $
+ * @version CVS $Id: Field.java,v 1.19 2003/12/19 21:28:39 tim Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -96,6 +96,7 @@ public class Field extends AbstractWidget {
 
     public Field(FieldDefinition fieldDefinition) {
         this.definition = fieldDefinition;
+        setLocation(fieldDefinition.getLocation());
     }
 
     public FieldDefinition getFieldDefinition() {

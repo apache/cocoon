@@ -68,6 +68,7 @@ import java.util.HashSet;
 public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         AggregateFieldDefinition definition = new AggregateFieldDefinition();
+        setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
 

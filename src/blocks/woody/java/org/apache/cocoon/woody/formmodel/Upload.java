@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.1 2003/11/13 14:57:05 sylvain Exp $
+ * @version CVS $Id: Upload.java,v 1.2 2003/12/19 21:28:39 tim Exp $
  */
 public class Upload extends AbstractWidget {
     private UploadDefinition definition;
@@ -77,6 +77,7 @@ public class Upload extends AbstractWidget {
 
     public Upload(UploadDefinition uploadDefinition) {
         this.definition = uploadDefinition;
+        setLocation(uploadDefinition.getLocation());
     }
 
     public UploadDefinition getUploadDefinition() {

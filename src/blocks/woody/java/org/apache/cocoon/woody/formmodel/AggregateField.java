@@ -94,6 +94,7 @@ public class AggregateField extends AbstractWidget {
 
     protected AggregateField(AggregateFieldDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     protected void addField(Field field) {

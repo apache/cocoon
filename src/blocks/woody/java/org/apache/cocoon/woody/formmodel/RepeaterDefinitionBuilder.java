@@ -64,6 +64,7 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
         
         RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
+        setLocation(repeaterElement, repeaterDefinition);
         setId(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
 

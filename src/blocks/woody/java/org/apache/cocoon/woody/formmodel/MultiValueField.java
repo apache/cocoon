@@ -87,6 +87,7 @@ public class MultiValueField extends AbstractWidget {
 
     public MultiValueField(MultiValueFieldDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     public String getId() {

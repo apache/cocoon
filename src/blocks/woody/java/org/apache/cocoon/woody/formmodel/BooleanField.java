@@ -79,6 +79,7 @@ public class BooleanField extends AbstractWidget {
 
     public BooleanField(BooleanFieldDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     public String getId() {

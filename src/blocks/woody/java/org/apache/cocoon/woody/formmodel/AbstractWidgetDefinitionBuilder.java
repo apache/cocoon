@@ -90,6 +90,10 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
     }
 
+    protected void setLocation(Element widgetElement, AbstractWidgetDefinition widgetDefinition) {
+        widgetDefinition.setLocation(DomHelper.getLocation(widgetElement));
+    }
+
     protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         String id = DomHelper.getAttribute(widgetElement, "id");
         if (id.length() < 1)

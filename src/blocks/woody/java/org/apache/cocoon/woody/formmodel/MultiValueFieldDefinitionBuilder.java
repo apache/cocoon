@@ -64,7 +64,7 @@ import org.apache.cocoon.woody.event.ValueChangedListener;
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-
+        setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
 

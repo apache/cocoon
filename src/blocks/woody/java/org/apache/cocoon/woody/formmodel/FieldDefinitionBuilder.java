@@ -65,6 +65,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         FieldDefinition fieldDefinition = new FieldDefinition();
+        setLocation(widgetElement, fieldDefinition);
         setId(widgetElement, fieldDefinition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");

@@ -58,6 +58,7 @@ import org.w3c.dom.Element;
 public class MessagesDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MessagesDefinition messagesDefinition = new MessagesDefinition();
+        setLocation(widgetElement, messagesDefinition);
         setId(widgetElement, messagesDefinition);
         setDisplayData(widgetElement, messagesDefinition);
         return messagesDefinition;

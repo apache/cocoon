@@ -21,6 +21,7 @@ public class Output extends AbstractWidget {
 
     protected Output(OutputDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     public String getId() {

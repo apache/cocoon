@@ -75,6 +75,7 @@ public class Action extends AbstractWidget {
 
     public Action(ActionDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     public String getId() {
