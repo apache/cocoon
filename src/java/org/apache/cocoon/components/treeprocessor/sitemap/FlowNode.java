@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,13 +21,10 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.cocoon.Constants;
+
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -38,16 +35,41 @@ import org.apache.cocoon.environment.Environment;
  * @version CVS $Id$
  */
 public class FlowNode extends AbstractProcessingNode
-        implements Composable, Contextualizable, Disposable {
+                      implements Composable, Disposable {
 
-    ComponentManager manager;
-    String language;
-    Context context;
-    Interpreter interpreter;
-    ComponentSelector selector;
-    
+    private ComponentManager manager;
+    private String language;
+    private Interpreter interpreter;
+    private ComponentSelector interpreterSelector;
+
     public FlowNode(String language) {
         this.language = language;
+    }
+
+    /**
+     * Lookup an flow {@link org.apache.cocoon.components.flow.Interpreter}
+     * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
+     * in the sitemap.
+     *
+     * @param manager a <code>ComponentManager</code> value
+     * @exception ComponentException if no flow interpreter could be obtained
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+
+        try {
+            this.interpreterSelector = (ComponentSelector) manager.lookup(Interpreter.ROLE);
+            // Obtain the Interpreter instance for this language
+            this.interpreter = (Interpreter) this.interpreterSelector.select(language);
+            // Set interpreter ID as location of the flow node (which includes full sitemap file path)
+            this.interpreter.setInterpreterID(this.location);
+        } catch (ComponentException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ComponentException(language,
+                                         "FlowNode: Couldn't obtain a flow interpreter for '" + language +
+                                         "' at " + getLocation(), e);
+        }
     }
 
     /**
@@ -64,49 +86,22 @@ public class FlowNode extends AbstractProcessingNode
         return true;
     }
 
-    public void contextualize(org.apache.avalon.framework.context.Context context)
-        throws ContextException {
-        this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-    }
-
-    /**
-     *
-     * Lookup an flow {@link org.apache.cocoon.components.flow.Interpreter}
-     * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
-     * in the sitemap.
-     *
-     * @param manager a <code>ComponentManager</code> value
-     * @exception ComponentException if no flow interpreter could be obtained
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-
-        try {
-            this.selector = (ComponentSelector)manager.lookup(Interpreter.ROLE);
-            // Obtain the Interpreter instance for this language
-            this.interpreter = (Interpreter)selector.select(language);
-        } catch (Exception ex) {
-            throw new ComponentException(language,
-                "ScriptNode: Couldn't obtain a flow interpreter for " + language + ": " + ex);
-        }
-    }
-
     public Interpreter getInterpreter() {
         return interpreter;
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            if ( this.selector != null ) {
-                this.selector.release( (Component)this.interpreter );
+        if (this.manager != null) {
+            if (this.interpreterSelector != null) {
+                this.interpreterSelector.release((Component) this.interpreter);
                 this.interpreter = null;
+
+                this.manager.release(this.interpreterSelector);
+                this.interpreterSelector = null;
             }
-            this.manager.release( this.selector );
-            this.selector = null;
             this.manager = null;
         }
     }
