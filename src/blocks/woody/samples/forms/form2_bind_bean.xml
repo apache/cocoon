@@ -36,6 +36,8 @@
     unique-row-id="id"
     unique-path="@id">
 
+	<!-- compare to xml-binding: the convertor is not needed here -->
+
     <!-- important note: the row-path is used inside jxpath-createPath context,
     as a consequence it cannot have dependent children or predicates -->
 

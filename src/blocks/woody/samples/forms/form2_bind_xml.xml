@@ -59,6 +59,10 @@
     unique-row-id="id"
     unique-path="@id"
     >
+    
+    <!-- optional convertor to use for mapping the unique id -->
+    <wd:convertor datatype="long" />
+        
     <!-- important note: the row-path is used inside jxpath-createPath context,
          as a consequence it cannot have dependent children or predicates -->
 
