@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.5 2003/03/30 12:48:32 ghoward Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.6 2003/05/08 06:39:47 bdelacretaz Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -8,11 +8,14 @@
 
 <xsl:param name="contextPath" select="string('/cocoon')"/>
 
+<!-- let sitemap override default page title -->
+<xsl:param name="pageTitle" select="//error:notify/error:title"/>
+
 <xsl:template match="error:notify">
  <html>
   <head>
    <title>
-    <xsl:value-of select="error:title"/>
+    <xsl:value-of select="$pageTitle"/>
    </title>
    <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    <style>
@@ -24,7 +27,7 @@
    <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
   </head>
   <body>
-   <h1><xsl:value-of select="error:title"/></h1>
+   <h1><xsl:value-of select="$pageTitle"/></h1>
 
    <p class="message">
     <xsl:call-template name="returns2br">
