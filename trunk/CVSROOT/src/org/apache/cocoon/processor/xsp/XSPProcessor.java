@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.5 2000-01-08 16:27:09 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.6 2000-01-23 22:52:52 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,7 +71,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.5 $ $Date: 2000-01-08 16:27:09 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-23 22:52:52 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -151,6 +151,13 @@ public class XSPProcessor extends AbstractActor
         this.languages.put(languageName, languageProcessor);
 
         // Do template
+/* START: Build XSP parameter dictionary */
+/* Add manager role key/value pairs */
+/* Add global XSP objects */
+/* END: Build XSP parameter dictionary */
+
+/* START: Create a new XSP core library given URI  */
+/* Pass global XSP parameter dictionary */
         XSPTemplate template = new XSPTemplate(transformer, parser, null);
         template.setLanguageName(languageName);
 
@@ -173,6 +180,7 @@ public class XSPProcessor extends AbstractActor
         }
 
         this.xspLibrary.addTemplate(template);
+/* END: Create a new XSP core library given URI  */
       }
     } catch (Exception e) {
       throw new RuntimeException("Error during initialization: " + e.getMessage());
@@ -184,6 +192,7 @@ public class XSPProcessor extends AbstractActor
     // Initialize repository
     conf = conf.getConfigurations("xsp");
         
+/* How to use Cocoon's Object Store for compiled classes? */
     // FIXME: the XSP processor should use the Cocoon internal object store
     // rather than providing its own. This is a quick and dirty hack to 
     // make it work with Ricardo's code. But we'll create smoother integration
@@ -221,6 +230,7 @@ public class XSPProcessor extends AbstractActor
       }
     }
 
+/* START: Load external libraries */
     // Load external libraries
     conf = conf.getConfigurations("library");
 
@@ -269,6 +279,7 @@ public class XSPProcessor extends AbstractActor
 
       this.libraries.put(namespace, library);
     }
+/* END: Load external libraries */
   }
 
   public Document process(Document document, Dictionary parameters)
@@ -284,7 +295,7 @@ public class XSPProcessor extends AbstractActor
     // Determine source document's absolute pathname
     String filename;
     if (request.getPathInfo() == null) {
-      filename = request.getRealPath(request.getRequestURI());
+      filename = request.getRealPath(request.getRequestURI()).replace('\\', '/');
     } else {
       filename = request.getPathTranslated();
     }
@@ -340,6 +351,7 @@ public class XSPProcessor extends AbstractActor
     if (pageEntry.hasChanged()) {
       // Collect used libraries
       Vector libraryList = new Vector();
+/* START: Locate libraries used */
       NamedNodeMap attributes = root.getAttributes();
       int attrCount = attributes.getLength();
       for (int i = 0; i < attrCount; i++) {
@@ -357,6 +369,7 @@ public class XSPProcessor extends AbstractActor
           if (!namespace.equals("xsp")) {
             XSPLibrary library =
               (XSPLibrary) this.libraries.get(attrName.substring(6));
+/* [Re]Load library given URI here */
 
             if (library != null) {
               libraryList.addElement(library);
@@ -364,19 +377,25 @@ public class XSPProcessor extends AbstractActor
           }
         }
       }
+/* END: Locate libraries used */
 
       // The XSP built-in library always comes last
       libraryList.addElement(this.xspLibrary);
 
       // Apply each library template
       Hashtable templateParameters = new Hashtable();
+/* START: Build XSP parameters for library */
       templateParameters.put("filename", filename);
       templateParameters.put("language", languageName);
+/* END: Build XSP parameters for library */
 
       int libraryCount = libraryList.size();
       for (int i = 0; i < libraryCount; i++) {
         XSPLibrary library = (XSPLibrary) libraryList.elementAt(i);
+/* START: Load/Reload library if necessary */
+/* Use Cocoon Object Store! */
         XSPTemplate template = library.getTemplate(languageName);
+/* END: Load/Reload library if necessary */
         if (template != null) document = template.apply(document, templateParameters);
       }
 

@@ -173,7 +173,7 @@ public class XSPContextLibrary {
 
   public static Element getRealPath(ServletContext context, String path, Document document) {
     Element element = document.createElement("context:real-path");
-    element.appendChild(document.createTextNode(context.getRealPath(path)));
+    element.appendChild(document.createTextNode(context.getRealPath(path).replace('\\', '/')));
     return element;
   }
 
