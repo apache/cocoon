@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.8 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class BeanConfigurator {
 
@@ -373,9 +373,9 @@ public class BeanConfigurator {
                 dest = getAttributeValue(node, ATTR_URI_DESTURI);
             }
 
-            if (root != null && type != null & dest != null) {
+            if (root != null && type != null && dest != null) {
                 cocoon.addTarget(type, root, src, dest);
-            } else if (root != null & dest != null) {
+            } else if (root != null && dest != null) {
                 cocoon.addTarget(root, src, dest);
             } else if (dest != null) {
                 cocoon.addTarget(src, dest);
