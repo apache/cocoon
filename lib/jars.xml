@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.32 2003/04/24 09:39:12 stephan Exp $
+    | CVS $Id: jars.xml,v 1.33 2003/04/24 09:44:07 bruno Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -333,24 +333,13 @@
  <file>
   <title>The XSLT processor</title>
   <description>
-   Xalan is an XSLT processor that fully supports the W3C specs.
+    Xalan is an XSLT processor that fully supports the W3C specs.
+    Includes XSLTC.
   </description>
   <ant-target>jar</ant-target>
   <used-by>Cocoon</used-by>
-  <lib>endorsed/xalan-2.4.1.jar</lib>
+  <lib>endorsed/xalan-2.5.0.jar</lib>
   <homepage>http://xml.apache.org/xalan/</homepage>
- </file>
-
- <file>
-  <title>The XSLTC processor</title>
-  <description>
-   XLTC is an XSLT compiler that fully supports the W3C specs. 
-   It compiles XSLT programs to very efficient, reusable Bytecode called translets.
-  </description>
-  <ant-target>xsltc.jar</ant-target>
-  <used-by>Cocoon TraxTransformer</used-by>
-  <lib>endorsed/xsltc-20030211.jar</lib>
-  <homepage>http://xml.apache.org/xalan-j/xsltc_usage.html</homepage>
  </file>
 
  <file>
@@ -358,7 +347,7 @@
   <description>Xerces is an XML parser.</description>
   <used-by>Cocoon</used-by>
   <ant-target>jars</ant-target>
-  <lib>endorsed/xercesImpl-2.1.0.jar</lib>
+  <lib>endorsed/xercesImpl-2.4.0.jar</lib>
   <homepage>http://xml.apache.org/xerces-j/</homepage>
  </file>
 

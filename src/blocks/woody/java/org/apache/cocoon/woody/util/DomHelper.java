@@ -192,8 +192,8 @@ public class DomHelper {
     public static class LocationTrackingDOMParser extends DOMParser {
         XMLLocator locator;
 
-        public void startDocument(XMLLocator xmlLocator, String s, Augmentations augmentations) throws XNIException {
-            super.startDocument(xmlLocator, s, augmentations);
+        public void startDocument(XMLLocator xmlLocator, String s, NamespaceContext namespaceContext, Augmentations augmentations) throws XNIException {
+            super.startDocument(xmlLocator, s, namespaceContext, augmentations);
             this.locator = xmlLocator;
             setLocation();
         }
