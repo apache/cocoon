@@ -70,6 +70,7 @@ import org.apache.excalibur.source.TraversableSource;
 
 /**
  * @author stefano
+ * @version CVS $Id: SourceRepository.java,v 1.2 2003/11/16 00:28:40 vgritsenko Exp $
  */
 public class SourceRepository {
     
