@@ -9,6 +9,9 @@
 package org.apache.cocoon.serialization;
 
 import org.apache.cocoon.*;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
@@ -38,9 +41,10 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-11 12:41:24 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-17 13:21:04 $
  */
-public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
+public class SVGSerializer extends SVGBuilder 
+        implements Composer, Serializer, Configurable, Poolable, Cacheable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;
@@ -215,5 +219,29 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
      */
     public String getMimeType() {
         return mimetype;
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     * This method must be invoked before the generateValidity() method.
+     *
+     * @return The generated key or <code>0</code> if the component
+     *              is currently not cacheable.
+     */
+    public long generateKey() {
+        return 1;
+    }
+
+    /**
+     * Generate the validity object.
+     * Before this method can be invoked the generateKey() method
+     * must be invoked.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        return new NOPCacheValidity();
     }
 }

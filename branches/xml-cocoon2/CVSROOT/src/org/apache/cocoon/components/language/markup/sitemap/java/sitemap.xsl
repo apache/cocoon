@@ -75,6 +75,7 @@
     import org.apache.regexp.REProgram;
 
     import org.apache.cocoon.Constants;
+    import org.apache.cocoon.Roles;
     import org.apache.cocoon.ProcessingException;
     import org.apache.cocoon.ResourceNotFoundException;
     import org.apache.cocoon.acting.Action;
@@ -95,7 +96,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.95 2001-04-12 16:00:56 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.96 2001-04-17 13:20:54 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -373,8 +374,8 @@
       public boolean process(Environment environment) throws Exception {
         /* the &lt;code&gt;EventPipeline&lt;/code&gt; is used to collect the xml producing sitemap
            components and the &lt;code&gt;StreamPipeline&lt;/code&gt; to produce the requested resource */
-        EventPipeline eventPipeline = (EventPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.EventPipeline");
-        StreamPipeline pipeline = (StreamPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.StreamPipeline");
+        EventPipeline eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
+        StreamPipeline pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
         pipeline.setEventPipeline(eventPipeline);
         boolean result = false;
         try {
@@ -452,8 +453,8 @@
             StreamPipeline pipeline = null;
             EventPipeline eventPipeline = null;
             try {
-              eventPipeline = (EventPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.EventPipeline");
-              pipeline = (StreamPipeline)this.manager.lookup("org.apache.cocoon.components.pipeline.StreamPipeline");
+              eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
+              pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
               pipeline.setEventPipeline(eventPipeline);
               List listOfMaps = (List)(new ArrayList());
               Map map;
