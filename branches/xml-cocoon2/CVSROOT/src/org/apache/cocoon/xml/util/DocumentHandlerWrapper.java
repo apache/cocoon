@@ -27,7 +27,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:08 $
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer {
 
@@ -136,13 +136,13 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer {
         // Set the real attributes
         for (int x=0; x<a.getLength(); x++) {
             NamespacesTable.Name aname=namespaces.resolve(a.getURI(x),
-                                                          a.getRawName(x),
+                                                          a.getQName(x),
                                                           null,
                                                           a.getLocalName(x));
-            a2.addAttribute(aname.getRawName(),a.getType(x),a.getValue(x));
+            a2.addAttribute(aname.getQName(),a.getType(x),a.getValue(x));
         }
         // Call the document handler startElement() method.
-        this.documentHandler.startElement(name.getRawName(),a2);
+        this.documentHandler.startElement(name.getQName(),a2);
     }
 
 
@@ -154,7 +154,7 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer {
         if (this.documentHandler==null)
             throw new SAXException("DocumentHandler not set");
         NamespacesTable.Name name=this.namespaces.resolve(uri,raw,null,loc);
-        this.documentHandler.endElement(name.getRawName());
+        this.documentHandler.endElement(name.getQName());
     }
 
     /**

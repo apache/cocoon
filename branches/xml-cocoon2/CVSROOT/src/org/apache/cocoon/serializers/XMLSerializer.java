@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-05-03 19:18:35 $
+ * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-06-06 12:54:06 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -107,11 +107,11 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
         this.closeElement();
         this.print('<');
 
-        this.print(this.ns.resolve(uri,raw,null,loc).getRawName());
+        this.print(this.ns.resolve(uri,raw,null,loc).getQName());
         for (int x=0; x<a.getLength(); x++) {
             this.print(' ');
-            this.print(this.ns.resolve(a.getURI(x),a.getRawName(x),null,
-                                       a.getLocalName(x)).getRawName());
+            this.print(this.ns.resolve(a.getURI(x),a.getQName(x),null,
+                                       a.getLocalName(x)).getQName());
             this.print('=');
             this.print('\"');
             this.printSafe(a.getValue(x));
@@ -158,7 +158,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
         }
         this.print('<');
         this.print('/');
-        this.print(this.ns.resolve(uri,raw,null,loc).getRawName());
+        this.print(this.ns.resolve(uri,raw,null,loc).getQName());
         this.print('>');
     }
 

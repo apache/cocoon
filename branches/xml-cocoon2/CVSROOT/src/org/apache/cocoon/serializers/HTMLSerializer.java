@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-03-30 04:53:26 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-06-06 12:54:06 $
  */
 public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -99,10 +99,10 @@ public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
     throws SAXException {
         this.print('<');
 
-        this.print(this.ns.resolve(uri,raw,null,loc).getRawName());
+        this.print(this.ns.resolve(uri,raw,null,loc).getQName());
         for (int x=0; x<a.getLength(); x++) {
-            String name=this.ns.resolve(a.getURI(x),a.getRawName(x),null,
-                                        a.getLocalName(x)).getRawName();
+            String name=this.ns.resolve(a.getURI(x),a.getQName(x),null,
+                                        a.getLocalName(x)).getQName();
             String value=a.getValue(x);
             if ((name.equals("checked"))  || (name.equals("compact"))  ||
                 (name.equals("declare"))  || (name.equals("defer"))    ||
@@ -149,7 +149,7 @@ public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void endElement (String uri, String loc, String raw)
     throws SAXException {
-        String name=this.ns.resolve(uri,raw,null,loc).getRawName();
+        String name=this.ns.resolve(uri,raw,null,loc).getQName();
         if ((name.equalsIgnoreCase("AREA"))     || (name.equalsIgnoreCase("BASE"))     ||        
             (name.equalsIgnoreCase("BASEFONT")) || (name.equalsIgnoreCase("BR"))       ||          
             (name.equalsIgnoreCase("COL"))      || (name.equalsIgnoreCase("FRAME"))    ||       

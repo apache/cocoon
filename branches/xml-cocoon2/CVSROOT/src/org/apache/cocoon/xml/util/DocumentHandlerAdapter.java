@@ -30,7 +30,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:08 $
  */
 public class DocumentHandlerAdapter extends AbstractXMLProducer
 implements DocumentHandler {
@@ -127,11 +127,11 @@ implements DocumentHandler {
             String val=a.getValue(x);
             String typ=a.getType(x);
             String uri=k.getPrefix().length()==0?"":k.getUri();
-            a2.addAttribute(uri,k.getLocalName(),k.getRawName(),typ,val);
+            a2.addAttribute(uri,k.getLocalName(),k.getQName(),typ,val);
         }
         // Notify the contentHandler
         super.contentHandler.startElement(w.getUri(),w.getLocalName(),
-                                          w.getRawName(),a2);
+                                          w.getQName(),a2);
         // Forward on the stack
         this.stack++;
     }    
@@ -148,7 +148,7 @@ implements DocumentHandler {
         // Notify the contentHandler
         NamespacesTable.Name w=this.namespaces.resolve(null,name,null,null);
         super.contentHandler.endElement(w.getUri(),w.getLocalName(),
-                                        w.getRawName());
+                                        w.getQName());
         // Undeclare namespaces
         Vector nslist=(Vector)this.stackedNS.remove(new Integer(this.stack));
         if (nslist==null) return;

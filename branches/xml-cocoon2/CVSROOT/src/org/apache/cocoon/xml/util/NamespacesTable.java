@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:08 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -274,7 +274,7 @@ public class NamespacesTable {
         /** Return the namespace local name. */
         public String getLocalName() { return(this.local); }
         /** Return the namespace raw name. */
-        public String getRawName() { return(this.raw); }
+        public String getQName() { return(this.raw); }
     }
 
     /**
@@ -289,7 +289,7 @@ public class NamespacesTable {
         /** Return the namespace local name. */
         public String getLocalName();
         /** Return the namespace raw name. */
-        public String getRawName();
+        public String getQName();
     }
 
     /**

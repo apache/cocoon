@@ -44,7 +44,7 @@ import java.util.Date;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-04-01 07:42:52 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-06-06 12:54:05 $
  *
  */
 public class LogFilter extends AbstractFilter {
@@ -152,7 +152,7 @@ public class LogFilter extends AbstractFilter {
             log ("            ", new Integer(i+1).toString()
                  +". uri="+a.getURI(i)
                  +",local="+a.getLocalName(i)
-                 +",raw="+a.getRawName(i)
+                 +",qname="+a.getQName(i)
                  +",type="+a.getType(i)
                  +",value="+a.getValue(i));
         }
@@ -164,11 +164,11 @@ public class LogFilter extends AbstractFilter {
     /**
      * Receive notification of the end of an element.
      */
-    public void endElement(String uri, String loc, String raw)
+    public void endElement(String uri, String loc, String qname)
     throws SAXException {
-        log ("endElement", "uri="+uri+",local="+loc+",raw="+raw);
+        log ("endElement", "uri="+uri+",local="+loc+",qname="+qname);
         if (super.contentHandler!=null)
-            super.contentHandler.endElement(uri,loc,raw);
+            super.contentHandler.endElement(uri,loc,qname);
     }
 
     /**

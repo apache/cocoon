@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-03-30 04:52:54 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-06-06 12:54:08 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
@@ -221,15 +221,15 @@ public class DOMBuilder implements XMLConsumer {
             if (this.name!=null) {
                 // Check that this root element is equal to the one specified
                 // in the DTD
-                if (!this.name.equals(n.getRawName()))
+                if (!this.name.equals(n.getQName()))
                     throw new SAXException("The name specified in the DTD '"+
                                           this.name+"' differs from the root "+
-                                          "element name '"+n.getRawName()+
+                                          "element name '"+n.getQName()+
                                           "'"+location());
             // Recreate the document since no DTD was specified
             } else {
                 // Recreate the document element
-                Document doc=this.factory.newDocument(n.getRawName());
+                Document doc=this.factory.newDocument(n.getQName());
                 // Copy the old document root PIs
                 NodeList list=this.document.getChildNodes();
                 for (int x=0; x<list.getLength(); x++) {
@@ -247,17 +247,17 @@ public class DOMBuilder implements XMLConsumer {
         // element check
         if(state!=S_BODY) throw new SAXException("Invalid state"+location());
         // Create the Element node
-        Element e=this.document.createElementNS(n.getUri(),n.getRawName());
+        Element e=this.document.createElementNS(n.getUri(),n.getQName());
         // Process all attributes
         for(int x=0;x<a.getLength();x++) {
             String auri=a.getURI(x);
             String aloc=a.getLocalName(x);
-            String araw=a.getRawName(x);
+            String araw=a.getQName(x);
             String aval=a.getValue(x);
             NamespacesTable.Name k=this.namespaces.resolve(auri,araw,null,aloc);
             // Set the attribute into the element
             auri=k.getPrefix().length()==0?"":k.getUri();
-            e.setAttributeNS(auri,k.getRawName(),aval);
+            e.setAttributeNS(auri,k.getQName(),aval);
         }
         // Append the xmlns... attributes
         if (this.undecl.size()>0) {
@@ -299,8 +299,8 @@ public class DOMBuilder implements XMLConsumer {
         // Check if the current element has the same tag name of this event
         NamespacesTable.Name n=this.namespaces.resolve(uri,raw,null,loc);
         String oldname=((Element)this.current).getTagName();
-        if (!oldname.equals(n.getRawName()))
-            throw new SAXException("Element end tag name '"+n.getRawName()+
+        if (!oldname.equals(n.getQName()))
+            throw new SAXException("Element end tag name '"+n.getQName()+
                                    "' differs from start tag name '"+
                                    oldname+"'"+location());
         // Restore the old node as current

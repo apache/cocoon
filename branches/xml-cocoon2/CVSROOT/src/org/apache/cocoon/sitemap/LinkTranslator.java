@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-28 18:43:21 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-06-06 12:54:07 $
  */
 public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
 
@@ -133,7 +133,7 @@ public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
                 if (a.getLocalName(x).equals("partition")) part=a.getValue(x);
                 if (a.getLocalName(x).equals("translate")) tran=a.getValue(x);
             } else {
-                a2.addAttribute(a.getURI(x),a.getLocalName(x),a.getRawName(x),
+                a2.addAttribute(a.getURI(x),a.getLocalName(x),a.getQName(x),
                                a.getType(x),a.getValue(x));
             }
         }

@@ -24,7 +24,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:04 $
  */
 public class SAXConfigurationBuilder implements ContentHandler, DocumentHandler {
     /** The current Locator. */
@@ -127,7 +127,7 @@ public class SAXConfigurationBuilder implements ContentHandler, DocumentHandler 
         Hashtable t=new Hashtable();
         // Process the attributes
         for (int x=0; x<a.getLength(); x++) {
-            String aname=resolve(a.getURI(x),a.getLocalName(x),a.getRawName(x));
+            String aname=resolve(a.getURI(x),a.getLocalName(x),a.getQName(x));
             t.put(aname,a.getValue(x));
         }
         this.startElement(name,t);
