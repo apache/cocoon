@@ -24,7 +24,7 @@ import org.apache.cocoon.Constants;
  * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-26 16:22:58 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-26 16:24:53 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -329,7 +329,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     elementData(
       contentHandler,
       "attribute",
-      getSessionAttribute(objectModel, name, defaultValue),
+      (String) getSessionAttribute(objectModel, name, defaultValue),
       attr
     );
   }
