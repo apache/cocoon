@@ -17,7 +17,7 @@ import org.xml.sax.EntityResolver;
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:37 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 15:38:27 $
  */
 public interface ProgramGenerator extends Component {
   /**
@@ -32,7 +32,7 @@ public interface ProgramGenerator extends Component {
    * @return The loaded object
    * @exception Exception If an error occurs during generation or loading
    */
-  Object load(
+  CompiledComponent load(
     File file, String markupLanguage, String programmingLanguage,
     EntityResolver resolver
   ) throws Exception;

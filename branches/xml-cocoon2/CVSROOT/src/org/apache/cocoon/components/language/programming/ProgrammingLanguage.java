@@ -11,13 +11,14 @@ import java.io.File;
 
 import org.apache.avalon.Component;
 
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.LanguageException;
 
 /**
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:43 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 15:38:29 $
  */
 public interface ProgrammingLanguage extends Component {
   /**
@@ -37,7 +38,7 @@ public interface ProgrammingLanguage extends Component {
    * @return The loaded program
    * @exception LanguageException If an error occurs during loading
    */
-  Object load(String filename, File baseDirectory, String encoding)
+  Class load(String filename, File baseDirectory, String encoding)
     throws LanguageException;
 
   /**
@@ -47,7 +48,7 @@ public interface ProgrammingLanguage extends Component {
    * @return A new program type instance
    * @exception LanguageException If an instantiation error occurs
    */
-  Object instantiate(Object program) throws LanguageException;
+  CompiledComponent instantiate(Class program) throws LanguageException;
 
   /**
    * Unload from memory and invalidate a given program

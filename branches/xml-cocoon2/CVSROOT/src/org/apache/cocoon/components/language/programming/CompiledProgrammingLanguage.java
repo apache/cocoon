@@ -17,13 +17,14 @@ import org.apache.avalon.Contextualizable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
 /**
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 20:29:04 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-16 15:38:28 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */
@@ -92,7 +93,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
      * @return The loaded object program
      * @exception LanguageException If an error occurs during loading
      */
-    protected abstract Object loadProgram(String filename, File baseDirectory) throws LanguageException;
+    protected abstract Class loadProgram(String filename, File baseDirectory) throws LanguageException;
 
     /**
      * Compile a source file yielding a loadable object file.
@@ -111,7 +112,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
      * @return The loaded object program
      * @exception LanguageException If an error occurs during compilation
      */
-    public Object load(String filename, File baseDirectory, String encoding) throws LanguageException {
+    public Class load(String filename, File baseDirectory, String encoding) throws LanguageException {
         // Does object file exist? Load and return instance
         File objectFile = new File(baseDirectory, filename + "." + this.getObjectExtension());
         if (objectFile.exists() && objectFile.isFile() && objectFile.canRead()) {
@@ -120,19 +121,19 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
         // Does source file exist?
         File sourceFile = new File(baseDirectory, filename + "." + this.getSourceExtension());
         if (!sourceFile.exists()) {
-            throw new LanguageException("Can't load program - File doesn't exist: " + sourceFile.toString());
+            throw new LanguageException("Can't load program - File doesn't exist: " + IOUtils.getFullFilename(sourceFile));
         }
         if (!sourceFile.isFile()) {
-            throw new LanguageException("Can't load program - File is not a normal file: " + sourceFile.toString());
+            throw new LanguageException("Can't load program - File is not a normal file: " + IOUtils.getFullFilename(sourceFile));
         }
         if (!sourceFile.canRead()) {
-            throw new LanguageException("Can't load program - File cannot be read: " + sourceFile.toString());
+            throw new LanguageException("Can't load program - File cannot be read: " + IOUtils.getFullFilename(sourceFile));
         }
         this.compile(filename, baseDirectory, encoding);
         if (this.deleteSources) {
             sourceFile.delete();
         }
-        Object program = this.loadProgram(filename, baseDirectory);
+        Class program = this.loadProgram(filename, baseDirectory);
         if (program == null) {
             throw new LanguageException("Can't load program : " + baseDirectory.toString() + File.separator + filename);
         }

@@ -25,6 +25,7 @@ import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.*;
 import org.apache.cocoon.components.language.LanguageException;
 
@@ -32,7 +33,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-15 20:29:10 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-16 15:38:30 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer {
 
@@ -111,7 +112,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @return The loaded object program
    * @exception LanguageException If an error occurs during loading
    */
-  protected Object loadProgram(String name, File baseDirectory)
+  protected Class loadProgram(String name, File baseDirectory)
     throws LanguageException
   {
     try {
@@ -219,9 +220,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @return A new class instance
    * @exception LanguageException If an instantiation error occurs
    */
-  public Object instantiate(Object program) throws LanguageException {
+  public CompiledComponent instantiate(Class program) throws LanguageException {
     try {
-      return ((Class) program).newInstance();
+      return (CompiledComponent) program.newInstance();
     } catch (Exception e) {
       log.warn("Could not instantiate program instance", e);
       throw new LanguageException("Could not instantiate program instance due to a " + e.getClass().getName() + ": " + e.getMessage());

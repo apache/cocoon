@@ -9,6 +9,7 @@ package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
 import org.apache.avalon.Component;
+import java.io.IOException;
 
 /**
  *
@@ -18,7 +19,7 @@ import org.apache.avalon.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:46 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 15:38:31 $
  */
 public interface Store extends Component {
 
@@ -32,14 +33,14 @@ public interface Store extends Component {
      * caller to ensure that the key has a persistent state across
      * different JVM executions.
      */
-    void store(Object key, Object value);
+    void store(Object key, Object value) throws IOException;
 
     /**
      * Holds the given object in a volatile state. This means
      * the object store will discard held objects if the
      * virtual machine is restarted or some error happens.
      */
-    void hold(Object key, Object value);
+    void hold(Object key, Object value) throws IOException;
 
     /**
      * Remove the object associated to the given key.

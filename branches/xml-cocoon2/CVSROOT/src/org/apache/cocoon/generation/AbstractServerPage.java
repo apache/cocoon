@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Modifiable;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +20,10 @@ import org.xml.sax.SAXException;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:41 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-16 15:38:32 $
  */
 public abstract class AbstractServerPage
-  extends ServletGenerator
-  implements Modifiable
+  extends ServletGenerator implements CompiledComponent
 {
   /**
    * Code generators should produce a static
@@ -90,10 +89,10 @@ public abstract class AbstractServerPage
    */
   protected void attribute(AttributesImpl attr, String name, String value) {
     attr.addAttribute("", name, name, "CDATA", value);
-  } 
+  }
 
   /**
-   * Start an element 
+   * Start an element
    *
    * @param name The element name
    * @param attr The element attributes
@@ -101,32 +100,32 @@ public abstract class AbstractServerPage
   protected void start(String name, AttributesImpl attr) throws SAXException {
     this.contentHandler.startElement("", name, name, attr);
     attr.clear();
-  } 
+  }
 
   /**
    * End an element
-   * 
+   *
    * @param name The element name
    */
   protected void end(String name) throws SAXException {
     this.contentHandler.endElement("", name, name);
-  } 
+  }
 
   /**
    * Add character data
-   * 
+   *
    * @param data The character data
    */
   protected void characters(String data) throws SAXException {
     this.contentHandler.characters(data.toCharArray(), 0, data.length());
-  } 
+  }
 
   /**
    * Add a comment
-   * 
+   *
    * @param comment The comment data
    */
   protected void comment(String data) throws SAXException {
     this.lexicalHandler.comment(data.toCharArray(), 0, data.length());
-  } 
+  }
 }

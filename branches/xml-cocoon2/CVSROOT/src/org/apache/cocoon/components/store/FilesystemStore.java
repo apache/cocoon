@@ -88,8 +88,7 @@ public class FilesystemStore implements Store, ThreadSafe, Loggable {
    * 2) String values are dumped to text files
    * 3) Object values are serialized
    */
-  public void store(Object key, Object value) {
-    try {
+  public void store(Object key, Object value) throws IOException {
       File file = fileFromKey(key);
 
       /* Create subdirectories as needed */
@@ -113,16 +112,12 @@ public class FilesystemStore implements Store, ThreadSafe, Loggable {
       } else { /* Serialized Object */
         IOUtils.serializeObject(file, value);
       }
-    } catch (Exception e) { /* FAILURE */
-      log.warn("FilesystemStore.store()", e);
-      throw new RuntimeException(e.getMessage());
-    }
   }
 
   /**
    * Holds the given object in a volatile state.
    */
-  public void hold(Object key, Object value) {
+  public void hold(Object key, Object value) throws IOException {
     this.store(key, value);
     File file = (File) this.get(key);
     if (file != null) {
@@ -202,9 +197,5 @@ public class FilesystemStore implements Store, ThreadSafe, Loggable {
     }
 
     return null;
-  }
-
-  public String normalizedFilename(String filename) {
-    return IOUtils.normalizedFilename(filename);
   }
 }

@@ -26,15 +26,14 @@ import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.store.MemoryStore;
-import org.apache.cocoon.components.store.FilesystemStore;
+import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -44,19 +43,18 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-02-15 20:28:45 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-16 15:38:27 $
  */
-public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe, Loggable {
-    private Logger log;
+public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
     /** The auto-reloading option */
-    protected boolean autoReload = true;
+    protected boolean autoReload = false;
 
     /** The in-memory store */
-    protected MemoryStore cache = new MemoryStore();
+    protected Store cache;
 
     /** The repository store */
-    FilesystemStore repository;
+    protected Store repository;
 
     /** The component manager */
     protected ComponentManager manager = null;
@@ -70,19 +68,11 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
     /** The working directory */
     protected File workDir;
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
-    public void contextualize(Context appContext) {
-        this.workDir = (File) appContext.get(Constants.CONTEXT_WORK_DIR);
-        try {
-            this.repository = new FilesystemStore(this.workDir);
-        } catch (IOException ioe) {
-            log.error("Could not get the Work Directory", ioe);
-        }
+    /** Contextualize this class */
+    public void contextualize(Context context) {
+       if (this.workDir == null) {
+           this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+       }
     }
 
     /**
@@ -94,10 +84,12 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
         if ((this.manager == null) && (manager != null)) {
             this.manager = manager;
             try {
+                this.cache = (Store) this.manager.lookup(Roles.STORE);
+                this.repository = (Store) this.manager.lookup(Roles.REPOSITORY);
                 this.markupSelector = (ComponentSelector)this.manager.lookup(Roles.MARKUP_LANGUAGE);
                 this.languageSelector = (ComponentSelector)this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
             } catch (Exception e) {
-                log.warn("Could not lookup Component", e);
+                getLogger().warn("Could not lookup Component", e);
             }
         }
     }
@@ -120,7 +112,7 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
      * @return The loaded program instance
      * @exception Exception If an error occurs during generation or loading
      */
-    public Object load(File file, String markupLanguageName, String programmingLanguageName,
+    public CompiledComponent load(File file, String markupLanguageName, String programmingLanguageName,
         EntityResolver resolver) throws Exception {
             // Get markup and programming languages
             MarkupLanguage markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
@@ -130,14 +122,14 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
             // Create filesystem store
             // Set filenames
             String filename = IOUtils.getFullFilename(file);
-            String normalizedName = repository.normalizedFilename(filename);
+            String normalizedName = IOUtils.normalizedFilename(filename);
             String sourceExtension = programmingLanguage.getSourceExtension();
             // Ensure no 2 requests for the same file overlap
-            Object program = null;
-            Object programInstance = null;
+            Class program = null;
+            CompiledComponent programInstance = null;
             synchronized(filename.intern()) {
                 // Attempt to load program object from cache
-                program = this.cache.get(filename);
+                program = (Class) this.cache.get(filename);
                 try {
                     if (program == null) {
           /*
@@ -152,20 +144,17 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
                     // Instantiate program
                     programInstance = programmingLanguage.instantiate(program);
                     if (programInstance instanceof Loggable) {
-                        ((Loggable)programInstance).setLogger(this.log);
+                        ((Loggable)programInstance).setLogger(getLogger());
                     }
-                    if (programInstance instanceof Composer) {
-                        ((Composer)programInstance).compose(this.manager);
-                    }
-                } catch (LanguageException e) { log.debug("Language Exception", e); }
+                    programInstance.compose(this.manager);
+                } catch (LanguageException e) { getLogger().debug("Language Exception", e); }
 
       /*
          FIXME: It's the program (not the instance) that must
          be queried for changes!!!
       */
 
-                if (this.autoReload && programInstance != null && programInstance instanceof Modifiable &&
-                    ((Modifiable)programInstance).modifiedSince(file.lastModified())) {
+                if (this.autoReload && programInstance != null && programInstance.modifiedSince(file.lastModified())) {
                         // Unload program
                         programmingLanguage.unload(program, normalizedName, this.workDir);
                         // Invalidate previous program/instance pair
@@ -186,11 +175,6 @@ public class ProgramGeneratorImpl implements ProgramGenerator, Contextualizable,
                     // Store generated code
                     String sourceFilename = filename + "." + sourceExtension;
                     repository.store(sourceFilename, code);
-                    // Verify source file generation was successful
-                    File sourceFile = (File)repository.get(sourceFilename);
-                    if (sourceFile == null) {
-                        throw new IOException("Error creating source file: " + sourceFilename);
-                    }
                     // [Compile]/Load generated program
                     program = programmingLanguage.load(normalizedName, this.workDir, encoding);
                     // Store generated program in cache
