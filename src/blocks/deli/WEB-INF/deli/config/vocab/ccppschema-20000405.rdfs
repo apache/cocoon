@@ -475,7 +475,6 @@
 	</rdf:Description>
 	<rdf:Description rdf:ID="SecuritySupport">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="#NetworkCharacteristics"/>
 		<rdfs:comment>
       Description:  Type of security or encryption mechanism supported. 
@@ -737,7 +736,6 @@
 	</rdf:Description>
 	<rdf:Description rdf:ID="WapVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="#WapCharacteristics"/>
 		<rdfs:comment>
       Description:  Version of WAP supported.
