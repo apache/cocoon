@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.9 2003/03/26 21:21:37 stefano Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.10 2003/03/27 17:55:45 stefano Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -26,6 +26,7 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
+ 
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
@@ -41,65 +42,6 @@
   
  </map:views>
 
-<!-- =========================== Resources ================================= -->
-
- <map:resources>
-
-  <map:resource name="dynamic-page">
-     <map:generate src="{target}.xsp" type="serverpages"/>
-     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-        <map:parameter name="servletPath" value="{request:servletPath}"/>
-        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-        <map:parameter name="file" value="{target}.xsp"/>
-        <map:parameter name="remove" value="{remove}"/>
-     </map:transform>
-     <map:serialize/>
-  </map:resource>
-
-  <map:resource name="dynamic-page1">
-     <!-- print all current sitemap parameters to log -->
-     <map:act type="session-state">
-        <map:parameter name="new-state" value="{../0}"/>
-        <!-- 
-           use the complete string that was matched as a parameter. Compare
-           this with the target parameter below. There the third
-           sitemap parameter refers to the very same string. Verfy this
-           by looking at the log. This irritating effect stems from
-           the fact, that the above map:parameter belongs conceptually
-           still to the parent element while all other nested tags
-           are, well, nested.
-        -->
-        <map:call resource="dynamic-page">
-           <map:parameter name="target" value="{../target}/state{../../../0}{../../0}"/>
-           <map:parameter name="remove" value="{../remove}"/>
-        </map:call>
-     </map:act>
-  </map:resource>
-
-  <map:resource name="dynamic-page2">
-     <map:act type="session-state">
-        <map:parameter name="new-state" value="1"/>
-        <map:call resource="dynamic-page">
-           <map:parameter name="target" value="{../target}1"/>
-           <map:parameter name="remove" value="{../remove}"/>
-        </map:call>
-     </map:act>
-  </map:resource>
-
-  <map:resource name="simple-page">
-     <map:generate src="{target}.xml" type="file"/>
-     <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
-        <map:parameter name="servletPath" value="{request:servletPath}"/>
-        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-        <map:parameter name="file" value="{target}.xml"/>
-        <map:parameter name="remove" value="{remove}"/>
-     </map:transform>
-     <map:serialize/>
-  </map:resource>
- </map:resources>
-
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
@@ -114,50 +56,24 @@
      <map:serialize/>
    </map:match>
 
-   <!-- =========================== Dynamic ================================ -->
-
-   <map:match pattern="xsp/*">
-    <map:generate src="docs/samples/xsp/{1}.xsp" type="serverpages"/>
-    <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-        <map:parameter name="servletPath" value="{request:servletPath}"/>
-        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-        <map:parameter name="file" value="docs/samples/xsp/{1}.xsp"/>
-        <map:parameter name="remove" value="{0}"/>
-    <!--
-       Run-time configuration is done through these
-       <map:parameter/> elements. Again, let's have a look at the
-       javadocs: 
-
-       "[...] All <map:parameter> declarations will be made
-       available in the XSLT stylesheet as xsl:variables. [...]" 
-    -->
-    </map:transform>
-    <map:serialize/>
-   </map:match>
-
-   <map:match pattern="xsp-plain/*">
-    <map:generate src="docs/samples/xsp/{1}.xsp" type="serverpages"/>
-    <map:serialize/>
-   </map:match>
-
    <!-- ========================== Stream ================================= -->
 
-   <map:match pattern="request1">
-     <map:generate type="stream">
-       <map:parameter name="form-name" value="Foo"/>
-     </map:generate>
-     <map:serialize type="xml"/>
-   </map:match>
-
-   <map:match pattern="Order">
-     <map:generate src="docs/samples/stream/OrderPage.xml"/>
+   <map:match pattern="order">
+     <map:generate src="stream/OrderPage.xml"/>
      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
         <map:parameter name="file" value=".xsp"/>
      </map:transform>
+     <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="process-order">
+     <map:generate type="stream">
+       <map:parameter name="form-name" value="Foo"/>
+     </map:generate>
+     <map:transform src="context://stylesheets/system/xml2html.xslt"/>
      <map:serialize type="html"/>
    </map:match>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.8 2003/03/26 21:21:37 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.9 2003/03/27 17:55:45 stefano Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -25,6 +25,9 @@
     in different ways, but also to syndicate, aggregate or otherwise transform
     content provided by other web sites.
    </sample>
+   <sample name="Slides" href="slides/slides">
+    An example of more complex use of XSTL for navigation and content filtering.
+   </sample>   
    <sample name="Resource Catalog" href="catalog/">
     XML is handy but also very complex. Cocoon integrates a number of 
     facilities to help you during your journey thru XML-land. One of these
@@ -33,8 +36,6 @@
     the use of catalogs.
    </sample>
   </group>
-
- <!-- still to fix
  
   <group name="Web Services">
    <sample name="SOAP" href="soap/">
@@ -44,9 +45,7 @@
    </sample>
   </group>
   
- -->
-   
- <!-- 
+<!-- 
  
   FIXME (SM) this should move into the proxy block 
   
@@ -63,7 +62,9 @@
     services without writing a single line of business logic code.
     Only styling is used in addition to the proxy.
    </sample>
-  </group> -->
+  </group> 
+  
+-->
    
   <group name="Input Modules">
    <sample name="Input Modules" href="modules/">
@@ -120,17 +121,31 @@
     you built the web application
   </sample>
   </group>
-     
-  <!-- still to fix
-  
-  <group name="Web Applications">
-   <sample name="Protected Area" href="protected/login">
-          An example web-application built around db-authenticator,
-          form-validator, session-validator and session-invalidator
-          actions.
+
+  <group name="Extensible Server Pages">
+   <sample name="XSP" href="xsp/">
+     Extensible Server Pages.
    </sample>
   </group>
-  
+
+  <group name="B2B">
+   <sample name="Order Page" href="stream/order" xlink:role="dynamic">
+     An example 
+   </sample>
+  </group>
+         
+  <group name="Web Applications">
+   <sample name="Protected Area" href="protected/login">
+     An example web-application built around db-authenticator,
+     form-validator, session-validator and session-invalidator
+     actions.
+   </sample>
+  </group>
+
+<!-- 
+
+  FIXME (SM): obsoleted by xmlform?
+    
   <group name="Sample Forms">
     <sample name="Simple Form Validation - Transformer" href="simpleform/sform" xlink:role="dynamic">
       This example demonstrates the use of an action to validate user
@@ -141,8 +156,8 @@
       input and report validation errors to the user through a taglib.
     </sample>
   </group>
-  
-  -->
+
+-->
   
   <group name="Block samples">
     <sample name="Blocks with samples" href="blocks">
