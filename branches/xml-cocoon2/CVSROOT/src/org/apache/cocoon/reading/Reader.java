@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-18 12:06:01 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 11:27:21 $
  */
 public interface Reader extends SitemapModelComponent, SitemapOutputComponent {
 
@@ -30,4 +30,9 @@ public interface Reader extends SitemapModelComponent, SitemapOutputComponent {
     int generate()
     throws IOException, SAXException, ProcessingException;
 
+    /**
+     * @return the time the read source was last modified or 0 if it is not
+     *         possible to detect
+     */
+    long getLastModified();
 }

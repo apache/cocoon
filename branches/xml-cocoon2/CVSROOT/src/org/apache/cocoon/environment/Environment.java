@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-19 11:30:42 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-20 11:27:11 $
  */
 
 public interface Environment extends EntityResolver {
@@ -85,5 +85,19 @@ public interface Environment extends EntityResolver {
      */
     String popURI();
 
+    /**
+     * Check if the response has been modified since the same
+     * "resource" was requested.
+     * The caller has to test if it is really the same "resource"
+     * which is requested.
+     * @result true if the response is modified or if the
+     *         environment is not able to test it
+     */
+    boolean isResponseModified(long lastModified);
+
+    /**
+     * Mark the response as not modified.
+     */
+    void setResponseIsNotModified();
 }
 

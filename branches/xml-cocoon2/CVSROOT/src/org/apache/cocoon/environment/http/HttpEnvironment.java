@@ -124,4 +124,27 @@ public class HttpEnvironment extends AbstractEnvironment {
     public OutputStream getOutputStream() throws IOException {
         return this.outputStream;
     }
+
+    /**
+     * Check if the response has been modified since the same
+     * "resource" was requested.
+     * The caller has to test if it is really the same "resource"
+     * which is requested.
+     * @result true if the response is modified or if the
+     *         environment is not able to test it
+     */
+    public boolean isResponseModified(long lastModified) {
+        long if_modified_since = this.request.getDateHeader("If-Modified-Since");
+
+        this.response.setDateHeader("Last-Modified", lastModified);
+        return (if_modified_since < lastModified);
+    }
+
+    /**
+     * Mark the response as not modified.
+     */
+    public void setResponseIsNotModified() {
+        this.response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+    }
+
 }

@@ -202,4 +202,24 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
         this.uris.remove(this.uris.size()-1);
         return uri;
     }
+
+    /**
+     * Check if the response has been modified since the same
+     * "resource" was requested.
+     * The caller has to test if it is really the same "resource"
+     * which is requested.
+     * @result true if the response is modified or if the
+     *         environment is not able to test it
+     */
+    public boolean isResponseModified(long lastModified) {
+        return true; // always modified
+    }
+
+    /**
+     * Mark the response as not modified.
+     */
+    public void setResponseIsNotModified() {
+        // does nothing
+    }
+
 }

@@ -24,7 +24,7 @@ import org.apache.avalon.Recyclable;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-18 16:56:53 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 11:27:20 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */
@@ -64,6 +64,14 @@ public abstract class AbstractReader extends AbstractLoggable implements Reader,
      */
     public String getMimeType() {
         return null;
+    }
+
+    /**
+     * @return the time the read source was last modified or 0 if it is not
+     *         possible to detect
+     */
+    public long getLastModified() {
+        return 0;
     }
 
     /**

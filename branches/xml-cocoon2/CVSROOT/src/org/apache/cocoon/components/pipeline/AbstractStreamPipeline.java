@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-19 11:30:38 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 11:27:05 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;
@@ -160,6 +160,16 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
             } else {
                 environment.setContentType(this.sitemapReaderMimeType);
             }
+            // has the read resource been modified?
+            long lastModified = this.reader.getLastModified();
+            if (lastModified != 0
+                && environment.isResponseModified(lastModified) == false) {
+
+                // environment supports this, so we are finished
+                environment.setResponseIsNotModified();
+                return true;
+            }
+
             this.reader.setOutputStream(environment.getOutputStream());
             int length = this.reader.generate();
             if (length != 0) {

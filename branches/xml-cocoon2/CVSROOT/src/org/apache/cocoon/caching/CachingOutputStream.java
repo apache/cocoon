@@ -7,7 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.caching;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -17,47 +16,68 @@ import java.io.OutputStream;
  * TeeOutputStream.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 15:32:56 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 11:27:01 $
  */
 
 public final class CachingOutputStream
 extends OutputStream {
 
     private OutputStream receiver;
-    private ByteArrayOutputStream baOutputStream;
+
+    /** The buffer for the compile xml byte stream. */
+    private byte buf[];
+
+    /** The number of valid bytes in the buffer. */
+    private int bufCount;
 
     public CachingOutputStream(OutputStream os) {
         this.receiver = os;
-        this.baOutputStream = new ByteArrayOutputStream();
+        this.buf = new byte[1024];
+        this.bufCount = 0;
     }
 
     public byte[] getContent() {
-        return this.baOutputStream.toByteArray();
+        byte newbuf[] = new byte[this.bufCount];
+        System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+        return newbuf;
     }
 
     public void write(int b) throws IOException {
         this.receiver.write(b);
-        this.baOutputStream.write(b);
+        int newcount = this.bufCount + 1;
+        if (newcount > this.buf.length) {
+            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
+            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+            this.buf = newbuf;
+        }
+        this.buf[this.bufCount] = (byte)b;
+        this.bufCount = newcount;
     }
 
     public void write( byte b[] ) throws IOException {
         this.receiver.write(b);
-        this.baOutputStream.write(b);
+        this.write(b, 0, b.length);
     }
 
     public void write(byte b[], int off, int len) throws IOException {
         this.receiver.write(b, off, len);
-        this.baOutputStream.write(b, off, len);
+        if (len == 0) return;
+        int newcount = this.bufCount + len;
+        if (newcount > this.buf.length) {
+            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
+            System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
+            this.buf = newbuf;
+        }
+        System.arraycopy(b, off, this.buf, this.bufCount, len);
+        this.bufCount = newcount;
     }
 
     public void flush() throws IOException {
         this.receiver.flush();
-        this.baOutputStream.flush();
     }
 
     public void close() throws IOException {
         this.receiver.close();
-        this.baOutputStream.close();
     }
 
 

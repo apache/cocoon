@@ -46,7 +46,7 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 13:11:44 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 11:27:06 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -93,7 +93,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
     protected boolean processReader(Environment environment)
     throws ProcessingException {
 
-        try 
+        try
         {
             this.reader.setup((EntityResolver) environment,environment.getObjectModel(),readerSource,readerParam);
             String mimeType = this.reader.getMimeType();
@@ -105,6 +105,16 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                 environment.setContentType(this.readerMimeType);
             } else {
                 environment.setContentType(this.sitemapReaderMimeType);
+            }
+
+            // has the read resource been modified?
+            long lastModified = this.reader.getLastModified();
+            if (lastModified != 0
+                && environment.isResponseModified(lastModified) == false) {
+
+                // environment supports this, so we are finished
+                environment.setResponseIsNotModified();
+                return true;
             }
         } catch (SAXException e){
             getLogger().debug("SAXException in ProcessReader", e);
@@ -161,7 +171,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                     }
                     if (valid == true) {
                         getLogger().debug("Using valid cached content.");
-                        
+
                         usedCache = true;
                         byte[] response = cachedObject.getResponse();
                         outputStream.write(response);
@@ -170,7 +180,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                         }
                     } else {
                         getLogger().debug("Cached content is invalid.");
-                        
+
                         // remove invalid cached object
                         this.streamCache.remove(pcKey);
                         cachedObject = null;
