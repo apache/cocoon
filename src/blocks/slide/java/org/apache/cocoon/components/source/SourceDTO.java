@@ -16,18 +16,27 @@
 
 package org.apache.cocoon.components.source;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
-import org.apache.cocoon.components.source.*;
-import org.apache.cocoon.components.source.helpers.*;
-import org.apache.excalibur.source.*;
+import org.apache.cocoon.components.source.helpers.SourceLock;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.excalibur.source.ModifiableTraversableSource;
+import org.apache.excalibur.source.MoveableSource;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.TraversableSource;
 
 /**
  * Data transfer object for a Source object.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDTO.java,v 1.1 2004/04/13 14:25:23 stephan Exp $
+ * @version CVS $Id: SourceDTO.java,v 1.2 2004/04/13 15:11:12 unico Exp $
  */
 public class SourceDTO implements Source, ModifiableTraversableSource, 
            MoveableSource, LockableSource, InspectableSource, 
