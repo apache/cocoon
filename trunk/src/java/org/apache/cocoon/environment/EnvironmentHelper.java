@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.7 2003/10/30 11:30:12 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.8 2003/10/30 12:20:45 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -81,6 +81,9 @@ implements SourceResolver, Serviceable, Disposable {
      * in the object model */
     static final String PROCESS_KEY = EnvironmentHelper.class.getName();
 
+    /** The environment information */
+    static protected InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+    
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver resolver;
     
@@ -99,8 +102,6 @@ implements SourceResolver, Serviceable, Disposable {
     /** The last prefix, which is stripped off from the request uri */
     protected String lastPrefix;
     
-    /** The environment information */
-    protected static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
 
     /**
      * Constructor
@@ -111,6 +112,12 @@ implements SourceResolver, Serviceable, Disposable {
         this.rootContext = context;
     }
     
+    public EnvironmentHelper(EnvironmentHelper parent) {
+        this.context = parent.context;
+        this.rootContext = parent.rootContext;
+        this.lastPrefix = parent.lastPrefix;
+        this.prefix = parent.prefix;
+    }
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -279,6 +286,60 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
+    public void redirect(Environment env, 
+                                boolean sessionmode, 
+                                String newURL) 
+    throws IOException {
+        this.doRedirect(env, sessionmode, newURL, false);
+    }
+
+    public void permanentRedirect(Environment env, boolean sessionmode, String newURL) 
+    throws IOException {
+        this.doRedirect(env, sessionmode, newURL, true);
+    }
+
+   /**
+    *  Redirect the client to new URL with session mode
+    */
+   protected void doRedirect(Environment env, 
+                             boolean sessionmode, 
+                             String newURL, 
+                             boolean permanent) 
+    throws IOException {
+        final Request request = ObjectModelHelper.getRequest(env.getObjectModel());
+        // check if session mode shall be activated
+        if (sessionmode) {
+
+            // The session
+            Session session = null;
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("redirect: entering session mode");
+            }
+            String s = request.getRequestedSessionId();
+            if (s != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Old session ID found in request, id = " + s);
+                    if ( request.isRequestedSessionIdValid() ) {
+                        getLogger().debug("And this old session ID is valid");
+                    }
+                }
+            }
+            // get session from request, or create new session
+            session = request.getSession(true);
+            if (session == null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("redirect session mode: unable to get session object!");
+                }
+            }
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+            }
+        }
+        // redirect
+        final Response response = ObjectModelHelper.getResponse(env.getObjectModel());
+        env.redirect(newURL, permanent);
+    }
+
     /**
      * This hook must be called by the sitemap each time a sitemap is entered
      * This method should never raise an exception, except when the

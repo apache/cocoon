@@ -65,9 +65,9 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.13 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.14 2003/10/30 12:20:45 cziegeler Exp $
  */
-public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
+public class HttpEnvironment extends AbstractEnvironment {
 
     public static final String HTTP_REQUEST_OBJECT = "httprequest";
     public static final String HTTP_RESPONSE_OBJECT= "httpresponse";
@@ -148,47 +148,16 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
       }
     }
 
-    public void redirect(boolean sessionmode, String newURL) throws IOException {
-        doRedirect(sessionmode, newURL, false);
-    }
-
-    public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
-        doRedirect(sessionmode, newURL, true);
+    public void redirect(String newURL, boolean permanent) throws IOException {
+        doRedirect(newURL, permanent);
     }
 
    /**
-    *  Redirect the client to new URL with session mode
+    *  Redirect the client to new URL 
     */
-    private void doRedirect(boolean sessionmode, String newURL, boolean permanent) throws IOException {
+    private void doRedirect(String newURL, boolean permanent) throws IOException {
         this.hasRedirected = true;
 
-        // check if session mode shall be activated
-        if (sessionmode) {
-            // The session
-            Session session = null;
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("redirect: entering session mode");
-            }
-            String s = request.getRequestedSessionId();
-            if (s != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Old session ID found in request, id = " + s);
-                    if ( request.isRequestedSessionIdValid() ) {
-                        getLogger().debug("And this old session ID is valid");
-                    }
-                }
-            }
-            // get session from request, or create new session
-            session = request.getSession(true);
-            if (session == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("redirect session mode: unable to get session object!");
-                }
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
-            }
-        }
         // redirect
         String redirect = this.response.encodeRedirectURL(newURL);
 
@@ -207,6 +176,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Sending redirect to '" + redirect + "'");
         }
+
         if (permanent) {
             this.response.sendPermanentRedirect(redirect);
         } else {

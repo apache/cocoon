@@ -56,7 +56,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.xml.sax.SAXException;
@@ -71,12 +70,11 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.6 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.7 2003/10/30 12:20:45 cziegeler Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
-extends AbstractEnvironment
-implements Redirector {
+extends AbstractEnvironment {
 
     protected String contentType;
     protected int contentLength;
@@ -96,16 +94,12 @@ implements Redirector {
     }
 
     /**
-     * Redirect the client to a new URL
+     * Redirect to the given URL
      */
-    public void redirect(boolean sessionmode, String newURL)
+    public void redirect(String newURL, boolean permanent) 
     throws IOException {
 
         this.hasRedirected = true;
-
-        if (sessionmode) {
-            CommandLineSession.getSession(true);
-        }
 
         // fix all urls created with request.getScheme()+... etc.
         if (newURL.startsWith("cli:/")) {

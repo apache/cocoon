@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.27 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.28 2003/10/30 12:20:45 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -501,9 +501,9 @@ public class Cocoon
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getSourceResolver()
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
-    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+    public EnvironmentHelper getEnvironmentHelper() {
         return this.environmentHelper;
     }
 

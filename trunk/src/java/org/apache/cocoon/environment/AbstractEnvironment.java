@@ -66,7 +66,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.21 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.22 2003/10/30 12:20:45 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -135,15 +135,6 @@ public abstract class AbstractEnvironment
     public void setURI(String prefix, String value) {
         this.prefix = prefix;
         this.uris = value;
-    }
-
-    /**
-     * Redirect the client to a new URL
-     */
-    public abstract void redirect(boolean sessionmode, String newURL) throws IOException;
-
-    public void globalRedirect(boolean sessionmode, String newURL) throws IOException {
-        redirect(sessionmode, newURL);
     }
 
     /**

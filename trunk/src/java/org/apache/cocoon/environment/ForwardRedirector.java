@@ -62,9 +62,11 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.10 2003/10/29 14:52:09 vgritsenko Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.11 2003/10/30 12:20:45 cziegeler Exp $
  */
-public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
+public class ForwardRedirector
+extends AbstractLogEnabled 
+implements Redirector, PermanentRedirector {
 
     /**
      * Was there a call to <code>redirect()</code> ?
@@ -91,7 +93,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
         } else {
-            this.env.redirect(sessionMode, url);
+            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().redirect(this.env, sessionMode, url);
         }
 
         this.hasRedirected = true;
@@ -104,10 +106,8 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
 
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
-        } else if (env instanceof PermanentRedirector) {
-            ((PermanentRedirector)env).permanentRedirect(sessionMode, url);
         } else {
-            this.env.redirect(sessionMode, url);
+            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().permanentRedirect(this.env, sessionMode, url);
         }
 
         this.hasRedirected = true;
@@ -128,7 +128,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         } else if (env instanceof EnvironmentWrapper) {
             ((EnvironmentWrapper)env).globalRedirect(sessionMode,url);
         } else {
-            this.env.redirect(sessionMode, url);
+            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().redirect(this.env, sessionMode, url);
         }
         this.hasRedirected = true;
     }

@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.9 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.10 2003/10/30 12:20:45 cziegeler Exp $
  */
 public interface Environment {
 
@@ -93,7 +93,7 @@ public interface Environment {
     /**
      * Redirect to the given URL
      */
-    void redirect(boolean sessionmode, String url) throws IOException;
+    void redirect(String url, boolean permanent) throws IOException;
 
     /**
      * Set the content type of the generated resource

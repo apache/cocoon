@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.21 2003/10/30 11:30:12 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.22 2003/10/30 12:20:45 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -216,6 +216,9 @@ public class TreeProcessor
         // that can be copied from the parent (see above)
         TreeProcessor child = new TreeProcessor(this, manager, language);
         child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
+        this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
+        // TODO - Test if getURI() is correct
+        this.environmentHelper.changeContext(prefix, source.getURI());
         return child;
     }
 
@@ -227,8 +230,10 @@ public class TreeProcessor
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
         try {
-            this.environmentHelper = new EnvironmentHelper(
-                         (String) this.context.get(Constants.CONTEXT_ROOT_URL));
+            if ( this.environmentHelper == null ) {
+                this.environmentHelper = new EnvironmentHelper(
+                             (String) this.context.get(Constants.CONTEXT_ROOT_URL));
+            }
             ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
             ContainerUtil.service(this.environmentHelper, this.manager);
         } catch (ContextException e) {
@@ -605,16 +610,10 @@ public class TreeProcessor
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getSourceResolver()
-     */
-    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
-        return this.environmentHelper;
-    }
-
-    /**
-     * Return the environment helper
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
     public EnvironmentHelper getEnvironmentHelper() {
         return this.environmentHelper;
     }
+
 }

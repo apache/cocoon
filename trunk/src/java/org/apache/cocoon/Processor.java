@@ -55,14 +55,14 @@ import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.EnvironmentHelper;
 
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.8 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.9 2003/10/30 12:20:45 cziegeler Exp $
  */
 public interface Processor extends Component {
 
@@ -103,11 +103,11 @@ public interface Processor extends Component {
     Processor getRootProcessor();
     
     /**
-     * Get the Source Resolver for this processor
+     * Get the EnvironmentHelper for this processor
      * EXPERIMENTAL
      * @since 2.2
      */
-    SourceResolver getSourceResolver();
+    EnvironmentHelper getEnvironmentHelper();
     
     /**
      * Get the context URI for this processor

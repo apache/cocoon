@@ -50,10 +50,6 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.excalibur.component.DefaultRoleManager;
-import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
-import org.apache.avalon.excalibur.component.RoleManageable;
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -70,7 +66,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
@@ -86,7 +81,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.4 2003/09/10 17:43:02 proyal Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.5 2003/10/30 12:20:45 cziegeler Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
