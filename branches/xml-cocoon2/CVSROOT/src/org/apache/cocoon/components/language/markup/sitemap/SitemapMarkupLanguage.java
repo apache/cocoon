@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-12 16:43:42 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-30 20:20:01 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -165,6 +165,11 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
             this.language = language;
         }
 
+	public void setParent(XMLReader reader) {
+	    reader.setContentHandler(this);
+	    super.setParent(reader);
+	}
+
         public void startDocument() throws SAXException {
             super.startDocument();
             isRootElem = true;
@@ -187,7 +192,12 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                 String path =
                     this.filename.substring(0, pos).replace(File.separatorChar, '/');
                 // update the attributes
-                AttributesImpl newAtts = new AttributesImpl(atts);
+                AttributesImpl newAtts = new AttributesImpl();
+		// FIXME (SSA) workaround a bug in SAX2 that goes in infinite loop
+		// when atts.getLength() == 0
+		if (atts.getLength()>0)
+		    newAtts.setAttributes(atts);
+
                 newAtts.addAttribute("", "file-name", "file-name", "CDATA", name);
                 newAtts.addAttribute("", "file-path", "file-path", "CDATA", path);
                 newAtts.addAttribute("", "creation-date", "creation-date",
