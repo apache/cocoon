@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -26,13 +27,14 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:08 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 03:42:11 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
     private long creationTime=0;
     private String configurationFile=null;
     private Exception exception=null;
+    private ServletContext context=null;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.
@@ -40,6 +42,7 @@ public class CocoonServlet extends HttpServlet {
     public void init(ServletConfig conf)
     throws ServletException {
         super.init(conf);
+        this.context=conf.getServletContext();
         this.configurationFile=conf.getInitParameter("configurationFile");
         if (this.configurationFile==null) {
             throw new ServletException("Servlet initialization argument "+
@@ -55,14 +58,24 @@ public class CocoonServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
         // Reload cocoon if configuration changed or we are reloading
+        boolean reloaded=false;
         synchronized (this) {
             if (this.cocoon!=null) {
-                if (this.cocoon.modifiedSince(this.creationTime)) {
+                if (this.cocoon.modifiedSince(this.creationTime)) {  
+                    this.context.log("Configuration changed reload attempt");
                     this.cocoon=this.create();
+                    reloaded=true;
+                } else if ((req.getPathInfo()==null) &&
+                           (req.getParameter("reload")!=null)) {
+                    this.context.log("Forced reload attempt");
+                    this.cocoon=this.create();
+                    reloaded=true;
                 }
-            } else if ((req.getParameter("reload")!=null) &&
-                       (req.getPathInfo()!=null)) {
+            } else if ((req.getPathInfo()==null) &&
+                       (req.getParameter("reload")!=null)) {
+                this.context.log("Invalid configurations reload");
                 this.cocoon=this.create();
+                reloaded=true;
             }
         }
 
@@ -81,6 +94,7 @@ public class CocoonServlet extends HttpServlet {
             out.print(req.getScheme()+"://"+req.getServerName()+":");
             out.print(req.getServerPort()+req.getServletPath());
             out.print("?reload=true\">Reload</a>");
+            out.println("<!-- PATH_INFO=\""+req.getPathInfo()+"\" -->");
             out.println("<hr>");
             this.printException(out,this.exception);
             if (exception instanceof SAXException) {
@@ -121,7 +135,9 @@ public class CocoonServlet extends HttpServlet {
             out.println("<body>");
             out.println("<center><h1>Cocoon: Version 2.0</h1></center>");
             out.println("<hr>");
-            out.print("Ready to process requests...");
+            if (reloaded) out.println("Configurations reloaded.<br>");
+            out.println("Ready to process requests...");
+            out.println("<!-- PATH_INFO=\""+req.getPathInfo()+"\" -->");
             out.println("<hr></body></html>");
         }
         out.flush();
@@ -130,10 +146,12 @@ public class CocoonServlet extends HttpServlet {
     /** Create a new <code>Cocoon</code> object. */
     private Cocoon create() {
         try {
+            this.context.log("Reloading from: "+this.configurationFile);
             Cocoon c=new Cocoon(this.configurationFile);
             this.creationTime=System.currentTimeMillis();
             return(c);
         } catch (Exception e) {
+            this.context.log("Exception reloading: "+e.getMessage());
             this.exception=e;
         }
         return(null);
