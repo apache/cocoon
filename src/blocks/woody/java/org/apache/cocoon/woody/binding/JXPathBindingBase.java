@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.13 2004/02/06 16:06:32 tim Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.14 2004/02/29 09:20:56 antonio Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -93,7 +93,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         this(JXPathBindingBuilderBase.CommonAttributes.DEFAULT);
     }
 
-    protected JXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts) {
+    protected JXPathBindingBase(
+            JXPathBindingBuilderBase.CommonAttributes commonAtts) {
         this.commonAtts = commonAtts;
     }
 
@@ -119,34 +120,39 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         }
         if (classBinding == null) {
             // Query parent for class
-            if (parent == null) {
+            if (parent != null) {
+                classBinding = parent.getClass(id);
+                // Cache result
+                if (classes == null) {
+                   classes = new HashMap();
+                }
+                classes.put(id, classBinding);
+            } else {
                 // TODO: Improve message to include source location.
                 throw new RuntimeException("Class \"" + id + "\" not found.");
             }
-            classBinding = parent.getClass(id);
-            // Cache result
-            if (classes == null)
-               classes = new HashMap();
-            classes.put(id, classBinding);
         }
         return classBinding;
     }
 
     protected Widget getWidget(Widget widget, String id) {
         Widget childWidget = widget.getWidget(id);
-        if (childWidget == null) {
-            throw new RuntimeException(getClass().getName() + ": Widget \"" + id +
-                "\" does not exist in container \"" + widget.getFullyQualifiedId() + "\" (" +
-                widget.getLocation() + ").");
+        if (childWidget != null) {
+            return childWidget;
+        } else {
+            throw new RuntimeException(getClass().getName() + ": Widget \"" +
+                    id + "\" does not exist in container \"" +
+                    widget.getFullyQualifiedId() + "\" (" +
+                    widget.getLocation() + ").");
         }
-        return childWidget;
     }
 
     /**
      * Performs the actual load binding regardless of the configured value of the "direction" attribute.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException;
+    public abstract void doLoad(Widget frmModel, JXPathContext jxpc)
+        throws BindingException;
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
@@ -154,7 +160,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Executes the actual loading via {@link #doLoad(Widget, JXPathContext)}
      * depending on the configured value of the "direction" attribute.
      */
-    public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+    public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc)
+            throws BindingException {
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         if (this.commonAtts.loadEnabled) {
@@ -168,20 +175,23 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
      */
-    public final void loadFormFromModel(Widget frmModel, Object objModel) throws BindingException {
-        if (objModel == null) {
-            throw new NullPointerException("null object passed to loadFormFromModel() method");
+    public final void loadFormFromModel(Widget frmModel, Object objModel)
+            throws BindingException {
+        if (objModel != null) {
+            JXPathContext jxpc = makeJXPathContext(objModel);
+            loadFormFromModel(frmModel, jxpc);
+        } else {
+            throw new NullPointerException(
+                    "null object passed to loadFormFromModel() method");
         }
-
-        JXPathContext jxpc = makeJXPathContext(objModel);
-        loadFormFromModel(frmModel, jxpc);
     }
 
     /**
      * Performs the actual save binding regardless of the configured value of the "direction" attribute.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException;
+    public abstract void doSave(Widget frmModel, JXPathContext jxpc)
+            throws BindingException;
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
@@ -189,7 +199,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Executes the actual saving via {@link #doSave(Widget, JXPathContext)}
      * depending on the configured value of the "direction" attribute.
      */
-    public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
+    public final void saveFormToModel(Widget frmModel, JXPathContext jxpc)
+            throws BindingException{
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         if (this.commonAtts.saveEnabled) {
@@ -203,13 +214,15 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
      */
-    public void saveFormToModel(Widget frmModel, Object objModel) throws BindingException {
-        if (objModel == null) {
-            throw new NullPointerException("null object passed to saveFormToModel() method");
+    public void saveFormToModel(Widget frmModel, Object objModel)
+                throws BindingException {
+        if (objModel != null) {
+            JXPathContext jxpc = makeJXPathContext(objModel);
+            saveFormToModel(frmModel, jxpc);    
+        } else {
+            throw new NullPointerException(
+                    "null object passed to saveFormToModel() method");
         }
-
-        JXPathContext jxpc = makeJXPathContext(objModel);
-        saveFormToModel(frmModel, jxpc);
     }
 
     private void applyLeniency(JXPathContext jxpc) {

@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: AggregateJXPathBinding.java,v 1.9 2004/02/29 06:07:37 vgritsenko Exp $
+ * @version CVS $Id: AggregateJXPathBinding.java,v 1.10 2004/02/29 09:20:56 antonio Exp $
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -77,7 +77,9 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public AggregateJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public AggregateJXPathBinding(
+            JXPathBindingBuilderBase.CommonAttributes commonAtts,
+            String widgetId, String xpath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;
@@ -88,9 +90,12 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+    public void doLoad(Widget frmModel,
+            JXPathContext jxpc) throws BindingException {
+        AggregateField aggregate =
+            (AggregateField)frmModel.getWidget(this.widgetId);
+        JXPathContext subContext =
+            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(aggregate, subContext);
         aggregate.combineFields();
         if (getLogger().isDebugEnabled()) {
@@ -103,9 +108,12 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
-    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+    public void doSave(Widget frmModel,
+            JXPathContext jxpc) throws BindingException {
+        AggregateField aggregate =
+            (AggregateField) frmModel.getWidget(this.widgetId);
+        JXPathContext subContext =
+            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doSave(aggregate, subContext);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Done saving " + toString());
@@ -113,6 +121,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
     }
 
     public String toString() {
-        return "AggregateJXPathBinding [widget=" + this.widgetId + ", xpath=" + this.xpath + "]";
+        return "AggregateJXPathBinding [widget=" + this.widgetId +
+            ", xpath=" + this.xpath + "]";
     }
 }

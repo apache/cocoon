@@ -57,7 +57,7 @@ import org.apache.cocoon.woody.formmodel.Widget;
  * information elements from some back-end model (2nd argument) to and from
  * a existing Woody Widget.
  *
- * @version CVS $Id: Binding.java,v 1.6 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: Binding.java,v 1.7 2004/02/29 09:20:56 antonio Exp $
  */
 public interface Binding {
 
@@ -84,12 +84,14 @@ public interface Binding {
      * @param frmModel
      * @param objModel
      */
-    void loadFormFromModel(Widget frmModel, Object objModel) throws BindingException;
+    void loadFormFromModel(Widget frmModel, Object objModel)
+            throws BindingException;
 
     /**
      * Saves the infortmation-elements to the objModel from the frmModel.
      * @param frmModel
      * @param objModel
      */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    void saveFormToModel(Widget frmModel, Object objModel)
+            throws BindingException;
 }
