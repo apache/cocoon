@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.192 2003/11/13 11:25:06 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.193 2003/11/13 12:32:47 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,7 +192,7 @@
   <changes>
 
  <release version="@version@" date="@date@">
-  <action dev="NN">
+  <action dev="NN" type="fix">
     DUMMY
   </action>
  </release>
