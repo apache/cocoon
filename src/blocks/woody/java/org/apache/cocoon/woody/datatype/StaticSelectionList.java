@@ -125,7 +125,7 @@ public class StaticSelectionList implements SelectionList {
                 throws SAXException
         {
             AttributesImpl itemAttrs = new AttributesImpl();
-            String stringValue = datatype.getConvertor().convertToString(value, locale, formatCache);;
+            String stringValue = datatype.getConvertor().convertToString(value, locale, formatCache);
             itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
             contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);

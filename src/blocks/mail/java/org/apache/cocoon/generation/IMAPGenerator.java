@@ -3,7 +3,6 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.SAXException;
 
