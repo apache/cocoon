@@ -10,7 +10,7 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard HTML/DOM/CSS by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.3 2003/03/17 20:30:33 stefano Exp $
+    | CVS $Id: xml2html.xslt,v 1.4 2003/03/18 11:44:18 stefano Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -52,8 +52,14 @@ function click(event) {
     if (mark.childNodes[0].nodeValue == "+") {
         mark.childNodes[0].nodeValue = "-";
         for (var i = 1; i < e.childNodes.length; i++) {
-            if (e.childNodes[i].nodeName != "#text") {
-                e.childNodes[i].style.display = "block";
+            var name = e.childNodes[i].nodeName;
+            if (name != "#text") {
+                if (name == "PRE" || name == "SPAN") {
+                   window.status = "inline";
+                   e.childNodes[i].style.display = "inline";
+                } else {
+                   e.childNodes[i].style.display = "block";
+                }
             }
         }
     } else if (mark.childNodes[0].nodeValue == "-") {
@@ -136,19 +142,17 @@ function click(event) {
    <!-- match empty nodes -->
    <xsl:template match="*">
       <DIV class="e">
-         <DIV>
-            <SPAN class="m">&lt;</SPAN>
-            <SPAN class="en">
-               <xsl:value-of select="name(.)"/>
-            </SPAN>
-            <xsl:if test="@*">
-               <xsl:text> </xsl:text>
-            </xsl:if>
-            <xsl:apply-templates select="@*"/>
-            <SPAN class="m">
-               <xsl:text>/></xsl:text>
-            </SPAN>
-         </DIV>
+        <SPAN class="m">&lt;</SPAN>
+        <SPAN class="en">
+           <xsl:value-of select="name(.)"/>
+        </SPAN>
+        <xsl:if test="@*">
+           <xsl:text> </xsl:text>
+        </xsl:if>
+        <xsl:apply-templates select="@*"/>
+        <SPAN class="m">
+           <xsl:text>/></xsl:text>
+        </SPAN>
       </DIV>
    </xsl:template>
 
@@ -187,31 +191,29 @@ function click(event) {
 
    <xsl:template match="*[text() and not (comment() or processing-instruction())]">
       <DIV class="e">
-         <DIV>
-            <SPAN class="m">
-               <xsl:text>&lt;</xsl:text>
-            </SPAN>
-            <SPAN class="en">
-               <xsl:value-of select="name(.)"/>
-            </SPAN>
-            <xsl:if test="@*">
-               <xsl:text> </xsl:text>
-            </xsl:if>
-            <xsl:apply-templates select="@*"/>
-            <SPAN class="m">
-               <xsl:text>></xsl:text>
-            </SPAN>
-            <SPAN class="t">
-               <xsl:value-of select="."/>
-            </SPAN>
-            <SPAN class="m">&lt;/</SPAN>
-            <SPAN class="en">
-               <xsl:value-of select="name(.)"/>
-            </SPAN>
-            <SPAN class="m">
-               <xsl:text>></xsl:text>
-            </SPAN>
-         </DIV>
+        <SPAN class="m">
+           <xsl:text>&lt;</xsl:text>
+        </SPAN>
+        <SPAN class="en">
+           <xsl:value-of select="name(.)"/>
+        </SPAN>
+        <xsl:if test="@*">
+           <xsl:text> </xsl:text>
+        </xsl:if>
+        <xsl:apply-templates select="@*"/>
+        <SPAN class="m">
+           <xsl:text>></xsl:text>
+        </SPAN>
+        <SPAN class="t">
+           <xsl:value-of select="."/>
+        </SPAN>
+        <SPAN class="m">&lt;/</SPAN>
+        <SPAN class="en">
+           <xsl:value-of select="name(.)"/>
+        </SPAN>
+        <SPAN class="m">
+           <xsl:text>></xsl:text>
+        </SPAN>
       </DIV>
    </xsl:template>
 
