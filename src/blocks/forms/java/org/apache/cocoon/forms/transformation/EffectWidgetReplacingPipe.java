@@ -58,7 +58,7 @@ import java.util.Map;
  * for the forms template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.5 2004/03/15 14:21:24 tim Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -237,9 +237,15 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_SET_DOCUMENT_LOCATOR:
                 return this;
             case EVENT_START_PREFIX_MAPPING:
-                // We consume this namespace completely
-                EffectWidgetReplacingPipe.this.namespacePrefix = input.prefix;
-                return this;
+                if(Constants.TEMPLATE_NS.equals(input.uri)) {
+                    // We consume this namespace completely.
+                    EffectWidgetReplacingPipe.this.namespacePrefix = input.prefix;
+                    return this;
+                } else {
+                    // Pass through all others.
+                    out.copy();
+                    return this;
+                }
             case EVENT_ELEMENT:
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if (FORM_TEMPLATE_EL.equals(input.loc)) {
@@ -249,6 +255,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                                 "\" not permitted outside \"form-template\"");
                     }
                 } else {
+                    // Pass through all others.
+                    out.copy();
                     return this;
                 }
             case EVENT_END_PREFIX_MAPPING:
