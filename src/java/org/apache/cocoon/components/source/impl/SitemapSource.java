@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.20 2004/06/16 14:29:31 vgritsenko Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.21 2004/06/23 17:13:00 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -114,7 +114,6 @@ implements Source, XMLizable {
         if ( env == null ) {
             throw new MalformedURLException("The cocoon protocol can not be used outside an environment.");
         }
-
         this.manager = manager;
         this.enableLogging(logger);
 

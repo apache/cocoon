@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.source.impl.SitemapSource
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.12 2004/06/22 22:13:43 vgritsenko Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.13 2004/06/23 17:13:00 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -51,6 +51,9 @@ public class MutableEnvironmentFacade implements Environment {
         this.env = env;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String, java.lang.String)
+     */
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
     }
