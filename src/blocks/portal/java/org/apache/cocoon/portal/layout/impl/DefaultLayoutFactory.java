@@ -48,6 +48,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -122,7 +123,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.17 2004/04/28 11:53:09 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.18 2004/04/28 13:58:16 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -395,6 +396,9 @@ public class DefaultLayoutFactory
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#remove(org.apache.cocoon.portal.layout.Layout)
+     */
     public void remove(Layout layout) 
     throws ProcessingException {
         if ( layout != null ) {
@@ -411,21 +415,27 @@ public class DefaultLayoutFactory
             }
             
             PortalService service = null;
+            EventManager eventManager = null;
             try {
-                service = (PortalService)this.manager.lookup(PortalService.ROLE);
+                service = (PortalService)this.manager.lookup(PortalService.ROLE);                
+                ProfileManager profileManager = service.getComponentManager().getProfileManager();
                 if ( layout instanceof CopletLayout ) {
+                    // full screen?
+                    if ( layout.equals(profileManager.getEntryLayout()) ) {
+                        Event event = new FullScreenCopletEvent(((CopletLayout)layout).getCopletInstanceData(), null);
+                        eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+                        eventManager.getPublisher().publish(event);
+                        service.getComponentManager().getLinkService().addEventToLink(event);
+                    }
                     CopletFactory factory = service.getComponentManager().getCopletFactory();
                     factory.remove( ((CopletLayout)layout).getCopletInstanceData());
-                }
-                ProfileManager profileManager = service.getComponentManager().getProfileManager();
-                if ( layout.equals(profileManager.getEntryLayout()) ) {
-                    profileManager.setEntryLayout(null);
                 }
                 profileManager.unregister(layout);
             } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
                 this.manager.release( service );
+                this.manager.release(eventManager);
             }
         }
     }

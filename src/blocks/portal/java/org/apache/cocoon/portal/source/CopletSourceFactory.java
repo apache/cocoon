@@ -39,7 +39,7 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.7 2004/04/19 14:47:31 cziegeler Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.8 2004/04/28 13:58:16 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
@@ -78,10 +78,12 @@ public class CopletSourceFactory
             location = location.substring(position+2);
         }
         PortalService service = null;
-        CopletInstanceData coplet = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            coplet = service.getComponentManager().getProfileManager().getCopletInstanceData(location);
+            CopletInstanceData coplet = service.getComponentManager().getProfileManager().getCopletInstanceData(location);
+            if ( coplet == null ) {
+                throw new IOException("Unable to get coplet for " + location);
+            }
             CopletSource copletSource =
                 new CopletSource(uri, protocol,
                                  coplet);

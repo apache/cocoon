@@ -37,7 +37,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.6 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: AbstractProfileManager.java,v 1.7 2004/04/28 13:58:16 cziegeler Exp $
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
@@ -179,7 +179,11 @@ public abstract class AbstractProfileManager
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
+            if ( object == null ) {
+                service.removeTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
+            } else {
+                service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
+            }
         } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup service manager.", e);
         } finally {

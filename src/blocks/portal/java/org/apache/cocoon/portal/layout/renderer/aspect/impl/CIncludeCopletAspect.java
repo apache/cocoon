@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CIncludeCopletAspect.java,v 1.5 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id: CIncludeCopletAspect.java,v 1.6 2004/04/28 13:58:16 cziegeler Exp $
  */
 public class CIncludeCopletAspect 
     extends AbstractCIncludeAspect {
@@ -58,7 +58,6 @@ public class CIncludeCopletAspect
                 		PortalService service,
                 		ContentHandler handler)
 	throws SAXException {
-
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
         
         XMLUtils.startElement(handler, "content");
