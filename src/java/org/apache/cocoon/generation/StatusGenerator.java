@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,13 +39,13 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current status of Cocoon.
- * 
+ *
  * @cocoon.sitemap.component.name   status
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.status
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  16
- * 
+ *
  * Potted DTD:
  *
  * <code>
@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -119,7 +119,7 @@ public class StatusGenerator extends ServiceableGenerator {
             getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
         }
     }
-    
+
     public void dispose() {
         if ( this.manager != null ) {
             this.manager.release( this.store_persistent );
@@ -212,18 +212,20 @@ public class StatusGenerator extends ServiceableGenerator {
         // END operating system
 
         String classpath = SystemUtils.JAVA_CLASS_PATH;
-        List paths = new ArrayList();
-        StringTokenizer tokenizer = new StringTokenizer(classpath, SystemUtils.PATH_SEPARATOR);
-        while (tokenizer.hasMoreTokens()) {
-            paths.add(tokenizer.nextToken());
+        if (classpath != null) {
+            List paths = new ArrayList();
+            StringTokenizer tokenizer = new StringTokenizer(classpath, SystemUtils.PATH_SEPARATOR);
+            while (tokenizer.hasMoreTokens()) {
+                paths.add(tokenizer.nextToken());
+            }
+            addMultilineValue(ch, "classpath", paths);
         }
-        addMultilineValue(ch, "classpath", paths);
         // END ClassPath
 
         // BEGIN Cache
-        if ( this.storejanitor != null ) {
+        if (this.storejanitor != null) {
             startGroup(ch, "Store-Janitor");
-    
+
             // For each element in StoreJanitor
             Iterator i = this.storejanitor.iterator();
             while (i.hasNext()) {
@@ -234,13 +236,13 @@ public class StatusGenerator extends ServiceableGenerator {
                 atts.clear();
                 atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
                 ch.startElement(namespace, "value", "value", atts);
-                // For each element in Store
-                Enumeration e = store.keys();
+
                 atts.clear();
-                while( e.hasMoreElements() ) {
+                Enumeration e = store.keys();
+                while (e.hasMoreElements()) {
                     size++;
-                    Object key  = e.nextElement();
-                    Object val  = store.get( key );
+                    Object key = e.nextElement();
+                    Object val = store.get(key);
                     String line = null;
                     if (val == null) {
                         empty++;
@@ -250,7 +252,7 @@ public class StatusGenerator extends ServiceableGenerator {
                         ch.characters(line.toCharArray(), 0, line.length());
                         ch.endElement(namespace, "line", "line");
                     }
-                } 
+                }
                 if (size == 0) {
                     ch.startElement(namespace, "line", "line", atts);
                     String value = "[empty]";
@@ -258,36 +260,37 @@ public class StatusGenerator extends ServiceableGenerator {
                     ch.endElement(namespace, "line", "line");
                 }
                 ch.endElement(namespace, "value", "value");
-    
+
                 addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
                 endGroup(ch);
             }
-            endGroup(ch);        
+            endGroup(ch);
         }
-        
-        if ( this.store_persistent != null ) {
-            startGroup(ch, store_persistent.getClass().getName()+" (hash = 0x"+Integer.toHexString(store_persistent.hashCode())+")");
+
+        if (this.store_persistent != null) {
+            startGroup(ch, store_persistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(store_persistent.hashCode()) + ")");
             int size = 0;
             int empty = 0;
             atts.clear();
             atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
             ch.startElement(namespace, "value", "value", atts);
-            Enumeration enumer = this.store_persistent.keys();
-            while (enumer.hasMoreElements()) {
+
+            atts.clear();
+            Enumeration e = this.store_persistent.keys();
+            while (e.hasMoreElements()) {
                 size++;
-    
-                Object key  = enumer.nextElement();
-                Object val  = store_persistent.get (key);
+                Object key = e.nextElement();
+                Object val = store_persistent.get(key);
                 String line = null;
                 if (val == null) {
                     empty++;
                 } else {
-                    line = key + " (class: " + val.getClass().getName() +  ")";
+                    line = key + " (class: " + val.getClass().getName() + ")";
                     ch.startElement(namespace, "line", "line", atts);
                     ch.characters(line.toCharArray(), 0, line.length());
                     ch.endElement(namespace, "line", "line");
                 }
-            }  
+            }
             if (size == 0) {
                 ch.startElement(namespace, "line", "line", atts);
                 String value = "[empty]";
@@ -295,8 +298,8 @@ public class StatusGenerator extends ServiceableGenerator {
                 ch.endElement(namespace, "line", "line");
             }
             ch.endElement(namespace, "value", "value");
-    
-            addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
+
+            addValue(ch, "size", size + " items in cache (" + empty + " are empty)");
             endGroup(ch);
         }
         // END Cache
@@ -311,8 +314,9 @@ public class StatusGenerator extends ServiceableGenerator {
     }
 
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
-    private void startGroup(ContentHandler ch, String name, Attributes atts) throws SAXException {
-        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts); 
+    private void startGroup(ContentHandler ch, String name, Attributes atts)
+    throws SAXException {
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "group", "group", ai);
     }
@@ -323,12 +327,14 @@ public class StatusGenerator extends ServiceableGenerator {
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(ContentHandler ch, String name, String value) throws SAXException {
+    private void addValue(ContentHandler ch, String name, String value)
+    throws SAXException {
         addValue(ch, name, value, null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addValue(ContentHandler ch, String name, String value, Attributes atts) throws SAXException {
+    private void addValue(ContentHandler ch, String name, String value, Attributes atts)
+    throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
@@ -343,12 +349,14 @@ public class StatusGenerator extends ServiceableGenerator {
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addMultilineValue(ContentHandler ch, String name, List values) throws SAXException {
+    private void addMultilineValue(ContentHandler ch, String name, List values)
+    throws SAXException {
         addMultilineValue(ch, name, values, null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts) throws SAXException {
+    private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts)
+    throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
