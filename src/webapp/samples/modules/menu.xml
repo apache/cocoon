@@ -13,14 +13,16 @@
  
   <menu label="Modules">
     <menu-item label="RequestModule" href="request.xsp"/>
+    <menu-item label="RequestParameterModule" href="requestparam"/>
     <menu-item label="DateInputModule" href="date.xsp"/>
     <menu-item label="DefaultsModule" href="defaults.xsp"/>
     <menu-item label="SessionModule" href="session.xsp"/>
     <menu-item label="SessionAttributeModule" href="session-attr.xsp"/>
-    <menu-item label="SystemPropertiesModule" href="system-property.xsp"/>
+    <menu-item label="SystemPropertyModule" href="system-property.xsp"/>
     <menu-item label="XMLFileModule" href="xml.xsp"/>
     <menu-item label="ChainMetaModule" href="chain.xsp"/>
-    <menu-item label="AttributeModule" />
+    <menu-item label="RandomNumberModule" href="randomnumber.xsp"/>
+    <menu-item label="RealPathModule" href="realpath.xsp"/>
   </menu>
 
   <menu label="Documentation">
