@@ -22,15 +22,15 @@ import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.xlink.XLinkPipe;
+import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.cocoon.transformation.Transformer;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-29 01:05:19 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-01 00:18:03 $
  */
 
-public class LinkTranslator extends XLinkPipe implements Transformer {
+public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {
 
     private Map links;
     
