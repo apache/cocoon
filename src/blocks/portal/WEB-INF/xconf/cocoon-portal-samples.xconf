@@ -52,7 +52,7 @@
      <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/column.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/column.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="column-layout"/>
@@ -65,7 +65,7 @@
      <renderer name="row" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/row.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/row.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="row-layout"/>
@@ -78,7 +78,7 @@
      <renderer name="tab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/tab.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/tab.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="tab-layout"/>
@@ -105,7 +105,7 @@
      <renderer name="linktab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/linktab.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/linktab.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="linktab-layout"/>
@@ -120,7 +120,7 @@
      <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/window.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="window"/>
@@ -154,7 +154,7 @@
                logger="portal">
          <aspects>
              <aspect type="xslt">
-                 <parameter name="style" value="{global:skin}styles/window.xsl"/>
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
              </aspect>
              <aspect type="parameter">
                  <parameter name="tag-name" value="window"/>
@@ -174,7 +174,7 @@
      <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
             <aspect type="xslt">
-                <parameter name="style" value="{global:skin}styles/frame.xsl"/>
+                <parameter name="style" value="{portal-skin:skin.basepath}/styles/frame.xsl"/>
             </aspect>
             <aspect type="parameter">
                 <parameter name="tag-name" value="frame"/>
