@@ -20,7 +20,7 @@ import org.apache.avalon.AbstractLoggable;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ContextURLFactory.java,v 1.1.2.3 2001-03-23 12:08:15 dims Exp $
+ * @version $Id: ContextURLFactory.java,v 1.1.2.4 2001-03-23 12:26:07 dims Exp $
  */
 public class ContextURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 
@@ -39,7 +39,7 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
      * @exception MalformedURLException If the location is malformed
      */
     public URL getURL(String location) throws MalformedURLException {
-        ServletContext servletContext = (ServletContext)context.get(CONTEXT_SERVLET_CONTEXT);
+        ServletContext servletContext = (ServletContext)context.get(Constants.CONTEXT_SERVLET_CONTEXT);
         if (servletContext == null) {
             getLogger().warn("no servlet-context in application context (making an absolute URL)");
             return new URL(location);
