@@ -36,26 +36,26 @@ import org.apache.avalon.framework.service.ServiceManager;
  * JUnit TestCase for Cocoon Components.
  * <p>
  *   This class extends the JUnit TestCase class to setup an environment which
- *   makes it possible to easily test Avalon Components. The following methods
+ *   makes it possible to easily test Cocoon Components. The following methods
  *   and instance variables are exposed for convenience testing:
  * </p>
  * <dl>
- *   <dt>manager</dt>
+ *   <dt>getManager()</dt>
  *   <dd>
- *     This instance variable contains an initialized ComponentLocator which
- *     can be used to lookup Components configured in the test configuration
+ *     This instance variable contains an initialized service manager which
+ *     can be used to lookup components configured in the test configuration
  *     file. (see below)
  *   </dd>
  *   <dt>getLogger()</dt>
  *   <dd>
- *     This method returns the default logger for this test case
+ *     This method returns a logger for this test case. By default this
+ *     logger logs with log level DEBUG.
  *   </dd>
  * </dl>
  * <p>
  *   The following test case configuration can be used as a basis for new tests.
- *   Detailed are explanations of the configuration elements can be found after
- *   the example.  The example will log all logger output to the console and to
- *   a log file.
+ *   Detailed explanations of the configuration elements can be found after
+ *   the example. 
  * </p>
  * <pre>
  *   &lt;testcase&gt;
@@ -65,7 +65,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  *         &lt;para&gt;
  *           {Description of test}
  *           The configuration is specified in the file located in
- *           &lt;parameter&gt;avalon-excalibur/src/test/{path and name of conf file}.xtext&lt;/parameter&gt;.
+ *           &lt;parameter&gt;cocoon/src/test/{path and name of conf file}.xtext&lt;/parameter&gt;.
  *         &lt;/para&gt;
  *       ]]&gt;
  *     &lt;/annotation&gt;
@@ -85,7 +85,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  *
  *     &lt;components&gt;
  *       &lt;datasources&gt;
- *         &lt;jdbc name="personell" logger="jdbc"&gt;
+ *         &lt;jdbc name="personell"&gt;
  *           &lt;pool-controller min="5" max="10"/&gt;
  *           &lt;jdbc name="personnel"/&gt;
  *           &lt;dburl&gt;jdbc:odbc:test&lt;/dburl&gt;
@@ -102,7 +102,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * <dl>
  * <dt>testcase</dt>
  * <dd>Defines a test case configuration.  Must contain one each of the
- *  following elements: <code>annotation</code>, <code>logkit</code>,
+ *  following elements: <code>annotation</code>,
  *  <code>context</code>, <code>roles</code>, and <code>components</code>
  *  </dd>.
  *
@@ -117,24 +117,17 @@ import org.apache.avalon.framework.service.ServiceManager;
  *  Contextualizable components.</dd>
  *
  * <dt>roles</dt>
- * <dd>Roles configuration for the Components configured in the
- *  <code>components</code> element.  The logger used by the RoleManager
- *  can be configured using a <code>logger</code> attribute, which defaults
- *  to "rm".  By default this logger will have the same log level and
- *  formatting as the LogKit logger.  It can be configured by adding a
- *  <code>category</code> within the <code>logkit</code> element.</dd>
+ * <dd>Roles configuration for the components configured in the
+ *  <code>components</code> element.  
+ * </dd>
  *
  * <dt>components</dt>
- * <dd>Used to configure any Components used by the test cases.  The logger
- *  used by the ComponentLocator can be configured using a <code>logger</code>
- *  attribute, which defaults to "cm".  By default this logger will have the
- *  same log level and formatting as the LogKit logger.  It can be configured
- *  by adding a <code>category</code> within the <code>logkit</code> element.
- *  </dd>
+ * <dd>Used to configure any Components used by the test cases.  
+ * </dd>
  *
  * </dl>
  *
- * @version $Id: ExcaliburTestCase.java,v 1.6 2004/02/28 11:47:27 cziegeler Exp $
+ * @version $Id: $
  */
 public class ContainerTestCase extends TestCase {
     
@@ -161,6 +154,7 @@ public class ContainerTestCase extends TestCase {
         super.setUp();
         this.prepare();
     }
+    
     /**
      * Initializes the ComponentLocator
      *
@@ -210,7 +204,6 @@ public class ContainerTestCase extends TestCase {
 
         setupManagers( conf.getChild( "components" ),
                        conf.getChild( "roles" ),
-                       conf.getChild( "logging" ),
                        context );
     }
 
@@ -273,25 +266,8 @@ public class ContainerTestCase extends TestCase {
 
     final private void setupManagers( final Configuration confCM,
                                       final Configuration confRM,
-                                      final Configuration loggingConf,
                                       final Context context )
     throws Exception {
-        // Get the log level from attributes
-        String lmLogLevel = loggingConf.getAttribute( "log-level", "DEBUG" );
-        int level = ConsoleLogger.LEVEL_DEBUG;
-        if ( lmLogLevel.equalsIgnoreCase("INFO") ) {
-            level = ConsoleLogger.LEVEL_INFO;
-        } else if ( lmLogLevel.equalsIgnoreCase("DISABLED") ) {
-            level = ConsoleLogger.LEVEL_DISABLED;
-        } else if ( lmLogLevel.equalsIgnoreCase("WARN") ) {
-            level = ConsoleLogger.LEVEL_WARN;
-        } else if ( lmLogLevel.equalsIgnoreCase("ERROR") ) {
-            level = ConsoleLogger.LEVEL_ERROR;
-        } else if ( lmLogLevel.equalsIgnoreCase("FATAL") ) {
-            level = ConsoleLogger.LEVEL_FATAL;
-        }
-        this.logger = new ConsoleLogger(level);
-
         // Setup the RoleManager
         RoleManager roleManager = new RoleManager();
         roleManager.enableLogging( this.getLogger() );
@@ -336,5 +312,5 @@ public class ContainerTestCase extends TestCase {
         public Logger getLoggerForCategory(String arg0) {
             return this.logger;
         }
-}
+    }
 }
