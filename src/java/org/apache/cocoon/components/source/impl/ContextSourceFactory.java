@@ -69,13 +69,14 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
 
 /**
- * A factory for the context protocol using the context of the servlet api. It builds the
- * source by asking the environment context for the real URL
- * (see {@link org.apache.cocoon.environment.Context#getResource(String)}) and then resolving this real URL.
+ * A factory for the context protocol using the context of the servlet api. 
+ * It builds the source by asking the environment context for the real URL
+ * (see {@link org.apache.cocoon.environment.Context#getResource(String)}) 
+ * and then resolving this real URL.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.5 2003/11/14 13:02:09 cziegeler Exp $
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
@@ -142,8 +143,13 @@ public class ContextSourceFactory
         }
                 
         // Remove the protocol and the first '/'
-        int pos = location.indexOf(":/");
-        String path = location.substring(pos+1);
+        final int pos = location.indexOf(":/");
+        final String path = location.substring(pos+1);
+        
+        // fix for #24093, we don't give access to files outside the context:
+        if ( path.indexOf("../") != -1 ) {
+            throw new MalformedURLException("Invalid path ('../' is not allowed) : " + path);
+        }
         
         URL u;
         
