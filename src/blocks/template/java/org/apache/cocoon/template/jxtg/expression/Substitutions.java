@@ -22,6 +22,9 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -130,5 +133,31 @@ public class Substitutions {
 
     public Object get(int pos) {
         return this.substitutions.get(pos);
+    }
+
+    public String toString(Locator location, ExpressionContext expressionContext)
+        throws SAXException {
+        StringBuffer buf = new StringBuffer();
+        Iterator iterSubst = iterator();
+        while (iterSubst.hasNext()) {
+            Subst subst = (Subst) iterSubst.next();
+            if (subst instanceof Literal) {
+                Literal lit = (Literal) subst;
+                buf.append(lit.getValue());
+            } else if (subst instanceof JXTExpression) {
+                JXTExpression expr = (JXTExpression) subst;
+                Object val;
+                try {
+                    val = expr.getValue(expressionContext);
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(), location, e);
+                } catch (Error err) {
+                    throw new SAXParseException(err.getMessage(), location,
+                                                new ErrorHolder(err));
+                }
+                buf.append(val != null ? val.toString() : "");
+            }
+        }
+        return buf.toString();
     }
 }
