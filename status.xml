@@ -117,11 +117,6 @@
       <link href="plan/samples.html">refactoring of samples</link>
     </action>
 
-    <action context="build" assigned-to="open">
-      Bring back the check-jars functionality. This verified that all jars
-      were properly described. It was lost the the recent build re-factoring.
-    </action>
-
     <action context="code" assigned-to="open">
       Move complete Source implementation to Excalibur.
     </action>
@@ -130,7 +125,8 @@
       Documentation to be published by Forrest.
       See the
       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=ForrestProposal">proposal</link>
-      under development.
+      under development. (Note: the generation of the docs should be completely done by
+      Forrest. So we should remove the deprecated docs generation stuff within Cocoon.)
     </action>
 
     <action context="code" assigned-to="open">
@@ -138,7 +134,9 @@
     </action>
 
     <action context="code" assigned-to="open">
-      There are some deprecated classes being used in 'build test'.
+      There are some deprecated classes being used in 'build test'. (Note: The testcase for
+      the resolver should be moved to the Excalibur XMLUtil, since there is the
+      default resolver).
     </action>
 
     <action context="code" assigned-to="open">
@@ -179,6 +177,30 @@
       server : store fragments in the session rather than in a local store. <br/>
       This couldn't work, because if you working with caching pipelines, you cannot be sure
       that the entries are in the session(Stephan).
+    </action>
+
+    <action context="code" assigned-to="SMS">
+      The wiki samples for the Chaperon block doesn't work anymore
+      (samples/chaperon/wikitest/selftest.html).
+    </action>
+
+    <action context="code">
+      Examples are broken, if you went first to precept example
+      (samples/precept/app/example1.html)
+      and then to the xmlform example (samples/xmlform/wizard).
+    </action>
+
+    <action context="code">
+      You got a ArrayIndexOutOfBoundsException from the profiler example, if
+      you try to get the SAX fragments.
+    </action>
+
+    <action context="code" assigned-to="SMS">
+      You can't upload a file within the Slide block.
+    </action>
+
+    <action context="code">
+      The 'B2B' example doesn't work (samples/stream/order).
     </action>
 
    </actions>
