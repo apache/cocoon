@@ -19,13 +19,13 @@
  * Employee template
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/30 11:10:53 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/04/02 11:08:54 $
 -->
 <document xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
           xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
  <header>
   <title>JFlow example</title>
-  <tab title="back" href=".."/>
+  <tab title="back" href="."/>
  </header>
  <body>
   <row>

@@ -17,7 +17,7 @@
 <document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
  <header>
   <title>Apache OJB example</title>
-  <tab title="back" href=".."/>
+  <tab title="back" href="."/>
  </header>
  <body>
   <row>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id: samples.xml,v 1.1 2004/04/02 11:08:54 stephan Exp $-->
+<samples>
+
+ <group name="Main examples page.">
+   <sample name="Back" href="..">to Cocoon examples main page</sample>
+ </group>
+
+ <group name="Java Flow">
+  <sample name="Calculator" href="calculator.do">
+   Example for the Java Flow implementation
+  </sample>
+  <sample name="Cocoon Forms" href="editForm1.do">
+   Example for the Cocoon Forms and Java Flow.
+  </sample>
+  <sample name="Cocoon Forms Binding" href="editForm2.do">
+   Example for the Cocoon Forms Binding and Java Flow.
+  </sample>
+  <sample name="Apache OJB" href="showEmployee.do">
+   Example for the Cocoon Forms and Java Flow and Apache OJB.
+  </sample>
+ </group>
+
+</samples>

@@ -20,7 +20,7 @@
           xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
  <header>
   <title>JFlow example</title>
-  <tab title="back" href=".."/>
+  <tab title="back" href="."/>
  </header>
  <body>
   <row>
