@@ -36,17 +36,18 @@ dynamically loaded class which is "introspected" at runtime with the
 element attributes, using bean-like 'setter' methods.
 
 First thing you should do to be able to compile Cocoon or generate its 
-documentation, is to install Ant on your system. Unfortunately, there is no
-Ant distribution (but we're planning to create one soon), so you have to 
-use CVS to checkout the "jakarta-ant" module under the jakarta.apache.org
-CVS repository.
+documentation, is to install Ant on your system.  Ant is available
+under the jakarta.apache.org project, but unfortunately at the moment
+the latest milestone build does not include some fixes required to
+build cocoon in its entirety, so you will have to use CVS to checkout
+the "jakarta-ant" module under the jakarta.apache.org CVS repository.
 
 Once, you've done the checkout, generate ant.jar by running the bootstrap script
 (.bat for win32, .sh for unix). Then, look into the /lib directory where you 
 should find
 
   - ant.jar
-  - projectx-tr2.jar
+  - xml.jar
   
 that you should place into your classpath.
 
