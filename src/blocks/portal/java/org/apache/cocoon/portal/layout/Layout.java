@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.layout;
 
-import java.util.Map;
-
 import org.apache.cocoon.portal.factory.Producible;
 
 
@@ -49,11 +47,9 @@ public interface Layout
     void setParent(Item item);
 
     /**
-     * Make a copy of this layout object and of all it's children.,
-     * Each reference to a coplet instance data is replaced to
-     * an instance from the provided map. (If the map is null,
-     * the reference is copied).
+     * Make a copy of this layout object and of all it's children.
+     * This includes copies of items and copletinstancedatas.
      */
-    Layout copy(Map copletInstanceDatas);
+    Layout copy();
 
 }

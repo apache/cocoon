@@ -106,4 +106,13 @@ public final class CopletInstanceData
         return clone;
     }
     
+    public CopletInstanceData copy() {
+        try {
+            return (CopletInstanceData)this.clone();
+        } catch (CloneNotSupportedException cnse) {
+            // ignore
+            return null;
+        }
+    }
+    
 }
