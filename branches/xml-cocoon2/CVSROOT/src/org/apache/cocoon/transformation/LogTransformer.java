@@ -30,12 +30,12 @@ import java.util.Map;
  * The file will be specified in a parameter tag in the sitemap pipeline to the
  * transformer as follows:
  * <p>
- * <code>
- * &lt;map:transform type="log"&gt;<br>
- * &nbsp;&nbsp;&lt;parameter name="logfile" value="logfile.log"/&gt;<br>
- * &nbsp;&nbsp;&lt;parameter name="append" value="no"/&gt;<br>
- * &lt;/map:transform&gt;<br>
- * </code>
+ * <pre>
+ * &lt;map:transform type="log"&gt;
+ * &nbsp;&nbsp;&lt;parameter name="logfile" value="logfile.log"/&gt;
+ * &nbsp;&nbsp;&lt;parameter name="append" value="no"/&gt;
+ * &lt;/map:transform&gt;>
+ * </pre>
  * </p>
  *
  * Because the log file will be hardcoded into the sitemap this LOGTransformer will
@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-12 14:17:44 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-14 22:12:30 $
  *
  */
 public class LogTransformer extends AbstractTransformer {

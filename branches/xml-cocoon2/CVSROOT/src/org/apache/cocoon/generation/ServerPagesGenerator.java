@@ -39,7 +39,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-12 14:17:35 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-14 22:12:28 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -111,7 +111,7 @@ public class ServerPagesGenerator
     try {
         url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(systemId);
     } catch (Exception e) {
-        getLogger().error ("cannot obtain the URLFactory");
+        getLogger().error ("cannot obtain the URLFactory", e);
         throw new SAXException("cannot obtain the URLFactory", e);
     }
     if (!url.getProtocol().equals("file")) {
@@ -142,7 +142,7 @@ public class ServerPagesGenerator
     }
 
     if (generator instanceof Loggable) {
-        ((Loggable)generator).setLogger(getLogger());
+        ((Loggable) generator).setLogger(getLogger());
     }
 
     // Delegate XML production to loaded generator
