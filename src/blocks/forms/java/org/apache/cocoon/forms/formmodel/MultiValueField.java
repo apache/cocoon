@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,18 +40,18 @@ import org.xml.sax.SAXException;
  * instead use the ValueCountValidationRule to check how many items the user
  * has selected.
  *
- * <p>A MultiValueField also has a {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
- * associated with it. In case of MultiValueFields, this Datatype will always be an array
- * type, thus {@link org.apache.cocoon.forms.datatype.Datatype#isArrayType()} will
- * always return true, and this in return has an influence on the kind of validation rules that
- * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
- * description for more information).
- * 
+ * <p>A MultiValueField also has a {@link Datatype} associated with it. In
+ * case of MultiValueFields, this Datatype will always be an array
+ * type, thus {@link Datatype#isArrayType()} will always return true, and
+ * this in return has an influence on the kind of validation rules that
+ * can be used with the Datatype (see {@link Datatype} description for more
+ * information).</p>
+ *
  * @version $Id$
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
-    
+
     private SelectionList selectionList;
     private String[] enteredValues;
     private Object[] values;
@@ -118,8 +118,8 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
      */
     public String getXMLElementName() {
         return MULTIVALUEFIELD_EL;
-    }   
-    
+    }
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         contentHandler.startElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL, XMLUtils.EMPTY_ATTRIBUTES);
         if (values != null) {
@@ -154,7 +154,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         }
     }
 
-    
+
     public Object getValue() {
         return values;
     }
@@ -197,7 +197,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
      * All Cocoon-supported protocols can be used.
      * The format of the XML produced by the source should be the
      * same as in case of inline specification of the selection list,
-     * thus the root element should be a <code>wd:selection-list</code>
+     * thus the root element should be a <code>fd:selection-list</code>
      * element.
      * @param uri The URI of the source.
      */
@@ -211,8 +211,8 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
      * (Java collection or array, or Javascript array) of objects. Each object
      * belonging to the collection should have a <em>value</em> property and a
      * <em>label</em> property, whose values are used to specify the <code>value</code>
-     * attribute and the contents of the <code>wd:label</code> child element
-     * of every <code>wd:item</code> in the list.
+     * attribute and the contents of the <code>fd:label</code> child element
+     * of every <code>fd:item</code> in the list.
      * <p>Access to the values of the above mentioned properties is done
      * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
      * @param model The collection used as a model for the selection list.
