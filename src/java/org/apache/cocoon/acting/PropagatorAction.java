@@ -146,7 +146,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: PropagatorAction.java,v 1.1 2003/11/09 11:30:04 haul Exp $
+ * @version CVS $Id: PropagatorAction.java,v 1.2 2003/12/11 03:28:16 crossley Exp $
  */
 public class PropagatorAction
 	extends  ServiceableAction
