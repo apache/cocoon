@@ -247,15 +247,24 @@ Another user adds: In my experience, session support is lost when you use mod_re
 
 <faq>
   <question>
-    How can I run Cocoon without X11. Why is a Display needed ?
+    Why won't my Batik .JPG and .PNG samples work? How can I run Cocoon without X11?
+    Why is a Display needed?
   </question>
   <answer>
+   <p>If your Batik .JPG and .PNG samples don't work it is probably because you have not
+     installed and configured a graphics display. You have a couple of options depending on
+     your environment.
+   </p>
+   <p>If you are using the Sun JDK 1.4 then you can use the 'headless' environment.
+     For more information about this see 
+     <link href="../installing/index.html#Headless+UNIX+and+PJA">Headless UNIX and PJA</link>.
+   </p>
    <p>
-     An Xserver is needed because of the batik library fop uses. batik uses
-     java's graphics code, which in turn requires the Xserver.
-     If you don't have an xserver on your system and can't set the DISPLAY
-     variable to one, then try out xvfb. xvfb gives you an 'in-memory'
-     xserver, which doesn't require any display hardware to run.
+     Otherwise, an XServer is needed because of the Batik library that FOP uses.
+     Batik uses Java's graphics code, which in turn requires the XServer.
+     If you don't have an XServer on your system and can't set the DISPLAY
+     variable to one, then try out XVFB. XVFB gives you an 'in-memory'
+     XServer, which doesn't require any display hardware to run.
    </p>
 
    <source><![CDATA[
@@ -264,11 +273,7 @@ $> export DISPLAY=:1
 $> $TOMCAT_HOME/bin/startup.sh -f server.xml
 ]]>
    </source>
-
-   <p>
-     Another solution is to use PJA library. Read 'Linux/Headless/Batik'
-     section in the <link href="../installing/index.html">Cocoon installation guide</link>.
-   </p>
+   <p>See also <link href="../installing/index.html#UNIX+with+X+server">UNIX with X server</link></p>
   </answer>
 </faq>
 
