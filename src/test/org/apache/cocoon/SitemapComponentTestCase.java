@@ -39,7 +39,6 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRedirector;
@@ -68,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
  * @version CVS $Id$
  */
-public abstract class SitemapComponentTestCase extends ContainerTestCase {
+public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
     public final static Parameters EMPTY_PARAMS = Parameters.EMPTY_PARAMETERS;
 

@@ -220,4 +220,18 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         VariableResolver resolver = VariableResolverFactory.getResolver(expr, getManager());
         assertEquals("", resolver.resolve(context, getObjectModel()));
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.CocoonTestCase#addSourceFactories()
+     */
+    protected boolean addSourceFactories() {
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.CocoonTestCase#addSourceResolver()
+     */
+    protected boolean addSourceResolver() {
+        return false;
+    }
 }
