@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.store;
+package org.apache.cocoon.components.store.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +31,10 @@ import org.apache.cocoon.util.IOUtils;
  * This is the default store implementation based on JCS
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: JCSDefaultStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
+ * @version CVS $Id: JCSDefaultStore.java,v 1.1 2004/05/17 14:02:50 cziegeler Exp $
  */
 public class JCSDefaultStore 
-    extends JCSTransientStore
+    extends AbstractJCSStore
     implements Contextualizable {
 
     /** The location of the JCS default properties file */
@@ -58,6 +58,12 @@ public class JCSDefaultStore
         // TODO describe options
         super.parameterize(parameters);
         
+        int maxobjects = parameters.getParameterAsInteger("maxobjects", -1);
+        if (maxobjects != -1) {
+            String key = "jcs.region." + region + ".cacheattributes.MaxObjects";
+            this.properties.setProperty(key, String.valueOf(maxobjects));
+        }
+
         // get the directory to use
         try {
             final File workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);

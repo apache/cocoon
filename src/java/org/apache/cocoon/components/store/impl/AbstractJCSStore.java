@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.store;
+package org.apache.cocoon.components.store.impl;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -38,7 +38,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * For JCS Configuration details see:
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: AbstractJCSStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
+ * @version CVS $Id: AbstractJCSStore.java,v 1.1 2004/05/17 14:02:50 cziegeler Exp $
  */
 public abstract class AbstractJCSStore 
     extends AbstractLogEnabled
