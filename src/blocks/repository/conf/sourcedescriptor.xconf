@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceInspector']">
+
+  <!--
+   - a source inspector handles source properties
+   - a source descriptor handles read/write source properties
+  -->
+  <component 
+    role="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
+    class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
+    logger="core.source.sourcedescriptor">
+    
+    <sourceinspector class="org.apache.cocoon.components.source.impl.XPathSourceInspector">
+      <parameter name="namespace" value="http://xml.apache.org/cocoon/xdoc/1.0"/>
+      <parameter name="name"      value="title"/>
+      <parameter name="extension" value=".xdoc"/>
+      <parameter name="xpath"     value="/document/header/title"/>
+    </sourceinspector>
+    
+    <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
+    <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
+    
+  </component>
+ 
+</xconf>
