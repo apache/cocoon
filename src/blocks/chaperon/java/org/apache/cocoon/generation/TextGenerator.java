@@ -52,6 +52,7 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Serializable;
@@ -78,7 +79,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
+ * @version CVS $Id: TextGenerator.java,v 1.4 2003/10/25 17:37:42 cziegeler Exp $
  */
 public class TextGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent {
@@ -87,8 +88,8 @@ public class TextGenerator extends ServiceableGenerator
     public final static String URI = "http://chaperon.sourceforge.net/schema/text/1.0";
 
     /** The input source */
-    private Source inputSource = null;
-    private String encoding = null;
+    private Source inputSource;
+    private String encoding;
 
     /**
      * Recycle this component.
@@ -163,17 +164,18 @@ public class TextGenerator extends ServiceableGenerator
         InputStreamReader in = null;
 
         try {
-            if (this.inputSource.getInputStream()==null) {
+            final InputStream sis = this.inputSource.getInputStream();
+            if (sis == null) {
                 throw new ProcessingException("Source '"+
                                               this.inputSource.getURI()+
                                               "' not found");
             }
 
             if (encoding!=null) {
-                in = new InputStreamReader(this.inputSource.getInputStream(),
+                in = new InputStreamReader(sis,
                                            encoding);
             } else {
-                in = new InputStreamReader(this.inputSource.getInputStream());
+                in = new InputStreamReader(sis);
             }
         } catch (SourceException se) {
             throw new ProcessingException("Error during resolving of '"+

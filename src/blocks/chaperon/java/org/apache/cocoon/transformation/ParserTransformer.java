@@ -110,7 +110,7 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.6 2003/10/24 23:44:26 joerg Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.7 2003/10/25 17:37:42 cziegeler Exp $
  */
 public class ParserTransformer extends ParserProcessorAdapter
   implements Transformer, LogEnabled, Serviceable, Parameterizable,
@@ -211,12 +211,12 @@ public class ParserTransformer extends ParserProcessorAdapter
                                  this.grammarSource.getURI()+"'");
 
                 SAXConfigurationHandler confighandler = new SAXConfigurationHandler();
-
+/*
                 if (this.grammarSource.getInputStream()==null) {
                     throw new ProcessingException("Source '"+
                                                   this.grammarSource.getURI()+
                                                   "' not found");
-                }
+                }*/
                 SourceUtil.toSAX(this.manager, this.grammarSource, null, confighandler);
 
                 Configuration config = confighandler.getConfiguration();
