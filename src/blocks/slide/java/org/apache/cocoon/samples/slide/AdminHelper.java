@@ -142,7 +142,7 @@ public class AdminHelper {
                 nat.rollback();
             }
             catch (Exception f) {
-                e.printStackTrace();
+                f.printStackTrace();
             }
             throw e;
         }
