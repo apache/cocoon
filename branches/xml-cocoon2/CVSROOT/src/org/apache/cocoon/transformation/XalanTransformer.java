@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Poolable;
 import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.Cocoon;
@@ -41,10 +42,10 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-06 21:25:32 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-08 21:09:53 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
-implements Transformer, Composer {
+implements Transformer, Composer, Poolable {
 
     /** The store service instance */
     private Store store = null;
