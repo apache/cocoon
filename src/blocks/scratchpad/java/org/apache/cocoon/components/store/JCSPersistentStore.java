@@ -51,7 +51,9 @@
 package org.apache.cocoon.components.store;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.jcs.access.exception.CacheException;
 
@@ -88,9 +90,6 @@ public class JCSPersistentStore extends AbstractJCSStore
     protected ServiceManager manager;
     
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
@@ -111,45 +110,16 @@ public class JCSPersistentStore extends AbstractJCSStore
      */
     public void parameterize(Parameters params) throws ParameterException {
         // TODO - These are only values for testing:
-        final String configFileName = params.getParameter("config-file", "context://WEB-INF/TestDiskCache.ccf");     
-        final String regionName = params.getParameter("region-name", "indexedRegion1");        
-        final String groupName = params.getParameter("group-name", "indexedDiskCache");        
-        
-        SourceResolver resolver = null;
-        Source source = null;
-        try {
-            File configFile = null;
+        final String configFile = params.getParameter("config-file", "/TestDiskCache.ccf");
+        final String regionName = params.getParameter("region-name", "indexedRegion1");
+        final String groupName = params.getParameter("group-name", "indexedDiskCache");
 
-            if ( configFileName != null ) {
-                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-                source = resolver.resolveURI(configFileName);
-            
-                // get the config file to use
-                configFile = SourceUtil.getFile(source);
-            
-                //if(!configFile.exists()){
-                //   throw new ParameterException(
-                //      "JCS Config file does not exist: " + configFileName
-                //   );
-                //}
-            }
-            
-            try {
-               this.setup(configFile, regionName, groupName);
-            } catch (CacheException ce) {
-               throw new ParameterException(
-                  "JCS unable to run setup with region: " + regionName
-               );
-            }
-        } catch (ServiceException se) {
-            throw new ParameterException("Unable to get source resolver.", se);
+        try {
+            this.setup(configFile, regionName, groupName);
+        } catch (CacheException ce) {
+           throw new ParameterException("JCS unable to run setup with region: " + regionName);
         } catch (IOException ioe) {
-            throw new ParameterException("Unable to get handle on JCS Config file: " + configFileName , ioe);
-        } finally {
-            if ( resolver != null ) {
-                resolver.release(source);
-                this.manager.release(resolver);
-            }
+            throw new ParameterException("Unable to get handle on JCS Config file: " + configFile , ioe);
         }
 
     }
@@ -161,7 +131,7 @@ public class JCSPersistentStore extends AbstractJCSStore
 
             if (super.m_JCS != null) {
                 
-                super.m_JCS = null;
+                //super.m_JCS = null;
                 //protected - what is the best way to do this?
                 //super.m_JCS.dispose();
             }

@@ -50,17 +50,15 @@
 */
 package org.apache.cocoon.components.store;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 
-import org.apache.jcs.JCS;
-import org.apache.jcs.access.exception.CacheException;
-
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.impl.AbstractReadWriteStore;
+import org.apache.jcs.JCS;
+import org.apache.jcs.access.exception.CacheException;
 
 /**
  * TODO - This store implementation should be moved to excalibur store
@@ -84,9 +82,8 @@ public abstract class AbstractJCSStore
     /**The group name as used by JCS getGroupKeys*/
     private String m_group;
     
-
      
-    public void setup(final File configFile, 
+    public void setup(final String configFile, 
                       final String regionName, 
                       final String groupName) 
     throws IOException, CacheException {
@@ -95,28 +92,18 @@ public abstract class AbstractJCSStore
         this.m_group = groupName;
         
         if ( this.getLogger().isDebugEnabled() ) {
-            if ( configFile != null ) {
-                getLogger().debug("CEM Loading config: '" + configFile.getAbsolutePath() + "'");
-            }
+            getLogger().debug("CEM Loading config: '" + configFile + "'");
             getLogger().debug("CEM Loading region: '" + this.m_region + "'");
             getLogger().debug("CEM Loading group: '" + this.m_group + "'");
         }
 
-        if ( configFile != null ) {
-            /* Does config exist? */
-            // if (this.m_JCSConfigFile.exists()) 
-            // {
-                getLogger().debug("CEM Setting full path: " + configFile.getAbsolutePath());
-                
-                JCS.setConfigFilename( configFile.getAbsolutePath() );
-           // } else {         
-            //    throw new IOException( "Error reading JCS Config '" + this.m_JCSConfigFile.getAbsolutePath() + "'. File not found." );
-           // }
-        }
+        JCS.setConfigFilename( configFile );
 
         try {
            m_JCS = JCS.getInstance( m_region );
+           System.out.println("m_JCS" + m_JCS);
         } catch (CacheException ce) { 
+            ce.printStackTrace();
             throw new CacheException( "Error initialising JCS with region: " + this.m_region );
         }
          
@@ -296,7 +283,5 @@ public abstract class AbstractJCSStore
         //so, I'll be bad
         return 0;
     }
-    
-    
     
 }
