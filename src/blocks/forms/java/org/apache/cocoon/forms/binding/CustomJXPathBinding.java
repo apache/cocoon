@@ -67,7 +67,7 @@ public class CustomJXPathBinding extends JXPathBindingBase {
         Widget selectedWidget = selectWidget(frmModel, this.widgetId);
         JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
-        this.wrappedBinding.doLoad(selectedWidget, context);
+        this.wrappedBinding.loadFormFromModel(selectedWidget, context);
     }    
 
     /**
@@ -82,7 +82,7 @@ public class CustomJXPathBinding extends JXPathBindingBase {
         Widget selectedWidget = selectWidget(frmModel, this.widgetId);
         JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
-        this.wrappedBinding.doSave(selectedWidget, context);
+        this.wrappedBinding.saveFormToModel(selectedWidget, context);
     }
     
 
