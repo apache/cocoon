@@ -21,7 +21,7 @@
   </target>
 
   <!-- Anteater tests  -->
-  <target name="anteater-tests">
+  <target name="anteater-tests" depends="block-anteater-tests">
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
@@ -42,7 +42,7 @@
       <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
       <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
       <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
-      <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
     </java>
   </target>
 
@@ -56,3 +56,11 @@
 
   </target>
 
+  <target name="block-anteater-tests" depends="prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="prepare-anteater-tests"/>
+
+  </target>
