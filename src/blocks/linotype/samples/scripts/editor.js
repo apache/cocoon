@@ -42,15 +42,14 @@ function start(e) {
     try {
         editor.designMode = "on";
         editor.execCommand("useCSS", false, true); // midas gets it backwards
-        editor.addEventListener("click",click,true);
-        editor.addEventListener("keypress",keypress,true);
+        editor.addEventListener("click", click, true);
+        editor.addEventListener("keypress", keypress, true);
     } catch (e) {
         alert("I'm sorry, but Linotype doesn't work on this browser: " + e);
         return;
     }
 
     divs = document.getElementsByTagName('div');
-
     for (var i = 0; i < divs.length; i++) {
         if (divs[i].getAttribute("class") == "imagebutton") {
             divs[i].onmousedown = buttonDown;
@@ -79,12 +78,12 @@ function stop(e) {
 
     if (modified) {
         // if ( window.confirm("You havn't saved. You changes will be lost.\nDo you want to continue?") ) {
-        // 	return;
+        //     return;
         // } else {
-        //	e.stopPropagation();
-        //	e.preventDefault();
-        //	e.returnValue = false;
-        //	return false;
+        //    e.stopPropagation();
+        //    e.preventDefault();
+        //    e.returnValue = false;
+        //    return false;
         // }
     }
 }
@@ -95,10 +94,10 @@ function updateUI(force) {
         lastOrigin = target;
         
         if (!sourceMode) {
-	        path.nodeValue = getPath(target);
-	    } else {
-	    	path.nodeValue = "...";
-	    }
+            path.nodeValue = getPath(target);
+        } else {
+            path.nodeValue = "...";
+        }
         
         if (target && (target.nodeType == target.TEXT_NODE)) {
             target = target.parentNode;
@@ -106,10 +105,10 @@ function updateUI(force) {
         
         var format = getBlockFormat(target);
         if (format) {
-        	formatblock.selectedIndex = format;
-        	block_selector.style.visibility = "visible";
+            formatblock.selectedIndex = format;
+            block_selector.style.visibility = "visible";
         } else {
-        	block_selector.style.visibility = "hidden";
+            block_selector.style.visibility = "hidden";
         }
         
         var options = getAlternatives(target);
@@ -120,9 +119,9 @@ function updateUI(force) {
             var type = target.getAttribute("class");
             for (i = 0; i < options.length; i++) {
                 var option = document.createElement('option');
-                option.setAttribute("value",options[i]);
+                option.setAttribute("value", options[i]);
                 if (type == options[i]) {
-                    option.setAttribute("selected","true");
+                    option.setAttribute("selected", "true");
                 }
                 option.appendChild(document.createTextNode(options[i]));
                 alternatives.appendChild(option);
@@ -143,34 +142,34 @@ function wysiwyg(enabled) {
         var source = document.createTextNode(text);
         editor.body.innerHTML = "";
         editor.body.appendChild(source);
-        editor.body.setAttribute("class","source");
+        editor.body.setAttribute("class", "source");
         sourceMode = true;
         updateUI(true);
     } else {
         var source = editor.body.ownerDocument.createRange();
         source.selectNodeContents(editor.body);
         editor.body.innerHTML = resume(source.toString());
-        editor.body.setAttribute("class","body");
+        editor.body.setAttribute("class", "body");
         reinstrumentImages(editor);
         sourceMode = false;
     }
 }
 
 function loadContent(content) {
-	editor.body.innerHTML = resume(content);
+    editor.body.innerHTML = resume(content);
 }
 
 function addImage() {
     editor.execCommand("insertimage", false, "template.jpg");
     var img = getOrigin();
-    var input = instrumentImg(img,true);
-    activateImgInstrumentation(input,img);
+    var input = instrumentImg(img, true);
+    activateImgInstrumentation(input, img);
 }
 
 function instrumentImages(editor) {
     var imgs = detach(editor.getElementsByTagName('img'));
     for (var i = 0; i < imgs.length; i++) {
-        instrumentImg(imgs[i],false);
+        instrumentImg(imgs[i], false);
     }
 }
 
@@ -181,28 +180,27 @@ function reinstrumentImages(editor) {
     }
 }
 
-function instrumentImg(img,template) {
+function instrumentImg(img, template) {
     var id = imageCounter++;
     var imgID = "image-" + id;
     var src = img.getAttribute("src");
 
-    img.setAttribute("id",imgID);
-    img.setAttribute("href",src);
-    setTemplate(img,template);
+    img.setAttribute("id", imgID);
+    img.setAttribute("href", src);
+    setTemplate(img, template);
 
-    img.addEventListener("mousedown",imageDown,false);
+    img.addEventListener("mousedown", imageDown, false);
+    img.parentNode.addEventListener("DOMNodeRemoved", imageRemoved, false);
     
-    img.parentNode.addEventListener("DOMNodeRemoved",imageRemoved,false);
-    
-    imageData[imgID] = [src,src,false];
+    imageData[imgID] = [src, src, false];
 
     var input = document.createElement("input");
-    input.setAttribute("type","file");
-    input.setAttribute("id",imgID + "-input");
+    input.setAttribute("type", "file");
+    input.setAttribute("id", imgID + "-input");
     input.setAttribute("size", "1");
     input.setAttribute("class", "image_browser");
-    input.addEventListener("click",inputChange,false);
-    input.addEventListener("change",inputChange,false);
+    input.addEventListener("click", inputChange, false);
+    input.addEventListener("change", inputChange, false);
     input.style.position = "absolute";
     input.style.visiblility = "hidden";
 
@@ -211,31 +209,31 @@ function instrumentImg(img,template) {
     return input;
 }
 
-function reinstrumentImg(img,id) {
-	if (!id) {
-	    var src = img.getAttribute("src");
-	    var id = src.substring(src.lastIndexOf('/'),src.lastIndexOf('.'));
-	}
+function reinstrumentImg(img, id) {
+    if (!id) {
+        var src = img.getAttribute("src");
+        var id = src.substring(src.lastIndexOf('/'), src.lastIndexOf('.'));
+    }
 
     var data = imageData[id];
 
-    img.setAttribute("id",id);
-    img.setAttribute("src",data[0]);
-    img.setAttribute("href",data[1]);
-    setTemplate(img,data[2]);
+    img.setAttribute("id", id);
+    img.setAttribute("src", data[0]);
+    img.setAttribute("href", data[1]);
+    setTemplate(img, data[2]);
 
-    img.addEventListener("mousedown",imageDown,true);
+    img.addEventListener("mousedown", imageDown, true);
 }
 
-function activateImgInstrumentation(input,img) {
+function activateImgInstrumentation(input, img) {
     input.style.left = (iframe.offsetLeft + img.x + 5) + "px";
     input.style.top = (iframe.offsetTop + img.y + 5) + "px";
-	input.style.visibility = "visible";
+    input.style.visibility = "visible";
 }
 
 function deactivateImgInstrumentation(input) {
-	input.style.visibility = "hidden";
-	input.name = "";
+    input.style.visibility = "hidden";
+    input.name = "";
 }
 
 // ----------------------- Event functions ---------------------------
@@ -251,6 +249,8 @@ function keypress(e) {
 
     //window.status = "[" + key + "," + ch + "," + e.shiftKey + "," + e.ctrlKey + "," + e.altKey + "," + e.metaKey + "]";
 
+    /* FIXME: Intentions of this code are not exactly clear, and it disables
+              very essential Ctrl+LeftArrow/Ctrl+RightArrow key combinations
     try {
         if (e.ctrlKey || e.metaKey) {
             if (key > 0) {
@@ -273,15 +273,16 @@ function keypress(e) {
                 }
             }
         //} else if (e.shiftKey && (key == e.DOM_VK_TAB)) {
-        //    editor.execCommand("outdent",false,null);
+        //    editor.execCommand("outdent", false, null);
         //} else if (key == e.DOM_VK_TAB) {
-        //    editor.execCommand("indent",false,null);
+        //    editor.execCommand("indent", false, null);
         //} else if ((key == e.DOM_VK_ENTER) ||  (key == e.DOM_VK_RETURN)) {
         //    if ((previousKey == e.DOM_VK_ENTER) ||  (previousKey == e.DOM_VK_RETURN)) {
-        //       editor.execCommand("insertparagraph",false,null);
+        //       editor.execCommand("insertparagraph", false, null);
         //    }
         }
     } catch (e) { }
+    */
 
     previousKey = key;
 }
@@ -295,11 +296,11 @@ function formatblockChange() {
     var selection = formatblock.selectedIndex;
     var blockFormat = formatblock.options[selection].value;
     if (selection == 0) {
-    	//var block = getOrigin().parentNode;
-    	//block.parentNode.replaceChild(block,block.firstChild);
-    	
-    	// <----------------- FIXME -----------------------
-    	
+        //var block = getOrigin().parentNode;
+        //block.parentNode.replaceChild(block, block.firstChild);
+        
+        // <----------------- FIXME -----------------------
+        
     } else {
         editor.execCommand("formatblock", false, blockFormat);
     }
@@ -311,13 +312,13 @@ function formatblockChange() {
 function alternativesChange() {
     var selection = alternatives.selectedIndex;
     var selectionClass = alternatives.options[selection].value;
-    alternativesTarget.setAttribute("class",selectionClass);
+    alternativesTarget.setAttribute("class", selectionClass);
 }
 
 function buttonClick() {
     if (this.id == "createlink") {
         var href = prompt("Enter a URL:", "");
-        editor.execCommand(this.id,false,href);
+        editor.execCommand(this.id, false, href);
     } else if (this.id == "insertimage") {
         addImage();
     } else if (this.id == "quote") {
@@ -356,7 +357,7 @@ var activeImage;
 var activeRatio;
 
 function imageDown(e) {
-	originalX = e.clientX;
+    originalX = e.clientX;
     editor_window.addEventListener("mousemove", doDrag, true);
     editor_window.addEventListener("mouseup", endDrag, true);
     activeImage = this;
@@ -369,9 +370,9 @@ function imageDown(e) {
 }
 
 function imageRemoved(e) {
-	var id = e.target.id;
-	var input = document.getElementById(id + "-input");
-	if (input) deactivateImgInstrumentation(input);
+    var id = e.target.id;
+    var input = document.getElementById(id + "-input");
+    if (input) deactivateImgInstrumentation(input);
 }
 
 function doDrag(e) {
@@ -389,17 +390,17 @@ function endDrag(e) {
 
 function inputChange() {
     var inputID = this.getAttribute("id");
-    var imgID = inputID.substring(0,inputID.indexOf("-input"));
+    var imgID = inputID.substring(0, inputID.indexOf("-input"));
     var img = editor.getElementById(imgID);
     if (this.value != "") {
         var newImg = document.createElement("img");
-        img.parentNode.replaceChild(newImg,img);
+        img.parentNode.replaceChild(newImg, img);
         var src = "file:///" + this.value;
         var href = imgID + this.value.substring(this.value.lastIndexOf('.'));
-        imageData[imgID] = [src,href,false];
-        reinstrumentImg(newImg,imgID);
-	    deactivateImgInstrumentation(this);
-        this.setAttribute("name","save:" + href);
+        imageData[imgID] = [src, href, false];
+        reinstrumentImg(newImg, imgID);
+        deactivateImgInstrumentation(this);
+        this.setAttribute("name", "save:" + href);
     } else {
         img.parentNode.removeChild(img);
         // Note: this will trigger a DOMNodeRemoved event that we'll use
@@ -415,7 +416,7 @@ function getInnerHTML() {
 }
 
 function getContent() {
-	if (sourceMode) wysiwyg(false);
+    if (sourceMode) wysiwyg(false);
     var content = '<html xmlns="http://www.w3.org/1999/xhtml"><body>';
     content += serializeChildren(editor.body);
     content += '</body></html>';
@@ -435,7 +436,7 @@ function serialize(node) {
     var str = "";
     var name = node.nodeName.toLowerCase();
 
-    str += whitespaceBefore(node,getPreviousMeaningfulNode(node));
+    str += whitespaceBefore(node, getPreviousMeaningfulNode(node));
 
     if (node.nodeType == node.TEXT_NODE) {
         if (preserveWhitespace(node.parentNode) || isMeaningfulWhitespace(node)) {
@@ -457,7 +458,7 @@ function serialize(node) {
         }
     }
 
-    str += whitespaceAfter(node,getNextMeaningfulNode(node));
+    str += whitespaceAfter(node, getNextMeaningfulNode(node));
 
     return str;
 }
@@ -467,7 +468,7 @@ function getAttributes(node) {
     if (node && attr) {
         var str = "";
         for (var i = 0; i < attr.length; i++) {
-            str += getAttribute(node,attr.item(i));
+            str += getAttribute(node, attr.item(i));
         }
         return str += getHiddenAttributes(node);
     } else {
@@ -499,7 +500,7 @@ function getOrigin() {
     //window.status = selection.anchorNode + "," + selection.anchorOffset + " " + selection.focusNode + "," + selection.focusOffset;
 
     if (selection.anchorNode == selection.focusNode) {
-        if (selection.anchorNode.nodeType != selection.anchorNode.TEXT_NODE ) {
+        if (selection.anchorNode.nodeType != selection.anchorNode.TEXT_NODE) {
             var index = (selection.focusOffset == 0) ? 0 : selection.focusOffset - 1;
             return selection.anchorNode.childNodes[index];
         }
@@ -589,7 +590,7 @@ var trimRE = /(^\s+)|(\s+$)/g;
  */
 function trimWhitespace(str) {
     if (!str) return '';
-    return str.replace(trimRE,'');
+    return str.replace(trimRE, '');
 }
 
 var saneRE = /\n+/g;
@@ -599,7 +600,7 @@ var saneRE = /\n+/g;
  */
 function trimNewlines(str) {
     if (!str) return '';
-    return str.replace(saneRE,'');
+    return str.replace(saneRE, '');
 }
 
 function isWhitespace(str) {
@@ -686,22 +687,22 @@ function getBlockFormat(node) {
 
 function isTemplate(node) {
     if (node && (node.nodeType == node.ELEMENT_NODE)) {
-		if (node.getAttribute("template") == "yes") {
-			return true;
-		} else if (node.nodeName.toLowerCase() == "br") {
-			if (!node.nextSibling) {
-				return true;
-			} else {
-				return isTemplate(node.nextSibling);
-			}
-		}
-	}
-	return false;
+        if (node.getAttribute("template") == "yes") {
+            return true;
+        } else if (node.nodeName.toLowerCase() == "br") {
+            if (!node.nextSibling) {
+                return true;
+            } else {
+                return isTemplate(node.nextSibling);
+            }
+        }
+    }
+    return false;
 }
 
 function setTemplate(node, status) {
     var value = (status) ? "yes" : "no";
-    node.setAttribute("template",value);
+    node.setAttribute("template", value);
 }
 
 function getAlternatives(node) {
@@ -715,7 +716,7 @@ function getAlternatives(node) {
     }
 }
 
-function getAttribute(node,at) {
+function getAttribute(node, at) {
     var nodeName = node.nodeName.toLowerCase();
     var atName = at.name.toLowerCase();
 
@@ -731,17 +732,17 @@ function getAttribute(node,at) {
 function getHiddenAttributes(node) {
     var nodeName = node.nodeName.toLowerCase();
     if (nodeName == "img") {
-    	return ' width="' + node.width + '" height="' + node.height + '"';
+        return ' width="' + node.width + '" height="' + node.height + '"';
     } else {
-    	return '';
+        return '';
     }
 } 
-	
+    
 function preserveWhitespace(node) {
     return ((node.nodeName.toLowerCase() == "blockquote") && (node.getAttribute("class") == "code"));
 }
 
-function whitespaceBefore(currentNode,precedingNode) {
+function whitespaceBefore(currentNode, precedingNode) {
     var current = currentNode.nodeName.toLowerCase();
     var preceding = (precedingNode) ? precedingNode.nodeName.toLowerCase() : "#none";
 
@@ -758,7 +759,7 @@ function whitespaceBefore(currentNode,precedingNode) {
     return "";
 }
 
-function whitespaceAfter(currentNode,followingNode) {
+function whitespaceAfter(currentNode, followingNode) {
     var current = currentNode.nodeName.toLowerCase();
     var following = (followingNode) ? followingNode.nodeName.toLowerCase() : "#none";
 
@@ -781,20 +782,20 @@ function whitespaceAfter(currentNode,followingNode) {
  * Change special text structures into markup
  */
 function structurize(str) {
-	str = str.replace(/\*((\w|\s)+)\*/g,"<b>$1</b>");
-	str = str.replace(/\"((\w|\s)+)\"/g,"<q>$1</q>");
-	return str;
+    str = str.replace(/\*((\w|\s)+)\*/g, "<b>$1</b>");
+    str = str.replace(/\"((\w|\s)+)\"/g, "<q>$1</q>");
+    return str;
 }
 
 /*
  * Escapes special charachters into entities
  */
 function escape(str) {
-	str = str.replace(/&/g,"&amp;");
-	str = str.replace(/</g,"&lt;");
-	str = str.replace(/>/g,"&gt;");
-	str = str.replace(/\u00A0/g,"&#160;");
-	return str;
+    str = str.replace(/&/g, "&amp;");
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+    str = str.replace(/\u00A0/g, "&#160;");
+    return str;
 }
 
 /*
@@ -802,11 +803,11 @@ function escape(str) {
  * [this is done because Midas doesn't recognize all entities]
  */
 function resume(str) {
-	str = str.replace(/&amp;/g,"&");
-	str = str.replace(/&lt;/g,"<");
-	str = str.replace(/&gt;/g,">");
-	//str = str.replace(/&#160;/g,\u00A0);
-	return str;
+    str = str.replace(/&amp;/g, "&");
+    str = str.replace(/&lt;/g, "<");
+    str = str.replace(/&gt;/g, ">");
+    //str = str.replace(/&#160;/g, \u00A0);
+    return str;
 }
 
 // ------------------------------ end of file --------------------------
