@@ -6,6 +6,15 @@
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
       <head>
         <title>Welcome to Cocoon!</title>
+        <!-- 
+             NOTE (SM): this meta tag reflects the *output* of the pipeline and not
+             the encoding of this file. I agree it's sort of an hack and it should
+             be the XHTML serializer to add the meta tag to the response, but, for
+             now, this fixes encoding problems in those user-agents that don't parse
+             the <?xml?> processing instruction to understand the encoding of the
+             stream 
+         --> 
+        <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8"/>
         <link href="styles/cocoon.css" type="text/css" rel="stylesheet"/>
         <link href="favicon.ico" rel="SHORTCUT ICON" />
       </head>
