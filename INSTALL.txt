@@ -33,7 +33,6 @@
 That's it!  
 
 
-
 Now, you have two choices:
 
   a) close this file and try to hack something out by yourself
@@ -42,8 +41,6 @@ Now, you have two choices:
 
 Go ahead and choose option a), but don't complain if you can't figure out how
 to use the cocoon build system for your needs.
-
-
 
 
 
@@ -60,6 +57,8 @@ Or you can build the docs your self by running "build.bat docs" or
 "./build.sh docs". If you want to build the docs yourself, you need
 an installed version of Forrest (http://xml.apache.org/forrest).
 
+Of course you can also read the documentation at the website
+http://cocoon.apache.org/
 
 Updating
 --------
