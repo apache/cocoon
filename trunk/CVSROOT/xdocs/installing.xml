@@ -616,6 +616,11 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <td colspan="2">WebLogic 4.5.1</td>
    <td>SCO JDK 1.1.7A</td>
   </tr>
+  <tr>
+   <td>MacOS 8.5+</td>
+   <td colspan="2">Resin 1.1b</td>
+   <td>MRJ 2.2</td>
+  </tr>
   </table>
   
   <note>

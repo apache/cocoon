@@ -10,6 +10,7 @@
   <page id="license" label="License" source="license.xml"/>
   <page id="install" label="Install" source="installing.xml"/>
 <separator/>
+  <page id="infrastracture" label="Infrastructure" source="infrastructure.xml"/>
   <page id="technologies" label="Technologies" source="technologies.xml"/>
   <page id="guide" label="User Guide" source="guide.xml"/>
   <page id="dynamic" label="Dynamic Content" source="dynamic.xml"/>
