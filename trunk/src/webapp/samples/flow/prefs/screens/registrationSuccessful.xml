@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--+
+    | CVS: $Id: registrationSuccessful.xml,v 1.1 2004/02/22 19:34:26 unico Exp $
+    | Author: Ovidiu Predescu "ovidiu@apache.org"
+    | Date: August 30, 2002
+    +-->
+
+<page>
+  <resources>
+    <resource type="file" href="prefs.js">Flowscript</resource>
+  </resources>
+  <title>Registration successful!</title>
+  <content>
+    <para>
+      Congratulations 
+      <strong>${user/firstName} ${user/lastName}</strong>!
+      You've successfully registered as a new user.
+    </para>
+    <para>| <link href="edit">Edit my preferences</link> | <link href="logout">Logout</link> |</para>
+  </content>
+</page>

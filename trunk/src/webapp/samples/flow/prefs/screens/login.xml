@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--+
+    | CVS: $Id: login.xml,v 1.1 2004/02/22 19:34:26 unico Exp $
+    | Author: Ovidiu Predescu "ovidiu@apache.org"
+    | Date: August 30, 2002
+    +-->
+
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <resources>
+    <resource type="file" href="prefs.js">Flowscript</resource>
+  </resources>
+  <title>Login</title>
+  <content>
+    <jx:if test="errorMsg">
+      <strong>${errorMsg}</strong>
+    </jx:if>
+    <form action="continue.${continuation.id}">
+      <para>
+        Login name:
+        <input type="text" name="login" value="${login}"/>
+      </para>
+      <para>Password: <input type="password" name="password"/></para>
+      <input type="submit" name="submit" value="Login"/>
+      <para>Not yet registered? <link href="register">Register now!</link></para>
+    </form>
+  </content>
+</page>
