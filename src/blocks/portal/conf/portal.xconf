@@ -128,6 +128,7 @@
             role="org.apache.cocoon.portal.aspect.AspectDataStoreSelector">
     <store name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>
     <store name="session" class="org.apache.cocoon.portal.aspect.impl.SessionAspectDataStore"/>
+    <store name="persistent" class="org.apache.cocoon.portal.aspect.impl.PersistentAspectDataStore"/>
  </component>
 
 <!-- Layout factory configuration -->
@@ -152,6 +153,9 @@
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout" 
                 renderer="frame">
+            <aspects>
+                <aspect name="frame" class="java.lang.String" store="request" auto-create="false"/>
+            </aspects>
         </layout>
         <layout name="coplet" 
                 class="org.apache.cocoon.portal.layout.impl.CopletLayout" 
@@ -160,7 +164,21 @@
     </layouts>
 </component>
 
- <component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
+<!-- Coplet factory configuration -->
+<component class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
+           role="org.apache.cocoon.portal.coplet.CopletFactory">
+    <coplets>
+        <coplet name="standard"
+                class="org.apache.cocoon.portal.coplet.CopletData">
+            <coplet-data-aspects>
+            </coplet-data-aspects>
+            <coplet-instance-data-aspects>
+            </coplet-instance-data-aspects>
+        </coplet>
+    </coplets>
+</component>
+
+<component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
  	<mapping-source source="layout">context://samples/portal/profiles/mapping/layout.xml</mapping-source>
  	<mapping-source source="copletbasedata">context://samples/portal/profiles/mapping/copletbasedata.xml</mapping-source>
  	<mapping-source source="copletdata">context://samples/portal/profiles/mapping/copletdata.xml</mapping-source>
