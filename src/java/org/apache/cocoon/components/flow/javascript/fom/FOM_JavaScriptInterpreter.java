@@ -92,7 +92,7 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContin
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.7 2003/07/06 23:27:24 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.1 2003/07/08 05:48:52 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -496,7 +496,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 int size = (params != null ? params.size() : 0);
                 Object[] funArgs = new Object[size];
-                NativeArray parameters = new NativeArray(size);
+		Scriptable parameters = context.newObject(thrScope);
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
                         Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
@@ -505,7 +505,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                         parameters.put(arg.name, parameters, arg.value);
                     }
                 }
-                //cocoon.setParameters(parameters);
+                cocoon.setParameters(parameters);
                 Object fun = ScriptableObject.getProperty(thrScope, funName);
                 if (fun == Scriptable.NOT_FOUND) {
                     fun = funName; // this will produce a better error message
@@ -572,16 +572,15 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }
-            //int size = (params != null ? params.size() : 0);
-            //NativeArray parameters = new NativeArray(size);
-            
-            //if (size != 0) {
-            //for (int i = 0; i < size; i++) {
-            //Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-            //parameters.put(arg.name, parameters, arg.value);
-            //}
-            //}
-            //cocoon.setParameters(parameters);
+            int size = (params != null ? params.size() : 0);
+            Scriptable parameters = context.newObject(kScope);
+            if (size != 0) {
+		for (int i = 0; i < size; i++) {
+		    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+		    parameters.put(arg.name, parameters, arg.value);
+		}
+	    }
+            cocoon.setParameters(parameters);
             Object[] args = new Object[] {k, 
                                           cocoon.makeWebContinuation(wk)};
             try {

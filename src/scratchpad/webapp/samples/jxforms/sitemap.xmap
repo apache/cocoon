@@ -6,7 +6,7 @@
     <map:generators default="file">
       <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="jxforms.sitemap.generator"/>
     </map:generators>
-    <map:flow-interpreters default="FOM_JavaScript"/>
+    <map:flow-interpreters default="javascript"/>
     <map:serializers default="html"/>
     <map:matchers default="wildcard"/>
   </map:components>
@@ -38,7 +38,7 @@
   </map:resources>
 
   <!-- =========================== Pipelines ================================= -->
-  <map:flow language="FOM_JavaScript">
+  <map:flow language="javascript">
      <map:script src="flow/feedbackWizard.js"/>
   </map:flow>
 
