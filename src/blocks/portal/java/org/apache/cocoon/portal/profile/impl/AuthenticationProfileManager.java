@@ -196,7 +196,7 @@ public class AuthenticationProfileManager
             if ( layoutKey == null ) {
                 layoutKey = service.getDefaultLayoutKey();
             }
-            
+
             final RequestState state = this.getRequestState();
             final UserHandler handler = state.getHandler();
 

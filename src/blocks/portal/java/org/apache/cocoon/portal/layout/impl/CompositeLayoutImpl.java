@@ -103,8 +103,8 @@ public class CompositeLayoutImpl
      */
     public Item createNewItem() {
         if ( this.itemClassName == null ) {
-        return new Item();
-    }
+            return new Item();
+        }
         try {
             return (Item)ClassUtils.newInstance(this.itemClassName);
         } catch (Exception ignore) {
@@ -125,7 +125,7 @@ public class CompositeLayoutImpl
     public void setItemClassName(String value) {
         this.itemClassName = value;
     }
-        
+
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */

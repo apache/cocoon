@@ -63,7 +63,7 @@ public class PortalServiceInfo {
                 // if we only have one portal, just use it
             String pm = this.portalComponentManagers.keySet().iterator().next().toString();
             this.setPortalName(pm);
-	}
+        }
     }
 
     public String getPortalName() {

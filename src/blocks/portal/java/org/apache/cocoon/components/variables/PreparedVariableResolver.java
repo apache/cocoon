@@ -38,7 +38,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @version CVS $Id$
  */
 public class PreparedVariableResolver 
-    extends NOPVariableResolver 
+    extends NOPVariableResolver
     implements Disposable {
     
     protected ServiceManager  manager;

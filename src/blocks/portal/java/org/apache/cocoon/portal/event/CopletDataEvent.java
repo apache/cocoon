@@ -26,6 +26,6 @@ package org.apache.cocoon.portal.event;
  */
 public interface CopletDataEvent 
     extends ActionEvent {
-        
+
     // just a marker interface
 }
