@@ -15,7 +15,7 @@
     <td>
       <form method="post" action="index.do">
         <input type="image" border="0" src="images/logo-topbar.gif" />
-        <select name="view" width="14" align="left" value="Velocity">
+        <select name="view" width="14" align="left" value="Velocity" onChange="document.forms[0].submit()">
           <option value="Velocity">Velocity</option>
           <option value="Xsp">Xsp</option>
         </select>
