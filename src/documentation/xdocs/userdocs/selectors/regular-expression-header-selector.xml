@@ -23,7 +23,7 @@
 
 <document>
   <header>
-    <title>Regular-Ecpression-Header-Selector in Cocoon</title>
+    <title>Regular-Expression-Header-Selector in Cocoon</title>
     <version>0.1</version>
     <type>Technical document</type>
     <authors>
@@ -145,6 +145,15 @@
           any sitemap parameters. 
         </p>
       </s2>
+    </s1>
+    <s1 title="Notes">
+      <p>
+      The main motivation for this selector is to do some simple content
+      negotiation to serve XHTML 1.1 pages where the browser indicates it
+      accepts application/xhtml+xml, and HTML pages otherwise.
+      However, this has many more uses, including automatic i18n according
+      to the accept-language header.
+      </p>
     </s1>
     <s1 title="Bugs/Caveats">
       <p>
