@@ -181,6 +181,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+    fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/>
+  </action>
   <action dev="JH" type="fix" fixes-bug="14977" due-to="Tony Culshaw" due-to-email="tony@cultech.com.au">
     fixed NPE in SQLTransformer.serializeData()
   </action>
