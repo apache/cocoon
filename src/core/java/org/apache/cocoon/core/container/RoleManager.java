@@ -251,32 +251,4 @@ implements Configurable {
             }
         }
     }
-    
-    
-    
-    private Set loadedURLs = new HashSet();
-    
-    public void loadFromClassPath() throws Exception {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Enumeration resources = cl.getResources("/org/apache/cocoon/cocoon.roles");
-        
-        while(resources.hasMoreElements()) {
-            URL url = (URL)resources.nextElement();
-            loadURL(url.toExternalForm());
-        }
-    }
-    
-    public void loadURL(String resource) throws Exception {
-        if (!hasLoaded(resource)) {
-            loadedURLs.add(resource);
-
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            Configuration config = builder.build(resource);
-            configure(config);
-        }
-    }
-    
-    public boolean hasLoaded(String resource) {
-        return loadedURLs.contains(resource) || (parent != null && parent.hasLoaded(resource));
-    }
 }
