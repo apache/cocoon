@@ -126,7 +126,7 @@ Courier: </td><td>$order.courier
   </tr>
 #end
   <tr bgcolor="#FFFF88">
-  <td colspan="4" align="right"><b>Total: $yoshi.formatNumber($order.totalPrice, '$#,##0.00'</b></td>
+  <td colspan="4" align="right"><b>Total: $yoshi.formatNumber($order.totalPrice, '$#,##0.00')</b></td>
   </tr>
 </table>
 </td></tr>
