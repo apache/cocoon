@@ -7,7 +7,7 @@ echo Cocoon Build System
 echo -------------------
 
 set ANT_HOME=.\lib
-set ANT=.\lib\ant.jar
+set ANT=.\lib\ant_1_1.jar
 set JAVAC=%JAVA_HOME%\lib\tools.jar
 set XERCES=.\lib\xerces_1_1_2.jar
 set XALAN=.\lib\xalan_1_1_D01.jar

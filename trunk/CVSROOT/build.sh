@@ -13,7 +13,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 ANT_HOME=./lib
-ANT=./lib/ant.jar
+ANT=./lib/ant_1_1.jar
 JAVAC=$JAVA_HOME/lib/tools.jar
 XERCES=./lib/xerces_1_1_2.jar
 XALAN=./lib/xalan_1_1_D01.jar
