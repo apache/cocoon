@@ -11,6 +11,8 @@
       <source-roots group="test-source">
         <!-- test source-root as mentioned in the qdox block samples.xml file -->
           <source-root uri="file:///tmp/qdox-test"/>
+          <!-- test source-root for linux (replace the above) -->
+          <!-- <source-root uri="jar:file:///usr/java/j2sdk1.4.2_03/src.zip!"/> -->
       </source-roots>
 
       <!-- examples of other source-roots
