@@ -1,4 +1,9 @@
-<!-- === Test targets =========================================================== -->
+<?xml version="1.0"?>
+<project name="test">
+
+  <description>
+    Test targets
+  </description>
 
   <!-- Runs all tests -->
   <target name="test" depends="junit-tests, block-tests" description="Runs all tests"/>
@@ -65,3 +70,4 @@
          target="prepare-anteater-tests"/>
 
   </target>
+</project>

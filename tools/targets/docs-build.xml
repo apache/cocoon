@@ -1,5 +1,10 @@
-<!-- === Documentation Targets ================================================= -->
+<?xml version="1.0"?>
+<project name="docs">
 
+  <description>
+    Documentation Targets
+  </description>
+  
   <target name="prepare-docs" unless="exclude.documentation" depends="blocks">
 
     <!-- Set classpath for documentation -->
@@ -209,3 +214,5 @@ Not rebuilding docs, as they are up-to-date:
          inheritRefs="false"
          target="javadocs"/>
   </target>
+  
+</project>

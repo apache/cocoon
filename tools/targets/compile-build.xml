@@ -1,4 +1,9 @@
-<!-- === Compilation Targets ============================================= -->
+<?xml version="1.0"?>
+<project name="compile">
+
+  <description>
+    Compilation Targets
+  </description>
 
   <!-- compiles everything -->
   <target name="compile"
@@ -158,3 +163,4 @@
          inheritRefs="false" 
          target="cocoon-block-${block.name}-${target.name}" />
   </target>
+</project>
