@@ -1,4 +1,4 @@
-/*-- $Id: LdapDefs.java,v 1.2 2000-02-13 18:29:31 stefano Exp $ -- 
+/*-- $Id: LdapDefs.java,v 1.3 2000-03-25 12:49:27 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -117,7 +117,7 @@ public class LdapDefs {
 	 */
 	protected void processLdapDef(Element ldap) throws Exception {
 		String name = ldap.getAttribute("name");
-		if (name == null) return;
+		if (name == null || name.equals("")) return;
 
 		Properties ldap_props = new Properties();
 
@@ -140,7 +140,7 @@ public class LdapDefs {
 
     protected void processQueryDef(Element querydef) {
         String name = querydef.getAttribute("name");
-        if (name == null) return;
+        if (name == null || name.equals("")) return;
         NamedNodeMap attributes = querydef.getAttributes();
         Properties props = new Properties(master_default_query_props);
         for (int i=0; i<attributes.getLength(); i++) {
@@ -160,7 +160,7 @@ public class LdapDefs {
 	}
 
 	public Properties getQueryProperties(String name) throws Exception {
-        if (name == null) return default_query_props;
+        if (name == null || name.equals("")) return default_query_props;
 		Properties props = (Properties)query_props.get(name);
 		return props;
 	}
