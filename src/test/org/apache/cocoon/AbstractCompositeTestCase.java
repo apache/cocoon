@@ -93,7 +93,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.7 2003/09/02 08:51:23 stephan Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.8 2003/10/15 21:00:24 cziegeler Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
@@ -409,7 +409,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
     }
 
     public final void print(Document document) {
-        TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
+        TransformerFactory factory = TransformerFactory.newInstance();
         try
         {
           javax.xml.transform.Transformer serializer = factory.newTransformer();

@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.7 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.8 2003/10/15 21:00:24 cziegeler Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
@@ -182,7 +182,7 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
     }
 
     public final void print(Document document) {
-        TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
+        TransformerFactory factory = TransformerFactory.newInstance();
         try
         {
           javax.xml.transform.Transformer serializer = factory.newTransformer();

@@ -64,16 +64,14 @@ import org.xml.sax.SAXException;
 /**
  * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.8 2003/07/26 14:48:39 cziegeler Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.9 2003/10/15 21:00:23 cziegeler Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
     private org.apache.excalibur.source.SourceResolver resolver;
-    private ComponentManager manager;
 
     public SourceResolverAdapter(org.apache.excalibur.source.SourceResolver resolver, ComponentManager manager) {
         this.resolver = resolver;
-        this.manager = manager;
     }
 
     /**
