@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
 
 /**
  * Node handler for calling functions and resuming continuations in
@@ -35,7 +36,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.12 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class CallFunctionNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
 
@@ -64,12 +65,12 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
     }
 
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        
+
         Map objectModel = env.getObjectModel();
-        
+
         // Resolve parameters
         Parameters params = VariableResolver.buildParameters(this.parameters, context, objectModel);
-        
+
         // Build the list of positional arguments
         //TODO (SW): Deprecate this in the future.
         // It has be found to be bad practice to pass sitemap parameters
@@ -87,25 +88,33 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
             args = Collections.EMPTY_LIST;
         }
 
-        String continuation = continuationId.resolve(context, objectModel);
+        // Need redirector in any case
+        Redirector redirector = context.getRedirector();
 
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
+        String continuation = continuationId.resolve(context, env.getObjectModel());
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, args, context.getRedirector());
+            interpreter.handleContinuation(continuation, args, redirector);
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call continuation> did not send a response, at " +
+                                              getLocation());
+            }
             return true;
         }
 
         // We don't have a continuation id passed in <map:call>, so invoke
         // the specified function
-
         String name = functionName.resolve(context, objectModel);
-
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, args, context.getRedirector());
+            interpreter.callFunction(name, args, redirector);
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call function> did not send a response, at " +
+                                              getLocation());
+            }
             return true;
         }
-        
+
         // Found neither continuation nor function to call
         throw new ProcessingException("No function nor continuation given in <map:call function> at " + getLocation());
     }
