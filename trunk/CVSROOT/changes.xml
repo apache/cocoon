@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.91 2000-07-11 05:42:14 balld Exp $
+  $Id: changes.xml,v 1.92 2000-07-20 00:09:19 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
+   Fixed the bug that prevented compiled XSP to be cacheable with hasChanged().
+  </action>
+  <action dev="SM" type="fix" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+   Fixed the bug that xsp:expr does not accept DocumentFragments.
+  </action>
+  <action dev="SM" type="fix" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
+   Updated Cocoon installation case document.
+  </action>
   <action dev="DB" type="fix">
    removed normalize-space from sql logicsheet's get-nested-string template
   </action>
@@ -34,7 +43,6 @@
   <action dev="DB" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
    fixed stupid bug in absolute href support in xinclude processor. also now set system ids on included xml resources.
   </action>
-
   <action dev="SM" type="fix" due-to="Matthias Brunner" due-to-email="mb@blumenstrasse.vol.at">
    Fixed typo on util.xsl that generated XSP compilation problems for the util taglib.
   </action>
