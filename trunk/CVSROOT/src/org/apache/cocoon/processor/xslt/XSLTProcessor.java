@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.8 2000-02-23 00:50:48 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.9 2000-03-04 02:36:22 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-02-23 00:50:48 $
+ * @version $Revision: 1.9 $ $Date: 2000-03-04 02:36:22 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -96,11 +96,18 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         String path = (String) parameters.get("path");
         String browser = (String) parameters.get("browser");
 
+        Hashtable params = new Hashtable();
+        Enumeration enum = request.getParameterNames();
+        while (enum.hasMoreElements()) {
+            String name = (String) enum.nextElement();
+            params.put(name, request.getParameter(name));
+        }
+
         try {
             Object resource = getResource(document, path, browser);
             Document stylesheet = getStylesheet(resource, request);
             Document result = this.parser.createEmptyDocument();
-            return transformer.transform(document, null, stylesheet, resource.toString(), result);
+            return transformer.transform(document, null, stylesheet, resource.toString(), result, params);
         } catch (PINotFoundException e) {
             return document;
         }
