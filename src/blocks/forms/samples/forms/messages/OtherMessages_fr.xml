@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,13 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<catalogue>
+  <message key="org.apache.cocoon.forms.samples.Sex.FEMALE">féminin</message>
+  <message key="org.apache.cocoon.forms.samples.Sex.MALE">masculin</message>
+</catalogue>

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,13 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<wi:selection-list xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+  
+  <wi:item value="10/11/03"><wi:label>10/11/03</wi:label></wi:item>
+  <wi:item value="2/4/63"><wi:label>My birthdate</wi:label></wi:item>
+</wi:selection-list>

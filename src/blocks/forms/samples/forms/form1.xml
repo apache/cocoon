@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | CVS $Id: form1.xml,v 1.1 2004/03/09 10:33:48 reinhard Exp $
+    +-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  
+  <fd:widgets>
+    <fd:field id="tab-state">
+      <fd:datatype base="string"/>
+    </fd:field>
+  
+    <fd:field id="email" required="true">
+      <fd:datatype base="string"/>
+      <!-- new-style validation, outside of the datatype -->
+	  <fd:validation>
+	    <fd:email/>
+	  </fd:validation>
+      <fd:label>Enter an <b>email</b> address:</fd:label>
+      <fd:help>
+        An email address must be in <i>[name]@[domain].[tld]</i> format.
+        <br/>
+        And if you do not know what <b>email</b> address is, then well, chances are
+        that you do not have it. However, if you have access to the Internet,
+        you can easily get yourself one!
+        <br/>
+        Choose one of the following options:
+        <ul>
+          <li><a href='http://mail.yahoo.com/'>Yahoo! Mail</a></li>
+          <li><a href='http://www.hotmail.com/'>Hotmail</a></li>
+        </ul>
+        <small>Anyway, the point of all this was to show a popup help with mixed html content.</small>
+      </fd:help>
+    </fd:field>
+  
+    <fd:booleanfield id="somebool">
+      <fd:label>Put me <em>on</em> or <em>off</em>.</fd:label>
+    </fd:booleanfield>
+  
+    <fd:field id="fourchars">
+      <fd:label>Select something that's 4 characters long:</fd:label>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:length exact='2*2'/>
+      </fd:validation>
+      <fd:selection-list src="forms/a-choices.xml"/>
+    </fd:field>
+  
+    <fd:field id="account">
+      <fd:label>Indicate the size of your bank account (in m<sup>3</sup>):</fd:label>
+      <fd:datatype base="long"/>
+      <fd:selection-list>
+        <fd:item value="1"/>
+        <fd:item value="2"/>
+        <fd:item value="3">
+          <fd:label>three</fd:label>
+        </fd:item>
+        <fd:item value="4"/>
+        <fd:item value="5"/>
+      </fd:selection-list>
+    </fd:field>
+  
+    <fd:field id="cowheight">
+      <fd:label>Indicate your height (in cows):</fd:label>
+      <fd:datatype base="long"/>
+      <fd:selection-list>
+        <fd:item value="1"/>
+        <fd:item value="2"/>
+        <fd:item value="3">
+          <fd:label>three</fd:label>
+        </fd:item>
+        <fd:item value="4"/>
+        <fd:item value="5"/>
+      </fd:selection-list>
+    </fd:field>
+  
+    <fd:field id="number1" required="true">
+      <fd:label>Please enter a number<br/>
+      <small>(will automatically set a correct value below if needed)</small>:</fd:label>
+      <fd:datatype base="long"/>
+      <fd:on-value-changed>
+        <javascript>
+          java.lang.System.err.println("Was here!");
+          var newValue = event.source.value;
+          if (newValue != null) {
+            var number2 = event.source.parent.getWidget("number2");
+            if (number2.value == null) {
+              number2.setValue(new java.lang.Long(newValue.intValue() + 1));
+            }
+          }
+        </javascript>
+      </fd:on-value-changed>
+    </fd:field>
+  
+    <fd:field id="number2" required="true">
+      <fd:label>Enter another number, larger than the other number:</fd:label>
+      <fd:datatype base="long"/>
+	  <fd:validation>
+	    <fd:range min="number1 + 1">
+		  <fd:failmessage>This number should be larger than the first number.</fd:failmessage>
+	    </fd:range>
+	  </fd:validation>
+    </fd:field>
+  
+    <fd:multivaluefield id="drinks">
+      <fd:label>Indicate which 2 of the following drinks you'd like to receive:</fd:label>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:value-count exact="2"/>
+      </fd:validation>
+      <fd:selection-list>
+        <fd:item value="Maes"/>
+        <fd:item value="Jupiler"/>
+        <fd:item value="Leffe"/>
+        <fd:item value="Hoegaarden"/>
+        <fd:item value="Coca Cola"/>
+      </fd:selection-list>
+    </fd:multivaluefield>
+  
+    <fd:aggregatefield id="visa" required="true">
+      <fd:label>Enter your (16-digit) visa number (without spaces)
+        <br/>Your credit card will be billed.
+        <br/><small>Valid test number is: 4111111111111111</small>
+      </fd:label>
+      <fd:help>Use a fake number if <a href="http://cocoon.apache.org">Cocoon</a> is not running on your local computer</fd:help>
+      <fd:datatype base="string"/>
+      <fd:split pattern="([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})">
+        <fd:map group="1" field="part1"/>
+        <fd:map group="2" field="part2"/>
+        <fd:map group="3" field="part3"/>
+        <fd:map group="4" field="part4"/>
+        <fd:failmessage>Not a valid 16-digit visa number.</fd:failmessage>
+      </fd:split>
+      <fd:combine expression='Concat(part1,part2,part3,part4)'/>
+      <fd:widgets>
+        <fd:field id="part1">
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part2">
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part3">
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part4">
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+      <fd:validation>
+        <fd:mod10>
+          <fd:failmessage>Invalid credit card number.</fd:failmessage>
+        </fd:mod10>
+      </fd:validation>
+    </fd:aggregatefield>
+  
+    <fd:field id="ipaddress" required="true">
+      <fd:label>Please enter your IP address</fd:label>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:regexp pattern="^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$">
+          <fd:failmessage>Invalid IP address.</fd:failmessage>
+        </fd:regexp>
+      </fd:validation>
+    </fd:field>
+  
+    <fd:field id="birthdate" required="true">
+      <fd:label>Your birthdate (dd/MM/yyyy):</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor>
+          <fd:patterns>
+            <fd:pattern>dd/MM/yyyy</fd:pattern>
+            <!-- The above pattern is a non-locale-specific pattern. You can
+            also add locale-specific patterns by adding more fd:pattern elements
+            here, with a locale attribute on them. -->
+          </fd:patterns>
+        </fd:convertor>
+      </fd:datatype>
+      <fd:validation>
+        <fd:range min="Date(1850, 1, 1)" max="Date(2150, 1, 1)">
+          <fd:failmessage>Dead and not born yet should not bother filling this form</fd:failmessage>
+        </fd:range>
+      </fd:validation>
+    </fd:field>
+  
+    <fd:field id="altbirthdate" required="true">
+      <fd:label>Select a date on which you'd rather had been born:</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor variant="date" style="full"/>
+      </fd:datatype>
+      <fd:selection-list>
+        <!-- The convertor element here is used to specify how the values
+             in the value attributes of the fd:item elements should be
+             interpreted. -->
+        <fd:convertor type="formatting">
+          <fd:patterns>
+            <fd:pattern>yyyyMMdd</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+        <fd:item value="13020711"/>
+        <fd:item value="19120623"/>
+        <fd:item value="19690721"/>
+        <fd:item value="19700506"/>
+        <fd:item value="19781014"/>
+        <fd:item value="20010911"/>
+      </fd:selection-list>
+    </fd:field>
+  
+    <fd:field id="dieselprice" required="true">
+      <fd:label>Price for a liter diesel:</fd:label>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="number">
+          <fd:patterns>
+            <fd:pattern>#.00</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+      </fd:datatype>
+    </fd:field>
+  
+    <fd:repeater id="contacts">
+      <fd:validation>
+      	<!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
+      		 A validator cannot itself display a validation error, and therefore sets a validation
+      		 error on a field in the offenting row. -->
+        <fd:javascript>
+          var list = new java.util.ArrayList();
+          var success = true;
+          // Iterate on all rows
+      	  for (var i = 0; i &lt; widget.size; i++) {
+      	    // Get the row
+      	    var row = widget.getRow(i);
+      	    // Compute a key combining the first and last name
+      	    var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
+      	    if (list.contains(key)) {
+      	      // already in the list
+      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
+      	      success = false;
+      	      break; // no need to continue
+      	    }
+      	    // Add the current row's key to the list
+      	    list.add(key);
+      	  }
+      	  
+      	  // Must return true/false
+      	  return success;
+      	  
+        </fd:javascript>
+      </fd:validation>
+      <fd:widgets>
+        <fd:field id="firstname">
+          <fd:label>Firstname</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="lastname">
+          <fd:label>Lastname</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="phone">
+          <fd:label>Phone</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="email">
+          <fd:label>Email</fd:label>
+          <fd:datatype base="string"/>
+          <fd:validation>
+            <fd:email/>
+          </fd:validation>
+        </fd:field>
+        <fd:booleanfield id="select">
+          <fd:label>Select</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:repeater>
+  
+    <fd:repeater-action id="addcontact" action-command="add-row" repeater="contacts">
+      <fd:label>Add contact</fd:label>
+    </fd:repeater-action>
+  
+    <fd:repeater-action id="removecontacts" action-command="delete-rows" repeater="contacts" select="select">
+      <fd:label>Remove selected contacts</fd:label>
+    </fd:repeater-action>
+  </fd:widgets>
+
+</fd:form>

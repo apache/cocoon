@@ -14,13 +14,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <title>HTMLArea</title>
+  <content>
+    <ft:form-template action="#{$continuation/id}.continue" method="POST">
+      <ft:widget-label id="data"/><br/>
+      <ft:widget id="data">
+        <fi:styling type="htmlarea" style="width: 100%;" rows="20" />
+	  </ft:widget>      
+      <br/>
+      <input type="submit"/>
+    </ft:form-template>
+  </content>
+</page>

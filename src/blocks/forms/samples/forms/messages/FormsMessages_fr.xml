@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in Woody messages. -->
+<catalogue>
+  <message key="general.field-required">Cette donnée est obligatoire.</message>
+
+  <message key="datatype.conversion-failed">N'est pas un(e) {0}.</message>
+  <message key="datatype.long">nombre entier</message>
+  <message key="datatype.date">date</message>
+
+  <message key="validation.string.exact-length">Doit avoir exactement {0} caractères.</message>
+  <message key="validation.string.range-length">Doit avoir entre {0} et {1} caractères.</message>
+  <message key="validation.string.min-length">Doit avoir au moins {0} caractères.</message>
+  <message key="validation.string.max-length">Doit avoir au plus {0} caractères.</message>
+  <message key="validation.string.regexp">Ne correspond pas à l'expression régulière : {0}</message>
+
+  <message key="validation.string.invalidemail">N'est pas une adresse mail correcte.</message>
+
+  <message key="validation.array.exact-valuecount">{0} éléments doivent être séléctionnés.</message>
+  <message key="validation.array.range-valuecount">Entre {0} et {1} éléments doivent être sélectionnés.</message>
+  <message key="validation.array.min-valuecount">Au moins {0} éléments doivent être séléctionnés.</message>
+  <message key="validation.array.max-valuecount">Au plus {0} éléments peuvent être séléctionnés.</message>
+
+  <message key="multivaluefield.conversionfailed">Un des éléments séléctionnées a un type incorrect.</message>
+
+  <message key="validation.numeric.range">Doit être compris entre {0} et {1}.</message>
+  <message key="validation.numeric.min">Doit être supérieur ou égal à {0}.</message>
+  <message key="validation.numeric.max">Doit être inférieur ou égal à {0}.</message>
+
+  <message key="validation.mod10">Numéro de carte incorrect.</message>
+
+
+  <message key="aggregatedfield.split-failed">Ne correspond pas à l'expression régulière: {0}</message>
+  <message key="upload.invalid-type">Type de fichier incorrect.</message>
+</catalogue>

@@ -14,13 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<page>
+  <title>Sample form result</title>
+  <content>
+    User '${username}' uploaded file '${filename}' whose content is :
+    <br/>
+    <pre>
+${uploadContent}
+    </pre>
+  </content>
+</page>

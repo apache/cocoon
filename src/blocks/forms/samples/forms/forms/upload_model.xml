@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,13 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+  
+    <fd:field id="user" required="true">
+      <fd:datatype base="string"/>
+      <fd:label>User name</fd:label>
+    </fd:field>
+    
+    <fd:upload id="upload" mime-types="text/plain" required="true">
+      <fd:label>Upload a text file</fd:label>
+      <fd:hint>You must choose a text file</fd:hint>
+    </fd:upload>
+    
+  </fd:widgets>
+</fd:form>

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,13 +14,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- form used to illustrate programmatic changing of listbox content. -->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+  <fd:widgets>
+    <fd:messages id="messages">
+      <fd:label>Here are some messages for you</fd:label>
+    </fd:messages>
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
+    <fd:field id="number1">
+      <fd:label>First number</fd:label>
+      <fd:datatype base="long"/>
+    </fd:field>
 
-</xsamples>
+    <fd:field id="number2">
+      <fd:label>Second number</fd:label>
+      <fd:datatype base="long"/>
+    </fd:field>
+
+  </fd:widgets>
+
+</fd:form>

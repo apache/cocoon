@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page
+  xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+
+    <!--
+      CVS $Id: form_model_gui_template.xml,v 1.1 2004/03/09 10:33:48 reinhard Exp $
+      Author: Timothy Larson
+    -->
+
+    <!--
+    TODO: Add features to "widgets-class" (e.g. move-up, move-down, add-before, add-after).
+    -->
+
+  <title>Form GUI</title>
+
+  <content>
+    <ft:form-template action="#{$continuation/id}.continue" method="POST">
+
+      <ft:class id="id-class"><ft:widget-label id="id"/>:<ft:widget id="id"/></ft:class>
+      <ft:class id="label-class"><ft:widget-label id="label"/>:<ft:widget id="label"/></ft:class>
+      <ft:class id="required-class"><ft:widget-label id="required"/>:<ft:widget id="required"/></ft:class>
+      <ft:class id="initial-size-class"><ft:widget-label id="initial-size"/>:<ft:widget id="initial-size"/></ft:class>
+
+      <ft:class id="widget-row-class">
+        <td>
+          <ft:widget id="select"/>
+        </td>
+        <td>
+          <ft:widget id="type">
+            <fi:styling list-type="dropdown" submit-on-change="true"/>
+          </ft:widget>
+
+          <ft:union id="union">
+
+            <ft:case id="">
+            </ft:case>
+
+            <ft:case id="action">
+              <ft:struct id="action">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="aggregatefield">
+                <ft:struct id="aggregatefield">
+                  <ft:new id="id-class"/>
+                  <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="booleanfield">
+              <ft:struct id="booleanfield">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="class">
+              <ft:struct id="class">
+                <ft:new id="id-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="field">
+              <ft:struct id="field">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="required-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="new">
+              <ft:struct id="new">
+                <ft:new id="id-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="output">
+              <ft:struct id="output">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="struct">
+              <ft:struct id="struct">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="repeater">
+              <ft:struct id="repeater">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="initial-size-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="row-action">
+              <ft:struct id="row-action">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="submit">
+              <ft:struct id="submit">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:struct>
+            </ft:case>
+
+            <ft:case id="union">
+              <ft:struct id="union">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:struct>
+            </ft:case>
+
+          </ft:union>
+        </td>
+      </ft:class>
+
+      <ft:class id="widgets-class">
+        <ft:repeater-size id="widgets"/>
+        <table border="4">
+          <ft:repeater-widget id="widgets">
+            <tr><ft:new id="widget-row-class"/></tr>
+          </ft:repeater-widget>
+        </table>
+        <ft:widget id="addWidget"/>
+        <ft:widget id="removeWidgets"/><br/>
+      </ft:class>
+
+      <table align="center" border="3">
+        <tr>
+          <td>
+            <p>
+              <ft:new id="widgets-class"/>
+            </p>
+           <input type="submit"/>
+          </td>
+        </tr>
+      </table>
+
+    </ft:form-template>
+  </content>
+
+</page>

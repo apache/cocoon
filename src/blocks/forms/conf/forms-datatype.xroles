@@ -15,12 +15,9 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.forms.datatype.DatatypeManager']">
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <role name="org.apache.cocoon.forms.datatype.DatatypeManager"
+        shorthand="forms-datatype"
+        default-class="org.apache.cocoon.forms.datatype.DefaultDatatypeManager"/>
+</xroles>

@@ -15,12 +15,9 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.forms.validation.WidgetValidatorBuilderSelector']">
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <role name="org.apache.cocoon.forms.validation.WidgetValidatorBuilderSelector"
+        shorthand="forms-validators"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+</xroles>

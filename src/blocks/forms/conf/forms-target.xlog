@@ -15,12 +15,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<xlog xpath="/logkit/targets" 
+      unless="cocoon[@id='forms']">
+    
+    <cocoon id="forms">
+      <filename>${context-root}/WEB-INF/logs/forms.log</filename>
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+    
+</xlog>

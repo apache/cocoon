@@ -14,13 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<root>
+  <!-- to see the runtime effect of non-lenient binding
+       comment out one of the 'breakingField' nodes below -->
+       
+  <!-- an element named 'one' is required by non-lenient binding -->     
+  <one>
+    <!-- 'breakingField' is required by non-lenient binding -->
+    <breakingField>init1</breakingField>
+  </one>
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <!-- elements 'two' and 'three' are optional, but if present, then non-lenient
+       binding requires them to have a 'breakingField' child attribute -->
+  <two>
+    <breakingField>init2</breakingField>
+  </two>
+  <three>
+    <breakingField>init3</breakingField>
+  </three>
+</root>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xconf xpath="/cocoon" unless="forms-binding">
+       
+  <forms-binding logger="forms.binding">
+    <bindings>
+      <binding name="value" src="org.apache.cocoon.forms.binding.ValueJXPathBindingBuilder"/>
+      <binding name="multi-value" src="org.apache.cocoon.forms.binding.MultiValueJXPathBindingBuilder"/>
+      <binding name="context" src="org.apache.cocoon.forms.binding.ContextJXPathBindingBuilder"/>
+      <binding name="repeater" src="org.apache.cocoon.forms.binding.RepeaterJXPathBindingBuilder"/>
+      <binding name="simple-repeater" src="org.apache.cocoon.forms.binding.SimpleRepeaterJXPathBindingBuilder"/>
+      <binding name="temp-repeater" src="org.apache.cocoon.forms.binding.TempRepeaterJXPathBindingBuilder"/>
+      <binding name="aggregate" src="org.apache.cocoon.forms.binding.AggregateJXPathBindingBuilder"/>
+      <binding name="set-attribute" src="org.apache.cocoon.forms.binding.SetAttributeJXPathBindingBuilder"/>
+      <binding name="insert-node" src="org.apache.cocoon.forms.binding.InsertNodeJXPathBindingBuilder"/>
+      <binding name="delete-node" src="org.apache.cocoon.forms.binding.DeleteNodeJXPathBindingBuilder"/>
+      <binding name="insert-bean" src="org.apache.cocoon.forms.binding.InsertBeanJXPathBindingBuilder"/>
+      <binding name="unique-field" src="org.apache.cocoon.forms.binding.UniqueFieldJXPathBindingBuilder"/>
+      <binding name="javascript" src="org.apache.cocoon.forms.binding.JavaScriptJXPathBindingBuilder"/>
+      <binding name="case" src="org.apache.cocoon.forms.binding.CaseJXPathBindingBuilder"/>
+      <binding name="class" src="org.apache.cocoon.forms.binding.ClassJXPathBindingBuilder"/>
+      <binding name="new" src="org.apache.cocoon.forms.binding.NewJXPathBindingBuilder"/>
+      <binding name="struct" src="org.apache.cocoon.forms.binding.StructJXPathBindingBuilder"/>
+      <binding name="union" src="org.apache.cocoon.forms.binding.UnionJXPathBindingBuilder"/>
+    </bindings>
+  </forms-binding>
+
+</xconf>

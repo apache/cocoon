@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | CForms aggregate sample binding. Represent values of two aggregate
+    | fields as single input fields.
+    |
+    | CVS $Id: template-combine.xml,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+    +-->
+
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <title>Aggregate Field: Combine</title>
+  <content>
+    <p>
+      On this form, you can enter phone and date, each as one field.
+    </p>
+    <ft:form-template action="${cocoon.continuation.id}.continue" method="POST">
+      <table align="center">
+        <tr>
+          <th style="border-bottom: solid 1px black;">Explanation</th>
+          <th style="border-bottom: solid 1px black;">Form</th>
+          <th style="border-bottom: solid 1px black;">Data Model</th>
+        </tr>
+        <tr>
+          <td>
+            <p>
+              When you click submit, following happens:
+              <ul>
+                <li>Input values are validated</li>
+                <li>Input values are split onto parts</li>
+                <li>Each part value is validated</li>
+                <li>Each part value saved into the backend data model</li>
+              </ul>
+            </p>
+            <p>
+              Switch to another aggregation example:
+            </p>
+            <ft:widget id="switch"/>
+          </td>
+          <td>
+            <fi:group>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="phone"/>
+                <ft:widget id="date"/>
+              </fi:items>
+            </fi:group>
+            <input type="submit" value="Submit"/>
+          </td>
+          <td>
+            <table cellpadding="3">
+              <tr>
+                <td>Phone, part 1</td><th>#{part1}</th>
+              </tr>
+              <tr>
+                <td>Phone, part 2</td><th>#{part2}</th>
+              </tr>
+              <tr>
+                <td>Phone, part 3</td><th>#{part3}</th>
+              </tr>
+              <tr>
+                <td>Phone, part 4</td><th>#{part4}</th>
+              </tr>
+              <tr>
+                <td>Date, Day</td><th>#{day}</th>
+              </tr>
+              <tr>
+                <td>Date, Month</td><th>#{month}</th>
+              </tr>
+              <tr>
+                <td>Date, Year</td><th>#{year}</th>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </ft:form-template>
+  </content>
+</page>

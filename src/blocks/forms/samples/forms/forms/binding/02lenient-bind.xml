@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fb:context 
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	path="/" 
+	direction="load" >
+
+<!-- 
+   | This file shows the inheritance behaviour of the @lenient setting 
+   | on the various bindings in the framework. 
+   | You will need to edit the backend-model in the script to see the effect
+   |  see: ../../flow/bindings.js#createLenientTestObject()
+   -->
+   
+  <!-- following 3 bindings work identical, see how inheritance and
+       default settings do their work -->
+        
+  <fb:context path="one" lenient="false">
+    <!-- to override inherit from .. explicitely set 'true' -->
+    <fb:value id="anyfield" path="surviveField" lenient="true" />
+    <!-- inherit from .. becomes 'false' -->
+    <fb:value id="anyfield" path="breakingField" />
+  </fb:context>
+            
+  <fb:context path="two" lenient="true">
+    <!-- inherit from .. becomes 'true' -->
+    <fb:value id="anyfield" path="surviveField" />
+    <!-- to override inherit from .. explicitely set 'false' -->
+    <fb:value id="anyfield" path="breakingField" lenient="false"/>
+  </fb:context>
+            
+  <fb:context path="three" >
+    <!-- inherit from ../.. becomes 'true' (the default for the root) -->
+    <fb:value id="anyfield" path="surviveField" />
+    <!-- to override inherit from ../.. explicitely set 'false' -->
+    <fb:value id="anyfield" path="breakingField" lenient="false"/>
+  </fb:context>
+
+</fb:context>
