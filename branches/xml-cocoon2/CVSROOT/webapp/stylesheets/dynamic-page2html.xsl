@@ -73,7 +73,7 @@
   
   <xsl:template match="*|@*" priority="-1">
    <xsl:copy>
-    <xsl:apply-templates/>
+    <xsl:apply-templates select="*|@*"/>
    </xsl:copy>
   </xsl:template>
 
