@@ -22,7 +22,7 @@
   </group>
 
   <target name="webdav-davmap">
-    <property name="davmap.samples" value="${anteater.env.cocoon}samples/webdav"/>
+    <property name="davmap.samples" value="${anteater.env.cocoon}samples/blocks/webdav"/>
     <property name="davmap.title" value="repo"/>
     <echo>samples=${davmap.samples}</echo>
 

@@ -22,7 +22,7 @@
   </group>
 
   <target name="webdav-step3">
-    <property name="step3.samples" value="${anteater.env.cocoon}/samples/webdav"/>
+    <property name="step3.samples" value="${anteater.env.cocoon}/samples/blocks/webdav"/>
     <property name="step3.newTitle" value="Title changed by anteater step3 test"/>
 
     <echo>samples=${samples}</echo>
