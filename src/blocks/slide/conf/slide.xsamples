@@ -4,8 +4,7 @@
 
   <group name="Slide">
     <sample name="Slide Integration" href="slide/">
-      Shows an example of how it could be possible to integrate a
-      Content Management System, like Jakarta Slide, into Cocoon.
+      Slide administration application showing the use of Slide inside Cocoon.
     </sample>
   </group>
 </xsamples>
