@@ -192,6 +192,12 @@ by the main ones.
         classname="javax.servlet.http.HttpServletRequestWrapper">
       <classpath refid="classpath"/>
     </available>
+    <available property="jndi.present" classname="javax.naming.Context">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="datasource.present" classname="javax.sql.DataSource">
+      <classpath refid="classpath"/>
+    </available>
   </target>
 
   <!-- =================================================================== -->
@@ -239,10 +245,16 @@ by the main ones.
         filtering="on"/>
   </target>
 
+  <target name="prepare-jndi" depends="prepare-datasource" if="jndi.present"/>
+
+  <target name="prepare-datasource" depends="prepare-src-main" if="datasource.present">
+    <property name="j2ee.present" value="true"/>
+  </target>
+
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare-src-22"/>
+  <target name="prepare-src" depends="prepare-src-22,prepare-jndi"/>
 
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
@@ -274,6 +286,7 @@ by the main ones.
       <exclude name="**/PNGEncoder*.java"    unless="png.present"/>
       <exclude name="**/JAI*.java"           unless="jai.present"/>
       <exclude name="**/HTMLGenerator.java"  unless="tidy.present"/>
+      <exclude name="**/J2eeDataSource.java" unless="j2ee.present"/>
     </javac>
   </target>
 
