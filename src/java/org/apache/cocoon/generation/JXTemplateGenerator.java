@@ -356,7 +356,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.21 2003/12/10 16:24:35 vgritsenko Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.22 2003/12/10 16:43:49 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -403,8 +403,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     public class LocatorFacade implements Locator {
         private Locator locator;
    
-        public LocatorFacade(Locator intialLocator) {
-            this.locator = intialLocator;
+        public LocatorFacade(Locator initialLocator) {
+            this.locator = initialLocator;
         }
         
         public void setDocumentLocator(Locator newLocator) {
@@ -3025,6 +3025,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         public boolean isLast() {
             return last;
         }
+        public int getBegin() {
+            return begin;
+        }
         public int getEnd() {
             return end;
         }
@@ -3243,6 +3246,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 LoopTagStatus status = null;
                 if (startForEach.varStatus != null) {
                     status = new LoopTagStatus();
+                    status.begin = begin;
                     status.end = end;
                     status.step = step;
                     status.first = true;
@@ -3251,7 +3255,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     localJXPathVariables.declareVariable(startForEach.varStatus,
                                                          status);
                 }
-                for (int count = 1; i <= end && iter.hasNext(); i++, count++) {
+                for (int count = 1; i <= end && iter.hasNext(); i+=step, count++) {
                     Object value;
                     JXPathContext localJXPathContext = null;
                     value = iter.next();
