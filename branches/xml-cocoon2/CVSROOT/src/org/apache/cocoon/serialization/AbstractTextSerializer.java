@@ -20,7 +20,7 @@ import org.apache.avalon.ConfigurationException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:08 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 13:42:21 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
@@ -35,66 +35,75 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
     public void configure(Configuration conf)
       throws ConfigurationException {
 
-        format = new OutputFormat();
-        format.setPreserveSpace(true);
-
-        try {
-            Configuration encoding = conf.getChild("encoding");
-            format.setEncoding(encoding.getValue());
-        } catch (ConfigurationException ce) {
-            log.debug("No Encoding");
-            // TODO: how to handle non-existant encoding?
-        }
+        Configuration encoding = conf.getChild("encoding");
+        Configuration dtPublic = conf.getChild("doctype-public");
+        Configuration dtSystem = conf.getChild("doctype-system");
+        Configuration indent = conf.getChild("indent");
+        Configuration preserveSpace = conf.getChild("preserve-space");
+        Configuration declaration = conf.getChild("xml-declaration");
+        Configuration lineWidth = conf.getChild("line-width");
 
         String doctypePublic = null;
 
-        try {
-            Configuration dtPublic = conf.getChild("doctype-public");
-            doctypePublic = dtPublic.getValue();
-        } catch (ConfigurationException ce) {
-            log.debug("No Public Doctype");
-            doctypePublic = null;
+        format = new OutputFormat();
+        format.setPreserveSpace(true);
+
+        if (! encoding.getLocation().equals("-")) {
+            try {
+                format.setEncoding(encoding.getValue());
+            } catch (ConfigurationException ce) {
+                log.debug("No value for encoding--but expected", ce);
+            }
         }
 
-        try {
-            Configuration doctypeSystem = conf.getChild("doctype-system");
-            format.setDoctype(doctypePublic, doctypeSystem.getValue());
-        } catch (ConfigurationException ce) {
-            log.debug("No System Doctype");
-            // TODO: how to handle non-existant doctype-system?
+        if (! dtPublic.getLocation().equals("-")) {
+            try {
+                doctypePublic = dtPublic.getValue();
+            } catch (ConfigurationException ce) {
+                log.debug("No Public Doctype--but expected", ce);
+            }
         }
 
-        try {
-            Configuration indent = conf.getChild("indent");
+        if (! dtSystem.getLocation().equals("-")) {
+            try {
+                format.setDoctype(doctypePublic, dtSystem.getValue());
+            } catch (ConfigurationException ce) {
+                log.debug("No System Doctype--but expected", ce);
+            }
+        }
+
+        if (! indent.getLocation().equals("-")) {
             format.setIndenting(true);
-            format.setIndent(indent.getValueAsInt());
-        } catch (ConfigurationException ce) {
-            log.debug("No indent");
-            // TODO: how to handle non-existant indent?
+            try {
+                format.setIndent(indent.getValueAsInt());
+            } catch (ConfigurationException ce) {
+                log.debug("No indent value or invalid value--but expected", ce);
+            }
         }
 
-        try {
-            Configuration preserveSpace = conf.getChild("preserve-space");
-            format.setPreserveSpace(preserveSpace.getValueAsBoolean());
-        } catch (ConfigurationException ce) {
-          log.debug("No preserve-space");
-          // TODO: how to handle non-existant preserve-space?
+        if (! preserveSpace.getLocation().equals("-")) {
+            try {
+                format.setPreserveSpace(preserveSpace.getValueAsBoolean());
+            } catch (ConfigurationException ce) {
+                log.debug("No preserve-space value--but expected", ce);
+            }
         }
 
-        try {
-            Configuration declaration = conf.getChild("xml-declaration");
-            format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
-        } catch (ConfigurationException ce) {
-          log.debug("No XML Declaration");
-          // TODO: how to handle non-existant xml-declaration?
+        if (! declaration.getLocation().equals("-")) {
+            try {
+                format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
+            } catch (ConfigurationException ce) {
+                log.debug("No declaration value or invalid value--but expected", ce);
+            }
         }
 
-        try {
-            Configuration lineWidth = conf.getChild("line-width");
-            format.setLineWidth(lineWidth.getValueAsInt());
-        } catch (ConfigurationException ce) {
-          log.debug("No line-width");
-          // TODO: how to handle non-existant line-width?
+
+        if (! lineWidth.getLocation().equals("-")) {
+            try {
+                format.setLineWidth(lineWidth.getValueAsInt());
+            } catch (ConfigurationException ce) {
+                log.debug("No line-width value or invalid value--but expected", ce);
+            }
         }
     }
 }
