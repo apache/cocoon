@@ -17,7 +17,7 @@
 
   <sample name="Profiler Result 2" href="profile2.html">Another view of the results.</sample>
 
-  <sample name="XML Output" href="profile.xml">Show source xml code of the profiler generator.</sample>
+  <sample name="XML Output" href="profile.xml?cocoon-view=pretty-content">Show source xml code of the profiler generator.</sample>
  </group>
 
 </samples>
