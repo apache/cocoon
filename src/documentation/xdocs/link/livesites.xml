@@ -3,21 +3,24 @@
 
 <document>
  <header>
-  <title>Live Sites Powered by Apache Cocoon</title>
+  <title>Live Sites Powered by Apache Cocoon 2.1</title>
   <authors>
-   <person name="Donald Ball" email="balld@webslingerZ.com"/>
-   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
-   <person name="Robin Green" email="greenrd@hotmail.com"/>
+   <person name="Cocoon Developers" email="cocoon-dev@xml.apache.org"/>
   </authors>
  </header>
- 
+
  <body>
-     <!--<li><link href=""></link></li>-->
-  <s1 title="Live Sites powered by Apache Cocoon 2.x">
+  <!--<li><link href=""></link></li>-->
+  <s1 title="Live Sites powered by Apache Cocoon 2.1">
    <p>
-    Here are some web sites that are proudly powered by Cocoon 2.x
+    Here are some web sites that are proudly powered by Cocoon 2.1
     (only ordered by Cocoon version):
    </p>
+   <s2 title="Cocoon 2.1m3-dev">
+    <ul>
+     <li><link href="http://www.adolos.com/">Adolos</link></li>
+    </ul>
+   </s2>
    <s2 title="Cocoon 2.1m2-dev">
     <ul>
      <li><link href="http://www.iniva.org/">The Institute of International Visual Arts</link></li>
@@ -34,130 +37,12 @@
      <li><link href="http://www.ormaz.it">Ormaz s.r.l.</link></li>
     </ul>
    </s2>
-   <s2 title="Cocoon 2.0.5-dev">
-    <ul>
-     <li><link href="http://biology.bangor.ac.uk/">School of Biological Sciences, University of Wales, Bangor</link></li>
-    </ul>
-   </s2>
-   <s2 title="Cocoon 2.0.4">
-    <ul>
-     <li><link href="http://www.adolos.com/">Adolos</link></li>
-     <li><link href="http://www.dyanet.com/">Dyanet</link></li>
-     <li><link href="http://www.osmosis.gr/">Osmosis</link> - networks and consulting</li>
-     <li><link href="http://www.urlaubstage.de/">Urlaubstage.de</link></li>
-     <li><link href="http://www.self-roster.com/">Self-Roster.com</link></li>
-     <li><link href="http://www.cueandreview.org.uk/">Cue and Review Recording Services</link></li>
-     <li><link href="http://www.standardlifeinvestments.com">Standard Life Investments</link></li>
-    </ul>
-   </s2>
-   <s2 title="Cocoon 2.0.3">
-    <ul>
-     <li><link href="http://robocode.diverman.com/">Robocode Fanatics!</link></li>
-     <li><link href="http://www.mnhb.ru/">Moscow Neftekhimichesky Bank</link></li>
-     <li><link href="http://www.teratext.com/">TeraText Solutions</link> - a division SAIC</li>
-     <li><link href="http://www.beblogging.com/blog/">Be Blogging</link></li>
-     <li><link href="http://www.linuxtag.org/">LinuxTag</link></li>
-     <li><link href="http://istruzione.provincia.lucca.it">Pubblica Istruzione</link></li>
-     <li><link href="http://www.simauria.net">Simauria Networks</link> - Spanish IT company focussed on Java and XML</li>
-     <li><!-- only the articles, the rest is FrontPage -->
-      <link href="http://www.americanartists.org">The American Center for Artists</link></li>
-     <li><!-- No content shown, I guess only temporary: <html><body></body></html> -->
-      <link href="http://www.stu.lipetsk.ru/">Lipetsk State Technical University</link></li>
-     <li><link href="http://www.software-express.de/">Software Express</link> - Software Competence Center for business and standard software</li>
-    </ul>
-   </s2>
-   <s2 title="Cocoon 2.0.2">
-    <ul>
-     <li><link href="http://www.tine.no/">TINE</link></li>
-     <li><link href="http://www.corrocean.com/">CorrOcean</link></li>
-     <li><link href="http://www.warnerbros.ch/">Warner Bros., Inc. Switzerland</link></li>
-     <li><link href="http://www.sun-catalogue.com/">Sun Catalogue</link></li>
-     <li><link href="http://www.caphnet.com/">CaphNet</link></li>
-     <li><link href="http://help.unc.edu/">The technical support site for the University of North Carolina at Chapel Hill</link></li>
-    </ul>
-   </s2>
-   <s2 title="unknown version"><!-- no X-Cocoon header -->
-    <ul>
-     <li><!-- SunShine Portal Demo without Cocoon ?? ;-) -->
-      <link href="http://sunshine.s-und-n.de/">SunShine Portal Demo of S&amp;N AG</link></li>
-     <li><!-- 3 Cocoon guys -->
-      <link href="http://outerthought.org/">Outerthought</link></li>
-     <li><!-- the low speed of images is a hint on Cocoon (SVG generated images with bad caching) -->
-      <link href="http://www.g-ne.de/">G-NE group for net-intelligence GmbH</link></li>
-     <li><!-- /cocoon/ in the URL -->
-      <link href="http://www.bethe1.com/">Bethel</link> - the employment specialist in fashion, beauty and retail</li>
-     <li><!-- I know it :-) -->
-      <link href="http://www.lofex.de/">LOcal Food EXpress</link></li>
-     <li><!-- /cocoon/ in the URL -->
-      <link href="http://www.triptravel.net/">Wh@m Project</link></li>
-     <li><link href="http://www.navigationzone.net/">NavigationZone</link></li>
-     <li><link href="http://www.intexti.it/">Intexti</link> - supply chain management solutions</li>
-     <li><link href="http://www.galatea.com/">Galatea Information Strategies</link></li>
-     <li><link href="http://www.nzetc.org/">New Zealand Electronic Text Centre</link></li>
-     <li><link href="http://www.duitslandweb.nl/">Duitsland Web</link></li>
-     <li><link href="http://www.workthing.com/">workthing.com</link></li>
-     <li><link href="http://www.caida.org/">CAIDA</link> - Cooperative Association for Internet Data Analysis</li>
-     <li><link href="http://www.fox-warner.ch/">20th Century Fox Switzerland</link></li>
-     <li><link href="http://www.tatry.info">High Tatras</link> - Beautiful mountains located on the Polish-Slovakian border.</li>
-     <li><link href="http://www.aromax.hu/">Aromax</link></li>
-     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
-      <link href="http://newscentre.towngas.com/">Towngas NewsCentre</link></li>
-     <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
-      <link href="http://www.cbossbilling.com/">CBOSS</link></li>
-    </ul>
-   </s2>
 
    <p>
     Of course, all of the websites listed on the Apache Forrest
     <link href="http://xml.apache.org/forrest/live-sites.html">Live sites</link>
     page are also essentially powered by Cocoon.
    </p>
-  </s1>
-
-  <s1 title="Live Sites powered by Apache Cocoon 1.x">
-   <p>
-    Here are some web sites that are proudly powered by Cocoon 1.x
-    (only ordered by Cocoon version):
-   </p>
-   <s2 title="Cocoon 1.8.2">
-    <ul>
-     <li><link href="http://www.linuxtv.org/">Linux TV</link></li>
-     <li><link href="http://www.cogentlogic.com/">Cogent Logic Corporation</link></li>
-     <li><link href="http://www.planetsalvage.com/">Planet Salvage</link></li>
-     <li><link href="http://damocles.uc3m.es/TC/">Sentencias del Tribunal Constitucional</link> - Univ. Carlos III, Madrid, Spain</li>
-     <li><link href="http://www.powerfm.org/">Power FM - Web Station</link></li>
-     <li><link href="http://www.estig.ipbeja.pt/">ESTIG</link></li>
-    </ul>
-   </s2>
-   <s2 title="Cocoon 1.8">
-    <ul>
-     <li><link href="http://www.intelinet.com.br/">Intelinet</link></li>
-     <li><link href="http://www.dfki.de/ruleml/">RuleML</link></li>
-     <li><link href="http://www.linxs.pt/">Linxs</link></li>
-     <li><link href="http://www.infoplanning.com/">Information Planning and Management Services</link></li>
-    </ul>
-   </s2>
-   <s2 title="Cocoon 1.7.4">
-    <ul>
-     <li><link href="http://www.nakapeida.com/">Naka Peida</link></li>
-     <li><link href="http://www.worlddent.com/">World Dentistry</link></li>
-    </ul>
-   </s2>
-   <s2 title="unknown version">
-    <ul>
-     <li><link href="http://www.derecho.com/">Derecho.com</link></li>
-     <li><link href="http://www.law.unc.edu/">Law at University of North Carolina</link></li>
-     <li><link href="http://www.stoneseeker.com/">StoneSeeker</link></li><!-- PHP ?? -->
-     <li><link href="http://www.sourcepole.com/">SourcePole</link></li>
-     <li><link href="http://www.rationalizer.com/">Rationalizer AG</link></li>
-     <li><link href="http://www.powderhausen.com/">Powderhausen</link></li>
-     <li><link href="http://www.aujac.org/">Associació d'Usuaris de Java de Catalunya</link></li>
-     <li><link href="http://www.terracare.com/">TerraCare Software</link></li>
-     <li><link href="http://www.westcoastsoaps.com/">West Coast Designer Soaps</link></li>
-     <li><link href="http://www.micinfo.com/">Medical Imaging Consultants</link></li>
-     <li><link href="http://www.dla.org/">Dartmouth Lawyers Association</link></li>
-    </ul>
-   </s2>
   </s1>
 
   <s1 title="How to get listed">
