@@ -62,7 +62,7 @@ import org.apache.commons.collections.SequencedHashMap;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.8 2003/05/22 06:55:15 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.9 2003/06/14 16:58:02 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractProducible 
@@ -88,7 +88,7 @@ public abstract class AbstractLayout
      */
     public String getRendererName() {
         if ( this.rendererName == null ) {
-            return ((LayoutDescription)this.description).getRendererName();
+            return ((LayoutDescription)this.description).getDefaultRendererName();
         }
         return this.rendererName;
     }

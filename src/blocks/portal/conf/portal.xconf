@@ -136,31 +136,41 @@
            role="org.apache.cocoon.portal.layout.LayoutFactory">
     <layouts>
         <layout name="column" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
-                renderer="column">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="column">
+                <renderer name="column"/>
+            </renderers>
         </layout>
         <layout name="row" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
-                renderer="row">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="row">
+                <renderer name="row"/>
+            </renderers>
         </layout>
         <layout name="tab" 
-                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
-                renderer="tab">
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="tab">
+                <renderer name="tab"/>
+            </renderers>
             <aspects>
                 <aspect name="tab" class="java.lang.Integer" store="session" auto-create="true"/>
             </aspects>
         </layout>
         <layout name="frame" 
-                class="org.apache.cocoon.portal.layout.impl.FrameLayout" 
-                renderer="frame"
+                class="org.apache.cocoon.portal.layout.impl.FrameLayout"
                 create-id="true">
+            <renderers default="frame">
+                <renderer name="frame"/>
+            </renderers>
             <aspects>
                 <aspect name="frame" class="java.lang.String" store="request" auto-create="false"/>
             </aspects>
         </layout>
         <layout name="coplet" 
-                class="org.apache.cocoon.portal.layout.impl.CopletLayout" 
-                renderer="window">
+                class="org.apache.cocoon.portal.layout.impl.CopletLayout">
+            <renderers default="window">
+                <renderer name="window"/>
+            </renderers>
         </layout>
     </layouts>
 </component>

@@ -50,6 +50,8 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Iterator;
+
 import org.apache.cocoon.portal.factory.ProducibleDescription;
 
 
@@ -59,13 +61,18 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutDescription.java,v 1.2 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: LayoutDescription.java,v 1.3 2003/06/14 16:58:02 cziegeler Exp $
  */
 public interface LayoutDescription
     extends ProducibleDescription  {
 
     /**
-     * @return
+     * @return the default renderer name
      */
-    String getRendererName();
+    String getDefaultRendererName();
+    
+    /**
+     * @return the names of all allowed renderers
+     */
+    Iterator getRendererNames();
 }
