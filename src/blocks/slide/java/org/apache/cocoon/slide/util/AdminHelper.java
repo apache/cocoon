@@ -339,25 +339,21 @@ public class AdminHelper {
     
     public static void changePassword(NamespaceAccessToken nat,
                                       String caller,
-                                      String username,
+                                      String userUri,
                                       String password) throws Exception {
-        
-        String usersPath = nat.getNamespaceConfig().getUsersPath();
-        String userUri = usersPath + "/" + username;
-        
+
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Content content = nat.getContentHelper();
-        
+
         try {
-            
             nat.begin();
 
-            NodeRevisionDescriptors revisions = content.retrieve(slideToken,userUri);
-            NodeRevisionDescriptor revision = content.retrieve(slideToken,revisions);
+            NodeRevisionDescriptors revisions = content.retrieve(slideToken, userUri);
+            NodeRevisionDescriptor revision = content.retrieve(slideToken, revisions);
             revision.setLastModified(new Date());
             revision.setProperty(new NodeProperty("password", password, NodeProperty.SLIDE_NAMESPACE));
             content.store(slideToken, userUri, revision, null);
-            
+
             nat.commit();
         }
         catch (Exception e) {
@@ -507,9 +503,9 @@ public class AdminHelper {
         Security security = nat.getSecurityHelper();
         
         try {
-            NodePermission permission = new NodePermission(uri,subject,action);
+            NodePermission permission = new NodePermission(uri, subject, action);
             nat.begin();
-            security.revokePermission(slideToken,permission);
+            security.revokePermission(slideToken, permission);
             nat.commit();
         }
         catch (Exception e) {
@@ -608,7 +604,7 @@ public class AdminHelper {
        
        try {
            nat.begin();
-           lock.lock(slideToken,new NodeLock(uri,subject,type,expire,isExclusive,isInherit));
+           lock.lock(slideToken, new NodeLock(uri, subject, type, expire, isInherit, isExclusive, uri));
            nat.commit();
        }
        catch (Exception e) {
