@@ -1,4 +1,4 @@
-/*-- $Id: AbstractXSLTProcessor.java,v 1.4 1999-11-30 16:30:09 stefano Exp $ -- 
+/*-- $Id: XSLTProcessor.java,v 1.1 1999-12-14 23:42:39 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,6 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
  
  */
+ 
 package org.apache.cocoon.processor.xslt;
 
 import java.io.*;
@@ -59,30 +60,43 @@ import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
+import org.apache.cocoon.transformer.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 import org.apache.cocoon.Utils;
 import org.apache.cocoon.Defaults;
 
 /**
- * This class abstracts the XSL processor interface.
+ * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:09 $
+ * @version $Revision: 1.1 $ $Date: 1999-12-14 23:42:39 $
  */
 
-public abstract class AbstractXSLTProcessor implements Actor, Processor, Status, Defaults {
+public class XSLTProcessor implements Actor, Processor, Status, Defaults {
 
     private Monitor monitor = new Monitor(10);
     
-    protected Parser parser;
-    protected Store store;
-    
+    private Parser parser;
+    private Store store;
+    private Transformer transformer;
+
     public void init(Director director) {
         this.parser = (Parser) director.getActor("parser");
         this.store = (Store) director.getActor("store");
+        this.transformer = (Transformer) director.getActor("transformer");
     }
-    
+
+    public Document process(Document document, Dictionary parameters) throws Exception {
+        try {
+            Document stylesheet = getStylesheet(document, parameters);
+            Document result = this.parser.createEmptyDocument();
+            return transformer.transform(document, stylesheet, result);
+        } catch (PINotFoundException e) {
+            return document;
+        }
+    }
+
     /**
      * Get the stylesheet associated with the given document, based 
      * on the environment and request parameters. This method
@@ -90,10 +104,14 @@ public abstract class AbstractXSLTProcessor implements Actor, Processor, Status,
      * in memory to be able to speed the transformation of those
      * files that changed the origin but left the stylesheet unchanged.
      */
-    public Document getStylesheet(Document document, Dictionary parameters) throws ProcessorException {
+    private Document getStylesheet(Document document, Dictionary parameters) throws ProcessorException {
 
         Object resource = null;
-        Document sheet = null;
+        
+        Document sheet = (Document) parameters.get("stylesheet");
+        if (sheet != null) {
+            return sheet;
+        }
         
         HttpServletRequest request = (HttpServletRequest) parameters.get("request");
 
@@ -131,10 +149,6 @@ public abstract class AbstractXSLTProcessor implements Actor, Processor, Status,
             throw new ProcessorException("Could not associate stylesheet to document: " 
                 + " error reading " + resource + ": " + e.getMessage());
         }
-    }
-
-    public boolean hasChanged(Object context) {
-        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context, true));
     }
 
     private Document getDocument(Object resource) throws Exception {
@@ -179,5 +193,13 @@ public abstract class AbstractXSLTProcessor implements Actor, Processor, Status,
         }
 
         return links;
+    }
+
+    public boolean hasChanged(Object context) {
+        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context, true));
+    }
+    
+    public String getStatus() {
+        return "XSLT Processor";
     }
 }
