@@ -70,7 +70,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.21 2004/03/22 17:05:28 gcasper Exp $
+ *  @version $Id: WebDAVSource.java,v 1.22 2004/03/22 17:09:39 gcasper Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -168,11 +168,11 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      */
     private WebDAVSource (WebdavResource source, String principal, String password)
     throws HttpException, IOException {
-    	this.resource = source;
-    	this.systemId = source.getHttpURL().getURI();
+        this.resource = source;
+        this.systemId = source.getHttpURL().getURI();
         source.getHttpURL().setUserinfo(principal, password);
 
-    	//fix trailing slash
+        //fix trailing slash
         if (this.resource.isCollection() && (this.systemId.endsWith("/") == false)) {
             this.systemId = this.systemId+"/";
             HttpURL httpURL = new HttpURL(this.systemId);
