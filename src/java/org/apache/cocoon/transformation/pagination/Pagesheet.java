@@ -79,7 +79,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.1 2003/06/27 20:10:42 stefano Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.2 2003/08/01 10:52:20 cziegeler Exp $
  */
 
 /*
@@ -496,7 +496,7 @@ public class Pagesheet extends DefaultHandler
     }
 
     public boolean modifiedSince(long date) {
-        return (date!=this.lastModified);
+        return (this.lastModified == 0 || date!=this.lastModified);
     }
 
     public Object clone() {

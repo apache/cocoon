@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.101 2003/08/01 10:28:38 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.102 2003/08/01 10:52:20 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="fix" fixes-bug="21213" due-to="Frank Taffelt"
+    due-to-email="frank.taffelt@interface-business.de">
+    Paginator now caches dynamic pagesheet correctly.
+  </action>  
   <action dev="CZ" type="add">
     Configuration logkit.xconf can now be read from any location.
   </action>
