@@ -60,6 +60,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A class that can record SAX events and replay them later.
@@ -75,17 +76,36 @@ import java.util.Iterator;
  * <p>Both ContentHandler and LexicalHandler are supported, the only exception is
  * that the setDocumentLocator event is not recorded.
  * 
- * @version CVS $Id: SaxBuffer.java,v 1.5 2003/11/20 14:09:59 bruno Exp $
+ * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
+ * @version CVS $Id: SaxBuffer.java,v 1.6 2003/12/09 21:03:17 vgritsenko Exp $
  */
 public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Recyclable {
-    private ArrayList saxbits = new ArrayList();
+
+    /**
+     * Stores list of {@link SaxBit} objects.
+     */
+    private List saxbits = new ArrayList();
+
+    /**
+     * Creates empty SaxBuffer
+     */
+    public SaxBuffer() {
+    }
+
+    /**
+     * Creates copy of another SaxBuffer
+     */
+    public SaxBuffer(SaxBuffer saxBuffer) {
+        this.saxbits.addAll(saxBuffer.saxbits);
+    }
+
 
     public void skippedEntity(String name) throws SAXException {
         saxbits.add(new SkippedEntity(name));
     }
 
     public void setDocumentLocator(Locator locator) {
-        //don't record this event
+        // don't record this event
     }
 
     public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
@@ -152,20 +172,68 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
         saxbits.add(new EndEntity(name));
     }
 
+
+    /**
+     * Adds a SaxBit to the bits list
+     */
+    protected final void addBit(SaxBit bit) {
+        saxbits.add(bit);
+    }
+    
+    /**
+     * Iterates through the bits list
+     */
+    protected final Iterator bits() {
+        return saxbits.iterator();
+    }
+    
+    public boolean isEmpty() {
+        return saxbits.isEmpty();
+    }
+    
     public void toSAX(ContentHandler contentHandler) throws SAXException {
-        Iterator saxbitsIt = saxbits.iterator();
-        while (saxbitsIt.hasNext()) {
-            SaxBit saxbit = (SaxBit)saxbitsIt.next();
+        for (Iterator i = saxbits.iterator(); i.hasNext();) {
+            SaxBit saxbit = (SaxBit)i.next();
             saxbit.send(contentHandler);
         }
+    }
+
+    /*
+     * NOTE: Used in i18n XML bundle implementation
+     */
+    public String toString() {
+        StringBuffer value = new StringBuffer();
+        for (Iterator i = saxbits.iterator(); i.hasNext();) {
+            SaxBit saxbit = (SaxBit)i.next();
+            if (saxbit instanceof Characters) {
+                ((Characters)saxbit).toString(value);
+            }
+        }
+        
+        return value.toString();
     }
 
     public void recycle() {
         saxbits.clear();
     }
 
+    /**
+     * SaxBit is a representation of the SAX event. Every SaxBit is immutable object.
+     */
     interface SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException;
+    }
+
+    final static class StartDocument implements SaxBit {
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.startDocument();
+        }
+    }
+
+    final static class EndDocument implements SaxBit {
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.endDocument();
+        }
     }
 
     final static class PI implements SaxBit {
@@ -179,147 +247,6 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
 
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.processingInstruction(target, data);
-        }
-    }
-
-    final static class StartElement implements SaxBit {
-        private final String namespaceURI;
-        private final String localName;
-        private final String qName;
-        private final Attributes attrs;
-
-        public StartElement(String namespaceURI, String localName, String qName, Attributes attrs) {
-            this.namespaceURI = namespaceURI;
-            this.localName = localName;
-            this.qName = qName;
-            this.attrs = new org.xml.sax.helpers.AttributesImpl(attrs);
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.startElement(namespaceURI, localName, qName, attrs);
-        }
-    }
-
-    final static class EndPrefixMapping implements SaxBit {
-        private final String prefix;
-
-        public EndPrefixMapping(String prefix) {
-            this.prefix = prefix;
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.endPrefixMapping(prefix);
-        }
-    }
-
-    final static class Characters implements SaxBit {
-        private final char[] ch;
-
-        public Characters(char[] ch, int start, int length) {
-            // make a copy so that we don't hold references to a potentially large array we don't control
-            this.ch = new char[length];
-            System.arraycopy(ch, start, this.ch, 0, length);
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.characters(ch, 0, ch.length);
-        }
-    }
-
-    final static class EndElement implements SaxBit {
-        private final String namespaceURI;
-        private final String localName;
-        private final String qName;
-
-        public EndElement(String namespaceURI, String localName, String qName) {
-            this.namespaceURI = namespaceURI;
-            this.localName = localName;
-            this.qName = qName;
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.endElement(namespaceURI, localName, qName);
-        }
-    }
-
-    final static class EndDocument implements SaxBit {
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.endDocument();
-        }
-    }
-
-    final static class StartPrefixMapping implements SaxBit {
-        private final String prefix;
-        private final String uri;
-
-        public StartPrefixMapping(String prefix, String uri) {
-            this.prefix = prefix;
-            this.uri = uri;
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.startPrefixMapping(prefix, uri);
-        }
-    }
-
-    final static class Comment implements SaxBit {
-        private final char[] ch;
-
-        public Comment(char[] ch, int start, int length) {
-            // make a copy so that we don't hold references to a potentially large array we don't control
-            this.ch = new char[length];
-            System.arraycopy(ch, start, this.ch, 0, length);
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            if (contentHandler instanceof LexicalHandler)
-                ((LexicalHandler)contentHandler).comment(ch, 0, ch.length);
-        }
-    }
-
-    final static class StartCDATA implements SaxBit {
-        public void send(ContentHandler contentHandler) throws SAXException {
-            if (contentHandler instanceof LexicalHandler)
-                ((LexicalHandler)contentHandler).startCDATA();
-        }
-    }
-
-    final static class EndCDATA implements SaxBit {
-        public void send(ContentHandler contentHandler) throws SAXException {
-            if (contentHandler instanceof LexicalHandler)
-                ((LexicalHandler)contentHandler).endCDATA();
-        }
-    }
-
-    final static class SkippedEntity implements SaxBit {
-        private final String name;
-
-        public SkippedEntity(String name) {
-            this.name = name;
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.skippedEntity(name);
-        }
-    }
-
-    final static class IgnorableWhitespace implements SaxBit {
-        private final char[] ch;
-
-        public IgnorableWhitespace(char[] ch, int start, int length) {
-            // make a copy so that we don't hold references to a potentially large array we don't control
-            this.ch = new char[length];
-            System.arraycopy(ch, start, this.ch, 0, length);
-        }
-
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.ignorableWhitespace(ch, 0, ch.length);
-        }
-    }
-
-    final static class StartDocument implements SaxBit {
-        public void send(ContentHandler contentHandler) throws SAXException {
-            contentHandler.startDocument();
         }
     }
 
@@ -370,6 +297,139 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endEntity(name);
+        }
+    }
+
+    final static class SkippedEntity implements SaxBit {
+        private final String name;
+
+        public SkippedEntity(String name) {
+            this.name = name;
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.skippedEntity(name);
+        }
+    }
+
+    final static class StartPrefixMapping implements SaxBit {
+        private final String prefix;
+        private final String uri;
+
+        public StartPrefixMapping(String prefix, String uri) {
+            this.prefix = prefix;
+            this.uri = uri;
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.startPrefixMapping(prefix, uri);
+        }
+    }
+
+    final static class EndPrefixMapping implements SaxBit {
+        private final String prefix;
+
+        public EndPrefixMapping(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.endPrefixMapping(prefix);
+        }
+    }
+
+    final static class StartElement implements SaxBit {
+        private final String namespaceURI;
+        private final String localName;
+        private final String qName;
+        private final Attributes attrs;
+
+        public StartElement(String namespaceURI, String localName, String qName, Attributes attrs) {
+            this.namespaceURI = namespaceURI;
+            this.localName = localName;
+            this.qName = qName;
+            this.attrs = new org.xml.sax.helpers.AttributesImpl(attrs);
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.startElement(namespaceURI, localName, qName, attrs);
+        }
+    }
+
+    final static class EndElement implements SaxBit {
+        private final String namespaceURI;
+        private final String localName;
+        private final String qName;
+
+        public EndElement(String namespaceURI, String localName, String qName) {
+            this.namespaceURI = namespaceURI;
+            this.localName = localName;
+            this.qName = qName;
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.endElement(namespaceURI, localName, qName);
+        }
+    }
+
+    final static class Characters implements SaxBit {
+        private final char[] ch;
+
+        public Characters(char[] ch, int start, int length) {
+            // make a copy so that we don't hold references to a potentially large array we don't control
+            this.ch = new char[length];
+            System.arraycopy(ch, start, this.ch, 0, length);
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.characters(ch, 0, ch.length);
+        }
+        
+        public void toString(StringBuffer value) {
+            value.append(ch);
+        }
+    }
+
+    final static class Comment implements SaxBit {
+        private final char[] ch;
+
+        public Comment(char[] ch, int start, int length) {
+            // make a copy so that we don't hold references to a potentially large array we don't control
+            this.ch = new char[length];
+            System.arraycopy(ch, start, this.ch, 0, length);
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            if (contentHandler instanceof LexicalHandler)
+                ((LexicalHandler)contentHandler).comment(ch, 0, ch.length);
+        }
+    }
+
+    final static class StartCDATA implements SaxBit {
+        public void send(ContentHandler contentHandler) throws SAXException {
+            if (contentHandler instanceof LexicalHandler)
+                ((LexicalHandler)contentHandler).startCDATA();
+        }
+    }
+
+    final static class EndCDATA implements SaxBit {
+        public void send(ContentHandler contentHandler) throws SAXException {
+            if (contentHandler instanceof LexicalHandler)
+                ((LexicalHandler)contentHandler).endCDATA();
+        }
+    }
+
+    final static class IgnorableWhitespace implements SaxBit {
+        private final char[] ch;
+
+        public IgnorableWhitespace(char[] ch, int start, int length) {
+            // make a copy so that we don't hold references to a potentially large array we don't control
+            this.ch = new char[length];
+            System.arraycopy(ch, start, this.ch, 0, length);
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            contentHandler.ignorableWhitespace(ch, 0, ch.length);
         }
     }
 }
