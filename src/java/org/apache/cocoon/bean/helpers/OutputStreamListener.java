@@ -66,7 +66,7 @@ import org.apache.cocoon.bean.BeanListener;
  * with file destination.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OutputStreamListener.java,v 1.3 2003/09/26 08:25:21 upayavira Exp $
+ * @version CVS $Id: OutputStreamListener.java,v 1.4 2003/09/27 09:50:29 upayavira Exp $
  */
 public class OutputStreamListener implements BeanListener {
     
@@ -111,7 +111,7 @@ public class OutputStreamListener implements BeanListener {
         } else {
             this.print(pad(8, "* ["+linksInPage + "] ") +
                        pad(7,time + "s ") +
-                       pad(8, size) +
+                       pad(7, size) + " " +
                        sourceURI);
         }     
            
