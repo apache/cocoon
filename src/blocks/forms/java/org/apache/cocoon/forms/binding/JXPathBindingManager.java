@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,8 +43,8 @@ import org.xml.sax.InputSource;
  * JXPathBindingManager provides an implementation of {@link BindingManager}by
  * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package </a>.
- * 
- * @version CVS $Id: JXPathBindingManager.java,v 1.4 2004/06/15 07:33:43 sylvain Exp $
+ *
+ * @version CVS $Id$
  */
 public class JXPathBindingManager extends AbstractLogEnabled implements
         BindingManager, Contextualizable, Serviceable, Disposable, Initializable, Configurable,
@@ -52,7 +52,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
 
     private static final String PREFIX = "CocoonFormBinding:";
 
-    private ServiceManager serviceManager;
+    private ServiceManager manager;
 
     private DatatypeManager datatypeManager;
 
@@ -68,29 +68,26 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
 		this.avalonContext = context;
 	}
 
-	public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-        this.datatypeManager = (DatatypeManager) serviceManager
-                .lookup(DatatypeManager.ROLE);
-        this.cacheManager = (CacheManager) serviceManager
-                .lookup(CacheManager.ROLE);
+	public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.datatypeManager = (DatatypeManager) manager.lookup(DatatypeManager.ROLE);
+        this.cacheManager = (CacheManager) manager.lookup(CacheManager.ROLE);
     }
 
     public void configure(Configuration configuration)
-            throws ConfigurationException {
+    throws ConfigurationException {
         this.configuration = configuration;
     }
 
     public void initialize() throws Exception {
         bindingBuilderSelector = new SimpleServiceSelector("binding",
-                JXPathBindingBuilderBase.class);
-        LifecycleHelper.setupComponent(
-        		bindingBuilderSelector,
-			getLogger(),
-			this.avalonContext,
-			this.serviceManager,
-			null, // RoleManager,
-			configuration.getChild("bindings"));
+                                                           JXPathBindingBuilderBase.class);
+        LifecycleHelper.setupComponent(bindingBuilderSelector,
+                                       getLogger(),
+                                       this.avalonContext,
+                                       this.manager,
+                                       null, // RoleManager,
+                                       configuration.getChild("bindings"));
     }
 
     public Binding createBinding(Source source) throws BindingException {
@@ -107,24 +104,23 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
                             .getBindingForConfigurationElement(rootElm);
                     ((JXPathBindingBase) binding).enableLogging(getLogger());
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug(
-                                "Creation of new Binding finished. " + binding);
+                        getLogger().debug("Creation of new binding finished. " + binding);
                     }
                 } else {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger()
-                                .debug(
-                                        "Root Element of said binding file is in wrong namespace.");
+                        getLogger().debug("Root Element of said binding file is in wrong namespace.");
                     }
                 }
+
                 this.cacheManager.set(binding, source, PREFIX);
             } catch (BindingException e) {
                 throw e;
             } catch (Exception e) {
-                throw new BindingException("Error creating binding from "
-                        + source.getURI(), e);
+                throw new BindingException("Error creating binding from " +
+                                           source.getURI(), e);
             }
         }
+
         return binding;
     }
 
@@ -134,17 +130,20 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
 
         try {
             try {
-                sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 source = sourceResolver.resolveURI(bindingURI);
             } catch (Exception e) {
-                throw new BindingException("Error resolving binding source: " + bindingURI);
+                throw new BindingException("Error resolving binding source: " +
+                                           bindingURI);
             }
             return createBinding(source);
         } finally {
-            if (source != null)
+            if (source != null) {
                 sourceResolver.release(source);
-            if (sourceResolver != null)
-                serviceManager.release(sourceResolver);
+            }
+            if (sourceResolver != null) {
+                manager.release(sourceResolver);
+            }
         }
     }
 
@@ -153,17 +152,21 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
     }
 
     public void dispose() {
-        this.bindingBuilderSelector.dispose();
-        this.bindingBuilderSelector = null;
-        this.serviceManager.release(this.datatypeManager);
+        if (this.bindingBuilderSelector != null) {
+            this.bindingBuilderSelector.dispose();
+            this.bindingBuilderSelector = null;
+        }
+        this.manager.release(this.datatypeManager);
         this.datatypeManager = null;
+        this.manager.release(this.cacheManager);
         this.cacheManager = null;
+        this.manager = null;
     }
 
     /**
      * Assistant Inner class discloses enough features to the created
      * childBindings to recursively
-     * 
+     *
      * This patterns was chosen to prevent Inversion Of Control between this
      * factory and its builder classes (that could be provided by third
      * parties.)
@@ -225,7 +228,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
         }
 
         public ServiceManager getServiceManager() {
-            return serviceManager;
+            return manager;
         }
     }
 }

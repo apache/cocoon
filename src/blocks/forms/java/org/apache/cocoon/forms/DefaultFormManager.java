@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,13 +44,13 @@ import org.xml.sax.InputSource;
 
 /**
  * Component implementing the {@link FormManager} role.
- * 
- * @version $Id: DefaultFormManager.java,v 1.6 2004/06/15 07:33:43 sylvain Exp $
+ *
+ * @version $Id$
  */
-public class DefaultFormManager 
-  extends AbstractLogEnabled 
+public class DefaultFormManager
+  extends AbstractLogEnabled
   implements FormManager, Contextualizable, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
-      
+
     protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
@@ -61,16 +61,16 @@ public class DefaultFormManager
     public void contextualize(Context context) throws ContextException {
 		this.avalonContext = context;
 	}
-    
+
     /** Temporary internal method, don't rely on it's existence! Needed to access the context from flowscript. */
     // FIXME (SW). Extending the FOM is needed.
     public Context getAvalonContext() {
-    		return this.avalonContext;
+        return this.avalonContext;
     }
 
-	public void service(ServiceManager serviceManager) throws ServiceException {
-        this.manager = serviceManager;
-        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
+	public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.cacheManager = (CacheManager)manager.lookup(CacheManager.ROLE);
     }
 
     /**
@@ -123,10 +123,12 @@ public class DefaultFormManager
             Form form = createForm(source);
             return form;
         } finally {
-            if (source != null)
+            if (source != null) {
                 sourceResolver.release(source);
-            if (sourceResolver != null)
+            }
+            if (sourceResolver != null) {
                 manager.release(sourceResolver);
+            }
         }
     }
 
@@ -146,9 +148,9 @@ public class DefaultFormManager
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
                 formDocument = DomHelper.parse(inputSource);
-            }
-            catch (Exception exc) {
-                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            } catch (Exception e) {
+                throw new CascadingException("Could not parse form definition from " +
+                                             source.getURI(), e);
             }
 
             Element formElement = formDocument.getDocumentElement();
@@ -180,9 +182,9 @@ public class DefaultFormManager
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
                 formDocument = DomHelper.parse(inputSource);
-            }
-            catch (Exception exc) {
-                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            } catch (Exception e) {
+                throw new CascadingException("Could not parse form definition from " +
+                                             source.getURI(), e);
             }
 
         } finally {
@@ -200,9 +202,12 @@ public class DefaultFormManager
      * Disposable
      */
     public void dispose() {
-        widgetDefinitionBuilderSelector.dispose();
-        this.manager = null;
+        if (this.widgetDefinitionBuilderSelector != null) {
+            this.widgetDefinitionBuilderSelector.dispose();
+            this.widgetDefinitionBuilderSelector = null;
+        }
+        this.manager.release(this.cacheManager);
         this.cacheManager = null;
+        this.manager = null;
     }
-
 }
