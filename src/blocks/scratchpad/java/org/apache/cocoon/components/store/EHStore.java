@@ -52,35 +52,36 @@ import org.apache.excalibur.store.StoreJanitor;
 public class EHStore extends AbstractLogEnabled 
 implements Store, Contextualizable, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
 
-	// ---------------------------------------------------- Constants
+    // ---------------------------------------------------- Constants
 
-	private static final String CACHE_NAME_PARAM = "cache-name";
-	private static final String MAXOBJECTS_PARAM = "maxobjects";
-	private static final String OVERFLOW_TO_DISK_PARAM = "overflow-to-disk";
-	private static final String ETERNAL_PARAM = "eternal";
-	private static final String TIME_TO_IDLE_PARAM = "time-to-idle-seconds";
+    private static final String CACHE_NAME_PARAM = "cache-name";
+    private static final String MAXOBJECTS_PARAM = "maxobjects";
+    private static final String OVERFLOW_TO_DISK_PARAM = "overflow-to-disk";
+    private static final String ETERNAL_PARAM = "eternal";
+    private static final String TIME_TO_IDLE_PARAM = "time-to-idle-seconds";
     private static final String TIME_TO_LIVE_PARAM = "time-to-live-seconds";
-	private static final String THREAD_INTERVAL_PARAM = "thread-interval";
+    private static final String THREAD_INTERVAL_PARAM = "thread-interval";
     private static final String CONFIG_FILE_PARAM = "config-file";
 
-	private static final String DEFAULT_CACHE_NAME = "main";
-	private static final long DEFAULT_TIME_TO_IDLE = 120;
-	private static final long DEFAULT_TIME_TO_LIVE = 120;
-	private static final long DEFAULT_THREAD_INTERVAL = 120;
-	private static final String DEFAULT_CONFIG_FILE = "org/apache/cocoon/components/store/ehcache-defaults.xml";
+    private static final String DEFAULT_CACHE_NAME = "main";
+    private static final long DEFAULT_TIME_TO_IDLE = 120;
+    private static final long DEFAULT_TIME_TO_LIVE = 120;
+    private static final long DEFAULT_THREAD_INTERVAL = 120;
+    private static final String DEFAULT_CONFIG_FILE = "org/apache/cocoon/components/store/ehcache-defaults.xml";
 
-	// ---------------------------------------------------- Instance variables
+    // ---------------------------------------------------- Instance variables
 
     private Cache cache;
     private CacheManager cacheManager;
-    
+
     // configuration options
     private String cacheName;
     private int maximumSize;
     private boolean overflowToDisk;
-	private boolean eternal;
+    private boolean eternal;
     private long timeToIdle;
-	private long timeToLive;
+    private long timeToLive;
+    private long threadInterval;
     private String configFile;
 
     /** The service manager */
@@ -91,9 +92,8 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
 
     /** The context containing the work and the cache directory */
     private Context context;
-	private long threadInterval;
 
-	// ---------------------------------------------------- Lifecycle
+    // ---------------------------------------------------- Lifecycle
 
     public EHStore() {
     }
@@ -160,13 +160,13 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cacheManager = CacheManager.create(configFileURL);
         if (tempDir != null) System.setProperty("java.io.tmpdir", tempDir);
         this.cache = new Cache(this.cacheName,
-        		               this.maximumSize,
-							   this.overflowToDisk,
-							   this.eternal,
-							   this.timeToLive,
-							   this.timeToIdle,
-							   true,
-							   this.threadInterval);
+                               this.maximumSize,
+                               this.overflowToDisk,
+                               this.eternal,
+                               this.timeToLive,
+                               this.timeToIdle,
+                               true,
+                               this.threadInterval);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
     }
@@ -273,16 +273,16 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
-    	List keys = null;
-		try {
-			keys = this.cache.getKeys();
-		}
-		catch (CacheException e) {
-			if (getLogger().isWarnEnabled()) {
-				getLogger().warn("Error while getting cache keys", e);
-			}
-			keys = Collections.EMPTY_LIST;
-		}
+        List keys = null;
+        try {
+            keys = this.cache.getKeys();
+        }
+        catch (CacheException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Error while getting cache keys", e);
+            }
+            keys = Collections.EMPTY_LIST;
+        }
         return Collections.enumeration(keys);
     }
 
@@ -291,14 +291,14 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      */
     public int size() {
         try {
-			return this.cache.getSize();
-		}
+            return this.cache.getSize();
+        }
         catch (CacheException e) {
-			if (getLogger().isWarnEnabled()) {
-				getLogger().warn("Error while getting cache size", e);
-			}
-			return 0;
-		}
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Error while getting cache size", e);
+            }
+            return 0;
+        }
     }
 
 }
