@@ -104,7 +104,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.3 2003/10/31 11:30:41 vgritsenko Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.4 2004/01/21 10:46:43 antonio Exp $
  */
 public class ServerPagesAction
         extends ConfigurableComposerAction
@@ -160,7 +160,7 @@ public class ServerPagesAction
         // Get a ServerPagesGenerator
         ServerPagesGenerator generator = (ServerPagesGenerator)this.generatorHandler.get();
 
-        // Generator ouptut, if output-attribute was given
+        // Generator output, if output-attribute was given
         XMLByteStreamCompiler compiler = null;
 
         try {

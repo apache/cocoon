@@ -57,7 +57,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.2 2004/01/21 10:46:43 antonio Exp $
  */
 
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
@@ -91,7 +91,6 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
             // No success
             context.popMap();
         }
-
         return false;
     }
 
@@ -109,7 +108,6 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
                 return true;
             }
         }
-
         return false;
     }
 }

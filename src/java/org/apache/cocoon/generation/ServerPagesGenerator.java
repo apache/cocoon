@@ -91,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.4 2003/10/07 16:07:33 vgritsenko Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.5 2004/01/21 10:46:43 antonio Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -195,9 +195,10 @@ public class ServerPagesGenerator extends ServletGenerator
                 "programming-language", this.programmingLanguage);
 
         try {
-            this.inputSource = this.resolver.resolveURI(super.source);
+            this.inputSource = this.resolver.resolveURI(src);
         } catch (SourceException se) {
-            throw SourceUtil.handle(se);
+            throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+            //throw SourceUtil.handle(se);
         }
 
         try {
