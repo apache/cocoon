@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.131 2003/08/31 09:32:35 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.132 2003/09/01 14:07:33 upayavira Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UV" type="fix">
+     Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir, 
+     rather than CLI invocation dir.
+   </action>
+   <action dev="UV" type="add">
+     Added include/exclude feature to CLI to allow fine-tuning of crawling of a site.
+   </action>
    <action dev="BRD" type="fix" fixes-bug="18131">
      Patched util-concurrent.jar so that Tomcat shutdown and continuations
      cleanup now works properly.
