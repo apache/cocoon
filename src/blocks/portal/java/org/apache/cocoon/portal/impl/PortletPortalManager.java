@@ -226,6 +226,8 @@ public class PortletPortalManager
                 final ServletResponseImpl res= (ServletResponseImpl)objectModel.get("portlet-response");
                 this.portletContainer.processPortletAction(actionWindow, req.getRequest(actionWindow), res);
 
+                // this redirect is only for 2.1.x, don't add it to 2.2 
+                // (see #32157 for more information)
                 final String redirectURL = res.getRedirectURL();
                 HttpServletResponse response = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
                 response.sendRedirect(redirectURL);
