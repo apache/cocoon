@@ -185,10 +185,6 @@
       You got a ArrayIndexOutOfBoundsException from the profiler example, if
       you try to get the SAX fragments.
     </action>
-
-    <action context="code" assigned-to="SMS">
-      You can't upload a file within the Slide block.
-    </action>
    </actions>
   </todo>
 
