@@ -23,14 +23,21 @@
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/ojb/ojb.roles"/>
 
-  <!-- ODMG Implementation Interface 
-  <ojb-odmg logger="core.ojb-odmg"/ -->
-  <!-- PersistenceBroker Interface -->
-  <ojb-pb logger="core.ojb-pb"/>
-  
-  <!-- Persistent Manager Factory for JDO -->
-  <!-- uncomment in order to set the logger to a category other than core.startup
-  <ojb-jdo class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl" logger="core.ojb-jdo"/>
-  -->
+  <!-- OJB Logger -->
+  <component role="org.apache.cocoon.ojb.components.Logger"
+             class="org.apache.cocoon.ojb.components.LoggerImpl"
+             logger="ojb"/>
+
+  <!-- OJB Connection Factory -->
+  <component role="org.apache.cocoon.ojb.components.ConnectionFactory"
+             class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
+             logger="core.ojb"/>
+
+  <!-- OJB PersistenceBroker Interface -->
+  <ojb-pb logger="core.ojb.pb"/>
+  <!-- OJB Persistent Manager Factory for JDO -->
+  <ojb-jdo class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl" logger="core.ojb.jdo"/>
+  <!-- OJB ODMG Implementation Interface -->
+  <ojb-odmg logger="core.ojb.odmg"/>
 
 </components>
