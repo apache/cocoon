@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.io.IOException;
+
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -66,6 +68,7 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
+import org.apache.excalibur.xml.xslt.XSLTProcessorException;
 import org.apache.excalibur.xml.xslt.XSLTProcessorImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -76,7 +79,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.2 2003/05/16 11:39:11 cziegeler Exp $
  */
 public class XSLTAspect 
     extends AbstractLogEnabled 
@@ -109,7 +112,11 @@ public class XSLTAspect
             context.invokeNext(layout, service, transformer);
 
             transformer.endDocument();
-        } catch (Exception ce) {
+        } catch (XSLTProcessorException xpe) {
+            throw new SAXException("XSLT Exception.", xpe);
+        } catch (IOException io) {
+            throw new SAXException("Error in resolving.", io);
+        } catch (ComponentException ce) {
             throw new SAXException("Unable to lookup component.", ce);
         } finally {
             if (null != resolver) {
