@@ -57,6 +57,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -70,7 +71,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.EventRegistry;
-import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.commons.collections.MultiHashMap;
 
@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.6 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.7 2003/10/02 04:21:17 ghoward Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -105,7 +105,7 @@ public class DefaultEventRegistryImpl
      * @param event The event to 
      * @param key
      */
-    public void register(Event e, PipelineCacheKey key) {
+    public void register(Event e, Serializable key) {
         synchronized(this) {
             m_keyMMap.put(key,e);
             m_eventMMap.put(e,key);
@@ -125,7 +125,7 @@ public class DefaultEventRegistryImpl
     /**
      * Retrieve all pipeline keys mapped to this event.
      */
-    public PipelineCacheKey[] keysForEvent(Event e) {
+    public Serializable[] keysForEvent(Event e) {
         Collection coll = (Collection)m_eventMMap.get(e);
         if (coll==null || coll.isEmpty()) {
             if (getLogger().isDebugEnabled()) {
@@ -133,24 +133,24 @@ public class DefaultEventRegistryImpl
             }
             return null;
         } else {
-            return (PipelineCacheKey[])coll.toArray(new PipelineCacheKey[coll.size()]);
+            return (Serializable[])coll.toArray(new Serializable[coll.size()]);
         }
     }
 
     /**
      * Return all pipeline keys mapped to any event
      */
-    public PipelineCacheKey[] allKeys() {
+    public Serializable[] allKeys() {
         Set keys = this.m_keyMMap.keySet();
-        return (PipelineCacheKey[])keys.toArray(
-                        new PipelineCacheKey[keys.size()]);
+        return (Serializable[])keys.toArray(
+                        new Serializable[keys.size()]);
     }
 
     /**
      * When a CachedResponse is removed from the Cache, any entries 
      * in the event mapping must be cleaned up.
      */
-    public void removeKey(PipelineCacheKey key) {
+    public void removeKey(Serializable key) {
         Collection coll = (Collection)m_keyMMap.get(key);
         if (coll==null || coll.isEmpty()) {
             return;

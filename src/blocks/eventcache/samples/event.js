@@ -1,4 +1,4 @@
-var role = Packages.org.apache.cocoon.caching.Cache.ROLE;
+var role = Packages.org.apache.cocoon.caching.Cache.ROLE + "/EventAware";
 
 function cacheEvent() {
 	var cache = cocoon.getComponent(role);

@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.caching;
 
+import java.io.Serializable;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.caching.validity.Event;
 
@@ -61,7 +63,7 @@ import org.apache.cocoon.caching.validity.Event;
  *  
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistry.java,v 1.2 2003/07/20 21:08:06 ghoward Exp $
+ * @version CVS $Id: EventRegistry.java,v 1.3 2003/10/02 04:21:17 ghoward Exp $
  */
 public interface EventRegistry extends Component {
     
@@ -76,14 +78,14 @@ public interface EventRegistry extends Component {
      * @param event
      * @param key
      */
-    public void register(Event e, PipelineCacheKey key);
+    public void register(Event e, Serializable key);
     
     /**
      * Remove all occurances of the specified key from the registry.
      * 
      * @param key - The key to remove.
      */
-    public void removeKey(PipelineCacheKey key);
+    public void removeKey(Serializable key);
     
     /**
      * Retrieve an array of all keys mapped to this event.
@@ -92,7 +94,7 @@ public interface EventRegistry extends Component {
      * @return an array of keys which should not be modified or null if 
      *      no keys are mapped to this event.
      */
-    public PipelineCacheKey[] keysForEvent(Event e);
+    public Serializable[] keysForEvent(Event e);
     
     /**
      * Retrieve an array of all keys regardless of event mapping, or null if
@@ -100,7 +102,7 @@ public interface EventRegistry extends Component {
      * 
      * @return an array of keys which should not be modified
      */
-    public PipelineCacheKey[] allKeys(); 
+    public Serializable[] allKeys(); 
     
     /**
      * Clear all event-key mappings from the registry.
