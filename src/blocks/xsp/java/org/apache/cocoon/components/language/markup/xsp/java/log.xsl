@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,21 +15,26 @@
   limitations under the License.
 -->
 
-<!-- $Id: log.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $-->
-<!--
- * XSP Logger logicsheet for the Java language
- *
- * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:22 $
--->
+<!--+
+    | XSP Logger logicsheet for the Java language
+    |
+    | @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
+    | @version $Id$
+    +-->
+<xsl:stylesheet version="1.0"
+                xmlns:xsp="http://apache.org/xsp"
+                xmlns:log="http://apache.org/xsp/log/2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsp="http://apache.org/xsp"
-  xmlns:log="http://apache.org/xsp/log/2.0"
-
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
->
+  <xsl:template match="xsp:page">
+    <xsp:page>
+      <xsl:apply-templates select="@*"/>
+      <xsp:logic>
+        org.apache.avalon.framework.logger.Logger _log_defaultLogger;
+      </xsp:logic>
+      <xsl:apply-templates/>
+    </xsp:page>
+  </xsl:template>
 
   <xsl:template match="log:logger">
     <xsl:variable name="name">
@@ -40,23 +45,9 @@
             <xsl:with-param name="content" select="log:name"/>
           </xsl:call-template>
         </xsl:when>
-        <xsl:otherwise>""</xsl:otherwise>
+        <xsl:otherwise>null</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
-<!-- Files are now under control of LogKitManager
-    <xsl:variable name="filename">
-      <xsl:choose>
-        <xsl:when test="@filename">"<xsl:value-of select="@filename"/>"</xsl:when>
-        <xsl:when test="filename">
-          <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="log:filename"/>
-          </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>""</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
--->
 
     <xsl:variable name="level">
       <xsl:choose>
@@ -71,63 +62,57 @@
     </xsl:variable>
 
     <xsp:logic>
-      if (getLogger() == null) {
-          try {
-            String category = <xsl:value-of select="$name"/>;
-            org.apache.log.Logger logger = org.apache.log.Hierarchy.getDefaultHierarchy().getLoggerFor( category );
-<!--
-            if (!"".equals(<xsl:value-of select="$filename"/>)) {
-                String file = this.avalonContext.get(org.apache.cocoon.Constants.CONTEXT_LOG_DIR) + <xsl:value-of select="$filename"/>;
-                org.apache.log.LogTarget[] targets = new org.apache.log.LogTarget[] {
-                    new org.apache.log.output.FileOutputLogTarget(file)
-                };
-                logger.setLogTargets(targets);
-            }
--->
-            logger.setPriority(org.apache.log.Priority.getPriorityForName(<xsl:value-of select="$level"/>));
-            this.enableLogging(new org.apache.avalon.framework.logger.LogKitLogger(logger));
-          } catch (Exception e) {
-            getLogger().error("Could not create logger for \"" +
-                               <xsl:value-of select="$name"/> + "\".", e);
-          }
+      if (_log_defaultLogger == null) {
+        _log_defaultLogger = getLogger();
+      }
+      try {
+        String category = <xsl:value-of select="$name"/>;
+        if (category != null) {
+          enableLogging(_log_defaultLogger.getChildLogger(category));
+        } else {
+          enableLogging(_log_defaultLogger);
+        }
+      } catch (Exception e) {
+        getLogger().error("Could not create logger for \"" +
+                           <xsl:value-of select="$name"/> + "\".", e);
       }
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:debug">
     <xsp:logic>
-      if(getLogger() != null)
+      if (getLogger().isDebugEnabled())
         getLogger().debug(<xsl:call-template name="get-log-message"/>);
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:info">
     <xsp:logic>
-      if(getLogger() != null)
+      if (getLogger().isInfoEnabled())
         getLogger().info(<xsl:call-template name="get-log-message"/>);
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:warn">
     <xsp:logic>
-      if(getLogger() != null)
+      if (getLogger().isWarnEnabled())
         getLogger().warn(<xsl:call-template name="get-log-message"/>);
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:error">
     <xsp:logic>
-      if(getLogger() != null)
+      if (getLogger().isErrorEnabled())
         getLogger().error(<xsl:call-template name="get-log-message"/>);
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:fatal-error">
     <xsp:logic>
-      if(getLogger() != null)
-        getLogger().fatalError(<xsl:call-template name="get-log-message"/>);
+      getLogger().fatalError(<xsl:call-template name="get-log-message"/>);
     </xsp:logic>
   </xsl:template>
+
 
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
