@@ -44,9 +44,9 @@ import org.xml.sax.SAXException;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-05-04 00:31:26 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-08 16:32:32 $
  */
-public final class CachingStreamPipeline extends AbstractStreamPipeline {
+public class CachingStreamPipeline extends AbstractStreamPipeline {
 
     /** The role name of the serializer */
     private String serializerRole;
@@ -176,13 +176,15 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                     if (valid == true) {
                         getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
 
-                        usedCache = true;
                         byte[] response = cachedObject.getResponse();
-                        outputStream.write(response);
-                        if (response.length != 0) {
+                        if(response.length > 0) {
+                            usedCache = true;
                             environment.setContentLength(response.length);
+                            outputStream.write(response);
                         }
-                    } else {
+                    } 
+                    
+                    if(usedCache == false) {
                         getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
 
                         // remove invalid cached object
@@ -293,9 +295,15 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                         if (valid == true) {
 
                             getLogger().debug("Using valid cached content for '" + environment.getURI() + "'.");
-                            usedCache = true;
-                            outputStream.write(cachedObject.getResponse());
-                        } else {
+                            byte[] bytes = cachedObject.getResponse();
+                            if(bytes.length > 0) {
+                                usedCache = true;
+                                environment.setContentLength(bytes.length);
+                                outputStream.write(bytes);
+                            }
+                        } 
+                        
+                        if (usedCache == false) {
 
                             getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
 
@@ -320,9 +328,11 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
                     // store the response
                     if (pcKey != null) {
+                        byte[] bytes = ((CachingOutputStream)outputStream).getContent();
+                        environment.setContentLength(bytes.length);
+                        
                         this.streamCache.store(pcKey,
-                            new CachedStreamObject(validityObjects,
-                                  ((CachingOutputStream)outputStream).getContent()));
+                            new CachedStreamObject(validityObjects, bytes));
                     }
                 }
 
