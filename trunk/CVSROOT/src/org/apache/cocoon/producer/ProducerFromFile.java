@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.1 1999-12-02 11:52:01 stefano Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.2 1999-12-16 11:45:07 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,7 @@ package org.apache.cocoon.producer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.*;
 import org.apache.cocoon.framework.*;
@@ -63,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * available, even if we should use getResource().
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-02 11:52:01 $
+ * @version $Revision: 1.2 $ $Date: 1999-12-16 11:45:07 $
  */
 
 public class ProducerFromFile extends AbstractProducer implements Status {
@@ -84,11 +85,40 @@ public class ProducerFromFile extends AbstractProducer implements Status {
     public boolean hasChanged(Object context) {
         return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context));
     }
-    
-    private String getBasename(HttpServletRequest request) {
-        return ((request.getPathInfo() == null)
-            ? request.getRealPath(request.getRequestURI())
-            : request.getPathTranslated()).replace('\\','/');
+
+    /**
+     * XXX: This is a dirty hack. The worst piece of code I ever wrote
+     * and it clearly shows how Cocoon must change to support the Servlet API
+     * 2.2 which has _much_ better mapping support thru the use of "getResource()"
+     * but then, all the file system abstraction should be URL based.
+     *
+     * So, for now, leave the dirty code even if totally deprecated and work
+     * out a better solution in the future.
+     */
+    protected String getBasename(HttpServletRequest request) {
+        try {
+            // detect if the engine supports at least Servlet API 2.2
+            request.getContextPath();
+            URL resource = ((ServletContext) context).getResource(request.getServletPath());
+            if (resource.getProtocol().equals("file")) {
+                return resource.getFile();
+            } else {
+                throw new RuntimeException("Cannot handle remote resources.");
+            }
+        } catch (NoSuchMethodError e) {
+            // if there is no such method we must be in Servlet API 2.1
+            if (request.getPathInfo() != null) {
+                // this must be Apache JServ
+                return request.getPathTranslated().replace('\\','/');
+            } else {
+                // otherwise use the deprecated method on all other servlet engines.
+                return request.getRealPath(request.getRequestURI());
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed request URL.");
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Context cannot be null.");
+        }
     }
     
     public String getStatus() {

@@ -64,7 +64,7 @@ import org.xml.sax.InputSource;
 
 /**
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version $Revision: 1.2 $ $Date: 1999-12-10 22:36:45 $
+ * @version $Revision: 1.3 $ $Date: 1999-12-16 11:45:07 $
  */
 
 public class ProducerFromMap extends ProducerFromFile {
@@ -141,19 +141,8 @@ public class ProducerFromMap extends ProducerFromFile {
 		}
 		return results;
 	}
-
-	/**
-	 * This is copied from FileProducer because Stefano is mean and makes
-	 * things private when they don't need to be.
-	 */
-    protected String getBasename(HttpServletRequest request) {
-        return ((request.getPathInfo() == null)
-            ? request.getRealPath(request.getRequestURI())
-            : request.getPathTranslated()).replace('\\','/');
-    }
     
 	public String getStatus() {
 		return "Map Producer";
 	}
-
 }

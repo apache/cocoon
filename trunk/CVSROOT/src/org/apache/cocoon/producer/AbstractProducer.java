@@ -1,4 +1,4 @@
-/*-- $Id: AbstractProducer.java,v 1.4 1999-11-30 16:30:10 stefano Exp $ -- 
+/*-- $Id: AbstractProducer.java,v 1.5 1999-12-16 11:45:07 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,10 +65,20 @@ import org.apache.cocoon.framework.*;
  * seen as a transparent "mediator" between stream and DOM realms.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:10 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-16 11:45:07 $
  */
 
 public abstract class AbstractProducer extends AbstractActor implements Producer, Defaults {
+
+    protected Object context;
+    
+    /**
+     * Initialize the producer setting its context.
+     */
+    public void init(Director director) {
+        super.init(director);
+        this.context = director.getActor("context");
+    }    
     
     /**
      * This method is the only one called by the Cocoon engine. Producers
