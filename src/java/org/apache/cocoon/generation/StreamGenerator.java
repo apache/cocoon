@@ -86,7 +86,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.2 2003/07/27 12:52:49 gianugo Exp $
  */
 public class StreamGenerator extends ComposerGenerator
 {
@@ -123,7 +123,13 @@ public class StreamGenerator extends ComposerGenerator
             HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
             contentType = request.getContentType();
             if (contentType == null) {
-                throw new IOException("Required header ContentType is missing.");
+                contentType = parameters.getParameter("defaultContentType", null);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("no Content-Type header - using contentType parameter");
+                }
+            }
+            if (contentType == null) {
+                throw new IOException("both Content-Type header and defaultContentType parameter are not set");
             } else if (contentType.startsWith("application/x-www-form-urlencoded") ||
                     contentType.startsWith("multipart/form-data")) {
                 String parameter = parameters.getParameter(FORM_NAME, null);
@@ -151,7 +157,7 @@ public class StreamGenerator extends ComposerGenerator
             }
 
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("processing stream ContentType= " + request.getContentType() + "ContentLen= " + len);
+                getLogger().debug("processing stream ContentType=" + contentType + " ContentLen=" + len);
             }
             String charset =  getCharacterEncoding(request, contentType) ;
             if( charset != null)

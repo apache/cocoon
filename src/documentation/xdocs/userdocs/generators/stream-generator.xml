@@ -17,7 +17,7 @@
 	            <p>
       	      The StreamGenerator is a class that reads XML from an HttpRequest 
             	InputStream and generates SAX Events. StreamGenerator expects 
-	            XML data coming as POST message. 
+	            XML data coming as HTTP request message. 
       	      </p>
 			<ul>
 				<li>Name : stream</li>
@@ -31,8 +31,8 @@
 	            </p>
 
       	      <p>
-            	For POST requests with mimetypes: text/plain, text/xml, application/xml 
-	            the xml data is in the body of the POST request and its length is 
+            	For HTTP requests with mimetypes: text/plain, text/xml, application/xml 
+	            the xml data is in the body of the HTTP request and its length is 
       	      specified by the value returned by getContentLength() method.
             	</p>
 			<s2 title="PostInputStream">
@@ -50,7 +50,7 @@
 			<s2 title="See it in Action">
 	            <p>
             	The Generator is a generic object, i.e. it can process any stream out of the 
-      	      POST message there are two ways to see StreamGenerator in action:
+      	      HTTP message. There are two ways to see StreamGenerator in action:
 	            </p>
             
             	<ul>
@@ -69,7 +69,7 @@
             
             	<p>
       	      The second or "pure" option of testing StreamGenerator "in action," requires the 
-	            use of Telnet program or any other process able to generate correct POST message. 
+	            use of Telnet program or any other process able to generate correct HTTP message. 
             	The procedure is:
       	      </p>
 
@@ -94,6 +94,18 @@
 <source>
      <![CDATA[
   <map:generate type="stream"/>
+     ]]>
+</source>
+            <p>
+      	      If you want to process XML streams sent by clients that don't set the Content-Type HTTP header
+              just use the defaultContentType parameter.
+                 
+            </p>
+<source>
+     <![CDATA[
+  <map:generate type="stream">
+    <map:parameter name="defaultContentType" value="text/xml"/>
+  </map:generate>
      ]]>
 </source>
         		</s2>
