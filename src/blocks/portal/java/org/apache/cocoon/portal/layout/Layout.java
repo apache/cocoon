@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Map;
+
 import org.apache.cocoon.portal.factory.Producible;
 
 
@@ -23,7 +25,7 @@ import org.apache.cocoon.portal.factory.Producible;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.9 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface Layout 
     extends Parameters, Producible {
@@ -45,5 +47,13 @@ public interface Layout
     Item getParent();
 
     void setParent(Item item);
+
+    /**
+     * Make a copy of this layout object and of all it's children.,
+     * Each reference to a coplet instance data is replaced to
+     * an instance from the provided map. (If the map is null,
+     * the reference is copied).
+     */
+    Layout copy(Map copletInstanceDatas);
 
 }

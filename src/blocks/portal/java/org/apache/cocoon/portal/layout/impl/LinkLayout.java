@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: LinkLayout.java,v 1.4 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class LinkLayout extends AbstractLayout implements Layout {
 
@@ -49,4 +49,16 @@ public class LinkLayout extends AbstractLayout implements Layout {
         linkedLayoutKey = key;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        LinkLayout clone = (LinkLayout)super.clone();
+        
+        clone.linkedLayoutId = this.linkedLayoutId;
+        clone.linkedLayoutKey = this.linkedLayoutKey;
+        
+        return clone;
+    }
+    
 }
