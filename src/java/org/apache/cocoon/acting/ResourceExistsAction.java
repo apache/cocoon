@@ -60,21 +60,19 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import java.util.Map;
 
 /**
- * This action simply checks to see if a given resource exists. It checks
- * whether the specified in the src attribute source exists or not.
- * The action returns empty <code>Map</code> if it exists, null otherwise.
+ * This action simply checks to see if a resource identified by the <code>src</code>
+ * sitemap attribute exists or not. The action returns empty <code>Map</code> if
+ * resource exists, <code>null</code> otherwise.
  * 
- * <p>
- * Instead of src attribute, source can be specified using
- * parameter named 'url' (this is old syntax).
+ * <p>Instead of src attribute, source can be specified using
+ * parameter named <code>url</code> (this is old syntax, should be removed soon).
  * 
- * <p>
- * <b>Note:</b> {@link org.apache.cocoon.selection.ResourceExistsSelector}
+ * <p><b>NOTE:</b> {@link org.apache.cocoon.selection.ResourceExistsSelector}
  * should be preferred to this component, as the semantics of a Selector better
  * matches the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.4 2003/12/12 14:33:09 vgritsenko Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.5 2004/03/02 14:09:48 vgritsenko Exp $
  */
 public class ResourceExistsAction extends ServiceableAction implements ThreadSafe {
 
