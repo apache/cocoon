@@ -44,7 +44,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.4 $ $Date: 2000-05-09 19:36:55 $ $Author: balld $
+ * @version CVS $Revision: 1.5 $ $Date: 2000-05-11 03:27:48 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -270,8 +270,8 @@ class XIncludeProcessorWorker {
 			try {
 				included_document = parser.parse(input,false);
 			} catch (Exception e) {}
-			if (suffix.startsWith("xptr(") && suffix.endsWith(")")) {
-				String xpath = suffix.substring(5,suffix.length()-1);
+			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
+				String xpath = suffix.substring(9,suffix.length()-1);
 				if (debug) { System.err.println("XPath is "+xpath); }
 				NodeList list = XPathAPI.selectNodeList(included_document,xpath);
 				int length = list.getLength();
