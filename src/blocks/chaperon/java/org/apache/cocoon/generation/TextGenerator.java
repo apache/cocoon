@@ -51,7 +51,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
  * @author <a href="mailto:rolf.schumacher@hamburg.de">Rolf Schumacher</a>
- * @version CVS $Id: TextGenerator.java,v 1.8 2004/04/03 00:46:33 antonio Exp $
+ * @version CVS $Id$
  */
 public class TextGenerator extends ServiceableGenerator implements Parameterizable,
                                                                    CacheableProcessingComponent
@@ -138,7 +138,9 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
    */
   public Serializable getKey()
   {
-    return inputSource.getURI();
+    return inputSource.getURI()
+    	+ ";localizable=" + localizable
+    	+ ";encoding=" + encoding;
   }
 
   /**
