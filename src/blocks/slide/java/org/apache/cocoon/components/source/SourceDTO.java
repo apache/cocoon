@@ -35,7 +35,7 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * Data transfer object for a Source object.
  *
- * @version CVS $Id: SourceDTO.java,v 1.3 2004/04/13 15:16:38 unico Exp $
+ * @version CVS $Id: SourceDTO.java,v 1.4 2004/04/23 23:14:03 joerg Exp $
  */
 public class SourceDTO implements Source, ModifiableTraversableSource, 
            MoveableSource, LockableSource, InspectableSource, 
@@ -324,10 +324,6 @@ public class SourceDTO implements Source, ModifiableTraversableSource,
         throw new IllegalStateException("Data transfer object does not support this operation");
     }
     
-    private Source getChildByPath(String path) throws SourceException {
-        throw new IllegalStateException("Data transfer object does not support this operation");
-    }
-
     public Collection getChildren() throws SourceException {
         return children;
     }
