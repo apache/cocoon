@@ -28,7 +28,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachedResponse.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CachedResponse
         implements Serializable {
@@ -37,7 +37,8 @@ public class CachedResponse
     protected final byte[]           response;
     protected Long                   expires;
     protected final long             lastModified;
-
+    protected String                 contentType;
+    
     /**
      * Create a new entry for the cache.
      *
@@ -128,4 +129,16 @@ public class CachedResponse
         return lastModified;
     }
 
+    /**
+     * @return Returns the cached content type (or null).
+     */
+    public String getContentType() {
+        return this.contentType;
+    }
+    /**
+     * @param value The content type to cache.
+     */
+    public void setContentType(String value) {
+        this.contentType = value;
+    }
 }

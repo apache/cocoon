@@ -697,6 +697,9 @@ public abstract class AbstractCachingProcessingPipeline
                             byte[] response = cachedObject.getResponse();
                             if (response.length > 0) {
                                 usedCache = true;
+                                if ( cachedObject.getContentType() != null ) {
+                                    environment.setContentType(cachedObject.getContentType());
+                                }
                                 outputStream = environment.getOutputStream(0);
                                 environment.setContentLength(response.length);
                                 outputStream.write(response);
@@ -748,10 +751,12 @@ public abstract class AbstractCachingProcessingPipeline
 
                 // store the response
                 if (pcKey != null) {
+                    final CachedResponse res = new CachedResponse( new SourceValidity[] {readerValidity},
+                            ((CachingOutputStream)outputStream).getContent());
+                    res.setContentType(environment.getContentType());
                     this.cache.store(
                         pcKey,
-                        new CachedResponse( new SourceValidity[] {readerValidity},
-                                            ((CachingOutputStream)outputStream).getContent())
+                        res
                     );
                 }
             }
