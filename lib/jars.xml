@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.174 2004/02/28 10:58:57 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.175 2004/02/28 14:34:15 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -226,7 +226,18 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/avalon-framework-4.1.4.jar</lib>
+    <lib>core/avalon-framework-api-4.1.5.jar</lib>
+    <homepage>http://avalon.apache.org/framework/</homepage>
+  </file>
+
+  <file>
+    <title>Avalon Framework - Implementation</title>
+    <description>
+      Part of avalon, it is a set of classes and patterns that
+      support high level server development.
+    </description>
+    <used-by>Cocoon</used-by>
+    <lib>core/avalon-framework-impl-4.1.5.jar</lib>
     <homepage>http://avalon.apache.org/framework/</homepage>
   </file>
 

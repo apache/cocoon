@@ -159,7 +159,9 @@
       <log-target id-ref="error"/>
     </category>
 
-    <log-target id-ref="core"/>
-    <log-target id-ref="error"/>
+    <category name="" log-level="@loglevel@">
+      <log-target id-ref="core"/>
+      <log-target id-ref="error"/>
+    </category>
   </categories>
 </logkit>
