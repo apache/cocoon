@@ -78,7 +78,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGenerator.java,v 1.1 2003/03/09 00:02:49 pier Exp $
+ * @version CVS $Id: TextGenerator.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
  */
 public class TextGenerator extends ComposerGenerator
   implements CacheableProcessingComponent {
@@ -137,7 +137,7 @@ public class TextGenerator extends ComposerGenerator
      *
      * @return The generated key hashes the src
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return inputSource.getURI();
     }
 
@@ -147,7 +147,7 @@ public class TextGenerator extends ComposerGenerator
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return this.inputSource.getValidity();
     }
 

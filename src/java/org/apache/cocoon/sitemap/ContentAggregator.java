@@ -78,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
@@ -171,7 +171,7 @@ implements Generator, CacheableProcessingComponent, Recyclable {
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         try {
             StringBuffer buffer = new StringBuffer();
             buffer.append("CA(")
@@ -208,7 +208,7 @@ implements Generator, CacheableProcessingComponent, Recyclable {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         try {
             AggregatedValidity v = new AggregatedValidity();
             Source current;

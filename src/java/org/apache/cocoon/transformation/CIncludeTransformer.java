@@ -150,7 +150,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -647,9 +647,9 @@ implements Disposable, CacheableProcessingComponent {
     }
 
     /**
-     * @see org.apache.cocoon.caching.CacheableProcessingComponent#generateKey()
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         if (this.supportCaching 
             && null != this.cacheManager 
             && this.cachingSession.getExpires() > 0) {
@@ -659,9 +659,9 @@ implements Disposable, CacheableProcessingComponent {
     }
 
     /**
-     * @see org.apache.cocoon.caching.CacheableProcessingComponent#generateValidity()
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (this.supportCaching 
             && null != this.cacheManager
             && this.cachingSession.getExpires() > 0

@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * to pull the image from, and source specifies the source key information.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseReader.java,v 1.1 2003/03/09 00:03:10 pier Exp $
+ * @version CVS $Id: DatabaseReader.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  */
 public class DatabaseReader
    extends ComposerReader
@@ -341,7 +341,7 @@ public class DatabaseReader
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return this.source;
     }
 
@@ -351,7 +351,7 @@ public class DatabaseReader
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (this.lastModified > 0) {
             return new TimeStampValidity(this.lastModified);
         } else {

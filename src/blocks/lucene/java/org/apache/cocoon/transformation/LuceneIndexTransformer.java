@@ -92,7 +92,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>FIXME: Write Documentation.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.3 2003/03/12 09:35:39 cziegeler Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.4 2003/03/19 15:42:17 cziegeler Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
@@ -199,7 +199,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
      *
      * @return The generated key
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return "1";
     }
 
@@ -209,7 +209,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

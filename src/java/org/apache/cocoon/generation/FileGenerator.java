@@ -73,7 +73,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.2 2003/03/19 15:42:13 cziegeler Exp $
  */
 public class FileGenerator extends ComposerGenerator
 implements CacheableProcessingComponent {
@@ -113,7 +113,7 @@ implements CacheableProcessingComponent {
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return this.inputSource.getURI();
     }
 
@@ -123,7 +123,7 @@ implements CacheableProcessingComponent {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return this.inputSource.getValidity();
     }
 

@@ -92,7 +92,7 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ * @version CVS $Id: ImageReader.java,v 1.3 2003/03/19 15:42:16 cziegeler Exp $
  */
 final public class ImageReader extends ResourceReader {
 
@@ -212,11 +212,11 @@ final public class ImageReader extends ResourceReader {
      * @return The generated key consists from src and width and height
      * parameters
     */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         if (width > 0 || height > 0) {
             return this.inputSource.getURI() + ':' + this.width + ':' + this.height;
         } else {
-            return super.generateKey();
+            return super.getKey();
         }
     }
 }

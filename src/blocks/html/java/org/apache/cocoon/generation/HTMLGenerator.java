@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.2 2003/03/12 09:35:38 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.3 2003/03/19 15:42:17 cziegeler Exp $
  */
 public class HTMLGenerator extends ComposerGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -248,7 +248,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         if (this.inputSource == null)
             return null;
             
@@ -269,7 +269,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (this.inputSource == null)
             return null;
         return this.inputSource.getValidity();

@@ -60,27 +60,27 @@ import java.io.Serializable;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheableProcessingComponent.java,v 1.1 2003/03/09 00:08:44 pier Exp $
+ * @version CVS $Id: CacheableProcessingComponent.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  */
 public interface CacheableProcessingComponent {
 
     /**
      * Generate the unique key.
      * This key must be unique inside the space of this component.
-     * This method must be invoked before the generateValidity() method.
+     * This method must be invoked before the getValidity() method.
      *
      * @return The generated key or <code>null</code> if the component
      *              is currently not cacheable.
      */
-    Serializable generateKey();
+    Serializable getKey();
 
     /**
      * Generate the validity object.
-     * Before this method can be invoked the generateKey() method
+     * Before this method can be invoked the getKey() method
      * must be invoked.
      *
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    SourceValidity generateValidity();
+    SourceValidity getValidity();
 }

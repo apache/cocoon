@@ -80,7 +80,7 @@ import java.net.MalformedURLException;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.3 2003/03/16 04:47:53 vgritsenko Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.4 2003/03/19 15:42:16 cziegeler Exp $
  */
 public class FOPSerializer
 extends AbstractSerializer
@@ -276,7 +276,7 @@ implements Composable, Configurable, CacheableProcessingComponent {
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return "1";
     }
 
@@ -288,7 +288,7 @@ implements Composable, Configurable, CacheableProcessingComponent {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

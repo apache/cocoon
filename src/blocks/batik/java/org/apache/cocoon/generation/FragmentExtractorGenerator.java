@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorGenerator.java,v 1.1 2003/03/09 00:02:38 pier Exp $
+ * @version CVS $Id: FragmentExtractorGenerator.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  */
 public class FragmentExtractorGenerator extends ComposerGenerator
         implements CacheableProcessingComponent {
@@ -84,7 +84,7 @@ public class FragmentExtractorGenerator extends ComposerGenerator
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return this.source;
     }
 
@@ -94,7 +94,7 @@ public class FragmentExtractorGenerator extends ComposerGenerator
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 
