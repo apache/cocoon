@@ -72,10 +72,13 @@ import org.xml.sax.InputSource;
 /**
  * JXPathBindingManager provides an implementation of {@link BindingManager}
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
- * JXPath package</a>. 
+ * JXPath package</a>.
+ * 
+ * @version CVS $ID$
  */
-public class JXPathBindingManager extends AbstractLogEnabled implements BindingManager, Serviceable, Disposable,
-        Initializable, Configurable, ThreadSafe {
+public class JXPathBindingManager extends AbstractLogEnabled
+        implements BindingManager, Serviceable, Disposable,
+                   Initializable, Configurable, ThreadSafe {
 
     //TODO caching of the Bindings. 
 
@@ -161,7 +164,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
         }
 
         /**
-         * Creates a {@link Binding} folowing the specification in the 
+         * Creates a {@link Binding} following the specification in the 
          * provided config element.
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
