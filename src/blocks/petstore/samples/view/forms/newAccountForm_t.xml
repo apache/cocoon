@@ -16,7 +16,7 @@
 -->
 
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
-	<site signOn="true" view="woody">
+	<site signOn="true" view="cforms">
 		<ft:form-template action="#{$continuation/id}.kont" method="POST">
 			<fi:form layout="grey">
 				<fi:group>
