@@ -54,6 +54,7 @@ package org.apache.cocoon.woody.event;
  * Listeners for {@link ActionEvent}s
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ActionListener.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
  */
 
 public interface ActionListener extends WidgetListener {

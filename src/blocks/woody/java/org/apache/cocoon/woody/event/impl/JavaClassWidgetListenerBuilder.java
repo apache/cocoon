@@ -65,6 +65,7 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: JavaClassWidgetListenerBuilder.java,v 1.3 2004/02/11 09:27:55 antonio Exp $
  */
 public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder {
 

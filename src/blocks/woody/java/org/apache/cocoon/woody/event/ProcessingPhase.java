@@ -60,6 +60,7 @@ import org.apache.commons.lang.enum.ValuedEnum;
  * Type-safe enumeration of the various form processing phases.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ProcessingPhase.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
  */
 public class ProcessingPhase extends ValuedEnum {
 

@@ -54,6 +54,7 @@ package org.apache.cocoon.woody.event;
  * Listener invoked when a field value changes.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ValueChangedListener.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
  */
 public interface ValueChangedListener extends WidgetListener {
     

@@ -72,6 +72,7 @@ import org.w3c.dom.Element;
  * variable.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.5 2004/02/11 09:27:55 antonio Exp $
  */
 public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
 
