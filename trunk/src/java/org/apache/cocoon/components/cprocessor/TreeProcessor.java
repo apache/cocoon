@@ -391,7 +391,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
         
         Environment newEnv = new ForwardEnvironmentWrapper(environment, m_manager, uri, getLogger());
-        ((ForwardEnvironmentWrapper)newEnv).setExternal(true);
+        //((ForwardEnvironmentWrapper)newEnv).setExternal(true);
         
         if (facade != null) {
             // Change the facade delegate
