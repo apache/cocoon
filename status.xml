@@ -431,6 +431,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="30043" due-to="Micah Dubinko" due-to-email="mdubinko@snapbridge.com">
+     xml2html.xslt does not work on IE.
+   </action>
    <action dev="RG" type="fix" fixes-bug="32417">
      Portal: attributes "javax.portlet.request" and "javax.portlet.response" were not set for JSR-168
      portlets running in the Cocoon webapp.
