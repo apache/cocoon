@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-30 20:40:01 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-05-04 19:02:43 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -32,13 +32,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getUri(objectModel))
+          (XSPRequestHelper.getURI(objectModel))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
     <!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getUri(objectModel, this.contentHandler);
+          XSPRequestHelper.getURI(objectModel, this.contentHandler);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>

@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-30 20:39:54 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-05-04 19:02:38 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -39,14 +39,14 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
-  public static void getUri(
+  public static void getRequestURI(
     Map objectModel,
     ContentHandler contentHandler
   )
     throws SAXException
   {
     Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
-    elementData(contentHandler, "uri", request.getRequestURI());
+    elementData(contentHandler, "request-uri", request.getRequestURI());
   }
 
   /**
@@ -54,12 +54,22 @@ public class XSPRequestHelper extends XSPObjectHelper {
    *
    * @param objectModel The Map objectModel
    */
-  public static String getUri(
+  public static String getURI(
     Map objectModel
   )
   {
     Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getRequestURI();
+  }
+
+  /**
+   * Outputs the sitemap uri associated with the given objectModel
+   *
+   * @param objectModel the Map objectModel
+   */
+  public static String getSitemapURI(Map objectModel) {
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getSitemapURI();
   }
 
   /**

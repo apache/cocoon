@@ -18,7 +18,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:07:02 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-05-04 19:02:48 $
  *
  */
 
@@ -595,6 +595,25 @@ public interface Request {
      */
 
     String getRequestURI();
+
+    /**
+     * <p>
+     * Returns the URI of the requested resource as interpreted by the sitemap.
+     * For example, if your webapp is mounted at "/webapp" and the HTTP request
+     * is for "/webapp/foo", this method returns "foo". Consequently, if the
+     * request is for "/webapp", this method returns an empty string.
+     * </p>
+     * <p>
+     * Note that if the request is mapped to a pipeline that contains
+     * aggregated content, and if this method is called in the context of
+     * one of the aggregated parts (e.g. a server page), this method will
+     * return the URI of the aggregated part, not the original requested URI.
+     * </p>
+     *
+     * @return a <code>String</code> containing the URL as mangled by the
+     *         sitemap
+     */
+    String getSitemapURI();
 
     /**
      *

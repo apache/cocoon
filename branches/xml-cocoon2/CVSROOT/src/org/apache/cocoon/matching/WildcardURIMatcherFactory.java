@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-30 14:17:30 $
+ * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-05-04 19:03:03 $
  */
 
 public class WildcardURIMatcherFactory extends AbstractLoggable implements CodeFactory {
@@ -52,7 +52,7 @@ public class WildcardURIMatcherFactory extends AbstractLoggable implements CodeF
     public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
         return "HashMap map = new HashMap();" +
-               "String uri = XSPRequestHelper.getUri(objectModel);" +
+               "String uri = XSPRequestHelper.getSitemapURI(objectModel);" +
                "if (uri.startsWith(\"/\")) uri = uri.substring(1);" +
                "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (map, uri, pattern)) {" +
                "return map;" +

@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-30 14:17:30 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-05-04 19:03:01 $
  */
 
 public class RegexpURIMatcherFactory extends AbstractLoggable implements CodeFactory {
@@ -90,7 +90,7 @@ public class RegexpURIMatcherFactory extends AbstractLoggable implements CodeFac
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("HashMap map = new HashMap ();")
-          .append("String uri = XSPRequestHelper.getUri(objectModel);")
+          .append("String uri = XSPRequestHelper.getSitemapURI(objectModel);")
           .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
           .append("if(pattern.match(uri)) {");
           /* Handle parenthesised subexpressions. XXX: could be faster if we count

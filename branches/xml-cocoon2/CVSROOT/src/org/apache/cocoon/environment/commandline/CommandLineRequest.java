@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.Session;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:07:12 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-05-04 19:02:52 $
  */
 
 /*
@@ -95,6 +95,10 @@ public class CommandLineRequest implements Request {
         if (contextPath != null) buffer.append(contextPath);
         if (pathInfo != null) buffer.append(pathInfo);
         return buffer.toString();
+    }
+    // FIXME
+    public String getSitemapURI() {
+        return "";
     }
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
