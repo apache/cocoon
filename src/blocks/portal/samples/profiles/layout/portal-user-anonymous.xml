@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite-layout name="row">
+    <item>
+        <composite-layout name="column">
+            <item>
+		        <coplet-layout name="coplet">
+		            <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
+		        </coplet-layout>
+            </item>
+            <item>
+		        <coplet-layout name="coplet">
+		            <coplet-instance-data>Login-1</coplet-instance-data>
+		        </coplet-layout>
+  	        </item>
+        </composite-layout>
+    </item>
+    <item>
+        <composite-layout name="column">
+            <item>
+                <coplet-layout name="coplet">
+                    <coplet-instance-data>Portal-Left-1</coplet-instance-data>
+                </coplet-layout>
+            </item>
+            <item>
+                <coplet-layout name="coplet">
+  	                <coplet-instance-data>Portal-Right-1</coplet-instance-data>
+                </coplet-layout>
+  	        </item>
+        </composite-layout>
+    </item>
+    <item>
+        <coplet-layout name="coplet">
+  	   	    <coplet-instance-data>Portal-Bottom-1</coplet-instance-data>
+        </coplet-layout>
+    </item>
+</composite-layout>

@@ -27,9 +27,11 @@
 			</tr>
 			<tr> 
 				<td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD" align="right">
-					<a href="logout" style="color:#4C6C8F;font-size:75%;">
-						Logout
-					</a>
+				    <xsl:if test="$user!='anonymous'">
+						<a href="logout" style="color:#4C6C8F;font-size:75%;">
+							Logout
+						</a>
+				    </xsl:if>
 				</td>
 			</tr>
 		</tbody>

@@ -72,7 +72,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: AbstractProfileManager.java,v 1.5 2003/12/17 15:03:27 cziegeler Exp $
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
@@ -194,12 +194,21 @@ public abstract class AbstractProfileManager
         
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#login()
+     */
     public void login() {
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#logout()
+     */
     public void logout() {
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#setEntryLayout(org.apache.cocoon.portal.layout.Layout)
+     */
     public void setEntryLayout(Layout object) {
         String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
@@ -213,6 +222,9 @@ public abstract class AbstractProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getEntryLayout()
+     */
     public Layout getEntryLayout() {
         String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;

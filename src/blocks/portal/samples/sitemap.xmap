@@ -132,8 +132,7 @@
       <map:mount check-reload="yes" src="coplets/" uri-prefix="coplets"/>
     </map:match>
 
-    <!-- Do an auto login as guest -->
-    <!--
+    <!-- Do an auto login as anonymous -->
     <map:act type="auth-loggedIn">
         <map:parameter name="handler" value="portalhandler"/> 
         <map:parameter name="application" value="portal"/> 
@@ -143,12 +142,11 @@
             <map:parameter name="handler" value="portalhandler"/>
             <map:parameter name="application" value="portal"/> 
     
-            <map:parameter name="parameter_name" value="guest"/>
-            <map:parameter name="parameter_password" value="guest"/>
+            <map:parameter name="parameter_name" value="anonymous"/>
+            <map:parameter name="parameter_password" value="anonymous"/>
          
         </map:act>
     </map:act>
-    -->
 
     <!-- Test pipeline for layout engine -->
     <map:match pattern="portal">
@@ -159,7 +157,9 @@
             <map:generate type="portal" label="content">
         	    <map:parameter name="portal-name" value="portal" />
             </map:generate>
-            <map:transform src="{global:skin}styles/portal-page.xsl"/>
+            <map:transform src="{global:skin}styles/portal-page.xsl">
+                <map:parameter name="user" value="{ID}"/>
+            </map:transform>
             <map:transform type="cinclude"/> 
             <map:transform type="encodeURL"/>
 <!--
@@ -195,44 +195,53 @@
         </map:act>
     </map:match>
 
-    <!-- authentication stuff -->
-
-    <map:match pattern="login">
-        <map:act type="auth-loggedIn">
-            <map:parameter name="handler" value="portalhandler"/> 
-            <map:parameter name="application" value="portal"/> 
-
-            <map:act type="portal-login">
-        	    <map:parameter name="portal-name" value="portal"/>
-            </map:act>
-                        
-            <map:redirect-to uri="portal"/>
-        </map:act>
-        <map:generate src="resources/login.xml"/>
-        <map:transform src="{global:skin}styles/login-html.xsl">
-            <map:parameter name="resource" value="{request-param:resource}"/>
-        </map:transform>
-        <map:transform src="{global:skin}styles/portal-page.xsl"/>
-        <map:transform type="encodeURL"/>
-        <map:serialize/>
-    </map:match>
-
+    <!-- Authenticate a user -->
     <map:match pattern="auth">
+        <!-- Check if we are logged in:
+             - if we are anonymous, then logout
+             - if we are any other use, redirect to loggedin
+        -->
         <map:act type="auth-loggedIn">
             <map:parameter name="handler" value="portalhandler"/> 
-            <map:redirect-to uri="loggedin"/>
+            
+	        <map:act type="auth-protect">
+	            <map:parameter name="handler" value="portalhandler"/> 
+	            <map:parameter name="application" value="portal"/> 
+
+		    	<map:select type="parameter" >
+		    		<map:parameter name="parameter-selector-test" value="{ID}"/>
+		    		<map:when test="anonymous">
+		    		    <map:act type="auth-logout">
+	                        <map:parameter name="handler" value="portalhandler"/> 
+		    		    </map:act>
+		    		</map:when>
+		    		<map:otherwise>
+	                    <map:redirect-to uri="loggedin"/>
+		    		</map:otherwise>
+		    	</map:select>
+	        </map:act>
         </map:act>
+        
+        <!-- Start the authentication process -->
         <map:act type="auth-login">
             <map:parameter name="handler" value="portalhandler"/>
             <map:parameter name="application" value="portal"/> 
             <map:parameter name="parameter_name" value="{request-param:name}"/>
             <map:parameter name="parameter_password" value="{request-param:password}"/>
 
+            <!-- Authentication succeeded -->
+            <map:act type="portal-login">
+        	    <map:parameter name="portal-name" value="portal"/>
+            </map:act>
+
             <map:redirect-to uri="{request-param:resource}"/>
 
         </map:act>
+        <!-- Authentication failed -->
         <map:generate src="resources/login-error.xml"/>
-        <map:transform src="{global:skin}styles/portal-page.xsl"/>
+        <map:transform src="{global:skin}styles/portal-page.xsl">
+            <map:parameter name="user" value="anonymous"/>
+        </map:transform>
         <map:transform type="encodeURL"/>
         <map:serialize/>
     </map:match>
