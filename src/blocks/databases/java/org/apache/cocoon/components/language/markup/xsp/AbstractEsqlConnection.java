@@ -25,7 +25,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.9 2004/06/04 07:44:39 tcurdt Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -150,6 +150,7 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             else if (database.indexOf("hsql") > -1 ||
                      database.indexOf("interbase") > -1 ||
                      database.indexOf("access") > -1 ||
+                     database.indexOf("ingres") > -1 ||
                      database.indexOf("sap db") > -1 ||
                      database.indexOf("firebird") > -1 ||
                      database.indexOf("informix-online") > -1 ||
