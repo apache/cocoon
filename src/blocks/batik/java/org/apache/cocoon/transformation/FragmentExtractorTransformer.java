@@ -81,12 +81,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-
 /**
  * The transformation half of the FragmentExtractor.
- * This transformer sieves an incoming stream of xml
- * and replaces fragments with an xlink locator pointing to the fragments.
- * <p>
+ *
+ * This transformer recieves an incoming stream of xml and replaces
+ * fragments with an fragment extractor locator pointing to the fragments.
+ *
  * The extracted fragments are identified by their element name and namespace URI.
  * The default is to extract SVG images ("svg" elements in namespace
  * "http://www.w3.org/2000/svg"), but this can be overriden in the configuration:
@@ -94,13 +94,19 @@ import org.xml.sax.helpers.AttributesImpl;
  *   &lt;extract-uri&gt;http://my/namespace/uri&lt;/extract-uri&gt;
  *   &lt;extract-element&gt;my-element&lt;/extract-element&gt;
  * </pre>
- * <p>
+ *
+ * Fragment extractor locator format is following:
+ * <pre>
+ *   &lt;fe:fragment xmlns:fe="http://apache.org/cocoon/fragmentextractor/2.0" fragment-id="..."/&gt;
+ * </pre>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.8 2003/11/24 19:31:55 joerg Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.9 2004/01/22 00:02:34 vgritsenko Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
+
+    public static final String FE_URI = "http://apache.org/cocoon/fragmentextractor/2.0";
 
     private static final String EXTRACT_URI_NAME = "extract-uri";
     private static final String EXTRACT_ELEMENT_NAME = "extract-element";
@@ -108,13 +114,11 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     private static final String EXTRACT_URI = "http://www.w3.org/2000/svg";
     private static final String EXTRACT_ELEMENT = "svg";
 
-    private static final String FE_URI = "http://apache.org/cocoon/fragmentextractor/2.0";
-
     private String extractURI;
     private String extractElement;
 
     /** The ServiceManager instance */
-    protected ServiceManager manager = null;
+    protected ServiceManager manager;
 
     private XMLSerializer serializer;
 
@@ -138,16 +142,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer
         }
     }
 
-    /** Setup the transformer. */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
-        extractLevel = 0;
-        fragmentID = 0;
-        prefixMap = new HashMap();
-
-        this.requestURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-    }
-
     /**
      * Set the current <code>ServiceManager</code> instance used by this
      * <code>Serviceable</code>.
@@ -157,21 +151,34 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     }
 
     /**
-     * Release all resources.
-     */
-    public void dispose() {
-        this.manager = null;
-    }
-
-    /**
      * Recycle this component
      */
     public void recycle() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             this.manager.release(serializer);
             this.serializer = null;
         }
         super.recycle();        
+    }
+
+    /**
+     * Release all resources.
+     */
+    public void dispose() {
+        recycle();
+        this.manager = null;
+    }
+
+    /**
+     * Setup the transformer.
+     */
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
+        extractLevel = 0;
+        fragmentID = 0;
+        prefixMap = new HashMap();
+
+        this.requestURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
     }
 
     /**
@@ -195,20 +202,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     }
 
     /**
-     * Receive notification of the beginning of a document.
-     */
-    public void startDocument() throws SAXException {
-        super.startDocument();
-    }
-
-    /**
-     * Receive notification of the end of a document.
-     */
-    public void endDocument() throws SAXException {
-        super.endDocument();
-    }
-
-    /**
      * Begin the scope of a prefix-URI Namespace mapping.
      *
      * @param prefix The Namespace prefix being declared.
@@ -217,10 +210,10 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
         if (extractLevel == 0) {
-            super.startPrefixMapping(prefix,uri);
-            prefixMap.put(prefix,uri);
+            super.startPrefixMapping(prefix, uri);
+            prefixMap.put(prefix, uri);
         } else {
-            this.serializer.startPrefixMapping(prefix,uri);
+            this.serializer.startPrefixMapping(prefix, uri);
         }
     }
 
@@ -257,7 +250,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
         if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
             extractLevel++;
             fragmentID++;
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("extractLevel now " + extractLevel + ".");
             }
 
@@ -281,9 +274,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
         }
 
         if (extractLevel == 0) {
-            super.startElement(uri,loc,raw,a);
+            super.startElement(uri, loc, raw, a);
         } else {
-            this.serializer.startElement(uri,loc,raw,a);
+            this.serializer.startElement(uri, loc, raw, a);
         }
     }
 
@@ -302,12 +295,12 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
         if (extractLevel == 0) {
-            super.endElement(uri,loc,raw);
+            super.endElement(uri, loc, raw);
         } else {
-            this.serializer.endElement(uri,loc,raw);
+            this.serializer.endElement(uri, loc, raw);
             if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
                 extractLevel--;
-                if (this.getLogger().isDebugEnabled()) {
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("extractLevel now " + extractLevel + ".");
                 }
 
@@ -337,7 +330,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
                         this.serializer = null;
                     }
 
-                    if (this.getLogger().isDebugEnabled()) {
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Stored document " + id + ".");
                     }
 
@@ -363,9 +356,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void characters(char c[], int start, int len)
     throws SAXException {
         if (extractLevel == 0) {
-            super.characters(c,start,len);
+            super.characters(c, start, len);
         } else {
-            this.serializer.characters(c,start,len);
+            this.serializer.characters(c, start, len);
         }
     }
 
@@ -379,9 +372,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void ignorableWhitespace(char c[], int start, int len)
     throws SAXException {
         if (extractLevel == 0) {
-            super.ignorableWhitespace(c,start,len);
+            super.ignorableWhitespace(c, start, len);
         } else {
-            this.serializer.ignorableWhitespace(c,start,len);
+            this.serializer.ignorableWhitespace(c, start, len);
         }
     }
 
@@ -395,9 +388,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void processingInstruction(String target, String data)
     throws SAXException {
         if (extractLevel == 0) {
-            super.processingInstruction(target,data);
+            super.processingInstruction(target, data);
         } else {
-            this.serializer.processingInstruction(target,data);
+            this.serializer.processingInstruction(target, data);
         }
     }
 
@@ -428,7 +421,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
         if (extractLevel == 0) {
-            super.startDTD(name,publicId,systemId);
+            super.startDTD(name, publicId, systemId);
         } else {
             throw new SAXException(
                 "Recieved startDTD after beginning fragment extraction process."
@@ -513,10 +506,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     public void comment(char ch[], int start, int len)
     throws SAXException {
         if (extractLevel == 0) {
-            super.comment(ch,start,len);
+            super.comment(ch, start, len);
         } else {
-            this.serializer.comment(ch,start,len);
+            this.serializer.comment(ch, start, len);
         }
     }
-
 }
