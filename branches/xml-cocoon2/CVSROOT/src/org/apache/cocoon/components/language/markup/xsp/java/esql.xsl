@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.49 2001-03-14 21:02:54 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.50 2001-03-21 18:51:11 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -207,7 +207,7 @@
                 try {
                   _esql_selector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
                 } catch (ComponentManagerException cme) {
-                  log.error("Could not look up the datasource component", cme);
+                  getLogger().error("Could not look up the datasource component", cme);
                 }
               }
             }
@@ -317,7 +317,7 @@
             _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
             _esql_connection.connection = _esql_connection.datasource.getConnection();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            log.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
+            getLogger().error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
             throw new RuntimeException("Could not get the datasource "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           }
         </xsl:when>

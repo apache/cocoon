@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-01-22 21:55:34 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-21 18:51:15 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -44,7 +44,7 @@
 
     import org.apache.avalon.*;
     import org.apache.avalon.util.*;
-    import org.apache.log.*;
+
     import org.apache.cocoon.*;
     import org.apache.cocoon.generation.*;
     import org.apache.cocoon.components.parser.*;

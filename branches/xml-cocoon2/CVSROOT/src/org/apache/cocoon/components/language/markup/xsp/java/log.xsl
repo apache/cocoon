@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:55:34 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-21 18:51:13 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -61,14 +61,14 @@
     </xsl:variable>
 
     <xsp:logic>
-      if (log == null) {
+      if (getLogger() == null) {
           try {
             Category logCategory = LogKit.createCategory(<xsl:value-of select="$name"/>,
                                          LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
 
-            log = new Logger(logCategory, log);
+            setLogger(new Logger(logCategory, log));
           } catch (Exception e) {
-            log.error("Could not create logger for \"" +
+            getLogger().error("Could not create logger for \"" +
                                <xsl:value-of select="$name"/> + "\".", e);
           }
       }
@@ -77,36 +77,36 @@
 
   <xsl:template match="log:debug">
     <xsp:logic>
-      if(log != null)
-        log.debug("<xsl:value-of select="."/>");
+      if(getLogger() != null)
+        getLogger().debug("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:info">
     <xsp:logic>
-      if(log != null)
-        log.info("<xsl:value-of select="."/>");
+      if(getLogger() != null)
+        getLogger().info("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:warn">
     <xsp:logic>
-      if(log != null)
-        log.warn("<xsl:value-of select="."/>");
+      if(getLogger() != null)
+        getLogger().warn("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:error">
     <xsp:logic>
-      if(log != null)
-        log.error("<xsl:value-of select="."/>");
+      if(getLogger() != null)
+        getLogger().error("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:fatal-error">
     <xsp:logic>
-      if(log != null)
-        log.fatalError("<xsl:value-of select="."/>");
+      if(getLogger() != null)
+        getLogger().fatalError("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
