@@ -1,6 +1,6 @@
 <xmap xpath="/sitemap/pipelines/pipeline"
     unless="match[@type='mount-table']"
-    insert-after="match[@pattern,'api')]" 
+    insert-after="match[contains(@pattern,'api')]" 
     replace-properties="true">
 
     <!--+
