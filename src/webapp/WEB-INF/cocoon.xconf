@@ -387,10 +387,10 @@
   <!--+
       | I18n Bundle Factory
       |
-	    | BundleFactory loads Bundles with i18n resources for the given locale.
-	    | Bundles are loaded from the 'catalogue_location'. Bundle base name is
-	    | 'catalogue_name' value.
-	    | If 'cache-at-startup' is true then BundleFactory preloads bundles.
+	  | BundleFactory loads Bundles with i18n resources for the given locale.
+	  | Bundles are loaded from the 'catalogue_location'. Bundle base name is
+	  | 'catalogue_name' value.
+	  | If 'cache-at-startup' is true then BundleFactory preloads bundles.
       +-->
   <i18n-bundles logger="core.i18n-bundles">
     <catalogue-name>messages</catalogue-name>
@@ -645,7 +645,7 @@
   </monitor>
 
   <!--+
-      | The Scheduler (???)
+      | The Thread Scheduler (used by the flow to invalidate continuations) 
       +-->
   <cornerstone-threadmanager logger="core.scheduler">
     <thread-group>
