@@ -91,12 +91,18 @@ public class ExpiresCachingProcessingPipeline
                 byte[] content = cachedResponse.getResponse();
 
                 if ( this.serializer == this.lastConsumer ) {
+                    if ( cachedResponse.getContentType() != null ) {
+                        environment.setContentType(cachedResponse.getContentType());
+                    } else {
+                        this.setMimeTypeForSerializer(environment);
+                    }
                     final OutputStream outputStream = environment.getOutputStream(0);
                     if (content.length > 0) {
                         environment.setContentLength(content.length);
                         outputStream.write(content);
                     }
                 } else {
+                    this.setMimeTypeForSerializer(environment);
                     this.xmlDeserializer.setConsumer( this.lastConsumer );
                     this.xmlDeserializer.deserialize( content );
                 }
@@ -109,6 +115,7 @@ public class ExpiresCachingProcessingPipeline
                     return super.processXMLPipeline( environment );
                 }
 
+                this.setMimeTypeForSerializer(environment);
                 byte[] cachedData;
                 if ( this.serializer == this.lastConsumer ) {
 
@@ -145,6 +152,7 @@ public class ExpiresCachingProcessingPipeline
                 if (this.cacheValidity != null) {
                     cachedResponse = new CachedResponse(this.cacheValidity,
                                                         cachedData);
+                    cachedResponse.setContentType(environment.getContentType());
                     this.cache.store(this.cacheKey, cachedResponse);
                 }
             }
@@ -287,6 +295,12 @@ public class ExpiresCachingProcessingPipeline
     throws ProcessingException {
         try {
             if (this.cachedResponse != null) {
+                if ( cachedResponse.getContentType() != null ) {
+                    environment.setContentType(cachedResponse.getContentType());
+                } else {
+                    this.setMimeTypeForReader(environment);
+                }
+
                 final byte[] content = cachedResponse.getResponse();
                 environment.setContentLength(content.length);
 
@@ -302,6 +316,7 @@ public class ExpiresCachingProcessingPipeline
 
                 byte[] cachedData;
 
+                this.setMimeTypeForReader(environment);
                 if (this.reader.shouldSetContentLength()) {
                     final OutputStream os = environment.getOutputStream(this.outputBufferSize);
 
@@ -330,6 +345,7 @@ public class ExpiresCachingProcessingPipeline
                 if (this.cacheValidity != null) {
                     cachedResponse = new CachedResponse(this.cacheValidity,
                                                         cachedData);
+                    cachedResponse.setContentType(environment.getContentType());
                     this.cache.store(this.cacheKey, cachedResponse);
                 }
             }
