@@ -83,7 +83,7 @@ import java.util.Map;
  * written in Javascript language
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JSGenerator.java,v 1.1 2003/03/09 00:08:54 pier Exp $
+ * @version CVS $Id: JSGenerator.java,v 1.2 2003/10/22 18:13:36 bloritsch Exp $
  */
 public class JSGenerator extends XSPGenerator
         implements Configurable, Initializable {
@@ -159,7 +159,7 @@ public class JSGenerator extends XSPGenerator
             throw new ProcessingException("Failed to compile script", compileError);
         }
 
-        // add enter/exit here, too 
+        // add enter/exit here, too
         Context.enter();
         try {
             global.put("objectModel", global, Context.toObject(this.objectModel, global));
@@ -194,7 +194,7 @@ public class JSGenerator extends XSPGenerator
         }
     }
 
-    public void recycle() {
+    public void reset() {
         global.delete("contentHandler");
 
         global.delete("objectModel");
@@ -204,7 +204,7 @@ public class JSGenerator extends XSPGenerator
         global.delete("resolver");
         global.delete("parameters");
 
-        super.recycle();
+        super.reset();
     }
 
     public void dispose() {

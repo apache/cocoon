@@ -50,23 +50,23 @@
 */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.generation.AbstractServerPage;
+import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.SAXException;
 
 /**
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: XSPGenerator.java,v 1.1 2003/03/09 00:08:55 pier Exp $
+ * @version CVS $Id: XSPGenerator.java,v 1.2 2003/10/22 18:13:36 bloritsch Exp $
  */
-public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Recyclable {
+public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Resettable {
     protected Context avalonContext = null;
 
     /** Contextualize this class */
@@ -80,8 +80,8 @@ public abstract class XSPGenerator extends AbstractServerPage implements Compile
      *
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
     }
 
     // XSP Helper methods accessible from the page
