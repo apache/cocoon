@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.86 2003/07/11 14:20:35 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.87 2003/07/11 14:29:15 gianugo Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,14 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="GR" type="add">
+   Added a WebDAV block, with an initial implementation of
+   a modifiable and traversable WebDAV source.
+  </action>
+  <action dev="GR" type="add">
+   Added a DirectoryGenerator implementation on scratchpad 
+   working on any Traversable Source.
+  </action>
   <action dev="CZ" type="add">
    Adding global request lifecycle component.
   </action>
