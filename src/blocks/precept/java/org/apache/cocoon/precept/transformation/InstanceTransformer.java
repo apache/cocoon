@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.precept;
+package org.apache.cocoon.precept.transformation;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -63,6 +63,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.precept.Constraint;
+import org.apache.cocoon.precept.Instance;
+import org.apache.cocoon.precept.InvalidXPathSyntaxException;
+import org.apache.cocoon.precept.NoSuchNodeException;
 import org.apache.cocoon.precept.acting.AbstractPreceptorAction;
 import org.apache.cocoon.transformation.AbstractTransformer;
 
@@ -75,10 +79,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
- * @version CVS $Id: InstanceTransformer.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
+ * @version CVS $Id: InstanceTransformer.java,v 1.1 2003/11/20 17:10:07 joerg Exp $
  */
 public class InstanceTransformer extends AbstractTransformer {
-    //implements Cacheable {
 
     public final static String NS = "http://www.dff.st/ns/desire/instance/1.0";
 
@@ -168,11 +171,9 @@ public class InstanceTransformer extends AbstractTransformer {
                     }
                 }
             }
-            else if (TAG_OUTPUT.equals(name) ||
-                    TAG_TEXTBOX.equals(name) ||
-                    TAG_PASSWORD.equals(name) ||
-                    TAG_SELECTBOOLEAN.equals(name) ||
-                    TAG_SELECTONE.equals(name)) {
+            else if (TAG_OUTPUT.equals(name) || TAG_TEXTBOX.equals(name) ||
+                     TAG_PASSWORD.equals(name) || TAG_SELECTBOOLEAN.equals(name) ||
+                     TAG_SELECTONE.equals(name)) {
                 String ref = attributes.getValue(TAG_COMMON_ATTR_REF);
                 String id = attributes.getValue(TAG_COMMON_ATTR_INSTANCE);
 
@@ -256,11 +257,9 @@ public class InstanceTransformer extends AbstractTransformer {
             }
             else if (TAG_INSTANCE.equals(name)) {
             }
-            else if (TAG_OUTPUT.equals(name) ||
-                    TAG_TEXTBOX.equals(name) ||
-                    TAG_PASSWORD.equals(name) ||
-                    TAG_SELECTBOOLEAN.equals(name) ||
-                    TAG_SELECTONE.equals(name)) {
+            else if (TAG_OUTPUT.equals(name) || TAG_TEXTBOX.equals(name) ||
+                     TAG_PASSWORD.equals(name) || TAG_SELECTBOOLEAN.equals(name) ||
+                     TAG_SELECTONE.equals(name)) {
                 super.endElement(uri, name, raw);
             }
             else if (TAG_SELECTMANY.equals(name)) {
@@ -307,5 +306,3 @@ public class InstanceTransformer extends AbstractTransformer {
     }
 
 }
-
-
