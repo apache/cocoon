@@ -48,7 +48,8 @@ import java.util.Collections;
  *
  * @version CVS $Id$
  */
-public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializable {
+public class SaxBuffer extends AbstractSAXFragment
+                       implements XMLConsumer, Recyclable, Serializable {
 
     /**
      * Stores list of {@link SaxBit} objects.
