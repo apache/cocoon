@@ -33,6 +33,7 @@ import java.io.PrintStream;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
+ * @deprecated Will be removed in 2.2
  */
 public class Pizza extends Javac {
 
