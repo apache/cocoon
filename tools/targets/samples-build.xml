@@ -44,7 +44,7 @@
         <exclude name="**/*.png"/>
         <!-- filtering breaks UTF-8 files -->
         <exclude name="i18n/**"/> 
-        <exclude name="hello-world/style/xsl/**"/>
+        <exclude name="hello-world/style/**"/>
       </fileset>
     </copy>
 
@@ -54,7 +54,7 @@
         <include name="**/*.gif"/>
         <include name="**/*.png"/>
         <include name="i18n/**"/>
-        <include name="hello-world/style/xsl/**"/>
+        <include name="hello-world/style/**"/>
       </fileset>
     </copy>
 
