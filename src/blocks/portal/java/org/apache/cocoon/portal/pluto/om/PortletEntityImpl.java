@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.pluto.om.common.Description;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.common.PreferenceSet;
@@ -33,7 +34,7 @@ import org.apache.pluto.om.window.PortletWindowList;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletEntityImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
 
@@ -95,7 +96,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntity#getPreferenceSet()
      */
     public PreferenceSet getPreferenceSet() {
-        return this.definition.getPreferenceSet();
+        return this.coplet.getPreferences();
     }
 
     /**
@@ -110,28 +111,28 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#reset()
      */
     public void reset() throws IOException {
-        // TODO Auto-generated method stub
+        // This method doesn't seem to be called by anything.
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#setId(java.lang.String)
      */
     public void setId(String id) {
-        // TODO Auto-generated method stub
+        // This method doesn't seem to be called by anything.
     }
 
-    /* (non-Javadoc)
+    /* (non-Javadoc) This method doesn't seem to be called by anything.
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#setPortletDefinition(org.apache.pluto.om.portlet.PortletDefinition)
      */
     public void setPortletDefinition(PortletDefinition portletDefinition) {
-        // TODO Auto-generated method stub
+        // This method doesn't seem to be called by anything
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#store()
      */
     public void store() throws IOException {
-        // TODO Auto-generated method stub
+        coplet.getProfileManager().saveUserCopletInstance(null);
     }
 
 }

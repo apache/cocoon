@@ -135,6 +135,7 @@ public class AuthenticationProfileManager
         Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
         while ( iter.hasNext() ) {
             CopletInstanceData cid = (CopletInstanceData) iter.next();
+            cid.setProfileManager(this);
             CopletAdapter adapter = null;
             try {
                 adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
@@ -146,47 +147,82 @@ public class AuthenticationProfileManager
         
         return layout;
     }
-    
-    public void saveUserProfiles(String layoutKey) {
-		ProfileLS adapter = null;
-		PortalService service = null;
-		try {
-			adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
-			service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            if ( layoutKey == null ) {
+
+    public void saveUserCopletInstance(String layoutKey) {
+        ProfileLS adapter = null;
+        PortalService service = null;
+        try {
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            if (layoutKey == null) {
                 layoutKey = service.getDefaultLayoutKey();
             }
-            
+
             RequestState state = this.getRequestState();
             UserHandler handler = state.getHandler();
 
-			HashMap parameters = new HashMap();
-			parameters.put("type", "user");
-            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
+            HashMap parameters = new HashMap();
+            parameters.put("type", "user");
+            parameters.put("config",
+                state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
             parameters.put("handler", handler);
             parameters.put("profiletype", "copletinstancedata");
 
-			Map key = this.buildKey(service, parameters, layoutKey, false);
-	
-			// save coplet instance data
-            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey));
-			adapter.saveProfile(key, parameters, profileManager);
+            Map key = this.buildKey(service, parameters, layoutKey, false);
 
-			// save coplet instance data
-			parameters.put("profiletype", "layout");
-            key = this.buildKey(service, parameters, layoutKey, false);
-			Layout layout = (Layout)service.getAttribute("Layout:" + layoutKey);
-			adapter.saveProfile(key, parameters, layout);
-            
-		} catch (Exception e) {
-			// TODO
-			throw new CascadingRuntimeException("Exception during save profile", e);
-		} finally {
-			this.manager.release(adapter);
-			this.manager.release(service);
-		}
+            // save coplet instance data
+            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager) service.getAttribute("CopletInstanceData:" +
+                layoutKey));
+            adapter.saveProfile(key, parameters, profileManager);
+        }
+        catch (Exception e) {
+            // TODO
+            throw new CascadingRuntimeException("Exception during save profile", e);
+        }
+        finally {
+            this.manager.release(adapter);
+            this.manager.release(service);
+        }
     }
-    
+
+    public void saveUserLayout(String layoutKey) {
+        ProfileLS adapter = null;
+        PortalService service = null;
+        try {
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            if (layoutKey == null) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
+
+            RequestState state = this.getRequestState();
+            UserHandler handler = state.getHandler();
+
+            HashMap parameters = new HashMap();
+            parameters.put("type", "user");
+            parameters.put("config",
+                state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
+            parameters.put("handler", handler);
+
+            Map key = this.buildKey(service, parameters, layoutKey, false);
+
+            // save layout data
+            parameters.put("profiletype", "layout");
+            key = this.buildKey(service, parameters, layoutKey, false);
+            Layout layout = (Layout) service.getAttribute("Layout:" + layoutKey);
+            adapter.saveProfile(key, parameters, layout);
+
+        }
+        catch (Exception e) {
+            // TODO
+            throw new CascadingRuntimeException("Exception during save profile", e);
+        }
+        finally {
+            this.manager.release(adapter);
+            this.manager.release(service);
+        }
+    }
+
 	/**
 	 * Gets a profile and applies possible user and role deltas to it.
 	 */
@@ -331,6 +367,9 @@ public class AuthenticationProfileManager
 			}
 
 			return new Object[] {object, Boolean.TRUE};
+        } catch (SourceNotFoundException se) {
+            this.getLogger().warn("Unable to locate profile: " + se.getMessage());
+            throw se;
         } catch (ProfileException pe) {
             this.getLogger().error("Error loading profile: " + pe.getMessage(), pe);
             throw pe;
