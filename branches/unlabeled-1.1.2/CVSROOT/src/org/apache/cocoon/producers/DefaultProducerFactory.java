@@ -5,27 +5,28 @@
  * version 1.1,  a copy of wich has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.framework;
+package org.apache.cocoon.producers;
+
+import org.apache.cocoon.framework.AbstractFactory;
+import org.apache.cocoon.framework.Configurations;
+import org.apache.cocoon.framework.ConfigurationException;
 
 /**
- * The <code>Configurable</code> interface is implemented by those objects
- * whose operation depends on configuration parameters.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.3.4.1 $ $Date: 2000-02-07 15:35:38 $
- * @since Cocoon 2.0
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:40 $
  */
-public interface Configurable {
-    /**
-     * Set the appropriate configurations for this component.
-     *
-     * @param conf The configuration parameters.
-     * @exception ConfigurationException If this component cannot be configured
-     *                                   properly.
-     */
-    public void configure(Configurations conf)
-    throws ConfigurationException;
+public class DefaultProducerFactory extends AbstractFactory
+                                    implements ProducerFactory {
+    public Producer getProducer()
+    throws ConfigurationException {
+        return((Producer)this.createInstance());
+    }
+
+    public String getAssignableClassName() {
+        return("org.apache.cocoon.producers.Producer");
+    }
 }

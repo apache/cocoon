@@ -1,189 +1,257 @@
-/*-- $Id: Configurations.java,v 1.5 2000-02-02 07:42:21 balld Exp $ --
-
- ============================================================================
-                   The Apache Software License, Version 1.1
- ============================================================================
-
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
-
- Redistribution and use in source and binary forms, with or without modifica-
- tion, are permitted provided that the following conditions are met:
-
- 1. Redistributions of  source code must  retain the above copyright  notice,
-    this list of conditions and the following disclaimer.
-
- 2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
-
- 3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:  "This product includes  software
-    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
-    Alternately, this  acknowledgment may  appear in the software itself,  if
-    and wherever such third-party acknowledgments normally appear.
-
- 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
-    endorse  or promote  products derived  from this  software without  prior
-    written permission. For written permission, please contact
-    apache@apache.org.
-
- 5. Products  derived from this software may not  be called "Apache", nor may
-    "Apache" appear  in their name,  without prior written permission  of the
-    Apache Software Foundation.
-
- THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
- APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
- INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
- DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
- OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
- ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
- (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
- THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
-
- */
+/*****************************************************************************
+ * Copyright (C) 1999 The Apache Software Foundation.   All rights reserved. *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1,  a copy of wich has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
 package org.apache.cocoon.framework;
 
-import java.util.*;
-import java.io.*;
+import java.io.PrintStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
- * This class encapsulates all the configurations needed by a Configurable
- * class to work.
+ * The <code>Configurations</code> object is a collection of parameters
+ * required by a <code>Configurable</code> object for proper operation.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-02-02 07:42:21 $
+ * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
+ *         Exoffice Technologies, INC.</a>
+ * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
+ *         Software Foundation</a>. All rights reserved.
+ * @version CVS $Revision: 1.5.2.1 $ $Date: 2000-02-07 15:35:38 $
+ * @since Cocoon 2.0
  */
-
 public class Configurations {
+    private Hashtable parameters=null;
 
-    protected String baseName;
-	protected Properties properties;
-
+    /**
+     * Create a new empty Configuration object.
+     */
     public Configurations() {
-		properties = new Properties();
+        super();
+        this.parameters=new Hashtable();
     }
 
     /**
-     * Create the class from a the file
+     * Set the value of a specified parameter.
+     * <br>
+     * If the specified value is null the parameter is removed.
+     *
+     * @return The previous value of the parameter or null.
      */
-    public Configurations(String file) throws Exception {
-        this(file, null);
+    public String setParameter(String name, String value) {
+        if (name==null) return(null);
+        if (value==null) return((String)this.parameters.remove(name));
+        return((String)this.parameters.put(name,value));
     }
 
     /**
-     * Create the class with given defaults and from the file
+     * Return an Enumeration view of all configuration parameter names.
      */
-    public Configurations(String file, Configurations defaults) throws Exception {
-		if (defaults != null) {
-        	properties = new Properties(defaults.properties);
-		} else {
-			properties = new Properties();
-		}
-        InputStream input = new FileInputStream(file);
-        properties.load(input);
-        input.close();
+    public Enumeration getParameterNames() {
+        return(this.parameters.keys());
+    }
+    
+    /**
+     * Check if the given parameter can be retrieved.
+     */
+    public boolean isParameter(String name) {
+        return(this.parameters.containsKey(name));
     }
 
     /**
-     * Create the class with given defaults.
+     * Retrieve the string value for a given parameter.
+     * <br>
+     * If the given parameter cannot be retrieved, null is returned.
      */
-    public Configurations(Configurations c) {
-		properties = new Properties(c.properties);
+    public String getParameter(String name) {
+        if(name==null) return(null);
+        return((String)this.parameters.get(name));
     }
 
     /**
-     * Set the configuration.
+     * Retrieve the string value for a given parameter.
+     * <br>
+     * If the given parameter cannot be retrieved, defaultValue is returned.
      */
-    public void set(String key, Object value) {
-        properties.put(key, value);
+    public String getParameter(String name, String defaultValue) {
+        String value=this.getParameter(name);
+        return(value==null ? defaultValue : value);
+    }
+    
+    /**
+     * Retrieve the int value for a given parameter.
+     *
+     * @exception ConfigurationException If the parameter was not found or its
+     *                                   value could not be parsed to int.
+     */
+    public int getParameterAsInteger(String name)
+    throws ConfigurationException {
+        String value=this.getParameter(name);
+        if (value==null)
+            throw new ConfigurationException("Parameter \""+name+
+                                             "\" was not found");
+        try {
+            if (value.startsWith("0x"))
+                return(Integer.parseInt(value.substring(2),16));
+            else if (value.startsWith("0o"))
+                return(Integer.parseInt(value.substring(2),8));
+            else if (value.startsWith("0b"))
+                return(Integer.parseInt(value.substring(2),2));
+            else return(Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            throw new ConfigurationException("Invalid integer value \""+value+
+                                             "\" for parameter \""+name+"\"");
+        }
+    }
+    
+    /**
+     * Retrieve the int value for a given parameter.
+     * <br>
+     * If the given parameter cannot be retrieved, or its value could not be
+     * parsed to int, defaultValue is returned.
+     */
+    public int getParameterAsInteger(String name, int defaultValue) {
+        try {
+            return(this.getParameterAsInteger(name));
+        } catch (ConfigurationException e) {
+            return(defaultValue);
+        }
+    }
+    
+    /**
+     * Retrieve the float value for a given parameter.
+     *
+     * @exception ConfigurationException If the parameter was not found or its
+     *                                   value could not be parsed to float.
+     */
+    public float getParameterAsFloat(String name)
+    throws ConfigurationException {
+        String value=this.getParameter(name);
+        if (value==null)
+            throw new ConfigurationException("Parameter \""+name+
+                                             "\" was not found");
+        try {
+            return(Float.parseFloat(value));
+        } catch (NumberFormatException e) {
+            throw new ConfigurationException("Invalid float value \""+value+
+                                             "\" for parameter \""+name+"\"");
+        }
+    }
+    
+    /**
+     * Retrieve the float value for a given parameter.
+     * <br>
+     * If the given parameter cannot be retrieved, or its value could not be
+     * parsed to float, defaultValue is returned.
+     */
+    public float getParameterAsFloat(String name, float defaultValue) {
+        try {
+            return(this.getParameterAsFloat(name));
+        } catch (ConfigurationException e) {
+            return(defaultValue);
+        }
+    }
+    
+    /**
+     * Retrieve the boolean value for a given parameter.
+     *
+     * @exception ConfigurationException If the parameter was not found or its
+     *                                   value could not be parsed to boolean.
+     */
+    public boolean getParameterAsBoolean(String name)
+    throws ConfigurationException {
+        String value=this.getParameter(name);
+        if (value==null)
+            throw new ConfigurationException("Parameter \""+name+
+                                             "\" was not found");
+        if (value.equalsIgnoreCase("TRUE")) return(true);
+        if (value.equalsIgnoreCase("FALSE")) return(false);
+        else throw new ConfigurationException("Invalid boolean value \""+value+
+                                              "\" for parameter \""+name+"\"");
     }
 
-	/**
-	 * The JavaModule interpreter is using this method. should it?
-	 */
-	public void put(String key, Object value) {
-		properties.put(key,value);
-	}
-
     /**
-     * Get the configuration.
+     * Retrieve the boolean value for a given parameter.
+     * <br>
+     * If the given parameter cannot be retrieved, or its value could not be
+     * parsed to boolean, defaultValue is returned.
      */
-    public Object get(String key) {
-        return properties.get(key);
+    public boolean getParameterAsBoolean(String name, boolean defaultValue) {
+        try {
+            return(this.getParameterAsBoolean(name));
+        } catch (ConfigurationException e) {
+            return(defaultValue);
+        }
+    }
+    
+    /**
+     * Get a new instance of this Configuration duplicating parameters one
+     * by one.
+     */
+    public Configurations duplicate() {
+        Configurations conf=new Configurations();
+        Enumeration e=this.getParameterNames();
+        while (e.hasMoreElements()) {
+            String name=(String)e.nextElement();
+            String value=this.getParameter(name);
+            conf.setParameter(new String(name),new String(value));
+        }
+        return(conf);
+    }
+    
+    /**
+     * Merge parameters from another Configuration object into this one.
+     *
+     * @return This Configurations instance.
+     */
+    public Configurations merge(Configurations conf) {
+        Enumeration e=conf.getParameterNames();
+        while (e.hasMoreElements()) {
+            String name=(String)e.nextElement();
+            String value=conf.getParameter(name);
+            this.setParameter(new String(name),new String(value));
+        }
+        return(this);
     }
 
     /**
-     * Get the configuration and use the given default value if not found.
+     * Dump these configuration (for debugging purposes).
      */
-    public Object get(String key, Object def) {
-        Object o = properties.get(key);
-        return (o == null) ? def : o;
-    }
-
-    /**
-     * Get the configuration, throw an exception if not present.
-     */
-    public Object getNotNull(String key) {
-        Object o = properties.get(key);
-        if (o == null) {
-            throw new RuntimeException("Cocoon configuration item '" + ((baseName == null) ? "" : baseName + "." + key) + "' is not set");
-        } else {
-            return o;
+    public void dump(PrintStream out) {
+        Enumeration e=this.getParameterNames();
+        out.println("# Dumping Configuration Parameters");
+        while (e.hasMoreElements()) {
+            String name=(String)e.nextElement();
+            out.println("\""+name+"\"=\""+this.getParameter(name)+"\"");
         }
     }
 
     /**
-     * Get a vector of configurations when the syntax is incremental
+     * Create a Configuration object from a DOM NodeList.
+     * <br>
+     * This method searches in a NodeList for elements like
+     * &lt;parameter name=&quot;parameter_name&quot;
+     *               value=&quot;parameter_value&quot;/&gt;
+     * and creates a new Configuration object from them.
      */
-    public Vector getVector(String key) {
-        Vector v = new Vector();
-
-        for (int i = 0; ; i++) {
-            Object n = get(key + "." + i);
-            if (n == null) break;
-            v.addElement(n);
-        }
-
-        return v;
-    }
-
-    /**
-     * Create a subconfiguration starting from the base node.
-     */
-    public Configurations getConfigurations(String base) {
-        Configurations c = new Configurations();
-        c.setBasename((baseName == null) ? base : baseName + "." + base);
-        String prefix = base + ".";
-
-        Enumeration keys = properties.propertyNames();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
-
-            if (key.startsWith(prefix)) {
-                c.set(key.substring(prefix.length()), this.get(key));
-            } else if (key.equals(base)) {
-                c.set("", this.get(key));
+    public static Configurations createFromNodeList(NodeList list) {
+        Configurations conf=new Configurations();
+        if (list!=null) {
+            for (int x=0; x<list.getLength(); x++) {
+                if (list.item(x).getNodeType()!=Node.ELEMENT_NODE) continue;
+                Element elem=(Element)list.item(x);
+                if (!elem.getTagName().equals("parameter")) continue;
+                String name=elem.getAttribute("name");
+                String value=elem.getAttribute("value");
+                if ((name==null)||(value==null)) continue;
+                conf.setParameter(name,value);
             }
         }
-
-        return c;
+        return(conf);
     }
-
-    public void setBasename(String baseName) {
-        this.baseName = baseName;
-    }
-
-	/**
-	 * Used by XSPProcessor, but this maybe should be getKeys()?
-	 */
-	public Enumeration keys() {
-		return properties.keys();
-	}
 }

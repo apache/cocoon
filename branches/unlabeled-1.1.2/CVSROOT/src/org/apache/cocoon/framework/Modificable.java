@@ -8,24 +8,24 @@
 package org.apache.cocoon.framework;
 
 /**
- * The <code>Configurable</code> interface is implemented by those objects
- * whose operation depends on configuration parameters.
+ * The <code>Modificable</code> interface is implemented by those objects whose
+ * behaviour changes over time.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.3.4.1 $ $Date: 2000-02-07 15:35:38 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:38 $
  * @since Cocoon 2.0
  */
-public interface Configurable {
+public interface Modificable {
     /**
-     * Set the appropriate configurations for this component.
+     * Check if a modification occourred since a specified date.
      *
-     * @param conf The configuration parameters.
-     * @exception ConfigurationException If this component cannot be configured
-     *                                   properly.
+     * @parame date The number of milliseconds since &quot;the epoch&quot;
+     *              (January 1, 1970 00:00:00 GMT), to check.
+     * @return If the a modification occourred since the specified date, this
+     *         method returns true, false otherwise.
      */
-    public void configure(Configurations conf)
-    throws ConfigurationException;
+    public boolean modifiedSince(long date);
 }

@@ -7,25 +7,34 @@
  *****************************************************************************/
 package org.apache.cocoon.framework;
 
+import org.apache.cocoon.Cocoon;
+
 /**
- * The <code>Configurable</code> interface is implemented by those objects
- * whose operation depends on configuration parameters.
+ * The <code>AbstractComponent</code> object is a basic implementation of the
+ * <code>Component</code> interface.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.3.4.1 $ $Date: 2000-02-07 15:35:38 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:38 $
  * @since Cocoon 2.0
  */
-public interface Configurable {
+public abstract class AbstractComponent {
+    /** The current cocoon instance */
+    private Cocoon cocoon=null;
+
     /**
-     * Set the appropriate configurations for this component.
-     *
-     * @param conf The configuration parameters.
-     * @exception ConfigurationException If this component cannot be configured
-     *                                   properly.
+     * Get the current Cocoon instance.
      */
-    public void configure(Configurations conf)
-    throws ConfigurationException;
+    public Cocoon getCocoonInstance() {
+        return(this.cocoon);
+    }
+
+    /**
+     * Set the current Cocoon instance.
+     */
+    public void setCocoonInstance(Cocoon cocoon) {
+        this.cocoon=cocoon;
+    }
 }

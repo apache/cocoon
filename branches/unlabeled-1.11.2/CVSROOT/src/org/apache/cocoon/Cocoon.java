@@ -1,256 +1,359 @@
-/*-- $Id: Cocoon.java,v 1.11 2000-01-27 11:50:12 stefano Exp $ -- 
-
- ============================================================================
-                   The Apache Software License, Version 1.1
- ============================================================================
- 
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
- 
- Redistribution and use in source and binary forms, with or without modifica-
- tion, are permitted provided that the following conditions are met:
- 
- 1. Redistributions of  source code must  retain the above copyright  notice,
-    this list of conditions and the following disclaimer.
- 
- 2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
- 
- 3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:  "This product includes  software
-    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
-    Alternately, this  acknowledgment may  appear in the software itself,  if
-    and wherever such third-party acknowledgments normally appear.
- 
- 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
-    endorse  or promote  products derived  from this  software without  prior
-    written permission. For written permission, please contact
-    apache@apache.org.
- 
- 5. Products  derived from this software may not  be called "Apache", nor may
-    "Apache" appear  in their name,  without prior written permission  of the
-    Apache Software Foundation.
- 
- THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
- APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
- INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
- DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
- OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
- ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
- (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
- THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
- This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
- Software Foundation, please see <http://www.apache.org/>.
- 
- */
+/*****************************************************************************
+ * Copyright (C) 1999 The Apache Software Foundation.   All rights reserved. *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1,  a copy of wich has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
 package org.apache.cocoon;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.apache.cocoon.framework.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Hashtable;
+import org.apache.cocoon.framework.Configurable;
+import org.apache.cocoon.framework.Configurations;
+import org.apache.cocoon.framework.ConfigurationException;
+import org.apache.cocoon.framework.Modificable;
+import org.apache.cocoon.parsers.ParserFactory;
+import org.apache.cocoon.dom.DocumentFactory;
+import org.apache.cocoon.dom.TreeGenerator;
+import org.apache.cocoon.producers.Producer;
+import org.apache.cocoon.producers.ProducerFactory;
+import org.apache.cocoon.filters.Filter;
+import org.apache.cocoon.filters.FilterFactory;
+import org.apache.cocoon.serializers.Serializer;
+import org.apache.cocoon.serializers.SerializerFactory;
+import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.sitemap.SitemapFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
- * The Cocoon Publishing Framework.
+ * The main <b>Cocoon 2.0</b> class.
+ * <br>
+ * After instantiation, the first method to call is <code>configure(...)</code>
+ * wich, deriving parameters from a <code>Configurations</code> object, creates
+ * all producer, filter and serializer factories.
+ * <br>
+ * This class implements the <code>Modificable</code> interface, and the
+ * <code>isModifiedSince(...)</code> method will return true if the
+ * configuration file changed since the date specified.
  *
- * This servlet implements an XML/XSL server side publishing framework to
- * separate different knowledge contexts in different processing layers.
- *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-01-27 11:50:12 $
+ * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>,
+ *         Exoffice Technologies, INC.</a>
+ * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
+ *         Software Foundation</a>. All rights reserved.
+ * @version CVS $Revision: 1.11.2.1 $ $Date: 2000-02-07 15:35:34 $
+ * @since Cocoon 2.0
  */
-
-public class Cocoon extends HttpServlet implements Defaults {
-
-    Engine engine = null;
-    String message = null;
-    Exception exception = null;
-    Configurations confs = null;
-    String confsName = null;
-    String server = null;
-    String statusURL = null;
-    boolean errorsInternally = false;
-    boolean showStatus = false;
+public class Cocoon implements Configurable, Modificable {
+    /** The configuration File */
+    private File configurationFile=null;
+    /** The configuration File */
+    private Configurations configurations=null;
+    /** The current DocumentFactory */
+    private DocumentFactory documentFactory=null;
+    /** The current ParserFactory */
+    private ParserFactory parserFactory=null;
+    /** The ProducerFactory table */
+    private Hashtable producers=null;
+    /** The FilterFactory table */
+    private Hashtable filters=null;
+    /** The SerializerFactory table */
+    private Hashtable serializers=null;
+    /** The Sitemap */
+    private Sitemap sitemap=null;
 
     /**
-     * Returns the version signature of Cocoon
+     * Instantiate a new Cocoon object.
      */
-    public static String version() {
-        return NAME + " " + VERSION;
+    public Cocoon() {
+        super();
+        this.producers=new Hashtable();
+        this.filters=new Hashtable();
+        this.serializers=new Hashtable();
     }
 
     /**
-     * This method initializes the servlet.
+     * Check if the configuration file was modified.
      */
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+    public boolean modifiedSince(long since) {
+        long modified=this.configurationFile.lastModified();
+        if (modified<=since) return(false);
+        else return(true);
+    }
 
-        // Get the servlet environment
-        server = config.getServletContext().getServerInfo();
+    /**
+     * Configure this Cocoon instance.
+     * <br>
+     * Valid configuration parameters are:
+     * <ul>
+     *   <li><b>configurationFile</b> <i>(string)</i> The uri of the Cocoon
+     *       XML configuration file <i>(default=no default)</i>.
+     *   <li><b>rootPath</b> <i>(string)</i> The root path for Cocoon operation
+     *       <i>(default=directory or configurationFile)</i>.
+     *   <li><b>defaultParserFactory</b> <i>(string)</i> The full class name
+     *       of the default ParserFactory.
+     *      <i>(default=org.apache.cocoon.parsers.XercesFactory)</i>.
+     *   <li><b>defaultDocumentFactory</b> <i>(string)</i> The full class name
+     *       of the default DocumentFactory.
+     *      <i>(default=org.apache.cocoon.parsers.XercesFactory)</i>.
+     * </ul>
+     * Those and all other specified parameters are merged with those specified
+     * at root level in the configuration file and passed to all factories.
+     */
+    public void configure(Configurations conf)
+    throws ConfigurationException {
+        //////////////////////////////////////////////////////////////////////
+        // Check the supplied configuration file parameter
+        String c=conf.getParameter("configurationFile");
+        if (c==null) throw this.newException("Configuration file unspecified");
 
-        // Get the initialization argument
-        confsName = config.getInitParameter(INIT_ARG);
-
-        if (confsName == null) {
-            exception = null;
-            message = "<p>The servlet initialization argument <i>\"" + INIT_ARG + "\"</i> was not found. " +
-                "Please, make sure Cocoon is able to find its configurations or it won't be able to execute correctly.</p>" +
-                "<p>A template for such configurations may be found in the file \"/bin/cocoon.properties\" in the distribution.</p>";
-            return;
-        }
-
+        // Check if the configuration file can be accessed and is a file
         try {
-            // Create the configuration object
-            confs = new Configurations(confsName);
-            
-            // Save servlet configurations
-            showStatus = ((String) confs.get(SHOW_STATUS, "false")).toLowerCase().equals("true");
-            statusURL = (String) confs.get(STATUS_URL, STATUS_URL_DEFAULT);
-            errorsInternally = ((String) confs.get(ERROR_INTERNALLY, "false")).toLowerCase().equals("true");
-
-            // create the engine
-            engine = Engine.getInstance(confs, this.getServletConfig().getServletContext());
-        } catch (Exception e) {
-            exception = e;
-            message = "Publishing Engine could not be initialized.";
+            this.configurationFile=new File(c).getCanonicalFile();
+            c=this.configurationFile.getPath();
+        } catch (IOException e) {
+            throw this.newException("Cannot access config file '"+c+"'",e);
         }
+        if (!this.configurationFile.isFile())
+            throw this.newException("Configuration file '"+c+"' doesnt exist");
+
+        // In case the rootPath parameter was not specifed set it
+        if (conf.getParameter("rootPath")==null)
+            conf.setParameter("rootPath",this.configurationFile.getParent());
+
+        //////////////////////////////////////////////////////////////////////
+        // Check if the defaultParserFactory parameter was specified
+        String d=conf.getParameter("defaultDocumentFactory",
+                                   "org.apache.cocoon.parsers.XercesFactory");
+        try {
+            this.documentFactory=(DocumentFactory)this.getClassInstance(d);
+        } catch (ClassCastException e) {
+            throw this.newException("Class '"+d+"' doesn't implement "+
+                                    "'org.apache.cocoon.dom.DocumentFactory'");
+        }
+
+        //////////////////////////////////////////////////////////////////////
+        // Check if the defaultParserFactory property was specified
+        String p=conf.getParameter("defaultParserFactory",
+                                   "org.apache.cocoon.parsers.XercesFactory");
+        try {
+            this.parserFactory=(ParserFactory)this.getClassInstance(p);
+        } catch (ClassCastException e) {
+            throw this.newException("Class '"+p+"' doesn't implement "+
+                                    "'org.apache.cocoon.parser.ParserFactory'");
+        }
+
+        //////////////////////////////////////////////////////////////////////
+        // Load configuration file
+        TreeGenerator tg=new TreeGenerator(this.documentFactory);
+        try {
+            this.parserFactory.getXMLProducer(new InputSource(c)).produce(tg);
+        } catch (IOException e) {
+            throw this.newException("IOException catched parsing '"+c+"'", e);
+        } catch (SAXException e) {
+            throw this.newException("SAXException catched parsing '"+c+"'", e);
+        }
+
+        //////////////////////////////////////////////////////////////////////
+        // Do a prelimiar analisys of the configuration document
+        Document doc=tg.document();
+        Element elem=doc.getDocumentElement();
+        if ((!elem.getTagName().equals("cocoon"))||
+            (!elem.getAttribute("version").equals("2.0")))
+            throw this.newException("Configuration file '"+c+"' does not "+
+                                    "start with <cocoon version=\"2.0\">");
+        // Setup preliminary configuration parameter found in document
+        NodeList l=elem.getChildNodes();
+        this.configurations=conf.merge(Configurations.createFromNodeList(l));
+
+        //////////////////////////////////////////////////////////////////////
+        // Setup the factories and the sitemap
+        boolean done=false;
+        for (int x=0; x<l.getLength(); x++) {
+            if (l.item(x).getNodeType()!=Node.ELEMENT_NODE) continue;
+            Element e=(Element)l.item(x);
+            if (e.getTagName().equals("sitemap"))
+                this.sitemap=new SitemapFactory(this,conf).build(e);
+            if (!e.getTagName().equals("configuration")) continue;
+            if (done)
+                throw this.newException("Multiple <configuration> tags found "+
+                                        "in configuration file '"+c+"'");
+            this.setupFactories(e);
+            done=true;
+        }
+
     }
 
     /**
-     * This method is called by the servlet engine to handle the request.
+     * Get the configured DocumentFactory.
      */
-    public void service(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    public DocumentFactory getDocumentFactory() {
+        return(this.documentFactory);
+    }
 
-        // if engine is null it means something went wrong during init()
-        if (engine == null) {
-            Frontend.error(response, message, exception);
-        } else {
-            // now check if the request is valid to avoid possible security
-            // holes using the servlet directly to access information or
-            // to bypass web server security restrictions.
-            if ((showStatus) && (request.getRequestURI().endsWith(statusURL))) {
-                // if the status is enabled and the request matches the status
-                // URL indicated in the properties, show the internal status
-                Frontend.status(response, getStatus(), engine.getStatus());
-            } else {
-                try {
-                    engine.handle(request, response);
-                } catch (FileNotFoundException e) {
-                    if (errorsInternally) {
-                        Frontend.error(response, "File not found.", e);
-                    } else {
-                        response.sendError(404, Utils.getStackTraceAsString(e));
-                    }
-                } catch (Throwable t) {
-                    if (errorsInternally) {
-                        Frontend.error(response, "Error found handling the request.", t);
-                    } else {
-                        response.sendError(500, Utils.getStackTraceAsString(t));
-                    }
-                }
+    /**
+     * Get the configured ParserFactory.
+     */
+    public ParserFactory getParserFactory() {
+        return(this.parserFactory);
+    }
+
+    /**
+     * Get the instance of a Producer specified by its name.
+     */
+    public Producer getProducer(String name)
+    throws ConfigurationException {
+        ProducerFactory f=(ProducerFactory)this.producers.get(name);
+        if(f==null) return(null);
+        Producer p=f.getProducer();
+        p.setCocoonInstance(this);        
+        return(p);
+    }
+
+    /**
+     * Get the instance of a Filter specified by its name.
+     */
+    public Filter getFilter(String name)
+    throws ConfigurationException {
+        FilterFactory f=(FilterFactory)this.filters.get(name);
+        if(f==null) return(null);
+        Filter x=f.getFilter();
+        x.setCocoonInstance(this);        
+        return(x);
+    }
+
+    /**
+     * Get the instance of a Serializer specified by its name.
+     */
+    public Serializer getSerializer(String name)
+    throws ConfigurationException {
+        SerializerFactory f=(SerializerFactory)this.serializers.get(name);
+        if(f==null) return(null);
+        Serializer s=f.getSerializer();
+        s.setCocoonInstance(this);        
+        return(s);
+    }
+
+    public boolean handle(Job job, OutputStream out)
+    throws IOException, SAXException {
+        return(this.sitemap.handle(job,out));
+    }
+
+    /** Create a new instance for a specified class */
+    private Object getClassInstance(String c)
+    throws ConfigurationException {
+        try {
+            return(Class.forName(c).newInstance());
+        } catch (ClassNotFoundException e) {
+            throw this.newException("Can't find class '"+c+"'");
+        } catch (IllegalAccessException e) {
+            throw this.newException("Can't access class '"+c+"'");
+        } catch (InstantiationException e) {
+            throw this.newException("Can't instantiate class '"+c+"'");
+        } catch (Exception e) {
+            throw this.newException("Error trying to load and/or instantiate '"+
+                                    c+"'");
+        }
+    }
+
+    /** Load a factory instance and configures it */
+    private Configurable configureFactory(String c, Configurations conf)
+    throws ConfigurationException {
+        try {
+            Configurable instance=(Configurable)this.getClassInstance(c);
+            instance.configure(conf);
+            return(instance);
+        } catch (ClassCastException e) {
+            throw this.newException("Class '"+c+"' doesn't implement "+
+                                    "'org.apache.cocoon.Configurable'");
+        }
+    }
+
+    /** Setup factories from a DOM Element */
+    private void setupFactories(Element elem)
+    throws ConfigurationException {
+        NodeList list=elem.getChildNodes();
+        for (int x=0; x<list.getLength(); x++) {
+            // Retrieve the element child of <configuration>
+            if (list.item(x).getNodeType()!=Node.ELEMENT_NODE) continue;
+            Element e=(Element)list.item(x);
+            // Get the name and the factory class
+            String type=e.getTagName();
+            String name=e.getAttribute("name");
+            String f=e.getAttribute("class");
+            // Prepare configurations
+            NodeList children=e.getChildNodes();
+            Configurations conf=Configurations.createFromNodeList(children);
+            conf.merge(this.configurations);
+            // Get the Configurable already configured
+            Configurable instance=this.configureFactory(f,conf);
+
+            ///////////////////////////////////////////////////////////////////
+            // Check if we were specified to instantiate a producer factory
+            if (type.equals("producerFactory")) try {
+                if (name==null)
+                    throw this.newException("No name specified for "+
+                                            "producerFactory '"+f+"'");
+                this.producers.put(name,(ProducerFactory)instance);
+            } catch (ClassCastException ex) {
+                throw this.newException("Factory '"+f+"' does not implement "+
+                              "'org.apache.cocoon.producers.ProducerFactory'");
+
+            ///////////////////////////////////////////////////////////////////
+            // Check if we were specified to instantiate a filter factory
+            } else if (type.equals("filterFactory")) try {
+                if (name==null)
+                    throw this.newException("No name specified for "+
+                                            "filterFactory '"+f+"'");
+                this.filters.put(name,(FilterFactory)instance);
+            } catch (ClassCastException ex) {
+                throw this.newException("Factory '"+f+"' does not implement "+
+                                "'org.apache.cocoon.producers.FilterFactory'");
+
+            ///////////////////////////////////////////////////////////////////
+            // Check if we were specified to instantiate a serializer factory
+            } else if (type.equals("serializerFactory")) try {
+                if (name==null)
+                    throw this.newException("No name specified for "+
+                                            "serializerFactory '"+f+"'");
+                this.serializers.put(name,(SerializerFactory)instance);
+            } catch (ClassCastException ex) {
+                throw this.newException("Factory '"+f+"' does not implement "+
+                            "'org.apache.cocoon.producers.SerializerFactory'");
+
+            ///////////////////////////////////////////////////////////////////
+            // Check if we were specified to instantiate a parser factory
+            } else if (type.equals("parserFactory")) try {
+                this.parserFactory=(ParserFactory)instance;
+            } catch (ClassCastException ex) {
+                throw this.newException("Factory '"+f+"' does not implement "+
+                                  "'org.apache.cocoon.parsers.ParserFactory'");
+
+            ///////////////////////////////////////////////////////////////////
+            // Check if we were specified to instantiate a document factory
+            } else if (type.equals("documentFactory")) try {
+                this.documentFactory=(DocumentFactory)instance;
+            } catch (ClassCastException ex) {
+                throw this.newException("Factory '"+f+"' does not implement "+
+                                    "'org.apache.cocoon.dom.DocumentFactory'");
             }
         }
     }
 
-    /**
-     * Method called to show the servlet status.
-     */
-    private Hashtable getStatus() {
-        Runtime jvm = Runtime.getRuntime();
-        Hashtable table = new Hashtable();
-        table.put("Servlet Engine", server);
-        table.put("Configurations", confsName);
-        table.put("Free Memory", new Long(jvm.freeMemory()));
-        table.put("Total Memory", new Long(jvm.totalMemory()));
-        return table;
+    /** Create a ConfigurationException */
+    private ConfigurationException newException(String msg) {
+        return(this.newException(msg,null));
     }
 
-    /**
-     * This method returns the Servlet information string.
-     */
-    public String getServletInfo() {
-        return version();
-    }
-    
-    /**
-     * The entry point for standalone usage of Cocoon.
-     *
-     * This part is a little hack to be able to process XML
-     * files from the command line. It's not, by no means, a 
-     * complete application and it's a dirty patch.
-     *
-     * If would be nice to have things like wildcards processing
-     * to be able to generate static sites from XML+XSL using
-     * cron processes and such. Plus the ability to look for 
-     * XSL PI to get the stylesheets from inside, plus the ability
-     * to print on file, to get URLS instead of files, etc, etc...
-     * 
-     * As you see, there's room for tons on work on this section.
-     */
-    public static void main(String[] argument) throws Exception {
-        
-        String properties = null;
-        String xml = null;
-        String xsl = null;
-        String out = null;
-        int i = 0;
-
-        if ((argument.length < 2) || (argument.length > 4)) {
-            usage();
-        }
-
-        if (argument[i].charAt(0) == '-') {
-            properties = getProperties(argument[++i]);
-            i++;
-        }
-        
-        xml = argument[i++];
-        out = argument[i];
-        
-        EngineWrapper engine = new EngineWrapper(new Configurations(properties));
-        engine.handle(new PrintWriter(new FileWriter(out), true), new File(xml));
-    }
-
-    private static void usage() {
-        System.err.println("Usage: java org.apache.cocoon.Cocoon [-p properties] Input Output");
-        System.err.println("\nOptions:");
-        System.err.println("  -p : indicates the property file");
-        System.err.println("\nNote: if the property file is not specified, Cocoon looks for a file named");
-        System.err.println("\"cocoon.properties\" in the current working directory, in the user directory");
-        System.err.println("and in the \"/usr/local/etc/\" directory before giving up.");
-        System.exit(1);
-    }
-
-    private static String getProperties(String file) throws Exception {
-                
-        File f;
-         
-        // look for the indicated file 
-        if (file != null) {
-            f = new File(file);
-            if (f.canRead()) return f.toString();
-        }
-        
-        // look in the current working directory
-        f = new File(PROPERTIES);
-        if (f.canRead()) return f.toString();
-
-        // then in the user directory
-        f = new File(System.getProperty("user.dir") + File.separator + PROPERTIES);
-        if (f.canRead()) return f.toString();
-
-        // finally in the /usr/local/etc/ directory (for Unix systems).
-        f = new File("/usr/local/etc/" + PROPERTIES);
-        if (f.canRead()) return f.toString();
-        
-        throw new Exception("The property file could not be found.");
+    /** Create a ConfigurationException */
+    private ConfigurationException newException(String msg, Exception exc) {
+        return(new ConfigurationException(msg,exc,this.getClass()));
     }
 }
