@@ -22,6 +22,7 @@ import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -46,7 +47,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.49 $ $Date: 2001-04-23 17:52:14 $
+ * @version CVS $Revision: 1.1.2.50 $ $Date: 2001-04-24 12:14:36 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable
     implements ProgramGenerator, Contextualizable, Composable, Configurable, ThreadSafe, Disposable {
@@ -79,7 +80,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable
     protected String rootPackage;
 
     /** Contextualize this class */
-    public void contextualize(Context context) {
+    public void contextualize(Context context) throws ContextException {
         if (this.workDir == null) {
             this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
             this.rootPath = (String) context.get(Constants.CONTEXT_ROOT_PATH);

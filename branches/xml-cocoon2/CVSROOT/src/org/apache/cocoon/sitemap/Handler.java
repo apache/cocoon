@@ -32,6 +32,7 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Context;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.Disposable;
@@ -42,7 +43,7 @@ import org.apache.avalon.logger.AbstractLoggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-23 19:06:45 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-24 12:14:46 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;
@@ -89,7 +90,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         this.conf = conf;
     }
 
-    public void contextualize (Context context) {
+    public void contextualize (Context context) throws ContextException {
         this.context = context;
     }
 

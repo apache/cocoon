@@ -21,7 +21,7 @@
   <map:transformers default="xslt">
    <map:transformer     name="xslt"      src="org.apache.cocoon.transformation.TraxTransformer">
     <compile-stylesheets map:value="true"/>
-    <use-store map:value="false"/>
+    <use-store map:value="true"/>
    </map:transformer>
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>

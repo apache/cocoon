@@ -23,6 +23,8 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 
+import org.apache.avalon.context.ContextException;
+
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  * It also creates a buffer by loading the whole servlet inside a ClassLoader.
@@ -32,7 +34,7 @@ import org.apache.cocoon.components.classloader.RepositoryClassLoader;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 15:20:51 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-24 12:14:44 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {
@@ -62,8 +64,13 @@ public class ParanoidCocoonServlet extends CocoonServlet {
      */
      protected String getClassPath(final ServletContext context)
      throws ServletException {
-        RepositoryClassLoader classloader =
-            (RepositoryClassLoader) this.appContext.get(Constants.CONTEXT_CLASS_LOADER);
+        RepositoryClassLoader classloader = null;
+        try {
+            classloader = (RepositoryClassLoader) this.appContext.get(Constants.CONTEXT_CLASS_LOADER);
+        } catch (ContextException e) {
+            log.debug("ContextException in getClassPath", e);
+        }
+
         StringBuffer buildClassPath = new StringBuffer();
         String classDirPath = getInitParameter("class-dir");
         String libDirPath = getInitParameter("lib-dir");

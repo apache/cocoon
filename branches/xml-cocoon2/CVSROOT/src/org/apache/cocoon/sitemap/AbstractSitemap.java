@@ -25,6 +25,7 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.Disposable;
 import org.apache.excalibur.component.DefaultComponentSelector;
@@ -46,7 +47,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-23 17:58:21 $
+ * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-04-24 12:14:45 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable, ThreadSafe {
     private Context context;
@@ -95,7 +96,7 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
         }
     }
 
-    public void contextualize(Context context) {
+    public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 

@@ -12,6 +12,7 @@ package org.apache.cocoon.components.language.programming;
 import java.io.File;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.component.Composable;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Context;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.cocoon.Constants;
@@ -24,7 +25,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-20 20:49:57 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-24 12:14:39 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */
@@ -55,7 +56,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
      * Set the global component manager
      * @param manager The global component manager
      */
-    public void contextualize(Context context) {
+    public void contextualize(Context context) throws ContextException {
         this.classpath = (String) context.get(Constants.CONTEXT_CLASSPATH);
     }
 

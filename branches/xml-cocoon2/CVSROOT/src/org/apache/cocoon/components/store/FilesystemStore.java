@@ -5,6 +5,7 @@ import java.util.Enumeration;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.context.Contextualizable;
@@ -24,7 +25,7 @@ public class FilesystemStore extends AbstractLoggable implements Contextualizabl
       this.setDirectory(new File(directory));
   }
 
-  public void contextualize(Context context) {
+  public void contextualize(Context context) throws ContextException {
       try {
           setDirectory((File) context.get(Constants.CONTEXT_WORK_DIR));
       } catch (Exception e) {

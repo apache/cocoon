@@ -22,6 +22,7 @@ import org.apache.avalon.context.Context;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Modifiable;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.SAXConfigurationHandler;
@@ -52,7 +53,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.75 $ $Date: 2001-04-20 20:49:42 $
+ * @version CVS $Revision: 1.4.2.76 $ $Date: 2001-04-24 12:14:35 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -94,7 +95,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         setSystemProperties();
     }
 
-    public void contextualize(Context context) {
+    public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = context;
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
@@ -138,7 +139,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     }
 
     /** Configure this <code>Cocoon</code> instance. */
-    public void configure() throws ConfigurationException {
+    public void configure() throws ConfigurationException, ContextException {
         Parser p = null;
         Configuration roleConfig = null;
 

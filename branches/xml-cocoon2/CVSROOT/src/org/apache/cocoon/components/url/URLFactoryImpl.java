@@ -19,6 +19,7 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.context.Context;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.logger.Loggable;
@@ -29,7 +30,7 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.7 2001-04-20 20:50:04 bloritsch Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.8 2001-04-24 12:14:42 dims Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
@@ -66,7 +67,13 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
         } catch (MalformedURLException mue) {
             getLogger().debug("Making URL a File relative to context root", mue);
 
-            String root = (String)context.get(Constants.CONTEXT_ROOT_PATH);
+            String root = null;
+            try {
+                root = (String)context.get(Constants.CONTEXT_ROOT_PATH);
+            } catch (ContextException e){
+                getLogger().error("ContextException in getURL",e);
+            }
+
             if (root != null) {
                 File file = new File(root, location);
                 if(file.exists())
@@ -89,7 +96,7 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
     /**
      * Get the context
      */
-    public void contextualize(Context context) {
+    public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = context;
         }

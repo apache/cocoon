@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.Constants;
@@ -18,7 +19,7 @@ import org.apache.cocoon.environment.Context;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ContextURLFactory.java,v 1.1.2.6 2001-04-20 20:50:04 bloritsch Exp $
+ * @version $Id: ContextURLFactory.java,v 1.1.2.7 2001-04-24 12:14:41 dims Exp $
  */
 public class ContextURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 
@@ -37,7 +38,12 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
      * @exception MalformedURLException If the location is malformed
      */
     public URL getURL(String location) throws MalformedURLException {
-        Context envContext = (Context)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        Context envContext = null;
+        try {
+            envContext = (Context)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        } catch (ContextException e){
+            getLogger().error("ContextException in getURL",e);
+        }
         if (envContext == null) {
             getLogger().warn("no environment-context in application context (making an absolute URL)");
             return new URL(location);
@@ -58,7 +64,7 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
     /**
      * Get the context
      */
-    public void contextualize(org.apache.avalon.context.Context context) {
+    public void contextualize(org.apache.avalon.context.Context context) throws ContextException {
         if (this.context == null) {
             this.context = context;
         }
