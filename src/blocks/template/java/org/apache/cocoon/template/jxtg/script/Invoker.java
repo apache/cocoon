@@ -18,11 +18,8 @@ package org.apache.cocoon.template.jxtg.script;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.expression.ExpressionContext;
-import org.apache.cocoon.environment.FlowObjectModelHelper;
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
@@ -33,11 +30,9 @@ import org.apache.cocoon.template.jxtg.expression.Subst;
 import org.apache.cocoon.template.jxtg.script.event.*;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,6 +57,8 @@ public class Invoker {
         consumer.setDocumentLocator(loc);
         while (ev != endEvent) {
             loc.setDocumentLocator(ev.getLocation());
+
+            // ContentHandler methods
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent) ev;
                 Iterator iter = text.getSubstitutions().iterator();
@@ -111,6 +108,8 @@ public class Invoker {
                     }
                     consumer.characters(chars, 0, chars.length);
                 }
+            } else if (ev instanceof EndDocument) {
+                consumer.endDocument();
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement) ev;
                 StartElement startElement = endElement.getStartElement();
@@ -128,165 +127,17 @@ public class Invoker {
                                        consumer.ignorableWhitespace(ch, offset, len);
                                    }
                                });
+            } else if (ev instanceof ProcessingInstruction) {
+                ProcessingInstruction pi = (ProcessingInstruction) ev;
+                consumer.processingInstruction(pi.getTarget(), pi.getData());
             } else if (ev instanceof SkippedEntity) {
                 SkippedEntity skippedEntity = (SkippedEntity) ev;
                 consumer.skippedEntity(skippedEntity.getName());
-            } else if (ev instanceof StartIf) {
-                StartIf startIf = (StartIf) ev;
-                Object val;
-                try {
-                    val = startIf.getTest().getValue(expressionContext);
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), ev.getLocation(), e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), ev.getLocation(),
-                                                new ErrorHolder(err));
+            } else if (ev instanceof StartDocument) {
+                if (((StartDocument) ev).getEndDocument() != null) {
+                    // if this isn't a document fragment
+                    consumer.startDocument();
                 }
-                boolean result = false;
-                if (val instanceof Boolean) {
-                    result = ((Boolean) val).booleanValue();
-                } else {
-                    result = (val != null);
-                }
-                if (!result) {
-                    ev = startIf.getEndInstruction().getNext();
-                    continue;
-                }
-            } else if (ev instanceof StartForEach) {
-                StartForEach startForEach = (StartForEach) ev;
-                final JXTExpression items = startForEach.getItems();
-                Iterator iter = null;
-                int begin, end, step;
-                String var, varStatus;
-                try {
-                    iter = items.getIterator(expressionContext);
-                    begin = startForEach.getBegin() == null
-                        ? 0
-                        : startForEach.getBegin().getIntValue(expressionContext);
-                    end = startForEach.getEnd() == null
-                        ? Integer.MAX_VALUE
-                        : startForEach.getEnd().getIntValue(expressionContext);
-                    step = startForEach.getStep() == null
-                        ? 1
-                        : startForEach.getStep().getIntValue(expressionContext);
-                    var = startForEach.getVar().getStringValue(expressionContext);
-                    varStatus =
-                        startForEach.getVarStatus().getStringValue(expressionContext);
-                } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.getLocation(), exc);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.getLocation(), new ErrorHolder(err));
-                }
-                ExpressionContext localExpressionContext =
-                    new ExpressionContext(expressionContext);
-                int i = 0;
-                // Move to the begin row
-                while (i < begin && iter.hasNext()) {
-                    iter.next();
-                    i++;
-                }
-                LoopTagStatus status = null;
-                if (varStatus != null) {
-                    status = new LoopTagStatus();
-                    status.setBegin(begin);
-                    status.setEnd(end);
-                    status.setStep(step);
-                    status.setFirst(true);
-                    localExpressionContext.put(varStatus, status);
-                }
-                int skipCounter, count = 1;
-                while (i <= end && iter.hasNext()) {
-                    Object value = iter.next();
-                    localExpressionContext.setContextBean(value);
-                    if (var != null) {
-                        localExpressionContext.put(var, value);
-                    }
-                    if (status != null) {
-                        status.setIndex(i);
-                        status.setCount(count);
-                        status.setFirst(i == begin);
-                        status.setCurrent(value);
-                        status.setLast((i == end || !iter.hasNext()));
-                    }
-                    execute(consumer, localExpressionContext, executionContext,
-                            macroCall, startForEach.getNext(),
-                            startForEach.getEndInstruction());
-                    // Skip rows
-                    skipCounter = step;
-                    while (--skipCounter > 0 && iter.hasNext()) {
-                        iter.next();
-                    }
-                    // Increase index
-                    i += step;
-                    count++;
-                }
-                ev = startForEach.getEndInstruction().getNext();
-                continue;
-            } else if (ev instanceof StartChoose) {
-                StartChoose startChoose = (StartChoose) ev;
-                StartWhen startWhen = startChoose.getFirstChoice();
-                while (startWhen != null) {
-                    Object val;
-                    try {
-                        val = startWhen.getTest().getValue(expressionContext);
-                    } catch (Exception e) {
-                        throw new SAXParseException(e.getMessage(), ev.getLocation(), e);
-                    }
-                    boolean result;
-                    if (val instanceof Boolean) {
-                        result = ((Boolean) val).booleanValue();
-                    } else {
-                        result = (val != null);
-                    }
-                    if (result) {
-                        execute(consumer, expressionContext, executionContext,
-                                macroCall, startWhen.getNext(),
-                                startWhen.getEndInstruction());
-                        break;
-                    }
-                    startWhen = startWhen.getNextChoice();
-                }
-                if (startWhen == null && startChoose.getOtherwise() != null) {
-                    execute(consumer, expressionContext, executionContext,
-                            macroCall, startChoose.getOtherwise().getNext(),
-                            startChoose.getOtherwise().getEndInstruction());
-                }
-                ev = startChoose.getEndInstruction().getNext();
-                continue;
-            } else if (ev instanceof StartSet) {
-                StartSet startSet = (StartSet) ev;
-                Object value = null;
-                String var = null;
-                try {
-                    if (startSet.getVar() != null) {
-                        var = startSet.getVar().getStringValue(expressionContext);
-                    }
-                    if (startSet.getValue() != null) {
-                        value = startSet.getValue().getNode(expressionContext);
-                    }
-                } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(), ev.getLocation(), exc);
-                }
-                if (value == null) {
-                    NodeList nodeList =
-                        toDOMNodeList("set", startSet,
-                                      expressionContext, executionContext,
-                                      macroCall);
-                    // JXPath doesn't handle NodeList, so convert it to an array
-                    int len = nodeList.getLength();
-                    Node[] nodeArr = new Node[len];
-                    for (int i = 0; i < len; i++) {
-                        nodeArr[i] = nodeList.item(i);
-                    }
-                    value = nodeArr;
-                }
-                if (var != null) {
-                    expressionContext.put(var, value);
-                }
-                ev = startSet.getEndInstruction().getNext();
-                continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement) ev;
                 StartDefine def = (StartDefine) executionContext
@@ -419,68 +270,12 @@ public class Invoker {
                 consumer.startElement(startElement.getNamespaceURI(),
                                       startElement.getLocalName(), startElement.getRaw(),
                                       attrs);
-            } else if (ev instanceof StartFormatNumber) {
-                StartFormatNumber startFormatNumber = (StartFormatNumber) ev;
-                try {
-                    String result = startFormatNumber.format(expressionContext);
-                    if (result != null) {
-                        char[] chars = result.toCharArray();
-                        consumer.characters(chars, 0, chars.length);
-                    }
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), ev.getLocation(), e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), ev.getLocation(),
-                                                new ErrorHolder(err));
-                }
-            } else if (ev instanceof StartFormatDate) {
-                StartFormatDate startFormatDate = (StartFormatDate) ev;
-                try {
-                    String result = startFormatDate.format(expressionContext);
-                    if (result != null) {
-                        char[] chars = result.toCharArray();
-                        consumer.characters(chars, 0, chars.length);
-                    }
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), ev
-                            .getLocation(), e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), ev
-                            .getLocation(), new ErrorHolder(err));
-                }
             } else if (ev instanceof StartPrefixMapping) {
                 StartPrefixMapping startPrefixMapping = (StartPrefixMapping) ev;
                 consumer.startPrefixMapping(startPrefixMapping.getPrefix(),
-                        startPrefixMapping.getUri());
-            } else if (ev instanceof StartComment) {
-                StartComment startJXComment = (StartComment) ev;
-                // Parse the body of the comment
-                NodeList nodeList =
-                    toDOMNodeList("comment", startJXComment,
-                                  expressionContext, executionContext,
-                                  macroCall);
-                // JXPath doesn't handle NodeList, so convert it to an array
-                int len = nodeList.getLength();
-                final StringBuffer buf = new StringBuffer();
-                Properties omit = XMLUtils.createPropertiesForXML(true);
-                for (int i = 0; i < len; i++) {
-                    try {
-                        String str = XMLUtils.serializeNode(nodeList.item(i),
-                                omit);
-                        buf.append(StringUtils.substringAfter(str, ">")); // cut
-                        // the
-                        // XML
-                        // header
-                    } catch (ProcessingException e) {
-                        throw new SAXParseException(e.getMessage(),
-                                                    startJXComment.getLocation(), e);
-                    }
-                }
-                char[] chars = new char[buf.length()];
-                buf.getChars(0, chars.length, chars, 0);
-                consumer.comment(chars, 0, chars.length);
-                ev = startJXComment.getEndInstruction().getNext();
-                continue;
+                                            startPrefixMapping.getUri());
+
+                // LexicalHandler methods
             } else if (ev instanceof EndCDATA) {
                 consumer.endCDATA();
             } else if (ev instanceof EndDTD) {
@@ -492,165 +287,16 @@ public class Invoker {
             } else if (ev instanceof StartDTD) {
                 StartDTD startDTD = (StartDTD) ev;
                 consumer.startDTD(startDTD.getName(), startDTD.getPublicId(),
-                        startDTD.getSystemId());
+                                  startDTD.getSystemId());
             } else if (ev instanceof StartEntity) {
                 consumer.startEntity(((StartEntity) ev).getName());
-            } else if (ev instanceof StartOut) {
-                StartOut startOut = (StartOut) ev;
-                Object val;
-                try {
-                    val = startOut.getCompiledExpression().getNode(expressionContext);
-                    if (val instanceof Node) {
-                        executeDOM(consumer, (Node) val);
-                    } else if (val instanceof NodeList) {
-                        NodeList nodeList = (NodeList) val;
-                        int len = nodeList.getLength();
-                        for (int i = 0; i < len; i++) {
-                            Node n = nodeList.item(i);
-                            executeDOM(consumer, n);
-                        }
-                    } else if (val instanceof Node[]) {
-                        Node[] nodeList = (Node[]) val;
-                        int len = nodeList.length;
-                        for (int i = 0; i < len; i++) {
-                            Node n = nodeList[i];
-                            executeDOM(consumer, n);
-                        }
-                    } else if (val instanceof XMLizable) {
-                        ((XMLizable) val)
-                                .toSAX(new IncludeXMLConsumer(consumer));
-                    } else {
-                        char[] ch = val == null ? ArrayUtils.EMPTY_CHAR_ARRAY
-                                : val.toString().toCharArray();
-                        consumer.characters(ch, 0, ch.length);
-                    }
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), ev
-                            .getLocation(), e);
-                }
-            } else if (ev instanceof StartTemplate) {
-                // EMPTY
-            } else if (ev instanceof StartEval) {
-                StartEval startEval = (StartEval) ev;
-                JXTExpression expr = startEval.getValue();
-                try {
-                    Object val = expr.getNode(expressionContext);
-                    if (!(val instanceof StartElement)) {
-                        throw new Exception(
-                                "macro invocation required instead of: " + val);
-                    }
-                    StartElement call = (StartElement) val;
-                    execute(consumer, expressionContext, executionContext,
-                            call, call.getNext(), call.getEndElement());
-                } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(), ev
-                            .getLocation(), exc);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), ev
-                            .getLocation(), new ErrorHolder(err));
-                }
-                ev = startEval.getEndInstruction().getNext();
+
+                // Instructions
+            } else if (ev instanceof StartInstruction) {
+                ev = ((StartInstruction)ev).execute(consumer,
+                                                    expressionContext, executionContext,
+                                                    macroCall, startEvent, endEvent);
                 continue;
-            } else if (ev instanceof StartEvalBody) {
-                StartEvalBody startEval = (StartEvalBody) ev;
-                try {
-                    execute(consumer, expressionContext, executionContext,
-                            null, macroCall.getNext(), macroCall.getEndElement());
-                } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.getLocation(), exc);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.getLocation(),
-                                                new ErrorHolder(err));
-                }
-                ev = startEval.getEndInstruction().getNext();
-                continue;
-            } else if (ev instanceof StartDefine) {
-                StartDefine startDefine = (StartDefine) ev;
-                executionContext.getDefinitions().put(startDefine.getQname(),
-                                                      startDefine);
-                ev = startDefine.getEndInstruction().getNext();
-                continue;
-            } else if (ev instanceof StartImport) {
-                StartImport startImport = (StartImport) ev;
-                String uri;
-                AttributeEvent e = startImport.getUri();
-                if (e instanceof CopyAttribute) {
-                    CopyAttribute copy = (CopyAttribute) e;
-                    uri = copy.getValue();
-                } else {
-                    StringBuffer buf = new StringBuffer();
-                    SubstituteAttribute substAttr = (SubstituteAttribute) e;
-                    Iterator i = substAttr.getSubstitutions().iterator();
-                    while (i.hasNext()) {
-                        Subst subst = (Subst) i.next();
-                        if (subst instanceof Literal) {
-                            Literal lit = (Literal) subst;
-                            buf.append(lit.getValue());
-                        } else if (subst instanceof JXTExpression) {
-                            JXTExpression expr = (JXTExpression) subst;
-                            Object val;
-                            try {
-                                val = expr.getValue(expressionContext);
-                            } catch (Exception exc) {
-                                throw new SAXParseException(exc.getMessage(),
-                                        ev.getLocation(), exc);
-                            } catch (Error err) {
-                                throw new SAXParseException(err.getMessage(),
-                                        ev.getLocation(), new ErrorHolder(err));
-                            }
-                            buf.append(val != null ? val.toString() : "");
-                        }
-                    }
-                    uri = buf.toString();
-                }
-                StartDocument doc;
-                try {
-                    doc = executionContext.getScriptManager().resolveTemplate(uri);
-                } catch (ProcessingException exc) {
-                    throw new SAXParseException(exc.getMessage(), ev
-                            .getLocation(), exc);
-                }
-                ExpressionContext selectExpressionContext = expressionContext;
-                if (startImport.getSelect() != null) {
-                    try {
-                        Object obj =
-                            startImport.getSelect().getValue(expressionContext);
-                        selectExpressionContext =
-                            new ExpressionContext(expressionContext);
-                        selectExpressionContext.setContextBean(obj);
-                        FlowObjectModelHelper.fillContext(obj, selectExpressionContext);
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                    ev.getLocation(), exc);
-                    } catch (Error err) {
-                        throw new SAXParseException(err.getMessage(),
-                                                    ev.getLocation(),
-                                                    new ErrorHolder(err));
-                    }
-                }
-                try {
-                    execute(consumer, expressionContext, executionContext,
-                            macroCall, doc.getNext(), doc.getEndDocument());
-                } catch (Exception exc) {
-                    throw new SAXParseException(
-                            "Exception occurred in imported template " + uri
-                                    + ": " + exc.getMessage(),
-                            ev.getLocation(), exc);
-                }
-                ev = startImport.getEndInstruction().getNext();
-                continue;
-            } else if (ev instanceof StartDocument) {
-                if (((StartDocument) ev).getEndDocument() != null) {
-                    // if this isn't a document fragment
-                    consumer.startDocument();
-                }
-            } else if (ev instanceof EndDocument) {
-                consumer.endDocument();
-            } else if (ev instanceof ProcessingInstruction) {
-                ProcessingInstruction pi = (ProcessingInstruction) ev;
-                consumer.processingInstruction(pi.getTarget(), pi.getData());
             }
             ev = ev.getNext();
         }
@@ -693,7 +339,7 @@ public class Invoker {
      * dump a DOM document, using an IncludeXMLConsumer to filter out start/end
      * document events
      */
-    private static void executeDOM(final XMLConsumer consumer, Node node)
+    public static void executeDOM(final XMLConsumer consumer, Node node)
             throws SAXException {
         IncludeXMLConsumer includer = new IncludeXMLConsumer(consumer);
         DOMStreamer streamer = new DOMStreamer(includer);
@@ -715,11 +361,11 @@ public class Invoker {
         }
     }
 
-    private static NodeList toDOMNodeList(String elementName,
-                                          StartInstruction si,
-                                          ExpressionContext expressionContext,
-                                          ExecutionContext executionContext,
-                                          StartElement macroCall)
+    public static NodeList toDOMNodeList(String elementName,
+                                         StartInstruction si,
+                                         ExpressionContext expressionContext,
+                                         ExecutionContext executionContext,
+                                         StartElement macroCall)
             throws SAXException {
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();

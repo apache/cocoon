@@ -18,7 +18,16 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.environment.FlowObjectModelHelper;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.expression.Literal;
+import org.apache.cocoon.template.jxtg.expression.Subst;
+import org.apache.cocoon.template.jxtg.script.Invoker;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -60,11 +69,68 @@ public class StartImport extends StartInstruction {
         this.select = select;
     }
 
-    public AttributeEvent getUri() {
-        return uri;
-    }
-
-    public JXTExpression getSelect() {
-        return select;
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        String uri;
+        AttributeEvent e = this.uri;
+        if (e instanceof CopyAttribute) {
+            CopyAttribute copy = (CopyAttribute) e;
+            uri = copy.getValue();
+        } else {
+            StringBuffer buf = new StringBuffer();
+            SubstituteAttribute substAttr = (SubstituteAttribute) e;
+            Iterator i = substAttr.getSubstitutions().iterator();
+            while (i.hasNext()) {
+                Subst subst = (Subst) i.next();
+                if (subst instanceof Literal) {
+                    Literal lit = (Literal) subst;
+                    buf.append(lit.getValue());
+                } else if (subst instanceof JXTExpression) {
+                    JXTExpression expr = (JXTExpression) subst;
+                    Object val;
+                    try {
+                        val = expr.getValue(expressionContext);
+                    } catch (Exception exc) {
+                        throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+                    } catch (Error err) {
+                        throw new SAXParseException(err.getMessage(),
+                                                    getLocation(), new ErrorHolder(err));
+                    }
+                    buf.append(val != null ? val.toString() : "");
+                }
+            }
+            uri = buf.toString();
+        }
+        StartDocument doc;
+        try {
+            doc = executionContext.getScriptManager().resolveTemplate(uri);
+        } catch (ProcessingException exc) {
+            throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+        }
+        ExpressionContext selectExpressionContext = expressionContext;
+        if (this.select != null) {
+            try {
+                Object obj = this.select.getValue(expressionContext);
+                selectExpressionContext = new ExpressionContext(expressionContext);
+                selectExpressionContext.setContextBean(obj);
+                FlowObjectModelHelper.fillContext(obj, selectExpressionContext);
+            } catch (Exception exc) {
+                throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+            } catch (Error err) {
+                throw new SAXParseException(err.getMessage(), getLocation(),
+                                            new ErrorHolder(err));
+            }
+        }
+        try {
+            Invoker.execute(consumer, expressionContext, executionContext,
+                            macroCall, doc.getNext(), doc.getEndDocument());
+        } catch (Exception exc) {
+            throw new SAXParseException(
+                                        "Exception occurred in imported template " + uri
+                                        + ": " + exc.getMessage(), getLocation(), exc);
+        }
+        return getEndInstruction().getNext();
     }
 }

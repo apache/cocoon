@@ -17,9 +17,15 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Invoker;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartEval extends StartInstruction {
     private final JXTExpression value;
@@ -33,7 +39,23 @@ public class StartEval extends StartInstruction {
         this.value = JXTExpression.compileExpr(select, "eval: \"select\":", getLocation());
     }
 
-    public JXTExpression getValue() {
-        return value;
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        try {
+            Object val = this.value.getNode(expressionContext);
+            if (!(val instanceof StartElement)) {
+                throw new Exception("macro invocation required instead of: " + val);
+            }
+            StartElement call = (StartElement) val;
+            Invoker.execute(consumer, expressionContext, executionContext,
+                            call, call.getNext(), call.getEndElement());
+        } catch (Exception exc) {
+            throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(), new ErrorHolder(err));
+        }
+        return getEndInstruction().getNext();
     }
 }
