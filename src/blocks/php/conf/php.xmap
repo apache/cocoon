@@ -2,5 +2,8 @@
 
 <xmap xpath="/sitemap/components/generators"
       unless="generator[@name='php']">
-    <map:generator name="php" src="org.apache.cocoon.generation.PhpGenerator" label="content,data"/>
+
+    <map:generator name="php"
+                   src="org.apache.cocoon.generation.PhpGenerator"
+                   label="content"/>
 </xmap>

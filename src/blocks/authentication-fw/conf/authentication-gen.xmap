@@ -5,5 +5,5 @@
 
     <map:generator name="auth-conf"
                    src="org.apache.cocoon.webapps.authentication.generation.ConfigurationGenerator"
-                   label="content,data"/>
+                   label="content"/>
 </xmap>

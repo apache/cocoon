@@ -5,8 +5,8 @@
 
     <map:generator name="portal"
                    src="org.apache.cocoon.webapps.portal.generation.PortalGenerator"
-                   label="content,data"/>
+                   label="content"/>
     <map:generator name="portal-conf"
                    src="org.apache.cocoon.webapps.portal.generation.ConfigurationGenerator"
-                   label="content,data"/>
+                   label="content"/>
 </xmap>

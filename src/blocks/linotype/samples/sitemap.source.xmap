@@ -9,27 +9,27 @@
   <map:generators default="file">
     <map:generator name="file" 
        src="org.apache.cocoon.generation.FileGenerator"
-       label="content,data" logger="sitemap.generator.file"  
+       label="content" logger="sitemap.generator.file"  
        pool-min="1" pool-grow="1" pool-max="8"  
     />
     <map:generator name="directory" 
        src="org.apache.cocoon.generation.DirectoryGenerator"
-       label="content,data" logger="sitemap.generator.file"  
+       label="content" logger="sitemap.generator.file"  
        pool-min="1" pool-grow="1" pool-max="8"  
     />    
     <map:generator name="traversable" 
        src="org.apache.cocoon.generation.TraversableGenerator"
-       label="content,data" logger="sitemap.generator.file"  
+       label="content" logger="sitemap.generator.file"  
        pool-min="1" pool-grow="1" pool-max="8"  
     />    
     <map:generator name="request" 
        src="org.apache.cocoon.generation.RequestGenerator"
-       label="data" logger="sitemap.generator.request" 
+       label="content" logger="sitemap.generator.request" 
        pool-min="1" pool-grow="1" pool-max="4"  
     />
     <map:generator name="jx"
        src="org.apache.cocoon.generation.JXTemplateGenerator"
-       label="content,data" logger="sitemap.generator.jx" 
+       label="content" logger="sitemap.generator.jx" 
        pool-min="1" pool-grow="1" pool-max="8"  
     />
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>

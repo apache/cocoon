@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- ========================= Components ================================ -->
@@ -29,7 +30,7 @@
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="pretty-content" from-label="data">
+  <map:view from-label="content" name="pretty-content">
     <map:transform src="context://stylesheets/system/xml2html.xsl"/>
     <map:serialize type="html"/>
   </map:view>

@@ -3,7 +3,7 @@
 <!--+
     | Batik block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.4 2003/06/10 23:58:42 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.5 2003/07/29 03:15:45 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -30,7 +30,7 @@
       <map:serialize type="xml"/>
     </map:view>
 
-    <map:view name="pretty-content" from-label="data">
+    <map:view from-label="content" name="pretty-content">
       <map:transform src="context://stylesheets/system/xml2html.xslt"/>
       <map:serialize type="html"/>
     </map:view>

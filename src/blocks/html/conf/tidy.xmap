@@ -2,7 +2,8 @@
 
 <xmap xpath="/sitemap/components/generators"
       unless="generator[@name='html']">
+
     <map:generator name="html"
                    src="org.apache.cocoon.generation.HTMLGenerator"
-                   label="content,data"/>
+                   label="content"/>
 </xmap>
