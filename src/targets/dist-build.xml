@@ -51,12 +51,12 @@
     <fixcrlf srcdir="${dist}" includes="antRun" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="**.bat" eol="crlf"/>
 
-    <zip zipfile="${dist.target}/${dist.name}.zip" 
+    <zip zipfile="${dist.target}/${dist.name}-src.zip" 
          basedir="${dist.root}" 
          includes="${dist.name}/**">
     </zip>
 
-    <tar tarfile="${dist.target}/${dist.name}.tar" 
+    <tar tarfile="${dist.target}/${dist.name}-src.tar" 
          longfile="gnu">
          <tarfileset dir="${dist.root}">
              <include name="${dist.name}/**"/>
@@ -70,15 +70,15 @@
              <include name="${dist.name}/tools/bin/antRun"/>
          </tarfileset>
     </tar>
-    <gzip zipfile="${dist.target}/${dist.name}.tar.gz" src="${dist.target}/${dist.name}.tar"/>
-    <delete file="${dist.target}/${dist.name}.tar"/>
+    <gzip zipfile="${dist.target}/${dist.name}-src.tar.gz" src="${dist.target}/${dist.name}-src.tar"/>
+    <delete file="${dist.target}/${dist.name}-src.tar"/>
   </target>
   
   <target name="clean-dist" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
     <delete dir="${build.root}"/>
     <delete dir="${tools.tasks.dest}"/>
     <delete dir="${tools.loader.dest}"/>
-    <delete file="${dist.target}/${dist.name}.tar.gz"/>
-    <delete file="${dist.target}/${dist.name}.zip"/>
+    <delete file="${dist.target}/${dist.name}-src.tar.gz"/>
+    <delete file="${dist.target}/${dist.name}-src.zip"/>
     <delete dir="${dist.root}"/>
   </target>  
