@@ -105,10 +105,10 @@
      <td>XSP</td>
      <td>"Processor"/"Producer"</td>
      <td>By default, yes; however, XSP pages can override this by putting
-      <code>&lt;xsp:cacheable/&gt;</code> within <code>&lt;xsp:structure&gt;
+      <code>&lt;util:cacheable/&gt;</code> within <code>&lt;xsp:structure&gt;
       </code> (see XSP documentation.)
      </td>
-     <td>Not applicable if xsp:cacheable tag is missing, since page will
+     <td>Not applicable if util:cacheable tag is missing, since page will
       never be cached. Otherwise, define the <code>public boolean hasChanged
       (Object context)</code> method to define cache invalidation behaviour.
       Always returning <code>false</code> will never invalidate, for example. 
@@ -179,7 +179,7 @@
     Since the root of the directory (?node=1) is requested so frequently, it
     makes sense to cache the transformed representation (HTML) of this 
     and other popular nodes. Assuming you are using
-    XSP, you can simply declare <code>&lt;xsp:cacheable/&gt;</code> and the
+    XSP, you can simply declare <code>&lt;util:cacheable/&gt;</code> and the
     following method:
    </p>
 

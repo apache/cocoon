@@ -72,6 +72,47 @@
     </xsp:page>
   </xsl:template>
 
+  <!-- Mark page as cacheable -->
+  <xsl:template match="xsp:structure/util:cacheable">
+    <xsp:logic>
+      public boolean isCacheable (HttpServletRequest request) {
+        return true;
+      }
+    </xsp:logic>
+  </xsl:template>
+
+  <!-- Multiline string (based on code by JQ)  - DOESN'T WORK YET!
+  <xsl:template match="util:string">
+    <xsl:choose>
+      <xsl:when test="contains(., '
+') or contains(.,
+'
+')">
+        <xsl:call-template name="get-nested-strings">
+          <xsl:with-param name="content" select="."/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="."/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="get-nested-strings">
+    <xsl:param name="content"/>
+      <xsl:variable name="first" select="substring-before($content, '
+')"/>
+      <xsl:variable name="rest" select="substring-after($content, '
+')"/>
+      <xsl:text>"</xsl:text><xsl:value-of select="$first"/><xsl:text>"</xsl:text>
+      <xsl:if test="$rest">
+        <xsl:text> + "\n" +
+</xsl:text>
+        <xsl:call-template name="get-nested-strings">
+          <xsl:with-param name="content" select="$rest"/>
+        </xsl:call-template>
+      </xsl:if>
+  </xsl:template>
+  -->
+
   <!-- Include URL contents as DOM -->
   <xsl:template match="util:include-uri">
     <xsl:variable name="href">

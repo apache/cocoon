@@ -713,6 +713,26 @@
         </p>
       </s2>
 
+      <s2 title="Cache Control">
+       <p>Also in the &lt;xsp:structure&gt; tag, a &lt;util:cacheable/&gt;
+        tag may be defined. This empty tag simply allows the page to be
+        cached. This should always be combined with a method declaration as
+        follows:</p>
+
+       <source>
+        &lt;xsp:logic&gt;
+          public boolean hasChanged (Object context) {
+            // context is a HttpServletRequest
+            return // whether the page has changed.
+          }
+        &lt;/xsp:logic&gt;
+       </source>
+
+       <p>Please read the guide to <connect href="caching.xml">Cocoon caching</connect>
+        for more information. See also the next section for details on 
+        declaring methods.</p>
+      </s2>
+
       <s2 title="Class-level logic">
         <p>
           In general, XSP class-level declarations (such as instance
