@@ -51,6 +51,7 @@
 package org.apache.cocoon.components.xpointer;
 
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -69,7 +70,7 @@ public class ShorthandPart implements PointerPart {
         this.shorthand = shorthand;
     }
 
-    public boolean process(XPointerContext xpointerContext) throws SAXException {
+    public boolean process(XPointerContext xpointerContext) throws SAXException, ResourceNotFoundException {
         Document document = xpointerContext.getDocument();
         Element element = document.getElementById(shorthand);
         if (element != null) {

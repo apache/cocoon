@@ -54,6 +54,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -70,7 +71,7 @@ public class XPointerPart implements PointerPart {
         this.expression = expression;
     }
 
-    public boolean process(XPointerContext xpointerContext) throws SAXException {
+    public boolean process(XPointerContext xpointerContext) throws SAXException, ResourceNotFoundException {
         Document document = xpointerContext.getDocument();
         ComponentManager manager = xpointerContext.getComponentManager();
         XPathProcessor xpathProcessor = null;

@@ -57,6 +57,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.xml.sax.SAXException;
 
 import java.util.HashMap;
@@ -90,10 +91,12 @@ public class XPointerContext implements PrefixResolver {
         prefixes.put("xml", "http://www.w3.org/XML/1998/namespace");
     }
 
-    public Document getDocument() throws SAXException {
+    public Document getDocument() throws SAXException, ResourceNotFoundException {
         if (document == null) {
             try {
                 document = SourceUtil.toDOM(source);
+            } catch (ResourceNotFoundException e) {
+                throw e;
             } catch (Exception e) {
                 throw new SAXException("Error during XPointer evaluation while trying to load " + source.getURI(), e);
             }
