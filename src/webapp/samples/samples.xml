@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.21 2003/08/01 09:41:23 reinhard Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.22 2003/08/10 11:42:47 reinhard Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -50,64 +50,34 @@
     that make use of it e.g. the Petstore, JXForms and Woody block
    </note>      
   </group>  
- 
-  <group name="Web Services and B2B">
-   <sample name="SOAP" href="soap/">
+
+  <group name="More core samples">
+   <sample href="modules/" name="The Power of Sitemap: Input Modules">
+    This example shows the usage of Input Modules in sitemap attribute expressions.
+   </sample>
+   <sample href="sources/" name="The Power of Sitemap: Sources">
+    This example shows the usage of sources in the sitemap.
+   </sample>    
+   <sample href="xsp/" name="Extensible Server Pages">
+     Extensible Server Pages.
+   </sample>   
+    <sample href="imagereader/" name="Imagereader">
+     ImageReader
+   </sample> 
+    <sample href="paginator/" name="Paginator">
+     Paginator
+   </sample> 
+   <sample href="soap/" name="SOAP">
      Cocoon ships with facilities for immediate connection to SOAP resources.
      These examples show you how to connect to any web service with a few
      lines of XML markup.
-   </sample>
-   <sample name="Order Page" href="stream/order" xlink:role="dynamic">
+   </sample> 
+   <note>
+   	 There is also an Axis block available that integrates Axis into Cocoon.
+   </note>   
+   <sample href="stream/order" name="B2B: Order Page" xlink:role="dynamic">
      An example of B2B processing.
-   </sample>
-  </group>
-  
-  <group name="The Power of Sitemap">
-   <sample name="Input Modules" href="modules/">
-    This example shows the usage of Input Modules in sitemap attribute expressions.
-   </sample>
-   <sample name="Sources" href="sources/">
-    This example shows the usage of sources in the sitemap.
-   </sample>
-  </group>
-  
-  <group name="Extensible Server Pages">
-   <sample name="XSP" href="xsp/">
-     Extensible Server Pages.
-   </sample>
-  </group>
-
-  <!-- FIXME: (RP) Do we rellay want this examples on our top samples page?
-  <group name="Web Applications">
-   <sample name="Protected Area" href="protected/login">
-     An example web-application built around db-authenticator,
-     form-validator, session-validator and session-invalidator
-     actions.
-   </sample>
-  </group>
-  -->
-
-  <!-- FIXME: (RP) Shouldn't be the paginator a block? -->
-  <group name="Paginator">
-    <sample name="List Pagination" href="paginator/list(1)">
-      Show the usage of the Paginator Transformer to paginate document based on items count limit.
-    </sample>
-    <sample name="Text Pagination" href="paginator/text(1)">
-      Show the usage of the Paginator Transformer to paginate document based on characters count limit.
-    </sample>
-  </group>
-
-  <!-- FIXME: (RP) Shouldn't be the image reader a block? -->  
-  <group name="ImageReader">
-    <sample name="Image" href="imagereader/image-0">
-      Image of original size
-    </sample>
-    <sample name="Image 250x250" href="imagereader/image-250">
-      Image scaled up to the size 250 x 250
-    </sample>
-    <sample name="Image 50x50" href="imagereader/image-50">
-      Image scaled down to the size 50 x 50
-    </sample>
+   </sample>   
   </group>
   
 <!-- 
