@@ -57,6 +57,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
 import org.apache.cocoon.components.renderer.RendererFactory;
@@ -80,7 +81,7 @@ import java.net.MalformedURLException;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.5 2003/05/06 23:39:16 vgritsenko Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.6 2004/01/19 09:27:26 antonio Exp $
  */
 public class FOPSerializer
 extends AbstractSerializer
@@ -119,7 +120,7 @@ implements Composable, Configurable, CacheableProcessingComponent {
     /**
      * This logger is used for FOP
      */
-    protected org.apache.avalon.framework.logger.Logger logger;
+    protected Logger logger;
 
     /**
      * It is used to make sure that default Options loaded only once.
@@ -197,7 +198,7 @@ implements Composable, Configurable, CacheableProcessingComponent {
                 getLogger().warn("Cannot load configuration from " + configUrl);
                 throw new ConfigurationException("Cannot load configuration from " + configUrl, e);
             } finally {
-                if ( null != resolver ) {
+                if (resolver != null) {
                     resolver.release(configSource);
                     manager.release(resolver);
                 }
@@ -258,7 +259,7 @@ implements Composable, Configurable, CacheableProcessingComponent {
                 this.renderer = (Renderer)ClassUtils.newInstance(this.rendererName);
             } catch (Exception e) {
                 if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("Cannot load  class " + this.rendererName, e);
+                    getLogger().warn("Cannot load class " + this.rendererName, e);
                 }
                 throw new CascadingRuntimeException("Cannot load class " + this.rendererName, e);
             }
