@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
@@ -82,6 +83,24 @@ public class PortletURLProviderImpl
                                   ServiceManager manager) {
         this.manager = manager;
         this.portletWindow = portletWindow;
+    }
+
+    /**
+     * Copy constructor
+     */
+    private PortletURLProviderImpl(PortletURLProviderImpl original) {
+        this.manager = original.manager;
+        this.portletWindow = original.portletWindow;
+        this.mode = original.mode;
+        this.state = original.state;
+        this.action = original.action;
+        this.secure = original.secure;
+        this.clearParameters = original.clearParameters;
+        this.generatedURL = original.generatedURL;
+        if (original.parameters != null) {
+            this.parameters = new HashMap(original.parameters.size());
+            this.parameters.putAll(original.parameters);
+        }
     }
 
     /**
@@ -163,11 +182,15 @@ public class PortletURLProviderImpl
         }
         return this.parameters;
     }
-    
+
+    public String toString() {
+        return new PortletURLProviderImpl(this).getURL();
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-    public String toString() {
+    private String getURL() {
         if ( this.generatedURL == null ) {
             final PortletWindowImpl impl = (PortletWindowImpl)this.portletWindow;
             final CopletLayout cl = impl.getLayout();
