@@ -171,7 +171,7 @@
 
   <map:component-configurations>
     <global-variables>
-      <home>/samples/linotype/</home>
+      <home>/samples/blocks/linotype/</home>
       <count>3</count>
     </global-variables>
   </map:component-configurations>
@@ -188,7 +188,7 @@
   
 <!-- ========================= Private Resources =========================== -->
 
-  <map:pipeline internal-only="true">
+  <map:pipeline>
 
     <map:match pattern="news">
      <map:generate src="cocoon:/news.xml"/>
