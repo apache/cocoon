@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -31,6 +32,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.log.LogTarget;
 
@@ -134,6 +136,14 @@ public class Core
         }
     }
     
+    /**
+     * Return the current object model
+     * @return The object model.
+     */
+    public Map getCurrentObjectModel() {
+        return ContextHelper.getObjectModel(this.context);
+    }
+
     public File getWorkDirectory() {
         try {
             return (File)this.context.get(Constants.CONTEXT_WORK_DIR);

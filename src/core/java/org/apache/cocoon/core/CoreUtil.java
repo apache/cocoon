@@ -19,6 +19,7 @@ package org.apache.cocoon.core;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -27,8 +28,10 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.log.LoggingHelper;
 
 /**
  *
@@ -139,12 +142,11 @@ public class CoreUtil {
             }
         }
 
-        //try {
-            // TODO - ContextHelper is not in core :(
-            //appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextURL));            
-        //} catch (MalformedURLException ignore) {
+        try {
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextURL));            
+        } catch (MalformedURLException ignore) {
             // we simply ignore this
-        //}
+        }
 
         // Init logger
         initLogger();
@@ -289,10 +291,10 @@ public class CoreUtil {
         }
         this.env.configureLoggingContext(subcontext);
 
-        // FIXME - we can move the logginghelper code into this class
-        //LoggingHelper lh = new LoggingHelper(this.settings, this.env.getDefaultLogTarget(), subcontext);
-        //this.loggerManager = lh.getLoggerManager();
-        //this.log = lh.getLogger();
+        // FIXME - we can move the logging helper into this class
+        LoggingHelper loggingHelper = new LoggingHelper(this.settings, this.env.getDefaultLogTarget(), subcontext);
+        this.loggerManager = loggingHelper.getLoggerManager();
+        this.log = loggingHelper.getLogger();
     }
 
     public static final class RootServiceManager implements ServiceManager {

@@ -67,46 +67,44 @@ public class Log4JConfigurator extends DOMConfigurator {
                 // no more variables
                 if(i==0) { // this is a simple string
                     return val;
-                } else { // add the tail string which contails no variables and return the result.
-                    sbuf.append(val.substring(i, val.length()));
-                    return sbuf.toString();
                 }
-            } else {
-                sbuf.append(val.substring(i, j));
-                k = val.indexOf(DELIM_STOP, j);
-                if(k == -1) {
-                    throw new IllegalArgumentException('"'+val+
-                             "\" has no closing brace. Opening brace at position " + j
-                             + '.');
-                } else {
-                    j += DELIM_START_LEN;
-                    String key = val.substring(j, k);
-                    // first try in System properties
-                    String replacement = this.getSystemProperty(key);
-                    // then try props parameter
-                    if (replacement == null && this.context != null) {
-                        try {
-                            Object o = this.context.get(key);
-                            if ( o != null ) {
-                                replacement = o.toString();
-                            }
-                        } catch (ContextException ce) {
-                            LogLog.debug("Was not allowed to read context property \""+key+"\".");                            
-                        }
+                // add the tail string which contails no variables and return the result.
+                sbuf.append(val.substring(i, val.length()));
+                return sbuf.toString();
+            }
+            sbuf.append(val.substring(i, j));
+            k = val.indexOf(DELIM_STOP, j);
+            if(k == -1) {
+                throw new IllegalArgumentException('"'+val+
+                         "\" has no closing brace. Opening brace at position " + j
+                         + '.');
+            }
+            j += DELIM_START_LEN;
+            String key = val.substring(j, k);
+            // first try in System properties
+            String replacement = this.getSystemProperty(key);
+            // then try props parameter
+            if (replacement == null && this.context != null) {
+                try {
+                    Object o = this.context.get(key);
+                    if ( o != null ) {
+                        replacement = o.toString();
                     }
-    
-                    if (replacement != null) {
-                        // Do variable substitution on the replacement string
-                        // such that we can solve "Hello ${x2}" as "Hello p1" 
-                        // the where the properties are
-                        // x1=p1
-                        // x2=${x1}
-                        String recursiveReplacement = substVars(replacement);
-                        sbuf.append(recursiveReplacement);
-                    }
-                    i = k + DELIM_STOP_LEN;
+                } catch (ContextException ce) {
+                    LogLog.debug("Was not allowed to read context property \""+key+"\".");                            
                 }
             }
+
+            if (replacement != null) {
+                // Do variable substitution on the replacement string
+                // such that we can solve "Hello ${x2}" as "Hello p1" 
+                // the where the properties are
+                // x1=p1
+                // x2=${x1}
+                String recursiveReplacement = substVars(replacement);
+                sbuf.append(recursiveReplacement);
+            }
+            i = k + DELIM_STOP_LEN;
         }
     }
     

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.container;
+package org.apache.cocoon.util.log;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -38,7 +38,6 @@ import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
-import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.log.ErrorHandler;
