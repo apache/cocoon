@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.38 2001-01-26 22:20:48 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.39 2001-01-30 20:53:14 balld Exp $-->
 <!--
 
  ============================================================================
@@ -239,19 +239,21 @@
   </xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*[not(namespace-uri(.)=$xsp-namespace-uri)]">
-  <xsl:copy>
-    <xsl:apply-templates select="@*"/>
-    <xsp:logic>
-      Stack _esql_connections = new Stack();
-      EsqlConnection _esql_connection = null;
-      Stack _esql_queries = new Stack();
-      EsqlQuery _esql_query = null;
-      SQLException _esql_exception = null;
-      StringWriter _esql_exception_writer = null;
-    </xsp:logic>
-    <xsl:apply-templates/>
-  </xsl:copy>
+<xsl:template match="xsp:page/*">
+  <xsl:if test="not(namespace-uri(.)=$xsp-namespace-uri)">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsp:logic>
+        Stack _esql_connections = new Stack();
+        EsqlConnection _esql_connection = null;
+        Stack _esql_queries = new Stack();
+        EsqlQuery _esql_query = null;
+        SQLException _esql_exception = null;
+        StringWriter _esql_exception_writer = null;
+      </xsp:logic>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="esql:connection">
@@ -700,7 +702,16 @@
   </xsl:variable>
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
-      <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+      <xsl:choose>
+        <xsl:when test="../esql:row-results">
+          <xsp:logic>
+            xspCurrentNode.appendChild(this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement();
+          </xsp:logic>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:when>
     <xsl:when test="$environment = 'cocoon2'">
       <xsp:logic>
