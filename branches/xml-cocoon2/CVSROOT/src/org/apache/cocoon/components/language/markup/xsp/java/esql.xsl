@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.4 2000-10-27 19:03:53 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.5 2000-10-30 19:49:05 balld Exp $-->
 <!--
 
  ============================================================================
@@ -381,10 +381,15 @@
 <xsl:template match="esql:results//esql:get-columns">
  <xsp:logic>
   for (int _esql_i=1; _esql_i &lt;= _esql_session.resultset_metadata.getColumnCount(); _esql_i++) {
-   Node _esql_node = document.createElement(_esql_session.resultset_metadata.getColumnName(_esql_i));
-   _esql_node.appendChild(document.createTextNode(_esql_session.resultset.getString(_esql_i)));
-   xspCurrentNode.appendChild(_esql_node);
+   String _tag_name = _esql_session.resultset_metadata.getColumnName(_esql_i);
+   //FIXME - we shouldn't rely on the SAX2 objects directly, but rather use
+   //xsp:element, right? but xsp:element requires a static element name...
+   this.contentHandler.startElement("", _tag_name, _tag_name, xspAttr);
+   xspAttr.clear();
+   this.characters(_esql_session.resultset.getString(_esql_i));
+   this.contentHandler.endElement("", _tag_name, _tag_name);
   }
+   this.characters("\n");
  </xsp:logic>
 </xsl:template>
 
