@@ -79,7 +79,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.6 2003/08/01 12:45:05 cziegeler Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.7 2003/08/07 05:57:17 cziegeler Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -263,8 +263,13 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 */
 	public void destroy() {
 
-		Thread.currentThread().setContextClassLoader(this.classloader);
-		this.servlet.destroy();
+        final ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.classloader);
+            this.servlet.destroy();
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);    
+        }
 
 		super.destroy();
 	}
