@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Mail Archives</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Mailing List Archives">
+  <p>
+   There are a number of mailing list archives available. Email 
+   <link href="mailto:cocoon-users@xml.apache.org">cocoon-users@xml.apache.org</link> if you
+   know of more.
+  </p>
+
+  <table>
+   <tr>
+    <th>Address</th>
+    <th>Regularly updated?</th>
+    <th>Searchable?</th>
+    <th>Speed</th>
+    <th>Other features?</th>
+   </tr>
+   <tr>
+    <td><link href="http://mail-archives.apache.org/">http://mail-archives.apache.org</link></td>
+    <td>No, at present</td>
+    <td>No</td>
+    <td>3/5</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td><link href="http://marc.theaimsgroup.com/">http://marc.theaimsgroup.com</link></td>
+    <td>?</td>
+    <td>Onsite, by subject/author/body</td>
+    <td>4/5</td>
+    <td>Chunked listings</td>
+   </tr>
+   <tr>
+    <td><link href="http://mailman.real-time.com/pipermail/cocoon-users/">
+     http://mailman.real-time.com/pipermail/cocoon-users</link></td>
+    <td>Yes</td>
+    <td>Yes - use www.google.com and prepend search with 
+     <code>site:mailman.real-time.com cocoon-users</code></td>
+    <td>3/5</td>
+    <td>Sort by author/subject/date</td>
+   </tr>
+   <tr>
+    <td>Ezlm archives (contact <link href="mailto:cocoon-users-help@xml.apache.org">
+     cocoon-users-help@xml.apache.org</link> for automated instructions)</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>1/5</td>
+    <td>Bulk retrieval</td>
+   </tr>
+  </table>
+ </s1>
+
+</body>
+</document>
