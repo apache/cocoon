@@ -81,7 +81,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.8 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.9 2004/02/20 18:58:59 sylvain Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -399,17 +399,6 @@ implements SourceResolver, Serviceable, Disposable {
         }
         stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
         stack.setOffset(stack.size()-1);
-<<<<<<< EnvironmentHelper.java
-=======
-        
-        // TODO: THIS WILL BE REMOVED SOON
-        EnvironmentContext ctx = (EnvironmentContext)env.getObjectModel().get(PROCESS_KEY);
-        
-        ForwardRedirector redirector = new ForwardRedirector(env);
-        redirector.enableLogging(processor.getEnvironmentHelper().getLogger());
-        ctx.addAttribute(REDIRECTOR_KEY, redirector);
->>>>>>> 1.7
-
     }
 
     /**
@@ -469,21 +458,6 @@ implements SourceResolver, Serviceable, Disposable {
     }
     
     /**
-<<<<<<< EnvironmentHelper.java
-=======
-     * Return the Redirector
-     * TODO: THIS WILL BE REMOVED SOON
-     */
-    public static Redirector getRedirector(Environment env) {
-        final EnvironmentContext ctx = getEnvironmentContext(env);
-        if (ctx != null) {
-            return (Redirector) ctx.getAttribute(REDIRECTOR_KEY);
-        }
-        return null;
-    }
-    
-    /**
->>>>>>> 1.7
      * Return the environment context
      * TODO: THIS WILL BE REMOVED SOON
      */
