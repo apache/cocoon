@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.152 2004/05/08 14:14:23 joerg Exp $
+    | CVS $Id: gump.xml,v 1.153 2004/05/11 06:52:28 crossley Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1155,11 +1155,11 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-supersonic" status="unstable">
+  <project name="cocoon-block-tour" status="unstable">
     <package>org.apache.cocoon</package>
 
-    <ant target="supersonic-block">
-      <property name="block-name" value="supersonic"/>
+    <ant target="tour-block">
+      <property name="block-name" value="tour"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
 
@@ -1171,7 +1171,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="blocks/supersonic-block.jar"/>
+    <jar name="blocks/tour-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>

@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <!-- make sure we have the required components -->
+    <map:components>
+
+        <map:generators default="file">
+            <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
+        </map:generators>
+
+    </map:components>
+
+    <!-- debugging views used with ?cocoon-view parameter -->
+    <map:views>
+        <map:view name="jxDebug" from-label="jxDebug">
+            <map:serialize type="xml"/>
+        </map:view>
+    </map:views>
+
+    <!-- reusable parts of pipelines -->
+    <map:resources>
+        <map:resource name="html">
+            <map:transform src="../intro/presentation/page2html.xsl"/>
+            <map:serialize type="html"/>
+        </map:resource>
+    </map:resources>
+
+    <!-- declare flowscript code files -->
+    <map:flow language="javascript">
+        <map:script src="cocoon-app/flow/tour.js"/>
+    </map:flow>
+
+    <!-- define pipelines -->
+    <map:pipelines>
+
+        <!-- external pipeline, accessible to clients -->
+        <map:pipeline>
+
+            <!-- no page, redirect to top page -->
+            <map:match pattern="">
+                <map:redirect-to uri="view/allTasks"/>
+            </map:match>
+
+            <!-- handle continuations -->
+            <map:match pattern="**/*.continue">
+              <map:call continuation="{2}"/>
+            </map:match>
+
+            <!-- all views are generated from flowscript functions -->
+            <map:match id="view" pattern="view/*">
+                <!-- Use prefix to restrict the set of javascript functions callable from here -->
+                <map:call function="query_{1}"/>
+            </map:match>
+
+            <!-- edit a bean using Cocoon Forms -->
+            <map:match id="edit" pattern="edit/*">
+                <map:call function="handleForm">
+                    <map:parameter name="function" value="{1}Editor"/>
+                    <map:parameter name="form-definition" value="cocoon-app/forms/{1}FormModel.xml"/>
+                    <map:parameter name="bindingURI" value="cocoon-app/forms/{1}FormBinding.xml"/>
+                </map:call>
+            </map:match>
+
+        </map:pipeline>
+
+        <!-- internal pipeline, meant to be called by flow only -->
+        <map:pipeline internal-only="true">
+
+            <!-- generate views using JXTemplateTransformer -->
+            <map:match id="genView" pattern="internal/generate-view/*">
+                <map:generate src="cocoon-app/views/{1}View.xml" type="file"/>
+                <map:transform type="jx" label="jxDebug"/>
+                <map:call resource="html"/>
+            </map:match>
+
+            <!-- Display a Cocoon Form -->
+            <map:match id="showForm" pattern="internal/show-form/*">
+                <map:generate src="cocoon-app/forms/{1}FormTemplate.xml"/>
+                <map:transform type="forms"/>
+
+                <!-- use standard forms stylesheet to convert output of FormsTransformer -->
+                <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
+
+                <!-- and apply our standard transform after it -->
+                <map:call resource="html"/>
+            </map:match>
+        </map:pipeline>
+
+    </map:pipelines>
+
+</map:sitemap>
