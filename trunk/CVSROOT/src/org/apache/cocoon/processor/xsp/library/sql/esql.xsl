@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.22 2000-10-16 23:41:42 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.23 2000-10-17 04:35:44 balld Exp $-->
 <!--
 
  ============================================================================
@@ -119,6 +119,8 @@
                   int count;
                   int max_rows;
                   int skip_rows;
+                  boolean has_resultset;
+		  int update_count;
                  }
 		</xsp:logic>
 		<xsl:for-each select=".//esql:execute-query[not(@inner-method='no')]">
@@ -272,10 +274,11 @@
 	        <xsl:when test="esql:query">
 	         _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
 	         _esql_session.statement = _esql_session.connection.createStatement();
-	         _esql_session.resultset = _esql_session.statement.executeQuery(_esql_session.query);
+                 _esql_session.has_resultset = _esql_session.statement.execute(_esql_session.query);
 		</xsl:when>
 		<xsl:when test="esql:statement">
 		 _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
+		 _esql_session.statement = _esql_session.prepared_statement;
 		 <xsl:text>_esql_session.prepared_statement.</xsl:text>
 		 <xsl:for-each select=".//esql:parameter">
 		  <xsl:choose>
@@ -290,37 +293,40 @@
 		   </xsl:otherwise>
 		  </xsl:choose>
 		 </xsl:for-each>
-	         _esql_session.resultset = _esql_session.prepared_statement.executeQuery();
+	         _esql_session.has_resultset = _esql_session.prepared_statement.execute();
 		</xsl:when>
 	       </xsl:choose>
-	       _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
-	       _esql_session.count = 0;
-	       if (_esql_session.skip_rows &gt; 0) {
-	        while (_esql_session.resultset.next()) {
-		 _esql_session.count++;
-		 if (_esql_session.count == _esql_session.skip_rows) {
-	          break;
+               if (_esql_session.has_resultset) {
+                _esql_session.resultset = _esql_session.statement.getResultSet();
+	        _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
+                _esql_session.update_count = -1;
+	        _esql_session.count = 0;
+	        if (_esql_session.skip_rows &gt; 0) {
+	         while (_esql_session.resultset.next()) {
+		  _esql_session.count++;
+		  if (_esql_session.count == _esql_session.skip_rows) {
+	           break;
+		  }
 		 }
-		}
-	       }
-	       boolean _esql_results_<xsl:value-of select="generate-id(.)"/> = false;
-	       while (_esql_session.resultset.next()) {
-		_esql_results_<xsl:value-of select="generate-id(.)"/> = true;
-	        <xsl:apply-templates select="esql:results/*"/>
-		if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
-		 break;
-		}
-		_esql_session.count++;
-	       }
-	       _esql_session.resultset.close();
-	       if (_esql_session.statement != null) {
-	         _esql_session.statement.close();
-	       } else if (_esql_session.prepared_statement != null) {
-	         _esql_session.prepared_statement.close();
-	       }
-	       if (!_esql_results_<xsl:value-of select="generate-id(.)"/>) {
-                <xsl:apply-templates select="esql:no-results/*"/>
-	       }
+	        }
+	        boolean _esql_results_<xsl:value-of select="generate-id(.)"/> = false;
+	        while (_esql_session.resultset.next()) {
+		 _esql_results_<xsl:value-of select="generate-id(.)"/> = true;
+	         <xsl:apply-templates select="esql:results/*"/>
+		 if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
+		  break;
+		 }
+		 _esql_session.count++;
+	        }
+	        _esql_session.resultset.close();
+	        if (!_esql_results_<xsl:value-of select="generate-id(.)"/>) {
+                 <xsl:apply-templates select="esql:no-results/*"/>
+	        }
+               } else {
+                _esql_session.update_count = _esql_session.statement.getUpdateCount();
+                <xsl:apply-templates select="esql:count-results/*"/>
+               }
+	       _esql_session.statement.close();
 	       } catch (Exception _esql_exception) {
 		<xsl:if test="esql:error-results//esql:get-stacktrace">
 		 StringWriter _esql_exception_writer = new StringWriter();
