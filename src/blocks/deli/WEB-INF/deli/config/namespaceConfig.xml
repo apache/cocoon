@@ -7,13 +7,13 @@
   <!-- This makes RDFFilter throw errors! aargh 
   <namespace>
    <uri>http://www.openmobilealliance.org/tech/profiles/UAPROF/ccppschema-20030226#</uri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20030226.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20030226.rdfs</schemaVocabularyFile>
   </namespace>   
   --> 
 
   <namespace>
    <uri>http://www.openmobilealliance.org/tech/profiles/UAPROF/ccppschema-20021212#</uri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20021212.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20021212.rdfs</schemaVocabularyFile>
   </namespace>
 
   <namespace>
@@ -21,14 +21,14 @@
 
    <uri>http://www.wapforum.org/UAPROF/ccppschema-20020710#</uri>
    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20020710#</aliasUri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20020710.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20020710.rdfs</schemaVocabularyFile>
   </namespace>
 
   <namespace>
    <!-- In the RDFS uses http://www.wapforum.org/profiles/MMS/ccppschema-20010111# -->
 
    <uri>http://www.wapforum.org/profiles/MMS/ccppschema-20010111#</uri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20010111.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20010111.rdfs</schemaVocabularyFile>
   </namespace>
 
   <namespace>
@@ -37,7 +37,7 @@
    <uri>http://www.wapforum.org/UAPROF/ccppschema-20000405#</uri>
    <aliasUri>http://www.wapforum.org/profiles/ccppschema-20000405#</aliasUri>
    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20000405#</aliasUri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20000405.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20000405.rdfs</schemaVocabularyFile>
   </namespace>
   
   <namespace>
@@ -46,7 +46,7 @@
    <uri>http://www.wapforum.org/UAPROF/ccppschema-20010330#</uri>
    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010330#</aliasUri>   
    <aliasUri>http://www.wapforum.org/UAPROF/ccppschema-19991014#</aliasUri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20010330.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20010330.rdfs</schemaVocabularyFile>
   </namespace>
 
   <namespace>
@@ -54,7 +54,7 @@
 
    <uri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430#</uri>
    <aliasUri>http://www.wapforum.org/UAPROF/ccppschema-20010430#</aliasUri>
-   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20010430.rdfs</schemaVocabularyFile>
+   <schemaVocabularyFile>/WEB-INF/deli/config/vocab/ccppschema-20010430.rdfs</schemaVocabularyFile>
   </namespace>
    
  </namespaceDeclaration>
