@@ -201,6 +201,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="23118" due-to="Jorg Heymans" due-to-email="jh@domek.be">
+     SearchGenerator incorrectly counts previous-index. Reported by: Tomasz Nowak (tnowak-p@netventure.pl)
+   </action>
    <action dev="AG" type="update">
      Updated iText to 1.1.
    </action>

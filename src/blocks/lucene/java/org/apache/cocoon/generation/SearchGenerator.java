@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -26,10 +25,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.search.LuceneCocoonHelper;
+import org.apache.cocoon.components.search.LuceneCocoonPager;
 import org.apache.cocoon.components.search.LuceneCocoonSearcher;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
-import org.apache.cocoon.components.search.LuceneCocoonPager;
-import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
@@ -45,10 +44,10 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Enumeration;
 
 /**
  * Generates an XML representation of a search result.
@@ -94,10 +93,10 @@ import java.util.Enumeration;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: SearchGenerator.java,v 1.5 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SearchGenerator extends ServiceableGenerator
-    implements Contextualizable, Initializable, Disposable
+    implements Contextualizable, Disposable
 {
 
     /**
@@ -160,7 +159,7 @@ public class SearchGenerator extends ServiceableGenerator
      * Attribute <code>name</code> of <code>hit</code> element.
      */
     protected final static String NAME_ATTRIBUTE = "name";
-    
+
     /**
      * Child element of generated xml content, ie <code>hits</code>.
      * This element describes all hits.
@@ -416,7 +415,6 @@ public class SearchGenerator extends ServiceableGenerator
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-//        lcs = (LuceneCocoonSearcher) this.manager.lookup(LuceneCocoonSearcher.ROLE);
     }
 
     /**
@@ -428,12 +426,14 @@ public class SearchGenerator extends ServiceableGenerator
              throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
+        try {
+            lcs = (LuceneCocoonSearcher) this.manager.lookup(LuceneCocoonSearcher.ROLE);
+        } catch (ServiceException e) {
+            throw new ProcessingException("Unable to lookup " + LuceneCocoonSearcher.ROLE, e);
+        }
+
         String param_name;
         Request request = ObjectModelHelper.getRequest(objectModel);
-
-        // get the analyzer
-//        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer("org.apache.lucene.analysis.standard.StandardAnalyzer");
-//        lcs.setAnalyzer(analyzer);
 
         String index_file_name = par.getParameter(INDEX_PARAM, INDEX_PARAM_DEFAULT);
         if (request.getParameter(INDEX_PARAM) != null) {
@@ -447,9 +447,9 @@ public class SearchGenerator extends ServiceableGenerator
         }
 
         // try getting the queryString from the generator sitemap params
-        
+
         queryString = par.getParameter(QUERY_PARAM, "");
-        
+
         // try getting the queryString from the request params
         if (queryString.equals("")) {
             param_name = par.getParameter(QUERY_STRING_PARAM, QUERY_STRING_PARAM_DEFAULT);
@@ -502,12 +502,6 @@ public class SearchGenerator extends ServiceableGenerator
     public void contextualize(Context context) throws ContextException {
         // retrieve the working directory, assuming that the index may reside there
         workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
-    }
-
-    public void initialize() throws IOException {
-        // get the directory where the index resides
-//        Directory directory = LuceneCocoonHelper.getDirectory(new File(workDir, "index"), false);
-//        lcs.setDirectory(directory);
     }
 
     /**
@@ -613,7 +607,7 @@ public class SearchGenerator extends ServiceableGenerator
      * @throws  SAXException         when there is a problem creating the output SAX events.
      */
     private void generateHits(LuceneCocoonPager pager) throws SAXException {
-        if (pager != null && pager.hasNext()) {
+        if (pager != null) {
             atts.clear();
             atts.addAttribute("", TOTAL_COUNT_ATTRIBUTE, TOTAL_COUNT_ATTRIBUTE,
                 CDATA, String.valueOf(pager.getCountOfHits()));
@@ -726,9 +720,7 @@ public class SearchGenerator extends ServiceableGenerator
         if (queryString != null && queryString.length() != 0) {
             Hits hits = null;
 
-            // TODO (VG): Move parts into compose/initialize/recycle
             try {
-                lcs = (LuceneCocoonSearcher) this.manager.lookup(LuceneCocoonSearcher.ROLE);
                 Analyzer analyzer = LuceneCocoonHelper.getAnalyzer("org.apache.lucene.analysis.standard.StandardAnalyzer");
                 lcs.setAnalyzer(analyzer);
                 // get the directory where the index resides
@@ -737,13 +729,6 @@ public class SearchGenerator extends ServiceableGenerator
                 hits = lcs.search(queryString, LuceneXMLIndexer.BODY_FIELD);
             } catch (IOException ioe) {
                 throw new ProcessingException("IOException in search", ioe);
-            } catch (ServiceException ce) {
-                throw new ProcessingException("ComponentException in search", ce);
-            } finally {
-                if (lcs != null) {
-                    this.manager.release(lcs);
-                    lcs = null;
-                }
             }
 
             // wrap the hits by an pager help object for accessing only a range of hits
@@ -778,6 +763,9 @@ public class SearchGenerator extends ServiceableGenerator
      */
     public void recycle() {
         super.recycle();
+        if (lcs != null) {
+            this.manager.release(lcs);
+        }
         this.queryString = null;
         this.startIndex = null;
         this.pageLength = null;
@@ -785,10 +773,6 @@ public class SearchGenerator extends ServiceableGenerator
     }
 
     public void dispose() {
-//        if (lcs != null) {
-//            this.manager.release(lcs);
-//            lcs = null;
-//        }
         super.dispose();
     }
 }
