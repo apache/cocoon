@@ -1,6 +1,6 @@
-#!/bin/sh 
+#!/bin/sh -x
 
-# $Id: create-repository-jars.sh,v 1.4 2004/02/02 10:55:23 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.5 2004/02/02 20:03:24 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -182,18 +182,23 @@ for i in $JARS; do
     SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/jars/cocoon$BLOCKPART-????????.??????.jar 2>/dev/null"` 
   fi
   scp $i $REMOTEHOST:$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar
-  ssh $REMOTEHOST "chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar"
   if [ "$REVISION" = "HEAD" ]; then
     if [ ! -z "$SNAPSHOT" ]; then
       RM="rm $SNAPSHOT;"
     else
       RM=""
     fi
-    ssh $REMOTEHOST "$RM \
-                     cd $REMOTEPATH/jars; \
-                     ln -fs cocoon$BLOCKPART-$TVERSION.jar cocoon$BLOCKPART-SNAPSHOT.jar; \
-                     echo $TVERSION >cocoon$BLOCKPART-snapshot.version"
+    CMD="$RM \
+         cd $REMOTEPATH/jars; \
+         ln -fs cocoon$BLOCKPART-$TVERSION.jar cocoon$BLOCKPART-SNAPSHOT.jar; \
+         echo $TVERSION >cocoon$BLOCKPART-snapshot.version"
+  else
+    CMD=""
   fi
+  ssh $REMOTEHOST "$CMD; \
+                   md5sum $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
+                     sed 's/ .*$//' >$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar.md5; \
+                   chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.*"
 done
 
 # copy the war file to the web space
@@ -208,8 +213,15 @@ if [ "$REVISION" = "HEAD" ]; then
   else
     RM=""
   fi
-  ssh $REMOTEHOST "$RM \
-                   cd $REMOTEPATH/wars; \
-                   ln -fs cocoon-war-$TVERSION.war cocoon-war-SNAPSHOT.war; \
-                   echo $TVERSION >cocoon-war-snapshot.version"
+  CMD="$RM \
+       cd $REMOTEPATH/wars; \
+       ln -fs cocoon-war-$TVERSION.war cocoon-war-SNAPSHOT.war; \
+       echo $TVERSION >cocoon-war-snapshot.version"
+else
+  CMD=""
 fi
+ssh $REMOTEHOST "$CMD; \
+                 md5sum $REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
+                   sed 's/ .*$//' >$REMOTEPATH/jars/cocoon-war-$TVERSION.jar.md5; \
+                 chmod g+w $REMOTEPATH/jars/cocoon-war-$TVERSION.*"
+
