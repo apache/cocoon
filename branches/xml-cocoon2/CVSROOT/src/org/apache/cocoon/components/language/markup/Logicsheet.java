@@ -38,8 +38,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -51,14 +50,9 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:34 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-01-31 20:25:40 $
  */
-public class Logicsheet implements Loggable {
-    /**
-     * The logger.
-     */
-    protected Logger log;
-
+public class Logicsheet extends AbstractLoggable {
     /**
     * The trax TransformerFactory
     */
@@ -67,12 +61,6 @@ public class Logicsheet implements Loggable {
     * The trax templates
     */
     protected Templates templates;
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
     /**
     * The constructor. It does preserve the namespace from the stylesheet.
@@ -88,7 +76,7 @@ public class Logicsheet implements Loggable {
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             templates = tfactory.newTemplates(new SAXSource(inputSource));
         } catch (TransformerConfigurationException e){
-            log.error("Logicsheet.setInputSource", e);
+            getLogger().error("Logicsheet.setInputSource", e);
 
         }
     }
@@ -103,9 +91,9 @@ public class Logicsheet implements Loggable {
         try {
             return tfactory.newTransformerHandler(templates);
         } catch (TransformerConfigurationException e) {
-            log.error("Logicsheet.getTransformerHandler:TransformerConfigurationException", e);
+            getLogger().error("Logicsheet.getTransformerHandler:TransformerConfigurationException", e);
         } catch (Exception e) {
-            log.error("Logicsheet.getTransformerHandler:Exception", e);
+            getLogger().error("Logicsheet.getTransformerHandler:Exception", e);
         }
         return null;
     }
