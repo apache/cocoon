@@ -1365,7 +1365,7 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configureLoggingContext(DefaultContext context) {
-            context.put(CONTEXT_SERVLET_CONFIG, this.config);
+            context.put("servlet-context", this.config.getServletContext());
         }
 
         /**
