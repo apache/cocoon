@@ -3,7 +3,7 @@
 
 <book software="Apache Cocoon" 
       title="Apache Cocoon i18n Samples" 
-      copyright="1999-2003 The Apache Software Foundation"
+      copyright="@year@ The Apache Software Foundation"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
       i18n:attr="title"
