@@ -114,6 +114,7 @@ public class ButterflyServlet extends HttpServlet {
         try {
             Class pipelineClass = loader.parseClass(getClass().getResourceAsStream("Pipeline.groovy"));
             // Parse the main sitemap
+            System.err.println(this.servletContext.getResource("sitemap.groovy").getFile());
             FileInputStream fis = new FileInputStream(this.servletContext.getResource("sitemap.groovy").getFile());
             Class sitemapClass = loader.parseClass(fis);
             GroovyObject sitemap = (GroovyObject) sitemapClass.newInstance();
