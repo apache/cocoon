@@ -18,7 +18,7 @@
         <script language="JavaScript" type="text/javascript" src="resources/script.js"/>
         <title><xsl:value-of select="title"/></title>
       </head>
-      <body text="#000000" link="#0000ff" vlink="#0000aa" alink="#ff0000"
+      <body text="#000000" link="#039acc" vlink="#0086b2" alink="#cc0000"
             topmargin="4" leftmargin="4" marginwidth="4" marginheight="4"
             bgcolor="#ffffff">
         <!-- THE TOP BAR (HEADER) -->
@@ -211,7 +211,7 @@
      <table border="0" width="95%" cellspacing="0" cellpadding="0">
       <tr>
        <td>
-        <font size="-1" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
        </td>
       </tr>
     </table>
@@ -244,7 +244,7 @@
      <table border="0" width="90%" cellspacing="0" cellpadding="0">
       <tr>
        <td>
-        <font size="-2" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
        </td>
       </tr>
     </table>
@@ -277,7 +277,7 @@
      <table border="0" width="85%" cellspacing="0" cellpadding="0">
       <tr>
        <td>
-        <font size="-3" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
        </td>
       </tr>
     </table>
@@ -464,7 +464,7 @@
  </xsl:template>
 
  <xsl:template match="connect">
-  <!-- ignore until we have softlinking capabilities -->
+  <xsl:apply-templates/>
  </xsl:template>
 
  <xsl:template match="jump">
