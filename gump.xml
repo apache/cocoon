@@ -742,6 +742,7 @@
     <library name="jena"/>
     <library name="icu4j"/>
     <library name="servlet"/>
+    <library name="log4j"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
