@@ -97,22 +97,22 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Source implementation for XML Javadoc.
- * 
+ *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/07/03 09:26:04 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/07/05 14:30:52 $
  */
 public final class QDoxSource
     extends AbstractSource
     implements XMLizable, Recyclable {
-    
+
     protected final static String ROOT_CLASSNAME = "java.lang.Object";
-    
+
     protected final static String EMPTY = "";
     protected final static String NS_URI = "http://apache.org/cocoon/javadoc/1.0";
     protected final static String NS_PREFIX = "jd";
     protected final static String ATTR_TYPE = "NMTOKEN";
     protected final static Attributes EMPTY_ATTRS = new AttributesImpl();
-    
+
     protected final static String CLASS_ELEMENT = "class";
     protected final static String CLASSNAME_ATTRIBUTE = "name";
     protected final static String PACKAGE_ATTRIBUTE = "package";
@@ -146,38 +146,38 @@ public final class QDoxSource
     protected final static String PARAMETER_ELEMENT = "parameter";
     protected final static String THROWS_ELEMENT = "throws";
     protected final static String EXCEPTION_ELEMENT = "exception";
-    
+
     protected final static int CONSTRUCTOR_MODE = 1;
     protected final static int METHOD_MODE = 2;
-    
+
     protected final static int CLASS_INHERITANCE = 1;
     protected final static int INTERFACE_INHERITANCE = 2;
     protected final static int INNERCLASS_INHERITANCE = 3;
     protected final static int FIELD_INHERITANCE = 4;
     protected final static int CONSTRUCTOR_INHERITANCE = 5;
     protected final static int METHOD_INHERITANCE = 6;
-    
+
     protected ComponentManager manager;
     protected Logger logger;
-    
+
     protected Source javaSource;
     protected String javadocUri;
     protected String javadocClassName;
     protected JavaClass javadocClass;
     protected JavaClass containingJavadocClass;  // in case javadocClass is an inner class
     protected Map classMap;
-    
+
     /**
      * This RegExp matches the <code>{</code><code>@link &hellip;}</code> occurrances in
      * Javadoc comments.
      */
     protected RE reLink;
-    
+
     /**
      * Contains a regular expression to match the <code>{</code><code>@link &hellip;}</code> occurrances.
-     * 
+     *
      * <p>The following <code>{</code><code>@link &hellip;}</code> literals are recognized:</p>
-     * 
+     *
      * <ul>
      * <li><code>{</code><code>@link HashMap}</code> - returns 'Hashmap' with <code>reLink.getParen(6)</code>;</li>
      * <li><code>{</code><code>@link #equals(java.lang.Object) equals(&hellip;)}</code> - returns '#equals(java.lang.Object)' with <code>reLink.getParen(2)</code>
@@ -187,14 +187,14 @@ public final class QDoxSource
      * </ul>
      * <p>The regexp is as follows:</p>
      * <code>\{@link\s+((([\w.#,$&amp;;\s]+)|([\w.#,$&amp;;(\s]+[\w.#,$&amp;;)\s]+))\s+([\w()#.,$&amp;;\s]+)|([\w.#,$&amp;;\s()]+))\s*\}</code>
-     * 
+     *
      * @see #reLink
      */
     protected final static String RE_LINK = "\\{@link\\s+((([\\w.#,$&;\\s]+)|([\\w.#,$&;(\\s]+[\\w.#,$&;)\\s]+))\\s+([\\w()#.,$&;\\s]+)|([\\w.#,$&;\\s()]+))\\s*\\}";
-    
+
     /**
      * Constructor for QDoxSource.
-     * 
+     *
      * @param location
      * @param javaSource
      * @param logger
@@ -205,9 +205,9 @@ public final class QDoxSource
         this.javaSource = javaSource;
         this.logger = logger;
         this.manager = manager;
-        
+
         this.javadocClassName = javadocUri.substring(javadocUri.indexOf(':') + 1);
-        
+
         try {
             createJavadocXml();
         } catch (SourceException se) {
@@ -215,7 +215,7 @@ public final class QDoxSource
         } catch (IOException ioe) {
             logger.error("Error reading source!", ioe);
         }
-        
+
         // Initialize regular expression:
         try {
             reLink = new RE(RE_LINK);
@@ -223,16 +223,16 @@ public final class QDoxSource
             logger.error("Regular Expression syntax error!", rse);
         }
     }
-    
+
     /**
      * Returns the parsed Java class.
-     * 
+     *
      * @return JavaClass
      */
     public JavaClass getJavadocClass() {
         return javadocClass;
     }
-    
+
     /**
      * @see XMLizable#toSAX(org.xml.sax.ContentHandler)
      * @throws SAXException if any error occurs during SAX outputting.
@@ -240,26 +240,26 @@ public final class QDoxSource
     public void toSAX(ContentHandler handler) throws SAXException {
         if (javadocClass == null) {
             logger.error("No classfile loaded! Cannot output SAX events.");
-            
+
             return;
         }
-        
+
         if (logger.isDebugEnabled()) {
             logger.debug("Outputting SAX events for class " + javadocClass.getFullyQualifiedName());
             logger.debug("  #fields: " + javadocClass.getFields().length);
             logger.debug("  #methods and constructors: " + javadocClass.getMethods().length);
         }
-        
+
         // Output SAX 'header':
         handler.startDocument();
         handler.startPrefixMapping(NS_PREFIX, NS_URI);
-        
+
         // Output class-level element:
         outputClassStartElement(handler, javadocClass);
-        
+
         // Modifiers:
         outputModifiers(handler, javadocClass);
-        
+
         // Imports:
         JavaSource parent = javadocClass.getParentSource();
         // Add two implicit imports:
@@ -270,7 +270,7 @@ public final class QDoxSource
             parent.addImport("*");
         }
         String[] imports = parent.getImports();
-        
+
         saxStartElement(handler, IMPORTS_ELEMENT);
         for (int i=0; i<imports.length; i++) {
             if (imports[i].endsWith("*")) {
@@ -288,15 +288,15 @@ public final class QDoxSource
             saxEndElement(handler, IMPORT_ELEMENT);
         }
         saxEndElement(handler, IMPORTS_ELEMENT);
-        
+
         // Superclass:
         if (!javadocClass.isInterface()) {
             outputSuperClassInheritance(handler, javadocClass, CLASS_INHERITANCE);
         }
-        
+
         // Implements:
         outputImplements(handler, javadocClass, true);
-        
+
         // Containing class in case this is an inner class:
         if (containingJavadocClass != null) {
             saxStartElement(handler, NESTED_IN_ELEMENT);
@@ -307,33 +307,33 @@ public final class QDoxSource
             outputClassEndElement(handler, containingJavadocClass);
             saxEndElement(handler, NESTED_IN_ELEMENT);
         }
-        
+
         // Comment:
         outputComment(handler, javadocClass.getComment());
-        
+
         // Tags:
         outputTags(handler, javadocClass);
-        
+
         // Inner classes:
         outputInnerClasses(handler, javadocClass, true);
-        
+
         // Fields:
         outputFields(handler, javadocClass, true);
-        
+
         // Constructors:
         outputMethods(handler, javadocClass, CONSTRUCTOR_MODE);
-        
+
         // Methods:
         outputMethods(handler, javadocClass, METHOD_MODE);
 
         // Close class-level element:
         outputClassEndElement(handler, javadocClass);
-        
+
         // Output SAX 'footer':
         handler.endPrefixMapping(NS_PREFIX);
         handler.endDocument();
     }
-    
+
     /**
      * @see Recyclable#recycle()
      */
@@ -341,7 +341,7 @@ public final class QDoxSource
         if (logger != null && logger.isDebugEnabled()) {
             logger.debug("Recycling QDoxSource '" + javadocClassName + "'...");
         }
-        
+
         manager = null;
         javaSource = null;
         javadocUri = null;
@@ -351,7 +351,7 @@ public final class QDoxSource
         classMap = null;
         logger = null;
     }
-    
+
     /**
      * Get the content length of the source or -1 if it
      * is not possible to determine the length.
@@ -387,7 +387,7 @@ public final class QDoxSource
     public SourceValidity getValidity() {
         return javaSource.getValidity();
     }
-    
+
     /**
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
@@ -395,13 +395,13 @@ public final class QDoxSource
         if (logger.isDebugEnabled()) {
             logger.debug("Getting InputStream for class " + javadocClass.getFullyQualifiedName());
         }
-        
+
         // Serialize the SAX events to the XMLSerializer:
-        
+
         XMLSerializer serializer = new XMLSerializer();
         //ComponentSelector serializerSelector = null;
         ByteArrayInputStream inputStream = null;
-        
+
         try {
             //serializerSelector = (ComponentSelector) manager.lookup(Serializer.ROLE + "Selector");
             //logger.debug("serializer selector: " + serializerSelector.toString());
@@ -420,7 +420,7 @@ public final class QDoxSource
             //serializerSelector.release(serializer);
             //manager.release(serializerSelector);
         }
-        
+
         return inputStream;
     }
 
@@ -428,10 +428,10 @@ public final class QDoxSource
         if (logger.isDebugEnabled()) {
             logger.debug("Reading Java source " + javaSource.getURI());
         }
-        
+
         JavaDocBuilder builder = new JavaDocBuilder();
         builder.addSource(new BufferedReader(new InputStreamReader(javaSource.getInputStream())));
-        
+
         javadocClass = builder.getClassByName(javadocClassName);
         if (javadocClass == null) {
             // An inner class is specified - let's find it:
@@ -442,10 +442,10 @@ public final class QDoxSource
             javadocClass = getJavadocInnerClass(containingJavadocClass, innerClassName);
         }
     }
-    
+
     /**
      * Method resolveMemberNameFromLink.
-     * 
+     *
      * @param ref
      * @return String
      */
@@ -457,10 +457,10 @@ public final class QDoxSource
             return ref.substring(hashIndex + 1);
         }
     }
-    
+
     /**
      * Method resolveClassNameFromLink.
-     * 
+     *
      * @param ref
      * @return String
      */
@@ -474,7 +474,7 @@ public final class QDoxSource
         }
         return getQualifiedClassName(classPart);
     }
-    
+
     private String getQualifiedClassName(String classPart) {
         if (classPart.length() == 0) {
             // No classname specified:
@@ -498,7 +498,7 @@ public final class QDoxSource
                     classImports.add(imports[i]);
                 }
             }
-                    
+
             boolean found = false;
             for (int i=0; !found && i<classImports.size(); i++) {
                 String name = (String) classImports.get(i);
@@ -507,7 +507,7 @@ public final class QDoxSource
                     found = true;
                 }
             }
-                    
+
             if (!found) {
                 SourceResolver resolver = null;
                 try {
@@ -519,14 +519,14 @@ public final class QDoxSource
                         } else {
                             name += '.' + classPart;
                         }
-                                
+
                         // Test whether the classname 'name' is valid:
                         Source source = resolver.resolveURI("javadoc:" + name);
                         found = source != null && source instanceof QDoxSource;
                         if (found) {
                             classPart = name;
                         }
-                        
+
                         resolver.release(source);
                     }
                 } catch (ComponentException e) {
@@ -544,13 +544,13 @@ public final class QDoxSource
                 }
             }
         }
-        
+
         return classPart;
     }
-    
+
     /**
      * Method outputClassInheritance.
-     * 
+     *
      * @param handler
      * @param jClass
      */
@@ -560,31 +560,31 @@ public final class QDoxSource
             outputClassInheritance(handler, superClass, mode);
         }
     }
-    
+
     private void outputClassInheritance(ContentHandler handler, JavaClass jClass, int mode) throws SAXException {
         outputInheritStartElement(handler, jClass);
-        
+
         switch (mode) {
             case CLASS_INHERITANCE :
                 // Already there!
                 outputSuperClassInheritance(handler, jClass, mode);
                 break;
-                
+
             case INTERFACE_INHERITANCE :
                 // Output interface inheritance summary:
                 outputImplements(handler, jClass, false);
                 break;
-                
+
             case INNERCLASS_INHERITANCE :
                 // Output nested inheritance summary:
                 outputInnerClasses(handler, jClass, false);
                 break;
-                
+
             case FIELD_INHERITANCE :
                 // Output field inheritance summary:
                 outputFields(handler, jClass, false);
                 break;
-                
+
             case METHOD_INHERITANCE :
                 // Output method inheritance summary from implemented interfaces:
                 Type[] interfaces = jClass.getImplements();
@@ -592,7 +592,7 @@ public final class QDoxSource
                     logger.debug("inherit from " + interfaces[i].getValue());
                     outputClassInheritance(handler, getJavaClass(interfaces[i].getValue()), mode);
                 }
-                
+
             case CONSTRUCTOR_INHERITANCE :
                 // Output method/constructor inheritance summary from superclass:
                 if (!(mode == METHOD_INHERITANCE && jClass.isInterface())) {
@@ -607,44 +607,44 @@ public final class QDoxSource
                     }
                 }
                 break;
-                
+
             default :
                 break;
         }
-        
+
         saxEndElement(handler, INHERIT_ELEMENT);
     }
-    
+
     private boolean hasInheritance(JavaClass jClass, int mode) {
         JavaClass superClass = getJavadocSuperClass(jClass);
         boolean result = false;
-        
+
         if (superClass != null) {
             switch (mode) {
                 case CLASS_INHERITANCE :
                     // Already there!
                     result = true;
                     break;
-                    
+
                 case INTERFACE_INHERITANCE :
                     result = superClass.getImplements().length > 0;
                     break;
-                    
+
                 case INNERCLASS_INHERITANCE :
                     result = superClass.getClasses().length > 0;
                     break;
-                    
+
                 case FIELD_INHERITANCE :
                     result = superClass.getFields().length > 0;
                     break;
-                    
+
                 case METHOD_INHERITANCE :
                     Type[] interfaces = jClass.getImplements();
                     for (int i=0; i<interfaces.length && !result; i++) {
                         JavaClass iface = getJavaClass(interfaces[i].getValue());
                         result = iface != null && iface.getMethods().length > 0;
                     }
-                    
+
                 case CONSTRUCTOR_INHERITANCE :
                     JavaMethod[] methods = superClass.getMethods();
                     for (int i=0; i<methods.length && !result; i++) {
@@ -652,22 +652,22 @@ public final class QDoxSource
                             (mode == CONSTRUCTOR_INHERITANCE && methods[i].getReturns() == null));
                     }
                     break;
-                    
+
                 default :
                     break;
             }
-            
+
             if (!result) {
                 result = hasInheritance(superClass, mode);
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Method getJavadocSuperClass.
-     * 
+     *
      * @param jClass
      * @return JavaClass
      */
@@ -676,14 +676,14 @@ public final class QDoxSource
             // May not happen, of course ;-)
             throw new IllegalArgumentException("Argument 'jClass' must not be <null>!");
         }
-        
+
         if (jClass.getFullyQualifiedName().equals(ROOT_CLASSNAME)) {
             // jClass is root class:
             return null;
         }
-        
+
         JavaClass superClass = null;
-        
+
         if (!jClass.isInterface()) {
             try {
                 // Use QDocx operation to retrieve class:
@@ -692,10 +692,10 @@ public final class QDoxSource
                 // No Cache built (yet)... ignore!
             }
         }
-        
+
         if (superClass == null) {
             String superJavadocClassName = null;
-            
+
             if (jClass.isInterface()) {
                 Type[] interfaces = jClass.getImplements();
                 if (interfaces.length == 1) {
@@ -703,45 +703,45 @@ public final class QDoxSource
                 }
             } else {
                 superJavadocClassName = jClass.getSuperClass().getValue();
-                
+
                 // Is the superClass itself an inner class?
                 if (superJavadocClassName.indexOf('.') == -1 && getJavadocInnerClass(containingJavadocClass, superJavadocClassName) != null) {
                     superJavadocClassName = containingJavadocClass.getFullyQualifiedName() + '.' + superJavadocClassName;
                 }
             }
-            
+
             if (superJavadocClassName != null) {
                 superClass = getJavaClass(superJavadocClassName);
             }
         }
-        
+
         return superClass;
     }
-    
+
     /**
      * Method getInnerClass.
-     * 
+     *
      * @param jClass
-     * @param superJavadocClassName
+     * @param className
      * @return JavaClass
      */
     private JavaClass getJavadocInnerClass(JavaClass jClass, String className) {
         if (jClass != null) {
             JavaClass[] classes = jClass.getClasses();
-            
+
             for (int i=0; i<classes.length; i++) {
                 if (classes[i].getName().equals(className)) {
                     return classes[i];
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Get the meta class for the specified classname. The result is cached internally.
-     * 
+     *
      * @param className
      * @return JavaClass
      */
@@ -749,10 +749,10 @@ public final class QDoxSource
         if (classMap != null && classMap.containsKey(className)) {
             return (JavaClass) classMap.get(className);
         }
-        
+
         JavaClass jClass = null;
         SourceResolver resolver = null;
-        
+
         try {
             resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
             Source source = resolver.resolveURI("javadoc:" + className);
@@ -778,15 +778,15 @@ public final class QDoxSource
                 manager.release(resolver);
             }
         }
-        
+
         return jClass;
     }
-    
+
     /**
      * Method outputModifiers.
-     * 
+     *
      * @param handler
-     * @param strings
+     * @param entity
      */
     private void outputModifiers(ContentHandler handler, AbstractJavaEntity entity) throws SAXException {
         String[] modifiers = entity.getModifiers();
@@ -799,16 +799,16 @@ public final class QDoxSource
             saxEndElement(handler, MODIFIERS_ELEMENT);
         }
     }
-    
+
     /**
      * Method outputCommentAndTags.
-     * 
+     *
      * @param handler
-     * @param javadocClass
+     * @param entity
      */
     private void outputTags(ContentHandler handler, AbstractJavaEntity entity) throws SAXException {
         DocletTag[] tags = entity.getTags();
-        
+
         boolean tagElementPassed = false;
         for (int i=0; i<tags.length; i++) {
             String tagName = tags[i].getName();
@@ -817,7 +817,7 @@ public final class QDoxSource
                 saxStartElement(handler, TAGS_ELEMENT);
                 tagElementPassed = true;
             }
-            
+
             if (tagName.equals("see")) {
                 saxStartElement(handler, tagName);
                 outputLink(handler, value, null);
@@ -829,15 +829,15 @@ public final class QDoxSource
                 saxEndElement(handler, tagName);
             }
         }
-        
+
         if (tagElementPassed) {
             saxEndElement(handler, TAGS_ELEMENT);
         }
     }
-    
+
     /**
      * Outputs a Javadoc comment.
-     * 
+     *
      * @param handler SAX ContentHandler
      * @param comment The Javadoc comment
      * @throws SAXException if something goes wrong
@@ -852,7 +852,7 @@ public final class QDoxSource
             //} else {
                 saxStartElement(handler, COMMENT_ELEMENT);
             //}
-            
+
             while (reLink.match(comment)) {
                 String ref = null;
                 String display = null;
@@ -865,25 +865,25 @@ public final class QDoxSource
                     ref = reLink.getParen(6);
                     display = EMPTY;
                 }
-                
+
                 // Output SAX:
                 saxCharacters(handler, comment.substring(0, reLink.getParenStart(0)));
-                
+
                 outputLink(handler, ref, display);
-                
+
                 // Cut from doc:
                 comment = comment.substring(reLink.getParenEnd(0));
             }
-            
+
             saxCharacters(handler, comment);
-            
+
             saxEndElement(handler, COMMENT_ELEMENT);
         }
     }
-    
+
     /**
      * Method outputLink.
-     * 
+     *
      * @param handler
      * @param ref
      * @param display
@@ -892,29 +892,29 @@ public final class QDoxSource
         String classPart = resolveClassNameFromLink(ref);
         String memberPart = resolveMemberNameFromLink(ref);
         String displayPart = display;
-        
+
         List attrs = new ArrayList();
-        
+
         if (classPart != null && classPart.length() > 0) {
             attrs.add(new String[] {LINK_CLASS_ATTRIBUTE, classPart});
         }
-        
+
         if (memberPart != null && memberPart.length() > 0) {
             attrs.add(new String[] {LINK_MEMBER_ATTRIBUTE, memberPart});
         }
-        
+
         if (display == null || display.length() == 0 && !ref.equals(classPart + "#" + memberPart)) {
             displayPart = ref.replace('#', '.');
         }
-        
+
         saxStartElement(handler, LINK_ELEMENT, (String[][]) attrs.toArray(new String[][]{{}}));
         saxCharacters(handler, displayPart);
         saxEndElement(handler, LINK_ELEMENT);
     }
-    
+
     /**
      * Method outputInnerClasses.
-     * 
+     *
      * @param handler
      * @param jClass
      * @param detailed
@@ -925,10 +925,10 @@ public final class QDoxSource
             if (detailed) {
                 saxStartElement(handler, INNERCLASSES_ELEMENT);
             }
-            
+
             // Output inheritance:
             outputSuperClassInheritance(handler, jClass, INNERCLASS_INHERITANCE);
-            
+
             for (int i=0; i<innerClasses.length; i++) {
                 outputClassStartElement(handler, innerClasses[i]);
                 if (detailed) {
@@ -938,16 +938,16 @@ public final class QDoxSource
                 }
                 outputClassEndElement(handler, innerClasses[i]);
             }
-            
+
             if (detailed) {
                 saxEndElement(handler, INNERCLASSES_ELEMENT);
             }
         }
     }
-    
+
     /**
      * Method outputImplements.
-     * 
+     *
      * @param handler
      * @param jClass
      */
@@ -957,46 +957,46 @@ public final class QDoxSource
             if (detailed) {
                 saxStartElement(handler, IMPLEMENTS_ELEMENT);
             }
-            
+
             // Output inheritance:
             outputSuperClassInheritance(handler, jClass, INTERFACE_INHERITANCE);
-            
+
             for (int i=0; i<interfaces.length; i++) {
                 String name = interfaces[i].getValue().toString();
                 String pckg = name.substring(0, name.lastIndexOf('.'));
                 name = name.substring(pckg.length() + 1);
-                
+
                 saxStartElement(handler, INTERFACE_ELEMENT,
                     new String[][] {{CLASSNAME_ATTRIBUTE, name},
                                     {PACKAGE_ATTRIBUTE, pckg},
                                     {QNAME_ATTRIBUTE, pckg + '.' + name}});
                 saxEndElement(handler, INTERFACE_ELEMENT);
             }
-            
+
             if (detailed) {
                 saxEndElement(handler, IMPLEMENTS_ELEMENT);
             }
         }
     }
-    
+
     /**
      * Method outputFields.
-     * 
+     *
      * @param handler
      * @param jClass
      * @param detailed
      */
     private void outputFields(ContentHandler handler, JavaClass jClass, boolean detailed) throws SAXException {
         JavaField[] fields = jClass.getFields();
-        
+
         if (fields.length > 0 || hasInheritance(jClass, FIELD_INHERITANCE)) {
             if (detailed) {
                 saxStartElement(handler, FIELDS_ELEMENT);
             }
-            
+
             // Output inheritance:
             outputSuperClassInheritance(handler, jClass, FIELD_INHERITANCE);
-            
+
             for (int i=0; i<fields.length; i++) {
                 saxStartElement(handler, FIELD_ELEMENT,
                     new String[][] {{NAME_ATTRIBUTE, fields[i].getName()},
@@ -1009,18 +1009,18 @@ public final class QDoxSource
                 }
                 saxEndElement(handler, FIELD_ELEMENT);
             }
-            
+
             if (detailed) {
                 saxEndElement(handler, FIELDS_ELEMENT);
             }
         }
     }
-    
+
     /**
      * Method outputClassStartElement.
-     * 
+     *
      * @param handler
-     * @param superClass
+     * @param jClass
      */
     private void outputInheritStartElement(ContentHandler handler, JavaClass jClass) throws SAXException {
         saxStartElement(handler, INHERIT_ELEMENT,
@@ -1029,12 +1029,12 @@ public final class QDoxSource
                             {PACKAGE_ATTRIBUTE, jClass.getPackage()},
                             {QNAME_ATTRIBUTE, jClass.getFullyQualifiedName()}});
     }
-    
+
     /**
      * Method outputClassStartElement.
-     * 
+     *
      * @param handler
-     * @param superClass
+     * @param jClass
      */
     private void outputClassStartElement(ContentHandler handler, JavaClass jClass) throws SAXException {
         saxStartElement(handler, jClass.isInterface() ? INTERFACE_ELEMENT : CLASS_ELEMENT,
@@ -1042,22 +1042,22 @@ public final class QDoxSource
                             {PACKAGE_ATTRIBUTE, jClass.getPackage()},
                             {QNAME_ATTRIBUTE, jClass.getFullyQualifiedName()}});
     }
-    
+
     /**
      * Method outputClassEndElement.
-     * 
+     *
      * @param handler
      * @param jClass
      */
     private void outputClassEndElement(ContentHandler handler, JavaClass jClass) throws SAXException {
         saxEndElement(handler, jClass.isInterface() ? INTERFACE_ELEMENT : CLASS_ELEMENT);
     }
-    
+
     /**
      * Method outputMethods.
-     * 
+     *
      * @param handler
-     * @param methods
+     * @param jClass
      * @param mode
      */
     private void outputMethods(ContentHandler handler, JavaClass jClass, int mode) throws SAXException {
@@ -1065,7 +1065,7 @@ public final class QDoxSource
         int size = 0;
         String elementGroup, element;
         JavaMethod[] methods = jClass.getMethods();
-        
+
         if (mode == CONSTRUCTOR_MODE) {
             elementGroup = CONSTRUCTORS_ELEMENT;
             element = CONSTRUCTOR_ELEMENT;
@@ -1083,18 +1083,18 @@ public final class QDoxSource
                 }
             }
         }
-        
+
         if (size > 0 || (mode == METHOD_MODE && hasInheritance(jClass, METHOD_INHERITANCE)) ||
             (mode == CONSTRUCTOR_MODE && hasInheritance(jClass, CONSTRUCTOR_INHERITANCE))) {
             saxStartElement(handler, elementGroup);
-            
+
             // Output inheritance:
             if (mode == METHOD_MODE) {
                 outputSuperClassInheritance(handler, jClass, METHOD_INHERITANCE);
             } else {
                 outputSuperClassInheritance(handler, jClass, CONSTRUCTOR_INHERITANCE);
             }
-        
+
             for (int i=0; i<methods.length; i++) {
                 if (mode == METHOD_MODE && methods[i].getReturns() != null) {
                     outputMethodStartElement(handler, methods[i]);
@@ -1106,16 +1106,16 @@ public final class QDoxSource
                     // Do not process this method or constructor:
                     continue;
                 }
-                
+
                 JavaParameter[] params = methods[i].getParameters();
                 DocletTag[] paramTags = methods[i].getTagsByName("param");
                 DocletTag[] throwsTags = methods[i].getTagsByName("throws");
-                
+
                 // Modifiers, comment, tags:
                 outputModifiers(handler, methods[i]);
                 outputComment(handler, methods[i].getComment());
                 outputTags(handler, methods[i]);
-                
+
                 // Parameters:
                 if (params.length > 0) {
                     saxStartElement(handler, PARAMETERS_ELEMENT);
@@ -1125,7 +1125,7 @@ public final class QDoxSource
                             new String[][] {{NAME_ATTRIBUTE, paramName},
                                             {TYPE_ATTRIBUTE, params[j].getType().getValue()},
                                             {DIMENSIONS_ATTRIBUTE, Integer.toString(params[j].getType().getDimensions())}});
-                        
+
                         // Is there any doc for this parameter?
                         for (int k=0; k<paramTags.length; k++) {
                             String paramValue = paramTags[k].getValue();
@@ -1135,12 +1135,12 @@ public final class QDoxSource
                                 outputComment(handler, splitIndex > 0 ? paramValue.substring(splitIndex + 1) : "");
                             }
                         }
-                        
+
                         saxEndElement(handler, PARAMETER_ELEMENT);
                     }
                     saxEndElement(handler, PARAMETERS_ELEMENT);
                 }
-                
+
                 // Exceptions:
                 Type[] exceptions = methods[i].getExceptions();
                 if (exceptions.length + throwsTags.length > 0) {
@@ -1149,7 +1149,7 @@ public final class QDoxSource
                         // Iterate each exception which is declared in the throws clause:
                         String exceptionName = exceptions[j].getValue();
                         saxStartElement(handler, EXCEPTION_ELEMENT, new String[][] {{NAME_ATTRIBUTE, exceptionName}});
-                        
+
                         // Is there any doc for this exception?
                         if (throwsTags.length > 0) {
                             String exceptionClassName = exceptionName.substring(exceptionName.lastIndexOf('.'));
@@ -1162,43 +1162,43 @@ public final class QDoxSource
                                 }
                             }
                         }
-                        
+
                         saxEndElement(handler, EXCEPTION_ELEMENT);
                     }
-                    
+
                     for (int j=0; j<throwsTags.length; j++) {
                         // Iterate each exception which is not declared in the throws clause but documented in javadoc:
                         String content = throwsTags[j].getValue();
                         int splitIndex = content.indexOf(' ');
                         String exceptionName = content.substring(0, splitIndex);
                         String qualifiedExceptionName = getQualifiedClassName(exceptionName);
-                        
+
                         // Does the exception *not* exist in the throws clause?
                         boolean found = false;
                         for (int k=0; !found && k<exceptions.length; k++) {
                             found = qualifiedExceptionName.equals(exceptions[k].getValue());
                         }
-                        
+
                         if (!found) {
                             saxStartElement(handler, EXCEPTION_ELEMENT, new String[][] {{NAME_ATTRIBUTE, qualifiedExceptionName}});
                             outputComment(handler, splitIndex > 0 ? content.substring(splitIndex + 1) : "");
                             saxEndElement(handler, EXCEPTION_ELEMENT);
                         }
                     }
-                    
+
                     saxEndElement(handler, THROWS_ELEMENT);
                 }
-                
+
                 saxEndElement(handler, element);
             }
-            
+
             saxEndElement(handler, elementGroup);
         }
     }
-    
+
     /**
      * Method getSignature.
-     * 
+     *
      * @param javaMethod
      * @return String
      */
@@ -1217,13 +1217,13 @@ public final class QDoxSource
             }
         }
         sb.append(')');
-        
+
         return sb.toString();
     }
-    
+
     /**
      * Method outputMethodStartElement.
-     * 
+     *
      * @param handler
      * @param javaMethod
      */
@@ -1240,10 +1240,10 @@ public final class QDoxSource
                                 {SIGNATURE_ATTRIBUTE, getSignature(javaMethod)}});
         }
     }
-    
+
     /**
      * Method outputMethodEndElement.
-     * 
+     *
      * @param handler
      */
     private void outputMethodEndElement(ContentHandler handler, JavaMethod javaMethod) throws SAXException {
@@ -1253,17 +1253,17 @@ public final class QDoxSource
             saxEndElement(handler, CONSTRUCTOR_ELEMENT);
         }
     }
-    
+
     /**
      * Method saxStartElement.
-     * 
+     *
      * @param handler
      * @param localName
      */
     private void saxStartElement(ContentHandler handler, String localName) throws SAXException {
         handler.startElement(NS_URI, localName, NS_PREFIX + ':' + localName, EMPTY_ATTRS);
     }
-    
+
     /**
      * Method saxStartElement.
      *
@@ -1280,25 +1280,25 @@ public final class QDoxSource
                 saxAttrs.addAttribute(attrs[i][0], attrs[i][1], attrs[i][2], attrs[i][3], attrs[i][4]);
             }
         }
-        
+
         handler.startElement(NS_URI, localName, NS_PREFIX + ':' + localName, saxAttrs);
     }
-    
+
     /**
      * Method saxEndElement.
-     * 
+     *
      * @param handler
      * @param localName
      */
     private void saxEndElement(ContentHandler handler, String localName) throws SAXException {
         handler.endElement(NS_URI, localName, NS_PREFIX + ':' + localName);
     }
-    
+
     /**
      * Method saxCharacters.
-     * 
+     *
      * @param handler
-     * @param string
+     * @param text
      */
     private void saxCharacters(ContentHandler handler, String text) throws SAXException {
         if (text != null && text.length() > 0) {
