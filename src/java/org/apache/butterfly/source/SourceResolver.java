@@ -16,22 +16,32 @@
 package org.apache.butterfly.source;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 
 /**
  * Description of SourceResolver.
  * 
- * @version CVS $Id: SourceResolver.java,v 1.2 2004/07/25 21:55:20 ugo Exp $
+ * @version CVS $Id$
  */
-public class SourceResolver {
+public class SourceResolver implements ApplicationContextAware {
+    protected static final Log logger = LogFactory.getLog(SourceResolver.class);
     private Map factories;
-    URL baseURL;
+    private URL baseURL;
     
     public SourceResolver() {
         try {
+            // Default value
             baseURL = new File(System.getProperty("user.dir")).toURL();
         } catch (MalformedURLException e) {
             throw new SourceException(e);
@@ -121,5 +131,21 @@ public class SourceResolver {
         else
             systemID = SourceUtil.absolutize(baseURI, systemID);
         return systemID;
+    }
+
+    /* (non-Javadoc)
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        try {
+            this.baseURL = applicationContext.getResource("/").getURL();
+            if (logger.isInfoEnabled()) {
+                logger.info("SourceResolver's base URL set to [" + baseURL + "].");
+            }
+        } catch (IOException e) {
+            logger.fatal("Cannot get base URL for Source resolver.", e);
+            throw new FatalBeanException("Cannot get base URL for Source resolver.", e);
+        }
+        
     }
 }
