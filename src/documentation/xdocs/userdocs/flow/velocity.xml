@@ -41,7 +41,7 @@
    </dl>
    <p>
    Cocoon installs a Velocity introspector that makes it possible for you
-   to access JavaScript objects and arrays in your template, as well as Java objects. For example, assuming you had a Flowscript like this:</p>
+   to access JavaScript objects and arrays in your templates, as well as Java objects. For example, assuming you had a Flowscript like this:</p>
    <source>
     sendPage("myTemplate.vm", {colors: ["red", "blue", "yellow"]});
    </source>

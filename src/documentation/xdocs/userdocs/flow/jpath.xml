@@ -39,16 +39,16 @@
      </source>
     </s2>
     <s2 title ="choose">
-     <p>The <code>choose</code> tag performs conditional block execution by the embedded
+     <p>The <code>choose</code> tag performs conditional block execution by its embedded
         <code>when</code> sub tags. It renders the body of the first <code>when</code> tag whose
         <code>test</code> condition evaluates to true. If none of the <code>test</code> conditions
-        of nested <code>when</code> tags evaluate to <code>true</code>, then the body of an
+        of its nested <code>when</code> tags evaluate to <code>true</code>, then the body of its
         <code>otherwise</code> tag is evaluated, if present:</p>
      <source>
 &lt;choose&gt;
   &lt;when test="XPathExpression"&gt;
     body
-  &lt;/when&gt;
+  &lt;/when&gt;+
   &lt;otherwise&gt;
     body
   &lt;/otherwise&gt;?
