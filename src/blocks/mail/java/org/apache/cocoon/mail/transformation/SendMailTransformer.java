@@ -201,7 +201,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.1 2003/08/08 11:35:03 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.2 2003/08/08 14:15:41 reinhard Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -671,11 +671,12 @@ public class SendMailTransformer extends AbstractSAXTransformer
             super.sendEndElementEvent("email:message");
             super.sendStartElementEvent("email:stacktrace");
 
+/* doesn't compile under 1.3.1 (RP)
             for (int i = 0; i < ex.getStackTrace().length; i++) {
                 String s = ((StackTraceElement) ex.getStackTrace()[i]).toString();
                 super.sendTextEvent(s + "\n");
             }
-
+*/
             super.sendEndElementEvent("email:stacktrace");
             super.sendEndElementEvent("email:exception");
         } catch (SAXException e) {
