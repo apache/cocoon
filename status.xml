@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated commons-httpclient to 2.0.2
+   </action>
    <action dev="VG" type="update">
      Flow invocations (function calls or continuation invocations) should always
      result in a response. Flowscripts with no response are prohibited.
