@@ -62,6 +62,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * RequestParameterModule accesses request parameters. If the
@@ -73,7 +75,7 @@ import java.util.Map;
  * such array is returned.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: RequestParameterModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $
  */
 public class RequestParameterModule extends AbstractInputModule implements ThreadSafe {
 
@@ -121,14 +123,21 @@ public class RequestParameterModule extends AbstractInputModule implements Threa
             } else {
                 suffix = "";
             }
-            List values = new LinkedList();
-            Enumeration names = request.getParameterNames();
+            SortedSet names = new TreeSet();
+            Enumeration allNames = request.getParameterNames();
 
-            while (names.hasMoreElements()) {
-                String pname = (String) names.nextElement();
+            while (allNames.hasMoreElements()) {
+                String pname = (String) allNames.nextElement();
                 if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
-                    values.add( request.getParameter( pname ) );
+                    names.add(pname);
                 }
+            }
+
+            List values = new LinkedList();
+            Iterator j = names.iterator();
+            while (j.hasNext()){
+                String pname = (String) j.next();
+                values.add( request.getParameter( pname ) );
             }
 
             return values.toArray();

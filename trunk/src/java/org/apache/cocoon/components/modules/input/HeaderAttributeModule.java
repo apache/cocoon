@@ -62,6 +62,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * HeaderAttributeModule accesses request header attributes. If the
@@ -71,7 +73,7 @@ import java.util.Map;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: HeaderAttributeModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $ */
+ * @version CVS $Id: HeaderAttributeModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $ */
 public class HeaderAttributeModule extends AbstractInputModule implements ThreadSafe {
     
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
@@ -120,14 +122,21 @@ public class HeaderAttributeModule extends AbstractInputModule implements Thread
             } else {
                 suffix = "";
             }
-            List values = new LinkedList();
-            Enumeration names = request.getHeaderNames();
-            
-            while (names.hasMoreElements()) {
-                String pname = (String) names.nextElement();
+            SortedSet names = new TreeSet();
+            Enumeration allNames = request.getHeaderNames();
+
+            while (allNames.hasMoreElements()) {
+                String pname = (String) allNames.nextElement();
                 if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
-                    values.add( request.getHeader( pname ) );
+                    names.add(pname);
                 }
+            }
+
+            List values = new LinkedList();
+            Iterator j = names.iterator();
+            while (j.hasNext()){
+                String pname = (String) j.next();
+                values.add( request.getHeader( pname ) );
             }
             
             return values.toArray();
