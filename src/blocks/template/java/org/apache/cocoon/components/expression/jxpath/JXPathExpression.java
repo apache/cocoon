@@ -16,21 +16,30 @@
 package org.apache.cocoon.components.expression.jxpath;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.Variables;
+import org.mozilla.javascript.NativeArray;
+import org.w3c.dom.Node;
 
 public class JXPathExpression implements Expression {
 
     private final String language;
     private final String expression;
     private final CompiledExpression compiledExpression;
+    private boolean lenient = false;
+
+    public static final String LENIENT = "lenient";
 
     public JXPathExpression(String language, String expression)
         throws ExpressionException {
@@ -46,7 +55,29 @@ public class JXPathExpression implements Expression {
 
     public Iterator iterate(ExpressionContext context)
         throws ExpressionException {
-        return this.compiledExpression.iterate(getContext(context));
+        final JXPathContext jxpathContext = getContext(context);
+        Object val =
+            this.compiledExpression.getPointer(jxpathContext, this.expression).getNode();
+        // FIXME: workaround for JXPath bug
+        if (val instanceof NativeArray)
+            return new JSIntrospector.NativeArrayIterator((NativeArray) val);
+        else
+            return new Iterator() {
+                    Iterator iter =
+                        compiledExpression.iteratePointers(jxpathContext);
+                    
+                    public boolean hasNext() {
+                        return iter.hasNext();
+                    }
+                    
+                    public Object next() {
+                        return ((Pointer)iter.next()).getNode();
+                    }
+                    
+                    public void remove() {
+                        iter.remove();
+                    }
+                };
     }
 
     public void assign(ExpressionContext context, Object value)
@@ -62,11 +93,46 @@ public class JXPathExpression implements Expression {
         return this.language;
     }
 
+    public void setProperty(String property, Object value) {
+        if (LENIENT.equals(property))
+            this.lenient = ((Boolean)value).booleanValue();
+    }
+
+    // Hack: try to prevent JXPath from converting result to a String
+    public Object getNode(ExpressionContext context) throws ExpressionException {
+        Iterator iter =
+            this.compiledExpression.iteratePointers(getContext(context));
+        if (iter.hasNext()) {
+            Pointer first = (Pointer)iter.next();
+            if (iter.hasNext()) {
+                List result = new LinkedList();
+                result.add(first.getNode());
+                boolean dom = (first.getNode() instanceof Node);
+                while (iter.hasNext()) {
+                    Object obj = ((Pointer)iter.next()).getNode();
+                    dom = dom && (obj instanceof Node);
+                    result.add(obj);
+                }
+                Object[] arr;
+                if (dom) {
+                    arr = new Node[result.size()];
+                } else {
+                    arr = new Object[result.size()];
+                }
+                result.toArray(arr);
+                return arr;
+            }
+            return first.getNode();                    
+        }
+        return null;
+    }
+
     private JXPathContext getContext(ExpressionContext context) {
         // This could be made more efficient by caching the
         // JXPathContext within the Context object.
-        JXPathContext jxcontext = JXPathContext.newContext(null, context.getContextBean());
+        JXPathContext jxcontext = JXPathContext.newContext(context.getContextBean());
         jxcontext.setVariables(new VariableAdapter(context));
+        jxcontext.setLenient(this.lenient);
         return jxcontext;
     }
 

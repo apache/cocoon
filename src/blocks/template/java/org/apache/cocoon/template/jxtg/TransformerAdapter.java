@@ -53,7 +53,7 @@ public class TransformerAdapter extends ServiceableTransformer {
 
         public void endDocument() throws SAXException {
             super.endDocument();
-            gen.performGeneration(gen.getConsumer(), gen.getJexlContext(), gen.getJXPathContext(), null, getStartEvent(), null);
+            gen.performGeneration(gen.getConsumer(), null, getStartEvent(), null);
         }
 
         void setConsumer(XMLConsumer consumer) {
@@ -92,3 +92,4 @@ public class TransformerAdapter extends ServiceableTransformer {
         templateConsumer.setConsumer(xmlConsumer);
     }
 }
+

@@ -22,10 +22,9 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -89,20 +88,20 @@ public class StartFormatNumber extends StartInstruction {
         this.var = JXTExpression.compileExpr(attrs.getValue("var"), null, locator);
     }
 
-    public String format(JexlContext jexl, JXPathContext jxp) throws Exception {
+    public String format(ExpressionContext expressionContext) throws Exception {
         // Determine formatting locale
-        String var = this.var.getStringValue(jexl, jxp);
-        Number input = this.value.getNumberValue(jexl, jxp);
-        String type = this.type.getStringValue(jexl, jxp);
-        String pattern = this.pattern.getStringValue(jexl, jxp);
-        String currencyCode = this.currencyCode.getStringValue(jexl, jxp);
-        String currencySymbol = this.currencySymbol.getStringValue(jexl, jxp);
-        Boolean isGroupingUsed = this.isGroupingUsed.getBooleanValue(jexl, jxp);
-        Number maxIntegerDigits = this.maxIntegerDigits.getNumberValue(jexl, jxp);
-        Number minIntegerDigits = this.minIntegerDigits.getNumberValue(jexl, jxp);
-        Number maxFractionDigits = this.maxFractionDigits.getNumberValue(jexl, jxp);
-        Number minFractionDigits = this.minFractionDigits.getNumberValue(jexl, jxp);
-        String localeStr = this.locale.getStringValue(jexl, jxp);
+        String var = this.var.getStringValue(expressionContext);
+        Number input = this.value.getNumberValue(expressionContext);
+        String type = this.type.getStringValue(expressionContext);
+        String pattern = this.pattern.getStringValue(expressionContext);
+        String currencyCode = this.currencyCode.getStringValue(expressionContext);
+        String currencySymbol = this.currencySymbol.getStringValue(expressionContext);
+        Boolean isGroupingUsed = this.isGroupingUsed.getBooleanValue(expressionContext);
+        Number maxIntegerDigits = this.maxIntegerDigits.getNumberValue(expressionContext);
+        Number minIntegerDigits = this.minIntegerDigits.getNumberValue(expressionContext);
+        Number maxFractionDigits = this.maxFractionDigits.getNumberValue(expressionContext);
+        Number minFractionDigits = this.minFractionDigits.getNumberValue(expressionContext);
+        String localeStr = this.locale.getStringValue(expressionContext);
         Locale loc = localeStr != null
             ? ValueHelper.parseLocale(localeStr, null)
             : Locale.getDefault();
@@ -129,8 +128,7 @@ public class StartFormatNumber extends StartInstruction {
             formatted = input.toString();
         }
         if (var != null) {
-            jexl.getVars().put(var, formatted);
-            jxp.getVariables().declareVariable(var, formatted);
+            expressionContext.put(var, formatted);
             return null;
         }
         return formatted;

@@ -91,6 +91,14 @@ public class JexlExpression implements Expression {
         return this.language;
     }
 
+    public void setProperty(String property, Object value) {
+        // Has no properties
+    }
+
+    public Object getNode(ExpressionContext context) throws ExpressionException {
+        return evaluate(context);
+    }
+
     private static class ContextAdapter implements JexlContext {
         private final ExpressionContext context;
         public ContextAdapter(ExpressionContext context) {

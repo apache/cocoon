@@ -56,6 +56,8 @@ public class Parser implements ContentHandler, LexicalHandler {
     final static String FORMAT_DATE = "formatDate";
     final static String COMMENT = "comment";
 
+    public static final Locator NULL_LOCATOR = new LocatorImpl();
+
     public Parser() {
         // EMPTY
     }
@@ -103,8 +105,7 @@ public class Parser implements ContentHandler, LexicalHandler {
             throws SAXException {
         if (charBuf == null) {
             charBuf = new StringBuffer(length);
-            charLocation = locator != null ? new LocatorImpl(locator)
-                    : JXTemplateGenerator.NULL_LOCATOR;
+            charLocation = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
         }
         charBuf.append(ch, start, length);
     }

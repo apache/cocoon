@@ -17,35 +17,22 @@ package org.apache.cocoon.template.jxtg.environment;
 
 import java.util.Map;
 
-import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
-import org.apache.commons.jxpath.JXPathContext;
+import org.apache.cocoon.template.jxtg.script.ScriptManager;
 
 public class ExecutionContext {
-    private MyJexlContext jexlContext;
-    private JXPathContext jxpathContext;
     private Map definitions;
+    private ScriptManager scriptManager;
 
-    public ExecutionContext(MyJexlContext jexlContext,
-            JXPathContext jxpathContext, Map definitions) {
-        this.jexlContext = jexlContext;
-        this.jxpathContext = jxpathContext;
+    public ExecutionContext(Map definitions, ScriptManager scriptManager) {
         this.definitions = definitions;
-    }
-
-    public MyJexlContext getJexlContext() {
-        return this.jexlContext;
-    }
-
-    public JXPathContext getJXPathContext() {
-        return this.jxpathContext;
+        this.scriptManager = scriptManager;
     }
 
     public Map getDefinitions() {
         return this.definitions;
     }
 
-    public ExecutionContext getChildContext(MyJexlContext jexlContext,
-            JXPathContext jxpathContext) {
-        return new ExecutionContext(jexlContext, jxpathContext, this.definitions);
+    public ScriptManager getScriptManager() {
+        return this.scriptManager;
     }
 }

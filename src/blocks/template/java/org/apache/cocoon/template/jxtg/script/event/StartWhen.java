@@ -40,6 +40,8 @@ public class StartWhen extends StartInstruction {
         String test = attrs.getValue("test");
         if (test != null) {
             this.test = JXTExpression.compileExpr(test, "when: \"test\": ", locator);
+            // Why is test lenient?
+            this.test.setLenient(Boolean.TRUE);
             
             StartChoose startChoose = (StartChoose) stack.peek();
             if (startChoose.getFirstChoice() != null) {

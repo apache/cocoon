@@ -25,7 +25,6 @@ import org.xml.sax.SAXParseException;
 
 public class StartOut extends StartInstruction {
     private final JXTExpression compiledExpression;
-    private final Boolean lenient;
 
     public StartOut(StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {
@@ -37,7 +36,9 @@ public class StartOut extends StartInstruction {
             this.compiledExpression =
                 JXTExpression.compileExpr(value, "out: \"value\": ", locator);
             String lenientValue = attrs.getValue("lenient");
-            this.lenient = lenientValue == null ? null : Boolean.valueOf(lenientValue);
+            Boolean lenient = lenientValue == null ? null : Boolean.valueOf(lenientValue);
+            // Why can out be lenient?
+            this.compiledExpression.setLenient(lenient);
         } else {
             throw new SAXParseException("out: \"value\" is required", locator, null);
         }
@@ -45,9 +46,5 @@ public class StartOut extends StartInstruction {
 
     public JXTExpression getCompiledExpression() {
         return compiledExpression;
-    }
-
-    public Boolean getLenient() {
-        return lenient;
     }
 }

@@ -17,40 +17,39 @@ package org.apache.cocoon.template.jxtg.expression;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
+import org.apache.cocoon.components.expression.Expression;
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.components.expression.jexl.JexlCompiler;
+import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
+import org.apache.cocoon.components.expression.jxpath.JXPathExpression;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
-import org.apache.cocoon.template.jxtg.environment.JSIntrospector;
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.util.Introspector;
-import org.apache.commons.jexl.util.introspection.Info;
-import org.apache.commons.jxpath.CompiledExpression;
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Pointer;
-import org.mozilla.javascript.NativeArray;
-import org.w3c.dom.Node;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class JXTExpression extends Subst {
 
-    // Factory classes
+    private String raw;
+    private Object compiledExpression;
 
-    public static JXTExpression compile(final String variable, boolean xpath)
-            throws Exception {
-        Object compiled;
+    private static JXPathCompiler jxpathCompiler = new JXPathCompiler();
+    private static JexlCompiler jexlCompiler = new JexlCompiler();
+    private static String JXPATH = "jxpath";
+    private static String JEXL = "jexl";
+
+    // Factory methods
+
+    public static JXTExpression compile(final String expression, boolean xpath)
+        throws Exception {
+        Expression compiled;
         if (xpath) {
-            compiled = JXPathContext.compile(variable);
+            compiled = jxpathCompiler.compile(JXPATH, expression);
         } else {
-            compiled = ExpressionFactory.createExpression(variable);
+            compiled = jexlCompiler.compile(JEXL, expression);
         }
-        return new JXTExpression(variable, compiled);
+        return new JXTExpression(expression, compiled);
     }
 
     public static JXTExpression compileBoolean(String val, String msg,
@@ -126,7 +125,7 @@ public class JXTExpression extends Subst {
      */
 
     public static JXTExpression compileExpr(String expr, String errorPrefix,
-            Locator location) throws SAXParseException {
+                                            Locator location) throws SAXParseException {
         try {
             return compileExpr(expr);
         } catch (Exception exc) {
@@ -141,13 +140,10 @@ public class JXTExpression extends Subst {
 
     // Members
 
-    public JXTExpression(String raw, Object expr) {
+    private JXTExpression(String raw, Object expr) {
         this.raw = raw;
         this.compiledExpression = expr;
     }
-
-    String raw;
-    Object compiledExpression;
 
     private Object getCompiledExpression() {
         return compiledExpression;
@@ -164,88 +160,21 @@ public class JXTExpression extends Subst {
     // Geting the value of the expression in various forms
 
     // Hack: try to prevent JXPath from converting result to a String
-    public Object getNode(JexlContext jexlContext, JXPathContext jxpathContext, Boolean lenient)
+    public Object getNode(ExpressionContext expressionContext)
         throws Exception {
-        try {
-            Object compiled = this.getCompiledExpression();
-            if (compiled instanceof CompiledExpression) {
-                CompiledExpression e = (CompiledExpression)compiled;
-                boolean oldLenient = jxpathContext.isLenient();
-                if (lenient != null) jxpathContext.setLenient(lenient.booleanValue());
-                try {
-                    Iterator iter = e.iteratePointers(jxpathContext);
-                    if (iter.hasNext()) {
-                        Pointer first = (Pointer)iter.next();
-                        if (iter.hasNext()) {
-                            List result = new LinkedList();
-                            result.add(first.getNode());
-                            boolean dom = (first.getNode() instanceof Node);
-                            while (iter.hasNext()) {
-                                Object obj = ((Pointer)iter.next()).getNode();
-                                dom = dom && (obj instanceof Node);
-                                result.add(obj);
-                            }
-                            Object[] arr;
-                            if (dom) {
-                                arr = new Node[result.size()];
-                            } else {
-                                arr = new Object[result.size()];
-                            }
-                            result.toArray(arr);
-                            return arr;
-                        }
-                        return first.getNode();                    
-                    }
-                    return null;
-                } finally {
-                    jxpathContext.setLenient(oldLenient);
-                }
-            } else if (compiled instanceof Expression) {
-                Expression e = (Expression)compiled;
-                return e.evaluate(jexlContext);
-            }
-            return this.getRaw();
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof Exception) {
-                throw (Exception)t;
-            }
-            throw (Error)t;
-        }
+        Object compiled = this.getCompiledExpression();
+        if (compiled instanceof Expression)
+            return ((Expression)compiled).getNode(expressionContext);
+        return this.getRaw();
     }
 
-    public Object getNode(JexlContext jexlContext, JXPathContext jxpathContext)
+    public Iterator getIterator(ExpressionContext expressionContext)
         throws Exception {
-        return getNode(jexlContext, jxpathContext, null);
-    }
-
-    public Iterator getIterator(JexlContext jexlContext, JXPathContext jxpathContext, Locator loc) throws Exception {
         Iterator iter = null;
         if (this.getCompiledExpression() != null || this.getRaw() != null) {
-            if (this.getCompiledExpression() instanceof CompiledExpression) {
-                CompiledExpression compiledExpression = 
-                    (CompiledExpression) this.getCompiledExpression();
-                Object val =
-                    compiledExpression.getPointer(jxpathContext, this.getRaw()).getNode();
-                // FIXME: workaround for JXPath bug
+            if (this.getCompiledExpression() instanceof Expression) {
                 iter =
-                    val instanceof NativeArray ?
-                    new JSIntrospector.NativeArrayIterator((NativeArray) val)
-                        : compiledExpression.iteratePointers(jxpathContext);
-            } else if (this.getCompiledExpression() instanceof Expression) {
-                Expression e = (Expression) this.getCompiledExpression();
-                Object result = e.evaluate(jexlContext);
-                if (result != null) {
-                    iter = Introspector.getUberspect().getIterator(
-                                                                   result,
-                                                                   new Info(
-                                                                            loc.getSystemId(),
-                                                                            loc.getLineNumber(),
-                                                                            loc.getColumnNumber()));
-                }
-                if (iter == null) {
-                    iter = EMPTY_ITER;
-                }
+                    ((Expression)this.getCompiledExpression()).iterate(expressionContext);
             } else {
                 // literal value
                 iter = new Iterator() {
@@ -272,15 +201,15 @@ public class JXTExpression extends Subst {
         return iter;
     }
 
-    public Boolean getBooleanValue(JexlContext jexlContext, JXPathContext jxpathContext)
+    public Boolean getBooleanValue(ExpressionContext expressionContext)
         throws Exception {
-        Object res = getValue(jexlContext, jxpathContext);
+        Object res = getValue(expressionContext);
         return res instanceof Boolean ? (Boolean)res : null;
     }
 
-    public String getStringValue(JexlContext jexlContext, JXPathContext jxpathContext)
+    public String getStringValue(ExpressionContext expressionContext)
         throws Exception {
-        Object res = getValue(jexlContext, jxpathContext);
+        Object res = getValue(expressionContext);
         if (res != null) {
             return res.toString();
         }
@@ -290,9 +219,9 @@ public class JXTExpression extends Subst {
         return null;
     }
 
-    public Number getNumberValue(JexlContext jexlContext, JXPathContext jxpathContext)
+    public Number getNumberValue(ExpressionContext expressionContext)
         throws Exception {
-        Object res = getValue(jexlContext, jxpathContext);
+        Object res = getValue(expressionContext);
         if (res instanceof Number) {
             return (Number)res;
         }
@@ -302,48 +231,27 @@ public class JXTExpression extends Subst {
         return null;
     }
 
-    public int getIntValue(JexlContext jexlContext, JXPathContext jxpathContext)
+    public int getIntValue(ExpressionContext expressionContext)
         throws Exception {
-        Object res = getValue(jexlContext, jxpathContext);
+        Object res = getValue(expressionContext);
         return res instanceof Number ? ((Number)res).intValue() : 0;
     }
 
-    public Object getValue(JexlContext jexlContext, JXPathContext jxpathContext)
+    public Object getValue(ExpressionContext expressionContext)
         throws Exception {
-        return getValue(jexlContext, jxpathContext, null);
-    }
-
-    public Object getValue(JexlContext jexlContext, JXPathContext jxpathContext,
-                                  Boolean lenient) throws Exception {
         if (this.getCompiledExpression() != null) {
             Object compiled = this.getCompiledExpression();
-            try {
-                if (compiled instanceof CompiledExpression) {
-                    CompiledExpression e = (CompiledExpression) compiled;
-                    boolean oldLenient = jxpathContext.isLenient();
-                    if (lenient != null) {
-                        jxpathContext.setLenient(lenient.booleanValue());
-                    }
-                    try {
-                        return e.getValue(jxpathContext);
-                    } finally {
-                        jxpathContext.setLenient(oldLenient);
-                    }
-                } else if (compiled instanceof Expression) {
-                    Expression e = (Expression) compiled;
-                    return e.evaluate(jexlContext);
-                }
+            if (compiled instanceof Expression)
+                return ((Expression)compiled).evaluate(expressionContext);
+            else
                 return compiled;
-            } catch (InvocationTargetException e) {
-                Throwable t = e.getTargetException();
-                if (t instanceof Exception) {
-                    throw (Exception) t;
-                }
-                throw (Error) t;
-            }
-        } else {
+        } else
             return null;
-        }
+    }
+
+    public void setLenient(Boolean lenient) {
+        if (this.compiledExpression instanceof Expression)
+            ((Expression)this.compiledExpression).setProperty(JXPathExpression.LENIENT, lenient);
     }
 
     private static final Iterator EMPTY_ITER = new Iterator() {

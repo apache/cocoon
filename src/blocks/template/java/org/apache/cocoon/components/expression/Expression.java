@@ -27,4 +27,13 @@ public interface Expression {
     public String getExpression();
 
     public String getLanguage();
+
+    /* This method is added to handle that JXPath have two access
+       methods getValue and getNode, where getNode gives direct access
+       to the object while getValue might do some conversion of the
+       object. I would prefer to get rid of the getNode method, but
+       have not yet figured out how to get work in JXTG */
+    public Object getNode(ExpressionContext context) throws ExpressionException;
+
+    public void setProperty(String property, Object value);
 }
