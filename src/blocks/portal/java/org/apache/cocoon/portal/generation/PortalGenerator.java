@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.6 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.7 2004/04/14 18:25:11 joerg Exp $
  */
 public class PortalGenerator 
 extends ServiceableGenerator {
@@ -84,7 +84,7 @@ extends ServiceableGenerator {
             
             // This is a fix: if we don't use the link service here, we get
             // in some rare cases a wrong uri!
-            String uri = service.getComponentManager().getLinkService().getRefreshLinkURI();
+            service.getComponentManager().getLinkService().getRefreshLinkURI();
             
         } catch (ParameterException pe) {
             throw new ProcessingException("Parameter portal-name is required.");
