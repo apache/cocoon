@@ -30,7 +30,11 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.thread.RunnableManager;
 
 /**
  * The default implementation of {@link ContinuationsManager}.
@@ -43,7 +47,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Configurable, Disposable, ThreadSafe {
+        implements ContinuationsManager, Configurable, Disposable, ThreadSafe, Serviceable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -53,8 +57,6 @@ public class ContinuationsManagerImpl
      */
     protected SecureRandom random;
     protected byte[] bytes;
-
-    protected ContinuationInterrupt interrupt;
 
     /**
      * How long does a continuation exist in memory since the last
@@ -84,6 +86,7 @@ public class ContinuationsManagerImpl
 
     private String instrumentableName;
 
+    private ServiceManager serviceManager;
 
     public ContinuationsManagerImpl() throws Exception {
         try {
@@ -103,13 +106,17 @@ public class ContinuationsManagerImpl
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
 
         final Configuration expireConf = config.getChild("expirations-check");
+        final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
+        final long interval = expireConf.getChild("period", true).getValueAsLong(180000);
         try {
-            this.interrupt = new ContinuationInterrupt(expireConf);
-            Thread thread = new Thread(interrupt);
-            thread.setDaemon(true);
-            thread.setName("continuation-interrupt");
-            thread.start();
-            Thread.yield();
+            final RunnableManager runnableManager = (RunnableManager)serviceManager.lookup(RunnableManager.ROLE);
+            runnableManager.execute( new Runnable() {
+                    public void run()
+                    {
+                        expireContinuations();
+                    }
+                }, initialDelay, interval);
+            serviceManager.release(runnableManager);
         } catch (Exception e) {
             getLogger().warn("Could not enqueue continuations expiration task. " +
                              "Continuations will not automatically expire.", e);
@@ -117,13 +124,22 @@ public class ContinuationsManagerImpl
     }
 
     /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service()
+     */
+    public void service( ServiceManager manager )
+    throws ServiceException
+    {
+        this.serviceManager = manager;
+    }
+
+    /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         // stop the thread
-        if ( this.interrupt != null ) {
+        /*if ( this.interrupt != null ) {
             this.interrupt.doRun = false;
-        }
+        }*/
     }
     
     public WebContinuation createWebContinuation(Object kont,
@@ -321,7 +337,7 @@ public class ContinuationsManagerImpl
     /**
      * Remove all continuations which have already expired.
      */
-    private void expireContinuations() {
+    protected void expireContinuations() {
         long now = 0;
         if (getLogger().isDebugEnabled()) {
             now = System.currentTimeMillis();
@@ -352,47 +368,6 @@ public class ContinuationsManagerImpl
             displayAllContinuations();
             displayExpireSet();
             */
-        }
-    }
-
-
-    final class ContinuationInterrupt implements Runnable {
-        private final long interval;
-        private final long initialDelay;
-
-        public boolean doRun;
-        
-        /**
-         * @param expireConf
-         */
-        public ContinuationInterrupt(Configuration expireConf) {
-            // only periodic time triggers are supported
-            this.initialDelay = expireConf.getChild("offset", true).getValueAsLong(100);
-            this.interval = expireConf.getChild("period", true).getValueAsLong(100);
-        }
-
-        /**
-         * expire any continuations that need expiring.
-         */
-        public void run() {
-            this.doRun = true;
-            if ( this.initialDelay > 0 ) {
-                // Sleep
-                try {
-                    Thread.sleep(this.initialDelay);
-                } catch (InterruptedException ignore) { 
-                    // ignore
-                }
-            }
-            while (doRun) {
-                expireContinuations();
-                // Sleep
-                try {
-                    Thread.sleep(this.interval);
-                } catch (InterruptedException ignore) { 
-                    // ignore
-                }
-            }
         }
     }
 }

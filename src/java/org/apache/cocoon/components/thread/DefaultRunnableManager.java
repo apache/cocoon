@@ -16,11 +16,14 @@
 package org.apache.cocoon.components.thread;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,7 +62,8 @@ import java.util.TreeSet;
  */
 public class DefaultRunnableManager
     extends AbstractLogEnabled
-    implements RunnableManager, Configurable, Disposable, Runnable
+    implements RunnableManager, Configurable, Disposable, Runnable, Startable,
+                   ThreadSafe
 {
     //~ Static fields/initializers ---------------------------------------------
 
@@ -80,7 +84,7 @@ public class DefaultRunnableManager
     public static final String DEFAULT_THREAD_PRIORITY = "NORM";
 
     /** The default keep alive time */
-    public static final long DEFAULT_KEEP_ALIVE_TIME = 20000L;
+    public static final long DEFAULT_KEEP_ALIVE_TIME = 60000L;
 
     /** The default way to shutdown gracefully */
     public static final boolean DEFAULT_SHUTDOWN_GRACEFUL = false;
@@ -93,17 +97,20 @@ public class DefaultRunnableManager
 
     //~ Instance fields --------------------------------------------------------
 
+    /**
+     * Sorted set of <code>ExecutionInfo</code> instances, based on their next
+     * execution time.
+     */
+    protected SortedSet m_executionInfo = new TreeSet(  );
+
     /** The managed thread pools */
     final Map m_pools = new HashMap(  );
 
     /** The configured default ThreadFactory class instance */
     private Class m_defaultThreadFactoryClass;
 
-    /**
-     * Sorted set of <code>ExecutionInfo</code> instances, based on their next
-     * execution time.
-     */
-    protected SortedSet m_executionInfo = new TreeSet(  );
+    /** Keep us running? */
+    private boolean m_keepRunning = false;
 
     //~ Methods ----------------------------------------------------------------
 
@@ -255,13 +262,40 @@ public class DefaultRunnableManager
      */
     public void dispose(  )
     {
-        for( final Iterator i = m_pools.keySet(  ).iterator(  ); i.hasNext(  ); )
+        if( getLogger(  ).isDebugEnabled(  ) )
         {
-            final DefaultThreadPool pool = (DefaultThreadPool)i.next(  );
-            pool.shutdown(  );
+            getLogger(  ).debug( "Disposing all thread pools" );
         }
 
-        m_pools.clear(  );
+        for( final Iterator i = m_pools.keySet(  ).iterator(  ); i.hasNext(  ); )
+        {
+            final String poolName = (String)i.next(  );
+            final DefaultThreadPool pool =
+                (DefaultThreadPool)m_pools.get( poolName );
+
+            if( getLogger(  ).isDebugEnabled(  ) )
+            {
+                getLogger(  ).debug( "Disposing thread pool " +
+                                     pool.getName(  ) );
+            }
+
+            pool.shutdown(  );
+
+            if( getLogger(  ).isDebugEnabled(  ) )
+            {
+                getLogger(  ).debug( "Thread pool " + pool.getName(  ) +
+                                     " disposed" );
+            }
+        }
+
+        try
+        {
+            m_pools.clear(  );
+        }
+        catch( final Throwable t )
+        {
+            getLogger(  ).error( "Cannot dispose", t );
+        }
     }
 
     /**
@@ -271,6 +305,8 @@ public class DefaultRunnableManager
      * @param command The {@link Runnable} to execute
      * @param delay the delay befor first run
      * @param interval The interval for repeated runs
+     *
+     * @throws IllegalArgumentException DOCUMENT ME!
      */
     public void execute( final String threadPoolName,
                          final Runnable command,
@@ -281,10 +317,12 @@ public class DefaultRunnableManager
         {
             throw new IllegalArgumentException( "delay < 0" );
         }
+
         if( interval < 0 )
         {
             throw new IllegalArgumentException( "interval < 0" );
         }
+
         ThreadPool pool = (ThreadPool)m_pools.get( threadPoolName );
 
         if( null == pool )
@@ -293,6 +331,13 @@ public class DefaultRunnableManager
                                 "\" is not known. Will use ThreadPool \"" +
                                 DEFAULT_THREADPOOL_NAME + "\"" );
             pool = (ThreadPool)m_pools.get( DEFAULT_THREADPOOL_NAME );
+        }
+
+        if( getLogger(  ).isDebugEnabled(  ) )
+        {
+            getLogger(  ).debug( "Command entered: " + command.toString(  ) +
+                                 ",pool=" + pool.getName(  ) + ",delay=" +
+                                 delay + ",interval=" + interval );
         }
 
         new ExecutionInfo( pool, command, delay, interval, getLogger(  ) );
@@ -365,7 +410,12 @@ public class DefaultRunnableManager
      */
     public void run(  )
     {
-        while( true )
+        if( getLogger(  ).isDebugEnabled(  ) )
+        {
+            getLogger(  ).debug( "Entering loop" );
+        }
+
+        while( m_keepRunning )
         {
             synchronized( m_executionInfo )
             {
@@ -385,30 +435,73 @@ public class DefaultRunnableManager
                     }
                     else
                     {
-                        if(getLogger().isDebugEnabled() )
+                        if( getLogger(  ).isDebugEnabled(  ) )
                         {
-                            getLogger().debug( "No commands available. Will just wait for one" );
+                            getLogger(  ).debug( "No commands available. Will just wait for one" );
                         }
+
                         m_executionInfo.wait(  );
                     }
                 }
                 catch( final InterruptedException ie )
                 {
-                    if(getLogger().isDebugEnabled() )
+                    if( getLogger(  ).isDebugEnabled(  ) )
                     {
-                        getLogger().debug( "I've been interrupted" );
+                        getLogger(  ).debug( "I've been interrupted" );
                     }
                 }
 
-                final ExecutionInfo info = (ExecutionInfo)m_executionInfo.first(  );
-                final long delay =
-                    info.m_nextRun - System.currentTimeMillis(  );
-
-                if( delay < 0 )
+                if( m_keepRunning )
                 {
-                    info.execute(  );
+                    final ExecutionInfo info =
+                        (ExecutionInfo)m_executionInfo.first(  );
+                    final long delay =
+                        info.m_nextRun - System.currentTimeMillis(  );
+
+                    if( delay < 0 )
+                    {
+                        info.execute(  );
+                    }
                 }
             }
+        }
+
+        if( getLogger(  ).isDebugEnabled(  ) )
+        {
+            getLogger(  ).debug( "Exiting loop" );
+        }
+    }
+
+    /**
+     * Start the managing thread
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void start(  )
+        throws Exception
+    {
+        if( getLogger(  ).isDebugEnabled(  ) )
+        {
+            getLogger(  ).debug( "starting heart" );
+        }
+
+        m_keepRunning = true;
+        ( (ThreadPool)m_pools.get( DEFAULT_THREADPOOL_NAME ) ).execute( this );
+    }
+
+    /**
+     * Stop the managing thread
+     *
+     * @throws Exception DOCUMENT ME!
+     */
+    public void stop(  )
+        throws Exception
+    {
+        m_keepRunning = false;
+
+        synchronized( m_executionInfo )
+        {
+            m_executionInfo.notifyAll(  );
         }
     }
 
@@ -636,12 +729,19 @@ public class DefaultRunnableManager
          */
         void execute(  )
         {
+            if( getLogger(  ).isDebugEnabled(  ) )
+            {
+                getLogger(  ).debug( "Executing Command: " +
+                                     m_command.toString(  ) + ",pool=" +
+                                     m_pool.getName(  ) + ",delay=" + m_delay +
+                                     ",interval=" + m_interval );
+            }
+
             synchronized( m_executionInfo )
             {
                 m_executionInfo.remove( this );
                 m_nextRun = ( ( m_interval > 0 )
-                        ? ( System.currentTimeMillis(  ) + m_interval ) : 0 );
-
+                              ? ( System.currentTimeMillis(  ) + m_interval ) : 0 );
 
                 if( m_nextRun > 0 )
                 {
