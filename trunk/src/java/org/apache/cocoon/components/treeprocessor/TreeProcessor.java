@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.23 2003/10/30 14:05:13 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.24 2003/11/15 04:21:57 joerg Exp $
  */
 
 public class TreeProcessor
@@ -353,7 +353,7 @@ public class TreeProcessor
      * Do the actual processing, be it producing the response or just building the pipeline
      * @param environment
      * @param context
-     * @return
+     * @return true if the pipeline was successfully built, false otherwise.
      * @throws Exception
      */
     protected boolean process(Environment environment, InvokeContext context)

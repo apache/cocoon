@@ -67,7 +67,7 @@ import org.apache.cocoon.environment.Request;
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: FormValidatorAction.java,v 1.4 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: FormValidatorAction.java,v 1.5 2003/11/15 04:21:57 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"
@@ -83,7 +83,7 @@ public class FormValidatorAction extends AbstractValidatorAction {
      * 
      * @param objectModel the object model
      * @param set a collection of parameter names
-     * @return
+     * @return HashMap of required parameters 
      */
     protected HashMap createMapOfParameters(Map objectModel, Collection set) {
         String name;

@@ -217,20 +217,20 @@ import org.apache.regexp.RESyntaxException;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.7 2003/10/27 07:37:49 cziegeler Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.8 2003/11/15 04:21:57 joerg Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
     implements Configurable {
 
     /**
-     * Reads parameter values for all parameters that are contained in the active 
-     * constraint list. If a parameter has multiple values, all are stored in the 
+     * Reads parameter values for all parameters that are contained in the active
+     * constraint list. If a parameter has multiple values, all are stored in the
      * resulting map.
      * 
      * @param objectModel the object model
      * @param set a collection of parameter names
-     * @return
+     * @return HashMap
      */
     abstract protected HashMap createMapOfParameters(Map objectModel, Collection set);
 
@@ -360,7 +360,7 @@ public abstract class AbstractValidatorAction
      * @param params Map of parameter values to be validated
      * @param isString boolean indicating if the value is string encoded
      * @param type string holding the name of the datatype to validate value
-     * @return
+     * @return ValidatorActionHelper
      */
     protected ValidatorActionHelper validateValue(
         String name,
@@ -916,7 +916,7 @@ public abstract class AbstractValidatorAction
      * attribute. An empty array results in an empty map.
      * 
      * @param descriptor
-     * @return
+     * @return index map or empty map
      */
     protected Map indexConfiguration(Configuration[] descriptor) {
         if (descriptor == null)
@@ -935,7 +935,7 @@ public abstract class AbstractValidatorAction
      * 
      * @param valsetstr
      * @param consets
-     * @return
+     * @return collection of all parameters to validate
      */
     protected Collection resolveConstraints(String valsetstr, Map consets) {
         /* get the list of params to be validated */
@@ -954,7 +954,7 @@ public abstract class AbstractValidatorAction
 
     /**
      * Checks the default setting for reloading the descriptor file.
-     * @return
+     * @return boolean
      */
     protected boolean isDescriptorReloadable() {
         // read global parameter settings
@@ -998,7 +998,7 @@ public abstract class AbstractValidatorAction
      * @param set
      * @param params
      * @param isString
-     * @return
+     * @return boolean all parameters ok or not
      */
     protected boolean validateSetOfParameters(
         Map desc,
