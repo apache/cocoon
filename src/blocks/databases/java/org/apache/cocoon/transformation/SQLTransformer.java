@@ -71,9 +71,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
  * @version CVS $Id$
  */
-public class SQLTransformer
-  extends AbstractSAXTransformer
-  implements Disposable, Configurable {
+public class SQLTransformer extends AbstractSAXTransformer
+                            implements Disposable, Configurable {
 
     /** The SQL namespace **/
     public static final String NAMESPACE = "http://apache.org/cocoon/SQL/2.0";
@@ -1037,17 +1036,17 @@ public class SQLTransformer
             this.rowset_name = properties.getParameter( SQLTransformer.MAGIC_DOC_ELEMENT, "rowset" );
             this.row_name = properties.getParameter( SQLTransformer.MAGIC_ROW_ELEMENT, "row" );
             this.columnCase = properties.getParameter(SQLTransformer.MAGIC_COLUMN_CASE, "lowercase");
-            Enumeration enum = query_parts.elements();
+
             StringBuffer sb = new StringBuffer();
-            while ( enum.hasMoreElements() ) {
-                Object object = enum.nextElement();
-                if ( object instanceof String ) {
-                    sb.append( (String) object );
-                } else if ( object instanceof AncestorValue ) {
+            for (Enumeration e = query_parts.elements(); e.hasMoreElements();) {
+                Object object = e.nextElement();
+                if (object instanceof String) {
+                    sb.append((String) object);
+                } else if (object instanceof AncestorValue) {
                     /** Do a lookup into the ancestors' result's values **/
                     AncestorValue av = (AncestorValue) object;
-                    Query query = transformer.getQuery( query_index - av.level );
-                    sb.append( query.getColumnValue( av.name ) );
+                    Query query = transformer.getQuery(query_index - av.level);
+                    sb.append(query.getColumnValue(av.name));
                 }
             }
 
