@@ -88,6 +88,7 @@ import org.apache.commons.jexl.util.introspection.VelPropertySet;
 import org.apache.commons.jxpath.*;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 import org.mozilla.javascript.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1125,7 +1126,7 @@ public class JXTemplateGenerator extends ComposerGenerator {
         StartDocument(Locator location) {
             super(location);
         }
-        long compileTime;
+        SourceValidity compileTime;
         EndDocument endDocument; // null if document fragment
     }
 
@@ -2569,13 +2570,18 @@ public class JXTemplateGenerator extends ComposerGenerator {
             } catch (SourceException se) {
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
-            long lastMod = inputSource.getLastModified();
             String uri = inputSource.getURI();
             synchronized (cache) {
                 StartDocument startEvent = (StartDocument)cache.get(uri);
-                if (startEvent != null &&
-                    lastMod > startEvent.compileTime) {
-                    cache.remove(uri);
+                if (startEvent != null) {
+                    int valid = startEvent.compileTime.isValid();
+                    if ( valid == SourceValidity.UNKNOWN ) {
+                        SourceValidity validity = inputSource.getValidity();
+                        valid = startEvent.compileTime.isValid(validity);
+                    }
+                    if ( valid != SourceValidity.VALID) {
+                        cache.remove(uri);
+                    }
                 }
             }
         }
@@ -2686,11 +2692,11 @@ public class JXTemplateGenerator extends ComposerGenerator {
             startEvent = (StartDocument)cache.get(inputSource.getURI());
         }
         if (startEvent == null) {
-            long compileTime = inputSource.getLastModified();
+            SourceValidity validity = inputSource.getValidity();
             Parser parser = new Parser();
             SourceUtil.parse(this.manager, this.inputSource, parser);
             startEvent = parser.getStartEvent();
-            startEvent.compileTime = compileTime;
+            startEvent.compileTime = validity;
             synchronized (cache) {
                 cache.put(inputSource.getURI(), startEvent);
             }
@@ -3522,12 +3528,26 @@ public class JXTemplateGenerator extends ComposerGenerator {
                                                 ev.location,
                                                 exc);
                 }
-                long lastMod = input.getLastModified();
+                SourceValidity validity = null;
                 StartDocument doc;
                 synchronized (cache) {
                     doc = (StartDocument)cache.get(input.getURI());
                     if (doc != null) {
-                        if (doc.compileTime < lastMod) {
+                        boolean recompile = false;
+                        if ( doc.compileTime == null) {
+                            recompile = true;
+                        } else {
+                            int valid = doc.compileTime.isValid();
+                            if ( valid == SourceValidity.UNKNOWN ) {
+                                validity = input.getValidity();
+                                valid = doc.compileTime.isValid(validity);
+                                
+                            }
+                            if ( valid != SourceValidity.VALID ) {
+                                recompile = true;
+                            }
+                        }
+                        if ( recompile ) {
                             doc = null; // recompile
                         }
                     }
@@ -3537,7 +3557,10 @@ public class JXTemplateGenerator extends ComposerGenerator {
                         Parser parser = new Parser();
                         SourceUtil.parse(this.manager, input, parser);
                         doc = parser.getStartEvent();
-                        doc.compileTime = lastMod;
+                        if ( validity == null ) {
+                            validity = input.getValidity();
+                        }
+                        doc.compileTime = validity;
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(),
                                                     ev.location,
