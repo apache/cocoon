@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- CVS: $Id: samples.xml,v 1.2 2003/03/12 12:55:17 haul Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.3 2003/03/20 05:31:30 crossley Exp $ -->
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
   <group name="Back">
     <sample name="Back" href="../">
@@ -21,13 +21,13 @@
   </group>
  <!--
   <group name="Documentation">
-    <sample name="Docs" href="/docs/index">
+    <sample name="Docs" href="../../docs/index">
     The Cocoon documentation.
    </sample>
     <sample name="Tutorial" href="tutorial/home.html">
     A tutorial on Cocoon.
    </sample>
-    <sample name="List of docs" href="/docs/doclist.html">
+    <sample name="List of docs" href="../../docs/doclist.html">
     Generated list of all documentation (aggregates each book.xml)
    </sample>
     <sample name="Slides" href="slides/slides">
