@@ -204,6 +204,103 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     New getSitemapPath() method on the Request object to get the path to the
+     current sitemap even if you are in a sub sitemap. Added an abstract request
+     wrapper class as well.
+   </action>
+   <action dev="CZ" type="update">
+     Update to servlet specification 2.3.
+   </action>
+   <action dev="AG" type="update">
+     Deprecate methods implementsInterface(String, String),
+     implementsInterface(Class, Class), lastModified(Class)
+     and which(Class) in org.apache.cocoon.util.ClassUtils
+     These methods will be removed on the next version.
+   </action>
+   <action dev="SW" type="update">
+     Move the sitemap engine to Serviceable (in replacement of Composable) and remove
+     SitemapComponentSelector and OutputComponentSelector that were no more needed.
+   </action>
+   <action dev="CZ" type="add">
+     Add profiling/debugging API for the sitemap.
+   </action>
+   <action dev="CZ" type="add">
+     Add sitemap versioning support to tree processor and remove unused
+     support for other tree based languages.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="28686">
+     Correct redirect handling for internal redirects.
+   </action>
+   <action dev="TC" type="remove">
+     SWF block: Removed the deprecated block and added a flash sample in the
+     hello world section.
+   </action>
+   <action dev="AG" type="update">
+     Deprecated methods in class org.apache.cocoon.util.IOUtils
+     to be removed in cocoon 2.3:
+     <ul>
+       <li>String baseName(String filename)</li>
+       <li>Object bytesToObject(byte[] bytes)</li>
+       <li>Object deserializeObject(File file)</li>
+       <li>String fileComponent(String filename)</li>
+       <li>byte[] objectToBytes(Object object)</li>
+       <li>String pathComponent(String filename)</li>
+       <li>void serializeObject(File file, Object object)</li>
+       <li>void serializeString(File file, String string)</li>
+       <li>void serializeString(File file, String string, String encoding)</li>
+     </ul>
+   </action>
+   <action dev="AG" type="update">
+     Deprecated class org.apache.cocoon.util.JavaArchiveFilter.
+     To be removed in cocoon 2.3. Moved to the deprecated dir.
+   </action>
+   <action dev="CZ" type="update">
+     Session-fw block: Remove deprecated class AbstractSessionComponent from session
+     block.
+   </action>
+   <action dev="CZ" type="update">
+     Redesign the internal environment handling (request processing) and moved
+     private classes into own packages.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated RequestLifecycleComponent and GlobalRequestLifecycleComponent.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated (2.0.x) caching system; only 2.1.x is supported.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated sitemap related components and classes.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Store implementations. Excalibur Store/JCS are used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Parser and Entity Resolver. Excalibur XMLUtils is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated XSLT Processor. Excalibur XMLUtils is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Source handling. Excalibur Sourceresolve is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated getOutputStream() method from Environment.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="10277">
+     Change the mime-type setting of a reader.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated methods from SimpleCharStream, Notifier,
+     AbstractComplementaryConfigurableAction, StringUtils. Remove deprecated
+     parser constant from Constants and remove deprecated class
+     DefaultsMetaModule.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
+   </action>
+ </release>
+ <release version="2.1.6" date="TBD">
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
    </action>
@@ -238,29 +335,6 @@
    <action dev="CZ" type="fix">
      Mail block: The mail transformer ignored configured toAddresses from a
      pipeline parameter. This is fixed now.
-   </action>
-   <action dev="SW" type="update">
-     Move the sitemap engine to Serviceable (in replacement of Composable) and remove
-     SitemapComponentSelector and OutputComponentSelector that were no more needed.
-   </action>
-   <action dev="AG" type="update">
-     Deprecated methods in class org.apache.cocoon.util.IOUtils
-     to be removed in cocoon 2.3:
-     <ul>
-       <li>String baseName(String filename)</li>
-       <li>Object bytesToObject(byte[] bytes)</li>
-       <li>Object deserializeObject(File file)</li>
-       <li>String fileComponent(String filename)</li>
-       <li>byte[] objectToBytes(Object object)</li>
-       <li>String pathComponent(String filename)</li>
-       <li>void serializeObject(File file, Object object)</li>
-       <li>void serializeString(File file, String string)</li>
-       <li>void serializeString(File file, String string, String encoding)</li>
-     </ul>
-   </action>
-   <action dev="AG" type="update">
-     Deprecated class org.apache.cocoon.util.JavaArchiveFilter.
-     To be removed in cocoon 2.3. Moved to the deprecated dir.
    </action>
    <action dev="AG" type="update">
      Update qdox to 1.5 and jdt-core to 3.0.0.
@@ -297,11 +371,6 @@
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
      Added support for stripping root elements in the CIncludeTransformer.
    </action>
-   <action dev="CZ" type="add">
-     New getSitemapPath() method on the Request object to get the path to the
-     current sitemap even if you are in a sub sitemap. Added an abstract request
-     wrapper class as well.
-   </action>
    <action dev="VG" type="add">
      Portal block: Added ManagedCocoonPortlet, to be used together with
      CocoonServlet or CocoonPortlet.
@@ -331,9 +400,6 @@
      Update commons-digester to 1.5, commons-betwixt to 0.5, commons-pool to 1.2,
      commons-dbcp to 1.2.1 and db-ojb to 1.0.0.
    </action>
-   <action dev="CZ" type="update">
-     Update to servlet specification 2.3.
-   </action>
    <action dev="AG" type="update">
      Update commons-collections to 3.1.
    </action>
@@ -360,12 +426,6 @@
    <action dev="VG" type="fix" fixes-bug="25712" due-to="Litrik De Roy">
      Fix byte ranges support in ResourceReader.
    </action>
-   <action dev="AG" type="update">
-     Deprecate methods implementsInterface(String, String),
-     implementsInterface(Class, Class), lastModified(Class)
-     and which(Class) in org.apache.cocoon.util.ClassUtils
-     These methods will be removed on the next version.
-   </action>
    <action dev="VG" type="update">
      Portal: CocoonPortlet has new configuration parameter,
      default-session-scope.
@@ -381,13 +441,6 @@
    </action>
    <action dev="CZ" type="add">
      Add configuration support for log4j.
-   </action>
-   <action dev="CZ" type="add">
-     Add profiling/debugging API for the sitemap.
-   </action>
-   <action dev="CZ" type="add">
-     Add sitemap versioning support to tree processor and remove unused
-     support for other tree based languages.
    </action>
    <action dev="ATC" type="add" due-to="Leszek Gawron">
      New Input modules: URLEncodeModule and URLDecodeModule
@@ -409,9 +462,6 @@
      source files in jar archives. Useful when using a non-released version
      to know what sources are used.
    </action>
-   <action dev="CZ" type="fix" fixes-bug="28686">
-     Correct redirect handling for internal redirects.
-   </action>
    <action dev="SW" type="fix" fixes-bug="27249">
      Refactor TreeProcessor to avoid constant reloading of sitemap if its
      modification date is in the future and occasional ECM-related exceptions
@@ -423,24 +473,11 @@
    <action dev="AG" type="update">
      Updated Groovy to 1.0-beta5, qdox to 1.4 and util.concurrent to 1.3.4.
    </action>
-   <action dev="TC" type="remove">
-     SWF block: Removed the deprecated block and added a flash sample in the
-     hello world section.
-   </action>
    <action dev="TC" type="fix">
      Serializers block: Fixed the namespace handling of the XMLSerializer.
    </action>
    <action dev="TC" type="add">
      Serializers block: Added support for indentation to the XMLSerializer.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated methods from SimpleCharStream, Notifier,
-     AbstractComplementaryConfigurableAction, StringUtils. Remove deprecated
-     parser constant from Constants and remove deprecated class
-     DefaultsMetaModule.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
    <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
      Chaperon block: Improvements for Chaperon JSPWiki to xdocs conversion:
@@ -456,41 +493,6 @@
        <li>selftest.txt tests for lists and tables</li>
        <li>More known issues listed in selftest.txt</li>
      </ul>
-   </action>
-   <action dev="CZ" type="update">
-     Session-fw block: Remove deprecated class AbstractSessionComponent from session
-     block.
-   </action>
-   <action dev="CZ" type="update">
-     Redesign the internal environment handling (request processing) and moved
-     private classes into own packages.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated RequestLifecycleComponent and GlobalRequestLifecycleComponent.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated (2.0.x) caching system; only 2.1.x is supported.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated sitemap related components and classes.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated Store implementations. Excalibur Store/JCS are used instead.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated Parser and Entity Resolver. Excalibur XMLUtils is used instead.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated XSLT Processor. Excalibur XMLUtils is used instead.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated Source handling. Excalibur Sourceresolve is used instead.
-   </action>
-   <action dev="CZ" type="update">
-     Remove deprecated getOutputStream() method from Environment.
-   </action>
-   <action dev="CZ" type="fix" fixes-bug="10277">
-     Change the mime-type setting of a reader.
    </action>
    <action dev="VG" type="add">
      Added instrumentation support to ContinuationsManager.
