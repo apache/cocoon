@@ -30,6 +30,7 @@
   type:
 
   ./build.sh anteater-tests
+  build anteater-tests
 
   The newly added test file will be picked up and executed
   auto-magically.
@@ -40,7 +41,7 @@
 
   -->
 
-<project name="all-tests" default="all">
+<project name="anteater-tests" default="all">
 
   <taskdef resource="META-INF/Anteater.tasks"/>
   <typedef resource="META-INF/Anteater.types"/>
@@ -67,6 +68,14 @@
       </fileset>
     </foreach>
   </target>
+
+  <target name="single" depends="init">
+    <foreach target="runtest" param="name">
+      <fileset dir=".">
+        <include name="${targetfile}.xml"/>
+      </fileset>
+    </foreach>
+  </target>  
 
   <target name="runtest" depends="init">
     <basename property="target" file="${name}" suffix=".xml"/>

@@ -18,22 +18,24 @@ package org.apache.cocoon.environment.commandline;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.9 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 /*
@@ -41,19 +43,6 @@ import org.apache.cocoon.environment.Session;
  * and should be fixed in the future if required
  */
 public class CommandLineRequest implements Request {
-
-    private class IteratorWrapper implements Enumeration {
-        private Iterator iterator;
-        public IteratorWrapper(Iterator i) {
-            this.iterator = i;
-        }
-        public boolean hasMoreElements() {
-            return iterator.hasNext();
-        }
-        public Object nextElement() {
-            return iterator.next();
-        }
-    }
 
     private class EmptyEnumeration implements Enumeration {
         public boolean hasMoreElements() {
@@ -71,7 +60,7 @@ public class CommandLineRequest implements Request {
     private Map attributes;
     private Map parameters;
     private Map headers;
-    private String characterEncoding = null;
+    private String characterEncoding;
 
     public CommandLineRequest(Environment env,
                               String contextPath,
@@ -113,7 +102,23 @@ public class CommandLineRequest implements Request {
         this.headers = headers;
     }
 
-    public Object get(String name) { return getAttribute(name); }
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
+    public Object get(String name) { 
+        String[] values = this.getParameterValues(name);
+        if (values == null || values.length == 0) {
+            return null;
+        } else if (values.length == 1) {
+            return values[0];
+        } else {
+            Vector vect = new Vector(values.length);
+            for (int i = 0; i < values.length; i++) {
+                vect.add(values[i]);
+            }
+            return vect;
+        }
+    }
 
     public String getContextPath() { return contextPath; }
     public String getServletPath() { return servletPath; }
@@ -137,7 +142,7 @@ public class CommandLineRequest implements Request {
         return this.attributes.get(name);
     }
     public Enumeration getAttributeNames() {
-        return new IteratorWrapper(this.attributes.keySet().iterator());
+        return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
     }
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
@@ -166,7 +171,7 @@ public class CommandLineRequest implements Request {
     }
 
     public Enumeration getParameterNames() {
-        return (this.parameters != null) ? new IteratorWrapper(this.parameters.keySet().iterator()) : null;
+        return (this.parameters != null) ? IteratorUtils.asEnumeration(this.parameters.keySet().iterator()) : null;
     }
 
     public String[] getParameterValues(String name) {
@@ -200,7 +205,7 @@ public class CommandLineRequest implements Request {
 
     public Enumeration getHeaderNames() {
         if (headers != null) {
-            return new IteratorWrapper(headers.keySet().iterator());
+            return IteratorUtils.asEnumeration(headers.keySet().iterator());
         } else {
             return new EmptyEnumeration();
         }
@@ -217,7 +222,7 @@ public class CommandLineRequest implements Request {
     public String getRemoteAddr() { return "127.0.0.1"; }
     public String getRemoteHost() { return "localhost"; }
     public String getMethod() { return "get"; }
-    public String getRemoteUser() { return System.getProperty("user.name"); }
+    public String getRemoteUser() { return SystemUtils.USER_NAME; }
 
     public Cookie[] getCookies() { return null; }
     public Map getCookieMap() {

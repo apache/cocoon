@@ -39,7 +39,7 @@ import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
  * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.8 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public final class HttpRequest implements Request {
@@ -68,6 +68,9 @@ public final class HttpRequest implements Request {
         this.env = env;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
     public Object get(String name) {
         // if the request has been wrapped then access its method
         if (req instanceof MultipartHttpServletRequest) {
@@ -209,6 +212,9 @@ public final class HttpRequest implements Request {
         return this.req.getServletPath();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getSession(boolean)
+     */
     public Session getSession(boolean create) {
         javax.servlet.http.HttpSession serverSession = this.req.getSession(create);
         if ( null != serverSession) {
