@@ -25,7 +25,7 @@
         configuration information specified in child elements.
       </p>
       <p>For conceptual information on generators see the user's guide document
-        <link href="../concepts/sitemap.html">The Sitemap</link>.
+        <link href="../../user/sitemap/preface.html">The Sitemap</link>.
       </p>
     </s1>
     <s1 title="The Generators in Apache Cocoon">

@@ -565,7 +565,7 @@ The required <code>id</code> attribute specifies the unique id of this <code>sub
   </s2>
  </s1>
  <anchor id="Sitemap"/><s1 title="Sitemap">
-<p>To use JXForms, you will need to add several elements to your Cocoon <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
+<p>To use JXForms, you will need to add several elements to your Cocoon <link href="../../user/sitemap/preface.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
 <source>
 &lt;map:generators&gt;
   &lt;map:generator label="content,data"
