@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.8 2001-01-16 15:50:28 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.9 2001-01-22 03:58:40 balld Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.8 $ $Date: 2001-01-16 15:50:28 $
+ * @version $Revision: 1.9 $ $Date: 2001-01-22 03:58:40 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -91,7 +91,7 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
            i = vn.indexOf ('.');
            if (i != -1) i = vn.indexOf ('.', i + 1);
            if (i != -1) vn = vn.substring (0, i);
-           FOP_VERSION_NO = Double.parseDouble (vn);
+           FOP_VERSION_NO = Double.valueOf (vn).doubleValue ();
         }
         catch (Exception ex) {
            FOP_VERSION_NO = UNKNOWN_VERSION;
