@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.293 2004/04/02 20:52:47 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.294 2004/04/02 21:32:33 joerg Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="15841">
+     "Fixed" bug 15841 by raising an exception when something is tried to add
+     to elements before attributes.
+   </action>
    <action dev="JH" type="update">
      Changed blocks selection handling to allow more intuitive
      include.block.blockname syntax in (local.)blocks.properties. Old syntax
