@@ -1,0 +1,35 @@
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'display-name' as child of 'servlet'.
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+0     WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+10    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+10    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+10    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+10    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'display-name' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+20    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'display-name' as child of 'servlet'.
+30    WARN  [main] webxml.WebXmlParser - Ignored element 'init-param' as child of 'servlet'.
+9964  ERROR [main] store.DiskStore - IOException reading index. Creating new index. 
+43292 WARN  [main] server.XindiceServlet - The database 'db' root directory has been set to D:\dev\workspace\cocoon-2.1.x\build\webapp\WEB-INF\db. Keep in mind that if a war upgrade will take place the database will be lost.
