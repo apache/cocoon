@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -81,15 +81,15 @@ public class BooleanField extends AbstractWidget {
         return definition.getId();
     }
 
-    public void readFromRequest(Request request, Locale locale) {
-        String param = request.getParameter(getFullyQualifiedId());
+    public void readFromRequest(FormContext formContext) {
+        String param = formContext.getRequest().getParameter(getFullyQualifiedId());
         if (param != null && param.equalsIgnoreCase("true"))
             value = Boolean.TRUE;
         else
             value = Boolean.FALSE;
     }
 
-    public boolean validate(Locale locale) {
+    public boolean validate(FormContext formContext) {
         // a boolean field is always valid
         return true;
     }

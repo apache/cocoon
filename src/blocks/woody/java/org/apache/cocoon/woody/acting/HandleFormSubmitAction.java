@@ -52,16 +52,14 @@ package org.apache.cocoon.woody.acting;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.woody.FormManager;
-import org.apache.cocoon.woody.formmodel.FormDefinition;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.formmodel.Form;
 
 import java.util.Map;
@@ -86,15 +84,30 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
             throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
+        String formHandlerClassName = parameters.getParameter("formhandler", null);
 
         Form form = formManager.createForm(resolver.resolveURI(formSource));
 
         Request request = ObjectModelHelper.getRequest(objectModel);
-        form.readFromRequest(request, Locale.US);
-        boolean validationSuccess = form.validate(Locale.US);
+        FormHandler formHandler = null;
+
+        if (formHandlerClassName != null) {
+            // TODO cache these classes
+            Class clazz = Class.forName(formHandlerClassName);
+            formHandler = (FormHandler)clazz.newInstance();
+            formHandler.setup(form);
+        }
+
+        FormContext formContext;
+        if (formHandler == null)
+            formContext = new FormContext(request, Locale.US);
+        else
+            formContext = new FormContext(request, Locale.US, formHandler);
+
+        boolean finished = form.process(formContext);
         request.setAttribute(formAttribute, form);
 
-        if (validationSuccess)
+        if (finished)
             return Collections.EMPTY_MAP;
         else
             return null;

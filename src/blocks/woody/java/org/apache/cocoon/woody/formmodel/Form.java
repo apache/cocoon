@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -79,21 +79,44 @@ public class Form extends AbstractWidget implements ContainerWidget {
         widgetsById.put(widget.getId(), widget);
     }
 
-    public void readFromRequest(Request request, Locale locale) {
+    /**
+     * Processes a form submit. This consists of multiple steps:
+     * <ul>
+     *  <li>all widgets read their value from the request (i.e. {@link #readFromRequest} is called recursively on
+     *       the whole widget tree)
+     *  <li>if there is an action event, execute it
+     *  <li>perform validation, if {@link FormContext#doValidation} returns true (which is true by default,
+     *      but false by default if there is an action event).
+     * </ul>
+     *
+     * If the form is finished, i.e. validation was succesful and the form should not be redisplayed to the user,
+     * then this method returns true, otherwise it returns false.
+     */
+    public boolean process(FormContext formContext) {
+        readFromRequest(formContext);
+        if (formContext.getActionEvent() != null && formContext.getFormHandler() != null) {
+            formContext.getFormHandler().handleActionEvent(formContext.getActionEvent());
+        }
+        if (formContext.doValidation())
+            return validate(formContext);
+        return false;
+    }
+
+    public void readFromRequest(FormContext formContext) {
         // let all individual widgets read their value from the request object
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();
-            widget.readFromRequest(request, locale);
+            widget.readFromRequest(formContext);
         }
     }
 
-    public boolean validate(Locale locale) {
+    public boolean validate(FormContext formContext) {
         boolean allValid = true;
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();
-            allValid = allValid & widget.validate(locale);
+            allValid = allValid & widget.validate(formContext);
         }
         return allValid;
     }

@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -88,8 +88,8 @@ public class MultiValueField extends AbstractWidget {
         return definition.getId();
     }
 
-    public void readFromRequest(Request request, Locale locale) {
-        enteredValues = request.getParameterValues(getFullyQualifiedId());
+    public void readFromRequest(FormContext formContext) {
+        enteredValues = formContext.getRequest().getParameterValues(getFullyQualifiedId());
         validationError = null;
         values = null;
 
@@ -103,7 +103,7 @@ public class MultiValueField extends AbstractWidget {
             Object[] tempValues = new Object[enteredValues.length];
             for (int i = 0; i < enteredValues.length; i++) {
                 String param = enteredValues[i];
-                tempValues[i] = definition.getDatatype().convertFromStringLocalized(param, locale);
+                tempValues[i] = definition.getDatatype().convertFromStringLocalized(param, formContext.getLocale());
                 if (tempValues[i] == null) {
                     conversionFailed = true;
                     break;
@@ -119,7 +119,7 @@ public class MultiValueField extends AbstractWidget {
         }
     }
 
-    public boolean validate(Locale locale) {
+    public boolean validate(FormContext formContext) {
         if (values != null)
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else

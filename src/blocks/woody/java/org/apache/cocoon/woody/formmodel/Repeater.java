@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -94,6 +94,13 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
     }
 
     /**
+     * @throws IndexOutOfBoundsException if the the index is outside the range of existing rows.
+     */
+    public void removeRow(int index) {
+        rows.remove(index);
+    }
+
+    /**
      * Gets a widget on a certain row.
      * @param rowIndex startin from 0
      * @param id a widget id
@@ -110,9 +117,9 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         return (RepeaterRow)rows.get(row);
     }
 
-    public void readFromRequest(Request request, Locale locale) {
+    public void readFromRequest(FormContext formContext) {
         // read number of rows from request, and make an according number of rows
-        String sizeParameter = request.getParameter(getFullyQualifiedId() + ".size");
+        String sizeParameter = formContext.getRequest().getParameter(getFullyQualifiedId() + ".size");
         if (sizeParameter != null) {
             int size = 0;
             try {
@@ -133,16 +140,16 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
-            row.readFromRequest(request, locale);
+            row.readFromRequest(formContext);
         }
     }
 
-    public boolean validate(Locale locale) {
+    public boolean validate(FormContext formContext) {
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
-            valid = valid & row.validate(locale);
+            valid = valid & row.validate(formContext);
         }
         return valid;
     }
@@ -253,20 +260,20 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             return (Widget)widgetsById.get(id);
         }
 
-        public void readFromRequest(Request request, Locale locale) {
+        public void readFromRequest(FormContext formContext) {
             Iterator widgetIt = widgets.iterator();
             while (widgetIt.hasNext()) {
                 Widget widget = (Widget)widgetIt.next();
-                widget.readFromRequest(request, locale);
+                widget.readFromRequest(formContext);
             }
         }
 
-        public boolean validate(Locale locale) {
+        public boolean validate(FormContext formContext) {
             boolean valid = true;
             Iterator widgetIt = widgets.iterator();
             while (widgetIt.hasNext()) {
                 Widget widget = (Widget)widgetIt.next();
-                valid = valid & widget.validate(locale);
+                valid = valid & widget.validate(formContext);
             }
             return valid;
         }
