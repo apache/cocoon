@@ -2,7 +2,7 @@
 
 <!--+
     | FOP block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.1 2003/09/04 12:42:46 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.2 2003/12/06 06:47:40 crossley Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
