@@ -16,7 +16,7 @@
     <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
      <tr>
       <td width="*"><font face="arial,helvetica,sanserif" color="#000000">The Apache Software Foundation is proud to present...</font></td>
-      <td width="40%" align="center"><img border="0" src="/images/cocoon.gif"/></td>
+      <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
       <td width="30%" align="center"><font face="arial,helvetica,sanserif" color="#000000"><b>version @version@</b></font></td>
      </tr>
      <tr>
