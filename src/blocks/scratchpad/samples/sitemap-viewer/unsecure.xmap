@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<!-- minimal sitemap for Cocoon 2 -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+
+    <!-- ======= Components ======= -->
+    
+    
+ <map:components>
+  <map:generators   default="file"/>
+  <map:transformers default="xslt"/>
+  <map:readers      default="resource"/>
+  <map:serializers  default="html"/>
+  <map:matchers     default="wildcard"/>
+  <map:selectors    default="browser">
+    <map:selector name="resource-exists"
+               logger="sitemap.selector.resource-exists"
+               src="org.apache.cocoon.selection.ResourceExistsSelector" />  
+   </map:selectors>
+  <map:actions>
+       <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+  </map:actions>
+ 
+  <map:pipes        default="caching"/>
+ </map:components>
+
+
+<!-- =========================== Resources =============================== -->
+<map:resources>
+  
+  <!-- load a page of a section if page is not available load index page 
+    of this section, plain XML
+  -->
+
+    <map:resource name="xml-view">
+        <map:generate src="{src}"/>
+        <map:transform src="transforms/xml2html.xslt"/>
+        <map:serialize />
+    </map:resource>
+    
+    <map:resource name="html-view">
+        <map:generate src="{src}"/>
+        <map:serialize />
+    </map:resource>
+    
+    <map:resource name="text-view">
+        <map:read src="{src}" mime-type="{mime-type}"/>
+    </map:resource>
+
+    <map:resource name="pix-view">
+        <map:read src="{src}" mime-type="{mime-type}"/>
+    </map:resource>
+    
+  
+</map:resources>
+
+    <map:views>
+        <map:view name="aggregate" from-label="aggregate">
+            <map:serialize type="xml"/>
+        </map:view>
+    </map:views>
+
+    <!-- ======= Pipelines ======= -->
+    <map:pipelines>
+
+
+        <map:pipeline>
+    
+            <map:match pattern="**.descr01">
+                 <map:generate src="cocoon:/{1}/sitemap.xmap"/>
+                 <map:transform src="transforms/sitemap2descr01.xsl">
+                     <map:parameter name="location" value="{1}"/>
+                 </map:transform>
+
+                 <map:serialize type="xml"/>
+            </map:match>
+
+            <map:match pattern="**.descr">
+                 <map:generate src="cocoon:/{1}.descr01"/>
+                 <map:transform src="transforms/sitemap2descr02.xsl"/>
+                 <map:serialize type="xml"/>
+            </map:match>
+
+
+            <map:match pattern="*.xmap">
+                <map:act type="request">
+                     <map:parameter name="parameters" value="true"/>
+                    <map:call resource="xml-view">
+                         <map:parameter name="src" value="../{location}/{../1}.xmap"/>
+                    </map:call>
+                 </map:act>
+            </map:match>
+
+            <map:match pattern="descr">
+                <map:act type="request">
+                     <map:parameter name="parameters" value="true"/>
+                     <map:generate src="cocoon:/../{location}.descr"/>
+                     <map:serialize type="xml"/>
+                 </map:act>
+            </map:match>
+
+
+            <map:match pattern="**/descr">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../descr?location={location}"/>
+                 </map:act>
+            </map:match>
+            
+            <map:match pattern="**.xmap">
+                 <map:generate src="../{1}/sitemap.xmap"/>
+                 <map:serialize type="xml"/>
+            </map:match>
+
+
+        </map:pipeline>
+        
+        <map:pipeline>
+
+            <map:match pattern="*.xml">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="xml-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xml"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            
+            <map:match pattern="*.xsl">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="xml-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xsl"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.xhtml">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="html-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xhtml"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.html">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="html-view">
+                        <map:parameter name="src" value="../{location}/{../1}.html"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.htm">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="html-view">
+                        <map:parameter name="src" value="../{location}/{../1}.htm"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.gif">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="pix-view">
+                        <map:parameter name="src" value="../{location}/{../1}.gif"/>
+                        <map:parameter name="mime-type" value="image/gif" />
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.jpg">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="pix-view">
+                        <map:parameter name="src" value="../{location}/{../1}.jpg"/>
+                        <map:parameter name="mime-type" value="image/jpeg" />
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.png">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="pix-view">
+                        <map:parameter name="src" value="../{location}/{../1}.png"/>
+                        <map:parameter name="mime-type" value="image/png" />
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.ico">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="pix-view">
+                        <map:parameter name="src" value="../{location}/{../1}.ico"/>
+                        <map:parameter name="mime-type" value="image/icon" />
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.css">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="text-view">
+                        <map:parameter name="src" value="../{location}/{../1}.css"/>
+                        <map:parameter name="mime-type" value="text/txt" />
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.js">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="text-view">
+                        <map:parameter name="src" value="../{location}/{../1}.js"/>
+                        <map:parameter name="mime-type" value="text/txt" />
+                    </map:call>
+                </map:act>
+            </map:match>
+
+            <map:match pattern="**/*.xmap">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../{../2}.xmap?location={location}"/>
+                 </map:act>
+            </map:match>
+            
+
+            <map:match pattern="**/*.*">
+                <map:redirect-to uri="{2}.{3}?location={1}"/>
+            </map:match>
+
+            
+            
+
+        </map:pipeline>
+
+    </map:pipelines>
+</map:sitemap>

@@ -15,13 +15,51 @@
                logger="sitemap.selector.resource-exists"
                src="org.apache.cocoon.selection.ResourceExistsSelector" />  
    </map:selectors>
-  <map:actions >
-       <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+  <map:actions>
+    <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+    <map:action name="simple-resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"
+      logger="sitemap.action.simple-resource-exists"/>
+    <map:action name="resource-exists" src="org.apache.cocoon.acting.ExtendedResourceExistsAction"
+      logger="sitemap.action.resource-exists"/>
   </map:actions>
  
   <map:pipes        default="caching"/>
+
+  <map:serializers>
+
+   <map:serializer name="xhtml-transitional"     src="org.apache.cocoon.serialization.XMLSerializer"  mime-type="text/html"      logger="sitemap.serializer.xhtml"
+             pool-grow="2" pool-max="64" pool-min="2">
+     <doctype-public>-//W3C//DTD XHTML 1.0 Transitional//EN</doctype-public>
+     <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</doctype-system>
+     <encoding>UTF-8</encoding>
+   </map:serializer>
+</map:serializers>
+      
+
  </map:components>
 
+
+<!-- =========================== Resources =============================== -->
+<map:resources>
+  
+  <!-- load a page of a section if page is not available load default page/image 
+    of this section
+  -->
+
+  <map:resource name="load-page">
+    <map:select type="parameter">
+      <map:parameter name="parameter-selector-test" value="{resource-exists}"/>
+      <map:when test="true">
+        <map:read src="{sect}/{page}" mime-type="{mime-type}" />
+      </map:when>
+      <map:otherwise>
+        <map:read src="{sect}/{default}" mime-type="{mime-type}" />
+      </map:otherwise>
+    </map:select>
+    <map:serialize type="xml"/>
+  </map:resource>
+  
+</map:resources>
 
     <map:views>
         <map:view name="aggregate" from-label="aggregate">
@@ -32,92 +70,72 @@
     <!-- ======= Pipelines ======= -->
     <map:pipelines>
 
-
         <map:pipeline>
-
-    
-            <map:match pattern="testmatch01">
-                <map:select type="resource-exists">
-                   <map:when test="SitemapInfo/images/{1}_{2}.gif">
-                 <map:generate src="cocoon:/{1}.xmap"/>
-                 <map:transform src="transforms/sitemap2descr01.xsl">
-                     <map:parameter name="location" value="{1}"/>
-                 </map:transform>
-                 <map:transform src="transforms/sitemap2descr02.xsl"/>
-                 <map:serialize type="xml"/>
-                   </map:when>
-                   <map:when test="images/{1}_{2}.gif">
-                      <map:read src="cocoon:/hoep/../vla/flip/../../index.html" mime-type="text/html"/>
-                   </map:when>
-                   <map:when test="images/{1}_{2}.gif">
-                      <map:read src="images/{1}_{2}.gif" mime-type="image/gif"/>
-                   </map:when>
-                   <map:when test="true">
-                    <map:aggregate element="index">
-                        <map:part element="files" src="cocoon:/dirlinks.xml"/>
-                        <map:part element="introhtml" src="html/intro.xml" strip-root="yes"/>
-                    </map:aggregate>
-                      <!--map:serialize type="xml"/-->
-                      <map:transform src="transforms/sitemaplist2index.xsl"/>
-                      <map:serialize type="html"/>
-                   </map:when>
-                   <map:otherwise>
-                        <map:redirect-to uri="index.html"/>
-                   </map:otherwise>
-                </map:select>
-            </map:match>
-
-            <map:match pattern="testmatch02">
-                <map:aggregate element="index">
-                    <map:part element="files" src="cocoon:/dirlinks.xml"/>
-                    <map:part element="introhtml" src="html/intro.xml" strip-root="yes"/>
-                </map:aggregate>
-                  <!--map:serialize type="xml"/-->
-                  <map:transform src="transforms/sitemaplist2index.xsl"/>
-                <map:select type="browser">
-                    <map:when test="explorer">
-                    </map:when>
-                    <map:when test="mozilla5">
-                    </map:when>
-                    <map:otherwise>
-                        <map:transform src="transforms/kill-dynamic.xsl"/>
-                    </map:otherwise>
-                </map:select>
-
-                  <map:serialize type="html"/>
-            </map:match>
-
-            <map:match pattern="*_*.gif">
-                <map:select type="resource-exists">
-                   <map:when test="SitemapInfo/images/{1}_{2}.gif">
-                      <map:read src="images/{1}_{2}.gif" mime-type="image/gif"/>
-                   </map:when>
-                   <map:when test="images/{1}_{2}.gif">
-                      <map:read src="images/{1}_{2}.gif" mime-type="image/gif"/>
-                   </map:when>
-                   <map:otherwise>
-                      <map:read src="images/default_{2}.gif" mime-type="image/gif"/>
-                   </map:otherwise>
-                </map:select>
-            </map:match>
-
-        </map:pipeline>
-
-        <map:pipeline >
             <map:match pattern="">
                 <map:redirect-to uri="index.html"/>
             </map:match>
-        </map:pipeline >
+        </map:pipeline>
 
 
-        <map:pipeline internal-only="false">
+        <!-- 
+            If you set the internal-only value to "yes", you'll get the unsecure version of the viewer, 
+            set it to "no" to make it secure. Also change the "showsources" value in the xsl below from 1 to 0 or 
+            vice versa -->
             
-            <map:match pattern="**.descr01">
-                 <map:generate src="cocoon:/{1}.xmap"/>
+        <map:pipeline internal-only="yes" label="srcviewing">
+            <map:match pattern="src/**">
+                <map:mount uri-prefix="src" check-reload="no" src="unsecure.xmap"/>
+            </map:match>
+            <map:match pattern="**/src/*.xmap">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../../src/{../2}.xmap?location={location}"/>
+                 </map:act>
+            </map:match>
+
+
+            <map:match pattern="**/src/**/*.*">
+                <map:redirect-to uri="../../src/{3}.{4}?location={1}/{2}"/>
+            </map:match>
+
+            <map:match pattern="**/src/*.*">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../../src/{../2}.{../3}?location={location}"/>
+                 </map:act>
+            </map:match>
+
+            <map:match pattern="**/src/**">
+                <map:read src="cocoon:/../{2}/src/{1}/{3}"/>
+            </map:match>
+
+            <map:match pattern="**/src/*.*">
+                <map:redirect-to uri="../  "/>
+            </map:match>
+
+            <map:match pattern="*/*/src/*.*">
+                <map:redirect-to uri="../  "/>
+            </map:match>
+
+            <map:match pattern="**/*/src/*.*">
+                <map:redirect-to uri="../../  "/>
+            </map:match>
+
+            <map:match pattern="**/*.descr01">
+                 <map:generate src="cocoon:/source/{1}/{2}.xmap"/>
                  <map:transform src="transforms/sitemap2descr01.xsl">
                      <map:parameter name="location" value="{1}"/>
                  </map:transform>
-                 <!--map:transform src="transforms/sitemap2descr02.xsl"/-->
+
+                 <map:serialize type="xml"/>
+            </map:match>
+
+            <map:match pattern="*.descr01">
+                 <map:generate src="cocoon:/source/{1}.xmap"/>
+                 <map:transform src="transforms/sitemap2descr01.xsl">
+                     <map:parameter name="location" value=""/>
+                 </map:transform>
+
                  <map:serialize type="xml"/>
             </map:match>
 
@@ -127,73 +145,88 @@
                  <map:serialize type="xml"/>
             </map:match>
 
-
-            <map:match pattern="sitemap.xmap">
-                <map:act type="request">
-                     <map:parameter name="parameters" value="true"/>
-                     <map:generate src="../{location}/sitemap.xmap"/>
-                    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-                     <map:serialize />
-                 </map:act>
-            </map:match>
-
-            <map:match pattern="descr">
-                <map:act type="request">
-                     <map:parameter name="parameters" value="true"/>
-                     <map:generate src="cocoon:/{location}.descr"/>
-                     <map:serialize type="xml"/>
-                 </map:act>
-            </map:match>
-
-            <map:match pattern="**/sitemap.xmap">
-                <map:act type="request">
-                    <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../sitemap.xmap?location={location}"/>
-                 </map:act>
-            </map:match>
-            
-            <map:match pattern="**/descr">
-                <map:act type="request">
-                    <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../descr?location={location}"/>
-                 </map:act>
-            </map:match>
-            
-            <map:match pattern="**.xmap">
-                 <map:generate src="../{1}/sitemap.xmap"/>
+            <map:match pattern="source/**.xmap">
+                 <map:generate src="../{1}.xmap"/>
                  <map:serialize type="xml"/>
             </map:match>
 
+        </map:pipeline>
 
-        </map:pipeline >
 
+        <map:pipeline>
+            <map:match pattern="src/**.xmap">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../disabled.html"/>
+                 </map:act>
+            </map:match>
+            <map:match pattern="**/src/**.xmap">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../../src/{../2}.xmap?location={location}"/>
+                 </map:act>
+            </map:match>
+        </map:pipeline>
+        
 
-        <map:pipeline >
+        <map:pipeline internal-only="yes">
+            
+
+        </map:pipeline>
+
+        <map:pipeline internal-only="yes">
+
+            <map:match pattern="allfiles-list">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:generate type="directory" src="../{location}">
+                        <map:parameter name="depth" value="20"/>
+                    </map:generate>
+                    <map:transform src="transforms/dirlist2filelist.xsl"/>
+                    <map:serialize type="xml"/>
+                </map:act>
+            </map:match>
+
+        </map:pipeline>
+        
+
+        <map:pipeline>
     
             <map:match pattern="**/*.gif">
                 <map:read mime-type="image/gif" src="cocoon:/{2}.gif"/>
             </map:match>
 
-            <map:match pattern="*.gif">
-                <map:select type="resource-exists">
-                   <map:when test="SitemapInfo/images/{1}.gif">
-                      <map:read src="images/{1}.gif" mime-type="image/gif"/>
-                   </map:when>
-                   <map:when test="images/{1}.gif">
-                      <map:read src="images/{1}.gif" mime-type="image/gif"/>
-                   </map:when>
-                   <map:otherwise>
-                      <map:read src="images/default.gif" mime-type="image/gif"/>
-                   </map:otherwise>
-                </map:select>
+            <map:match pattern="*_*.gif">
+              <map:act type="resource-exists" src="images/{1}_{2}.gif">
+                <map:call resource="load-page">
+                  <map:parameter name="sect" value="images"/>
+                  <map:parameter name="page" value="{../1}_{../2}.gif"/>
+                  <map:parameter name="default" value="default_{../2}.gif"/>
+                  <map:parameter name="mime-type" value="image/gif"/>
+                  <map:parameter name="resource-exists" value="{resource-exists}"/>
+                </map:call>
+              </map:act>
             </map:match>
 
+            <map:match pattern="*.gif">
+              <map:act type="resource-exists" src="images/{1}.gif">
+                <map:call resource="load-page">
+                  <map:parameter name="sect" value="images"/>
+                  <map:parameter name="page" value="{../1}.gif"/>
+                  <map:parameter name="default" value="default.gif"/>
+                  <map:parameter name="mime-type" value="image/gif"/>
+                  <map:parameter name="resource-exists" value="{resource-exists}"/>
+                </map:call>
+              </map:act>
+            </map:match>
+
+
             <map:match pattern="**/*.js">
-                <map:read mime-type="text/javascript" src="scripts/{2}.javascript"/>
+                <map:read mime-type="text/txt" src="scripts/{2}.javascript"/>
             </map:match>
 
             <map:match pattern="*.js">
-                <map:read mime-type="text/javascript" src="scripts/{1}.javascript"/>
+                <map:read mime-type="text/txt" src="scripts/{1}.javascript"/>
             </map:match>
 
             <map:match pattern="**/*.css">
@@ -205,12 +238,13 @@
             </map:match>
 
             <map:match pattern="dirlinks.xml">
-                        <map:generate type="directory" src=".." >
-                            <map:parameter name="depth" value="20"/>
-                        </map:generate>
-                        <map:transform src="transforms/sitemaplinks.xsl"/>
-                        <map:serialize type="xml"/>
+                <map:generate type="directory" src="..">
+                    <map:parameter name="depth" value="20"/>
+                </map:generate>
+                <map:transform src="transforms/sitemaplinks.xsl"/>
+                <map:serialize type="xml"/>
             </map:match>
+
             
             <map:match pattern="index.html">
                     <map:generate src="html/intro.xml" />
@@ -246,16 +280,21 @@
             </map:match>
 
             <map:match pattern="dir.xml">
-                <map:generate type="directory" src=".." >
+                <map:generate type="directory" src="..">
                     <map:parameter name="depth" value="20"/>
                   </map:generate>
                   <map:serialize type="xml"/>
               </map:match>
+
+            <map:match pattern="**/*.xmap">
             
-            
-            <map:match pattern="**">
-                <map:generate src="cocoon:/{1}.descr"/>
+                <map:aggregate element="sitemapandfiles">
+                    <map:part src="cocoon:/{1}/{2}.descr"/>
+                    <map:part src="cocoon:/allfiles-list?location={1}"/>
+                </map:aggregate>
                 <map:transform src="transforms/sitemapdescr2html.xsl">
+
+                    <!-- change showsources to 0 if you don't want the link to the sources -->
                     <map:parameter name="showsources" value="0"/>
                 </map:transform>
                 
@@ -269,11 +308,19 @@
                     </map:otherwise>
                 </map:select>
 
+                <map:serialize type="xhtml-transitional"/>
+            </map:match>
+
+        <map:pipeline>
+
+        </map:pipeline>
+
+            <map:match pattern="**">
+                <map:generate  src="cocoon:/{1}.xmap"/>
                 <map:serialize type="html"/>
             </map:match>
 
-
-        </map:pipeline >
+        </map:pipeline>
 
 
     </map:pipelines>

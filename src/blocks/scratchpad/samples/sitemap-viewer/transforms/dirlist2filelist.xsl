@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:dir="http://apache.org/cocoon/directory/2.0">
 
-<xsl:template match="dir:directory[.//dir:file[contains(@name,'.xmap') and substring-after(@name,'.xmap')='']]">
+<xsl:template match="dir:directory[.//dir:file]">
     <xsl:apply-templates>
             <xsl:sort select="@name"/>
     </xsl:apply-templates>
@@ -10,13 +10,10 @@
 <xsl:template match="dir:directory">
 </xsl:template>
 
-<xsl:template match="dir:file[contains(@name,'.xmap') and substring-after(@name,'.xmap')='']">
+<xsl:template match="dir:file">
     <file>
-    <xsl:apply-templates select="." mode="print"/>
+        <xsl:apply-templates select="." mode="print"/>
     </file>
-    <dir>
-        <xsl:apply-templates select=".." mode="print"/>
-    </dir>
 </xsl:template>
 
 
@@ -29,11 +26,11 @@
 </xsl:template>
 
 <xsl:template match="/">
-    <lines>
+    <files>
         <xsl:apply-templates>
             <xsl:sort select="@name"/>
         </xsl:apply-templates>
-    </lines>
+    </files>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -178,37 +178,19 @@
                 </xsl:variable>
 
                 <reference thepattern="{$thepattern}" src="{$src}" src0="{$src0}"/>
-                
-<!--                
-                <xsl:choose>
-                    <xsl:when test="count(//map:match[@pattern=$thepattern])&gt;0">
-                        <xsl:apply-templates select="//map:match[@pattern=$thepattern]" mode="pipeline">
-                            <xsl:with-param name="depth" select="$depth+1"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-
-                    <xsl:otherwise>
-                        <xsl:variable name="empty">
-                            <xsl:call-template name="find-match">
-                                <xsl:with-param name="request" select="$src0"/>
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <LEGEPIPELINE src="{$src}">
-                            <pattern>
-                                <xsl:copy-of select="$thepattern"/>
-                            </pattern>
-
-                            <match ref="{substring-after($src,'cocoon:/')}" pattern="{concat(substring-before(substring-after($src,'cocoon:/'),'{'),substring-after($src,'}'))}"/>
-                        </LEGEPIPELINE>
-                    </xsl:otherwise>
-                </xsl:choose>
--->
-
+    
             </xsl:element>
         </xsl:if>
     </xsl:template>
-    
-    <xsl:template match="Sitemap|map:sitemap|map:pipelines|map:pipeline">
+
+    <xsl:template match="map:pipeline">
+        <xsl:element name="{substring-after(name(),'map:')}">
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="*"/>
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template match="Sitemap|map:sitemap|map:pipelines">
         <xsl:param name="depth" select="0"/>
         <xsl:apply-templates select="*">
             <xsl:with-param name="depth" select="$depth+1"/>
@@ -301,14 +283,6 @@
     
     
     
-    <!--xsl:template match="*.xxx">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template-->
-
-    
     <xsl:template name="find-match">
         <xsl:param name="request"/>
         
@@ -384,16 +358,6 @@
             <xsl:when test="$pattern=$request">1</xsl:when>
             <xsl:when test="not(contains($pattern,'*'))">0</xsl:when>
             <xsl:when test="$request=''">0</xsl:when>
-            <!--xsl:when test="substring($pattern,1,1)='*'">
-                <xsl:call-template name="test-match-anybefore">
-                    <xsl:with-param name="pattern" select="substring-after($pattern,'*')"/>
-                    <xsl:with-param name="request" select="$request"/>
-                </xsl:call-template>
-            </xsl:when-->
-            <!--xsl:when test="substring($pattern,1,2)='**'">
-                <xsl:message>UNSUPPORTED** </xsl:message>
-                UNSUPPORTED**
-            </xsl:when-->
 
             <xsl:when test="substring($pattern,1,1)='*'">
 
@@ -522,6 +486,7 @@
     
     <xsl:template name="strip-last-dir">
         <xsl:param name="path"/>
+
         <!-- this will change "/usr/local/me" into "/usr/local/", 
             "usr/him" into "usr/" 
             and "foo" into "" -->
