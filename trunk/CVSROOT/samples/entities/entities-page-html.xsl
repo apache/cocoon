@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 
+<!DOCTYPE xsl:stylesheet [
+ <!ENTITY message SYSTEM "message.txt">
+]>
+
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -9,7 +13,7 @@
    <html>
     <head>
      <title>
-      <xsl:value-of select="title"/>
+      <xsl:value-of select="title"/><xsl:text> - &message;</xsl:text>
      </title>
     </head>
     <body bgcolor="#ffffff">

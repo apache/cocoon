@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: lib-page.xml,v 1.3 2000-01-08 07:19:37 ricardo Exp $ -->
+<!-- Version: $Id: lib-page.xml,v 1.4 2000-01-09 23:44:19 stefano Exp $ -->
 
 <?cocoon-process type="xsp"?>
 
@@ -63,34 +63,11 @@
  further processing of the produced content, as required, for example, by
  XSL-transformations.</p>
  
- <servlet:headers>
-  <p>Here are the request headers...</p>
-  <list title="Request Headers">
-   <servlet:for-each-header>
-    <element>
-     <xsp:attribute name="name">
-      <servlet:header-name/>
-     </xsp:attribute>
-     <servlet:header-value/>
-    </element>
-   </servlet:for-each-header>
-  </list>
- </servlet:headers>
-
- <servlet:parameters>
-  <p>and here the servlet parameters that were passed along with the request...</p>
-  <list title="Servlet Parameters">
-   <servlet:for-each-parameter>
-    <element>
-     <xsp:attribute name="name">
-      <servlet:parameter-name/>
-     </xsp:attribute>
-     <servlet:parameter-value tag="item"/>
-    </element>
-   </servlet:for-each-parameter>
-  </list>
- </servlet:parameters>
-    
+ <!-- FIXME (SM): here should go some taglib to emulate the other two 
+      examples, but we don't have yet a good way to iterate over items
+      and so on without using logic directly... more feedback is needed on
+      the taglib issue. -->
+      
  <p>All right, the first XSP page is over, but you can see the dynamically syntax highlighted
  <link href="view-source.xml?filename=lib-page.xml">source of this page</link>,
  <link href="view-source.xml?url=resource://org/apache/cocoon/processor/xsp/library/java/request.xsl">the servlet request library logicsheet</link>,

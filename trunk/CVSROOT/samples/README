@@ -7,13 +7,19 @@ give you insights on Cocoon capabilities as well as real-life suggestions on
 how to XML-ize your web-serving environment.
 
       - hello ................. a simple hello world example
+      - entities .............. shows XML external entities
+      - import ................ shows XSLT imports
       - sites ................. some live Apache web sites XML-ized
       - fo .................... examples regarding XSL formatting objects
       - wap ................... how to turn your site wireless ready with WML
       - vml ................... how to turn your site voice ready with VoiceML
-      - sql ................... how to XML-ize your legacy rational data
+      - sql ................... how to XML-ize your rational data
       - dcp ................... how to add dynamic PI evaluation
       - xsp ................... examples to show XML compiled server pages
+      - ldap .................. how to XML-ize your LDAP data
+      - vrml .................. how to use Cocoon to generate VRML
+      - fromServlet ........... how to call Cocoon from another servlet
+
 
 Filenames
 ---------

@@ -8,6 +8,15 @@
    This is a very simple demostration of how to use Cocoon. A simple XML page
    is transformed into an HTML page.
   </sample>
+  <sample name="Hello World (with external message)" url="entities/entities-page.xml">
+   This is a very simple demostration of how to use Cocoon. Same page as above,
+   but some of its content is included using XML external entities.
+  </sample>
+  <sample name="Hello World (with imported stylesheet)" url="import/import-page.xml">
+   This is a very simple demostration of how to use Cocoon. Same page as above,
+   but its stylesheet is an extention of the previous one and changes some
+   of its properties.
+  </sample>
  </group>
  
  <group name="XML-ized web sites">
