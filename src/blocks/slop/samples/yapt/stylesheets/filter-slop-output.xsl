@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.5 2003/10/13 17:49:10 stevenn Exp $
+    $Id: filter-slop-output.xsl,v 1.6 2003/10/13 18:23:45 stevenn Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -168,9 +168,7 @@
 
     <!-- output code slop:lines as-is, with added carriage return -->
     <xsl:template match="slop:line" mode="list">
-        <li>
-          <xsl:copy-of select="text()"/>
-        </li>
+        <li>&#187; <xsl:copy-of select="text()"/></li>
     </xsl:template>
 
     <!-- output code slop:lines as-is, with added carriage return -->

@@ -38,6 +38,12 @@ pre {
     background: silver;
 }
 
+ul {
+	list-style: none;
+	padding-left: 0.85em;
+	text-indent: -0.85em;
+}
+
 a {
 	text-decoration: none;
 	color: #000;
