@@ -75,6 +75,8 @@ import java.math.BigInteger;
  * is not entirely correct. In fact, it uses a small wrapper class that will either delegate to
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
+ *
+ * @version CVS $Id: FormattingDecimalConvertor.java,v 1.3 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;

@@ -54,6 +54,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link MillisDateConvertor}s.
+ *
+ * @version CVS $Id: MillisDateConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class MillisDateConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) {

@@ -59,6 +59,8 @@ import java.util.Locale;
  *
  * <p>This map should be filled once using calls to {@link #put}, before any calls
  * are made to {@link #get}.
+ *
+ * @version CVS $Id: LocaleMap.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class LocaleMap {
     private FastHashMap map = new FastHashMap();

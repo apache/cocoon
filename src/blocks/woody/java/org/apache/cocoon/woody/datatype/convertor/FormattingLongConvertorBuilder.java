@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.datatype.convertor;
 
 /**
  * Builds {@link FormattingLongConvertor}s.
+ *
+ * @version CVS $Id: FormattingLongConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingLongConvertorBuilder extends FormattingDecimalConvertorBuilder {
     protected FormattingDecimalConvertor createConvertor() {

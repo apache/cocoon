@@ -70,10 +70,12 @@ import java.text.ParseException;
  * pattern for nl-BE will be sought, then one for nl, and if that is not
  * found, finally the locale-independent formatting pattern will be used.
  *
- * <p>Note: the earlier statement about the fact that this class uses java.text.SimpleDateFormat
+ * <p><strong>NOTE:</strong> the earlier statement about the fact that this class uses java.text.SimpleDateFormat
  * is not entirely correct. In fact, it uses a small wrapper class that will either delegate to
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
+ *
+ * @version CVS $Id: FormattingDateConvertor.java,v 1.3 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */

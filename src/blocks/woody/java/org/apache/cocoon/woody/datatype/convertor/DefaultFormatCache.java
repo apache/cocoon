@@ -50,6 +50,10 @@
 */
 package org.apache.cocoon.woody.datatype.convertor;
 
+/**
+ *
+ * @version CVS $Id: DefaultFormatCache.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
+ */
 public class DefaultFormatCache implements Convertor.FormatCache {
     private Object object;
 

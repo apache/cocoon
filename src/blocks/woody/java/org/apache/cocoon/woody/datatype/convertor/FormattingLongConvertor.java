@@ -61,6 +61,8 @@ import java.text.ParseException;
  *
  * <p>This class is mostly the same as the {@link FormattingDecimalConvertor},
  * so see there for more information.
+ *
+ * @version CVS $Id: FormattingLongConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingLongConvertor extends FormattingDecimalConvertor {
 

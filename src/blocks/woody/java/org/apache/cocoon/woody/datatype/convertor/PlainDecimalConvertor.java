@@ -54,8 +54,10 @@ import java.util.Locale;
 import java.math.BigDecimal;
 
 /**
- * Convertor for java.math.BigDecimals that does not do any (Locale-dependent)
- * formatting.
+ * Convertor for {@link java.math.BigDecimal}s that does not do any
+ * (locale-dependent) formatting.
+ *
+ * @version CVS $Id: PlainDecimalConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class PlainDecimalConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

@@ -54,6 +54,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link PlainLongConvertor}s.
+ *
+ * @version CVS $Id: PlainLongConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class PlainLongConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
