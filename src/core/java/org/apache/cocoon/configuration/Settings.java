@@ -19,7 +19,7 @@ import java.util.Properties;
 
 /**
  *
- * @version CVS $Revision: 1.33 $ $Date: 2004/04/03 23:55:54 $
+ * @version SVN $Id$
  */
 public class Settings {
 
@@ -45,8 +45,295 @@ public class Settings {
     protected boolean showTime;
     protected boolean manageExceptions;
     protected String formEncoding;
-
+    protected String log4jConfiguration;
+    
     public Settings(Properties properties) {
         // ignore
+    }
+    
+    
+    /**
+     * @return Returns the allowReload.
+     */
+    public boolean isAllowReload() {
+        return this.allowReload;
+    }
+    /**
+     * @param allowReload The allowReload to set.
+     */
+    public void setAllowReload(boolean allowReload) {
+        this.allowReload = allowReload;
+    }
+    /**
+     * @return Returns the autosaveUploads.
+     */
+    public boolean isAutosaveUploads() {
+        return this.autosaveUploads;
+    }
+    /**
+     * @param autosaveUploads The autosaveUploads to set.
+     */
+    public void setAutosaveUploads(boolean autosaveUploads) {
+        this.autosaveUploads = autosaveUploads;
+    }
+    /**
+     * @return Returns the cacheDirectory.
+     */
+    public String getCacheDirectory() {
+        return this.cacheDirectory;
+    }
+    /**
+     * @param cacheDirectory The cacheDirectory to set.
+     */
+    public void setCacheDirectory(String cacheDirectory) {
+        this.cacheDirectory = cacheDirectory;
+    }
+    /**
+     * @return Returns the classloaderClassName.
+     */
+    public String getClassloaderClassName() {
+        return this.classloaderClassName;
+    }
+    /**
+     * @param classloaderClassName The classloaderClassName to set.
+     */
+    public void setClassloaderClassName(String classloaderClassName) {
+        this.classloaderClassName = classloaderClassName;
+    }
+    /**
+     * @return Returns the cocoonLogger.
+     */
+    public String getCocoonLogger() {
+        return this.cocoonLogger;
+    }
+    /**
+     * @param cocoonLogger The cocoonLogger to set.
+     */
+    public void setCocoonLogger(String cocoonLogger) {
+        this.cocoonLogger = cocoonLogger;
+    }
+    /**
+     * @return Returns the configuration.
+     */
+    public String getConfiguration() {
+        return this.configuration;
+    }
+    /**
+     * @param configuration The configuration to set.
+     */
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
+    /**
+     * @return Returns the enableUploads.
+     */
+    public boolean isEnableUploads() {
+        return this.enableUploads;
+    }
+    /**
+     * @param enableUploads The enableUploads to set.
+     */
+    public void setEnableUploads(boolean enableUploads) {
+        this.enableUploads = enableUploads;
+    }
+    /**
+     * @return Returns the extraClasspaths.
+     */
+    public String[] getExtraClasspaths() {
+        return this.extraClasspaths;
+    }
+    /**
+     * @param extraClasspaths The extraClasspaths to set.
+     */
+    public void setExtraClasspaths(String[] extraClasspaths) {
+        this.extraClasspaths = extraClasspaths;
+    }
+    /**
+     * @return Returns the forceProperties.
+     */
+    public String[] getForceProperties() {
+        return this.forceProperties;
+    }
+    /**
+     * @param forceProperties The forceProperties to set.
+     */
+    public void setForceProperties(String[] forceProperties) {
+        this.forceProperties = forceProperties;
+    }
+    /**
+     * @return Returns the formEncoding.
+     */
+    public String getFormEncoding() {
+        return this.formEncoding;
+    }
+    /**
+     * @param formEncoding The formEncoding to set.
+     */
+    public void setFormEncoding(String formEncoding) {
+        this.formEncoding = formEncoding;
+    }
+    /**
+     * @return Returns the initClassloader.
+     */
+    public boolean isInitClassloader() {
+        return this.initClassloader;
+    }
+    /**
+     * @param initClassloader The initClassloader to set.
+     */
+    public void setInitClassloader(boolean initClassloader) {
+        this.initClassloader = initClassloader;
+    }
+    /**
+     * @return Returns the loadClasses.
+     */
+    public String[] getLoadClasses() {
+        return this.loadClasses;
+    }
+    /**
+     * @param loadClasses The loadClasses to set.
+     */
+    public void setLoadClasses(String[] loadClasses) {
+        this.loadClasses = loadClasses;
+    }
+    /**
+     * @return Returns the loggerClassName.
+     */
+    public String getLoggerClassName() {
+        return this.loggerClassName;
+    }
+    /**
+     * @param loggerClassName The loggerClassName to set.
+     */
+    public void setLoggerClassName(String loggerClassName) {
+        this.loggerClassName = loggerClassName;
+    }
+    /**
+     * @return Returns the loggingConfiguration.
+     */
+    public String getLoggingConfiguration() {
+        return this.loggingConfiguration;
+    }
+    /**
+     * @param loggingConfiguration The loggingConfiguration to set.
+     */
+    public void setLoggingConfiguration(String loggingConfiguration) {
+        this.loggingConfiguration = loggingConfiguration;
+    }
+    /**
+     * @return Returns the logLevel.
+     */
+    public String getLogLevel() {
+        return this.logLevel;
+    }
+    /**
+     * @param logLevel The logLevel to set.
+     */
+    public void setLogLevel(String logLevel) {
+        this.logLevel = logLevel;
+    }
+    /**
+     * @return Returns the manageExceptions.
+     */
+    public boolean isManageExceptions() {
+        return this.manageExceptions;
+    }
+    /**
+     * @param manageExceptions The manageExceptions to set.
+     */
+    public void setManageExceptions(boolean manageExceptions) {
+        this.manageExceptions = manageExceptions;
+    }
+    /**
+     * @return Returns the maxUploadSize.
+     */
+    public long getMaxUploadSize() {
+        return this.maxUploadSize;
+    }
+    /**
+     * @param maxUploadSize The maxUploadSize to set.
+     */
+    public void setMaxUploadSize(long maxUploadSize) {
+        this.maxUploadSize = maxUploadSize;
+    }
+    /**
+     * @return Returns the overwriteUploads.
+     */
+    public boolean isOverwriteUploads() {
+        return this.overwriteUploads;
+    }
+    /**
+     * @param overwriteUploads The overwriteUploads to set.
+     */
+    public void setOverwriteUploads(boolean overwriteUploads) {
+        this.overwriteUploads = overwriteUploads;
+    }
+    /**
+     * @return Returns the parentServiceManagerClassName.
+     */
+    public String getParentServiceManagerClassName() {
+        return this.parentServiceManagerClassName;
+    }
+    /**
+     * @param parentServiceManagerClassName The parentServiceManagerClassName to set.
+     */
+    public void setParentServiceManagerClassName(
+            String parentServiceManagerClassName) {
+        this.parentServiceManagerClassName = parentServiceManagerClassName;
+    }
+    /**
+     * @return Returns the showTime.
+     */
+    public boolean isShowTime() {
+        return this.showTime;
+    }
+    /**
+     * @param showTime The showTime to set.
+     */
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
+    }
+    /**
+     * @return Returns the uploadDirectory.
+     */
+    public String getUploadDirectory() {
+        return this.uploadDirectory;
+    }
+    /**
+     * @param uploadDirectory The uploadDirectory to set.
+     */
+    public void setUploadDirectory(String uploadDirectory) {
+        this.uploadDirectory = uploadDirectory;
+    }
+    /**
+     * @return Returns the workDirectory.
+     */
+    public String getWorkDirectory() {
+        return this.workDirectory;
+    }
+    /**
+     * @param workDirectory The workDirectory to set.
+     */
+    public void setWorkDirectory(String workDirectory) {
+        this.workDirectory = workDirectory;
+    }
+    
+    /**
+     * @return Returns the log4jConfiguration.
+     */
+    public String getLog4jConfiguration() {
+        return this.log4jConfiguration;
+    }
+    /**
+     * @param log4jConfiguration The log4jConfiguration to set.
+     */
+    public void setLog4jConfiguration(String log4jConfiguration) {
+        this.log4jConfiguration = log4jConfiguration;
+    }
+    public String get(String property, String defaultValue) {
+        if ( property == null ) {
+            return defaultValue;
+        }
+        return property;
     }
 }
