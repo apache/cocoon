@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
  * are instances of the {@link ParamSaxBuffer} class.
  *
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle, Serviceable {
@@ -91,7 +91,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
     /**
      * Bundle validity
      */
-    private SourceValidity validity = null;
+    private SourceValidity validity;
 
     /**
      * Locale of the bundle
@@ -287,20 +287,23 @@ public class XMLResourceBundle extends AbstractLogEnabled
      */
     protected void load(String sourceURL)
     throws IOException, ProcessingException, SAXException {
-
         Source source = null;
         SourceResolver resolver = null;
         try {
-            resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(sourceURL);
-            SourceValidity sourceValidity = source.getValidity();
-            if (validity == null || validity.isValid( sourceValidity ) == SourceValidity.INVALID) {
-                HashMap values = new HashMap();
-                SourceUtil.toSAX(source, new SAXContentHandler(values));
-                this.validity = sourceValidity;
-                this.values = values;
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Loaded XML bundle: " + name + ", locale: " + locale);
+            int valid = this.validity == null? SourceValidity.INVALID: this.validity.isValid();
+            if (valid != SourceValidity.VALID) {
+                // Saved validity is not valid, get new source and validity
+                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                source = resolver.resolveURI(sourceURL);
+                SourceValidity sourceValidity = source.getValidity();
+                if (valid == SourceValidity.INVALID || this.validity.isValid(sourceValidity) != SourceValidity.VALID) {
+                    HashMap values = new HashMap();
+                    SourceUtil.toSAX(source, new SAXContentHandler(values));
+                    this.validity = sourceValidity;
+                    this.values = values;
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Loaded XML bundle: " + this.name + ", locale: " + this.locale);
+                    }
                 }
             }
         } catch (ServiceException e) {
@@ -311,7 +314,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             if (source != null) {
                 resolver.release(source);
             }
-            manager.release(resolver);
+            this.manager.release(resolver);
         }
     }
 
@@ -339,7 +342,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * @return the locale
      */
     public Locale getLocale() {
-        return locale;
+        return this.locale;
     }
 
     /**
@@ -372,7 +375,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             return null;
         }
 
-        Object value = values.get(key);
+        Object value = this.values.get(key);
         if (value != null) {
             return value.toString();
         }
@@ -390,21 +393,20 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * @return the enumeration of keys
      */
     public Set keySet() {
-        return Collections.unmodifiableSet(values.keySet());
+        return Collections.unmodifiableSet(this.values.keySet());
     }
 
     /**
      * Reload this bundle if URI's timestam is newer than ours
      *
      * @param sourceURL source URL of the XML bundle
-     **/
-    public void update(String sourceURL)
-    {
+     */
+    public void update(String sourceURL) {
         try {
-                load(sourceURL);
-        }
-        catch (Exception e) {
-            getLogger().info("Resource update failed. " + name + ", locale: " + locale + " Exception: " + e.getMessage());
+            load(sourceURL);
+        } catch (Exception e) {
+            getLogger().info("Resource update failed. " + this.name + ", locale: " + this.locale +
+                             " Exception: " + e);
         }
     }
 }
