@@ -40,7 +40,7 @@
     </copy>
 
     <!-- make sure change is detected -->
-    <sleep seconds="1"/>
+    <sleep seconds="5"/>
 
     <httpRequest href="${url}" description="Send original request">
       <match>
@@ -62,7 +62,7 @@
     </copy>
 
     <!-- make sure change is detected -->
-    <sleep seconds="1"/>
+    <sleep seconds="5"/>
 
     <httpRequest href="${url}" description="Send next request after flowscript was modified">
       <match>
