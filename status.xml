@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="fix" fixes-bug="30994">
+     Change constructor to be public in order to fix bug 30270
+   </action>
    <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
      Forms block: added possibility to add a SelectionList based on Java.
    </action>
