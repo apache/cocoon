@@ -39,7 +39,8 @@
 		<p>but this has the significant disadvantage that your database usernames and passwords are by default accessible from the WWW. You may wish to protect the cdefs.xml file by restricting access to the directory it lives in to the ip address(es) of your server(s).</p>
 		<p>The other warning here is that if cocoon is operating on the www.example.com site, it will try to process the cdefs.xml file before giving it to the XML parser. As long as cdefs.xml has no cocoon:process PI, you will not have any trouble but it will be somewhat slower than if cocoon is not involved. A simple trick to get around this is to rename the file to an extension that does not trigger cocoon. I use .sxml, shorthand for Source XML. Those of you with real operating systems can just make a link to the .xml file.</p>
 		<p>In addition to the connection element, you can also have querydefs tags in your connectiondefs node. A querydefs node must have a unique name attribute. query tags (described below) may reference a querydefs tag in their defs attribute, which causes the query tag's attributes to default to the attributes of the querydefs tag. This is useful for setting commonly used groups of attributes. You may also specify a default querydefs. Here is an example:</p>
-		<source>&lt;querydefs name="standard" doc-element="options" row-element="option" connection="foo"/&gt;
+<source>&lt;querydefs name="standard" doc-element="options" 
+  row-element="option" connection="foo"/&gt;
 &lt;query defs="standard"/&gt;</source>
 		<p>is equivalent to</p>
 		<source>&lt;query doc-element="options" row-element="option" connection="foo"/&gt;</source>
@@ -56,7 +57,10 @@
  &lt;ROW ID="0"&gt;
   &lt;NAME&gt;Donald Ball&lt;/NAME&gt;
   &lt;NUMBER&gt;23&lt;/NUMBER&gt;
-  &lt;MESSAGE&gt;The Illuminati do not exist. This message paid for by the Illuminati.&lt;/MESSAGE&gt;
+  &lt;MESSAGE&gt;
+   The Illuminati do not exist. 
+   This message paid for by the Illuminati.&lt;/MESSAGE
+  &gt;
  &lt;/ROW&gt;
  ... other rows ...
 &lt;/ROWSET&gt;</source>
@@ -82,7 +86,8 @@
 	<s1 title="Creating Complex Queries">
 		<p>URL request parameter substitution using {@var} is fine for many situations, but is inadequate for handling queries whose conditions are dependent on the state of many variables. To accomodate these queries, you can specify the name of a subclass of SQLQueryCreator that will create the query string. The method that should be overridden is:</p>
 		<source>public String getQuery(Connection conn, String query, 
-  Element query_element, Properties query_props, Hashtable parameters) throws Exception;</source>
+  Element query_element, Properties query_props, Hashtable parameters) 
+  throws Exception;</source>
 		<p>This looks like a lot of parameters. I didn't figure that it made sense to deny any of the potential information available to the query creator. Just ignore what you don't care about. The parameters that deserve explanation are query_props, which is a Properties object containing all of the attribute values of the query tag, keyed by name. The parameters table is passed from cocoon to its processors, and contains lots of informatin, notable the original HttpServletRequest, keyed by the string "request".</p>
 		<p>You specify the particular subclass of SQLQueryCreator in the creator attribute of the query tag. It's probably easiest if you put your query creators in a package, e.g. com.webslingerZ.cocoon.ComplexQueryCreator.</p>
 		<p>One utility method is provided for your convenience. The SQLEscape method should parse a string for apostrophes and replace them with whichever string their database likes to use instead. It's not working correctly for my database drivers, so the default getQuery method does not use it. If anyone can suggest the correct way to go about doing this, please contact me with your suggestion or, ideally, a patch.</p>
@@ -104,7 +109,7 @@
 	</s1>
 
 	<s1 title="Notes and Disclaimers">
-		<p>I sure hope this is useful to you. It's proving to be very useful to me. The DTD used here is a superset of that used by Oracle's XSQL servlet (which provides no methods for specifying alternate variable delimiters, creating complex queries, query default attributes, or error handling). Technical notes for the XSQL servlet are available - note you apparantly must now fill out an annoying survey to get access to this page. We're sharing the DTD with the tacit approval of Steve Meunch, who kindly pointed me in that direction when he saw a) how similar our methodologies were and b) how horrible my original DTD was. Thanks also go out to Stefano Mazzochi, who started this whole cocoon business in the first place, and Ricardo Rocha, whose DCP processor provided the framework for SQLProcessor's parent, XMLResultSet. Stefano Malimpensa has suggested many useful features that are beginning to make their way into the code.</p>
+		<p>I sure hope this is useful to you. It's proving to be very useful to me. The DTD used here is a superset of that used by Oracle's XSQL servlet (which provides no methods for specifying alternate variable delimiters, creating complex queries, query default attributes, or error handling). Technical notes for the XSQL servlet are available - note you apparantly must now fill out an annoying survey to get access to this page. We're sharing the DTD with the tacit approval of Steve Meunch, who kindly pointed me in that direction when he saw a) how similar our methodologies were and b) how horrible my original DTD was. Thanks also go out to Stefano Mazzocchi, who started this whole cocoon business in the first place, and Ricardo Rocha, whose DCP processor provided the framework for SQLProcessor's parent, XMLResultSet. Stefano Malimpensa has suggested many useful features that are beginning to make their way into the code.</p>
 	</s1>
 
 	<s1 title="Planned Features">
