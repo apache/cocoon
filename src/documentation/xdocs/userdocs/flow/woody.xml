@@ -10,7 +10,11 @@
  </header>
  <body>
   <s1 title="Woody">
-   <p><link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link> is another form framework that can be used in your Flowscripts.</p>
+   <p><link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link> is another form framework 
+     that can be used in your Flowscripts.</p>
+   <note>
+     Woody is marked as "unstable" block because it is under development!
+   </note>
 <p>Here is an example:</p>
 <source><![CDATA[
 
