@@ -35,20 +35,24 @@
    </sample>
   </group>
 
+  <group name="News Feeds">
+   <sample name="Slashdot" href="slashdot/slashdot.xml">
+    Live XML Feed from Slashdot.
+   </sample>
+   <sample name="Moreover.com" href="moreover/moreover.xml">
+    Live XML Developer News Feed from moreover.com.
+   </sample>
+   <sample name="iSyndicate.com" href="isyndicate/news.xml">
+    Live XML News Feed from iSyndicate.com.
+   </sample>
+  </group>
+
   <group name="Static Content">
    <sample name="formatting objects" href="fo">
     This is an example of FO translated to PDF by Apache FOP.
    </sample>
    <sample name="scalable vector graphics" href="svg">
     An example of a SVG file rendered to a PNG image.
-   </sample>
-   <sample name="Javascript Generator" href="scripts/hello.js">
-    An example of the ScriptGenerator producing XML out of a Javascript program.
-   </sample>
-   <sample name="Python Generator" href="scripts/hello.py">
-    An example of the ScriptGenerator producing XML out of a Python program.
-    You should make sure that you have the Jython interpreter (jython.jar) from
-    www.jython.org in the WEB-INF/lib directory of your Cocoon 2 webapp context.
    </sample>
    <sample name="slides" href="slides/slides">
     Example of complex XSLT usage.
@@ -84,6 +88,17 @@
    </sample>
    <sample name="File Uploads" href="xsp/upload" xlink:role="dynamic">
     Sample to illustrate File uploads.
+   </sample>
+  </group>
+
+  <group name="Generators">
+   <sample name="Javascript Generator" href="scripts/hello.js">
+    An example of the ScriptGenerator producing XML out of a Javascript program.
+   </sample>
+   <sample name="Python Generator" href="scripts/hello.py">
+    An example of the ScriptGenerator producing XML out of a Python program.
+    You should make sure that you have the Jython interpreter (jython.jar) from
+    www.jython.org in the WEB-INF/lib directory of your Cocoon 2 webapp context.
    </sample>
    <sample name="Velocity Generator" href="templates/hello-page.vm">
     An example of the VelocityGenerator producing XML out of a Velocity Template.

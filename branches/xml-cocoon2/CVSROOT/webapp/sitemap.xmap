@@ -15,6 +15,7 @@
    <map:generator  name="extractor"   src="org.apache.cocoon.generation.FragmentExtractorGenerator"/>
    <map:generator  name="script"      src="org.apache.cocoon.generation.ScriptGenerator"/>
    <map:generator  name="velocity"    src="org.apache.cocoon.generation.VelocityGenerator"/>
+   <map:generator  name="html"        src="org.apache.cocoon.generation.HTMLGenerator" label="content"/>
   </map:generators>
 
   <map:transformers default="xslt">
@@ -220,6 +221,34 @@
 
    <map:match pattern="sites/images/*.gif">
     <map:read src="resources/images/{1}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <!-- ================  NEWS  =========================== -->
+
+   <map:match pattern="slashdot/slashdot.xml">
+    <map:generate src="http://www.slashdot.org/slashdot.xml"/>
+    <map:transform src="stylesheets/news/slashdot.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="slashdot/**.gif">
+    <map:read src="http://images.slashdot.org/topics/{1}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="slashdot/**.jpg">
+    <map:read src="http://images.slashdot.org/topics/{1}.jpg" mime-type="image/jpg"/>
+   </map:match>
+
+   <map:match pattern="moreover/moreover.xml">
+    <map:generate src="http://www.moreover.com/cgi-local/page?o=xml&amp;c=Developer%20news"/>
+    <map:transform src="stylesheets/news/moreover.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="isyndicate/news.xml">
+    <map:generate src="http://headlines.isyndicate.com/pages/cui/news.xml"/>
+    <map:transform src="stylesheets/news/isyndicate.xsl"/>
+    <map:serialize/>
    </map:match>
 
    <!-- ================  Static  =========================== -->
