@@ -45,7 +45,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** The processor that wraps us */
     private TreeProcessor wrappingProcessor;
 
-        /** Processing nodes that need to be disposed with this processor */
+    /** Processing nodes that need to be disposed with this processor */
     private List disposableNodes;
 
     /** Root node of the processing tree */
@@ -86,8 +86,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
-
-       }
+    }
 
     /** Get the component info for this processor */
     public ProcessorComponentInfo getComponentInfo() {
@@ -153,9 +152,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      */
     public boolean process(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext();
-
         context.enableLogging(getLogger());
-
         try {
             return process(environment, context);
         } finally {
@@ -171,7 +168,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         InvokeContext context = new InvokeContext(true);
-
         context.enableLogging(getLogger());
         try {
             if (process(environment, context)) {
@@ -287,8 +283,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         if (this.disposableNodes != null) {
             // we must dispose the nodes in reverse order
             // otherwise selector nodes are freed before the components node
-            for(int i=this.disposableNodes.size()-1; i>-1; i--) {
-                ((Disposable)disposableNodes.get(i)).dispose();
+            for (int i = this.disposableNodes.size() - 1; i > -1; i--) {
+                ((Disposable) disposableNodes.get(i)).dispose();
             }
             this.disposableNodes = null;
         }
@@ -309,14 +305,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
             try {
                 ConcreteTreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
-            } catch(IOException ioe) {
-                throw ioe;
-            } catch(ProcessingException pe) {
-                throw pe;
-            } catch(RuntimeException re) {
-                throw re;
-            } catch(Exception ex) {
-                throw new ProcessingException(ex);
+            } catch (IOException e) {
+                throw e;
+            } catch (ProcessingException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ProcessingException(e);
             }
         }
     }
