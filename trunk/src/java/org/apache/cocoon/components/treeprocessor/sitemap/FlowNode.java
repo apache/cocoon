@@ -63,72 +63,62 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: FlowNode.java,v 1.3 2003/07/19 15:24:59 joerg Exp $
  */
 public class FlowNode extends AbstractProcessingNode
-  implements Composable, Contextualizable
-{
-  ComponentManager manager;
-  String language;
-  Context context;
-  Interpreter interpreter;
+        implements Composable, Contextualizable {
 
-  public FlowNode(String language)
-  {
-    this.language = language;
-  }
-  
-  /**
-   * This method should never be called by the TreeProcessor, since a
-   * <code>&lt;map:flow&gt;</code> element should not be in an
-   * "executable" sitemap node.
-   *
-   * @param env an <code>Environment</code> value
-   * @param context an <code>InvokeContext</code> value
-   * @return a <code>boolean</code> value
-   * @exception Exception if an error occurs
-   */
-  public boolean invoke(Environment env, InvokeContext context)
-    throws Exception
-  {
-    return true;
-  }
+    ComponentManager manager;
+    String language;
+    Context context;
+    Interpreter interpreter;
 
-  public void contextualize(org.apache.avalon.framework.context.Context context)
-    throws ContextException
-  {
-    this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-  }
-
-  /**
-   *
-   * Lookup an flow {@link
-   * org.apache.cocoon.components.flow.Interpreter} instance to hold
-   * the scripts defined within the <code>&lt;map:flow&gt;</code> in
-   * the sitemap.
-   *
-   * @param manager a <code>ComponentManager</code> value
-   */
-  public void compose(ComponentManager manager)
-    throws ComponentException
-  {
-    this.manager = manager;
-    
-    try {
-      ComponentSelector selector
-        = (ComponentSelector)manager.lookup(Interpreter.ROLE);
-      // Obtain the Interpreter instance for this language
-      interpreter = (Interpreter)selector.select(language);
+    public FlowNode(String language) {
+        this.language = language;
     }
-    catch (Exception ex) {
-      throw new ComponentException("ScriptNode: Couldn't obtain a flow "
-                                   + "interpreter for " + language
-                                   + ": " + ex);
-    }
-  }
 
-  public Interpreter getInterpreter()
-  {
-    return interpreter;
-  }
+    /**
+     * This method should never be called by the TreeProcessor, since a
+     * <code>&lt;map:flow&gt;</code> element should not be in an
+     * "executable" sitemap node.
+     *
+     * @param env an <code>Environment</code> value
+     * @param context an <code>InvokeContext</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
+    public boolean invoke(Environment env, InvokeContext context) throws Exception {
+        return true;
+    }
+
+    public void contextualize(org.apache.avalon.framework.context.Context context)
+        throws ContextException {
+        this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    }
+
+    /**
+     *
+     * Lookup an flow {@link org.apache.cocoon.components.flow.Interpreter}
+     * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
+     * in the sitemap.
+     *
+     * @param manager a <code>ComponentManager</code> value
+     * @exception ComponentException if no flow interpreter could be obtained
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+
+        try {
+            ComponentSelector selector = (ComponentSelector)manager.lookup(Interpreter.ROLE);
+            // Obtain the Interpreter instance for this language
+            interpreter = (Interpreter)selector.select(language);
+        } catch (Exception ex) {
+            throw new ComponentException(language,
+                "ScriptNode: Couldn't obtain a flow interpreter for " + language + ": " + ex);
+        }
+    }
+
+    public Interpreter getInterpreter() {
+        return interpreter;
+    }
 }
