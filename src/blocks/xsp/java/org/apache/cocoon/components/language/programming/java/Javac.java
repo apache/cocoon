@@ -66,22 +66,6 @@ public class Javac extends AbstractJavaCompiler {
     return result;
   }
 
-  /*
-   * Parse the compiler error stream to produce a list of
-   * <code>CompilerError</code>s
-   *
-   * @param input The error stream
-   * @return The list of compiler error messages
-   * @exception IOException If an error occurs during message collection
-   */
-/*  protected List parseStream(BufferedReader input) throws IOException {
-    if (modern) {
-        return parseModernStream(input);
-    } else {
-        return parseClassicStream(input);
-    }
-  }*/
-
   /**
    * Parse the compiler error stream to produce a list of
    * <code>CompilerError</code>s
@@ -146,82 +130,6 @@ public class Javac extends AbstractJavaCompiler {
     }
   }
 
-  /*
-   * Parse the compiler error stream to produce a list of
-   * <code>CompilerError</code>s
-   *
-   * @param input The error stream
-   * @return The list of compiler error messages
-   * @exception IOException If an error occurs during message collection
-   */
-  /*
-  protected List parseClassicStream(BufferedReader input) throws IOException {
-
-    List errors = null;
-    String line = null;
-    StringBuffer buffer = null;
-
-    while (true) {
-      // cleanup the buffer
-      buffer = new StringBuffer(); // this is faster than clearing it
-
-      // each error has 3 lines
-      for (int i = 0; i < 3 ; i++) {
-        if ((line = input.readLine()) == null) {
-            return errors;
-        }
-        buffer.append(line);
-        buffer.append('\n');
-      }
-
-      // if error is found create the vector
-      if (errors == null) {
-          errors = new ArrayList();
-      }
-
-      // add the error bean
-      errors.add(parseClassicError(buffer.toString()));
-    }
-  }
-*/
-  /*
-   * Parse an individual compiler error message with classic style.
-   *
-   * @param error The error text
-   * @return A messaged <code>CompilerError</code>
-   */
-  /*
-  private CompilerError parseClassicError(String error) {
-
-    StringTokenizer tokens = new StringTokenizer(error, ":");
-    try {
-      String file = tokens.nextToken();
-      if (file.length() == 1) {
-          file = new StringBuffer(file).append(":").append(tokens.nextToken()).toString();
-      }
-      int line = Integer.parseInt(tokens.nextToken());
-
-      StringBuffer last = new StringBuffer(tokens.nextToken());
-      // In case the message contains ':', it should be reassembled
-      while (tokens.hasMoreElements()) {
-        last.append(tokens.nextToken());
-      }
-      tokens = new StringTokenizer(last.toString().trim(), "\n");
-      String message = tokens.nextToken();
-      String context = tokens.nextToken();
-      String pointer = tokens.nextToken();
-      int startcolumn = pointer.indexOf("^");
-      int endcolumn = context.indexOf(" ", startcolumn);
-      if (endcolumn == -1) endcolumn = context.length();
-
-      return new CompilerError(srcDir + File.separator + file, true, line, startcolumn, line, endcolumn, message);
-    } catch(NoSuchElementException nse) {
-      return new CompilerError("no more tokens - could not parse error message: " + error);
-    } catch(Exception nse) {
-      return new CompilerError("could not parse error message: " + error);
-    }
-  }
-*/
   public String toString() {
     return "Sun Javac Compiler";
   }
