@@ -15,24 +15,6 @@
  */
 package org.apache.cocoon.portlet;
 
-import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.ConnectionResetException;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
-import org.apache.cocoon.components.notification.Notifier;
-import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.portlet.PortletContext;
-import org.apache.cocoon.environment.portlet.PortletEnvironment;
-import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
-import org.apache.cocoon.portlet.multipart.RequestFactory;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.StringUtils;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.commons.lang.BooleanUtils;
-
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
@@ -46,6 +28,24 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.ConnectionResetException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
+import org.apache.cocoon.components.notification.Notifier;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.portlet.PortletContext;
+import org.apache.cocoon.environment.portlet.PortletEnvironment;
+import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
+import org.apache.cocoon.portlet.multipart.RequestFactory;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.StringUtils;
+import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -61,7 +61,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -86,7 +85,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.6 2004/06/18 16:45:57 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.7 2004/06/22 20:41:08 vgritsenko Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -212,6 +211,11 @@ public class CocoonPortlet extends GenericPortlet {
     protected String portletContextPath;
 
     /**
+     * This is the url to the portlet context directory
+     */
+    protected String portletContextURL;
+
+    /**
      * The RequestFactory is responsible for wrapping multipart-encoded
      * forms and for handing the file payload of incoming requests
      */
@@ -325,6 +329,26 @@ public class CocoonPortlet extends GenericPortlet {
             }
         }
 
+        try {
+            if (path.indexOf(':') > 1) {
+                this.portletContextURL = path;
+            } else {
+                this.portletContextURL = new File(path).toURL().toExternalForm();
+            }
+        } catch (MalformedURLException me) {
+            // VG: Novell has absolute file names starting with the
+            // volume name which is easily more then one letter.
+            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
+            try {
+                this.portletContextURL = new File(path).toURL().toExternalForm();
+            } catch (MalformedURLException ignored) {
+                throw new PortletException("Unable to determine servlet context URL.", me);
+            }
+        }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("URL for Root: " + this.portletContextURL);
+        }
+
         this.forceLoadParameter = getInitParameter("load-class", null);
 
         this.forceSystemProperty = getInitParameter("force-property", null);
@@ -340,6 +364,7 @@ public class CocoonPortlet extends GenericPortlet {
             }
         }
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
+        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.portletContextURL);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
