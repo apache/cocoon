@@ -67,9 +67,6 @@ import org.apache.cocoon.environment.Request;
  */
 public class ApplesProcessor extends AbstractInterpreter implements Serviceable, ContinuationsDisposer {
 
-    //TODO make this a configuration setting
-    public static final int TIMETOLIVE = 1800000; // 30 minutes
-
 
     private ServiceManager serviceManager;
 
@@ -82,7 +79,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         AppleController app = instantiateController(className);
 
-        WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, TIMETOLIVE, this);
+        WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, 0, this);
 
         DefaultContext appleContext = new DefaultContext();
         appleContext.put("continuation-id", wk.getId());
