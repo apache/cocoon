@@ -44,7 +44,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.7 $ $Date: 2000-06-04 05:52:20 $ $Author: balld $
+ * @version CVS $Revision: 1.8 $ $Date: 2000-06-29 06:17:49 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -199,6 +199,7 @@ class XIncludeProcessorWorker {
 		if (current_xmlbase_uri != null) {
 			xmlbase_stack.push(current_xmlbase_uri);
 		}
+		System.err.println("URL IS "+value);
 		current_xmlbase_uri = new URL(value);
 	}
 
@@ -216,16 +217,27 @@ class XIncludeProcessorWorker {
 			href = href.substring(0,index);
 		}
 		Object object;
-		if (current_xmlbase_uri != null) {
-			URL url = new URL(current_xmlbase_uri,href);
+		String system_id;
+		try {
+			URL url = new URL(href);
+			system_id = url.toString();
 			processor.monitored_table.put(monitor_key,"");
 			processor.monitor.watch(monitor_key,url);
 			object = url.getContent();
-		} else {
-			File file = new File(base_file,href);
-			processor.monitored_table.put(monitor_key,"");
-			processor.monitor.watch(monitor_key,file);
-			object = new FileReader(file);
+		} catch (MalformedURLException e) {
+			if (current_xmlbase_uri != null) {
+				URL url = new URL(current_xmlbase_uri,href);
+				system_id = url.toString();
+				processor.monitored_table.put(monitor_key,"");
+				processor.monitor.watch(monitor_key,url);
+				object = url.getContent();
+			} else {
+				File file = new File(base_file,href);
+				system_id = file.getAbsolutePath();
+				processor.monitored_table.put(monitor_key,"");
+				processor.monitor.watch(monitor_key,file);
+				object = new FileReader(file);
+			}
 		}
 		Object result = null;
 		if (parse.equals("text")) {
@@ -264,6 +276,7 @@ class XIncludeProcessorWorker {
 			} else {
 				throw new Exception("Unknown object type: "+object);
 			}
+			input.setSystemId(system_id);
 			Document included_document = null;
 			try {
 				included_document = parser.parse(input,false);
