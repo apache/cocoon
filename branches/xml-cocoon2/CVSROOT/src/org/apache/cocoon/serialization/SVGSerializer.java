@@ -41,7 +41,7 @@ import org.xml.sax.ext.*;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-25 17:08:29 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-25 17:54:26 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {
@@ -125,7 +125,7 @@ public class SVGSerializer extends SVGBuilder
                     value = new Float(parameters[i].getAttributeAsFloat("value"));
                 } else if ("INTEGER".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Integer(parameters[i].getAttributeAsInt("value"));
+                    value = new Integer(parameters[i].getAttributeAsInteger("value"));
                 } else if ("BOOLEAN".equals(keyType)) {
                     // Can throw an exception.
                     value = new Boolean(parameters[i].getAttributeAsBoolean("value"));
