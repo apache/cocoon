@@ -19,7 +19,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-15 20:35:08 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-12 05:56:49 $
  */
 public interface Action extends Component, ThreadSafe {
     /**
@@ -38,10 +38,10 @@ public interface Action extends Component, ThreadSafe {
      *                    (ie HttpRequest, HttpResponse).
      * @param source      A source <code>String</code> to the Action
      * @param parameters  The <code>Parameters</code> for this invocation
-     * @return List       The returned <code>List</code> object with
+     * @return Map        The returned <code>Map</code> object with
      *                    sitemap substitution values which can be used
      *                    in subsequent elements attributes like src=
-     *                    using a xpath like expression: src="mydir/{1}/foo"
+     *                    using a xpath like expression: src="mydir/{myval}/foo"
      *                    If the return value is null the processing inside
      *                    the <map:act> element of the sitemap will
      *                    be skipped.

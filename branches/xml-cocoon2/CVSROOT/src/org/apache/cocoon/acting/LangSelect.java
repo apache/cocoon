@@ -31,17 +31,21 @@ import org.xml.sax.EntityResolver;
  * LangSelect Action returns two character language code to sitemap.
  *
  * Definition in sitemap:
+ * <pre>
  * &lt;map:actions&gt;
  *		&lt;map:action name="lang_select" src="org.apache.cocoon.acting.LangSelect"/&gt;
+ * </pre>
  *
  * And you use it in following way:
  *
+ * <pre>
  * &lt;map:match pattern="file"&gt;
  * &lt;map:act type="lang_select"&gt;
- *		&lt;map:generate src="file_{1}.xml"/&gt;
+ *		&lt;map:generate src="file_{lang}.xml"/&gt;
  * &lt;/map:act&gt;
+ * </pre>
  *
- * {1} is substituted with language code.
+ * {lang} is substituted with language code.
  * eg. if user selects url ../file?lang=en
  * then Sitemap engine generates file_en.xml source.
  *
@@ -90,11 +94,13 @@ public class LangSelect extends java.lang.Object implements Action {
 
     /**
      * Returns two character language code by checking environment in following order
-     * 1. Http request has parameter lang
-     * 2. Http session has parameter lang
-     * 3. Cookies has parameter lang
-     * 4. User locales has matching language we are providing
-     * 5. Otherwise we return default_lang from sitemap or if that is not found then 'en'
+     * <ol>
+     *   <li>Http request has parameter lang</li>
+     *   <li>Http session has parameter lang</li>
+     *   <li>Cookies has parameter lang</li>
+     *   <li>User locales has matching language we are providing</li>
+     *   <li>Otherwise we return default_lang from sitemap or if that is not found then 'en'</li>
+     * </ol>
      * @return java.lang.String
      * @param objectModel java.util.Map
      * @param par org.apache.avalon.Parameters

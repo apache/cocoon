@@ -37,7 +37,7 @@ import org.apache.cocoon.Constants;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-09 20:51:10 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-12 05:56:49 $
  */
 public class AddEmployeeAction extends ComposerAction {
 
@@ -47,6 +47,8 @@ public class AddEmployeeAction extends ComposerAction {
      * Get the <code>Configuration</code> object for this <code>Component</code>
      */
     public void configure( Configuration configuration) throws ConfigurationException {
+        super.configure(configuration);
+
         Configuration connElement = configuration.getChild("use-connection");
 
         try {

@@ -109,7 +109,7 @@ by the main ones.
     <property name="Name"     value="Cocoon"/>
     <property name="name"     value="cocoon"/>
     <property name="version"  value="2.0a3"/>
-    <property name="year"     value="1999-2000"/>
+    <property name="year"     value="1999-2001"/>
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
 

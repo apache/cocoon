@@ -5,7 +5,7 @@
 	 <title>Using Databases in Cocoon 2</title>
 	 <version>0.3</version> 
 	 <type>Overview document</type> 
-	 <authors><person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
+	 <authors><person name="Berin Loritsch" email="bloritsch@apache.org"/> 
 	 </authors> 
   </header> 
   <body> 
