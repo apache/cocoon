@@ -24,6 +24,7 @@
     <widgets>
       <widget name="form" src="org.apache.cocoon.forms.formmodel.FormDefinitionBuilder"/>
       <widget name="field" src="org.apache.cocoon.forms.formmodel.FieldDefinitionBuilder"/>
+      <widget name="group" src="org.apache.cocoon.forms.formmodel.GroupDefinitionBuilder"/>
       <widget name="repeater" src="org.apache.cocoon.forms.formmodel.RepeaterDefinitionBuilder"/>
       <widget name="booleanfield" src="org.apache.cocoon.forms.formmodel.BooleanFieldDefinitionBuilder"/>
       <widget name="multivaluefield" src="org.apache.cocoon.forms.formmodel.MultiValueFieldDefinitionBuilder"/>
