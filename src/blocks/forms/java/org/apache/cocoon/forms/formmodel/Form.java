@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.7 2004/04/13 21:29:48 sylvain Exp $
+ * @version CVS $Id: Form.java,v 1.8 2004/04/20 22:19:27 mpo Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -303,9 +303,18 @@ public class Form extends AbstractContainerWidget {
         return super.validate(formContext); 
     }
 
+
     private static final String FORM_EL = "form";
     private static final String CHILDREN_EL = "children";
 
+    /**
+     * @return
+     */
+    public String getXMLElementName() {
+        return FORM_EL;
+    }
+    
+    //TODO: reuse available implementation on superclass    
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl formAttrs = new AttributesImpl();
         formAttrs.addCDATAAttribute("id", definition.getId());

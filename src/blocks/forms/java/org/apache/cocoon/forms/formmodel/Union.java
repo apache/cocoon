@@ -15,11 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.Locale;
-
 import org.apache.cocoon.forms.FormContext;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * A discriminated union that references a discriminant value in another
@@ -28,10 +24,12 @@ import org.xml.sax.SAXException;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.5 2004/04/14 17:51:23 joerg Exp $
+ * @version $Id: Union.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
  */
 public class Union extends AbstractContainerWidget {
-    private static final String ELEMENT = "field";
+    
+    //TODO: check if this element-name shouldn't have been 'union'?
+    private static final String UNION_EL = "field";
     private Widget caseWidget;
     
     private final UnionDefinition definition;
@@ -62,8 +60,11 @@ public class Union extends AbstractContainerWidget {
         caseWidget = getParent().getWidget(caseWidgetId);
     }
 
-    public String getElementName() {
-        return ELEMENT;
+    /**
+     * @return "field"
+     */
+    public String getXMLElementName() {
+        return UNION_EL;
     }
 
     public Object getValue() {
@@ -103,12 +104,13 @@ public class Union extends AbstractContainerWidget {
         return super.getWidget(id);
     }
 
+    
+    //TODO: check further: cause the claim in the accompanied comment doesn't seem
+    // to be completely correct
+    
     // This method is overridden to suppress output of sub-widget sax fragments.
-    public void generateItemsSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        // Do nothing
-    }
+//    public void generateItemsSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+//        // Do nothing
+//    }
 
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        generateSaxFragment(contentHandler, locale, ELEMENT);
-    }
 }

@@ -45,7 +45,7 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: MultiValueField.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -109,6 +109,15 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
+
+    /**
+     * @return "multivaluefield"
+     */
+    public String getXMLElementName() {
+        return MULTIVALUEFIELD_EL;
+    }   
+    
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());

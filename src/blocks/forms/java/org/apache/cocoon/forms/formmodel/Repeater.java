@@ -39,9 +39,11 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.6 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: Repeater.java,v 1.7 2004/04/20 22:19:27 mpo Exp $
  */
-public class Repeater extends AbstractWidget implements ContainerWidget {
+public class Repeater extends AbstractWidget 
+//implements ContainerWidget 
+{
     private final RepeaterDefinition definition;
     private final List rows = new ArrayList();
 
@@ -59,9 +61,9 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         return rows.size();
     }
 
-    public void addWidget(Widget widget) {
-        throw new RuntimeException("Repeater.addWidget(): Please use addRow() instead.");
-    }
+//    public void addWidget(Widget widget) {
+//        throw new RuntimeException("Repeater.addWidget(): Please use addRow() instead.");
+//    }
 
     public RepeaterRow addRow() {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
@@ -161,18 +163,20 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         RepeaterRow row = (RepeaterRow)rows.get(rowIndex);
         return row.getWidget(id);
     }
+//
+//    public boolean hasWidget(String id) {
+//        int row; 
+//        try { 
+//            row = Integer.parseInt(id);
+//        } catch (NumberFormatException e) {
+//            // TODO: Use i18n.
+//            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
+//        }
+//        return row >= 0 && row < rows.size();
+//    }
 
-    public boolean hasWidget(String id) {
-        int row; 
-        try { 
-            row = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            // TODO: Use i18n.
-            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
-        }
-        return row >= 0 && row < rows.size();
-    }
-
+    //TODO: consider removing when this method is removed 
+    // from the Widget interface.
     public Widget getWidget(String id) {
         int row; 
         try { 
@@ -230,12 +234,22 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         return valid ? super.validate(formContext) : false;
     }
 
+
     private static final String REPEATER_EL = "repeater";
     private static final String HEADINGS_EL = "headings";
     private static final String HEADING_EL = "heading";
     private static final String LABEL_EL = "label";
     private static final String REPEATER_SIZE_EL = "repeater-size";
+    
 
+    /**
+     * @return "repeater"
+     */
+    public String getXMLElementName() {
+        return REPEATER_EL;
+    }   
+    
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl repeaterAttrs = new AttributesImpl();
         repeaterAttrs.addCDATAAttribute("id", getFullyQualifiedId());
@@ -343,6 +357,16 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             // this widget has no label
         }
 
+        
+        
+        /**
+         * @return "repeater-row"
+         */
+        public String getXMLElementName() {
+            return ROW_EL;
+        }
+
+        //TODO: reuse available implementation on superclass       
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
             AttributesImpl rowAttrs = new AttributesImpl();
             rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
@@ -363,10 +387,10 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.formmodel.ContainerWidget#getChildren()
      */
-    public Iterator getChildren() {
-        // TODO Auto-generated method stub to make this compile again
-        return null;
-    }
+//    public Iterator getChildren() {
+//        // TODO Auto-generated method stub to make this compile again
+//        return null;
+//    }
 
     
 }

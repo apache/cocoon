@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id: Upload.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -134,10 +134,19 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         this.validationError = error;
     }
 
-    private static final String FIELD_EL = "upload";
+
+    private static final String UPLOAD_EL = "upload";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-
+    
+    /**
+     * @return "upload"
+     */
+    public String getXMLElementName() {
+        return UPLOAD_EL;
+    }
+    
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
@@ -145,7 +154,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         if (uploadDefinition.getMimeTypes() != null) {
             fieldAttrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
         }
-        contentHandler.startElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL, fieldAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, UPLOAD_EL, Constants.INSTANCE_PREFIX_COLON + UPLOAD_EL, fieldAttrs);
 
         if (this.part != null) {
             String name = (String)this.part.getHeaders().get("filename");
@@ -164,7 +173,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         // the display data
         this.uploadDefinition.generateDisplayData(contentHandler);
 
-        contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, UPLOAD_EL, Constants.INSTANCE_PREFIX_COLON + UPLOAD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
