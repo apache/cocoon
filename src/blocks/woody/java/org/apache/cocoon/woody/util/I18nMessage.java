@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.woody.util;
 
-import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -135,22 +135,18 @@ public class I18nMessage implements XMLizable {
     }
 
     public void toSAX(ContentHandler contentHandler) throws SAXException {
+        contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
+        AttributesImpl i18nAttrs = new AttributesImpl();
         if (parameters != null) {
-            contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
-
             contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT, Constants.EMPTY_ATTRS);
-
-            // the i18n:text element
-            AttributesImpl i18nAttrs = new AttributesImpl();
-
-            if (catalogue != null)
-                i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, catalogue);
-
-            contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
-            contentHandler.characters(key.toCharArray(), 0, key.length());
-            contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
-
-            // the parameters
+        }
+        if (catalogue != null)
+            i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, catalogue);
+        contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
+        contentHandler.characters(key.toCharArray(), 0, key.length());
+        contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
+        // the parameters
+        if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT, Constants.EMPTY_ATTRS);
                 if (keys != null && keys[i])
@@ -160,24 +156,8 @@ public class I18nMessage implements XMLizable {
                     contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
                 contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT);
             }
-
             contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT);
-
-            contentHandler.endPrefixMapping("i18n");
-        } else {
-            contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
-
-            AttributesImpl i18nAttrs = new AttributesImpl();
-
-            if (catalogue != null)
-                i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, catalogue);
-
-            contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
-            contentHandler.characters(key.toCharArray(), 0, key.length());
-            contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
-
-            contentHandler.endPrefixMapping("i18n");
-            //To change body of implemented methods use Options | File Templates.
         }
+        contentHandler.endPrefixMapping("i18n");
     }
 }
