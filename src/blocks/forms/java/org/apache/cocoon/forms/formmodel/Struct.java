@@ -15,18 +15,14 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.Locale;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * A container {@link Widget} which can hold zero or more child widgets.
  *
- * @version $Id: Struct.java,v 1.3 2004/04/12 14:05:09 tim Exp $
+ * @version $Id: Struct.java,v 1.4 2004/04/20 22:19:27 mpo Exp $
  */
 public class Struct extends AbstractContainerWidget {
-    private static final String ELEMENT = "struct";
+    private static final String STRUCT_EL = "struct";
     
     private final StructDefinition definition; 
 
@@ -37,8 +33,12 @@ public class Struct extends AbstractContainerWidget {
     protected WidgetDefinition getDefinition() {
         return this.definition;
     }
-
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        generateSaxFragment(contentHandler, locale, ELEMENT);
+    
+    /**
+     * @return "struct"
+     */
+    public String getXMLElementName() {
+        return STRUCT_EL;
     }
+    
 }

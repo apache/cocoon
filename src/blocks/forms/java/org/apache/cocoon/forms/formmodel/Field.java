@@ -43,7 +43,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.7 2004/04/13 21:28:24 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.8 2004/04/20 22:19:27 mpo Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
@@ -217,7 +217,16 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
+    
 
+    /**
+     * @return "field"
+     */
+    public String getXMLElementName() {
+        return FIELD_EL;
+    }
+
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());

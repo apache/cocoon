@@ -54,7 +54,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.3 2004/03/25 16:41:48 bruno Exp $
+ * @version CVS $Id: Widget.java,v 1.4 2004/04/20 22:19:27 mpo Exp $
  */
 public interface Widget {
 
@@ -149,6 +149,9 @@ public interface Widget {
     /**
      * Gets the child widget of this widget with the given id, or null if there isn't such a child.
      */
+    //TODO: this is duplicated on the ContainerWidget interface
+    // and in fact only seems to be reasonable in that scope
+    // should we not remove this?
     public Widget getWidget(String id);
     
     /**
@@ -156,6 +159,12 @@ public interface Widget {
      */
     public void broadcastEvent(WidgetEvent event);
 
+    /**
+     * Retrieves an attribute on this widget
+     * 
+     * @param name of the attribute to lookup
+     * @return the found attribute or <code>null</code> if none was found with that name.
+     */
     public Object getAttribute(String name);
 
     /**
@@ -164,5 +173,10 @@ public interface Widget {
      */
     public void setAttribute(String name, Object value);
 
+    /**
+     * Removes the named attribute from this widget.
+     * 
+     * @param name of the attribute
+     */
     public void removeAttribute(String name);
 }

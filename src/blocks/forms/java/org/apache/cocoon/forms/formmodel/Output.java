@@ -32,7 +32,7 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: Output.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     
@@ -66,6 +66,15 @@ public class Output extends AbstractWidget implements DataWidget {
     private static final String OUTPUT_EL = "output";
     private static final String VALUE_EL = "value";
 
+
+    /**
+     * @return "output"
+     */
+    public String getXMLElementName() {
+        return OUTPUT_EL;
+    }
+
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl outputAttrs = new AttributesImpl();
         outputAttrs.addCDATAAttribute("id", getFullyQualifiedId());

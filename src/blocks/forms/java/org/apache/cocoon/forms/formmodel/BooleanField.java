@@ -37,7 +37,7 @@ import java.util.Locale;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: BooleanField.java,v 1.5 2004/04/20 22:19:27 mpo Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -76,9 +76,18 @@ public class BooleanField extends AbstractWidget {
         return true;
     }
 
+
     private static final String BOOLEAN_FIELD_EL = "booleanfield";
     private static final String VALUE_EL = "value";
+    
+    /**
+     * @return "booleanfield"
+     */
+    public String getXMLElementName() {
+        return BOOLEAN_FIELD_EL;
+    }
 
+    //TODO: reuse available implementation on superclass
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
