@@ -59,7 +59,7 @@ import java.io.PushbackInputStream;
  *
  * A newline is espected after each boundary and is parsed away.
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: TokenStream.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: TokenStream.java,v 1.2 2003/09/24 21:41:11 cziegeler Exp $
  */
 class TokenStream extends PushbackInputStream {
 
@@ -288,7 +288,7 @@ class TokenStream extends PushbackInputStream {
         if (read == 0) {
             return -1;
         } else {
-            return (int) buf[0];
+            return buf[0];
         }
     }
 }

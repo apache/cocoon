@@ -75,7 +75,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * - expires (long/0) : The lifetime of the cached content
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.4 2003/07/27 11:09:17 cziegeler Exp $
+ *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
  *  @since   2.1
  */
 public final class IncludeCacheManagerSession {
@@ -102,7 +102,7 @@ public final class IncludeCacheManagerSession {
     private SourceValidity validity;
     
     /** Cache the source objects */
-    private Map sourceList = new HashMap(10);;
+    private Map sourceList = new HashMap(10);
     
     /**
      * Constructor

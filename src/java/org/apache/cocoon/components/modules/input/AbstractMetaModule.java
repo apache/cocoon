@@ -71,7 +71,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.4 2003/05/17 06:00:26 jefft Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -390,7 +390,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             case OP_NAMES:
                 value = input.getAttributeNames(conf, objectModel);
                 break;
-            };
+            }
 
             if (getLogger().isDebugEnabled())
                 getLogger().debug("using "+name+" as "+input+" for "+op+" ("+attr+") and "+conf+" gives "+value);

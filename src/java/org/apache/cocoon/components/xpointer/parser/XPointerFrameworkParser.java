@@ -134,7 +134,6 @@ public class XPointerFrameworkParser
                 case NCName :
                 case WS :
                 case QName :
-                    ;
                     break;
                 default :
                     jj_la1[1] = jj_gen;
@@ -143,7 +142,6 @@ public class XPointerFrameworkParser
             label_2 : while (true) {
                 switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
                     case WS :
-                        ;
                         break;
                     default :
                         jj_la1[2] = jj_gen;
@@ -230,7 +228,6 @@ public class XPointerFrameworkParser
                 case CIRC_RBRACE :
                 case DOUBLE_CIRC :
                 case NormalChar :
-                    ;
                     break;
                 default :
                     jj_la1[4] = jj_gen;

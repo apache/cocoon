@@ -72,7 +72,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.9 2003/09/08 18:58:01 bruno Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.10 2003/09/24 21:41:11 cziegeler Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
@@ -88,8 +88,6 @@ public class PipelineNode
     private ProcessingNode error500;
 
     private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
-
-    private ComponentManager manager;
 
     protected Logger handledErrorsLogger;
 
@@ -116,13 +114,12 @@ public class PipelineNode
      * The component manager is used to create error pipelines
      */
     public void compose(ComponentManager manager) {
-        this.manager = manager;
-        errorHandlerHelper.compose(manager);
+        this.errorHandlerHelper.compose(manager);
     }
 
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
-        errorHandlerHelper.enableLogging(logger);
+        this.errorHandlerHelper.enableLogging(logger);
         handledErrorsLogger = logger.getChildLogger("handled-errors");
     }
 

@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.5 2003/07/27 11:09:17 cziegeler Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager
@@ -453,7 +453,6 @@ final class LoaderThread implements Runnable {
     
     private  Source source;
     private  XMLSerializer serializer;
-    private  ComponentManager manager;
     boolean  finished;
     Exception exception;
     byte[]    content;
@@ -463,7 +462,6 @@ final class LoaderThread implements Runnable {
                          ComponentManager manager) {
         this.source = source;
         this.serializer = serializer;
-        this.manager = manager;
         this.finished = false;
     }
     

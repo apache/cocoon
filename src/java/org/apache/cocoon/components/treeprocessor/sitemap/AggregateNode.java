@@ -82,7 +82,7 @@ import java.util.*;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.2 2003/09/24 21:41:11 cziegeler Exp $
  */
 
 public class AggregateNode extends AbstractProcessingNode {
@@ -207,11 +207,11 @@ public class AggregateNode extends AbstractProcessingNode {
             this.stripRoot = stripRoot;
         }
 
-        private VariableResolver source;
-        private VariableResolver element;
-        private VariableResolver nsURI;
-        private VariableResolver nsPrefix;
-        private VariableResolver stripRoot;
+        protected VariableResolver source;
+        protected VariableResolver element;
+        protected VariableResolver nsURI;
+        protected VariableResolver nsPrefix;
+        protected VariableResolver stripRoot;
         
     }
 }
