@@ -57,6 +57,9 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -64,6 +67,7 @@ import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
+import org.apache.cocoon.components.cprocessor.TreeProcessor;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
@@ -77,7 +81,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActNode.java,v 1.3 2004/01/27 13:41:42 cziegeler Exp $
+ * @version CVS $Id: ActNode.java,v 1.4 2004/01/28 10:17:12 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -85,7 +89,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @x-avalon.info name=act-node
  */
 public class ActNode extends SimpleParentProcessingNode
-implements ProcessingNode, Initializable, Disposable {
+implements ProcessingNode, Initializable, Disposable, Contextualizable {
     
     /** The 'name' for the variable anchor */
     private String m_name;
@@ -104,6 +108,9 @@ implements ProcessingNode, Initializable, Disposable {
 
     protected boolean m_inActionSet;
 
+    /** The source resolver for this sitemap */
+    protected SourceResolver resolver;
+    
     public ActNode() {
     }
 
@@ -114,6 +121,14 @@ implements ProcessingNode, Initializable, Disposable {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        TreeProcessor processor = (TreeProcessor) context.get(TreeProcessor.CONTEXT_TREE_PROCESSOR);
+        this.resolver = processor.getEnvironmentHelper();
+    }
+    
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
         m_name = config.getAttribute("name", null);
@@ -195,7 +210,6 @@ implements ProcessingNode, Initializable, Disposable {
         // Prepare data needed by the action
         Map            objectModel    = env.getObjectModel();
         Redirector     redirector     = EnvironmentHelper.getRedirector(env);
-        SourceResolver resolver       = EnvironmentHelper.getSourceResolver(env);
         String         resolvedSource = m_source.resolve(context, objectModel);
         Parameters     resolvedParams = VariableResolver.buildParameters(super.m_parameters, context, objectModel);
 

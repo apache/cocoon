@@ -121,6 +121,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     /** The key for the pipeline component */
     public static final String PIPELINE_KEY = ProcessingPipeline.class.getName();
     
+    /** The key for the processor inside the component context */
+    public static final String CONTEXT_TREE_PROCESSOR = TreeProcessor.class.getName();
+    
     /* The xsl transformation location for turning a 
      * sitemap into a Fortress container configuration 
      */
@@ -348,7 +351,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     private void createContainer() throws Exception {
         // create the sitemap container
         DefaultContext context = new DefaultContext(m_context);
-        context.put("treeprocessor",this);
+        context.put(TreeProcessor.CONTEXT_TREE_PROCESSOR, this);
         context.makeReadOnly();
         FortressConfig config = new FortressConfig(context);
         config.setContainerClass(SitemapContainer.class);

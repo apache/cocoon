@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.5 2004/01/05 11:28:24 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.6 2004/01/28 10:17:12 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -117,8 +117,11 @@ implements ProcessingNode, Contextualizable, Disposable {
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
-        m_parentProcessor = (TreeProcessor) context.get("treeprocessor");
+        m_parentProcessor = (TreeProcessor) context.get(TreeProcessor.CONTEXT_TREE_PROCESSOR);
     }
 
     public final boolean invoke(Environment env, InvokeContext context)

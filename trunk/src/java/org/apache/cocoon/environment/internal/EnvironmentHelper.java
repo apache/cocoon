@@ -81,16 +81,12 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.4 2004/01/27 13:41:51 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.5 2004/01/28 10:17:14 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
 extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
-
-    /** The key used to store the current SourceResolver 
-     * in the environment context */
-    private static final String SOURCE_RESOLVER_KEY = "global:" + SourceResolver.class.getName();
 
     /** The key used to store the current redirector 
      * in the environment context */
@@ -416,7 +412,6 @@ implements SourceResolver, Serviceable, Disposable {
         
         EnvironmentContext ctx = (EnvironmentContext)env.getObjectModel().get(PROCESS_KEY);
         ctx.addAttribute(LAST_PROCESSOR_KEY, processor);
-        ctx.addAttribute(SOURCE_RESOLVER_KEY, processor.getEnvironmentHelper());
         
         ForwardRedirector redirector = new ForwardRedirector(env);
         redirector.enableLogging(processor.getEnvironmentHelper().getLogger());
@@ -475,17 +470,6 @@ implements SourceResolver, Serviceable, Disposable {
             final EnvironmentInfo info = stack.getCurrentInfo();
             final Map objectModel = info.environment.getObjectModel();
             return (EnvironmentContext)objectModel.get(PROCESS_KEY);
-        }
-        return null;
-    }
-    
-    /**
-     * Return the SourceResolver
-     */
-    public static SourceResolver getSourceResolver(Environment env) {
-        final EnvironmentContext ctx = getEnvironmentContext(env);
-        if (ctx != null) {
-            return (SourceResolver) ctx.getAttribute(SOURCE_RESOLVER_KEY);
         }
         return null;
     }
