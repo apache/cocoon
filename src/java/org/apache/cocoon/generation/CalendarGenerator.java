@@ -72,28 +72,28 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.1 2004/04/07 23:18:48 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.2 2004/04/07 23:29:22 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
-
-	/** The URI of the namespace of this generator. */
+    
+    /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/calendar/1.0";
-
+    
     /** The namespace prefix for this namespace. */
     protected static final String PREFIX = "calendar";
-
+    
     /** Node and attribute names */
     protected static final String CALENDAR_NODE_NAME = "calendar";
     protected static final String WEEK_NODE_NAME     = "week";
     protected static final String DAY_NODE_NAME      = "day";
-	protected static final String MONTH_ATTR_NAME    = "month";
-	protected static final String YEAR_ATTR_NAME     = "year";
+    protected static final String MONTH_ATTR_NAME    = "month";
+    protected static final String YEAR_ATTR_NAME     = "year";
     protected static final String DATE_ATTR_NAME     = "date";
-	protected static final String NUMBER_ATTR_NAME   = "number";
-
+    protected static final String NUMBER_ATTR_NAME   = "number";
+    
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
-
+    
     /**
      * The cache key needs to be generated for the configuration of this
      * generator, so storing the parameters for generateKey().
@@ -121,18 +121,18 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         if (src == null) {
             throw new ProcessingException("No src attribute specified.");
         }
         super.setup(resolver, objectModel, src, par);
-
+        
         this.cacheKeyParList = new ArrayList();
         this.cacheKeyParList.add(src);
-
+        
         this.year = Integer.parseInt(src.substring(0, src.indexOf('/')));
         this.month = Integer.parseInt(src.substring(src.indexOf('/') + 1)) - 1;
-
+        
         String dateFormatString = par.getParameter("dateFormat", null);
         this.cacheKeyParList.add(dateFormatString);
         String langString = par.getParameter("lang", null);
@@ -144,9 +144,9 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                 this.cacheKeyParList.add(countryString);
                 locale = new Locale(langString, countryString);
             } else {
-            		locale = new Locale(langString);
+                locale = new Locale(langString);
             }
-
+            
         }
         if (dateFormatString != null) {
             this.dateFormatter = new SimpleDateFormat(dateFormatString, locale);
@@ -157,67 +157,67 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         
         this.attributes = new AttributesImpl();
     }
-
+    
     /**
      * Generate XML data.
      *
      * @throws  SAXException if an error occurs while outputting the document
      */
     public void generate() throws SAXException {
-    		Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    		start.clear();
-    		start.set(Calendar.YEAR, this.year);
-    		start.set(Calendar.MONTH, this.month);
-    		start.set(Calendar.DAY_OF_MONTH, 1);
-    		Calendar end = (Calendar) start.clone();
-    		end.add(Calendar.MONTH, 1);
-
+        Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        start.clear();
+        start.set(Calendar.YEAR, this.year);
+        start.set(Calendar.MONTH, this.month);
+        start.set(Calendar.DAY_OF_MONTH, 1);
+        Calendar end = (Calendar) start.clone();
+        end.add(Calendar.MONTH, 1);
+        
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping(PREFIX, URI);
         attributes.clear();
-		attributes.addAttribute("", YEAR_ATTR_NAME, YEAR_ATTR_NAME, "CDATA", String.valueOf(year));
-		attributes.addAttribute("", MONTH_ATTR_NAME, MONTH_ATTR_NAME, "CDATA", 
-				monthFormatter.format(start.getTime()));
+        attributes.addAttribute("", YEAR_ATTR_NAME, YEAR_ATTR_NAME, "CDATA", String.valueOf(year));
+        attributes.addAttribute("", MONTH_ATTR_NAME, MONTH_ATTR_NAME, "CDATA", 
+                monthFormatter.format(start.getTime()));
         this.contentHandler.startElement(URI, CALENDAR_NODE_NAME,
-        			PREFIX + ':' + CALENDAR_NODE_NAME, attributes);
+                PREFIX + ':' + CALENDAR_NODE_NAME, attributes);
         int weekNo = start.get(Calendar.WEEK_OF_MONTH);
         if (start.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
             attributes.clear();
             attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA", String.valueOf(weekNo));
             this.contentHandler.startElement(URI, WEEK_NODE_NAME,
-        			PREFIX + ':' + WEEK_NODE_NAME, attributes);
-    		}
-        	while (start.before(end)) {
-        		if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                    PREFIX + ':' + WEEK_NODE_NAME, attributes);
+        }
+        while (start.before(end)) {
+            if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
                 weekNo = start.get(Calendar.WEEK_OF_MONTH);
                 attributes.clear();
                 attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA", String.valueOf(weekNo));
                 this.contentHandler.startElement(URI, WEEK_NODE_NAME,
-            			PREFIX + ':' + WEEK_NODE_NAME, attributes);
-        		}
+                        PREFIX + ':' + WEEK_NODE_NAME, attributes);
+            }
             attributes.clear();
             attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA",
-            			String.valueOf(start.get(Calendar.DAY_OF_MONTH)));
+                    String.valueOf(start.get(Calendar.DAY_OF_MONTH)));
             attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME, "CDATA",
-        			dateFormatter.format(start.getTime()));
+                    dateFormatter.format(start.getTime()));
             this.contentHandler.startElement(URI, DAY_NODE_NAME,
-        			PREFIX + ':' + DAY_NODE_NAME, attributes);
-            	this.contentHandler.endElement(URI, DAY_NODE_NAME,
-            			PREFIX + ':' + DAY_NODE_NAME);
-        		start.add(Calendar.DAY_OF_MONTH, 1);
-        		if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
-        					|| ! start.before(end)) {
-                    this.contentHandler.endElement(URI, WEEK_NODE_NAME,
-                			PREFIX + ':' + WEEK_NODE_NAME);
-                		}
-            	}
- 
-            	this.contentHandler.endElement(URI, CALENDAR_NODE_NAME,
-            			PREFIX + ':' + CALENDAR_NODE_NAME);
+                    PREFIX + ':' + DAY_NODE_NAME, attributes);
+            this.contentHandler.endElement(URI, DAY_NODE_NAME,
+                    PREFIX + ':' + DAY_NODE_NAME);
+            start.add(Calendar.DAY_OF_MONTH, 1);
+            if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+                    || ! start.before(end)) {
+                this.contentHandler.endElement(URI, WEEK_NODE_NAME,
+                        PREFIX + ':' + WEEK_NODE_NAME);
+            }
+        }
+        
+        this.contentHandler.endElement(URI, CALENDAR_NODE_NAME,
+                PREFIX + ':' + CALENDAR_NODE_NAME);
         this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
     }
-
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
@@ -229,12 +229,11 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         }
         return buffer.toString();
     }
-
-
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
     public SourceValidity getValidity() {
-    		return NOPValidity.SHARED_INSTANCE;
+        return NOPValidity.SHARED_INSTANCE;
     }
 }
