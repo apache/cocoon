@@ -53,14 +53,11 @@ import org.apache.excalibur.source.SourceResolver;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-public final class CocoonComponentManager
-extends ExcaliburComponentManager
-implements SourceResolver
-{
+public final class CocoonComponentManager extends ExcaliburComponentManager
+                                          implements SourceResolver {
 
     /** The key used to store the current process environment */
     private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
-
 
     /** The environment information */
     private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
@@ -217,8 +214,7 @@ implements SourceResolver
      */
     public static void endProcessing(Environment env, Object key) {
 		env.finishingProcessing();
-        final EnvironmentDescription desc = (EnvironmentDescription)key;
-        desc.release();
+        ((EnvironmentDescription) key).release();
         env.getObjectModel().remove(PROCESS_KEY);
     }
 
@@ -276,14 +272,15 @@ implements SourceResolver
      */
     public Component lookup( final String role )
     throws ComponentException {
-        if( null == role ) {
+        if (null == role) {
             final String message =
                 "ComponentLocator Attempted to retrieve component with null role.";
 
             throw new ComponentException( role, message );
         }
-        if ( role.equals(SourceResolver.ROLE) ) {
-            if ( null == this.sourceResolver ) {
+
+        if (role.equals(SourceResolver.ROLE)) {
+            if (null == this.sourceResolver) {
                 if(wasDisposed) {
                     // (BD) working on bug 27249: I think we could throw an Exception here, as
                     // the following call fails anyway, but I'm not sure enough ;-)
@@ -294,12 +291,10 @@ implements SourceResolver
             return this;
         }
 
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (stack != null && !stack.isEmpty()) {
+            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
+            if (null != desc) {
                 Component component = desc.getRequestLifecycleComponent(role);
                 if (null != component) {
                     return component;
@@ -311,18 +306,19 @@ implements SourceResolver
             }
         }
 
-        final Component component = super.lookup( role );
-        if (null != component && component instanceof RequestLifecycleComponent) {
+        final Component component = super.lookup(role);
+
+        if (component != null && component instanceof RequestLifecycleComponent) {
             if (stack == null || stack.empty()) {
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
 
+            final Object[] objects = (Object[]) stack.getCurrent();
+            final Map objectModel = ((Environment) objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription) objectModel.get(PROCESS_KEY);
+            if (null != desc) {
                 // first test if the parent CM has already initialized this component
-                if ( !desc.containsRequestLifecycleComponent( role ) ) {
+                if (!desc.containsRequestLifecycleComponent(role)) {
                     try {
                         if (component instanceof Recomposable) {
                             ((Recomposable) component).recompose(this);
@@ -337,15 +333,15 @@ implements SourceResolver
             }
         }
 
-        if (null != component && component instanceof GlobalRequestLifecycleComponent) {
+        if (component != null && component instanceof GlobalRequestLifecycleComponent) {
             if (stack == null || stack.empty()) {
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
+
             final Object[] objects = (Object[]) stack.getCurrent();
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
-
+            EnvironmentDescription desc = (EnvironmentDescription) objectModel.get(PROCESS_KEY);
+            if (null != desc) {
                 // first test if the parent CM has already initialized this component
                 if ( !desc.containsGlobalRequestLifecycleComponent( role ) ) {
                     try {
@@ -362,16 +358,15 @@ implements SourceResolver
             }
         }
 
-        if ( null != component && component instanceof SitemapConfigurable) {
-
+        if (component != null && component instanceof SitemapConfigurable) {
             // FIXME: how can we prevent that this is called over and over again?
             SitemapConfigurationHolder holder;
 
-            holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
-            if ( null == holder ) {
+            holder = (SitemapConfigurationHolder) this.sitemapConfigurationHolders.get(role);
+            if (null == holder) {
                 // create new holder
-                holder = new DefaultSitemapConfigurationHolder( role );
-                this.sitemapConfigurationHolders.put( role, holder );
+                holder = new DefaultSitemapConfigurationHolder(role);
+                this.sitemapConfigurationHolders.put(role, holder);
             }
 
             try {
@@ -380,6 +375,7 @@ implements SourceResolver
                 throw new ComponentException(role, "Exception during setup of SitemapConfigurable.", ce);
             }
         }
+
         return component;
     }
 
@@ -387,26 +383,28 @@ implements SourceResolver
      * Release a Component.  This implementation makes sure it has a handle on the propper
      * ComponentHandler, and let's the ComponentHandler take care of the actual work.
      */
-    public void release( final Component component ) {
-        if( null == component ) {
+    public void release(final Component component) {
+        if (null == component) {
             return;
         }
 
-        if ( component instanceof RequestLifecycleComponent
-             || component instanceof GlobalRequestLifecycleComponent) {
+        if (component instanceof RequestLifecycleComponent
+                || component instanceof GlobalRequestLifecycleComponent) {
             return;
         }
-        if ( component == this ) {
+
+        if (component == this) {
             return;
         }
-        super.release( component);
+
+        super.release(component);
     }
 
     /**
      * Release a RequestLifecycleComponent
      */
-    protected void releaseRLComponent( final Component component ) {
-        super.release( component );
+    protected void releaseRLComponent(final Component component) {
+        super.release(component);
     }
 
     /**
@@ -416,12 +414,10 @@ implements SourceResolver
                                                        final Component         component,
                                                        final ComponentManager  manager)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (null != stack && !stack.empty()) {
+            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
+            if (null != desc) {
                 desc.addToAutoRelease(selector, component, manager);
             }
         } else {
@@ -435,12 +431,10 @@ implements SourceResolver
     public static void addComponentForAutomaticRelease(final ComponentManager manager,
                                                        final Component        component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (null != stack && !stack.empty()) {
+            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
+            if (null != desc) {
                 desc.addToAutoRelease(manager, component);
             }
         } else {
@@ -453,12 +447,10 @@ implements SourceResolver
      */
     public static void removeFromAutomaticRelease(final Component component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (null != stack && !stack.empty()) {
+            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
+            if (null != desc) {
                 desc.removeFromAutoRelease(component);
             }
         } else {
@@ -466,16 +458,22 @@ implements SourceResolver
         }
     }
 
+    private static EnvironmentDescription getCurrentEnvironmentDescriptor(final EnvironmentStack stack) {
+        final Object[] objects = (Object[]) stack.getCurrent();
+        final Map objectModel = ((Environment) objects[0]).getObjectModel();
+        return (EnvironmentDescription) objectModel.get(CocoonComponentManager.PROCESS_KEY);
+    }
+
     /**
      * Dispose
      */
     public void dispose() {
-        if(getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("CocoonComponentManager.dispose() called");
         }
 
-        if ( null != this.sourceResolver ) {
-            super.release( this.sourceResolver );
+        if (null != this.sourceResolver) {
+            super.release(this.sourceResolver);
             // We cannot null out sourceResolver here yet as some other not
             // disposed yet components might still have unreleased sources,
             // and they will call {@link #release(Source)} during their
@@ -520,8 +518,8 @@ implements SourceResolver
     /**
      * Releases a resolved resource
      */
-    public void release( final Source source ) {
-        this.sourceResolver.release( source );
+    public void release(final Source source) {
+        this.sourceResolver.release(source);
     }
 
 
@@ -529,18 +527,16 @@ implements SourceResolver
      * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
      */
     public void addComponent(String role, Class clazz, Configuration conf)
-        throws ComponentException {
+    throws ComponentException {
         super.addComponent(role, clazz, conf);
         // Note that at this point, we're not initialized and cannot do
         // lookups, so defer parental introductions to initialize().
-        if ( ParentAware.class.isAssignableFrom( clazz ) ) {
+        if (ParentAware.class.isAssignableFrom(clazz)) {
             parentAwareComponents.add(role);
         }
     }
 
-    public void initialize()
-        throws Exception
-    {
+    public void initialize() throws Exception {
         super.initialize();
         if (parentAwareComponents == null) {
             throw new ComponentException(null, "CocoonComponentManager already initialized");
@@ -597,7 +593,7 @@ final class EnvironmentDescription {
      * released.
      */
     void release() {
-        if ( this.requestLifecycleComponents != null ) {
+        if (this.requestLifecycleComponents != null) {
             final Iterator iter = this.requestLifecycleComponents.values().iterator();
             while (iter.hasNext()) {
                 final Object[] o = (Object[])iter.next();
@@ -607,15 +603,15 @@ final class EnvironmentDescription {
             this.requestLifecycleComponents.clear();
         }
 
-        for(int i = 0; i < autoreleaseComponents.size(); i++) {
+        for (int i = 0; i < autoreleaseComponents.size(); i++) {
             final Object[] o = (Object[])autoreleaseComponents.get(i);
             final Component component = (Component)o[0];
             if (o[1] instanceof ComponentManager) {
                 ((ComponentManager)o[1]).release( component );
             } else {
-                ((ComponentSelector)o[1]).release( component );
+                ((ComponentSelector) o[1]).release(component);
                 if (o[2] != null) {
-                    ((ComponentManager)o[2]).release( (Component)o[1] );
+                    ((ComponentManager) o[2]).release((Component) o[1]);
                 }
             }
         }
@@ -623,7 +619,6 @@ final class EnvironmentDescription {
         this.environment = null;
         this.objectModel = null;
     }
-
 
     /**
      * Add a RequestLifecycleComponent to the environment
@@ -692,8 +687,8 @@ final class EnvironmentDescription {
      * Add an automatically released component
      */
     void addToAutoRelease(final ComponentSelector selector,
-                          final Component         component,
-                          final ComponentManager  manager) {
+                                       final Component         component,
+                                       final ComponentManager  manager) {
         this.autoreleaseComponents.add(new Object[] {component, selector, manager});
     }
 
@@ -701,7 +696,7 @@ final class EnvironmentDescription {
      * Add an automatically released component
      */
     void addToAutoRelease(final ComponentManager manager,
-                          final Component        component) {
+                                       final Component        component) {
         this.autoreleaseComponents.add(new Object[] {component, manager});
     }
 
@@ -733,7 +728,6 @@ final class EnvironmentDescription {
             throw new ProcessingException("Unable to remove component from automatic release: component not found.");
         }
     }
-
 }
 
 final class CloningInheritableThreadLocal
