@@ -27,9 +27,6 @@ import java.util.Map;
 public class VarMap {
     private HashMap map = new HashMap();
 
-    public VarMap() {
-    }
-
     public VarMap(String name, Object value) {
         add(name, value);
     }

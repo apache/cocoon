@@ -22,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -46,7 +43,7 @@ import org.apache.javaflow.Continuation;
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version CVS $Id$
  */
-public class JavaInterpreter extends AbstractInterpreter implements Configurable {
+public class JavaInterpreter extends AbstractInterpreter {
 
     private int timeToLive = 600000;
 
@@ -57,13 +54,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
     static {
         JXPathIntrospector.registerDynamicClass(VarMap.class, VarMapHandler.class);
-    }
-
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-    }
-
-    public void initialize() throws Exception {
     }
 
     public void continueFlow( final WebContinuation parentwk, final List params, final Redirector redirector, final Continuation parentContinuation, final CocoonContinuationContext context) throws Exception {
@@ -84,7 +74,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         ? new Continuation(parentContinuation, context)
         : new Continuation(context);
 
-        System.out.println("created new continuation " + continuation);
         if (getLogger().isDebugEnabled()) { 
             getLogger().debug("created new continuation " + continuation);
         }
@@ -97,38 +86,36 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         continuation.registerThread();
 
         if (parentContinuation != null) {
-            System.out.println("resuming continuation " + continuation + continuation.getStack());
             if (getLogger().isDebugEnabled()) { 
                 getLogger().debug("resuming continuation " + continuation + continuation.getStack());
             }            
         }
         
         try {
-            System.out.println("calling " + context.getMethod());
             if (getLogger().isDebugEnabled()) { 
                 getLogger().debug("calling " + context.getMethod());
             }
 
             context.getMethod().invoke(context.getObject(), new Object[0]);
 
-            System.out.println("back from " + context.getMethod());
             if (getLogger().isDebugEnabled()) { 
                 getLogger().debug("back from " + context.getMethod());
             }
 
         } catch (InvocationTargetException ite) {
             if (ite.getTargetException() != null) {
-                if (ite.getTargetException() instanceof Exception) 
+                if (ite.getTargetException() instanceof Exception) {
                     throw (Exception) ite.getTargetException();
-                else if (ite.getTargetException() instanceof Error)
+                } else if (ite.getTargetException() instanceof Error) {
                     throw new ProcessingException("An internal error occured", ite.getTargetException());
-                else if (ite.getTargetException() instanceof RuntimeException)
+                } else if (ite.getTargetException() instanceof RuntimeException) {
                     throw (RuntimeException) ite.getTargetException();
-                else
+                } else {
                     throw ite;
-            } else {
-                throw ite;
+                }
             }
+            throw ite;
+
         } finally {
             // remove last object reference, which is not needed to
             // reconstruct the invocation path
