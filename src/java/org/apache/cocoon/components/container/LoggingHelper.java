@@ -117,6 +117,7 @@ public class LoggingHelper {
                     final Configuration conf = builder.build(source.getInputStream());
                     final DefaultConfiguration categories = (DefaultConfiguration)conf.getChild("categories");
                     final DefaultConfiguration targets = (DefaultConfiguration)conf.getChild("targets");
+                    final DefaultConfiguration factories = (DefaultConfiguration)conf.getChild("factories");
                     
                     // now process includes
                     final Configuration[] children = conf.getChildren("include");
@@ -135,6 +136,7 @@ public class LoggingHelper {
                                         // add targets and categories
                                         categories.addAllChildren(includeConf.getChild("categories"));
                                         targets.addAllChildren(includeConf.getChild("targets"));
+                                        factories.addAllChildren(includeConf.getChild("factories"));
                                     }
                                 }
                             } else {
