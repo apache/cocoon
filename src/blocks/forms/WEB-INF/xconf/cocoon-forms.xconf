@@ -51,7 +51,9 @@
         <convertors default="dummy" plain="dummy">
           <convertor name="dummy" src="org.apache.cocoon.forms.datatype.convertor.DummyStringConvertorBuilder"/>
           <convertor name="htmlcleaner" src="org.apache.cocoon.forms.datatype.convertor.HtmlCleaningConvertorBuilder"/>
+          <!-- FIXME: The class is missing, so let's uncomment it for now
           <convertor name="html2xml" src="org.apache.cocoon.forms.datatype.convertor.HTMLtoXMLStringConvertorBuilder"/>
+          -->
         </convertors>
       </datatype>
       <datatype name="integer" src="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
