@@ -35,3 +35,12 @@
 	color:blue;
     font-weight: bold;
 }
+
+.woody-help {
+    border-style: dotted;
+    border-width: 1px;
+    padding: 5px;
+    background-color:#FFFFC0; /* light yellow */
+    width: 200px; /* otherwise IE does a weird layout */
+    z-index:1000; /* must be higher than woody-tabContent */
+}

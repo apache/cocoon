@@ -10,29 +10,9 @@
     <xsl:param name="uri" select="'resources'"/>
     <xsl:param name="div">woody_calendarDiv</xsl:param>
     
-    <script src="{$uri}/CalendarPopup.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib.js" language="JavaScript"></script>
+    <script src="{$uri}/woody-lib.js" language="JavaScript"></script>
     <script language="JavaScript">
-      function woody_getForm(element) {
-        while(element != null &amp;&amp; element.tagName != "FORM") {
-          element = element.parentNode;
-        }
-        return element;
-      }
-      
-      function woody_submitForm(element, name) {
-        if (name == undefined) {
-          name = element.name;
-        }
-        
-        var form = woody_getForm(element);
-        if (form == null) {
-          alert("Cannot find form for " + element);
-        } else {
-          form["woody_submit_id"].value = name;
-          form.submit();
-        }
-      }
-
       // Setup calendar
       <xsl:choose>
         <xsl:when test="$div">
@@ -45,15 +25,29 @@
       woody_calendar.setWeekStartDay(1);
       woody_calendar.showYearNavigation();
       woody_calendar.showYearNavigationInput();
+      //FIXME: avoid this and simply write them in the CSS?
       document.write(woody_calendar.getStyles());
-      
     </script>
   </xsl:template>
   
   <!-- must be called in <head> to load calendar script and setup the CSS -->
   <xsl:template name="woody-field-body">
+      <xsl:attribute name="onload">woody_init(); <xsl:value-of select="@onload"/></xsl:attribute>
+    <script language="JavaScript">
+      // Register woody startup function
+      document.body.onload = woody_init;
+    </script>
+    
      <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
+  
+  <!--xsl:template match="body">
+    <body>
+      <xsl:copy-of select="@*"/>
+      <xsl:attribute name="onload">woody_init(); <xsl:value-of select="@onload"/></xsl:attribute>
+      <xsl:apply-templates/>
+    </body>
+  </xsl:template-->
 
   <!--
     Generic wi:field : produce an <input>
@@ -71,10 +65,23 @@
   </xsl:template>
   
   <xsl:template match="wi:*" mode="common">
+    <!-- validation message -->
     <xsl:apply-templates select="wi:validation-message"/>
+    <!-- required mark -->
     <xsl:if test="@required='true'">
       <span class="woody-field-required"> * </span>
     </xsl:if>
+    <!-- help icon -->
+    <xsl:if test="wi:help">
+      <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
+        <xsl:apply-templates select="wi:help/node()"/>
+      </div>
+      <script language="JavaScript">
+        var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
+      </script>
+      <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
+    </xsl:if>
+
   </xsl:template>
 
   <xsl:template match="wi:validation-message">

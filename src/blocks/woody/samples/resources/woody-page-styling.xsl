@@ -6,28 +6,8 @@
                 exclude-result-prefixes="wi">
   
   <xsl:template name="woody-page-head">
-      
-    <script language="JavaScript">
-      function woody_showTab(tabgroup, idx, length, state) {
-        //alert(tabgroup + " - " + idx);
-        for (var i = 0; i &lt; length; i++) {
-          // Change tab status (selected/unselected)
-          var tab = document.getElementById(tabgroup + "_tab_" + i);
-          if (tab != null) {
-            tab.className = (i == idx) ? 'woody-tab woody-activeTab': 'woody-tab';
-          }
-          // Change tab content visibilty
-          var tabitems = document.getElementById(tabgroup + "_items_" + i);
-          if (tabitems != null) {
-            tabitems.style.display = (i == idx) ? '' : 'none';
-          }
-        }
-        // Change state value
-        if (state.length > 0) {
-          document.forms[0][state].value = idx;
-        }
-      }
-      </script>
+    
+    <!-- only woody_showTab is needed here. Assume woody-lib.js is loaded by the field-styling -->
   </xsl:template>
   
   <xsl:template name="woody-page-body">
