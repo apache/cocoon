@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
+package org.apache.cocoon.webapps.authentication.configuration;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.1 2003/04/21 19:26:13 cziegeler Exp $
+ * @version CVS $Id: HandlerConfiguration.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
 */
 public final class HandlerConfiguration
 implements java.io.Serializable {
