@@ -21,7 +21,7 @@
   <body>
     <row>
       <column title="Back">
-        <a href="../">Back</a> - to Cocoon examples main page
+        <a href="${base}/../">Back</a> - to Cocoon examples main page
       </column>
       <column title="Login">
         <p>
