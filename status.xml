@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Fix caching of i18n bundles with expires validities.
+   </action>
    <action dev="VG" type="add">
      Implemented error handling for the internal requests. Error handling for
      the internal requests configured using <code>when</code> attribute on
@@ -240,7 +243,8 @@
      default platform encoding is used.
    </action>
    <action dev="JQ" type="add">
-     Added QueryBean as a standalone block, copied over from 2.2.0. Removed the original from the Lucene Block. Stores Favourites using OJB in HSQLDB.
+     Added QueryBean as a standalone block, copied over from 2.2.0. Removed
+     the original from the Lucene Block. Stores Favourites using OJB in HSQLDB.
    </action>
    <action dev="SW" type="update">
      CForms: separate <code>FormattingDateConvertor</code> that uses
