@@ -57,7 +57,6 @@ import java.util.Map;
           <optional><attribute name="cachable"><data type="boolean"/></attribute></optional>
        </element>
     </define>
-
  </grammar>
 
  * This module provides an Input Module interface to any XML document, by using
@@ -83,7 +82,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.18 2004/06/16 20:00:07 vgritsenko Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.19 2004/06/24 01:11:49 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -92,16 +91,16 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     /** Cached documents */
     Map documents = null;
     /** Default value for reloadability of sources */
-    boolean reloadAll = false;
+    boolean reloadAll;
     /** Default value for cachability of sources */
     boolean cacheAll = true;
     /** Default value for cachability of xpath expressions. */
     boolean cacheExpressions = true;
     /** Default src */
-    String src = null;
+    String src;
 
-    SourceResolver resolver = null;
-    ComponentManager manager = null;
+    SourceResolver resolver;
+    ComponentManager manager;
 
     //
     // need two caches for Object and Object[]
@@ -115,14 +114,14 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
      * Takes care of (re-)loading and caching of sources.
      */
     protected class DocumentHelper {
-
-        private boolean reloadable = true;
-        private boolean cacheable = true;
-        /** source location */
-        private String uri = null;
-        /** cached DOM */
-        private Document document = null;
-        private SourceValidity srcVal = null;
+        private boolean reloadable;
+        private boolean cacheable;
+        /** Source location */
+        private String uri;
+        /** Source validity */
+        private SourceValidity validity;
+        /** Source content cached as DOM Document */
+        private Document document;
 
         /**
          * Creates a new <code>DocumentHelper</code> instance.
@@ -135,7 +134,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
             this.reloadable = reload;
             this.cacheable = cache;
             this.uri = src;
-            // deferr loading document
+            // defer loading of the document
         }
 
         /**
@@ -148,44 +147,49 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
          * @exception Exception if an error occurs
          */
         public synchronized Document getDocument(ComponentManager manager, SourceResolver resolver, Logger logger)
-            throws Exception {
+        throws Exception {
             Source src = null;
             Document dom = null;
             try {
                 if (this.document == null) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Document not cached... reloading uri " + this.uri);
+                        logger.debug("Document not cached... Loading uri " + this.uri);
                     }
                     src = resolver.resolveURI(this.uri);
-                    this.srcVal = src.getValidity();
+                    this.validity = src.getValidity();
                     this.document = SourceUtil.toDOM(src);
-                    dom = this.document;
                 } else {
                     if (this.reloadable) {
                         if (logger.isDebugEnabled()) {
                             logger.debug("Document cached... checking validity of uri " + this.uri);
                         }
-                        src = resolver.resolveURI(this.uri);
-                        SourceValidity valid = src.getValidity();
-                        if (srcVal != null && this.srcVal.isValid(valid) != 1) {
-                            if (logger.isDebugEnabled())
-                                logger.debug("reloading document... uri " + this.uri);
-                            this.srcVal = valid;
-                            this.document = SourceUtil.toDOM(src);
+                        if (this.validity != null && this.validity.isValid() == SourceValidity.UNKNOWN) {
+                            src = resolver.resolveURI(this.uri);
+                            SourceValidity valid = src.getValidity();
+                            if (this.validity.isValid(valid) != SourceValidity.VALID) {
+                                if (logger.isDebugEnabled()) {
+                                    logger.debug("Reloading document... uri " + this.uri);
+                                }
+                                this.validity = valid;
+                                this.document = SourceUtil.toDOM(src);
+                            }
                         }
                     }
-                    dom = this.document;
                 }
-            } finally {
-                resolver.release(src);
-            }
 
-            if (!this.cacheable) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Not caching document cached... uri " + this.uri);
+                dom = this.document;
+            } finally {
+                if (src != null) {
+                    resolver.release(src);
                 }
-                this.srcVal = null;
-                this.document = null;
+
+                if (!this.cacheable) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Not caching document cached... uri " + this.uri);
+                    }
+                    this.validity = null;
+                    this.document = null;
+                }
             }
 
             if (logger.isDebugEnabled()) {
@@ -235,22 +239,22 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
      * @param config a <code>Configuration</code> value, as described above.
      * @exception ConfigurationException if an error occurs
      */
-    public void configure(Configuration config) throws ConfigurationException {
-
+    public void configure(Configuration config)
+    throws ConfigurationException {
         this.staticConfLocation = config.getLocation();
         super.configure(config);
         this.reloadAll = config.getChild("reloadable").getValueAsBoolean(this.reloadAll);
         if (config.getChild("cachable", false) != null) {
-            throw new ConfigurationException(
-                "Bzzt! Wrong spelling at "
-                    + config.getChild("cachable").getLocation()
-                    + ": please use 'cacheable', not 'cachable'");
+            throw new ConfigurationException("Bzzt! Wrong spelling at " +
+                                             config.getChild("cachable").getLocation() +
+                                             ": please use 'cacheable', not 'cachable'");
         }
         this.cacheAll = config.getChild("cacheable").getValueAsBoolean(this.cacheAll);
 
         Configuration[] files = config.getChildren("file");
-        if (this.documents == null)
+        if (this.documents == null) {
             this.documents = Collections.synchronizedMap(new HashMap());
+        }
 
         for (int i = 0; i < files.length; i++) {
             boolean reload = files[i].getAttributeAsBoolean("reloadable", this.reloadAll);
@@ -268,7 +272,6 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
             Collections.synchronizedMap(new ReferenceMap(ReferenceMap.SOFT, ReferenceMap.SOFT));
     }
 
-
     /**
      * Get the DOM object that JXPath will operate on when evaluating
      * attributes.  This DOM is loaded from a Source, specified in the
@@ -283,8 +286,8 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
      * &lt;/...>
      * @param objectModel Object Model for the current module operation.
      */
-    protected Object getContextObject(Configuration modeConf, Map objectModel) throws ConfigurationException {
-
+    protected Object getContextObject(Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         String src = this.src;
         boolean reload = this.reloadAll;
         boolean cache = this.cacheAll;
@@ -297,7 +300,6 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
                 }
-
             } else {
                 hasDynamicConf = true;
             }
@@ -307,8 +309,9 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
             src = fileConf.getAttribute("src");
         }
 
-        if (this.documents == null)
+        if (this.documents == null) {
             this.documents = Collections.synchronizedMap(new HashMap());
+        }
 
         if (src == null) {
             throw new ConfigurationException(
@@ -333,35 +336,35 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
             this.documents.put(src, new DocumentHelper(reload, cache, src));
         }
 
-        Document dom = null;
-
         try {
-            dom = ((DocumentHelper) this.documents.get(src)).getDocument(this.manager, this.resolver, getLogger());
+            return ((DocumentHelper) this.documents.get(src)).getDocument(this.manager, this.resolver, getLogger());
         } catch (Exception e) {
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Error using source " + src + "\n" + e.getMessage(), e);
+            }
             throw new ConfigurationException("Error using source " + src, e);
         }
-        return dom;
-
     }
 
-    public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         return this.getAttribute(name, modeConf, objectModel, false);
     }
 
-    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         Object result = this.getAttribute(name, modeConf, objectModel, true);
         return (result != null ? (Object[]) result : null);
     }
 
 
-    public Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues) throws ConfigurationException {
-
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues)
+    throws ConfigurationException {
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
         }
+
         Object result = null;
         Map cache = null;
         boolean hasBeenCached = false;
@@ -376,6 +379,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
                 result = cache.get(name);
             }
         }
+
         if (!hasBeenCached) {
             if (getValues){
                 result = JXPathHelper.getAttributeValues(name, modeConf, this.configuration, contextObj);
