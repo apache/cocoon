@@ -1,6 +1,4 @@
 /*
-$Id: NamespaceHelper.java,v 1.1 2004/03/01 12:30:54 cziegeler Exp $
-<License>
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -24,7 +22,7 @@ $Id: NamespaceHelper.java,v 1.1 2004/03/01 12:30:54 cziegeler Exp $
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Lenya" and  "Apache Software Foundation"  must  not  be
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
@@ -46,12 +44,9 @@ $Id: NamespaceHelper.java,v 1.1 2004/03/01 12:30:54 cziegeler Exp $
 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Michael Wechner <michi@apache.org>. For more information on the Apache Soft-
- ware Foundation, please see <http://www.apache.org/>.
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
- Lenya includes software developed by the Apache Software Foundation, W3C,
- DOM4J Project, BitfluxEditor, Xopus, and WebSHPINX.
-</License>
 */
 package org.apache.cocoon.xml;
 
@@ -65,7 +60,7 @@ import org.w3c.dom.Text;
 /**
  * A NamespaceHelper object simplifies the creation of elements in a certain
  * namespace. All elements are owned by a document that is passed to the
- * {@link #NamespaceHelper(Document, String, String)} constructor or created
+ * {@link #NamespaceHelper(String, String, Document)} constructor or created
  * using the {@link #NamespaceHelper(String, String, String)} constructor.
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>

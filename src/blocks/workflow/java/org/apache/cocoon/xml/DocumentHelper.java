@@ -1,5 +1,4 @@
 /*
-<License>
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -23,7 +22,7 @@
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Lenya" and  "Apache Software Foundation"  must  not  be
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
@@ -45,12 +44,9 @@
 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Michael Wechner <michi@apache.org>. For more information on the Apache Soft-
- ware Foundation, please see <http://www.apache.org/>.
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
- Lenya includes software developed by the Apache Software Foundation, W3C,
- DOM4J Project, BitfluxEditor, Xopus, and WebSHPINX.
-</License>
 */
 package org.apache.cocoon.xml;
 
@@ -89,7 +85,7 @@ import org.xml.sax.SAXException;
  * Various utility methods to work with JAXP.
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: DocumentHelper.java,v 1.1 2004/03/01 12:30:54 cziegeler Exp $
+ * @version $Id: DocumentHelper.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
  */
 public class DocumentHelper {
     
@@ -274,7 +270,7 @@ public class DocumentHelper {
      * 
      * @throws ParserConfigurationException if an error occurs
      * 
-     * @see DOMImplementation.createDocumentType(String, String, String)
+     * @see org.w3c.dom.DOMImplementation#createDocumentType(String, String, String)
      */
     public DocumentType createDocumentType(String qualifiedName, String publicId, String systemId)
         throws ParserConfigurationException {

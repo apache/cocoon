@@ -1,6 +1,4 @@
 /*
-$Id: SynchronizedWorkflowInstancesImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
-<License>
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -24,7 +22,7 @@ $Id: SynchronizedWorkflowInstancesImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler 
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Lenya" and  "Apache Software Foundation"  must  not  be
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
@@ -46,12 +44,9 @@ $Id: SynchronizedWorkflowInstancesImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler 
 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Michael Wechner <michi@apache.org>. For more information on the Apache Soft-
- ware Foundation, please see <http://www.apache.org/>.
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
- Lenya includes software developed by the Apache Software Foundation, W3C,
- DOM4J Project, BitfluxEditor, Xopus, and WebSHPINX.
-</License>
 */
 package org.apache.cocoon.workflow.impl;
 
@@ -115,7 +110,7 @@ public class SynchronizedWorkflowInstancesImpl implements SynchronizedWorkflowIn
 
     /**
      * Returns all executable events.
-     * @see org.apache.lenya.workflow.WorkflowInstance#getExecutableEvents(org.apache.lenya.workflow.Situation)
+     * @see WorkflowInstance#getExecutableEvents(Situation)
      */
     public Event[] getExecutableEvents(Situation situation) throws WorkflowException {
         if (log.isDebugEnabled()) {
@@ -182,7 +177,7 @@ public class SynchronizedWorkflowInstancesImpl implements SynchronizedWorkflowIn
 
     /**
      * Invokes an event on all documents.
-     * @see org.apache.lenya.workflow.WorkflowInstance#invoke(org.apache.lenya.workflow.Situation, org.apache.lenya.workflow.Event)
+     * @see WorkflowInstance#invoke(Situation, Event)
      */
     public void invoke(Situation situation, Event event) throws WorkflowException {
         

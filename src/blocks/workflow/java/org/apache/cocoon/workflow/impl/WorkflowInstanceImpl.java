@@ -1,6 +1,4 @@
 /*
-$Id: WorkflowInstanceImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
-<License>
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -24,7 +22,7 @@ $Id: WorkflowInstanceImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Lenya" and  "Apache Software Foundation"  must  not  be
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
@@ -46,12 +44,9 @@ $Id: WorkflowInstanceImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Michael Wechner <michi@apache.org>. For more information on the Apache Soft-
- ware Foundation, please see <http://www.apache.org/>.
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
- Lenya includes software developed by the Apache Software Foundation, W3C,
- DOM4J Project, BitfluxEditor, Xopus, and WebSHPINX.
-</License>
 */
 package org.apache.cocoon.workflow.impl;
 
@@ -82,7 +77,7 @@ import org.apache.log4j.Category;
  * Implementation of a workflow instance.
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: WorkflowInstanceImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
+ * @version $Id: WorkflowInstanceImpl.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
  */
 public abstract class WorkflowInstanceImpl implements WorkflowInstance {
     
@@ -298,7 +293,7 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
     }
 
     /**
-     * @see org.apache.lenya.workflow.WorkflowInstance#getValue(java.lang.String)
+     * @see WorkflowInstance#getValue(java.lang.String)
      */
     public boolean getValue(String variableName) throws WorkflowException {
         BooleanVariable variable = getWorkflowImpl().getVariable(variableName);
@@ -323,7 +318,7 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
     private List listeners = new ArrayList();
 
     /**
-     * @see org.apache.lenya.workflow.WorkflowInstance#addWorkflowListener(org.apache.lenya.workflow.WorkflowListener)
+     * @see WorkflowInstance#addWorkflowListener(WorkflowListener)
      */
     public void addWorkflowListener(WorkflowListener listener) {
         if (!listeners.contains(listener)) {
@@ -332,14 +327,14 @@ public abstract class WorkflowInstanceImpl implements WorkflowInstance {
     }
 
     /**
-     * @see org.apache.lenya.workflow.WorkflowInstance#removeWorkflowListener(org.apache.lenya.workflow.WorkflowListener)
+     * @see WorkflowInstance#removeWorkflowListener(WorkflowListener)
      */
     public void removeWorkflowListener(WorkflowListener listener) {
         listeners.remove(listener);
     }
 
     /**
-     * @see org.apache.lenya.workflow.WorkflowInstance#isSynchronized(org.apache.lenya.workflow.Situation, org.apache.lenya.workflow.Event)
+     * @see WorkflowInstance#isSynchronized(Event)
      */
     public boolean isSynchronized(Event event) throws WorkflowException {
         Transition nextTransition = getNextTransition(event);
