@@ -82,11 +82,11 @@
               var union = widget.lookupWidget("../union");
               var type = widget.lookupWidget("../type-selector");
               if(widget.getValue().equals("edit")) {
-	        union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
-		type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
+                union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
+                type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
               } else {
-	        union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
-		type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
+                union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
+                type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
               }
             </javascript>
           </fd:on-value-changed>
