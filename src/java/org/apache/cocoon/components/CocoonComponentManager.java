@@ -224,7 +224,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     public static Environment getCurrentEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (null != stack && !stack.empty()) {
+        if (null != stack && !stack.isEmpty()) {
             return (Environment) ((Object[])stack.getCurrent())[0];
         }
         return null;
@@ -235,7 +235,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     public static Processor getCurrentProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (null != stack && !stack.empty()) {
+        if (null != stack && !stack.isEmpty()) {
             return (Processor) ((Object[])stack.getCurrent())[1];
         }
         return null;
@@ -256,8 +256,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     static public ComponentManager getSitemapComponentManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-
-        if (null != stack && !stack.empty()) {
+        if (null != stack && !stack.isEmpty()) {
             Object[] o = (Object[]) stack.peek();
             return (ComponentManager) o[2];
         }
@@ -292,7 +291,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         }
 
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
+        if ( null != stack && !stack.isEmpty()) {
             final Object[] objects = (Object[])stack.getCurrent();
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
@@ -311,7 +310,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         final Component component = super.lookup(role);
 
         if (component != null && component instanceof RequestLifecycleComponent) {
-            if (stack == null || stack.empty()) {
+            if (stack == null || stack.isEmpty()) {
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
 
@@ -336,7 +335,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         }
 
         if (component != null && component instanceof GlobalRequestLifecycleComponent) {
-            if (stack == null || stack.empty()) {
+            if (stack == null || stack.isEmpty()) {
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
 
@@ -417,7 +416,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                                                        final ComponentManager  manager)
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
+        if ( null != stack && !stack.isEmpty()) {
             final Object[] objects = (Object[])stack.get(0);
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
@@ -436,7 +435,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                                                        final Component        component)
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
+        if ( null != stack && !stack.isEmpty()) {
             final Object[] objects = (Object[])stack.get(0);
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
@@ -454,7 +453,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     public static void removeFromAutomaticRelease(final Component component)
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
+        if ( null != stack && !stack.isEmpty()) {
             final Object[] objects = (Object[])stack.get(0);
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
@@ -509,7 +508,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     throws MalformedURLException, IOException, SourceException {
         if (baseURI == null) {
             final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-            if ( null != stack && !stack.empty()) {
+            if ( null != stack && !stack.isEmpty()) {
                 final Object[] objects = (Object[])stack.getCurrent();
                 baseURI = ((Environment)objects[0]).getContext();
             }
