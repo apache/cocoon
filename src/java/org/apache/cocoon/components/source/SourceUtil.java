@@ -73,9 +73,10 @@ public final class SourceUtil {
 
     static {
         try {
-            uripattern = (new RECompiler()).compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$");
-        } catch (RESyntaxException rese) {
-            rese.printStackTrace();
+            uripattern = new RECompiler().compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$");
+        } catch (RESyntaxException e) {
+            // Should not happen
+            e.printStackTrace();
         }
     }
 
@@ -141,17 +142,17 @@ public final class SourceUtil {
                 ((XMLizable) source).toSAX(handler);
             } catch (SAXException e) {
                 // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
-                // See also FileGenerator.generate()
+                // See also handleSAXException
                 final Exception cause = e.getException();
                 if (cause != null) {
                     if (cause instanceof ProcessingException) {
-                        throw (ProcessingException)cause;
+                        throw (ProcessingException) cause;
                     }
                     if (cause instanceof IOException) {
-                        throw (IOException)cause;
+                        throw (IOException) cause;
                     }
                     if (cause instanceof SAXException) {
-                        throw (SAXException)cause;
+                        throw (SAXException) cause;
                     }
                 }
                 throw e;
@@ -161,6 +162,7 @@ public final class SourceUtil {
             if (null == mimeType) {
                 mimeType = mimeTypeHint;
             }
+
             XMLizer xmlizer = null;
             try {
                 xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
@@ -168,10 +170,10 @@ public final class SourceUtil {
                               mimeType,
                               source.getURI(),
                               handler);
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
-                throw new ProcessingException("Exception during streaming source.", ce);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            } catch (ComponentException e) {
+                throw new ProcessingException("Exception during streaming source.", e);
             } finally {
                 manager.release((Component) xmlizer);
             }
@@ -197,7 +199,10 @@ public final class SourceUtil {
             ((XMLizable) source).toSAX(handler);
         } else {
             String mimeType = source.getMimeType();
-            if (null == mimeType) mimeType = mimeTypeHint;
+            if (null == mimeType) {
+                mimeType = mimeTypeHint;
+            }
+
             XMLizer xmlizer = null;
             try {
                 xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
@@ -328,8 +333,8 @@ public final class SourceUtil {
 
         Document document = builder.getDocument();
         if (document == null) {
-            throw new ProcessingException("Could not build DOM for '"+
-                                          source.getURI()+"'");
+            throw new ProcessingException("Could not build DOM for '" +
+                                          source.getURI() + "'");
         }
 
         return document;
@@ -353,8 +358,8 @@ public final class SourceUtil {
 
         Document document = builder.getDocument();
         if (document == null) {
-            throw new ProcessingException("Could not build DOM for '"+
-                                          source.getURI()+"'");
+            throw new ProcessingException("Could not build DOM for '" +
+                                          source.getURI() + "'");
         }
 
         return document;
@@ -378,8 +383,8 @@ public final class SourceUtil {
 
         Document document = builder.getDocument();
         if (document == null) {
-            throw new ProcessingException("Could not build DOM for '"+
-                                          source.getURI()+"'");
+            throw new ProcessingException("Could not build DOM for '" +
+                                          source.getURI() + "'");
         }
 
         return document;
@@ -428,14 +433,15 @@ public final class SourceUtil {
     throws ProcessingException, IOException, SAXException {
         final Exception cause = e.getException();
         if (cause != null) {
+            // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
             if (cause instanceof ProcessingException) {
-                throw (ProcessingException)cause;
+                throw (ProcessingException) cause;
             }
             if (cause instanceof IOException) {
-                throw (IOException)cause;
+                throw (IOException) cause;
             }
             if (cause instanceof SAXException) {
-                throw (SAXException)cause;
+                throw (SAXException) cause;
             }
             throw new ProcessingException("Could not read resource " +
                                           source, cause);
@@ -563,7 +569,7 @@ public final class SourceUtil {
     }
 
     /**
-     * Write a DOM Fragment to a source
+     * Write a DOM Fragment to a source.
      * If the source is a ModifiableSource the interface is used.
      * If not, the source is invoked with an additional parameter named
      * "content" containing the XML.
@@ -686,12 +692,12 @@ public final class SourceUtil {
                                               parameters, resolver);
                 SourceUtil.toSAX(source, new DefaultHandler());
             }
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
-        } catch (IOException ce) {
-            throw new ProcessingException(ce);
-        } catch (SAXException ce) {
-            throw new ProcessingException(ce);
+        } catch (SourceException e) {
+            throw SourceUtil.handle(e);
+        } catch (IOException e) {
+            throw new ProcessingException(e);
+        } catch (SAXException e) {
+            throw new ProcessingException(e);
         } finally {
             resolver.release(source);
         }
@@ -701,15 +707,15 @@ public final class SourceUtil {
      * Read a DOM Fragment from a source
      *
      * @param location URI of the Source
-     * @param typeParameters Type of Source query.  Currently, only
-     * <code>method</code> parameter (value typically <code>GET</code> or
-     * <code>POST</code>) is recognized.  May be <code>null</code>.
+     * @param typeParameters Type of Source query. Currently, only
+     *        <code>method</code> parameter (value typically <code>GET</code> or
+     *        <code>POST</code>) is recognized. May be <code>null</code>.
      * @param parameters Parameters (e.g. URL params) of the source.
-     * May be <code>null</code>
+     *        May be <code>null</code>
      * @param resolver Resolver for the source.
      *
      * @return DOM <code>DocumentFragment</code> constructed from the specified
-     * Source
+     *         source.
      *
      * @throws ProcessingException
      */
@@ -720,22 +726,21 @@ public final class SourceUtil {
     throws ProcessingException {
 
         Source source = null;
-
         try {
             source = SourceUtil.getSource(location, typeParameters,
                                           parameters, resolver);
             Document doc = SourceUtil.toDOM(source);
-            DocumentFragment fragment = doc.createDocumentFragment();
 
+            DocumentFragment fragment = doc.createDocumentFragment();
             fragment.appendChild(doc.getDocumentElement());
 
             return fragment;
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
-        } catch (IOException ce) {
-            throw new ProcessingException(ce);
-        } catch (SAXException ce) {
-            throw new ProcessingException(ce);
+        } catch (SourceException e) {
+            throw SourceUtil.handle(e);
+        } catch (IOException e) {
+            throw new ProcessingException(e);
+        } catch (SAXException e) {
+            throw new ProcessingException(e);
         } finally {
             resolver.release(source);
         }
@@ -753,11 +758,10 @@ public final class SourceUtil {
      */
     public static String getScheme(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
             return re.getParen(2);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
@@ -774,11 +778,10 @@ public final class SourceUtil {
      */
     public static String getAuthority(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
             return re.getParen(4);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
@@ -795,11 +798,10 @@ public final class SourceUtil {
      */
     public static String getPath(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
             return re.getParen(5);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
@@ -814,11 +816,10 @@ public final class SourceUtil {
      */
     public static String getPathWithoutAuthority(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
-            return re.getParen(4)+re.getParen(5);
+            return re.getParen(4) + re.getParen(5);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
@@ -834,11 +835,10 @@ public final class SourceUtil {
      */
     public static String getQuery(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
             return re.getParen(7);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
@@ -857,11 +857,10 @@ public final class SourceUtil {
      */
     public static String getFragment(String uri) {
         RE re = new RE(uripattern);
-
         if (re.match(uri)) {
             return re.getParen(9);
         } else {
-            throw new IllegalArgumentException("'"+uri+
+            throw new IllegalArgumentException("'" + uri +
                                                "' is not a correct URI");
         }
     }
