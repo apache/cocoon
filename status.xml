@@ -469,6 +469,12 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="SW" type="update">
+    Remove restrictions on the flowscript object model (FOM): the objects available through the
+    <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
+    corresponding Java classes. The only additional feature of the JS objects are that request,
+    session and context attributes are available as properties on these objects.
+   </action>
    <action dev="CZ" type="fix">
     CForms: template generator and transformer now use the same object model as the JXTG: access
             to objects have to use the "cocoon" object, like "cocoon/continuation/id".
