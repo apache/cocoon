@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.10 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.11 2003/08/20 12:05:35 cziegeler Exp $
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -88,7 +88,9 @@ public class TabContentAspect
         if (layout instanceof CompositeLayout) {
             TabPreparedConfiguration config = (TabPreparedConfiguration)context.getAspectConfiguration();
 
-            XMLUtils.startElement(handler, config.tagName);
+            if ( config.rootTag ) {
+                XMLUtils.startElement(handler, config.tagName);
+            }
 
             AttributesImpl attributes = new AttributesImpl();
             CompositeLayout tabLayout = (CompositeLayout) layout;
@@ -118,7 +120,9 @@ public class TabContentAspect
                 XMLUtils.endElement(handler, "named-item");
             }
 
-            XMLUtils.endElement(handler, config.tagName);
+            if ( config.rootTag ) {
+                XMLUtils.endElement(handler, config.tagName);
+            }
         } else {
             throw new SAXException("Wrong layout type, TabLayout expected: " + layout.getClass().getName());
         }

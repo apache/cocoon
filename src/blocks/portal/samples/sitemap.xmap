@@ -109,6 +109,18 @@
         </map:act>
     </map:match>
         
+    <map:match pattern="portalxml">
+        <map:act type="auth-protect">
+            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="application" value="portal"/> 
+
+            <map:generate type="portal" label="content">
+        	    <map:parameter name="portal-name" value="portal" />
+            </map:generate>
+            <map:serialize type="xml"/> 
+        </map:act>
+    </map:match>
+
     <!-- authentication stuff -->
 
     <map:match pattern="login">

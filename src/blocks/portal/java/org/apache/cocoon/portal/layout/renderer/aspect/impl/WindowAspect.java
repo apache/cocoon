@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: WindowAspect.java,v 1.5 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: WindowAspect.java,v 1.6 2003/08/20 12:05:35 cziegeler Exp $
  */
 public final class WindowAspect extends AbstractAspect {
 
@@ -81,19 +81,25 @@ public final class WindowAspect extends AbstractAspect {
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
 
-        XMLUtils.startElement(contenthandler, config.tagName);
+        if ( config.rootTag ) {
+            XMLUtils.startElement(contenthandler, config.tagName);
+        }
         XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
 
         context.invokeNext( layout, service, contenthandler );
 
-        XMLUtils.endElement(contenthandler, config.tagName);
+        if ( config.rootTag ) {
+            XMLUtils.endElement(contenthandler, config.tagName);
+        }
     }
 
     protected class PreparedConfiguration {
         public String tagName;
+        public boolean rootTag;
         
         public void takeValues(PreparedConfiguration from) {
             this.tagName = from.tagName;
+            this.rootTag = from.rootTag;
         }
     }
     
@@ -104,6 +110,7 @@ public final class WindowAspect extends AbstractAspect {
     throws ParameterException {
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.tagName = configuration.getParameter("tag-name", "window");
+        pc.rootTag = configuration.getParameterAsBoolean("root-tag", true);
         return pc;
     }
 

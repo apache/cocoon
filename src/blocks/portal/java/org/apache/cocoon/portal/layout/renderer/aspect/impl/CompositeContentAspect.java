@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeContentAspect.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: CompositeContentAspect.java,v 1.5 2003/08/20 12:05:35 cziegeler Exp $
  */
 public class CompositeContentAspect extends AbstractCompositeAspect {
 
@@ -85,9 +85,13 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     throws SAXException {
         PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         
-        XMLUtils.startElement(handler, config.tagName);
+        if ( config.rootTag ) {
+            XMLUtils.startElement(handler, config.tagName);
+        }
         super.toSAX(context, layout, service, handler);
-        XMLUtils.endElement(handler, config.tagName);
+        if ( config.rootTag ) {
+            XMLUtils.endElement(handler, config.tagName);
+        }
 
     }
 
@@ -120,9 +124,11 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 
     protected class PreparedConfiguration {
         public String tagName;
+        public boolean rootTag;
         
         public void takeValues(PreparedConfiguration from) {
             this.tagName = from.tagName;
+            this.rootTag = from.rootTag;
         }
     }
     
@@ -133,6 +139,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     throws ParameterException {
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.tagName = configuration.getParameter("tag-name", "composite");
+        pc.rootTag = configuration.getParameterAsBoolean("root-tag", true);
         return pc;
     }
 

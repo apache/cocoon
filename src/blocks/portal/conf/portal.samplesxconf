@@ -12,8 +12,11 @@
              <aspect type="xslt">
                  <parameter name="style" value="{global:skin}styles/column.xsl"/>
              </aspect>
-             <aspect type="composite-content">
+             <aspect type="parameter">
                  <parameter name="tag-name" value="column-layout"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="root-tag" value="false"/>
              </aspect>
          </aspects>
      </renderer>
@@ -22,8 +25,11 @@
              <aspect type="xslt">
                  <parameter name="style" value="{global:skin}styles/row.xsl"/>
              </aspect>
-             <aspect type="composite-content">
+             <aspect type="parameter">
                  <parameter name="tag-name" value="row-layout"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="root-tag" value="false"/>
              </aspect>
          </aspects>
      </renderer>
@@ -32,8 +38,11 @@
              <aspect type="xslt">
                  <parameter name="style" value="{global:skin}styles/tab.xsl"/>
              </aspect>
-             <aspect type="tab-content">
+             <aspect type="parameter">
                  <parameter name="tag-name" value="tab-layout"/>
+             </aspect>
+             <aspect type="tab-content">
+                 <parameter name="root-tag" value="false"/>
                  <parameter name="store"    value="session"/>
              </aspect>
          </aspects>
@@ -43,8 +52,11 @@
              <aspect type="xslt">
                  <parameter name="style" value="{global:skin}styles/window.xsl"/>
              </aspect>
-             <aspect type="window">
+             <aspect type="parameter">
                  <parameter name="tag-name" value="window"/>
+             </aspect>
+             <aspect type="window">
+                 <parameter name="root-tag" value="false"/>
              </aspect>
              <aspect type="coplet-removing"/>
              <aspect type="coplet-full-screen"/>
