@@ -529,10 +529,10 @@
       </xsl:if>
 
       <!-- Copy the library depencies -->
-      <xsl:if test="library">
+      <xsl:if test="library[not(@bundle='false')]">
         <copy filtering="off" todir="${{build.webapp.lib}}">
           <fileset dir="${{lib.optional}}">
-            <xsl:for-each select="library">
+            <xsl:for-each select="library[not(@bundle='false')]">
               <include name="{@name}*.jar"/>
             </xsl:for-each>
           </fileset>

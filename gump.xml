@@ -159,7 +159,7 @@
     <depend project="cocoon-block-axis"/>
     <depend project="apache-garbage"/>
 
-    <library name="servlet-2_3"/>
+    <library name="servlet-2_3" bundle="false"/>
     <library name="velocity"/>
     <library name="castor"/>
     <library name="commons-jexl"/>
@@ -527,7 +527,7 @@
     <depend project="jakarta-servletapi"/>
 
     <library name="jtidy"/>
-    <library name="servlet"/>
+    <library name="servlet" bundle="false"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -684,7 +684,7 @@
     <depend project="commons-logging"/>
     <depend project="jakarta-servletapi"/>
 
-    <library name="servlet"/>
+    <library name="servlet" bundle="false"/>
     <library name="commons-httpclient"/>
     <library name="commons-logging"/>
 
@@ -741,7 +741,7 @@
     <library name="deli"/>
     <library name="jena"/>
     <library name="icu4j"/>
-    <library name="servlet"/>
+    <library name="servlet" bundle="false"/>
     <library name="log4j"/>
 
     <work nested="tools/anttasks"/>
@@ -815,7 +815,7 @@
     <library name="axis-jaxrpc"/>
     <library name="wsdl4j"/>
     <library name="commons-discovery"/>
-    <library name="servlet"/>
+    <library name="servlet" bundle="false"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1220,7 +1220,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-servletapi"/>
 
-    <library name="servlet"/>
+    <library name="servlet" bundle="false"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
