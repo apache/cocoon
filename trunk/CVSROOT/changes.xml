@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.211 2001-02-25 17:00:02 greenrd Exp $ 
+  $Id: changes.xml,v 1.212 2001-02-26 17:54:36 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,18 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add" due-to="Ingo Bruell" due-to-email="ibruell@gmx.de">
+   Stylesheets (but not logicsheets) can now access a COCOON-BROWSER-ID parameter to identify which
+   browser they are serving (as an alternative to using different stylesheets for each browser, by
+   declaring &lt;xsl:param name="COCOON-BROWSER-ID"&gt; as a top-level element in the stylesheet.
+   IMPORTANT WARNING: If you use this alternative technique for a cacheable page, 
+   you MUST set the HTTP Vary header as follows:
+     response.setHeader ("Vary", "user-Agent");
+   This can be done either in an &lt;xsp:logic&gt; element in XSP, or in a Producer.
+   If you don't do this, it will work fine when users are connecting directly to the server, but
+   if they access it through a web proxy, the proxy will not know that different content should
+   be served for different browsers, so it will serve the same content for all browsers.
+  </action>
   <action dev="RDG" type="fix" due-to="Torsten Curdt" due-to-email="tcurdt@dff.st">
    Added manifest to w3c.jar to fix startup problem on JRun 3.0.
   </action>
