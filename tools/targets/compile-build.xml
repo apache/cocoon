@@ -62,7 +62,7 @@
 
   <!-- compiles deprecated code -->
   <target name="compile-deprecated" depends="prepare"
-      unless="unless.exclude.deprecated">
+      unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
@@ -126,7 +126,7 @@
 
   <!-- package deprecated code -->
   <target name="package-deprecated" depends="compile-deprecated"
-      unless="unless.exclude.deprecated">
+      unless="internal.exclude.deprecated">
     <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
