@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.3 2003/03/24 14:33:55 stefano Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.4 2003/07/30 02:24:43 joerg Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Composable, Disposable, Recyclable {
@@ -345,9 +345,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
                     // Insert ref.
                     super.startPrefixMapping("fe", FE_URI);
                     AttributesImpl atts = new AttributesImpl();
-                    atts.addAttribute(null,"fragment-id","fragment-id","CDATA",id);
-                    super.startElement(FE_URI,"fragment","fe:fragment",atts);
-                    super.endElement(FE_URI,"fragment","fe:fragment");
+                    atts.addAttribute("", "fragment-id", "fragment-id", "CDATA", id);
+                    super.startElement(FE_URI, "fragment", "fe:fragment", atts);
+                    super.endElement(FE_URI, "fragment", "fe:fragment");
                     super.endPrefixMapping("fe");
                 }
             }
