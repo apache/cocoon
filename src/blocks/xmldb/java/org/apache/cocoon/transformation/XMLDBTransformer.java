@@ -139,7 +139,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.11 2004/05/16 16:16:43 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class XMLDBTransformer extends AbstractTransformer
         implements CacheableProcessingComponent, Configurable, Initializable {
@@ -446,18 +446,32 @@ public class XMLDBTransformer extends AbstractTransformer
                             }
                         }
                     } else if ("delete".equals(operation)) {
-                        try {
-                            Resource resource = collection.getResource(this.key);
-                            if (resource == null) {
-                                message = "Resource " + this.key + " does not exist";
-                                getLogger().debug(message);
-                            } else {
-                                collection.removeResource(resource);
+                        if (key != null && key.endsWith("/")) {
+                            try {
+                                // Cut trailing '/'
+                                String k = this.key.substring(0, this.key.length() - 1);
+                                CollectionManagementService service =
+                                        (CollectionManagementService) collection.getService("CollectionManagementService", "1.0");
+                                service.removeCollection(k);
                                 result = "success";
+                            } catch (XMLDBException e) {
+                                message = "Failed to delete collection " + this.key + ": " + e.errorCode;
+                                getLogger().error(message, e);
                             }
-                        } catch (XMLDBException e) {
-                            message = "Failed to delete resource " + key + ": " + e.errorCode;
-                            getLogger().debug(message, e);
+                        } else {
+                            try {
+                                Resource resource = collection.getResource(this.key);
+                                if (resource == null) {
+                                    message = "Resource " + this.key + " does not exist";
+                                    getLogger().debug(message);
+                                } else {
+                                    collection.removeResource(resource);
+                                    result = "success";
+                                }
+                            } catch (XMLDBException e) {
+                                message = "Failed to delete resource " + key + ": " + e.errorCode;
+                                getLogger().debug(message, e);
+                            }
                         }
                     } else if ("update".equals(operation)) {
                         try {
