@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 
 /**
  * Bundle Factory implementations are responsible for loading and providing
@@ -27,7 +26,7 @@ import org.apache.avalon.framework.component.ComponentSelector;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: BundleFactory.java,v 1.9 2004/07/13 16:00:12 sylvain Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.10 2004/07/15 06:05:40 stefano Exp $
  */
 public interface BundleFactory extends Component {
 
