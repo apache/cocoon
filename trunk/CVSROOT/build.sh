@@ -12,6 +12,18 @@ if [ "$JAVA_HOME" = "" ] ; then
   exit 1
 fi
 
+xmlerror(){
+ print "ERROR: Please delete any XML jars from $JAVA_HOME/jre/lib/ext,"
+ print " otherwise Cocoon will not compile!\n"
+}
+if [ -e $JAVA_HOME/jre/lib/ext/xml.jar ] ;
+then xmlerror;
+elif [ -e $JAVA_HOME/jre/lib/ext/parser.jar ] ;
+then xmlerror;
+elif [ -e $JAVA_HOME/jre/lib/ext/crimson.jar ] ;
+then xmlerror;
+fi
+
 ANT_HOME=./lib
 LOCALCLASSPATH=`echo lib/*.jar | tr ' ' ':'`:$JAVA_HOME/lib/tools.jar:$CLASSPATH
 
