@@ -40,12 +40,6 @@ import org.apache.cocoon.generation.ServerPagesGenerator;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 
 /**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
-/**
  * Allows actions to be written in XSP. This allows to use XSP to produce
  * XML fragments that are later reused in generators.<br/>
  *
@@ -79,7 +73,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.2 2004/05/24 12:37:52 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class ServerPagesAction
         extends AbstractAction

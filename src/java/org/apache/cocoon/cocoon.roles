@@ -77,7 +77,7 @@
   <!-- Stores: -->
   <role name="org.apache.excalibur.store.Store"
        shorthand="store"
-       default-class="org.apache.cocoon.components.store.impl.JCSDefaultStore"/>
+       default-class="org.apache.cocoon.components.store.impl.EHDefaultStore"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
