@@ -34,9 +34,8 @@ import java.util.Map;
  * a given block.
  * 
  * @cocoon.sitemap.component.name   filter
+ * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.logger sitemap.transformer.filter
- * @cocoon.sitemap.component.documentation.caching
- *               TBD
  * 
  * 
  * The filter transformer can be used to let only an amount of elements through in

@@ -60,9 +60,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @cocoon.sitemap.component.name   xpathdirectory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.xpathdirectory
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained documents
+ * @cocoon.sitemap.component.logger sitemap.generator.xpathdirectory
  * 
  * 
  * <p>
