@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.127 2004/02/20 18:51:50 sylvain Exp $
+    | CVS $Id: jars.xml,v 1.128 2004/02/25 13:08:16 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -352,7 +352,7 @@
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
     <ant-target>jars</ant-target>
-    <lib>endorsed/xercesImpl-2.6.1.jar</lib>
+    <lib>endorsed/xercesImpl-2.6.2.jar</lib>
     <homepage>http://xml.apache.org/xerces2-j/</homepage>
   </file>
 
