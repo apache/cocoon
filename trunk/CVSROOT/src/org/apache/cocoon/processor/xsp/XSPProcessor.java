@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.18 2000-04-04 11:12:16 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.19 2000-04-08 10:18:18 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.18 $ $Date: 2000-04-04 11:12:16 $
+ * @version $Revision: 1.19 $ $Date: 2000-04-08 10:18:18 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -178,8 +178,11 @@ public class XSPProcessor extends AbstractActor
     if (!this.repositoryFile.exists()) {
       if (!this.repositoryFile.mkdirs()) {
         throw new RuntimeException("Can't create store repository: "
-          + repositoryFile.getAbsolutePath()
-          + ". Make sure it's there or you have writing permissions.");
+          + repositoryFile
+          + ". Make sure it's there or you have writing permissions.<br>"
+          + "In case this path is relative we highly suggest you to"
+          + "change this to an absolute path so you can control its location directly"
+          + "and provide valid access rights." );
       }
     }
 
