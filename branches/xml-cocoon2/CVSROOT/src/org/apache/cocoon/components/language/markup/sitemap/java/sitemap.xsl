@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-07-28 16:20:06 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-07-30 19:08:57 $
 -->
 
 <xsl:stylesheet 
@@ -106,8 +106,12 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
       <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:match[@type=$type or (not(@type) and $default!='')]">
-        <xsl:variable name="matcher-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
-        <xsl:variable name="matcher-name">matcher_<xsl:value-of select='translate($matcher-name1,"&#39;","")'/></xsl:variable>
+        <xsl:variable name="matcher-name">
+          <xsl:call-template name="mangle-name">
+            <xsl:with-param name="prefix">matcher_</xsl:with-param>
+            <xsl:with-param name="value" select="@pattern"/>
+          </xsl:call-template>
+        </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
         private List <xsl:value-of select="$matcher-name"/> (String pattern, Environment environment) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
@@ -122,10 +126,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
       <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:when[../map:select/@type=$type or (not(../map:select/@type) and $default!='')]">
-        <xsl:variable name="selector-name1" select="translate(@test,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
-        <xsl:variable name="selector-name">selector_<xsl:value-of select='translate($selector-name1,"&#39;","")'/></xsl:variable>
+        <xsl:variable name="selector-name">
+          <xsl:call-template name="mangle-name">
+            <xsl:with-param name="prefix">selector_</xsl:with-param>
+            <xsl:with-param name="value" select="@test"/>
+          </xsl:call-template>
+        </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
-        private boolean <xsl:value-of select="$selector-name"/> (String test, Environment environment) {
+        private boolean <xsl:value-of select="$selector-name"/> (String pattern, Environment environment) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -256,8 +264,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         <xsl:with-param name="required">true</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="matcher-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
-    <xsl:variable name="matcher-name2" select='translate($matcher-name1,"&#39;","")'/>
+    <xsl:variable name="matcher-name2">
+      <xsl:call-template name="mangle-name">
+        <xsl:with-param name="value"><xsl:value-of select="@pattern"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="matcher-name">
       <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]">
         <xsl:choose>
@@ -276,8 +287,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       </xsl:for-each>
     </xsl:variable>
     if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment)) != null) {
-       listOfLists.add (list);  
-       <xsl:apply-templates/>
+      listOfLists.add (list);  
+      <xsl:apply-templates/>
     }
   </xsl:template> <!-- match="map:match" -->
 
@@ -295,8 +306,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           <xsl:with-param name="required">true</xsl:with-param>
         </xsl:call-template>
       </xsl:variable>
-      <xsl:variable name="selector-name1" select="translate($test-value,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
-      <xsl:variable name="selector-name2" select='translate($selector-name1,"&#39;","")'/>
+      <xsl:variable name="selector-name2">
+        <xsl:call-template name="mangle-name">
+          <xsl:with-param name="value" select="@test"/>
+        </xsl:call-template>
+      </xsl:variable>
       <xsl:variable name="selector-name">
         <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]">
           <xsl:choose>
@@ -364,7 +378,6 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
 
   <xsl:template match="map:mount">
     <xsl:variable name="src" select="@src"/>
-    <xsl:variable name="pos"><xsl:value-of select="translate(./@uri-prefix, '- /{}', '___')"/></xsl:variable>
     <xsl:variable name="check-reload">
       <xsl:choose>
         <xsl:when test="@check-reload='yes'">true</xsl:when>
@@ -381,7 +394,21 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+    <xsl:choose>
+      <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='/'">
+        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+      </xsl:when>
+      <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='}'">
+        String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>");
+        if (uri_prefix<xsl:value-of select="count(.)"/>.charAt(uri_prefix<xsl:value-of select="count(.)"/>.length()-1)=='/')
+          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+        else
+          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+      </xsl:when>
+      <xsl:otherwise>
+        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template> <!-- match="map:mount" -->
 
   <xsl:template match="map:redirect-to">
@@ -554,6 +581,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:otherwise> 
     </xsl:choose> 
+  </xsl:template>
+
+  <xsl:template name="mangle-name">
+    <xsl:param name="value"/>
+    <xsl:param name="prefix"/>
+    <xsl:param name="suffix"/>
+    <xsl:variable name="value1" select="translate($value,'/- *?@:{}()[].#^\\$|&#33;~\','_')"/>
+    <xsl:value-of select="$prefix"/><xsl:value-of select='translate($value1,"&#39;","")'/><xsl:value-of select="$suffix"/>
   </xsl:template>
 
   <!-- Utility templates -->

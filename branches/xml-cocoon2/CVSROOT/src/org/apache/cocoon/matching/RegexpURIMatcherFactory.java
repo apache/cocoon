@@ -20,7 +20,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:49:03 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-30 19:08:58 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
@@ -32,11 +32,12 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
             RECompiler r = new RECompiler();
             String name         = prefix;
             String instructions = name + "PatternInstructions";
+            String pat = correctPattern (pattern);
             sb.append("\n    // Pre-compiled regular expression '")
-              .append(pattern).append("'\n")
+              .append(pat).append("'\n")
               .append("    static char[] ");
             sb.append(instructions).append(" = \n    {");
-            REProgram program = r.compile(pattern);
+            REProgram program = r.compile(pat);
             int numColumns = 7;
             char[] p = program.getInstructions();
             for (int j = 0; j < p.length; j++) {
@@ -67,18 +68,36 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         StringBuffer sb = new StringBuffer ();
         String name         = prefix;
         String instructions = name + "PatternInstructions";
+        String pat = correctPattern (pattern);
         sb.append("java.util.ArrayList list = new java.util.ArrayList ();")
           .append("if (").append(name).append("Pattern.match(environment.getUri())) {");
         // Count number of parens
         int i = 0;
         int j = -1;
-        while ((j = pattern.indexOf('(', j+1)) != -1) {
-            if (j == 0 || pattern.charAt(j-1) != '\\') {
+        while ((j = pat.indexOf('(', j+1)) != -1) {
+            if (j == 0 || pat.charAt(j-1) != '\\') {
                 sb.append("list.add (").append(name).append("Pattern.getParen(")
                   .append(++i).append("));");
             }
         }
         sb.append("return list; } else { return null; }");
         return sb.toString();
+    }
+
+    private String correctPattern (String pattern) {
+        char[] pat = new char[pattern.length()];
+        pattern.getChars (0, pattern.length(), pat, 0);
+        int j = 0;
+        int i = 0;
+        while (i < pat.length-1) {
+            if (pat[i] == '\\') {
+                if (pat[i+1] == '\\') {
+                    i++;
+                }
+            }
+            pat[j++]=pat[i++];
+        }
+        pat[j]=pat[i];
+        return new String(pat,0,j+1);
     }
 }

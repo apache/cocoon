@@ -65,6 +65,7 @@ public class HttpEnvironment implements Environment {
      */
     public void changeContext(String prefix, String context) 
     throws MalformedURLException { 
+System.out.print ("HttpEnvironment.changeContext(prefix=\""+prefix+"\",context=\""+context+"\") => ");
         if (uri.startsWith (prefix)) {
             this.prefix.append (prefix);
             uri = uri.substring(prefix.length());
@@ -76,6 +77,7 @@ public class HttpEnvironment implements Environment {
         } else {
             //FIXME: should we throw an error here ?
         }
+System.out.println ("uri=\""+uri+"\",this.context=\""+this.context+"\"");
     }
 
     /**
