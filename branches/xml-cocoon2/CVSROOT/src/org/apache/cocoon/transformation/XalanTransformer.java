@@ -55,16 +55,17 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-01-23 17:47:14 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-02-05 22:06:17 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
+    private static String FILE = "file:/";
 
     /** The store service instance */
     private Store store = null;
 
     /** The trax TransformerFactory */
-    private SAXTransformerFactory tfactory = null;
+    private SAXTransformerFactory tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
 
     /** The trax TransformerHandler */
     private TransformerHandler transformerHandler = null;
@@ -75,24 +76,21 @@ implements Transformer, Composer, Poolable, Configurable {
     TransformerHandler getTransformerHandler(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException
     {
-        // Initialize a shared Transformer factory instance.
-        if(tfactory == null)
-            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-
-        // Only local files are checked for midification for compatibility reasons!
+        // Only local files are checked for modification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
-        // The systemID if such a resource starts with file:/.
+        // The systemID if such a resource starts with file://.
         Templates templates = null;
         InputSource src = resolver.resolveEntity(null, xsluri);
         String      systemID = src.getSystemId();
+
         if (this.useCache == true)
         {
             // Is this a local file
-            if (systemID.startsWith("file:/") == true) {
+            if (systemID.startsWith(FILE) == true) {
                 // Cached is an array of the template and the caching time
                 if (store.containsKey(xsluri) == true) {
                     Object[] templateAndTime = (Object[])store.get(xsluri);
-                    File xslFile = new File(systemID.substring(6));
+                    File xslFile = new File(systemID.substring(FILE.length()));
                     long cachedTime = ((Long)templateAndTime[1]).longValue();
                     if (cachedTime < xslFile.lastModified()) {
                         templates = null;
@@ -113,7 +111,7 @@ implements Transformer, Composer, Poolable, Configurable {
             if (this.useCache == true)
             {
                 // Is this a local file
-                if (systemID.startsWith("file:/") == true) {
+                if (systemID.startsWith(FILE) == true) {
                     // Cached is an array of the template and the current time
                     Object[] templateAndTime = new Object[2];
                     templateAndTime[0] = templates;

@@ -44,7 +44,7 @@ import org.apache.avalon.AbstractLoggable;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-01 18:44:38 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-05 22:06:16 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -271,14 +271,10 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                 getLogger().debug("This should never happen: codeGenerator is null");
                 throw new SAXException("codeGenerator must never be null.");
             }
-            if (logicsheetLocation.indexOf(":/") < 0) { // Relative to Cocoon root
-                inputSource = entityResolver.resolveEntity(null, logicsheetLocation);
-                systemId = inputSource.getSystemId();
-            } else { // Fully resolved URL
-                systemId = logicsheetLocation;
-                inputSource = new InputSource(systemId);
-            }
-            URL url = new URL(systemId);
+
+            URL url = NetUtils.getURL(logicsheetLocation);
+            inputSource = new InputSource(url.openStream());
+
             String logicsheetName = url.toExternalForm();
             CachedURL entry = (CachedURL)this.logicsheetCache.get(logicsheetName);
             Logicsheet logicsheet = null;
