@@ -1,7 +1,7 @@
 
 
 /*
- $Id: groovy-20040415.114632.jar.license.txt,v 1.1 2004/04/16 07:41:12 cziegeler Exp $
+ $Id: groovy-1.0-beta5.jar.license.txt,v 1.1 2004/06/04 07:30:49 antonio Exp $
 
  Copyright 2003 (C) James Strachan and Bob Mcwhirter. All Rights Reserved.
 

@@ -60,7 +60,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Id: QDoxSource.java,v 1.10 2004/04/30 22:50:39 joerg Exp $ $Date: 2004/04/30 22:50:39 $
+ * @version CVS $Id: QDoxSource.java,v 1.11 2004/06/04 07:30:49 antonio Exp $ $Date: 2004/06/04 07:30:49 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -68,7 +68,6 @@ public final class QDoxSource
 
     protected final static String ROOT_CLASSNAME = "java.lang.Object";
 
-    protected final static String EMPTY = "";
     protected final static String PROTOCOL = "qdox:";
     protected final static String NS_URI = "http://apache.org/cocoon/javadoc/1.0";
     protected final static String NS_PREFIX = "jd";
@@ -167,9 +166,7 @@ public final class QDoxSource
         this.javaSource = javaSource;
         this.logger = logger;
         this.manager = manager;
-
         this.javadocClassName = javadocUri.substring(javadocUri.indexOf(':') + 1);
-
         try {
             createJavadocXml();
         } catch (SourceException se) {
@@ -177,7 +174,6 @@ public final class QDoxSource
         } catch (IOException ioe) {
             logger.error("Error reading source!", ioe);
         }
-
         // Initialize regular expression:
         try {
             reLink = new RE(RE_LINK);
@@ -225,7 +221,7 @@ public final class QDoxSource
         JavaSource parent = javadocClass.getParentSource();
         // Add two implicit imports:
         parent.addImport("java.lang.*");
-        if (parent.getPackage().length() > 0) {
+        if (parent.getPackage() != null) {
             parent.addImport(parent.getPackage() + ".*");
         } else {
             parent.addImport("*");
@@ -237,10 +233,7 @@ public final class QDoxSource
             if (imports[i].endsWith("*")) {
                 // package import:
                 saxStartElement(handler, IMPORT_ELEMENT, new String[][] {{IMPORT_ATTRIBUTE, "package"}});
-                String imp = imports[i];
-                while (imp.endsWith("*") || imp.endsWith(".")) {
-                    imp = StringUtils.chop(imp);
-                }
+                String imp = StringUtils.substringBeforeLast(imports[i], ".*");
                 saxCharacters(handler, imp);
             } else {
                 saxStartElement(handler, IMPORT_ELEMENT, new String[][] {{IMPORT_ATTRIBUTE, "class"}});
@@ -356,32 +349,18 @@ public final class QDoxSource
         if (logger.isDebugEnabled()) {
             logger.debug("Getting InputStream for class " + javadocClass.getFullyQualifiedName());
         }
-
-        // Serialize the SAX events to the XMLSerializer:
-
         XMLSerializer serializer = new XMLSerializer();
-        //ComponentSelector serializerSelector = null;
         ByteArrayInputStream inputStream = null;
 
         try {
-            //serializerSelector = (ComponentSelector) manager.lookup(Serializer.ROLE + "Selector");
-            //logger.debug("serializer selector: " + serializerSelector.toString());
-            //serializer = (XMLSerializer) serializerSelector.select(XMLSerializer.class);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(2048);
             serializer.setOutputStream(outputStream);
             toSAX(serializer);
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        //} catch (ComponentException ce) {
-        //    logger.error("Component not found: " + XMLSerializer.ROLE, ce);
-        //    throw new SourceException("Component lookup of XMLSerializer failed!", ce);
         } catch (SAXException se) {
             logger.error("SAX exception!", se);
             throw new SourceException("Serializing SAX to a ByteArray failed!", se);
-        //} finally {
-            //serializerSelector.release(serializer);
-            //manager.release(serializerSelector);
         }
-
         return inputStream;
     }
 
@@ -389,29 +368,18 @@ public final class QDoxSource
         if (logger.isDebugEnabled()) {
             logger.debug("Reading Java source " + javaSource.getURI());
         }
-
         JavaDocBuilder builder = new JavaDocBuilder();
         builder.addSource(new BufferedReader(new InputStreamReader(javaSource.getInputStream())));
 
         javadocClass = builder.getClassByName(javadocClassName);
-        if (javadocClass == null) {
+        if (javadocClass.getPackage() == null) {
             // An inner class is specified - let's find it:
-            int index = javadocUri.lastIndexOf('.');
-            String containingClassName = javadocUri.substring(javadocUri.indexOf(':') + 1, index);
-            String innerClassName = javadocUri.substring(index + 1);
+            int index = javadocClassName.lastIndexOf('.');
+            String containingClassName = javadocClassName.substring(0, index);
+            String innerClassName = javadocClassName.substring(index + 1);
             containingJavadocClass = builder.getClassByName(containingClassName);
-            javadocClass = getJavadocInnerClass(containingJavadocClass, innerClassName);
+            javadocClass = containingJavadocClass.getInnerClassByName(innerClassName);
         }
-    }
-
-    /**
-     * Method resolveMemberNameFromLink.
-     *
-     * @param ref
-     * @return String
-     */
-    private String resolveMemberNameFromLink(String ref) {
-        return StringUtils.substringAfter(ref, "#");
     }
 
     /**
@@ -658,7 +626,7 @@ public final class QDoxSource
                 superJavadocClassName = jClass.getSuperClass().getValue();
 
                 // Is the superClass itself an inner class?
-                if (superJavadocClassName.indexOf('.') == -1 && getJavadocInnerClass(containingJavadocClass, superJavadocClassName) != null) {
+                if (superJavadocClassName.indexOf('.') == -1 && containingJavadocClass.getInnerClassByName(superJavadocClassName) != null) {
                     superJavadocClassName = containingJavadocClass.getFullyQualifiedName() + '.' + superJavadocClassName;
                 }
             }
@@ -678,7 +646,7 @@ public final class QDoxSource
      * @param className
      * @return JavaClass
      */
-    private JavaClass getJavadocInnerClass(JavaClass jClass, String className) {
+/*    private JavaClass getJavadocInnerClass(JavaClass jClass, String className) {
         if (jClass != null) {
             JavaClass[] classes = jClass.getInnerClasses();
 
@@ -689,7 +657,7 @@ public final class QDoxSource
             }
         }
         return null;
-    }
+    }*/
 
     /**
      * Get the meta class for the specified classname. The result is cached internally.
@@ -796,15 +764,7 @@ public final class QDoxSource
      */
     private void outputComment(ContentHandler handler, String comment) throws SAXException {
         if (comment != null && comment.length() > 0) {
-            // When newlines are recognized in QDox, uncomment these lines:
-            //if (comment.indexOf("<pre>") >= 0) {
-                //saxStartElement(handler, COMMENT_ELEMENT, new String[][] {{"http://www.w3.org/XML/1998/namespace",
-                //                "space", "xml:space", "NMTOKEN", "preserve"}});
-                //saxStartElement(handler, COMMENT_ELEMENT, new String[][] {{"xml:space", "preserve"}});
-            //} else {
-                saxStartElement(handler, COMMENT_ELEMENT);
-            //}
-
+            saxStartElement(handler, COMMENT_ELEMENT);
             while (reLink.match(comment)) {
                 String ref = null;
                 String display = null;
@@ -815,20 +775,15 @@ public final class QDoxSource
                 } else {
                     // {@link xxx}
                     ref = reLink.getParen(6);
-                    display = EMPTY;
+                    display = "";
                 }
-
                 // Output SAX:
                 saxCharacters(handler, comment.substring(0, reLink.getParenStart(0)));
-
                 outputLink(handler, ref, display);
-
                 // Cut from doc:
                 comment = comment.substring(reLink.getParenEnd(0));
             }
-
             saxCharacters(handler, comment);
-
             saxEndElement(handler, COMMENT_ELEMENT);
         }
     }
@@ -842,7 +797,7 @@ public final class QDoxSource
      */
     private void outputLink(ContentHandler handler, String ref, String display) throws SAXException {
         String classPart = resolveClassNameFromLink(ref);
-        String memberPart = resolveMemberNameFromLink(ref);
+        String memberPart = StringUtils.substringAfter(ref, "#");
         String displayPart = display;
 
         List attrs = new ArrayList();
@@ -1227,7 +1182,7 @@ public final class QDoxSource
         AttributesImpl saxAttrs = new AttributesImpl();
         for (int i=0; i<attrs.length; i++) {
             if (attrs[i].length == 2) {
-                saxAttrs.addAttribute(EMPTY, attrs[i][0], attrs[i][0], ATTR_TYPE, attrs[i][1]);
+                saxAttrs.addAttribute("", attrs[i][0], attrs[i][0], ATTR_TYPE, attrs[i][1]);
             } else if (attrs[i].length == 5) {
                 saxAttrs.addAttribute(attrs[i][0], attrs[i][1], attrs[i][2], attrs[i][3], attrs[i][4]);
             }
