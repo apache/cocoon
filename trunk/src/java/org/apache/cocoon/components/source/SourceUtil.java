@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.11 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.12 2004/03/01 18:49:14 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -407,6 +407,13 @@ public final class SourceUtil {
         Map resolverParameters = new java.util.HashMap();
 
         resolverParameters.put(SourceResolver.METHOD, method);
+        if (typeParameters != null) {
+            String encoding = typeParameters.getParameter("encoding",
+                 System.getProperties().getProperty("file.encoding", "ISO-8859-1"));
+            if ( encoding != null && !"".equals(encoding) ) {
+                resolverParameters.put(SourceResolver.URI_ENCODING, encoding);                
+            }
+        }
         resolverParameters.put(SourceResolver.URI_PARAMETERS,
                                resourceParameters);
 
