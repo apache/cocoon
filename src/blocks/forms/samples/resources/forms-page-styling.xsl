@@ -67,13 +67,13 @@
         <input type="hidden" name="{$state-widget}" value="{$active}"/>
       </xsl:if>
       <!-- div containing the tabs -->
-      <div class="woody-tabArea">
+      <div class="forms-tabArea">
         <xsl:for-each select="fi:items/fi:*">
           <xsl:variable name="pos" select="position() - 1"/>
-          <span id="{$id}_tab_{$pos}" onclick="woody_showTab('{$id}', {$pos}, {last()}, '{$state-widget}')">
+          <span id="{$id}_tab_{$pos}" onclick="forms_showTab('{$id}', {$pos}, {last()}, '{$state-widget}')">
             <xsl:attribute name="class">
-              <xsl:text>woody-tab</xsl:text>
-              <xsl:if test="$active = $pos"> woody-activeTab</xsl:if>
+              <xsl:text>forms-tab</xsl:text>
+              <xsl:if test="$active = $pos"> forms-activeTab</xsl:if>
             </xsl:attribute>
             <xsl:copy-of select="fi:label/node()"/>
             <xsl:if test="fi:items/*//fi:validation-message">
@@ -85,7 +85,7 @@
       <!-- a div for each of the items -->
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
-        <div class="woody-tabContent" id="{$id}_items_{$pos}">
+        <div class="forms-tabContent" id="{$id}_items_{$pos}">
           <xsl:if test="$active != $pos">
             <xsl:attribute name="style">display:none</xsl:attribute>
           </xsl:if>
@@ -100,7 +100,7 @@
   -->
   <xsl:template match="fi:group[fi:styling/@type='choice']">
     <!-- find the currently selected tab.
-         Thoughts still needed here, such as autogenerating a field in the woodytransformer
+         Thoughts still needed here, such as autogenerating a field in the formstransformer
          to hold this state.
     -->
     <xsl:variable name="active">
@@ -119,7 +119,7 @@
     <fieldset id="{$id}">
       <legend title="{fi:hint}">
         <xsl:apply-templates select="fi:label/node()"/>
-        <select name="{$state-widget}" onchange="woody_showTab('{$id}', this.selectedIndex, {count(fi:items/*)}, '{$state-widget}')">
+        <select name="{$state-widget}" onchange="forms_showTab('{$id}', this.selectedIndex, {count(fi:items/*)}, '{$state-widget}')">
           <xsl:for-each select="fi:items/fi:*">
             <xsl:variable name="pos" select="position() - 1"/>
             <option>

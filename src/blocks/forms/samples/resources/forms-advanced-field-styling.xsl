@@ -19,8 +19,8 @@
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
   <!--+
-      | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | It extends the 'woody-field-styling.xsl' with additional stylings.
+      | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
+      | It extends the 'forms-field-styling.xsl' with additional stylings.
       | The very specific advanced stylings as the calendar or htmlarea (both
       | also need additional JS files) are separated out of this file.
       +-->
@@ -48,7 +48,7 @@
   </xsl:template>
 
   <!--+ This template should not be necessary as this stylesheet "inherits"
-      | all templates from 'woody-field-styling.xsl', but without it, it does
+      | all templates from 'forms-field-styling.xsl', but without it, it does
       | not work for me (using Xalan 2.5.1). It's like adding all methods of
       | a superclass in a subclass and calling everywhere only the super
       | implementation.
@@ -74,7 +74,7 @@
       <xsl:apply-templates select="node()"/>
     </div>
     <script type="text/javascript">
-      var helpWin<xsl:value-of select="$id"/> = woody_createPopupWindow('help<xsl:value-of select="$id"/>');
+      var helpWin<xsl:value-of select="$id"/> = forms_createPopupWindow('help<xsl:value-of select="$id"/>');
     </script>
     <a id="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="resources/help.gif"/></a>
   </xsl:template>
@@ -154,7 +154,7 @@
         </tr>
       </table>
       <script type="text/javascript">
-        var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
+        var opt<xsl:value-of select="generate-id()"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>');
       </script>
     </span>
   </xsl:template>

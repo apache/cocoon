@@ -19,7 +19,7 @@
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
   <!--+
-      | This stylesheet is designed to be included by 'woody-advanced-styling.xsl'.
+      | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -30,17 +30,17 @@
     <script src="{$resources-uri}/mattkruse-lib/date.js" type="text/javascript"/>
     <script type="text/javascript">
       // Setup calendar
-      var woody_calendar = CalendarPopup('woody_calendarDiv');
-      woody_calendar.setWeekStartDay(1);
-      woody_calendar.showYearNavigation();
-      woody_calendar.showYearNavigationInput();
-      woody_calendar.setCssPrefix("woody_");
+      var forms_calendar = CalendarPopup('forms_calendarDiv');
+      forms_calendar.setWeekStartDay(1);
+      forms_calendar.showYearNavigation();
+      forms_calendar.showYearNavigationInput();
+      forms_calendar.setCssPrefix("forms_");
     </script>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms-calendar.css"/>
   </xsl:template>
 
   <xsl:template match="body" mode="woody-calendar">
-    <div id="woody_calendarDiv"/>
+    <div id="forms_calendarDiv"/>
   </xsl:template>
 
   <!--+
@@ -64,7 +64,7 @@
     
     <!-- calendar popup -->
     <a href="#" name="{generate-id()}" id="{generate-id()}"
-       onClick="woody_calendar.select(woody_getForm(this)['{@id}'],'{generate-id()}','{$format}'); return false;">
+       onClick="forms_calendar.select(forms_getForm(this)['{@id}'],'{generate-id()}','{$format}'); return false;">
       <img src="{$resources-uri}/cal.gif" border="0" alt="Calendar"/>
     </a>
 
