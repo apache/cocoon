@@ -632,9 +632,9 @@ public class XPointerFrameworkParserTokenManager
         SimpleCharStream stream,
         int lexState) {
         this(stream);
-        SwitchTo(lexState);
+        switchTo(lexState);
     }
-    public void ReInit(SimpleCharStream stream) {
+    public void reInit(SimpleCharStream stream) {
         jjmatchedPos = jjnewStateCnt = 0;
         curLexState = defaultLexState;
         input_stream = stream;
@@ -646,11 +646,11 @@ public class XPointerFrameworkParserTokenManager
         for (i = 7; i-- > 0;)
             jjrounds[i] = 0x80000000;
     }
-    public void ReInit(SimpleCharStream stream, int lexState) {
-        ReInit(stream);
-        SwitchTo(lexState);
+    public void reInit(SimpleCharStream stream, int lexState) {
+        reInit(stream);
+        switchTo(lexState);
     }
-    public void SwitchTo(int lexState) {
+    public void switchTo(int lexState) {
         if (lexState >= 2 || lexState < 0)
             throw new TokenMgrError(
                 "Error: Ignoring invalid lexical state : "
@@ -665,7 +665,7 @@ public class XPointerFrameworkParserTokenManager
         Token t = Token.newToken(jjmatchedKind);
         t.kind = jjmatchedKind;
         String im = jjstrLiteralImages[jjmatchedKind];
-        t.image = (im == null) ? input_stream.GetImage() : im;
+        t.image = (im == null) ? input_stream.getImage() : im;
         t.beginLine = input_stream.getBeginLine();
         t.beginColumn = input_stream.getBeginColumn();
         t.endLine = input_stream.getEndLine();
@@ -686,7 +686,7 @@ public class XPointerFrameworkParserTokenManager
 
         EOFLoop : for (;;) {
             try {
-                curChar = input_stream.BeginToken();
+                curChar = input_stream.beginToken();
             } catch (java.io.IOException e) {
                 jjmatchedKind = 0;
                 matchedToken = jjFillToken();
@@ -722,7 +722,7 @@ public class XPointerFrameworkParserTokenManager
                 input_stream.backup(1);
             } catch (java.io.IOException e1) {
                 EOFSeen = true;
-                error_after = curPos <= 1 ? "" : input_stream.GetImage();
+                error_after = curPos <= 1 ? "" : input_stream.getImage();
                 if (curChar == '\n' || curChar == '\r') {
                     error_line++;
                     error_column = 0;
@@ -731,7 +731,7 @@ public class XPointerFrameworkParserTokenManager
             }
             if (!EOFSeen) {
                 input_stream.backup(1);
-                error_after = curPos <= 1 ? "" : input_stream.GetImage();
+                error_after = curPos <= 1 ? "" : input_stream.getImage();
             }
             throw new TokenMgrError(
                 EOFSeen,

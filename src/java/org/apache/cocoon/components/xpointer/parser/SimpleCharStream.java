@@ -169,7 +169,7 @@ public class SimpleCharStream {
         }
     }
 
-    public char BeginToken() throws java.io.IOException {
+    public char beginToken() throws java.io.IOException {
         tokenBegin = -1;
         char c = readChar();
         tokenBegin = bufpos;
@@ -295,7 +295,7 @@ public class SimpleCharStream {
     public SimpleCharStream(java.io.Reader dstream) {
         this(dstream, 1, 1, 4096);
     }
-    public void ReInit(
+    public void reInit(
         java.io.Reader dstream,
         int startline,
         int startcolumn,
@@ -315,15 +315,15 @@ public class SimpleCharStream {
         bufpos = -1;
     }
 
-    public void ReInit(
+    public void reInit(
         java.io.Reader dstream,
         int startline,
         int startcolumn) {
-        ReInit(dstream, startline, startcolumn, 4096);
+        reInit(dstream, startline, startcolumn, 4096);
     }
 
-    public void ReInit(java.io.Reader dstream) {
-        ReInit(dstream, 1, 1, 4096);
+    public void reInit(java.io.Reader dstream) {
+        reInit(dstream, 1, 1, 4096);
     }
     public SimpleCharStream(
         java.io.InputStream dstream,
@@ -348,28 +348,28 @@ public class SimpleCharStream {
         this(dstream, 1, 1, 4096);
     }
 
-    public void ReInit(
+    public void reInit(
         java.io.InputStream dstream,
         int startline,
         int startcolumn,
         int buffersize) {
-        ReInit(
+        reInit(
             new java.io.InputStreamReader(dstream),
             startline,
             startcolumn,
             buffersize);
     }
 
-    public void ReInit(java.io.InputStream dstream) {
-        ReInit(dstream, 1, 1, 4096);
+    public void reInit(java.io.InputStream dstream) {
+        reInit(dstream, 1, 1, 4096);
     }
-    public void ReInit(
+    public void reInit(
         java.io.InputStream dstream,
         int startline,
         int startcolumn) {
-        ReInit(dstream, startline, startcolumn, 4096);
+        reInit(dstream, startline, startcolumn, 4096);
     }
-    public String GetImage() {
+    public String getImage() {
         if (bufpos >= tokenBegin)
             return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
         else
@@ -377,7 +377,7 @@ public class SimpleCharStream {
                 + new String(buffer, 0, bufpos + 1);
     }
 
-    public char[] GetSuffix(int len) {
+    public char[] getSuffix(int len) {
         char[] ret = new char[len];
 
         if ((bufpos + 1) >= len)
@@ -395,7 +395,7 @@ public class SimpleCharStream {
         return ret;
     }
 
-    public void Done() {
+    public void done() {
         buffer = null;
         bufline = null;
         bufcolumn = null;
