@@ -45,7 +45,7 @@
         INFO:         prints all level of log messages except DEBUG ones.
         WARN:         prints all level of log messages except DEBUG and INFO ones.
         ERROR:        prints all level of log messages except DEBUG, INFO and WARN ones.
-        FATAL-ERRROR: prints only log messages of this level
+        FATAL-ERROR: prints only log messages of this level
     -->
     <init-param>
       <param-name>log-level</param-name>
