@@ -53,12 +53,14 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             df.addChild(factory);
             manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
                                  StandaloneServiceSelector.class.getName(), 
-                                 df);
+                                 df,
+                                 null);
         }
         if ( this.addSourceResolver() ) {
             manager.addComponent(SourceResolver.ROLE, 
                     SourceResolverImpl.class.getName(), 
-                    new DefaultConfiguration("", "-"));
+                    new DefaultConfiguration("", "-"),
+                    null);
         }
     }
     

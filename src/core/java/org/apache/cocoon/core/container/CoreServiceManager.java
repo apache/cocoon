@@ -346,7 +346,8 @@ public class CoreServiceManager
 
                         handler = this.getComponentHandler(role,
                                                        info.getServiceClassName(),
-                                                       configuration);
+                                                       configuration.getChild(role),
+                                                       info);
 
                         handler.initialize();
                     } catch (ServiceException se) {
@@ -458,7 +459,8 @@ public class CoreServiceManager
      */
     public void addComponent( String role,
                               String className,
-                              Configuration configuration )
+                              Configuration configuration,
+                              ComponentInfo info)
     throws ConfigurationException {
         if( this.initialized ) {
             throw new IllegalStateException("Cannot add components to an initialized CoreServiceManager." );
@@ -482,7 +484,7 @@ public class CoreServiceManager
         }
         
         try {
-            handler = this.getComponentHandler(role, className, configuration);
+            handler = this.getComponentHandler(role, className, configuration, info);
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
@@ -585,10 +587,17 @@ public class CoreServiceManager
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
     private ComponentHandler getComponentHandler( final String role,
-                                                    final String className,
-                                                    final Configuration configuration)
+                                                  final String className,
+                                                  final Configuration configuration,
+                                                  final ComponentInfo baseInfo)
     throws Exception {
-        ComponentInfo info = new ComponentInfo();
+        // FIXME - we should ensure that we always get an info
+        ComponentInfo info;
+        if ( baseInfo != null ) {
+            info = baseInfo.duplicate();
+        } else {
+            info = new ComponentInfo();
+        }
         info.setConfiguration(configuration);
         info.setServiceClassName(className);
         
@@ -645,7 +654,7 @@ public class CoreServiceManager
                     role = role + "/" + name;
                 }
 
-                this.addComponent(role, className, componentConfig);
+                this.addComponent(role, className, componentConfig, null);
             }
         }
     }

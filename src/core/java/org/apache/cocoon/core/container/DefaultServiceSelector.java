@@ -84,6 +84,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
         for (int i = 0; i < instances.length; i++) {
 
             Configuration instance = instances[i];
+            ComponentInfo info = null;
 
             String key = instance.getAttribute("name");
 
@@ -93,7 +94,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             if (compInstanceName == null) {
                 // component-instance implicitly defined by the presence of the 'class' attribute
                 if (classAttr == null) {
-                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 } else {
                     className = classAttr;
@@ -104,7 +105,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
                 if (compInstanceName.equals(instance.getName())) {
                     className = (classAttr == null) ? null : classAttr;
                 } else {
-                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 }
             }
@@ -118,7 +119,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             }
             
             // Add this component in the manager
-            this.manager.addComponent(this.rolePrefix + key, className, instance);
+            this.manager.addComponent(this.rolePrefix + key, className, instance, info);
         }
         
         // Register default key, if any

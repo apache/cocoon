@@ -97,9 +97,11 @@ implements ComponentHandler {
 
         if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
-            info.setModel(ComponentInfo.MODEL_POOLED);
-            if ( ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED.equals(info.getConfiguration().getAttribute("model", null))) {
-                info.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
+            if ( info.getModel() != ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED ) {
+                info.setModel(ComponentInfo.MODEL_POOLED);
+                if ( ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED.equals(info.getConfiguration().getAttribute("model", null))) {
+                    info.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
+                }
             }
         }
 
