@@ -9,9 +9,9 @@
     <para>The number was indeed: ${random}</para>
     <para>It took you ${guesses} tries.</para>
 
-	<para/>
-	
-	<para><a href="guess.flow">Play again</a></para> 
+  <para/>
+  
+  <para><a href="guess.flow">Play again</a></para> 
     
   </content>
 

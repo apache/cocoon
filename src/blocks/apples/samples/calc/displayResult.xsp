@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS: $Id: displayResult.xsp,v 1.1 2003/08/29 22:22:05 mpo Exp $
+    | CVS: $Id: displayResult.xsp,v 1.2 2003/11/18 01:21:56 crossley Exp $
     | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
     | Date: March 23, 2002
     +-->
@@ -15,20 +15,20 @@
       <form action="./calc.flow" method="post">
         <para>a =
           <a>
-	        <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=NumberA"</xsp:expr></xsp:attribute>
-    	    <strong><jpath:value-of select="a"/></strong>
+          <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=NumberA"</xsp:expr></xsp:attribute>
+          <strong><jpath:value-of select="a"/></strong>
           </a> 
         </para>
         <para>b =
           <a>
-	        <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=NumberB"</xsp:expr></xsp:attribute>
-    	    <strong><jpath:value-of select="b"/></strong>
+          <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=NumberB"</xsp:expr></xsp:attribute>
+          <strong><jpath:value-of select="b"/></strong>
           </a> 
         </para> 
         <para>Operator =
           <a>
-	        <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=Operator"</xsp:expr></xsp:attribute>
-    	    <strong><jpath:value-of select="operator"/></strong>
+          <xsp:attribute name="href"><xsp:expr><jpath:continuation/>+".continue?change=Operator"</xsp:expr></xsp:attribute>
+          <strong><jpath:value-of select="operator"/></strong>
           </a> 
         </para> 
 
