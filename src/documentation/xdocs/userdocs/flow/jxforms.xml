@@ -16,14 +16,14 @@
    <link href="http://jakarta.apache.org/commons/beanutils/api/org/apache/commons/beanutils/DynaBean.html">DynaBeans</link>, and JavaScript objects.
     </p>
 
-  <s2 title="Table of Contents">
+
    <p><link href="#Overview">Overview</link></p>
    <p><link href="#Controls">Form Controls</link></p>
    <p><link href="#JSAPI">JavaScript API</link></p>
    <p><link href="#Sitemap">Sitemap</link></p>
    <p><link href="#Validation">Validation</link></p>
    <p><link href="#HTML">Conversion to HTML</link></p>
-  </s2>
+
   </s1>
   <anchor id="Overview"/><s1 title="Overview">
 
@@ -240,6 +240,10 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;input&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-input">input</link> element. It allows the user to do free-form data entry.</p>
  <p>Example:</p>
       <source><![CDATA[
+<input ref="order/shipTo/street" class="streetAddress">
+  <label>Street</label>
+  <hint>Please enter the number and street name</hint>
+</input>
       ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
@@ -254,6 +258,10 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;secret&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-secret">secret</link> element. It is is used for entering information that is considered sensitive, and thus not echoed to a visual or aural display as it is being entered, e.g., password entry. </p>
  <p>Example:</p>
       <source><![CDATA[
+<secret ref="/login/password">
+  <label>Password</label>
+  <hint>The password you enter will not be displayed.</hint>
+</secret>
       ]]></source>
  <p></p>
 <p>It supports the following attributes:</p>
@@ -269,6 +277,10 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;textarea&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-textarea">textarea</link> element. </p>
  <p>Example:</p>
       <source><![CDATA[
+<textarea ref="message/body" class="messageBody">
+  <label>Message Body</label>
+  <hint>Enter the text of your message here</hint>
+</textarea>
       ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
@@ -282,6 +294,9 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;output&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-output">output</link> element. It is used to display values from the model, but provides no means to enter or modify those values.</p>
  <p>Example:</p>
       <source><![CDATA[
+I charged you -
+<output ref="order/totalPrice"/>
+- and here is why
       ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
@@ -298,6 +313,23 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">select</link> element. </p>
  <p>Example:</p>
       <source><![CDATA[
+<select ref="my:flavors">
+  <label>Flavors</label>
+  <choices>
+    <item>
+      <label>Vanilla</label>
+      <value>v</value>
+    </item>
+    <item>
+      <label>Strawberry</label>
+      <value>s</value>
+    </item>
+    <item>
+      <label>Chocolate</label>
+      <value>c</value>
+    </item>
+  </choices>
+</select>
       ]]></source>
  <p></p>
 
@@ -318,6 +350,21 @@ This form control allows the user to make a single selection from multiple choic
  </ul>
  <p>Example:</p>
       <source><![CDATA[
+<select1 ref="my:flavor">
+  <label>Flavor</label>
+  <item>
+    <label>Vanilla</label>
+    <value>v</value>
+  </item>
+  <item>
+    <label>Strawberry</label>
+    <value>s</value>
+  </item>
+  <item>
+    <label>Chocolate</label>
+    <value>c</value>
+  </item>
+</select1>
       ]]></source>
  <p></p>
  <p/>
@@ -326,6 +373,12 @@ This form control allows the user to make a single selection from multiple choic
  <p>JXForms <code>&lt;submit&gt;</code> differs from <link href="http://www.w3.org/TR/xforms/slice8.html#ui-submit">that</link> of W3C XForms. </p>
  <p>Example:</p>
       <source><![CDATA[
+<submit id="timecard" continuation="forward">
+  <label>Submit Timecard</label>
+</submit>
+<submit id="prev" continuation="back">
+  <label>Go Back</label>
+</submit>
       ]]></source>
  <p></p>
 
@@ -336,13 +389,26 @@ This form control allows the user to make a single selection from multiple choic
    <li><code>class</code></li>
  </ul>
  <p>
+The required <code>id</code> attribute specifies the unique id of this <code>submit</code> element. This value is returned by the <link href="getSubmitId">getSubmitId</link> function when this element is used to submit a form. The optional <code>continuation</code> attribute provides support for automated back/forward navigation in multipage forms. A value of <code>forward</code> (the default) causes the form to be submitted normally. A value of <code>back</code> causes the previous page of the form to be displayed.
  </p>
 </s2>
  <s2 title="group">
- <p>JXForms <code>&lt;group&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-group">group</link> element.</p>
+ <p>JXForms <code>&lt;group&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-group">group</link> element. It is used as a container for defining a hierarchy of form controls. Groups can be nested to create complex hierarchies.</p> 
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source>
+<group ref="address">
+  <label>Shipping Address</label>
+  <input ref="line_1">
+    <label>Address line 1</label>
+  </input>
+  <input ref="line_2">
+    <label>Address line 2</label>
+  </input>
+  <input ref="postcode">
+    <label>Postcode</label>
+  </input>
+</group>
+     ]]></source>
  <p></p>
 
  <p>It supports the following attributes:</p>
@@ -355,9 +421,18 @@ This form control allows the user to make a single selection from multiple choic
  </p>
  </s2>
  <s2 title="repeat">
- <p>JXForms <code>&lt;repeat&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-repeat">repeat</link> element.</p>
+ <p>JXForms <code>&lt;repeat&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-repeat">repeat</link> element. The repeat element iterates over the collection of objects defined by its <code>nodeset</code> attribute.</p>
  <p>Example:</p>
       <source><![CDATA[
+<xf:repeat nodeset="/cartItems">
+  <tr bgcolor="#FFFF88">
+    <td>
+      <b>
+        <xf:output ref="./itemId"/>
+      </b>
+    </td>
+  </tr>
+</xf:repeat>
       ]]></source>
  <p></p>
 <p> It supports the following attributes:</p>
@@ -365,11 +440,20 @@ This form control allows the user to make a single selection from multiple choic
    <li><code>nodeset</code></li>
  </ul>
  <p/>
+ <p>
+ </p>
  </s2>
  <s2 title="itemset">
  <p>JXForms <code>&lt;itemset&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-common-elements-itemset">itemset</link> element. It is used for the dynamic creation of selections within the <code>select</code> and <code>select1</code> elements.</p>
  <p>Example:</p>
       <source><![CDATA[
+<select ref="/order">
+  <label>Flavors</label>
+  <itemset nodeset="/flavors/flavor">
+    <label ref="/description"/>
+    <value ref="/description"/>
+  </itemset>
+</select>
       ]]></source>
  <p></p>
 <p> It supports the following attributes:</p>
@@ -460,6 +544,12 @@ This form control allows the user to make a single selection from multiple choic
       </p>
       <p>Returns an iterator over a nodeset value of an xpath expression evaluated
  against the model of this form</p>
+    </s3>
+    <s3 title = "getSubmitId"><anchor id="getSubmitId"/>
+      <p>
+      <em>Function</em> <code>[String] getSubmitId()</code>
+      </p>
+       <p>Get the id of the submit element used to submit this form.</p>
     </s3>
     <s3 title = "finish"><anchor id="finish"/>
       <p>
