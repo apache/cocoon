@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.7 2003/05/23 09:18:48 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.8 2003/06/04 09:25:53 upayavira Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -757,6 +757,9 @@ public class Cocoon
      */
     public int getActiveRequestCount() {
         return activeRequestCount;
+    }
+    public ExcaliburComponentManager getComponentManager() {
+        return this.componentManager;
     }
 }
 
