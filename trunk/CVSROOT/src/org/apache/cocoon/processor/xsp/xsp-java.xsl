@@ -136,6 +136,15 @@
     xspNodeStack.push(xspParentNode);
     xspCurrentNode =
       document.createElement("<xsl:value-of select="@name"/>");
+
+    <!-- Add namespace declarations -->
+    <xsl:for-each select="namespace::*">
+      ((Element) xspCurrentNode).setAttribute(
+        "xmlns:<xsl:value-of select="local-name(.)"/>",
+        "<xsl:value-of select="."/>"
+      );
+    </xsl:for-each>
+
     xspParentNode.appendChild(xspCurrentNode);
 
     <xsl:apply-templates/>
@@ -226,6 +235,15 @@
     xspParentNode.appendChild(xspCurrentNode);
 
     <xsl:apply-templates select="@*"/>
+
+    <!-- Add namespace declarations -->
+    <xsl:for-each select="namespace::*">
+      ((Element) xspCurrentNode).setAttribute(
+        "xmlns:<xsl:value-of select="local-name(.)"/>",
+        "<xsl:value-of select="."/>"
+      );
+    </xsl:for-each>
+
     <xsl:apply-templates/>
 
     ((Element) xspCurrentNode).normalize();
