@@ -39,15 +39,18 @@ implements Source, TraversableSource {
     final protected Set children;
     final protected ContextSourceFactory factory;
     final protected String path;
+    final protected String scheme;
     
     public TraversableContextSource(Source source, 
                                     Set children, 
                                     ContextSourceFactory factory,
-                                    String path) {
+                                    String path,
+                                    String scheme) {
         this.wrappedSource = source;
         this.children = children;
         this.factory = factory;
         this.path = path;
+        this.scheme = scheme;
     }
 
     /* (non-Javadoc)
@@ -90,7 +93,7 @@ implements Source, TraversableSource {
      * @see org.apache.excalibur.source.Source#getScheme()
      */
     public String getScheme() {
-        return this.wrappedSource.getScheme();
+        return this.scheme;
     }
     
     /* (non-Javadoc)

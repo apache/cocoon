@@ -106,6 +106,7 @@ implements SourceFactory,
 
             // Remove the protocol and the first '/'
             final int pos = location.indexOf(":/");
+            final String scheme = location.substring(0, pos);
             final String path = location.substring(pos+1);
             
             // fix for #24093, we don't give access to files outside the context:
@@ -131,7 +132,7 @@ implements SourceFactory,
                      && !(source instanceof TraversableSource) ) {
                     final Set children = this.servletContext.getResourcePaths(path + '/');
                     if ( children != null ) {
-                        source = new TraversableContextSource(source, children, this, path);
+                        source = new TraversableContextSource(source, children, this, path, scheme);
                     }
                 }
                 return source;                
