@@ -65,7 +65,7 @@ import java.util.List;
  * children nodes.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNodeBuilder.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: AbstractParentProcessingNodeBuilder.java,v 1.2 2003/10/29 14:45:53 vgritsenko Exp $
  */
 
 public abstract class AbstractParentProcessingNodeBuilder extends AbstractProcessingNodeBuilder implements Configurable {
@@ -106,9 +106,9 @@ public abstract class AbstractParentProcessingNodeBuilder extends AbstractProces
 
         // Is this element to be ignored ?
         if (ignoredChildren != null && ignoredChildren.contains(name)) {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Element '" + name + "' is ignored for building children of element '" +
-                    child.getName() + "'");
+                                  child.getName() + "'");
             }
 
             return false;
