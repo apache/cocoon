@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FormsTemplateTransformer extends EffectWidgetReplacingPipe implements Transformer {
 

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface WidgetDefinition {
 

@@ -44,7 +44,7 @@ import org.xml.sax.InputSource;
  * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package </a>.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class JXPathBindingManager extends AbstractLogEnabled implements
         BindingManager, Contextualizable, Serviceable, Disposable, Initializable, Configurable,

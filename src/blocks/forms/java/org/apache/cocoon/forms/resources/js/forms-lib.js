@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Cocoon forms.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 // Handlers that are to be called in the document's "onload" event
