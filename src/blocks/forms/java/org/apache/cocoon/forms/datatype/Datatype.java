@@ -18,6 +18,8 @@ package org.apache.cocoon.forms.datatype;
 import org.outerj.expression.ExpressionContext;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.xml.sax.SAXException;
+import org.xml.sax.ContentHandler;
 
 import java.util.Locale;
 
@@ -36,7 +38,7 @@ import java.util.Locale;
  * influence on the {@link #validate(Object, ExpressionContext)} method, which should in that case be passed
  * an array of objects. See also {@link #isArrayType()}.
  * 
- * @version $Id: Datatype.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id: Datatype.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
  */
 public interface Datatype {
     /**
@@ -102,4 +104,9 @@ public interface Datatype {
      * Returns the factory that built this datatype.
      */
     DatatypeBuilder getBuilder();
+
+    /**
+     * Generates a bit of information about this datatype.
+     */
+    void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException;
 }
