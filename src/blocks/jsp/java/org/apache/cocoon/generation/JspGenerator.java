@@ -50,36 +50,31 @@
 */
 package org.apache.cocoon.generation;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.jsp.JSPEngine;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.avalon.framework.component.Component;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.jsp.JSPEngine;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
- * Allows JSP to be used as a generator. Builds upon the JSP servlet
+ * Allows JSP to be used as a generator.  Builds upon the JSP servlet
  * functionality - overrides the output method in order to pipe the
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.8 2003/10/22 20:26:22 joerg Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.9 2003/10/22 20:31:19 joerg Exp $
  */
 public class JspGenerator extends ServletGenerator {
-
-    protected String jspEncoding = null;
 
     /**
      * Generate XML data from JSP.
@@ -101,16 +96,6 @@ public class JspGenerator extends ServletGenerator {
         JSPEngine engine = null;
         SAXParser parser = null;
         try {
-            Source inputSource = null;
-            try {
-                inputSource = super.resolver.resolveURI(this.source);
-                inputSource.getURI();
-            } catch (SourceException se) {
-                throw SourceUtil.handle("Error during resolving of '" + this.source + "'.", se);
-            } finally {
-                super.resolver.release(inputSource);
-            }
-            
             // TODO (KP): Should we exclude not supported protocols, say 'context'?
             String url = this.source;
             // absolute path is processed as is
@@ -118,12 +103,8 @@ public class JspGenerator extends ServletGenerator {
                 // get current request path
                 String servletPath = httpRequest.getServletPath();
                 // remove sitemap URI part
-                String sitemapURI = this.request.getSitemapURI();
-                if (servletPath.indexOf(sitemapURI) != -1) {
-                    servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
-                } else {
-                    servletPath = servletPath.substring(0, servletPath.lastIndexOf("/") + 1);
-                }
+                String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
+                servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
                 url = servletPath + url;
             }
 
