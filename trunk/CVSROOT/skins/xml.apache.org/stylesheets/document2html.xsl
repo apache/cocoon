@@ -175,7 +175,7 @@
         <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
       </tr>
      </table>
-     <table border="0" width="100%" cellspacing="0" cellpadding="0">
+     <table border="0" width="98%" cellspacing="0" cellpadding="0">
       <tr>
        <td>
         <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
@@ -274,7 +274,7 @@
         <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
       </tr>
      </table>
-     <table border="0" width="90%" cellspacing="0" cellpadding="0">
+     <table border="0" width="85%" cellspacing="0" cellpadding="0">
       <tr>
        <td>
         <font size="-3" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
