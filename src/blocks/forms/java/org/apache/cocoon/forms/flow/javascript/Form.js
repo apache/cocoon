@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.13 2004/05/18 15:32:27 joerg Exp $
+ * @version CVS $Id: Form.js,v 1.14 2004/05/28 12:20:20 vgritsenko Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -40,7 +40,7 @@ function Form(uri) {
         this.eventHandler = null;
         // TODO : do we keep this ?
         this.formWidget = new Widget(this.form);
-        
+
     } finally {
         cocoon.releaseComponent(formMgr);
         if (src != null) resolver.release(src);
@@ -60,7 +60,7 @@ Form.prototype.getWidget = function(name) {
     if (name != undefined) {
     	throw "getWidget(id) has been deprecated.\n" +
     	      "Consider using getChild(id) or lookupWidget(path) instead."
-    } 
+    }
     return this.form;
 }
 
@@ -100,7 +100,7 @@ Form.prototype.showForm = function(uri, bizData) {
     if (this.locale == null)
         this.locale = java.util.Locale.getDefault();
     bizData["locale"] = this.locale;
-    
+
     // Keep the first continuation that will be created as the result of this function
     var result = null;
 
@@ -115,30 +115,30 @@ Form.prototype.showForm = function(uri, bizData) {
     do {
         var k = cocoon.sendPageAndWait(uri, bizData);
         if (result == null) result = k;
-        
+
         var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
 
         // Prematurely add the bizData as in the object model so that event listeners can use it
         // (the same is done by cocoon.sendPage())
         // FIXME: hack because object model isn't available in flowscript.
-        var objectModel = org.apache.cocoon.components.CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        var objectModel = org.apache.cocoon.components.container.CocoonComponentManager.getCurrentEnvironment().getObjectModel();
         org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
 
         finished = this.form.process(formContext);
         if (finished) {
             this.isValid = this.form.isValid();
         }
-        
+
         // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
         // value with the continuation. We don't do it since there should me not much pratical consequences
         // except a sudden change of repeaters whose size changed from a continuation to another.
-        
+
     } while(!finished);
 
     var widget = this.form.getSubmitWidget();
     // Can be null on "normal" submit
-    this.submitId = widget == null ? null : widget.getId(); 
-    
+    this.submitId = widget == null ? null : widget.getId();
+
     return result;
 }
 
