@@ -39,8 +39,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.caching.validity.EventValidity;
-import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.LockableSource;
 import org.apache.cocoon.components.source.VersionableSource;
@@ -82,7 +80,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.19 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SlideSource.java,v 1.20 2004/03/27 22:25:10 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -104,7 +102,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     private Macro m_macro;
 
     /* Source specifics */
-    private String m_scheme = "slide";
+    private String m_scheme;
     private String m_path;
     private String m_scope;
     private String m_uri;
@@ -116,7 +114,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     
     private String m_principal;
     private SourceValidity m_validity;
-    private boolean m_useEventCaching;
 
     private SlideSourceOutputStream m_outputStream;
 
@@ -132,8 +129,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                        String scope,
                        String path,
                        String principal, 
-                       String version,
-                       boolean useEventCaching) {
+                       String version) {
 
         m_nat = nat;
         m_scheme = scheme;
@@ -152,7 +148,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         if (version != null) {
             m_version = new NodeRevisionNumber(version);
         }
-        m_useEventCaching = useEventCaching;
     }
     
     /**
@@ -268,20 +263,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @return Validity for the source.
      */
     public SourceValidity getValidity() {
-        try {
-            if (m_validity == null) {
-                if (m_useEventCaching) {
-                    m_validity = new EventValidity(
-                        new NamedEvent(m_nat.getName() + m_uri));
-                }
-                else if (m_descriptor != null) {
-                    m_validity = new TimeStampValidity(
-                        m_descriptor.getLastModifiedAsDate().getTime());
-                }
+        if (m_validity == null && m_descriptor != null) {
+            final long lastModified = getLastModified();
+            if (lastModified > 0) {
+                m_validity = new TimeStampValidity(lastModified);                
             }
-        } catch (Exception e) {
-            getLogger().debug("Could not create SourceValidity", e);
-            return null;
         }
         return m_validity;
     }
@@ -291,9 +277,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * content has changed.
      */
     public void refresh() {
-        if (!m_useEventCaching) {
-            m_validity = null;
-        }
+        m_validity = null;
     }
 
     /**
@@ -446,7 +430,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     private Source getChildByPath(String path) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null,m_useEventCaching);
+        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null);
         child.enableLogging(getLogger());
         child.contextualize(m_context);
         child.service(m_manager);
@@ -496,7 +480,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             parentPath = m_path.substring(0,index);
         }
-        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null,m_useEventCaching);
+        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null);
         parent.enableLogging(getLogger());
         parent.contextualize(m_context);
         parent.service(m_manager);
