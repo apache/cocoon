@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * 
  * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.1 2003/10/22 20:22:07 sylvain Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.2 2003/11/03 23:16:12 ugo Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -77,10 +77,27 @@ public class FlowJXPathSelectionList implements SelectionList {
     private String valuePath;
     private String labelPath;
     private Datatype datatype;
+    private Object model;
     
     public FlowJXPathSelectionList(Context context, String listPath, String valuePath, String labelPath, Datatype datatype) {
         this.context = context;
         this.listPath = listPath;
+        this.valuePath = valuePath;
+        this.labelPath = labelPath;
+        this.datatype = datatype;
+    }
+    
+    /**
+     * Builds a dynamic selection list from an in-memory collection.
+     * @see org.apache.cocoon.woody.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
+     * @param model The collection used as a model for the selection list. 
+     * @param keyPath An XPath expression referring to the attribute used
+     * to populate the values of the list's items. 
+     * @param labelPath An XPath expression referring to the attribute used
+     * to populate the labels of the list's items.
+     */
+    public FlowJXPathSelectionList(Object model, String valuePath, String labelPath, Datatype datatype) {
+        this.model = model;
         this.valuePath = valuePath;
         this.labelPath = labelPath;
         this.datatype = datatype;
@@ -91,21 +108,32 @@ public class FlowJXPathSelectionList implements SelectionList {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+
+        JXPathContext ctx = null;
+        Iterator iter = null;
+        if (model == null) {
+            Object flowData = FlowHelper.getContextObject(ContextHelper.getObjectModel(this.context));
         
-        Object flowData = FlowHelper.getContextObject(ContextHelper.getObjectModel(this.context));
+            if (flowData == null) {
+                throw new SAXException("No flow data to produce selection list");
+            }
+            // Move to the list location
+            ctx = JXPathContext.newContext(flowData);
         
-        if (flowData == null) {
-            throw new SAXException("No flow data to produce selection list");
+            // Iterate on all elements of the list
+            iter = ctx.iteratePointers(this.listPath);
+        }
+        else {
+            // Move to the list location
+            ctx = JXPathContext.newContext(model);
+        
+            // Iterate on all elements of the list
+            iter = ctx.iteratePointers(".");
         }
         
         // Start the selection-list
         contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
         
-        // Move to the list location
-        JXPathContext ctx = JXPathContext.newContext(flowData);
-        
-        // Iterate on all elements of the list
-        Iterator iter = ctx.iteratePointers(this.listPath);
         while(iter.hasNext()) {
             
             // Get a context on the current item
