@@ -221,9 +221,12 @@
         the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
    </s2>
    <s2 title="Source Resolver">
-    <p>The SourceResolver is now an Avalon component
-      which can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em>.
-      The package name of the component is <em>org.apache.excalibur.source</em>.</p>
+    <p>
+      Every sitemap component gets a SourceResolver from the sitemap processor.
+      For all other components that need access to a SourceResolver, the SourceResolver 
+      is now an Avalon component that can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em>.
+      The package name of the component is <em>org.apache.excalibur.source</em>.
+    </p>
    </s2>
    <s2 title="XSLT Processor">
     <p>There are some issues related to JDK 1.4.</p>
