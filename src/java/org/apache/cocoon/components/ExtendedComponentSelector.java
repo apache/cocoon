@@ -63,7 +63,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.7 2003/11/06 19:18:32 joerg Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.8 2003/12/22 13:54:27 joerg Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -214,7 +214,7 @@ public class ExtendedComponentSelector
         // Pass a copy of the top-level object to superclass so that
         // our name is properly initialized
         // FIXME : could be avoided if parent m_role was protected or had protected accessors
-        DefaultConfiguration temp = new DefaultConfiguration(config.getName(), config.getLocation());
+        DefaultConfiguration temp = new DefaultConfiguration(config.getName(), this.location);
         if (config.getAttribute("role", null) != null) {
             temp.setAttribute("role", this.roleName);
         }
