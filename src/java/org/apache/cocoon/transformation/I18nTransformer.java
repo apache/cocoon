@@ -44,7 +44,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.i18n.Bundle;
 import org.apache.cocoon.i18n.BundleFactory;
@@ -246,7 +247,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.26 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.27 2004/07/13 16:00:12 sylvain Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -2151,17 +2152,17 @@ public class I18nTransformer extends AbstractTransformer
      * usage. It is important that releaseCatalog is called when the transformer is recycled.
      */
     private final class CatalogueInfo {
-        PreparedVariableResolver name;
-        PreparedVariableResolver[] locations;
+        VariableResolver name;
+        VariableResolver[] locations;
         String resolvedName;
         String[] resolvedLocations;
         Bundle catalogue;
 
         public CatalogueInfo(String name, String[] locations) throws PatternException {
-            this.name = new PreparedVariableResolver(name, manager);
-            this.locations = new PreparedVariableResolver[locations.length];
+            this.name = VariableResolverFactory.getResolver(name, manager);
+            this.locations = new VariableResolver[locations.length];
             for (int i=0; i < locations.length; ++i) {
-                this.locations[i] = new PreparedVariableResolver(locations[i], manager);
+                this.locations[i] = VariableResolverFactory.getResolver(locations[i], manager);
             }
         }
 
