@@ -341,24 +341,23 @@
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding
       will be assumed.
+      Since the servlet specification requires that the ISO-8859-1 encoding
+      is used (by default), you should never change this value unless
+      you have a buggy servlet container.
     -->
-    <!--
     <init-param>
       <param-name>container-encoding</param-name>
-      <param-value>utf-8</param-value>
+      <param-value>ISO-8859-1</param-value>
     </init-param>
-    -->
 
     <!--
       Set form encoding. This will be the character set used to decode request
       parameters. If not set the ISO-8859-1 encoding will be assumed.
     -->
-    <!--
     <init-param>
       <param-name>form-encoding</param-name>
-      <param-value>utf-8</param-value>
+      <param-value>ISO-8859-1</param-value>
     </init-param>
-    -->
 
     <!--
       This parameter allows you to startup Cocoon2 immediately after startup
