@@ -23,7 +23,7 @@ import org.outerj.expression.ExpressionException;
  * Returns null constant.
  *  
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class NullFunction extends AbstractExpression {
 

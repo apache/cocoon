@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link SelectionList}s from an XML description.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface SelectionListBuilder {
     

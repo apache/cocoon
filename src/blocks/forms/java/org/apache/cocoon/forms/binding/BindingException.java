@@ -20,7 +20,7 @@ import org.apache.avalon.framework.CascadingException;
 /**
  * This exception is thrown when something goes wrong with the binding.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class BindingException extends CascadingException {
     public BindingException(String message) {

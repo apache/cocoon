@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:temp-repeater&gt;
  * </pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * Builds {@link IntegerType}s.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class IntegerTypeBuilder extends AbstractDatatypeBuilder {
 	public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

@@ -24,7 +24,7 @@ import java.util.Locale;
  * Convertor for {@link Float}s that does not do any (locale-dependent)
  * formatting.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PlainFloatConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

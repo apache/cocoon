@@ -21,7 +21,7 @@ import org.apache.cocoon.forms.event.ActionListener;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RowActionDefinition extends ActionDefinition {
     

@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:aggregate&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class AggregateJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

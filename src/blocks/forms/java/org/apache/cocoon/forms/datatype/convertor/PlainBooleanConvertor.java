@@ -23,7 +23,7 @@ import java.util.Locale;
 /**
  * Convertor for java.lang.Boolean's.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PlainBooleanConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {

@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.event.ActionEvent;
  * are actually removed
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
 

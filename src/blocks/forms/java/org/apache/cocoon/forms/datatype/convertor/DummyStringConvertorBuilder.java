@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link DummyStringConvertor}s.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DummyStringConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

@@ -24,7 +24,7 @@ import java.util.Locale;
  * Convertor that converts between strings and strings, in other words,
  * it does nothing.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DummyStringConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

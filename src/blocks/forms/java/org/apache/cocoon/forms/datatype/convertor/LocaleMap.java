@@ -25,7 +25,7 @@ import java.util.Locale;
  * <p>This map should be filled once using calls to {@link #put(Locale, Object)},
  * before any calls are made to {@link #get(Locale)}.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LocaleMap {
     private FastHashMap map = new FastHashMap();

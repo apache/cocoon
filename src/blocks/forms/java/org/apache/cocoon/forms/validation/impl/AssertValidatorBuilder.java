@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * Adapter for {@link org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class AssertValidatorBuilder extends AssertValidationRuleBuilder implements WidgetValidatorBuilder {
 

@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

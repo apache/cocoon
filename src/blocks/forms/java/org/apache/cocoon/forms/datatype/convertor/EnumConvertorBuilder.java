@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link EnumConvertor}s.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumConvertorBuilder implements ConvertorBuilder {
 
