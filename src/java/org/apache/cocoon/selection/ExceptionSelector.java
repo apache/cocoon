@@ -81,11 +81,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * <li>an exception can be unrolled, meaning we try to get its cause and then consider this cause for
  *     the exception name</li>
  * Note that both "name" and "unroll" can be specified. In that case, we first try to unroll the exception,
- * and if no cause is found, then the "name" attribute is considered.
+ * and if none of the causes has a name, then the "name" attribute is considered.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.1 2003/04/01 21:25:09 sylvain Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.2 2003/04/10 13:59:32 sylvain Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
@@ -157,12 +157,15 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
         for (int i = 0; i < this.clazz.length; i++) {
             if (this.clazz[i].isInstance(thr)) {
 
-                //getLogger().debug("Throwable of class " + thr.getClass().getName() + " is instance of " +
-                //    this.clazz[i].getName() + ". Name='" + this.name[i] + ", Unroll=" + this.unroll[i]);
+                // If exception needs to be unrolled, and it has a cause,
+                // return the cause name, if not null (recursively)
                 if (this.unroll[i]) {
                     Throwable cause = ExceptionUtils.getCause(thr);
                     if (cause != null) {
-                        return findName(cause);
+                        String causeName = findName(cause);
+                        if (causeName != null) {
+                            return causeName;
+                        }
                     }
                 }
 
