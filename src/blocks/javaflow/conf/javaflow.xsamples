@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='Java Flow']">
+
+  <group name="Java Flow">
+    <sample name="Calculator" href="javaflow/calculator.do">
+      Example for the Java Flow implementation
+    </sample>
+    <sample name="Cocoon Forms" href="javaflow/editForm1.do">
+      Example for the Cocoon Forms and Java Flow.
+    </sample>
+    <sample name="Cocoon Forms Binding" href="javaflow/editForm2.do">
+      Example for the Cocoon Forms Binding and Java Flow.
+    </sample>
+    <sample name="Apache OJB" href="javaflow/showEmployee.do">
+      Example for the Cocoon Forms and Java Flow and Apache OJB.
+    </sample>
+  </group>
+
+</xsamples>

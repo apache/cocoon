@@ -1,0 +1,26 @@
+ 
+ What is left to do?
+ -------------------
+
+Tons of stuff, but here is a list of the things that I think are most important 
+at the moment:
+
+ - allow the ability to reload the java flow classes using for example the
+   CompilingClassLoader.
+ 
+ - some patches need to be applied to the jakarta-bcel project, see
+   http://issues.apache.org/bugzilla/show_bug.cgi?id=27646
+   http://issues.apache.org/bugzilla/show_bug.cgi?id=27854
+   http://issues.apache.org/bugzilla/show_bug.cgi?id=27855
+   We got already a "go" of the author, but he wasn't able to commit these
+   patches at the moment.
+
+ - The suspend of continuations seems not to work properly in "finally"
+   blocks.
+ 
+ - The OJB example throw an exception if the ID is already assigned.
+
+ - The continuation is not available in the constructor, so there
+   is no ContinuationContext availble. This makes lookups of components
+   impossible. The move of the continuation context into an
+   independent ThreadLocal variable might be an option.
