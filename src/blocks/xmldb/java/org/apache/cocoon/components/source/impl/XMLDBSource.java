@@ -93,7 +93,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.9 2004/01/13 08:44:05 upayavira Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.10 2004/01/13 12:47:20 upayavira Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -519,6 +519,7 @@ public class XMLDBSource extends AbstractLogEnabled
 
             if (name.equals("")) {
                 name = collection.createId();
+                this.url += name;
             }
             Resource resource = collection.createResource(name, "XMLResource");
 
