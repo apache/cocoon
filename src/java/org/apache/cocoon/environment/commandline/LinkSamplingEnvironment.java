@@ -65,7 +65,7 @@ import java.util.Map;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSamplingEnvironment.java,v 1.2 2003/05/12 13:26:17 stephan Exp $
+ * @version CVS $Id: LinkSamplingEnvironment.java,v 1.3 2003/08/10 19:58:09 upayavira Exp $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -114,7 +114,9 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                     String line = buffer.readLine();
                     if (line == null)
                         break;
-                    list.add(line);
+                    if (!list.contains(line)) {
+                        list.add(line);
+                    }
                 }
             } finally {
                 // explictly close the input
