@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -60,7 +57,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
 
@@ -69,7 +66,7 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SessionAspectDataStore.java,v 1.4 2003/05/26 09:52:59 cziegeler Exp $
+ * @version CVS $Id: SessionAspectDataStore.java,v 1.5 2003/07/11 10:08:23 cziegeler Exp $
  */
 public class SessionAspectDataStore 
     extends AbstractLogEnabled
@@ -77,27 +74,29 @@ public class SessionAspectDataStore
     
     protected Context context;
     
-    protected Map getMap(Aspectalizable owner) {
-        final Request request = ContextHelper.getRequest(this.context);
-        Map componentMap = (Map)request.getSession().getAttribute(this.getClass().getName());
-        if ( componentMap == null) {
-            componentMap = new HashMap(3);
-            request.getSession().setAttribute(this.getClass().getName(), componentMap);
-        }
-        Map ownerMap = (Map)componentMap.get( owner );
-        if ( ownerMap == null ) {
-            ownerMap = new HashMap(3);
-            componentMap.put( owner, ownerMap );
-        }
-        return ownerMap;
+    protected String getKey(Aspectalizable owner, String aspectName) {
+        StringBuffer buffer = new StringBuffer(this.getClass().getName());
+        buffer.append('/');
+        buffer.append(owner.getClass().getName());
+        buffer.append('/');
+        buffer.append(owner.hashCode());
+        buffer.append('/');
+        buffer.append(aspectName);
+        return buffer.toString();
     }
     
     public Object getAspectData(Aspectalizable owner, String aspectName) {
-        return this.getMap(owner).get( aspectName );
+        final Session session = ContextHelper.getRequest(this.context).getSession();
+        return session.getAttribute( this.getKey( owner, aspectName ) );
     }
     
     public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
-        this.getMap(owner).put(aspectName, data);
+        final Session session = ContextHelper.getRequest(this.context).getSession();
+        if ( data == null ) {
+            session.removeAttribute( this.getKey( owner, aspectName) );
+        } else {
+            session.setAttribute( this.getKey( owner, aspectName), data );
+        }
     }
 
     public boolean isPersistent() {
