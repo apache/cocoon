@@ -59,7 +59,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * documents written in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ProgramGenerator.java,v 1.3 2003/11/09 20:09:47 cziegeler Exp $
+ * @version CVS $Id: ProgramGenerator.java,v 1.4 2003/12/29 13:30:11 unico Exp $
  */
 public interface ProgramGenerator {
 
@@ -69,7 +69,7 @@ public interface ProgramGenerator {
      * Load a program built from an XML document written in a
      * <code>MarkupLanguage</code>
      *
-     * @param newManager  The ComponentManager that it will be loaded with
+     * @param newManager  The ServiceManager that it will be loaded with
      * @param fileName The input document's <code>File</code> name
      * @param markupLanguage The <code>MarkupLanguage</code> in which the input
      * document is written
@@ -90,7 +90,7 @@ public interface ProgramGenerator {
      * Load a program built from an XML document written in a
      * <code>MarkupLanguage</code>
      *
-     * @param newManager  The ComponentManager that it will be loaded with
+     * @param newManager  The ServiceManager that it will be loaded with
      * @param source The input document's <code>File</code> name
      * @param markupLanguage The <code>MarkupLanguage</code> in which the input
      * document is written
