@@ -49,8 +49,8 @@ class Pipeline {
         this.pipeline.setSerializer(serializer);
     }
     
-    protected void read(src, type, parameters) {
-        reader = beanFactory.getBean("resourceReader");
+    protected void read(type, src, parameters) {
+        reader = beanFactory.getBean(type + "Reader");
         reader.inputSource = src;
         parameters.each { reader[it.key] = it.value }
         this.pipeline.reader = reader;

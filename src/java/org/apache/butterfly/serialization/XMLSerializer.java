@@ -44,6 +44,7 @@ public class XMLSerializer extends AbstractXMLPipe implements Serializer {
      * The <code>Properties</code> used by this serializer.
      */
     protected Properties format = new Properties();
+    private String mimeType;
     
     /**
      * 
@@ -112,11 +113,12 @@ public class XMLSerializer extends AbstractXMLPipe implements Serializer {
         this.setLexicalHandler(handler);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.sitemap.SitemapOutputComponent#getMimeType()
-     */
     public String getMimeType() {
-        return null;
+        return this.mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     /* (non-Javadoc)

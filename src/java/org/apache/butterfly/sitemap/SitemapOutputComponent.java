@@ -36,6 +36,11 @@ public interface SitemapOutputComponent {
      * Get the mime-type of the output of this <code>Component</code>.
      */
     String getMimeType();
+
+    /**
+     * Set the mime-type of the output of this <code>Component</code>.
+     */
+    void setMimeType(String mimeType);
     
     /**
      * Test if the component wants to set the content length

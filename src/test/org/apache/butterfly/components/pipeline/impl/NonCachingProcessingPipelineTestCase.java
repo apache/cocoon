@@ -82,8 +82,8 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
             public boolean shouldSetContentLength() {
                 return false;
             }
-            public void setObjectModel(Map objectModel) {
-            }
+            public void setObjectModel(Map objectModel) {}
+            public void setMimeType(String mimeType) {}
         }; 
         
         stubTransformer = new Transformer() {
@@ -140,6 +140,7 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
                 return null;
             }
             public void setEncoding(String encoding) {}
+            public void setMimeType(String mimeType) {}            
         };
         
         // Set up real components

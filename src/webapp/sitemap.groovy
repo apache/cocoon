@@ -26,19 +26,21 @@ class Sitemap extends Pipeline {
         if (uri == "") {
             generate "file", "welcome.xml", []
             transform "trax", "welcome.xslt", [] 
-            serialize "xml", [ 'encoding': 'UTF-8' ]
+            serialize "xml", [ "encoding": "UTF-8", "mimeType": "text/html" ]
         } else if (m = (uri =~ "(.*)\.html")) {
             generate "file", m.group(1) + ".xml", []
             transform "trax", "welcome.xslt", []
-            serialize "xml", [ 'encoding': 'UTF-8' ] 
+            serialize "xml", [ "encoding": "UTF-8", "mimeType": "text/html" ] 
         } else if (m = (uri =~ "images/(.*)\.gif")) {
-            read "resources/images/" + m.group(1) + ".gif", "image/gif", []
+            read "resource", "resources/images/" + m.group(1) + ".gif", 
+                [ "mimeType": "image/gif" ]
         } else if (m = (uri =~ "styles/(.*)\.css")) {
-            read "resources/styles/" + m.group(1) + ".css", "text/css", []
+            read "resource", "resources/styles/" + m.group(1) + ".css",
+                [ "mimeType": "text/css" ]
         } else if (m = (uri == "sitemap.groovy")) {
             generate "file", "sitemap.xmap", []
             transform "trax", "sitemap.xslt", [] 
-            serialize "text", [ "mime-type": "text/plain" ]
+            serialize "text", []
         } else {
             return false;
         }

@@ -72,6 +72,9 @@
     <property name="encoding">
       <value>UTF-8</value>
     </property>
+    <property name="mimeType">
+      <value>text/xml</value>
+    </property>
   </bean>
 
   <bean id="textSerializer" class="org.apache.butterfly.serialization.TextSerializer" singleton="false">
@@ -80,6 +83,9 @@
     </property>
     <property name="encoding">
       <value>UTF-8</value>
+    </property>
+    <property name="mimeType">
+      <value>text/plain</value>
     </property>
   </bean>
   

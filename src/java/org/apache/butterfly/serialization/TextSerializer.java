@@ -63,6 +63,7 @@ public class TextSerializer extends AbstractXMLPipe implements Serializer {
      * The <code>Properties</code> used by this serializer.
      */
     protected Properties format = new Properties();
+    private String mimeType;
 
     public TextSerializer() {
         this.format.put(OutputKeys.METHOD, "text");
@@ -118,13 +119,14 @@ public class TextSerializer extends AbstractXMLPipe implements Serializer {
         return (String) format.get(OutputKeys.ENCODING);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.sitemap.SitemapOutputComponent#getMimeType()
-     */
     public String getMimeType() {
-        return null;
+        return this.mimeType;
     }
 
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.butterfly.sitemap.SitemapOutputComponent#shouldSetContentLength()
      */

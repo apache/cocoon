@@ -41,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 public class ResourceReader implements Reader {
     protected static final Log logger = LogFactory.getLog(ResourceReader.class);
     private SourceResolver sourceResolver;
+    protected String mimeType;
     protected long expires = -1;
     protected int bufferSize = 8192;
     protected boolean byteRanges = true;
@@ -153,12 +154,12 @@ public class ResourceReader implements Reader {
            }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.butterfly.sitemap.SitemapOutputComponent#getMimeType()
-     */
     public String getMimeType() {
-        // TODO Auto-generated method stub
-        return null;
+        return mimeType;
+    }
+    
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     /* (non-Javadoc)
