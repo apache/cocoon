@@ -114,7 +114,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.5 2003/09/12 18:26:54 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.6 2003/09/12 18:41:36 reinhard Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -125,7 +125,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     Environment environement = null;
     
     /** If debugging is true, the intercepted script is writen to filesystem */
-    boolean copyResultScript = false;
+    boolean serializeResultScript = false;
 
     /** Base script <code>org.apache.excalibur.source.Source</code>*/
     Source source = null; 
@@ -188,7 +188,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         this.getLogger().info( "\n\n" + this.baseScriptTokenList.toString() + "\n" );
         
         // create a file to make debugging easier
-        if( copyResultScript ) {
+        if( serializeResultScript ) {
             this.baseScriptTokenList.writeToFile( this.source );            
         }
 
@@ -230,8 +230,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * Should the JavaScriptAspectWeaver write the result script
      * into separate file in the same directory as the basescript?
      */
-    public void setCopyResultScript( boolean copy ) {
-        this.copyResultScript = copy;
+    public void setSerializeResultScriptParam( boolean serialize ) {
+        this.serializeResultScript = serialize;
     }
     
     /** 

@@ -107,7 +107,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.4 2003/09/12 18:18:36 reinhard Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.5 2003/09/12 18:41:36 reinhard Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -242,7 +242,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
 
     // (RPO) added by interception layer       
     Configuration stopExecutionFunctionsConf = null;
-    boolean copyResultScript = false;
+    boolean serializeResultScript = false;
     // --end
 
     public void configure(Configuration config) 
@@ -267,8 +267,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             config.getChild( "enable-interception" ).getValueAsBoolean( true );
         stopExecutionFunctionsConf = 
             config.getChild( "cont-creating-functions" );
-        copyResultScript = 
-           config.getChild( "copy-result-script" ).getValueAsBoolean( false );
+        serializeResultScript = 
+           config.getChild( "serialize-result-script" ).getValueAsBoolean( false );
         // --end
     }
 
@@ -498,7 +498,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                     JavaScriptAspectWeaver aspectWeaver = new JavaScriptAspectWeaver();
                     aspectWeaver.setEnvironment( environment );
                     aspectWeaver.enableLogging( this.getLogger() );
-                    aspectWeaver.setCopyResultScript( this.copyResultScript );
+                    aspectWeaver.setSerializeResultScriptParam( this.serializeResultScript );
                     aspectWeaver.setStopExecutionFunctionsConf( this.stopExecutionFunctionsConf );
                     entry.setAspectWeaver( aspectWeaver );
                 }        
