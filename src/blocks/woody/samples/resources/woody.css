@@ -1,0 +1,32 @@
+.woody-tab {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-bottom-width: 0px;
+    padding: 2px 1em 2px 1em;
+    margin-right: 5px;
+    position: relative;
+    text-decoration: none;
+    top: -1px;
+    z-index: 100;
+    cursor: pointer;
+}
+      
+.woody-tab.woody-activeTab {
+    z-index: 102;
+    font-weight: bold;
+    padding-top: 5px;
+    cursor: default;
+}
+
+.woody-tabContent {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding: 1em;
+    position: relative;
+    z-index: 101;
+}
+
+.woody-validation-message-indicator:link {
+    color: red;
+    font-weight: bold;
+}

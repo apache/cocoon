@@ -13,35 +13,7 @@
       <!-- insert the head snippets required by the styling stylesheets -->
       <xsl:call-template name="woody-page-head"/>
       <xsl:call-template name="woody-field-head"/>
-      <style type="text/css">
-        .woody-tab {
-            background-color: #ffffff;
-            border: 1px solid #000000;
-            border-bottom-width: 0px;
-            padding: 2px 1em 2px 1em;
-            margin-right: 5px;
-            position: relative;
-            text-decoration: none;
-            top: -1px;
-            z-index: 100;
-            cursor: pointer;
-        }
-              
-        .woody-tab.woody-activeTab {
-            z-index: 102;
-            font-weight: bold;
-            padding-top: 5px;
-            cursor: default;
-        }
-        
-        .woody-tabContent {
-            background-color: #ffffff;
-            border: 1px solid #000000;
-            padding: 1em;
-            position: relative;
-            z-index: 101;
-        }
-      </style>
+      <link rel="stylesheet" type="text/css" href="resources/woody.css"/>
     </xsl:copy>
   </xsl:template>
   
