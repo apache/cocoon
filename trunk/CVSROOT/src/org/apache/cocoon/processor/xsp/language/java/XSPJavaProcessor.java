@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.7 2000-04-13 10:42:57 stefano Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.8 2000-04-27 17:57:43 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.7 $ $Date: 2000-04-13 10:42:57 $
+ * @version $Revision: 1.8 $ $Date: 2000-04-27 17:57:43 $
  */
 public class XSPJavaProcessor implements XSPLanguageProcessor {
   // Create class loader
@@ -102,25 +102,22 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
 
   public void compile(String filename) throws Exception {
     String repositoryName = this.repository.getCanonicalPath();
-      String fullFilename = repositoryName + File.separator + filename;
+    String fullFilename = repositoryName + File.separator + filename;
 
     String[] compilerArgs = {
       "-classpath",
         repositoryName +
         File.pathSeparator +
         System.getProperty("java.class.path"),
-
       "-O",
-
       // "-deprecation",
       // "-verbose",
-
       fullFilename
     };
 
     ByteArrayOutputStream err = new ByteArrayOutputStream();
     
-    // FIXME: we should make this reflection based and also allowed other
+    // FIXME: we should make this reflection based and also allow other
     // compilers to be plugged in. Maybe we can steal... ehmmm, borrow.. some
     // Tomcat code for this :) (SM)
     
@@ -135,7 +132,6 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
         if (errorLines[i].startsWith(fullFilename)) {
           errorLines[i] = errorLines[i].substring(pos);
         }
-
         buffer.append(errorLines[i] + "\n");
       }
 
