@@ -21,84 +21,109 @@
         <property name="usetidy" value="false"/>
     </group>
 
-    <!-- Check mime-types (bugzilla 25212) -->
+    <!-- Check mime-types (bugzilla 25121) -->
     <target name="reader-mime-type">
         <property name="baseUrl" value="${anteater.env.cocoon}/samples/test/reader-mime-type"/>
 
-        <httpRequest href="${baseUrl}/test10.html" description="Check content-type">
-            <match>
-                <header name="Content-type" value="text/html"/>
+        <!--
+            Each httpRequest repeated twice to check caching pipeline.
+            Check for text/xml instead of text/html in order not to be fooled
+            by 404 or 500 error pages.
+        -->
+
+        <!-- Check that content-type is *not* derived from URL extension. -->
+        <!-- FIXME: no easier way to check absence of header with anteater? -->
+        <httpRequest href="${baseUrl}/test10.xml" description="Check content-type">
+            <match assign="test10-failed-1">
+                <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
+                <header name="Content-type" pattern=".*"/>
             </match>
         </httpRequest>
-        <httpRequest href="${baseUrl}/test10.html" description="Check content-type (cached)">
+        <fail if="test10-failed-1"/>
+        <httpRequest href="${baseUrl}/test10.xml" description="Check content-type (cached)">
+            <match assign="test10-failed-2">
+                <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
+                <header name="Content-type" pattern=".*"/>
+            </match>
+        </httpRequest>
+        <fail if="test10-failed-2"/>
+
+        <!-- Check content-type derived from map:read/@src -->
+        <httpRequest href="${baseUrl}/test20.x20" description="Check content-type">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
+            </match>
+        </httpRequest>
+        <httpRequest href="${baseUrl}/test20.x20" description="Check content-type (cached)">
+            <match>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/test20.html" description="Check content-type">
+        <!-- Check content-type derived from map:read/@mime-type -->
+        <httpRequest href="${baseUrl}/test30.x30" description="Check content-type">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
-        <httpRequest href="${baseUrl}/test20.html" description="Check content-type (cached)">
+        <httpRequest href="${baseUrl}/test30.x30" description="Check content-type (cached)">
             <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-
-        <httpRequest href="${baseUrl}/test30.html" description="Check content-type">
-            <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-        <httpRequest href="${baseUrl}/test30.html" description="Check content-type (cached)">
-            <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/test40.html" description="Check content-type">
+        <!-- Check content-type derived from map:reader/@mime-type -->
+        <httpRequest href="${baseUrl}/test40.x40" description="Check content-type">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
-        <httpRequest href="${baseUrl}/test40.html" description="Check content-type (cached)">
+        <httpRequest href="${baseUrl}/test40.x40" description="Check content-type (cached)">
             <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-
-        <httpRequest href="${baseUrl}/test50.html" description="Check content-type">
-            <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-        <httpRequest href="${baseUrl}/test50.html" description="Check content-type (cached)">
-            <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/test60.html" description="Check content-type">
+        <!-- Check that content-type is *not* inherited across cocoon:/ -->
+        <!-- See bugzilla 25121 why this not possible. -->
+        <httpRequest href="${baseUrl}/test50.xml" description="Check content-type">
+            <match assign="test50-failed-1">
+                <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
+                <header name="Content-type" pattern=".*"/>
+            </match>
+            <match assign="test50-passed-1"/>
+        </httpRequest>
+        <fail if="test50-failed-1"/>
+        <httpRequest href="${baseUrl}/test50.xml" description="Check content-type (cached)">
+            <match assign="test50-failed-2">
+                <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
+                <header name="Content-type" pattern=".*"/>
+            </match>
+            <match/>
+        </httpRequest>
+        <fail if="test50-failed-2"/>
+
+        <!-- Check content-type derived from map:read/@src -->
+        <httpRequest href="${baseUrl}/test60.x60" description="Check content-type">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
-        <httpRequest href="${baseUrl}/test60.html" description="Check content-type (cached)">
+        <httpRequest href="${baseUrl}/test60.x60" description="Check content-type (cached)">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/test70.html" description="Check content-type">
+        <!-- Check content-type derived from map:read/@mime-type -->
+        <httpRequest href="${baseUrl}/test70.x70" description="Check content-type">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
-        <httpRequest href="${baseUrl}/test70.html" description="Check content-type (cached)">
+        <httpRequest href="${baseUrl}/test70.x70" description="Check content-type (cached)">
             <match>
-                <header name="Content-type" value="text/html"/>
+                <header name="Content-type" value="text/xml"/>
             </match>
         </httpRequest>
 

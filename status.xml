@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="10277">
+     Change the mime-type setting of a reader. See also bug #25121.
+   </action>
    <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
      Fix thread safety problem in JXTemplateGenerator.setup() concerning template script reparsing.
    </action>
