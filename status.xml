@@ -327,7 +327,7 @@
            Add a new tag &lt;jpath:set-lenient lenient="true|false"&gt;
    </action>
    <action dev="AG" type="update">
-     Updated commons-httpclient to 2.0.2
+     Updated commons-httpclient to 2.0.2, groovy to 1.0-beta-7
    </action>
    <action dev="VG" type="update">
      Flow invocations (function calls or continuation invocations) should always
