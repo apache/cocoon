@@ -20,6 +20,7 @@ import org.apache.avalon.Configuration;
 import org.apache.cocoon.ProcessingException; 
 import org.apache.cocoon.Processor; 
 import org.apache.cocoon.environment.Environment; 
+import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.SAXException; 
 
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:35:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:25 $
  */
 public abstract class AbstractSitemap
          implements Sitemap {      
@@ -78,20 +79,18 @@ public abstract class AbstractSitemap
       * Loads a class specified in a sitemap component definition and
       * initialize it
       */ 
-    protected Component load_component (String classURL, Configuration conf) 
-    throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Class cl = this.getClass().getClassLoader().loadClass(classURL);
-        Object comp = cl.newInstance();
+    protected Component load_component(String classURL, Configuration conf) throws Exception {
+        Object comp = ClassUtils.newInstance(classURL);
         if (!(comp instanceof Component)) {
-            throw new IllegalAccessException ("Object "+classURL+" is not a Component");
+            throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
         if (comp instanceof Composer) {
-            ((Composer)comp).setComponentManager (this.manager);
+            ((Composer) comp).setComponentManager(this.manager);
         }
         if (comp instanceof Configurable) {
-            ((Configurable)comp).setConfiguration (conf);
+            ((Configurable) comp).setConfiguration(conf);
         }
-        return ((Component)comp); 
+        return ((Component) comp); 
     } 
 
      /** 

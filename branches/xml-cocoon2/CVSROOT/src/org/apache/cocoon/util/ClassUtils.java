@@ -5,6 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.util;
 
 import java.io.File;
@@ -16,9 +17,11 @@ import java.io.IOException;
  * A collection of class management utility methods.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:42 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-06 23:22:26 $
  */
 public class ClassUtils {
+    
   /**
    * Create a new instance given a class name
    *
@@ -27,7 +30,7 @@ public class ClassUtils {
    * @exception Exception If an instantiation error occurs
    */
   public static Object newInstance(String className) throws Exception {
-    return getClass(className).newInstance();
+    return loadClass(className).newInstance();
   }
 
   /**
@@ -37,8 +40,20 @@ public class ClassUtils {
    * @return The class pointed to by <code>className</code>
    * @exception Exception If a loading error occurs
    */
-  public static Class getClass(String className) throws Exception {
-    return ClassUtils.class.getClassLoader().loadClass(className);
+  public static Class loadClass(String className) throws Exception {
+    // return getClassLoader().loadClass(className);
+    return Class.forName(className);
+  }
+
+  /**
+   * Return the context classloader
+   *
+   * @return The context classloader.
+   * @exception Exception If a loading error occurs
+   */
+  public static ClassLoader getClassLoader() {
+    // return Thread.currentThread().getContextClassLoader();
+    return ClassUtils.class.getClassLoader();
   }
 
   /**

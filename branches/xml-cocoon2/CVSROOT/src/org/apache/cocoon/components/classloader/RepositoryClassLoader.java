@@ -15,12 +15,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:26 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-06 23:22:22 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -102,8 +103,7 @@ class RepositoryClassLoader extends ClassLoader {
         byte[] bits = this.loadClassData (name);
 
         if (bits == null) {
-          // ClassLoader cl = getParent();
-          ClassLoader cl = this.getClass().getClassLoader();
+          ClassLoader cl = ClassUtils.getClassLoader();
 
           if (cl != null)  {
             c = cl.loadClass (name);

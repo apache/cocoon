@@ -4,12 +4,11 @@
  * This software is published under the terms of the Apache Software License * 
  * version 1.1, a copy of which has been included  with this distribution in * 
  * the LICENSE file.                                                         * 
- *****************************************************************************/ 
+ *****************************************************************************/
+  
 package org.apache.cocoon.matching; 
 
-import org.apache.avalon.ConfigurationException;
-
-import org.w3c.dom.DocumentFragment;
+import org.apache.cocoon.CodeFactory;
  
 /** 
  * Interface a class has to implement that produces java source code 
@@ -20,13 +19,9 @@ import org.w3c.dom.DocumentFragment;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:49:02 $ 
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:24 $ 
  */ 
 
-public interface MatcherFactory {
-    public String generateClassSource (String prefix, String pattern, DocumentFragment conf) 
-    throws ConfigurationException;
-
-    public String generateMethodSource (String prefix, String pattern, DocumentFragment conf)
-    throws ConfigurationException;
+public interface MatcherFactory extends CodeFactory {
+    
 }

@@ -23,6 +23,7 @@ import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -37,7 +38,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-02 21:12:40 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-06 23:22:26 $ $Author: stefano $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -453,10 +454,8 @@ public class SQLTransformer extends AbstractTransformer {
         protected void execute() throws SQLException {
             String driver = properties.getProperty(transformer.MAGIC_DRIVER);
             try {
-                Class.forName(driver).newInstance();
-            } catch (ClassNotFoundException e) {}
-            catch (IllegalAccessException e) {}
-            catch (InstantiationException e) {}
+                ClassUtils.newInstance(driver);
+            } catch (Exception e) {}
             if (null != properties.getProperty(transformer.MAGIC_DOC_ELEMENT)) {
                 this.rowset_name = properties.getProperty(transformer.MAGIC_DOC_ELEMENT);
             }
@@ -537,9 +536,10 @@ public class SQLTransformer extends AbstractTransformer {
             try {
                 rs.close();
                 st.close();
+            } finally { 
+                conn.close();
             }
-            finally { conn.close();
-                    } }
+        }
 
         protected void addQueryPart(Object object) {
             query_parts.addElement(object);

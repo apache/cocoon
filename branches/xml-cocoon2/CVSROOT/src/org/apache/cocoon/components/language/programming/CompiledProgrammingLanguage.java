@@ -15,6 +15,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
 /**
@@ -23,7 +24,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:23 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -55,8 +56,7 @@ public abstract class CompiledProgrammingLanguage
 	this.getName() + "'"
       );
     }
-    this.compilerClass =
-      this.getClass().getClassLoader().loadClass(compilerClass);
+    this.compilerClass = ClassUtils.loadClass(compilerClass);
 
     this.deleteSources = params.getParameterAsBoolean("delete-sources", false);
   }

@@ -16,6 +16,7 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.utils.Parameters;
 import org.apache.avalon.AbstractNamedComponent;
 
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
 /**
@@ -24,7 +25,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:30 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-06 23:22:22 $
  */
 public abstract class AbstractProgrammingLanguage
   extends AbstractNamedComponent
@@ -45,8 +46,7 @@ public abstract class AbstractProgrammingLanguage
     try {
       String className = params.getParameter("code-formatter", null);
       if (className != null) {
-        this.codeFormatter =
-	  this.getClass().getClassLoader().loadClass(className);
+        this.codeFormatter = ClassUtils.loadClass(className);
       }
     } catch (Exception e) { }
   }

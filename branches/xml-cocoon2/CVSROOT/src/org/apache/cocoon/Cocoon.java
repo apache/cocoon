@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.23 $ $Date: 2000-09-03 13:45:05 $
+ * @version CVS $Revision: 1.4.2.24 $ $Date: 2000-09-06 23:22:21 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -75,7 +75,7 @@ public class Cocoon
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
         try {
-            this.components.put("parser", ClassUtils.getClass(parser));
+            this.components.put("parser", ClassUtils.loadClass(parser));
         } catch (Exception e) {
             throw new ConfigurationException("Error creating parser (" + parser + ")", null);
         }
@@ -145,7 +145,7 @@ public class Cocoon
             String role = co.getAttribute("role");
             String className = co.getAttribute("class");
             try {
-                this.components.put(role, ClassUtils.getClass(className));
+                this.components.put(role, ClassUtils.loadClass(className));
                 this.configurations.put(role, co);
             } catch (Exception ex) {
                 // if the component is not found, there is no need to stop at this point.

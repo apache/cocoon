@@ -18,17 +18,16 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
-
 import org.apache.cocoon.components.language.programming.*;
-
 import org.apache.cocoon.components.language.LanguageException;
 
 /**
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:41:46 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:23 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
     
@@ -74,8 +73,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
 
     String compilerClass = params.getParameter("class-loader", null);
     if (compilerClass != null) {
-      this.classLoaderManager = (ClassLoaderManager)
-        this.getClass().getClassLoader().loadClass(compilerClass).newInstance();
+      this.classLoaderManager = (ClassLoaderManager) ClassUtils.newInstance(compilerClass);
     }
   }
 
