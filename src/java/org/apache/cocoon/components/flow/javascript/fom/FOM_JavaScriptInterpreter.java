@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.30 2004/05/17 18:39:58 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.31 2004/07/07 05:56:04 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -351,7 +351,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
                 // Get the scope attached to the current context
-                scope = (ThreadScope)userScopes.get(getSitemapPath());
+                scope = (ThreadScope)userScopes.get(getInterpreterID());
             }
         }
         if (scope == null) {
@@ -388,7 +388,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
 
             // Attach the scope to the current context
-            userScopes.put(getSitemapPath(), scope);
+            userScopes.put(getInterpreterID(), scope);
         } catch (IllegalStateException e) {
             // Session might be invalidated already.
             if (getLogger().isDebugEnabled()) {
@@ -396,15 +396,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
         }
         return scope;
-    }
-
-    private String getSitemapPath() throws Exception {
-        Source src = this.sourceresolver.resolveURI(".");
-        try {
-            return src.getURI();
-        } finally {
-            this.sourceresolver.release(src);
-        }
     }
 
     public static class ThreadScope extends ScriptableObject {
