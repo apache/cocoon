@@ -1355,10 +1355,7 @@ xspCurrentNode.appendChild(
           element nesting in the XSP page <code>Document</code>
           object. Extreme caution must be exercised in
           using this object as all DOM manipulations
-          take effect on its top element. Note: 
-          <code>java.util.Stack</code> was introduced
-          in Java2. It should be replaced by an
-          equivalent JDK1.1 implementation!
+          take effect on its top element.
         </li>
         <li>
           <code>xspCurrentNode</code>.
