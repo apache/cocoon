@@ -118,6 +118,7 @@
     boolean close_connection = true;
     Statement statement;
     ResultSet resultset;
+    ResultSetMetaData resultset_metadata;
     int count;
     int max_rows;
     int skip_rows;
@@ -223,6 +224,7 @@
 	        </xsl:choose>
 	       _esql_session.statement = _esql_session.connection.createStatement();
 	       _esql_session.resultset = _esql_session.statement.executeQuery(<xsl:copy-of select="$query"/>);
+	       _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
 	       _esql_session.count = 0;
 	       if (_esql_session.skip_rows &gt; 0) {
 	        while (_esql_session.resultset.next()) {
@@ -262,22 +264,54 @@
 	</xsp:logic>
 </xsl:template>
 
-<xsl:template match="esql:get-string" name="get-string">
+<xsl:template match="esql:results/esql:get-columns">
+ <xsp:logic>
+  for (int _esql_i=1; _esql_i &lt;= _esql_session.resultset_metadata.getColumnCount(); _esql_i++) {
+   Node _esql_node = document.createElement(_esql_session.resultset_metadata.getColumnName(_esql_i));
+   _esql_node.appendChild(document.createTextNode(_esql_session.resultset.getString(_esql_i)));
+   xspCurrentNode.appendChild(_esql_node);
+  }
+ </xsp:logic>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-string" name="get-string">
  <xsp:expr><xsl:call-template name="get-resultset"/>.getString(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:get-date">
+<xsl:template match="esql:results/esql:get-date">
  <xsl:choose>
   <xsl:when test="@format">
-   <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(_esql_session.resultset.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
+   <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
   </xsl:when>
   <xsl:otherwise>
-   <xsp:expr>_esql_session.resultset.getDate(<xsl:call-template name="get-column"/>)</xsp:expr>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:otherwise>
  </xsl:choose>
 </xsl:template>
 
-<xsl:template match="esql:get-xml">
+<xsl:template match="esql:results/esql:get-time">
+ <xsl:choose>
+  <xsl:when test="@format">
+   <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-timestamp">
+ <xsl:choose>
+  <xsl:when test="@format">
+   <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-xml">
  <xsl:variable name="content">
   <xsl:choose>
    <xsl:when test="@root">
@@ -297,8 +331,20 @@
  <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:get-row-number">
+<xsl:template match="esql:results/esql:get-row-number">
  <xsp:expr>_esql_session.count</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-column-name">
+ <xsp:expr>_esql_session.resultset_metadata.getColumnName(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-column-label">
+ <xsp:expr>_esql_session.resultset_metadata.getColumnLabel(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:results/esql:get-column-type-name">
+ <xsp:expr>_esql_session.resultset_metadata.getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
 <xsl:template name="get-resultset">
