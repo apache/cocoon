@@ -374,7 +374,6 @@
 
   <!-- The XMLizers converts different mime-types to XML -->
   <xmlizer>
-      <parser role="org.apache.excalibur.xml.sax.SAXParser/HTML" mime-type="text/html"/>
       <parser role="org.apache.excalibur.xml.sax.SAXParser"      mime-type="text/xml"/>
   </xmlizer>
 
