@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:41:46 $
+ * @version $Revision: 1.1.2.5 $ $Date: 2000-08-31 15:57:53 $
  * @since 2.0
  */
 
@@ -174,6 +174,7 @@ public class Javac extends AbstractJavaCompiler {
 
     StringTokenizer tokens = new StringTokenizer(error, ":");
     String file = tokens.nextToken();
+    if (file.length() == 1) file += ":" + tokens.nextToken();
     int line = Integer.parseInt(tokens.nextToken());
 
     tokens = new StringTokenizer(tokens.nextToken().trim(), "\n");
