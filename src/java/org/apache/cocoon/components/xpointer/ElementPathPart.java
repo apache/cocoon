@@ -88,7 +88,7 @@ public class ElementPathPart implements PointerPart {
             if (path.size() < 1)
                 throw new SAXException("Invalid element path xpointer expression \"" + expression + "\".");
 
-            this.elementPath = (QName[])path.toArray(new QName[0]);
+            this.elementPath = (QName[])path.toArray(new QName[path.size()]);
             this.level = -1;
             this.include = false;
             this.levelToMatch = 0;

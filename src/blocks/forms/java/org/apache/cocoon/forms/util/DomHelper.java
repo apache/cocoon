@@ -127,8 +127,7 @@ public class DomHelper {
      * Returns all Element children of an Element that belong to the given
      * namespace.
      */
-    public static Element[] getChildElements(Element element,
-            String namespace) {
+    public static Element[] getChildElements(Element element, String namespace) {
         ArrayList elements = new ArrayList();
         NodeList nodeList = element.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -137,7 +136,7 @@ public class DomHelper {
                     && namespace.equals(node.getNamespaceURI()))
                 elements.add(node);
         }
-        return (Element[])elements.toArray(new Element[0]);
+        return (Element[])elements.toArray(new Element[elements.size()]);
     }
 
     /**
@@ -156,7 +155,7 @@ public class DomHelper {
                 elements.add(node);
             }
         }
-        return (Element[])elements.toArray(new Element[0]);
+        return (Element[])elements.toArray(new Element[elements.size()]);
     }
 
     /**
