@@ -123,9 +123,13 @@ public final class DocumentCache {
         // if we have any DOCTYPE declaration in the input xml document
         final DocumentType doctype = document.getDoctype();
         Properties props = new Properties();
-        if (null != doctype && null != doctype.getPublicId()) {
-            props.put(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-            props.put(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+        if (null != doctype) {
+            if (null != doctype.getPublicId()) {
+                props.put(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());  
+            }
+            if (null != doctype.getSystemId()) {
+                props.put(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+            }
         }
         transformer.setOutputProperties(props);
         
