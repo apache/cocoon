@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp-java.xsl,v 1.3 2000-01-03 01:42:50 stefano Exp $
+<!-- $Id: xsp-java.xsl,v 1.4 2000-01-05 13:49:26 ricardo Exp $
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,7 @@
 
 <!-- written by Ricardo Rocha "ricardo@apache.org" -->
 
+
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
@@ -79,7 +80,9 @@
     import org.apache.cocoon.parser.*;
     import org.apache.cocoon.producer.*;
     import org.apache.cocoon.framework.*;
+
     import org.apache.cocoon.processor.xsp.*;
+    import org.apache.cocoon.processor.xsp.library.*;
 
     /* User Imports */
     <xsl:for-each select="xsp:structure/xsp:include">
@@ -97,9 +100,12 @@
       )
         throws Exception
       {
+	// Node stack logic variables
         Node xspParentNode = null;
         Node xspCurrentNode = document;
         Stack xspNodeStack = new Stack();
+
+	// Make session object readily available
         HttpSession session = request.getSession(true);
 
         <xsl:for-each select="/processing-instruction()[not(contains(.,'xsp'))]">
@@ -110,6 +116,8 @@
             )
           );
         </xsl:for-each>
+
+	<!-- Method level declarations should go here... -->
 
         <xsl:apply-templates select="*[not(starts-with(name(.), 'xsp:'))]"/>
       }
@@ -148,11 +156,21 @@
   </xsl:template>
 
   <xsl:template match="xsp:expr">
-    xspCurrentNode.appendChild(
-      xspExpr(<xsl:value-of select="."/>, document)
-    );
+    <xsl:choose>
+      <xsl:when test="starts-with(name(..), 'xsp:') and name(..) != 'xsp:content'">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+        xspCurrentNode.appendChild(
+          xspExpr(<xsl:value-of select="."/>, document)
+        );
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="xsp:content">
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <xsl:template match="xsp:logic">
     <xsl:apply-templates/>
@@ -199,6 +217,27 @@
       "<xsl:value-of select="name(.)"/>",
       "<xsl:value-of select="."/>"
     );
+  </xsl:template>
+
+
+  <!-- *** Dynamic Tag Support *** -->
+
+  <!-- Expand dynamic tags to code -->
+  <xsl:template name="expr-value" match="xsp:expr-value">
+    <xsl:choose>
+      <xsl:when test="name(*[1]) = 'xsp:expr'">
+        <xsl:value-of select="*[1]"/>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="normalize(.)"/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Prolog declarations required to mix code and markup -->
+  <xsl:template match="xsp:declare-node-stack">
+    Node xspParentNode = null;
+    Node xspCurrentNode = <xsl:value-of select="@node-argument"/>;
+    Stack xspNodeStack = new Stack();
+    Document document = <xsl:value-of select="@node-argument"/>.getOwnerDocument();
   </xsl:template>
 
 </xsl:stylesheet>
