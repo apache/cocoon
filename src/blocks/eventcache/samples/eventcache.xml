@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,81 +16,25 @@
 -->
 
 <!--+
-    | XSP event-based cache sample.
+    | event-based cache sample.
     |
-    | CVS $Id: eventcache.xsp,v 1.6 2004/04/05 12:25:34 antonio Exp $
+    | @version $Id:$
     +-->
-
-<xsp:page language="java"
-          xmlns:xsp="http://apache.org/xsp"
-          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
-
-<xsp:structure>
-    <xsp:include>org.apache.excalibur.source.SourceValidity</xsp:include>
-    <xsp:include>org.apache.cocoon.caching.validity.EventValidity</xsp:include>
-    <xsp:include>org.apache.cocoon.caching.validity.NamedEvent</xsp:include>
-    <xsp:include>java.io.Serializable</xsp:include>
-</xsp:structure>
-
-<xsp:logic>
-    // artificial slowdown to make the effects of the cache visible
-    final int DELAY_SECS = 2;
-
-    /**
-     * Generate the unique key for the cache.
-     *
-     * This key must be unique inside the space of this XSP page, it is used
-     * to find the page contents in the cache (if getValidity says that the
-     * contents are still valid).
-     *
-     * This method will be invoked before the getValidity() method.
-     *
-     * @return The generated key or null if the component
-     *         is currently not cacheable.
-     */
-    public Serializable getKey()
-    {
-       // for our test, pages having the same value of "pageKey" will share
-       // the same cache location
-       String key = request.getParameter("pageKey") ;
-       return ((key==null||"".equals(key)) ? "one" : key);
-    }
-
-    /**
-     * Generate the validity object, tells the cache how long to
-     * keep contents having this key around.  In this case, it will 
-     * be until an Event is retrieved matching the NamedEvent created below.
-     *
-     * Before this method can be invoked the getKey() method
-     * will be invoked.
-     *
-     * @return The generated validity object or null if the
-     *         component is currently not cacheable.
-     */
-    public SourceValidity getValidity() {
-       String key = request.getParameter("pageKey") ;
-       return new EventValidity(
-                   new NamedEvent(
-                       (key==null||"".equals(key)) ? "one" : key));
-    }
- </xsp:logic>
-
-
-  <page>
+<page>
     <title>Demonstrating Event-Aware Caching</title>
     <content>
         <para>
-            This xsp page is based on (copied from) the cacheable xsp sample 
-            but there are some important differences.  If you don't already 
+            This page is a sample for event aware caching. We subclassed the
+            JXTG template generate for this sample. If you don't already 
             understand at least the basics of caching in Cocoon, you should 
             probably start there, not here.  Read the text below, and the 
             sitemap and source for more details.
         </para>
         <para>
-            I pause for <xsp:expr>DELAY_SECS</xsp:expr> seconds during generation, so 
+            I pause for ${cocoon.parameters.DELAY_SECS} seconds during generation, so 
             that you can tell if I'm being served from the cache or not.
             <br/>
-            What you see here was generated on <b><xsp:expr>new java.util.Date()</xsp:expr></b>.
+            What you see here was generated on <b>${cocoon.parameters.DATE}</b>.
         </para>
 
         <para>
@@ -98,7 +42,7 @@
             parameters do not matter.
             <br/>
             Here the value is:
-            <b><xsp-request:get-parameter name="pageKey"/></b>.  
+            <b>${cocoon.parameters.KEY}</b>.  
             <br/>
             If this is not the same as the 'pageKey' parameter in the page URL, we have a problem.
         </para>
@@ -108,7 +52,7 @@
             to Cocoon - for instance, when a database table or row is updated.
             <br/>
             My cache entry will be invalidated (actually, removed) when an event named 
-            <i><xsp-request:get-parameter name="pageKey"/></i> occurs.  This can be manually 
+            <i>${cocoon.parameters.KEY}</i> occurs.  This can be manually 
             simulated by clicking one of the "uncache" links below.
         </para>
         <para>Test links:
@@ -151,18 +95,10 @@
                 orphaned EventValidities (currently by clearing the entire cache).
                 </li>
             </ul>
-            Note that though this example uses xsp with actions or flow, any pipeline component can be 
+            Note that though this example extends the jxtg in combination with actions or flow, 
+            any pipeline component can be 
             made to use EventValidity, and any code with access to the ServiceManager can 
             translate real-world events to Events and notify the Cache of them.  
         </para>
-        <xsp:logic>
-          // slowdown page generation.
-            try {
-              Thread.sleep(DELAY_SECS * 1000L);
-            } catch (InterruptedException ie) {
-              // Not much that can be done...
-            }
-        </xsp:logic>
     </content>
-  </page>
-</xsp:page>
+</page>
