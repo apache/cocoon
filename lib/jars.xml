@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.206 2004/04/16 13:35:53 unico Exp $
+    | CVS $Id: jars.xml,v 1.207 2004/04/17 05:06:30 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -637,7 +637,7 @@
     <title>Velocity engine</title>
     <description>Velocity is a general purpose template engine written in Java.</description>
     <used-by>Velocity Generator (velocity block)</used-by>
-    <lib>velocity/lib/velocity-1.4-rc1.jar</lib>
+    <lib>velocity/lib/velocity-1.4.jar</lib>
     <homepage>http://jakarta.apache.org/velocity/</homepage>
   </file>
 
