@@ -130,8 +130,9 @@ NOTE: the "site" target is only useful for site mantainers.
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
  
-    <available property="php.present"     classname="net.php.servlet"/>
     <available property="servlet.present" classname="javax.servlet.http.HttpServlet"/>
+    <available property="php.present"     classname="net.php.servlet"/>
+    <available property="xt.present"      classname="com.jclark.xsl.sax.XMLProcessorImpl"/>
     <available property="svg.present"     classname="org.csiro.svg.dom.SVGDocumentImpl"/>
     <available property="rhino.present"   classname="org.mozilla.javascript.tools.jsc.Main"/>
     <available property="jstyle.present"  classname="jstyle.JSFormatter"/>
@@ -202,6 +203,7 @@ NOTE: the "site" target is only useful for site mantainers.
            deprecation="${deprecation}">
       <exclude name="**/*.html"/>
       <exclude name="**/CocoonServlet*.java" unless="servlet.present"/>
+      <exclude name="**/XT*.java" unless="xt.present"/>
       <exclude name="**/SVG*.java" unless="svg.present"/>
       <exclude name="**/Javascript*" unless="rhino.present"/>
       <exclude name="**/Jstyle*" unless="jstyle.present"/>
@@ -315,7 +317,6 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <target name="dist" depends="package, webapp, docs, javadocs">
     <mkdir dir="${dist.dir}"/>
-    <mkdir dir="${dist.dir}/bin"/>
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/src"/>
     <mkdir dir="${dist.dir}/conf"/>
@@ -325,7 +326,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <mkdir dir="${dist.dir}/webapp"/>
     <mkdir dir="${dist.dir}/xdocs"/>
 
-    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
+    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/lib/${name}.jar"/>
     <copyfile src="${build.war}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
 
     <copydir src="${build.src}"      dest="${dist.dir}/src"/>
