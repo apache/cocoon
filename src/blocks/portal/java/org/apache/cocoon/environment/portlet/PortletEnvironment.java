@@ -100,6 +100,7 @@ public class PortletEnvironment extends AbstractEnvironment {
      * and PortletResponse objects
      */
     public PortletEnvironment(String servletPath,
+                              String pathInfo,
                               String uri,
                               javax.portlet.ActionRequest request,
                               javax.portlet.ActionResponse response,
@@ -110,8 +111,6 @@ public class PortletEnvironment extends AbstractEnvironment {
                               int defaultSessionScope)
     throws IOException {
         super(uri, null, null);
-
-        String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
         this.request = new ActionRequest(servletPath, pathInfo, request, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
@@ -131,6 +130,7 @@ public class PortletEnvironment extends AbstractEnvironment {
      * and PortletResponse objects
      */
     public PortletEnvironment(String servletPath,
+                              String pathInfo,
                               String uri,
                               javax.portlet.RenderRequest request,
                               javax.portlet.RenderResponse response,
@@ -141,8 +141,6 @@ public class PortletEnvironment extends AbstractEnvironment {
                               int defaultSessionScope)
     throws IOException {
         super(uri, null, null);
-
-        String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
         this.request = new RenderRequest(servletPath, pathInfo, request, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
