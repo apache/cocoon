@@ -16,13 +16,14 @@
  */
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.transform.TransformerException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -40,7 +41,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 /**
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.4 $ $Date: 2004/05/01 16:31:15 $
+ * @version CVS $Revision: 1.5 $ $Date: 2004/05/01 18:06:12 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -56,7 +57,11 @@ public final class SitemapTask extends AbstractQdoxTask {
     public static final String NO_DOC_TAG = "cocoon.sitemap.component.documentation.disabled";
     /** The documentation (optional) */
     public static final String DOC_TAG    = "cocoon.sitemap.component.documentation";
-    
+    /** Configuration (optional) */
+    public static final String CONF_TAG   = "cocoon.sitemap.component.configuration";
+    /** Caching info (optional) */
+    public static final String CACHING_INFO_TAG = "cocoon.sitemap.component.documentation.caching";
+
     /** Pooling min (optional) */
     public static final String POOL_MIN_TAG = "cocoon.sitemap.component.pooling.min";
     /** Pooling max (optional) */
@@ -233,7 +238,11 @@ public final class SitemapTask extends AbstractQdoxTask {
         while ( iter.hasNext() ) {
             final SitemapComponent component = (SitemapComponent)iter.next();
             
-            component.generateDocs(this.docDir);
+            // Read template
+            final File templateFile = this.getProject().resolveFile("src/documentation/templates/sitemap-component.xml");
+            Document template = DocumentCache.getDocument(templateFile, this);
+            
+            component.generateDocs(template, this.docDir, this.getProject());
         }
         
     }
@@ -309,7 +318,14 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             parent.appendChild(node);
             newLine(parent);
-            // TODO Add configuration
+            
+            // add configuration
+            String configuration = this.getTagValue(CONF_TAG, null);
+            if ( configuration != null ) {
+                configuration = "<root>" + configuration + "</root>";
+                final Document confDoc = DocumentCache.getDocument(configuration);
+                setValue(node, null, confDoc.getDocumentElement().getChildNodes());
+            }
 
             return true;
         }
@@ -335,24 +351,79 @@ public final class SitemapTask extends AbstractQdoxTask {
             node.appendChild(n);
         }
         
-        public void generateDocs(File parentDir) {
+        public void generateDocs(Document template, File parentDir, Project project) 
+        throws TransformerException {
+            final File componentsDir = new File(parentDir, this.type+'s');
+            componentsDir.mkdir();
+            
+            final File docFile = new File(componentsDir, this.name + "-generated.xml");
+
             final String doc = this.getDocumentation();
             if ( doc == null ) {
+                if ( docFile.exists() ) {
+                    docFile.delete();
+                }
                 return;
             }
-            try {
-                final File componentsDir = new File(parentDir, this.type+'s');
-                componentsDir.mkdir();
-                
-                final File docFile = new File(componentsDir, this.name + ".txt");
-                docFile.createNewFile();
-                
-                final FileWriter writer = new FileWriter(docFile);
-                writer.write(doc);
-                writer.close();
-            } catch (IOException ioe) {
-                throw new BuildException("Error writing doc.", ioe);
+            // get body from template
+            final Node body = XPathAPI.selectSingleNode(template, "/document/body");
+            
+            // append root element and surrounding paragraph
+            final String description = "<root><p>" + doc + "</p></root>";
+            final Document descriptionDoc = DocumentCache.getDocument(description);
+            
+            // Title
+            setValue(template, "/document/header/title", 
+                     "Description of the " + this.name + " " + this.type);
+            
+            // Version
+            setValue(template, "/document/header/version",
+                     project.getProperty("version"));
+            
+            // Description
+            setValue(body, "s1[@title='Description']", 
+                     descriptionDoc.getDocumentElement().getChildNodes());
+            
+            // check: deprecated?
+            if ( this.getTagValue("deprecated", null) != null ) {
+                Node node = XPathAPI.selectSingleNode(body, "s1[@title='Description']");
+                // node is never null - this is ensured by the test above
+                Element e = node.getOwnerDocument().createElement("note");
+                node.appendChild(e);
+                e.appendChild(node.getOwnerDocument().createTextNode("This component is deprecated."));
+                final String info = this.getTagValue("deprecated", null);
+                if ( info != null ) {
+                    e.appendChild(node.getOwnerDocument().createTextNode(info));
+                }
             }
+            
+            // Info - Name
+            setValue(body, "s1[@title='Info']/table/tr[1]/td[2]", this.name);
+            // Info - Class
+            setValue(body, "s1[@title='Info']/table/tr[2]/td[2]", this.javaClass.getFullyQualifiedName());
+            // Info - Cacheable
+            String cacheInfo;
+            if ( this.javaClass.isA("org.apache.cocoon.caching.CacheableProcessingComponent") ) {
+                cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
+                if ( cacheInfo != null ) {
+                    cacheInfo = "Yes - " + cacheInfo;
+                } else {
+                    cacheInfo = "Yes";
+                }
+            } else if ( this.javaClass.isA("org.apache.cocoon.caching.Cacheable") ) {
+                cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
+                if ( cacheInfo != null ) {
+                    cacheInfo = "Yes (2.0 Caching) - " + cacheInfo;
+                } else {
+                    cacheInfo = "Yes (2.0 Caching)";
+                }
+            } else {
+                cacheInfo = "No";
+            }
+            setValue(body, "s1[@title='Info']/table/tr[3]/td[2]", cacheInfo);
+            
+            // finally write the doc
+            DocumentCache.writeDocument(docFile, template, null);            
         }
         
         /**
@@ -394,6 +465,40 @@ public final class SitemapTask extends AbstractQdoxTask {
             } else {
                 throw new BuildException("Sitemap component " + clazz.getName() + " does not implement a sitemap component interface.");
             }            
+        }
+        
+        private static void setValue(Node node, String xpath, String value) {
+            try {
+                final Node insertNode = (xpath == null ? node : XPathAPI.selectSingleNode(node, xpath));
+                if ( insertNode == null ) {
+                    throw new BuildException("Node (" + xpath + ") not found.");
+                }
+                Node text = insertNode.getOwnerDocument().createTextNode(value);
+                while (insertNode.hasChildNodes() ) {
+                    insertNode.removeChild(insertNode.getFirstChild());
+                }
+                insertNode.appendChild(text);
+            } catch (TransformerException e) {
+                throw new BuildException(e);
+            }
+        }
+
+        private static void setValue(Node node, String xpath, NodeList nodes) {
+            try {
+                final Node insertNode = (xpath == null ? node : XPathAPI.selectSingleNode(node, xpath));
+                if ( insertNode == null ) {
+                    throw new BuildException("Node (" + xpath + ") not found.");
+                }
+                while (insertNode.hasChildNodes() ) {
+                    insertNode.removeChild(insertNode.getFirstChild());
+                }
+                for(int i=0; i<nodes.getLength(); i++) {
+                    final Node current = nodes.item(i);
+                    insertNode.appendChild(insertNode.getOwnerDocument().importNode(current, true));
+                }
+            } catch (TransformerException e) {
+                throw new BuildException(e);
+            }
         }
     }
 }
