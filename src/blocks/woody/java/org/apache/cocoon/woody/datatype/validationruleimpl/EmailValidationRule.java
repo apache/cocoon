@@ -57,6 +57,8 @@ import org.outerj.expression.ExpressionContext;
 
 /**
  * ValidationRule that checks that a string is an email address.
+ * 
+ * @version $Id: EmailValidationRule.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class EmailValidationRule extends AbstractValidationRule {
 

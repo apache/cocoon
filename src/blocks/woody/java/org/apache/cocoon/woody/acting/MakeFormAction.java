@@ -74,6 +74,8 @@ import java.util.Map;
  *  <li><strong>form-definition</strong>: filename (URL) of the form definition file
  *  <li><strong>attribute-name</strong>: name of the request attribute in which to store the form instance
  * </ul>
+ * 
+ * @version $Id: MakeFormAction.java,v 1.6 2004/02/11 09:53:45 antonio Exp $
  */
 public class MakeFormAction implements Action, ThreadSafe, Serviceable {
 

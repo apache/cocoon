@@ -55,6 +55,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Various constants used in the Woody form framework.
+ * 
+ * @version $Id: Constants.java,v 1.5 2004/02/11 09:53:44 antonio Exp $
  */
 public final class Constants {
 // TODO : see this later

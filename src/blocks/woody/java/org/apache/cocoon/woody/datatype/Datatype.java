@@ -69,6 +69,8 @@ import java.util.Locale;
  * <p>Each datatype can be marked as an "arraytype". Currently, this only has an
  * influence on the {@link #validate} method, which should in that case be passed
  * an array of objects. See also {@link #isArrayType}.
+ * 
+ * @version $Id: Datatype.java,v 1.5 2004/02/11 09:53:43 antonio Exp $
  */
 public interface Datatype {
     /**

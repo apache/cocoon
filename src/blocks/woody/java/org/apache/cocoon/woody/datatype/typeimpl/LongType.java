@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.datatype.typeimpl;
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation
  * for whole numbers.
+ * @version $Id: LongType.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class LongType extends AbstractDatatype {
     public Class getTypeClass() {

@@ -55,6 +55,8 @@ import org.apache.excalibur.source.Source;
 
 /**
  * Work interface for the component that can create {@link Form}s.
+ * 
+ * @version $Id: FormManager.java,v 1.9 2004/02/11 09:53:44 antonio Exp $
  */
 public interface FormManager {
     

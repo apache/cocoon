@@ -75,6 +75,8 @@ import java.util.Locale;
  *
  * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
+ * 
+ * @version $Id: DynamicSelectionList.java,v 1.7 2004/02/11 09:53:43 antonio Exp $
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;

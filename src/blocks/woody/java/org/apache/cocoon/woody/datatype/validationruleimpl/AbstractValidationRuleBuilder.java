@@ -66,6 +66,8 @@ import org.outerj.expression.TokenMgrError;
 
 /**
  * Abstract base class for ValidationRuleBuilder implementations.
+ * 
+ * @version $Id: AbstractValidationRuleBuilder.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Serviceable, Disposable {
     protected ExpressionManager expressionManager;

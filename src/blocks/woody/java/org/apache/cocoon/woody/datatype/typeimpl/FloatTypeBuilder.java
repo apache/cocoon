@@ -56,6 +56,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link FloatType}s.
+ * @version $Id: FloatTypeBuilder.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public class FloatTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

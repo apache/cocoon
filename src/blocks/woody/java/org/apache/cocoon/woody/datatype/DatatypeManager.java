@@ -57,6 +57,8 @@ import org.apache.cocoon.woody.datatype.convertor.Convertor;
  * Work interface for the component that manages the datatypes.
  *
  * <p>See also {@link Datatype} and {@link DefaultDatatypeManager}.
+ * 
+ * @version $Id: DatatypeManager.java,v 1.4 2004/02/11 09:53:43 antonio Exp $
  */
 public interface DatatypeManager {
     

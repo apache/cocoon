@@ -56,6 +56,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * @deprecated Validations error are now a general feature of widgets, not limited
  *             widgets having a datatype.
  * @see org.apache.cocoon.woody.validation.ValidationError
+ * @version $Id: ValidationError.java,v 1.7 2004/02/11 09:53:43 antonio Exp $
  */
 public class ValidationError extends org.apache.cocoon.woody.validation.ValidationError {
     

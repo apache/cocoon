@@ -55,6 +55,8 @@ import org.apache.excalibur.source.Source;
 
 /**
  * Work interface for the component that caches objects for Woody.
+ * 
+ * @version $Id: CacheManager.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public interface CacheManager {
     

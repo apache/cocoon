@@ -55,6 +55,7 @@ import java.util.Date;
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
  * java.util.Date's (so includes a time-component).
+ * @version $Id: DateType.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class DateType extends AbstractDatatype {
 

@@ -62,6 +62,8 @@ import org.outerj.expression.ExpressionContext;
  * <p>In addition to this, the credit card number can be further validated by its length
  * and prefix, but those properties are depended on the credit card type and such validation
  * is not performed by this validation rule.
+ * 
+ * @version $Id: Mod10ValidationRule.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class Mod10ValidationRule extends AbstractValidationRule {
     public ValidationError validate(Object value, ExpressionContext expressionContext) {

@@ -57,6 +57,8 @@ import org.w3c.dom.Element;
  * A ValidationRuleBuilder can be Composable.
  * A ValidationRuleBuilder should be thread safe, only one instance of it
  * will be created.
+ * 
+ * @version $Id: ValidationRuleBuilder.java,v 1.2 2004/02/11 09:53:43 antonio Exp $
  */
 public interface ValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception;

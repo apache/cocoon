@@ -65,6 +65,7 @@ import org.outerj.expression.ExpressionContext;
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
+ * @version $Id: AbstractDatatype.java,v 1.6 2004/02/11 09:53:44 antonio Exp $
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();

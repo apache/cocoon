@@ -69,6 +69,8 @@ import java.util.Locale;
  * the items in the list are build once from its source, and then list items are
  * cached as part of this object. In contrast, the {@link DynamicSelectionList}
  * will retrieve its content from its source each time it's needed.
+ * 
+ * @version $Id: StaticSelectionList.java,v 1.9 2004/02/11 09:53:43 antonio Exp $
  */
 public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */

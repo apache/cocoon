@@ -75,6 +75,8 @@ import org.xml.sax.InputSource;
 
 /**
  * Component implementing the {@link FormManager} role.
+ * 
+ * @version $Id: DefaultFormManager.java,v 1.15 2004/02/11 09:53:44 antonio Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
