@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.33 2003/10/22 11:32:18 joerg Exp $
+    | CVS $Id: sitemap.xmap,v 1.34 2003/10/28 14:01:40 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -337,10 +337,18 @@
            | individual map:pipeline elements (using map:parameter syntax).
            +-->
        <!-- parameter name="outputBufferSize" value="8192"/ -->
+       <!--+
+           | If you want to use an alternate cache implementation you can specify
+           | the cache-role parameter to indicate the component key of the cache 
+           | implementation you want to use. The EventAware implementation in the
+           | example below requires that the event aware block is present.
+           + -->
+       <!-- parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/ -->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
        <autoCachingPoint>On</autoCachingPoint>
        <!-- parameter name="outputBufferSize" value="8192"/ -->
+       <!-- parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/ -->
      </map:pipe>
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
        <!-- parameter name="outputBufferSize" value="8192"/ -->
