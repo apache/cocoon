@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Builds a EnumSelectionList.
- * @version CVS $Id: EnumSelectionList.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: EnumSelectionList.java,v 1.4 2003/11/17 16:18:12 ugo Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
@@ -70,14 +70,15 @@ public class EnumSelectionList implements SelectionList {
     
     private Datatype datatype;
     private Class clazz;
+    private boolean nullable;
 
     /**
      * @param className
      * @param datatype
      */
-    public EnumSelectionList(String className, Datatype datatype) throws ClassNotFoundException {
+    public EnumSelectionList(String className, Datatype datatype, boolean nullable) throws ClassNotFoundException {
         this.datatype = datatype;
-        // FIXME: use the correct class loader.
+        this.nullable = nullable;
         this.clazz = Class.forName(className);
     }
 
@@ -96,8 +97,15 @@ public class EnumSelectionList implements SelectionList {
         Locale locale)
         throws SAXException {
         try {
-            Field fields[] = clazz.getDeclaredFields();
             contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+            Field fields[] = clazz.getDeclaredFields();
+            // Create void element
+            if (nullable) {
+                AttributesImpl voidAttrs = new AttributesImpl();
+                voidAttrs.addCDATAAttribute("value", "");
+                contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, voidAttrs);
+                contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
+            }            
             for (int i = 0 ; i < fields.length ; ++i) {
                 int mods = fields[i].getModifiers();
                 if (Modifier.isPublic(mods) && Modifier.isStatic(mods)
