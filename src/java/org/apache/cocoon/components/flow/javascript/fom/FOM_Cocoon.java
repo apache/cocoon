@@ -77,6 +77,7 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.http.HttpResponse;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -90,7 +91,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.18 2003/11/20 15:31:29 sylvain Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.19 2003/11/23 20:57:03 ricardo Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -684,6 +685,9 @@ public class FOM_Cocoon extends ScriptableObject {
         }
         
         public void jsFunction_setAttribute(String name, Object value) {
+            if (value instanceof NativeJavaObject) {
+                value = ((NativeJavaObject) value).unwrap();
+            }
             session.setAttribute(name, value);
         }
 
