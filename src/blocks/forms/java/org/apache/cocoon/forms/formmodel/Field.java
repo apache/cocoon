@@ -19,6 +19,7 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.*;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
@@ -41,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.14 2004/04/30 12:23:33 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.15 2004/05/06 14:59:44 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -82,17 +83,13 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             this.value = null;
             if (this.enteredValue != null) {
                 // Parse the value
-                this.value = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
-                if (this.value != null) {       // Conversion successfull
+                ConversionResult conversionResult = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
+                if (conversionResult.isSuccessful()) {
+                    this.value = conversionResult.getResult();
                     this.needsParse = false;
                     this.needsValidate = true;
                 } else {        // Conversion failed
-                    this.validationError = new ValidationError(new I18nMessage(
-                        "datatype.conversion-failed",
-                        new String[] {"datatype." + getDatatype().getDescriptiveName()},
-                        new boolean[] { true },
-                        Constants.I18N_CATALOGUE
-                    ));
+                    this.validationError = conversionResult.getValidationError();
                     // No need for further validation (and need to keep the above error)
                     this.needsValidate = false;
                 }

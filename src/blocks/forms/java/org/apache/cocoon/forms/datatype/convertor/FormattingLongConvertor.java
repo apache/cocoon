@@ -27,7 +27,7 @@ import java.text.ParseException;
  * <p>This class is mostly the same as the {@link FormattingDecimalConvertor},
  * so see there for more information.
  *
- * @version CVS $Id: FormattingLongConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: FormattingLongConvertor.java,v 1.2 2004/05/06 14:59:44 bruno Exp $
  */
 public class FormattingLongConvertor extends FormattingDecimalConvertor {
 
@@ -35,16 +35,16 @@ public class FormattingLongConvertor extends FormattingDecimalConvertor {
         super();
     }
 
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
         try {
             Number decimalValue = decimalFormat.parse(value);
             if (decimalValue instanceof Long)
-                return decimalValue;
+                return new ConversionResult(decimalValue);
             else
-                return new Long(decimalValue.longValue());
+                return new ConversionResult(new Long(decimalValue.longValue()));
         } catch (ParseException e) {
-            return null;
+            return ConversionResult.create("long");
         }
     }
 

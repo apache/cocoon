@@ -32,17 +32,16 @@ import java.util.Locale;
  * Some convertors need to build and configure parser or formatting objects,
  * which can be expensive if it needs to be done repeatedly.
  *
- * @version CVS $Id: Convertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: Convertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public interface Convertor {
     
     /**
      * Converts string representation into the object of convertor's type.
-     * Returns null if conversion fails.
      *
      * @param formatCache can be null if not needed
      */
-    Object convertFromString(String value, Locale locale, FormatCache formatCache);
+    ConversionResult convertFromString(String value, Locale locale, FormatCache formatCache);
 
     String convertToString(Object value, Locale locale, FormatCache formatCache);
 

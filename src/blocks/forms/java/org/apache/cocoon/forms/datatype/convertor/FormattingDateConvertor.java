@@ -44,7 +44,7 @@ import java.text.ParseException;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDateConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: FormattingDateConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
@@ -66,12 +66,12 @@ public class FormattingDateConvertor implements Convertor {
         this.localizedPatterns = new LocaleMap();
     }
 
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         DateFormat dateFormat = getDateFormat(locale, formatCache);
         try {
-            return dateFormat.parse(value);
+            return new ConversionResult(dateFormat.parse(value));
         } catch (ParseException e) {
-            return null;
+            return ConversionResult.create("date");
         }
     }
 

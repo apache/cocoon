@@ -25,6 +25,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -40,7 +41,7 @@ import java.util.Locale;
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.4 2004/05/06 14:59:44 bruno Exp $
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
     
@@ -95,12 +96,13 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
                     // Empty value translates into the null object
                     value = null;
                 } else {
-                    value = convertor.convertFromString(stringValue, Locale.US, formatCache);
-                    if (value == null) {
+                    ConversionResult conversionResult = convertor.convertFromString(stringValue, Locale.US, formatCache);
+                    if (!conversionResult.isSuccessful()) {
                         throw new Exception("Could not convert the value \"" + stringValue +
                                             "\" to the type " + datatype.getDescriptiveName() +
                                             ", defined at " + DomHelper.getLocation(element));
                     }
+                    value = conversionResult.getResult();
                 }
 
                 XMLizable label = null;

@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
@@ -29,7 +30,7 @@ import org.apache.commons.jxpath.JXPathException;
  * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.4 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.5 2004/05/06 14:59:44 bruno Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -89,7 +90,9 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         Object value = jxpc.getValue(this.xpath);
         if (value != null && convertor != null) {
             if (value instanceof String) {
-                value = convertor.convertFromString((String)value, convertorLocale, null);
+                ConversionResult conversionResult = convertor.convertFromString((String)value, convertorLocale, null);
+                if (conversionResult.isSuccessful())
+                    value = conversionResult.getResult();
             } else {
                 getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
             }

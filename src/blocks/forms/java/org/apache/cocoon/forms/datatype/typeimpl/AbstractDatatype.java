@@ -24,6 +24,7 @@ import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.DatatypeBuilder;
 import org.apache.cocoon.forms.datatype.ValidationRule;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
- * @version $Id: AbstractDatatype.java,v 1.4 2004/04/10 13:40:27 bruno Exp $
+ * @version $Id: AbstractDatatype.java,v 1.5 2004/05/06 14:59:44 bruno Exp $
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();
@@ -85,7 +86,7 @@ public abstract class AbstractDatatype implements Datatype {
         return convertor;
     }
 
-    public Object convertFromString(String value, Locale locale) {
+    public ConversionResult convertFromString(String value, Locale locale) {
         return getConvertor().convertFromString(value, locale, null);
     }
 

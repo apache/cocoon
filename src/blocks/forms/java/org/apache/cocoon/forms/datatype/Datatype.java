@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.datatype;
 
 import org.outerj.expression.ExpressionContext;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
@@ -38,15 +39,14 @@ import java.util.Locale;
  * influence on the {@link #validate(Object, ExpressionContext)} method, which should in that case be passed
  * an array of objects. See also {@link #isArrayType()}.
  * 
- * @version $Id: Datatype.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
+ * @version $Id: Datatype.java,v 1.4 2004/05/06 14:59:44 bruno Exp $
  */
 public interface Datatype {
     /**
-     * Converts a string to an object of this datatype. Returns null if this
-     * fails. This method uses the same {@link Convertor} as returned by the
-     * {@link #getConvertor()} method.
+     * Converts a string to an object of this datatype. This method uses the
+     * same {@link Convertor} as returned by the {@link #getConvertor()} method.
      */
-    Object convertFromString(String value, Locale locale);
+    ConversionResult convertFromString(String value, Locale locale);
 
     /**
      * Converts an object of this datatype to a string representation.
