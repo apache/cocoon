@@ -65,7 +65,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Workbook.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: Workbook.java,v 1.4 2003/09/22 22:44:15 joerg Exp $
  */
 
 // package scope
@@ -130,7 +130,7 @@ class Workbook
 
     void renameSheet(final int index, final String name)
     {
-        _workbook.setSheetName(index, name);
+        _workbook.setSheetName(index, name, HSSFWorkbook.ENCODING_UTF_16);
     }
 
     
