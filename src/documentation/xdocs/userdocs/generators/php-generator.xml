@@ -42,6 +42,12 @@
   <map:generate type="php"/>
      ]]>
 </source>
+
+            <note>
+                The PHPGenerator is deprecated in Cocoon 2.1.x, and will be removed in 2.2. 
+                If you still need to integrate PHP and Cocoon, please consider simply  using 
+                the FileGenerator pointed at a PHP script accessible over HTTP.
+            </note>
 		</s1>
 	</body>
 </document>
