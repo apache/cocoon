@@ -52,26 +52,18 @@ public class JCSDefaultStore extends JCSTransientStore implements Contextualizab
     }
     
     /**
-     *  Configure the Component.<br>
-     *  A few options can be used
-     * 
      *  TODO: describe options
      * 
-     * @param params the configuration paramters
+     * @param params the configuration parameters
      * @exception  ParameterException
      */
     public void parameterize(Parameters parameters) throws ParameterException {
         
         super.parameterize(parameters);
         
-        int maxobjects = parameters.getParameterAsInteger("maxobjects",-1);
-        if (maxobjects != -1) {
-            m_properties.setProperty("jcs.default.cacheattributes.MaxObjects",String.valueOf(maxobjects));
-        }
-        
         // get the directory to use
         try {
-            File workDir = (File) m_context.get(Constants.CONTEXT_WORK_DIR);
+            final File workDir = (File) m_context.get(Constants.CONTEXT_WORK_DIR);
             if (parameters.getParameterAsBoolean("use-cache-directory", false)) {
                 final File cacheDir = (File) m_context.get(Constants.CONTEXT_CACHE_DIR);
                 if (getLogger().isDebugEnabled()) {
@@ -101,6 +93,7 @@ public class JCSDefaultStore extends JCSTransientStore implements Contextualizab
         } catch (IOException e) {
             throw new ParameterException("Unable to set directory", e);
         }
+        
     }
     
     protected String getDefaultPropertiesFile() {
