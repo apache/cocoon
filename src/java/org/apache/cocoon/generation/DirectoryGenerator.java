@@ -110,7 +110,7 @@ public class DirectoryGenerator
     protected long refreshDelay;
     /**
      * The sort parameter determines by which attribute the content of one
-     * directory should be sorted. Possible values are "name", "size", "time"
+     * directory should be sorted. Possible values are "name", "size", "lastmodified"
      * and "directory", where "directory" is the same as "name", except that
      * directory entries are listed first.
      */
