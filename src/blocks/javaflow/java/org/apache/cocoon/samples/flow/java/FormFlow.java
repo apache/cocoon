@@ -23,7 +23,7 @@ import org.apache.cocoon.forms.samples.*;
                  
 import java.util.Date;
 
-public class FormFlow extends AbstractCocoonFlow {
+public class FormFlow extends AbstractContinuable {
 
     public void doEditForm1() {
 

@@ -17,7 +17,7 @@ package org.apache.cocoon.samples.flow.java;
 
 import org.apache.cocoon.components.flow.java.*;
 
-public class CalculatorFlow extends AbstractCocoonFlow {
+public class CalculatorFlow extends AbstractContinuable {
 
     private int count = 1;
 
