@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.132 2004/03/25 03:57:46 crossley Exp $
+    | CVS $Id: gump.xml,v 1.133 2004/03/25 14:12:57 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -47,7 +47,7 @@
     <depend project="xml-xalan2"/>
     <depend project="xml-commons-resolver"/>
 
-    <depend project="avalon-framework" ids="impl"/>
+    <depend project="avalon-framework" ids="impl api"/>
     <depend project="excalibur-compatibility"/>
     <depend project="excalibur-instrument"/>
     <depend project="excalibur-instrument-manager"/>
