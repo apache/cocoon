@@ -123,67 +123,80 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.3 2003/05/13 22:14:51 vgritsenko Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.4 2003/06/21 13:34:03 joerg Exp $
  */
-public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent  {
-  private static final String FILE = "file:";
+public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent {
+
+    /** Constant for the file protocol. */
+    private static final String FILE = "file:";
 
     /** The URI of the namespace of this generator. */
-    protected static final String URI =
-    "http://apache.org/cocoon/directory/2.0";
+    protected static final String URI = "http://apache.org/cocoon/directory/2.0";
 
     /** The namespace prefix for this namespace. */
     protected static final String PREFIX = "dir";
 
     /* Node and attribute names */
-    protected static final String DIR_NODE_NAME         = "directory";
-    protected static final String FILE_NODE_NAME        = "file";
+    protected static final String DIR_NODE_NAME = "directory";
+    protected static final String FILE_NODE_NAME = "file";
 
-    protected static final String FILENAME_ATTR_NAME    = "name";
-    protected static final String LASTMOD_ATTR_NAME     = "lastModified";
-    protected static final String DATE_ATTR_NAME        = "date";
-    protected static final String SIZE_ATTR_NAME        = "size";
+    protected static final String FILENAME_ATTR_NAME = "name";
+    protected static final String LASTMOD_ATTR_NAME = "lastModified";
+    protected static final String DATE_ATTR_NAME = "date";
+    protected static final String SIZE_ATTR_NAME = "size";
 
-    /*
-     * Variables set per-request
-     *
-     * FIXME: SimpleDateFormat is not supported by all locales!
-     */
-    protected int depth;
-    protected AttributesImpl attributes = new AttributesImpl();
-    protected SimpleDateFormat dateFormatter;
-    protected String sort;
-    protected boolean reverse;
-
-    protected RE rootRE;
-    protected RE includeRE;
-    protected RE excludeRE;
-
-    protected boolean isRequestedDirectory;
-    
     /** The validity that is being built */
     protected DirValidity validity;
-    
-    /** The delay between checks to the filesystem */
-    protected long refreshDelay;
+    /** Convenience object, so we don't need to create an AttributesImpl for every element. */
+    protected AttributesImpl attributes;
 
+    /** The depth parameter determines how deep the DirectoryGenerator should delve. */
+    protected int depth;
+    /**
+     * The dateFormatter determines into which date format the lastModified
+     * time should be converted.
+     * FIXME: SimpleDateFormat is not supported by all locales!
+     */
+    protected SimpleDateFormat dateFormatter;
+    /** The delay between checks on updates to the filesystem. */
+    protected long refreshDelay;
+    /**
+     * The sort parameter determines by which attribute the content of one
+     * directory should be sorted. Possible values are "name", "size", "time"
+     * and "directory", where "directory" is the same as "name", except that
+     * directory entries are listed first.
+     */
+    protected String sort;
+    /** The reverse parameter reverses the sort order. <code>false</code> is default. */
+    protected boolean reverse;
+    /** The regular expression for the root pattern. */
+    protected RE rootRE;
+    /** The regular expression for the include pattern. */
+    protected RE includeRE;
+    /** The regular expression for the exclude pattern. */
+    protected RE excludeRE;
+    /**
+     * This is only set to true for the requested directory specified by the
+     * <code>src</code> attribute on the generator's configuration.
+     */
+    protected boolean isRequestedDirectory;
 
     /**
-     * Set the request parameters. Must be called before the generate
-     * method.
+     * Set the request parameters. Must be called before the generate method.
      *
-     * @param   resolver
-     *      the SourceResolver object
-     * @param   objectModel
-     *      a <code>Map</code> containing model object
-     * @param   src
-     *      the URI for this request (?)
-     * @param   par
-     *      configuration parameters
+     * @param resolver     the SourceResolver object
+     * @param objectModel  a <code>Map</code> containing model object
+     * @param src          the directory to be XMLized specified as src attribute on &lt;map:generate/>
+     * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
+            throws ProcessingException, SAXException, IOException {
+        if (src == null) {
+            throw new ProcessingException("No src attribute pointing to a directory to be XMLized specified.");
+        }
         super.setup(resolver, objectModel, src, par);
+
+        this.depth = par.getParameterAsInteger("depth", 1);
 
         String dateFormatString = par.getParameter("dateFormat", null);
         if (dateFormatString != null) {
@@ -192,67 +205,70 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
             this.dateFormatter = new SimpleDateFormat();
         }
 
-        this.depth = par.getParameterAsInteger("depth", 1);
-
         this.sort = par.getParameter("sort", "name");
 
         this.reverse = par.getParameterAsBoolean("reverse", false);
 
-        String rePattern = par.getParameter("root", null);
-        
         this.refreshDelay = par.getParameterAsLong("refreshDelay", 1L) * 1000L;
-        
+
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("depth: " + this.depth);
+            this.getLogger().debug("dateFormat: " + this.dateFormatter.toPattern());
             this.getLogger().debug("sort: " + this.sort);
             this.getLogger().debug("reverse: " + this.reverse);
             this.getLogger().debug("refreshDelay: " + this.refreshDelay);
         }
+
+        String rePattern = null;
         try {
-            this.rootRE = (rePattern == null)?null:new RE(rePattern);
-
-            rePattern = par.getParameter("include", null);
-            this.includeRE = (rePattern == null)?null:new RE(rePattern);
-
-            rePattern = par.getParameter("exclude", null);
-            this.excludeRE = (rePattern == null)?null:new RE(rePattern);
-
+            rePattern = par.getParameter("root", null);
+            this.rootRE = (rePattern == null) ? null : new RE(rePattern);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("root pattern: " + rePattern);
+            }
+
+            rePattern = par.getParameter("include", null);
+            this.includeRE = (rePattern == null) ? null : new RE(rePattern);
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("include pattern: " + rePattern);
+            }
+
+            rePattern = par.getParameter("exclude", null);
+            this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
+
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("exclude pattern: " + rePattern);
             }
         } catch (RESyntaxException rese) {
             throw new ProcessingException("Syntax error in regexp pattern '"
-                + rePattern + "'", rese);
+                                          + rePattern + "'", rese);
         }
 
         this.isRequestedDirectory = false;
-
-        /* Create a reusable attributes for creating nodes */
         this.attributes = new AttributesImpl();
     }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
-	 */
-	public Serializable getKey()
-	{
-		return super.source + this.sort + this.depth + this.excludeRE + this.includeRE + this.reverse;
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+     * FIXME: SimpleDateFormat and RE don't have a toString() implemented, so
+     *        the key generation is buggy!!
+     */
+    public Serializable getKey() {
+        return super.source + this.depth + this.dateFormatter + this.sort
+               + this.reverse + this.rootRE + this.excludeRE + this.includeRE;
+    }
 
-
-	/**
-	 * Gets the source validity, using a deferred validity object. The validity is initially empty since
-	 * the files that define it are not known before generation has occured. So the returned object is
-	 * kept by the generator and filled with each of the files that are traversed.
-	 * @see DirectoryGenerator.DirValidity
-	 */
-	public SourceValidity getValidity()
-	{
-		this.validity = new DirValidity(this.refreshDelay);
-		return this.validity;
-	}
+    /**
+     * Gets the source validity, using a deferred validity object. The validity
+     * is initially empty since the files that define it are not known before
+     * generation has occured. So the returned object is kept by the generator
+     * and filled with each of the files that are traversed.
+     * @see DirectoryGenerator.DirValidity
+     */
+    public SourceValidity getValidity() {
+        this.validity = new DirValidity(this.refreshDelay);
+        return this.validity;
+    }
 
     /**
      * Generate XML data.
@@ -260,18 +276,16 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
      * @throws  SAXException
      *      if an error occurs while outputting the document
      * @throws  ProcessingException
-     *      if the requsted URI isn't a directory on the local
-     *      filesystem
+     *      if the requsted URI isn't a directory on the local filesystem
      */
-    public void generate()
-    throws SAXException, ProcessingException {
+    public void generate() throws SAXException, ProcessingException {
         String directory = super.source;
         Source inputSource = null;
         try {
             inputSource = this.resolver.resolveURI(directory);
             String systemId = inputSource.getURI();
             if (!systemId.startsWith(FILE)) {
-              throw new ResourceNotFoundException(systemId + " does not denote a directory");
+                throw new ResourceNotFoundException(systemId + " does not denote a directory");
             }
             // This relies on systemId being of the form "file://..."
             File directoryFile = new File(new URL(systemId).getFile());
@@ -280,28 +294,23 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
             }
 
             this.contentHandler.startDocument();
-            this.contentHandler.startPrefixMapping(PREFIX,URI);
 
             Stack ancestors = getAncestors(directoryFile);
-            addPathWithAncestors(directoryFile, ancestors);
+            addAncestorPath(directoryFile, ancestors);
 
-            this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } catch (IOException ioe) {
-            throw new ResourceNotFoundException("Could not read directory "
-                + directory, ioe);
+            throw new ResourceNotFoundException("Could not read directory " + directory, ioe);
         } finally {
-            this.resolver.release( inputSource );
+            this.resolver.release(inputSource);
         }
     }
 
     /**
-     * Creates a stack containing the ancestors of File up to specified
-     * directory.
+     * Creates a stack containing the ancestors of File up to specified directory.
      * @param path the File whose ancestors shall be retrieved
-     *
      * @return a Stack containing the ancestors.
      */
     protected Stack getAncestors(File path) {
@@ -312,109 +321,105 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
             parent = parent.getParentFile();
             if (parent != null) {
                 ancestors.push(parent);
+            } else {
+                // no ancestor matched the root pattern
+                ancestors.clear();
             }
         }
 
         return ancestors;
     }
 
-
-    protected void addPathWithAncestors(File path, Stack ancestors)
-            throws SAXException {
-
+    /**
+     * Adds recursively the path from the directory matched by the root pattern
+     * down to the requested directory.
+     * @param path       the requested directory.
+     * @param ancestors  the stack of the ancestors.
+     * @throws SAXException
+     */
+    protected void addAncestorPath(File path, Stack ancestors) throws SAXException {
         if (ancestors.empty()) {
             this.isRequestedDirectory = true;
             addPath(path, depth);
         } else {
             startNode(DIR_NODE_NAME, (File)ancestors.pop());
-            addPathWithAncestors(path, ancestors);
+            addAncestorPath(path, ancestors);
             endNode(DIR_NODE_NAME);
         }
     }
-
 
     /**
      * Adds a single node to the generated document. If the path is a
      * directory, and depth is greater than zero, then recursive calls
      * are made to add nodes for the directory's children.
      *
-     * @param   path
-     *      the file/directory to process
-     * @param   depth
-     *      how deep to scan the directory
+     * @param path   the file/directory to process
+     * @param depth  how deep to scan the directory
      *
-     * @throws  SAXException
-     *      if an error occurs while constructing nodes
+     * @throws SAXException  if an error occurs while constructing nodes
      */
-    protected void addPath(File path, int depth)
-    throws SAXException {
+    protected void addPath(File path, int depth) throws SAXException {
         if (path.isDirectory()) {
             startNode(DIR_NODE_NAME, path);
-            if (depth>0) {
+            if (depth > 0) {
                 File contents[] = path.listFiles();
 
-                if(sort.equals("name")) {
-                    Arrays.sort(contents,
-                        new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                if(reverse) {
-                                    return ((File) o2).getName()
-                                        .compareTo(((File) o1).getName());
-                                }
-                                return ((File) o1).getName()
-                                    .compareTo(((File) o2).getName());
+                if (sort.equals("name")) {
+                    Arrays.sort(contents, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            if (reverse) {
+                                return ((File)o2).getName().compareTo(((File)o1).getName());
                             }
-                        });
-                } else if(sort.equals("size")) {
-                    Arrays.sort(contents,
-                        new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                if(reverse) {
-                                    return new Long(((File) o2).length())
-                                        .compareTo(new Long(((File) o1).length()));
-                                }
-                                return new Long(((File) o1).length())
-                                    .compareTo(new Long(((File) o2).length()));
+                            return ((File)o1).getName().compareTo(((File)o2).getName());
+                        }
+                    });
+                } else if (sort.equals("size")) {
+                    Arrays.sort(contents, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            if (reverse) {
+                                return new Long(((File)o2).length()).compareTo(
+                                    new Long(((File)o1).length()));
                             }
-                        });
-                } else if(sort.equals("lastmodified")) {
-                    Arrays.sort(contents,
-                        new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                if(reverse) {
-                                    return new Long(((File) o2).lastModified())
-                                        .compareTo(new Long(((File) o1).lastModified()));
-                                }
-                                return new Long(((File) o1).lastModified())
-                                    .compareTo(new Long(((File) o2).lastModified()));
+                            return new Long(((File)o1).length()).compareTo(
+                                new Long(((File)o2).length()));
+                        }
+                    });
+                } else if (sort.equals("lastmodified")) {
+                    Arrays.sort(contents, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            if (reverse) {
+                                return new Long(((File)o2).lastModified()).compareTo(
+                                    new Long(((File)o1).lastModified()));
                             }
-                        });
-                } else if(sort.equals("directory")) {
-                    Arrays.sort(contents,
-                        new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                File f1 = (File) o1;
-                                File f2 = (File) o2;
+                            return new Long(((File)o1).lastModified()).compareTo(
+                                new Long(((File)o2).lastModified()));
+                        }
+                    });
+                } else if (sort.equals("directory")) {
+                    Arrays.sort(contents, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            File f1 = (File)o1;
+                            File f2 = (File)o2;
 
-                                if(reverse) {
-                                    if(f2.isDirectory() && f1.isFile())
-                                        return -1;
-                                    if(f2.isFile() && f1.isDirectory())
-                                        return 1;
-                                    return f2.getName().compareTo(f1.getName());
-                                }
-                                if(f2.isDirectory() && f1.isFile())
-                                    return 1;
-                                if(f2.isFile() && f1.isDirectory())
+                            if (reverse) {
+                                if (f2.isDirectory() && f1.isFile())
                                     return -1;
-                                return f1.getName().compareTo(f2.getName());
+                                if (f2.isFile() && f1.isDirectory())
+                                    return 1;
+                                return f2.getName().compareTo(f1.getName());
                             }
-                        });
+                            if (f2.isDirectory() && f1.isFile())
+                                return 1;
+                            if (f2.isFile() && f1.isDirectory())
+                                return -1;
+                            return f1.getName().compareTo(f2.getName());
+                        }
+                    });
                 }
 
-                for (int i=0; i<contents.length; i++) {
+                for (int i = 0; i < contents.length; i++) {
                     if (isIncluded(contents[i]) && !isExcluded(contents[i])) {
-                        addPath(contents[i], depth-1);
+                        addPath(contents[i], depth - 1);
                     }
                 }
             }
@@ -427,189 +432,157 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
         }
     }
 
-
     /**
-     * Begins a named node, and calls setNodeAttributes to set its
-     * attributes.
+     * Begins a named node and calls setNodeAttributes to set its attributes.
      *
-     * @param   nodeName
-     *      the name of the new node
-     * @param   path
-     *      the file/directory to use when setting attributes
-     *
-     * @throws  SAXException
-     *      if an error occurs while creating the node
+     * @param nodeName  the name of the new node
+     * @param path      the file/directory to use when setting attributes
+     * 
+     * @throws SAXException  if an error occurs while creating the node
      */
-    protected void startNode(String nodeName, File path)
-    throws SAXException {
-		if (this.validity != null) {
-			this.validity.addFile(path);
-		}
-
+    protected void startNode(String nodeName, File path) throws SAXException {
+        if (this.validity != null) {
+            this.validity.addFile(path);
+        }
         setNodeAttributes(path);
-        super.contentHandler.startElement(URI, nodeName, PREFIX+':'+nodeName, attributes);
+        super.contentHandler.startElement(URI, nodeName, PREFIX + ':' + nodeName, attributes);
     }
-
 
     /**
      * Sets the attributes for a given path. The default method sets attributes
      * for the name of thefile/directory and for the last modification time
      * of the path.
      *
-     * @param path
-     *        the file/directory to use when setting attributes
+     * @param path  the file/directory to use when setting attributes
      *
-     * @throws SAXException
-     *         if an error occurs while setting the attributes
+     * @throws SAXException  if an error occurs while setting the attributes
      */
     protected void setNodeAttributes(File path) throws SAXException {
         long lastModified = path.lastModified();
         attributes.clear();
-        attributes.addAttribute("", FILENAME_ATTR_NAME,
-                    FILENAME_ATTR_NAME, "CDATA",
-                    path.getName());
-        attributes.addAttribute("", LASTMOD_ATTR_NAME,
-                    LASTMOD_ATTR_NAME, "CDATA",
-                    Long.toString(path.lastModified()));
-        attributes.addAttribute("", DATE_ATTR_NAME,
-                    DATE_ATTR_NAME, "CDATA",
-                    dateFormatter.format(new Date(lastModified)));
-        attributes.addAttribute("", SIZE_ATTR_NAME,
-                    SIZE_ATTR_NAME, "CDATA",
-                    Long.toString(path.length()));
-
+        attributes.addAttribute("", FILENAME_ATTR_NAME, FILENAME_ATTR_NAME,
+                                "CDATA", path.getName());
+        attributes.addAttribute("", LASTMOD_ATTR_NAME, LASTMOD_ATTR_NAME,
+                                "CDATA", Long.toString(path.lastModified()));
+        attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME,
+                                "CDATA", dateFormatter.format(new Date(lastModified)));
+        attributes.addAttribute("", SIZE_ATTR_NAME, SIZE_ATTR_NAME,
+                                "CDATA", Long.toString(path.length()));
         if (this.isRequestedDirectory) {
             attributes.addAttribute("", "sort", "sort", "CDATA", this.sort);
             attributes.addAttribute("", "reverse", "reverse", "CDATA",
-                String.valueOf(this.reverse));
-            attributes.addAttribute("", "requested", "requested", "CDATA",
-                "true");
+                                    String.valueOf(this.reverse));
+            attributes.addAttribute("", "requested", "requested", "CDATA", "true");
             this.isRequestedDirectory = false;
         }
     }
 
-
     /**
      * Ends the named node.
      *
-     * @param   nodeName
-     *      the name of the new node
+     * @param nodeName  the name of the new node
      *
-     * @throws  SAXException
-     *      if an error occurs while closing the node
+     * @throws SAXException  if an error occurs while closing the node
      */
-    protected void endNode(String nodeName)
-    throws SAXException {
-        super.contentHandler.endElement(URI, nodeName, PREFIX+':'+nodeName);
+    protected void endNode(String nodeName) throws SAXException {
+        super.contentHandler.endElement(URI, nodeName, PREFIX + ':' + nodeName);
     }
-
 
     /**
      * Determines if a given File is the defined root.
      *
-     * @param path the File to check
+     * @param path  the File to check
      *
      * @return true if the File is the root or the root pattern is not set,
-     *      false otherwise.
+     *         false otherwise.
      */
     protected boolean isRoot(File path) {
-
-        return (this.rootRE == null)
-                ? true
-                : this.rootRE.match(path.getName());
+        return (this.rootRE == null) ? true : this.rootRE.match(path.getName());
     }
-
 
     /**
      * Determines if a given File shall be visible.
      *
-     * @param path the File to check
+     * @param path  the File to check
      *
-     * @return true if the File shall be visible or the include Pattern is
-            <code>null</code>, false otherwise.
+     * @return true if the File shall be visible or the include Pattern is <code>null</code>,
+     *         false otherwise.
      */
     protected boolean isIncluded(File path) {
-
-        return (this.includeRE == null)
-                ? true
-                : this.includeRE.match(path.getName());
+        return (this.includeRE == null) ? true : this.includeRE.match(path.getName());
     }
-
 
     /**
      * Determines if a given File shall be excluded from viewing.
      *
-     * @param path the File to check
+     * @param path  the File to check
      *
-     * @return false if the given File shall not be excluded or the
-     * exclude Pattern is <code>null</code>, true otherwise.
+     * @return false if the given File shall not be excluded or the exclude Pattern is <code>null</code>,
+     *         true otherwise.
      */
     protected boolean isExcluded(File path) {
-
-        return (this.excludeRE == null)
-                ? false
-                : this.excludeRE.match(path.getName());
+        return (this.excludeRE == null) ? false : this.excludeRE.match(path.getName());
     }
 
     /**
      * Recycle resources
-     *
      */
-
     public void recycle() {
-       super.recycle();
-       this.attributes = null;
-         this.dateFormatter = null;
-       this.rootRE = null;
-       this.includeRE = null;
-       this.excludeRE = null;
-       this.validity = null;
-
+        super.recycle();
+        this.attributes = null;
+        this.dateFormatter = null;
+        this.rootRE = null;
+        this.includeRE = null;
+        this.excludeRE = null;
+        this.validity = null;
     }
 
     /** Specific validity class, that holds all files that have been generated */
-	public static class DirValidity implements SourceValidity {
-		private long expiry;
-		private long delay;
-		List files = new ArrayList();
-		List fileDates = new ArrayList();
+    public static class DirValidity implements SourceValidity {
 
-		public DirValidity(long delay) {
-			expiry = System.currentTimeMillis() + delay;
-			this.delay = delay;
-		}
+        private long expiry;
+        private long delay;
+        List files = new ArrayList();
+        List fileDates = new ArrayList();
 
-		public int isValid() {
-			if (System.currentTimeMillis() <= expiry)
-				return 1;
+        public DirValidity(long delay) {
+            expiry = System.currentTimeMillis() + delay;
+            this.delay = delay;
+        }
 
-			//            System.out.println("Regenerating cache validity");
-			expiry = System.currentTimeMillis() + delay;
-			int len = files.size();
-			for (int i = 0; i < len; i++) {
-				File f = (File) files.get(i);
-				if (!f.exists())
-					return -1; // File was removed
+        public int isValid() {
+            if (System.currentTimeMillis() <= expiry) {
+                return 1;
+            }
 
-				long oldDate = ((Long) fileDates.get(i)).longValue();
-				long newDate = f.lastModified();
+            expiry = System.currentTimeMillis() + delay;
+            int len = files.size();
+            for (int i = 0; i < len; i++) {
+                File f = (File)files.get(i);
+                if (!f.exists()) {
+                    return -1; // File was removed
+                }
 
-				if (oldDate != newDate)
-					return -1;
-			}
+                long oldDate = ((Long)fileDates.get(i)).longValue();
+                long newDate = f.lastModified();
 
-			// All content is up to date : update the expiry date
-			expiry = System.currentTimeMillis() + delay;
-			return 1;
-		}
-		
-		public int isValid(SourceValidity newValidity) {
-			return isValid();
-		}
+                if (oldDate != newDate) {
+                    return -1;
+                }
+            }
 
-		public void addFile(File f) {
-			files.add(f);
-			fileDates.add(new Long(f.lastModified()));
-		}
-	}
+            // all content is up to date: update the expiry date
+            expiry = System.currentTimeMillis() + delay;
+            return 1;
+        }
+
+        public int isValid(SourceValidity newValidity) {
+            return isValid();
+        }
+
+        public void addFile(File f) {
+            files.add(f);
+            fileDates.add(new Long(f.lastModified()));
+        }
+    }
 }
