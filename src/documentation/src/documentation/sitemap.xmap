@@ -28,13 +28,24 @@
         <map:select type="exists">
           <map:when test="{project:content.xdocs}{1}/content_en.xml">
             <map:generate src="{project:content.xdocs}{1}/content_en.xml"/>
-        <map:transform src="{defaults:stylesheets}/html2document.xsl"/>            
+            <map:transform src="{defaults:stylesheets}/html2document.xsl"/>            
           </map:when>
           <map:otherwise>
             <map:generate src="{project:content.xdocs}{1}/content_en.html" type="local-html"/>
             <map:transform src="{forrest:stylesheets}/html2document.xsl" />            
           </map:otherwise>
         </map:select>        
+        <map:serialize/>
+      </map:match>
+      <map:match pattern="generated-*/*">
+        <map:select type="exists">
+          <map:when test="{project:content.xdocs}{2}/generated-{1}_en.xml">
+            <map:generate src="{project:content.xdocs}{2}/generated-{1}_en.xml"/>
+          </map:when>
+          <map:otherwise>
+            <map:generate src="{project:content}no-generated-document.xml"/>
+          </map:otherwise>
+        </map:select>          
         <map:serialize/>
       </map:match>
       <map:match pattern="comments/*">
@@ -55,7 +66,9 @@
         <map:select type="exists">
           <map:when test="{project:content.xdocs}{1}/meta.xml">
             <map:aggregate element="aggregate">
+              <map:part src="cocoon:/generated-before/{1}" element="generated-before"/>              
               <map:part src="cocoon:/html2document/{1}" element="content"/>
+              <map:part src="cocoon:/generated-after/{1}" element="generated-after"/>                 
               <map:part src="{project:content.xdocs}{1}/meta.xml"/>
               <map:part src="cocoon:/comments/{1}"/>
             </map:aggregate>
