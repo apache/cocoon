@@ -25,7 +25,7 @@ find src -name *Action.java -o -name *Generator.java \
 
 echo "Listing the sitemap components java source files."
 echo " (See components-source.txt)"
-sed -n 's/src\/.*java\/org/org/p' component-java-files.txt \
+sed -n 's/src\/.*org\//org\//p' component-java-files.txt \
 | sort > components-source.txt
 
 echo "Scanning the coordinate table xdoc and list the javadoc sources."
