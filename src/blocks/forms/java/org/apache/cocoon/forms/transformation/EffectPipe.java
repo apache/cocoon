@@ -35,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the XMLPipe to match the structure of the data being transformed.
  *
  * @author Timothy Larson
- * @version $Id: EffectPipe.java,v 1.3 2004/04/08 09:38:55 mpo Exp $
+ * @version $Id: EffectPipe.java,v 1.4 2004/04/09 16:36:00 mpo Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -94,53 +94,86 @@ public class EffectPipe extends AbstractXMLPipe {
             }
         }
 
-        public void addAttributes(Attributes attrs) {
-            if (attrs != null) {
-                if (mine == true) {
-                    if (this.attrs == XMLUtils.EMPTY_ATTRIBUTES) {
-                        this.attrs = attrs;
-                        mine = false;
-                    } else {
-                        ((AttributesImpl)this.attrs).setAttributes(attrs);
-                    }
-                } else {
-                    this.attrs = new AttributesImpl(this.attrs);
-                    ((AttributesImpl)this.attrs).setAttributes(attrs);
+        /**
+         * Adds/overwrites the attributes from the collection in the argument 
+         * to the ones inside this class.
+         * 
+         * @param attrs collection of attributes to add/overwrite
+         */
+        public void addAttributes(Attributes newAttrs) {
+            if (newAttrs == null || newAttrs.getLength() == 0) return; //nothing to add
+            if (attrs == XMLUtils.EMPTY_ATTRIBUTES) {
+                attrs = new AttributesImpl(newAttrs);
+                mine = true;
+            } else {
+                if (!mine) {
+                    attrs = new AttributesImpl(attrs);
                     mine = true;
+                }
+
+                AttributesImpl modifAttrs  = ((AttributesImpl)attrs);
+                int newAttrsCount = newAttrs.getLength();
+                for (int i = 0; i < newAttrsCount; i++) {
+                    String uri = newAttrs.getURI(i);
+                    String loc = newAttrs.getLocalName(i);
+                    String raw = newAttrs.getQName(i);
+                    String type = newAttrs.getType(i);
+                    String value = newAttrs.getValue(i);
+                    
+                    int foundAttr = modifAttrs.getIndex(uri, loc);
+                    if (foundAttr == -1) {
+                        modifAttrs.addAttribute(uri, loc, raw, type, value);                
+                    } else {
+                        modifAttrs.setAttribute(foundAttr, uri, loc, raw, type, value);                                
+                    }                    
                 }
             }
         }
 
+        /**
+         * Adds/overwrites one single attribute to the ones already contained 
+         * inside this object.
+         * 
+         * @param uri the uri of the attribute to add.
+         * @param loc the localname of the attribute to add
+         * @param raw the rawname of the attribute to add
+         * @param type the type of the attribute to add
+         * @param value the value of the attribute to add.
+         */
         public void addAttribute(String uri, String loc, String raw, String type, String value) {
             if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
                 attrs = new AttributesImpl(attrs);
                 mine = true;
             }
-            ((AttributesImpl)attrs).addAttribute(uri, loc, raw, type, value);
+            AttributesImpl modifAttrs  = ((AttributesImpl)attrs);
+            int foundAttr = modifAttrs.getIndex(uri, loc);
+            if (foundAttr == -1) {
+                modifAttrs.addAttribute(uri, loc, raw, type, value);                
+            } else {
+                modifAttrs.setAttribute(foundAttr, uri, loc, raw, type, value);                                
+            }
         }
 
         public void addAttribute(String prefix, String uri, String loc, String value) {
-            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
-                attrs = new AttributesImpl(attrs);
-                mine = true;
-            }
-            ((AttributesImpl)attrs).addAttribute(uri, loc, prefix + ":" +loc, "CDATA", value);
+            this.addAttribute(uri, loc, prefix + ":" +loc, "CDATA", value);
         }
 
         public void addAttribute(String loc, String value) {
-            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
-                attrs = new AttributesImpl(attrs);
-                mine = true;
-            }
-            ((AttributesImpl)attrs).addAttribute("", loc, loc, "CDATA", value);
+            this.addAttribute("", loc, loc, "CDATA", value);
         }
 
-        public void claimAttributes() {
-            if (!mine) {
-                attrs = new AttributesImpl(attrs);
-                mine = true;
-            }
-        }
+        //TODO: IMPORTANT!!! 
+        // check this: when commenting out this stuff everything still compiles!
+        // this means that attributes on these objects are never explicitely "claimed"
+        // which means that these Element objects should never get referenced 
+        // outside the scope of the SAX event that creates them.
+        // Is that really the case?
+//        public void claimAttributes() {
+//            if (!mine) {
+//                attrs = new AttributesImpl(attrs);
+//                mine = true;
+//            }
+//        }
     }
 
     protected abstract class Handler {
