@@ -122,7 +122,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.13 2004/07/08 07:22:33 tcurdt Exp $
+ * @version CVS $Id$
  */
 public class CIncludeTransformer
 extends AbstractSAXTransformer
@@ -199,7 +199,7 @@ implements Disposable, CacheableProcessingComponent {
         }
         this.compiling = false;
         this.supportCaching = parameters.getParameterAsBoolean("support-caching", false);
-        if (this.getLogger().isErrorEnabled()) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Starting CIncludeTransformer with session " + this.cachingSession);
             this.startTime = System.currentTimeMillis();
         }
@@ -243,7 +243,7 @@ implements Disposable, CacheableProcessingComponent {
         super.recycle();
         this.configurationParameters = null;
         this.resourceParameters = null;
-        if (getLogger().isErrorEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Finishing CachingCIncludeTransformer, time: " +
                               (System.currentTimeMillis() - this.startTime));
             this.startTime = 0;
