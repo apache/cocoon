@@ -437,7 +437,7 @@
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->
-  <store class="org.apache.cocoon.components.store.JCSDefaultStore" 
+  <store class="org.apache.cocoon.components.store.impl.JCSDefaultStore" 
          logger="core.store">
     <parameter name="maxobjects" value="1000"/>
     <parameter name="use-cache-directory" value="true"/>
@@ -457,7 +457,7 @@
       |             work directory.
       |
       +-->
-  <persistent-store class="org.apache.cocoon.components.store.JCSPersistentStore"
+  <persistent-store class="org.apache.cocoon.components.store.impl.JCSPersistentStore"
                     logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
     <parameter name="maxobjects" value="1000"/>

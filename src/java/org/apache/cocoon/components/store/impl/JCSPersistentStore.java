@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.store;
+package org.apache.cocoon.components.store.impl;
 
 import org.apache.avalon.framework.context.Contextualizable;
 
@@ -22,7 +22,7 @@ import org.apache.avalon.framework.context.Contextualizable;
  * This is the persistent store implementation based on JCS
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: JCSPersistentStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
+ * @version CVS $Id: JCSPersistentStore.java,v 1.1 2004/05/17 14:02:50 cziegeler Exp $
  */
 public class JCSPersistentStore 
     extends JCSDefaultStore
