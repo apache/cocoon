@@ -50,7 +50,10 @@
 */
 package org.apache.cocoon.components.flow.javascript.fom;
 
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -93,7 +96,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.22 2003/12/12 05:39:38 antonio Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.23 2003/12/26 18:48:40 coliver Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -369,7 +372,8 @@ public class FOM_Cocoon extends ScriptableObject {
         LifecycleHelper.decommission(obj);
     }
 
-    public static class FOM_Request extends ScriptableObject {
+    public static class FOM_Request 
+        extends ScriptableObject implements Request {
 
         Request request;
 
@@ -553,9 +557,194 @@ public class FOM_Cocoon extends ScriptableObject {
         public boolean jsFunction_isUserInRole(String role) {
             return request.isUserInRole(role);
         }
+
+        // Request interface
+        
+        public Object get(String name) {
+            return request.get(name);
+        }
+
+        public Object getAttribute(String name) {
+            return request.getAttribute(name);
+        }
+
+        public Enumeration getAttributeNames() {
+            return request.getAttributeNames();
+        }
+
+        public void setAttribute(String name, Object o) {
+            request.setAttribute(name, o);
+        }
+
+        public void removeAttribute(String name) {
+            request.removeAttribute(name);
+        }
+
+        public String getAuthType() {
+            return request.getAuthType();
+        }
+
+        public String getCharacterEncoding() {
+            return request.getCharacterEncoding();
+        }
+
+        public void setCharacterEncoding(String enc) 
+            throws java.io.UnsupportedEncodingException {
+            request.setCharacterEncoding(enc);
+        }
+
+        public int getContentLength() {
+            return request.getContentLength();
+        }
+
+        public String getContentType() {
+            return request.getContentType();
+        }
+
+        public String getParameter(String name) {
+            return request.getParameter(name);
+        }
+
+        public Enumeration getParameterNames() {
+            return request.getParameterNames();
+        }
+
+        public String[] getParameterValues(String name) {
+            return request.getParameterValues(name);
+        }
+
+        public String getProtocol() {
+            return request.getProtocol();
+        }
+
+        public String getScheme() {
+            return request.getScheme();
+        }
+
+        public String getServerName() {
+            return request.getServerName();
+        }
+
+        public int getServerPort() {
+            return request.getServerPort();
+        }
+
+        public String getRemoteAddr() {
+            return request.getRemoteAddr();
+        }
+
+        public String getRemoteHost() {
+            return request.getRemoteHost();
+        }
+
+        public Locale getLocale() {
+            return request.getLocale();
+        }
+
+        public Enumeration getLocales() {
+            return request.getLocales();
+        }
+
+        public boolean isSecure() {
+            return request.isSecure();
+        }
+
+        public Cookie[] getCookies() {
+            return request.getCookies();
+        }
+
+        public Map getCookieMap() {
+            return request.getCookieMap();
+        }
+
+        public long getDateHeader(String name) {
+            return request.getDateHeader(name);
+        }
+        
+        public String getHeader(String name) {
+            return request.getHeader(name);
+        }
+
+        public Enumeration getHeaders(String name) {
+            return request.getHeaders(name);
+        }
+
+        public Enumeration getHeaderNames() {
+            return request.getHeaderNames();
+        }
+        
+        public String getMethod() {
+            return request.getMethod();
+        }
+
+        public String getPathInfo() {
+            return request.getPathInfo();
+        }
+
+        public String getPathTranslated() {
+            return request.getPathTranslated();
+        }
+
+        public String getContextPath() {
+            return request.getContextPath();
+        }
+
+        public String getQueryString() {
+            return request.getQueryString();
+        }
+
+        public String getRemoteUser() {
+            return request.getRemoteUser();
+        }
+
+        public Principal getUserPrincipal() {
+            return request.getUserPrincipal();
+        }
+        
+        public boolean isUserInRole(String role) {
+            return request.isUserInRole(role);
+        }
+
+        public String getRequestedSessionId() {
+            return request.getRequestedSessionId();
+        }
+
+        public String getRequestURI() {
+            return request.getRequestURI();
+        }
+        
+        public String getSitemapURI() {
+            return request.getSitemapURI();
+        }
+
+        public String getServletPath() {
+            return request.getServletPath();
+        }
+
+        public Session getSession(boolean create) {
+            return request.getSession(create);
+        }
+
+        public Session getSession() {
+            return request.getSession();
+        }
+
+        public boolean isRequestedSessionIdValid() {
+            return request.isRequestedSessionIdValid();
+        }
+
+        public boolean isRequestedSessionIdFromCookie() {
+            return request.isRequestedSessionIdFromCookie();
+        }
+
+        public boolean isRequestedSessionIdFromURL() {
+            return request.isRequestedSessionIdFromURL();
+        }
+
     }
 
-    public static class FOM_Cookie extends ScriptableObject {
+    public static class FOM_Cookie 
+        extends ScriptableObject implements Cookie {
 
         Cookie cookie;
 
@@ -630,9 +819,72 @@ public class FOM_Cocoon extends ScriptableObject {
         public boolean jsGet_secure() {
             return cookie.getSecure();
         }
+
+        // Cookie interface
+
+        public void setComment(String purpose) {
+            cookie.setComment(purpose);
+        }
+
+        public String getComment() {
+            return cookie.getComment();
+        }
+
+        public void setDomain(String pattern) {
+            cookie.setDomain(pattern);
+        }
+
+        public String getDomain() {
+            return cookie.getDomain();
+        }
+
+        public void setMaxAge(int expiry) {
+            cookie.setMaxAge(expiry);
+        }
+
+        public int getMaxAge() {
+            return cookie.getMaxAge();
+        }
+
+        public void setPath(String uri) {
+            cookie.setPath(uri);
+        }
+
+        public String getPath() {
+            return cookie.getPath();
+        }
+
+        public void setSecure(boolean flag) {
+            cookie.setSecure(flag);
+        }
+
+        public boolean getSecure() {
+            return cookie.getSecure();
+        }
+
+        public String getName() {
+            return cookie.getName();
+        }
+
+        public void setValue(String newValue) {
+            cookie.setValue(newValue);
+        }
+
+        public String getValue() {
+            return cookie.getValue();
+        }
+
+        public int getVersion() {
+            return cookie.getVersion();
+        }
+        
+        public void setVersion(int v) {
+            cookie.setVersion(v);
+        }
     }
 
-    public static class FOM_Response extends ScriptableObject {
+    public static class FOM_Response 
+        extends ScriptableObject implements Response {
 
         Response response;
 
@@ -682,10 +934,63 @@ public class FOM_Cocoon extends ScriptableObject {
                 ((HttpResponse) response).setStatus(sc);
             }
         }
+
+        // Response interface
         
+        public String getCharacterEncoding() {
+            return response.getCharacterEncoding();
+        }
+
+        public void setLocale(Locale loc) {
+            response.setLocale(loc);
+        }
+
+        public Locale getLocale() {
+            return response.getLocale();
+        }
+        public Cookie createCookie(String name, String value) {
+            return response.createCookie(name, value);
+        }
+
+        public void addCookie(Cookie cookie) {
+            response.addCookie(cookie);
+        }
+
+        public boolean containsHeader(String name) {
+            return response.containsHeader(name);
+        }
+
+        public String encodeURL(String url) {
+            return response.encodeURL(url);
+        }
+        
+        public void setDateHeader(String name, long date) {
+            response.setDateHeader(name, date);
+        }
+
+        public void addDateHeader(String name, long date) {
+            response.addDateHeader(name, date);
+        }
+
+        public void setHeader(String name, String value) {
+            response.setHeader(name, value);
+        }
+
+        public void addHeader(String name, String value) {
+            response.addHeader(name, value);
+        }
+
+        public void setIntHeader(String name, int value) {
+            response.setIntHeader(name, value);
+        }
+        
+        public void addIntHeader(String name, int value) {
+            response.addIntHeader(name, value);
+        }
     }
 
-    public static class FOM_Session extends ScriptableObject {
+    public static class FOM_Session 
+        extends ScriptableObject implements Session {
 
         Session session;
 
@@ -772,9 +1077,57 @@ public class FOM_Cocoon extends ScriptableObject {
         public int jsFunction_getMaxInactiveInterval() {
             return session.getMaxInactiveInterval();
         }
+
+
+        // Session interface 
+
+        public long getCreationTime() {
+            return session.getCreationTime();
+        }
+        
+        public String getId() {
+            return session.getId();
+        }
+
+        public long getLastAccessedTime() {
+            return session.getLastAccessedTime();
+        }
+
+        public void setMaxInactiveInterval(int interval) {
+            session.setMaxInactiveInterval(interval);
+        }
+
+        public int getMaxInactiveInterval() {
+            return session.getMaxInactiveInterval();
+        }
+
+        public Object getAttribute(String name) {
+            return session.getAttribute(name);
+        }
+
+        public Enumeration getAttributeNames() {
+            return session.getAttributeNames();
+        }
+
+        public void setAttribute(String name, Object value) {
+            session.setAttribute(name, value);
+        }
+
+        public void removeAttribute(String name) {
+            session.removeAttribute(name);
+        }
+
+        public void invalidate() {
+            session.invalidate();
+        }
+
+        public boolean isNew() {
+            return session.isNew();
+        }
     }
 
-    public static class FOM_Context extends ScriptableObject {
+    public static class FOM_Context extends ScriptableObject 
+        implements org.apache.cocoon.environment.Context {
 
         org.apache.cocoon.environment.Context context;
 
@@ -840,6 +1193,46 @@ public class FOM_Cocoon extends ScriptableObject {
         	return context.getRealPath(path);
         }
         */
+
+        // Context interface
+
+        public Object getAttribute(String name) {
+            return context.getAttribute(name);
+        }
+
+        public void setAttribute(String name, Object value) {
+            context.setAttribute(name, value);
+        }
+
+        public void removeAttribute(String name) {
+            context.removeAttribute(name);
+        }
+
+        public Enumeration getAttributeNames() {
+            return context.getAttributeNames();
+        }
+
+        public URL getResource(String path) 
+            throws MalformedURLException {
+            return context.getResource(path);
+        }
+        
+        public String getRealPath(String path) {
+            return context.getRealPath(path);
+        }
+
+        public String getMimeType(String file) {
+            return context.getMimeType(file);
+        }
+
+        public String getInitParameter(String name) {
+            return context.getInitParameter(name);
+        }
+
+        public InputStream getResourceAsStream(String path) {
+            return context.getResourceAsStream(path);
+        }
+        
     }
 
     public static class FOM_Log extends ScriptableObject {
