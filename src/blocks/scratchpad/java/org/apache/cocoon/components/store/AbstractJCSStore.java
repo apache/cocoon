@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.store;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -29,35 +28,30 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.impl.AbstractReadWriteStore;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheConfigurator;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- * TODO - This store implementation should be moved to excalibur store
- * 
- * The JCS Configuration file - for details see: 
+ * For JCS Configuration details see:
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
  * @author <a href="mailto:cmoss@tvnz.co.nz">Corin Moss</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
-public class JCSStore extends AbstractReadWriteStore
+public abstract class AbstractJCSStore extends AbstractReadWriteStore
     implements Store, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
     
     /** The JCS configuration properties */
-    private Properties m_properties;
+    protected Properties m_properties;
     
-    /** The Region as used by JCS*/
-    private String m_region;
-    
-    /** The group name as used by JCS getGroupKeys*/
-    private String m_group;
+    /** The JCS region name */
+    protected String m_region;
     
     /** JCS Cache manager */
     private CompositeCacheManager m_cacheManager;
@@ -71,84 +65,51 @@ public class JCSStore extends AbstractReadWriteStore
     
     // ---------------------------------------------------- Lifecycle
     
-    public JCSStore() {
+    public AbstractJCSStore() {
     }
     
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
     }
     
-    /**
-     *  Configure the Component.<br>
-     *  A few options can be used
-     *  <ul>
-     *    <li>
-     *      <code>config-file</code>: the name of the file which specifies 
-     *       the configuration parameters
-     *    </li>
-     *    <li>
-     *      <code>region-name<code>: the region to be used as defined in the config file
-     *    </li>
-     *    <li>
-     *      <code>group-name</code>: the group to be used as defined in the config file
-     *    </li>
-     *  </ul>
-     * 
-     * TODO: instead of loading properties from an external file we may want to
-     * specify them using parameters.
-     * 
-     * @param params the configuration paramters
-     * @exception  ParameterException
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        // TODO - These are only values for testing:
-        String configFile = params.getParameter("config-file", "context://WEB-INF/cache.ccf");
-        m_region = params.getParameter("region-name", "indexedRegion1");
-        // FIXME: I don't think group-name is really required here
-        m_group = params.getParameter("group-name", "indexedDiskCache");
-
-        if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("CEM Loading config: '" + configFile + "'");
-            getLogger().debug("CEM Loading region: '" + m_region + "'");
-            getLogger().debug("CEM Loading group: '" + m_group + "'");
-        }
+    public void parameterize(Parameters parameters) throws ParameterException {
         
-        Source source = null;
-        SourceResolver resolver = null;
+        Properties defaults = new Properties();
         try {
-            resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(configFile);
-            if (!source.exists()) {
-                throw new ParameterException("No config file at configured location: " + configFile);
+            String defaultsFile = getDefaultPropertiesFile();
+            if (defaultsFile != null) {
+                defaults.load(Thread.currentThread().getContextClassLoader().
+                    getResourceAsStream(defaultsFile));
             }
-            m_properties = new Properties();
-            m_properties.load(source.getInputStream());
         }
         catch (IOException e) {
-            throw new ParameterException("Failed to load JCS properties file",e);
+            throw new ParameterException("Failure loading cache defaults",e);
         }
-        catch (ServiceException e) {
-            throw new ParameterException("Missing service dependency: SourceResolver",e);
-        }
-        finally {
-            if (resolver != null && source != null) {
-                resolver.release(source);
+        
+        m_properties = new Properties(defaults);
+        String[] names = parameters.getNames();
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].startsWith("jcs.")) {
+                m_properties.put(names[i], parameters.getParameter(names[i]));
             }
         }
+        
+        m_region = parameters.getParameter("region-name","main");
+    }
+    
+    protected String getDefaultPropertiesFile() {
+        return null;
     }
     
     public void initialize() throws Exception {
-        
         m_cacheManager = CompositeCacheManager.getUnconfiguredInstance();
         m_cacheManager.configure(m_properties);
         m_JCS = new JCSCacheAccess(m_cacheManager.getCache(m_region));
-        
     }
-
+    
     public void dispose() {
-        // FIXME: how to actually persist the stored items?
         m_JCS.save();
-        m_cacheManager.freeCache(m_region);
+        m_JCS.dispose();
     }
     
     // ---------------------------------------------------- Store implementation
@@ -180,7 +141,7 @@ public class JCSStore extends AbstractReadWriteStore
     }
     
     /**
-     *  Store the given object in the indexed data file.
+     * Store the given object.
      *
      * @param key the key object
      * @param value the value object
@@ -195,27 +156,18 @@ public class JCSStore extends AbstractReadWriteStore
             getLogger().debug("Store object " + value + " with key "+ key);
         }
         
-        //This test is not really pertinent here - we
-        //won't always be storing serializable objects (I don't think)
-        if (value instanceof Serializable) 
+        try 
         {
-            try 
-            {
-                m_JCS.put(key, value);
-            } 
-            catch (CacheException ce) 
-            {
-                getLogger().error("Failure storing object ", ce);
-            }
+            m_JCS.put(key, value);
         } 
-        else 
+        catch (CacheException ce) 
         {
-            throw new IOException("Object not Serializable");
+            getLogger().error("Failure storing object ", ce);
         }
     }
     
     /**
-     * Frees some values of the data file.<br>
+     * Frees some values of the store.
      * TODO: implementation?
      */
     protected void doFree() {
@@ -232,11 +184,8 @@ public class JCSStore extends AbstractReadWriteStore
             getLogger().debug("Clearing the store");
         }
         
-        try 
+        try
         {
-            //No args - should remove all
-            //This is not well documented, although the source
-            //suggests that this will work
             m_JCS.remove();               
         } 
         catch (CacheException ce) 
@@ -261,7 +210,6 @@ public class JCSStore extends AbstractReadWriteStore
         {
            m_JCS.remove(key);
         }
-        // if object for key does no exists exception is thrown
         catch (CacheException ce)
         {
             getLogger().error("Failure removing object", ce);
@@ -269,40 +217,23 @@ public class JCSStore extends AbstractReadWriteStore
     }
     
     /**
-     *  Test if the the index file contains the given key
+     * Test if the store contains the element.
      *
      * @param key the key object
      * @return true if Key exists and false if not
      */
     protected boolean doContainsKey(Object key) 
     {
-        
-        //All we have available is a null check
-        if (m_JCS.get(key) != null) {
-            return true;
-        } 
-        else {
-            return false;
-        }
+        return m_JCS.get(key) != null;
     }
     
     
-     /**
-     * Returns an Enumeration of all Keys in the cache.<br>
-     * this is a bit of a hack - I don't believe that the group
-     * needs to be passed in as a string in this way - we should
-     * be able to retreive it.
-     * FIX ME!!
-     * 
-     * UH: I think an empty String would be the correct value for the group?
-     *
-     * @return  Enumeration Object with all existing keys
+    /**
+     * Return all existing keys.
      */
     protected Enumeration doGetKeys() 
     {
-      return new org.apache.commons.collections.iterators.IteratorEnumeration(
-         this.m_JCS.getGroupKeys(this.m_group).iterator()
-      );
+      return new IteratorEnumeration(this.m_JCS.getGroupKeys("").iterator());
     }
     
     protected int doGetSize() 
@@ -318,6 +249,10 @@ public class JCSStore extends AbstractReadWriteStore
         
         private int getSize() {
             return super.cacheControl.getSize();
+        }
+        
+        protected void dispose() {
+            super.dispose();
         }
     }
 }
