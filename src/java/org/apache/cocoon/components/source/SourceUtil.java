@@ -82,7 +82,7 @@ public final class SourceUtil {
     /**
      * Generates SAX events from the given source.
      *
-     * <p><b>NOTE</b>: if the implementation can produce lexical events,
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
      * care should be taken that <code>handler</code> can actually
      * directly implement the LexicalHandler interface!</p>
      *
@@ -100,7 +100,7 @@ public final class SourceUtil {
      * Generates SAX events from the given source by using XMLizer.
      * Current sitemap manager will be used to lookup XMLizer.
      *
-     * <p><b>NOTE</b>: if the implementation can produce lexical events,
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
      * care should be taken that <code>handler</code> can actually
      * directly implement the LexicalHandler interface!</p>
      *
@@ -118,7 +118,7 @@ public final class SourceUtil {
     /**
      * Generates SAX events from the given source by using XMLizer.
      *
-     * <p><b>NOTE</b>: if the implementation can produce lexical events,
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
      * care should be taken that <code>handler</code> can actually
      * directly implement the LexicalHandler interface!</p>
      *
@@ -461,7 +461,7 @@ public final class SourceUtil {
         if (typeParameters != null) {
             String encoding = typeParameters.getParameter("encoding",
                  System.getProperties().getProperty("file.encoding", "ISO-8859-1"));
-            if ( encoding != null && !"".equals(encoding) ) {
+            if (encoding != null && !"".equals(encoding)) {
                 resolverParameters.put(SourceResolver.URI_ENCODING, encoding);
             }
         }
@@ -509,47 +509,49 @@ public final class SourceUtil {
 
                 if (null != serializerName) {
                     ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
-	                ServiceSelector selector = null;
-	                Serializer serializer = null;
-	                OutputStream oStream = null;
-	                try {
-	                     selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
-	                     serializer = (Serializer)selector.select(serializerName);
-	                     oStream = ws.getOutputStream();
-	                     serializer.setOutputStream(oStream);
-                         serializer.startDocument();
-	                     DOMStreamer streamer = new DOMStreamer(serializer);
-	                     streamer.stream(frag);
-                         serializer.endDocument();
-	                } catch (ServiceException e) {
-	                	throw new ProcessingException("Unable to lookup serializer.", e);
-					} finally {
-	                    if (oStream != null) {
-	                        oStream.flush();
-	                        try {
-	                            oStream.close();
-	                        } catch (Exception ignore) {
+
+                    ServiceSelector selector = null;
+                    Serializer serializer = null;
+                    OutputStream oStream = null;
+                    try {
+                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
+                        serializer = (Serializer)selector.select(serializerName);
+                        oStream = ws.getOutputStream();
+                        serializer.setOutputStream(oStream);
+                        serializer.startDocument();
+                        DOMStreamer streamer = new DOMStreamer(serializer);
+                        streamer.stream(frag);
+                        serializer.endDocument();
+                    } catch (ServiceException e) {
+                        throw new ProcessingException("Unable to lookup serializer.", e);
+                    } finally {
+                        if (oStream != null) {
+                            oStream.flush();
+                            try {
+                                oStream.close();
+                            } catch (Exception ignore) {
                             }
                         }
-						if ( selector != null ) {
-							selector.release( serializer );
-							manager.release( selector );
-						}
-	                }
+                        if (selector != null) {
+                            selector.release(serializer);
+                            manager.release(selector);
+                        }
+                    }
                 } else {
                     Properties props = XMLUtils.createPropertiesForXML(false);
                     props.put(OutputKeys.ENCODING, "ISO-8859-1");
-	                final String content = XMLUtils.serializeNode(frag, props);
-	                OutputStream oStream = ws.getOutputStream();
+                    final String content = XMLUtils.serializeNode(frag, props);
+                    OutputStream oStream = ws.getOutputStream();
 
-	                oStream.write(content.getBytes());
-	                oStream.flush();
-	                oStream.close();
+                    oStream.write(content.getBytes());
+                    oStream.flush();
+                    oStream.close();
                 }
             } else {
-            	String content;
-				if (null != serializerName) {
+                String content;
+                if (null != serializerName) {
                     ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
+
                     ServiceSelector selector = null;
                     Serializer serializer = null;
                     ByteArrayOutputStream oStream = new ByteArrayOutputStream();
@@ -561,8 +563,8 @@ public final class SourceUtil {
                         DOMStreamer streamer = new DOMStreamer(serializer);
                         streamer.stream(frag);
                         serializer.endDocument();
-					} catch (ServiceException e) {
-						throw new ProcessingException("Unable to lookup serializer.", e);
+                    } catch (ServiceException e) {
+                        throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
                         if (oStream != null) {
                             oStream.flush();
@@ -571,17 +573,17 @@ public final class SourceUtil {
                             } catch (Exception ignore) {
                             }
                         }
-						if ( selector != null ) {
-							selector.release( serializer );
-							manager.release( selector );
-						}
+                        if (selector != null) {
+                            selector.release(serializer);
+                            manager.release(selector);
+                        }
                     }
-					content = oStream.toString();
-				} else {
+                    content = oStream.toString();
+                } else {
                     Properties props = XMLUtils.createPropertiesForXML(false);
                     props.put(OutputKeys.ENCODING, "ISO-8859-1");
                     content = XMLUtils.serializeNode(frag, props);
-				}
+                }
 
                 if (parameters == null) {
                     parameters = new SourceParameters();
