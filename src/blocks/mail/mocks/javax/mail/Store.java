@@ -7,24 +7,33 @@ package javax.mail;
  * @version CVS $Id:
  */
 public class Store {
-	
-	public void connect() throws MessagingException {
-		throw new NoSuchMethodError("This is a mock object");
-	}
+    
+    public void connect() throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
+    }
 
-	public boolean isConnected() {
-		throw new NoSuchMethodError("This is a mock object");
-	}
-	
-	public void close() throws MessagingException {
-		throw new NoSuchMethodError("This is a mock object");
-	}
-	
-	public Folder getDefaultFolder() throws MessagingException {
-		throw new NoSuchMethodError("This is a mock object");
-	}
+    public boolean isConnected() {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+    
+    public void close() throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+    
+    public Folder getDefaultFolder() throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
+    }
 
-	public Folder getFolder(String name) throws MessagingException {
-		throw new NoSuchMethodError("This is a mock object");
-	}	
+    public Folder getFolder(String name) throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+    
+    public void connect(String host, String user, String password) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public void connect(String host, int port, String user, String password) {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+    
 }
