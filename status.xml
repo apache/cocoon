@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.209 2003/12/10 17:53:26 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.210 2003/12/11 11:33:45 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,18 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="VG" type="update">
+     Reworked I18nTransformer implementation to use new version of XMLResourceBundle.
+   </action>
+   <action dev="VG" type="update">
+     Reworked XMLResourceBundle implementation. Now it supports only XML bundles with
+     fixed syntax (same as for I18nTransformer dictionaries), and instead of XPath
+     keys uses message keys (which is faster). Returned resources now are instances of
+     ParamSaxBuffer class, and not DOM nodes.
+   </action>
+   <action dev="VG" type="update">
+     Modified BundleFactory interface to return Bundle instead of Component.
+   </action>
    <action dev="VG" type="update">
      Cocoon Forms (Woody) selection lists now allow empty value (which is
      translated to the null object)
