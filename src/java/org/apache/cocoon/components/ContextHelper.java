@@ -29,7 +29,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public final class ContextHelper {
@@ -50,6 +50,11 @@ public final class ContextHelper {
         // Forbid instantiation
     }
 
+    /**
+     * Return the current request
+     * @param context The component context
+     * @return The request object
+     */
     public static final Request getRequest(Context context) {
         // the request object is always present
         try {
@@ -59,6 +64,11 @@ public final class ContextHelper {
         }
     }
 
+    /**
+     * Return the current response
+     * @param context The component context
+     * @return The response
+     */
     public static final Response getResponse(Context context) {
         // the response object is always present
         try {
@@ -68,6 +78,11 @@ public final class ContextHelper {
         }
     }
 
+    /**
+     * Return the current object model
+     * @param context The component context
+     * @return The object model
+     */
     public static final Map getObjectModel(Context context) {
         // the object model is always present
         try {

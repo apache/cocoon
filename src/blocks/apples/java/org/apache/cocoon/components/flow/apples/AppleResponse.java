@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
+import org.apache.cocoon.environment.Response;
 
 
 /**
@@ -24,5 +25,5 @@ public interface AppleResponse {
 
     public void sendPage(String uri, Object bizData);
     public void redirectTo(String uri);
-
+    public Response getCocoonResponse();
 }

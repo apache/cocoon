@@ -31,6 +31,7 @@ import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 
 /**
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
@@ -50,12 +51,17 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         AppleController app = instantiateController(className);
 
-        WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, 0, this);
+        WebContinuation wk = null;
+        if (!(app instanceof StatelessAppleController)) {
+            wk = this.continuationsMgr.createWebContinuation(app, null, 0, this);
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("Instantiated a stateful apple, continuationid = " + wk.getId());
+        }
 
-        DefaultContext appleContext = new DefaultContext();
+        DefaultContext appleContext = new DefaultContext(avalonContext);
+        if (wk != null) {
         appleContext.put("continuation-id", wk.getId());
-
-        getLogger().debug("Pulling fresh apple through the lifecycle... | continuationid=" + wk.getId());
+        }
         
         LifecycleHelper.setupComponent( app, getLogger(), appleContext, 
                                         this.serviceManager, new WrapperComponentManager(this.serviceManager),  
@@ -114,14 +120,33 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
-        DefaultAppleResponse res = new DefaultAppleResponse();
+        Response cocoonResponse = ContextHelper.getResponse(this.avalonContext);
+        DefaultAppleResponse res = new DefaultAppleResponse(cocoonResponse);
+
+        try {
         app.process(req, res);
+        } finally {
+            if (wk == null) {
+                // dispose stateless apple immediatelly
+                if (app instanceof Disposable) {
+                    try {
+                        ((Disposable)app).dispose();
+                    } catch (Exception e) {
+                        getLogger().error("Error disposing Apple instance.", e);
+                    }
+                }
+            }
+        }
 
         if (res.isRedirect()) {
             redirector.redirect(false, res.getURI());
         } else {
             String uri = res.getURI();
-            getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData() + " and continuationid= " + wk.getId());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData() + (wk != null ? " and continuationid= " + wk.getId() : " without continuationid"));
+            }
+
+            // Note: it is ok for wk to be null
             this.forwardTo(uri, res.getData(), wk, redirector);
         }
 

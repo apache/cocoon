@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
-import org.apache.cocoon.ProcessingException;
-
 
 /**
  * AppleController declares the main processing interfaces for the stateful 
@@ -34,7 +32,7 @@ public interface AppleController {
      * passed {@link AppleRequest} and result into setting specific aspects of the
      * {@link AppleResponse}
      */
-    void process(AppleRequest req, AppleResponse res) throws ProcessingException;
+    void process(AppleRequest req, AppleResponse res) throws Exception;
     
 
 }
