@@ -65,5 +65,5 @@ public interface ConvertorBuilder {
     /**
      * @param configElement is allowed to be null!
      */
-    public Convertor build(Element configElement) throws Exception;
+    Convertor build(Element configElement) throws Exception;
 }
