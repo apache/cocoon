@@ -53,9 +53,6 @@ package org.apache.cocoon.webapps.authentication.components;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -83,15 +80,12 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.7 2003/10/24 08:41:46 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.8 2003/10/24 08:43:50 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
-    implements Serviceable, ThreadSafe, Disposable, Contextualizable, Authenticator {
+    implements Serviceable, ThreadSafe, Disposable, Authenticator {
     
-    /** The context */
-    protected Context context;
-        
     /** The service manager */
     protected ServiceManager manager;
     
@@ -314,13 +308,6 @@ public class PipelineAuthenticator
             this.resolver = null;
 		}
 	}
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(org.apache.cocoon.webapps.authentication.user.UserHandler)
