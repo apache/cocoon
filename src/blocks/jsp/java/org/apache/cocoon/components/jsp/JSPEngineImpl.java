@@ -67,7 +67,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Allows Servlets and JSPs to be used as a generator.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.9 2004/01/16 13:49:32 unico Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.10 2004/01/29 10:34:13 joerg Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -104,14 +104,15 @@ public class JSPEngineImpl extends AbstractLogEnabled
         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(this.jspServletClass);
         Servlet servlet = (Servlet) clazz.newInstance();
         servlet.init(new JSPEngineServletConfig(context,"JSPEngineImpl"));
-        servlet.service(request, response);
         
-        bytes = output.toByteArray();
+        try {
+            servlet.service(request, response);
+            bytes = output.toByteArray();
+        } finally {
+            // clean up
+            servlet.destroy();
+        }
         
-        // clean up
-        servlet.destroy();
-
         return bytes;
     }
-
 }
