@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.23 2000-04-26 13:49:19 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.24 2000-04-26 22:56:52 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.23 $ $Date: 2000-04-26 13:49:19 $
+ * @version $Revision: 1.24 $ $Date: 2000-04-26 22:56:52 $
  */
 
 public class Engine implements Defaults {
@@ -106,7 +106,7 @@ public class Engine implements Defaults {
     private Engine(Configurations configurations, Object context) throws Exception {
 
         // Create the engine instance table
-        engineInstances = new HashTable(1, 0.90);
+        engineInstances = new Hashtable(1, 0.90);
         
         // Create the object manager which is both Factory and Director
         // and register it
