@@ -64,6 +64,15 @@
     <parameter name="auto-reload" value="true"/>
   </component>
 
+  <component role="org.apache.cocoon.components.datasource.DataSourceComponentSelector" class="org.apache.cocoon.CocoonComponentSelector">
+    <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
+      <driver>postgresql.Driver</driver>
+      <dburl>jdbc:postgresql://localhost/test</dburl>
+      <user>test</user>
+      <password>test</password>
+    </component-instance>
+  </component>
+
   <!-- these components is used as a PoolController for the sitemap component pools  -->
   <component role="org.apache.avalon.util.pool.PoolController" class="org.apache.cocoon.util.ComponentPoolController"/>
 

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.18 2001-01-04 22:39:20 dims Exp $
+  $Id: changes.xml,v 1.9.2.19 2001-01-06 06:36:15 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -22,6 +22,9 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="add">
+    Added DataSourceComponent framework to Cocoon and esql logicsheet.
+  </action>
   <action dev="RB" type="add"> 
    SVG serializer now uses Batik.
   </action>
