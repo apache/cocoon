@@ -32,12 +32,9 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 
 /**
- *  A factory for WebDAV sources
+ * A factory for WebDAV sources
  *
- *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
- *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.8 2004/03/27 15:49:41 unico Exp $
+ * @version $Id: WebDAVSourceFactory.java,v 1.9 2004/03/27 15:51:21 unico Exp $
 */
 public class WebDAVSourceFactory extends AbstractLogEnabled 
 implements SourceFactory, Configurable, ThreadSafe {

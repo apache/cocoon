@@ -83,10 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version $Id: WebDAVSource.java,v 1.23 2004/03/27 15:49:41 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.24 2004/03/27 15:51:21 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
