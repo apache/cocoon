@@ -422,8 +422,7 @@
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->
-  <transient-store class="org.apache.cocoon.components.store.JCSTransientStore" 
-                    logger="core.store.transient">
+  <transient-store logger="core.store.transient">
     <parameter name="maxobjects" value="1000"/>
   </transient-store>
   
