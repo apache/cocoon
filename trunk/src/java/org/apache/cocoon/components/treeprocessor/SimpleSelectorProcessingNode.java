@@ -58,7 +58,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.1 2003/03/09 00:09:17 pier Exp $
+ * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.2 2003/09/30 12:42:18 cziegeler Exp $
  */
 
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode {
@@ -78,7 +78,7 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
     }
 
     /**
-     * Tests is the component designated by this node using the selector and component name
+     * Tests if the component designated by this node using the selector and component name
      * is <code>ThreadSafe</code>, and return it if true.
      * <p>
      * Note : this method must be called <i>after</i> <code>setSelector()</code>.
@@ -88,7 +88,7 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
     }
 
     /**
-     * Tests is the component designated by this node using the selector and component name
+     * Tests if the component designated by this node using the selector and component name
      * is <code>ThreadSafe</code>, and return it if true.
      * <p>
      * Note : this method must be called <i>after</i> <code>setSelector()</code>.
