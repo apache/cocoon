@@ -57,20 +57,22 @@ import org.apache.avalon.framework.parameters.Parameters;
 
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.2 2003/03/16 18:03:56 vgritsenko Exp $
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.3 2003/04/16 10:56:44 stephan Exp $
  */
 public class FileGeneratorTestCase extends AbstractGeneratorTestCase
 {
   public FileGeneratorTestCase(String name)
   {
-    super(name==null?"FileGenerator Testcase":name);
+    super(name);
+  }
 
-    String generator = "file";
-    HashMap objectmodel = new HashMap();
+  public void testFileGenerator() {
+
+    String type = "file";
     String src = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
     Parameters parameters = new Parameters();
     String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
 
-    addTestStep(generator, objectmodel, src, parameters, result, EQUAL);
+    assertEqual(load(result), generate(type, src, parameters));
   }
 }

@@ -61,24 +61,28 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGeneratorTestCase.java,v 1.1 2003/04/09 12:24:34 stephan Exp $
+ * @version CVS $Id: TextGeneratorTestCase.java,v 1.2 2003/04/16 10:56:44 stephan Exp $
  */
 public class TextGeneratorTestCase extends AbstractGeneratorTestCase {
 
     public TextGeneratorTestCase(String name) {
         super(name);
+    }
 
-        String generator = "text";
-        HashMap objectmodel = new HashMap();
+    public void testTextGenerator1() {
         String src = "resource://org/apache/cocoon/generation/texttest-input1.txt";
         Parameters parameters = new Parameters();
         String result = "resource://org/apache/cocoon/generation/texttest-result1.xml";
 
-        addTestStep(generator, objectmodel, src, parameters, result, EQUAL);
+        assertEqual(load(result), generate("text", src, parameters));
+    }
 
-        src = "resource://org/apache/cocoon/generation/texttest-input2.txt";
-        result = "resource://org/apache/cocoon/generation/texttest-result2.xml";
+    public void testTextGenerator2() {
 
-        addTestStep(generator, objectmodel, src, parameters, result, EQUAL);
+        String src = "resource://org/apache/cocoon/generation/texttest-input2.txt";
+        Parameters parameters = new Parameters();
+        String result = "resource://org/apache/cocoon/generation/texttest-result2.xml";
+
+        assertEqual(load(result), generate("text", src, parameters));
     }
 }

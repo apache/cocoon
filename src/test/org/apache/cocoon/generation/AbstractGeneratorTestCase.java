@@ -53,7 +53,7 @@ package org.apache.cocoon.generation;
 
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.Vector;
+import java.util.HashMap;
 
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.component.Component;
@@ -75,24 +75,11 @@ import org.xml.sax.InputSource;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.3 2003/03/18 01:33:38 vgritsenko Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.4 2003/04/16 10:56:44 stephan Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {
-
-    /** If the result document should be equal. */
-    public final static int EQUAL = 0;
-
-    /** If the result document should not be equal. */
-    public final static int NOTEQUAL = 1;
-
-    /** If the result document should be identical. */
-    public final static int IDENTICAL = 2;
-
-    /** If the result document should not be identical. */
-    public final static int NOTIDENTICAL = 3;
-
-    private Vector teststeps = new Vector();
+    private HashMap objectmodel = new HashMap();
 
     /**
      * Create a new generator test case.
@@ -103,35 +90,18 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
         super(name);
     }
 
-    /**
-     * Add a new test step to the test case.
-     *
-     * @param generator Hint of the generator. 
-     * @param objectmodel Object model.
-     * @param source Source for the transformer.
-     * @param parameters Generator parameters.
-     * @param assertion Assertion XML document. 
-     * @param assertiontype (EQUAL|NOTEQUAL|IDENTICAL|NOTIDENTICAL)
-     */
-    public final void addTestStep(String generator, Map objectmodel,
-                                  String source, Parameters parameters,
-                                  String assertion, int assertiontype) {
-        TestStep test = new TestStep();
-
-        test.generator = generator;
-        test.objectmodel = objectmodel;
-        test.source = source;
-        test.parameters = parameters;
-        test.assertion = assertion;
-        test.assertiontype = assertiontype;
-
-        teststeps.addElement(test);
+    public final Map getObjectModel() {
+        return objectmodel;
     }
 
     /**
-     * Test the generators and his output
+     * Generate the generator output.
+     *
+     * @param type Hint of the generator. 
+     * @param source Source for the generator.
+     * @param parameters Generator parameters.
      */
-    public final void testGenerator() {
+    public final Document generate(String type, String source, Parameters parameters) {
 
         ComponentSelector selector = null;
         Generator generator = null;
@@ -139,6 +109,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
         SAXParser parser = null;
         Source assertionsource = null;
 
+        Document document = null;
         try {
             selector = (ComponentSelector) this.manager.lookup(Generator.ROLE +
                 "Selector");
@@ -150,100 +121,22 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
-            TestStep test;
-            int count = 0;
+            assertNotNull("Test if generator name is not null", type);
 
-            for (Enumeration e = teststeps.elements(); e.hasMoreElements(); ) {
-                test = (TestStep) e.nextElement();
-                count++;
-                getLogger().info(count+".Test step");
+            generator = (Generator) selector.select(type);
+            assertNotNull("Test lookup of generator", generator);
 
-                assertNotNull("Test if generator name is not null",
-                              test.generator);
-                generator = (Generator) selector.select(test.generator);
-                assertNotNull("Test lookup of generator", generator);
+            DOMBuilder builder = new DOMBuilder();
+            generator.setConsumer(new WhitespaceFilter(builder));
 
-                DOMBuilder builder = new DOMBuilder();
+            generator.setup(new SourceResolverAdapter(resolver, this.manager),
+                            objectmodel, source, parameters);
+            generator.generate();
 
-                if ((test.assertiontype==EQUAL) ||
-                    (test.assertiontype==NOTEQUAL)) {
-                    generator.setConsumer(new WhitespaceFilter(builder));
-                } else {
-                    generator.setConsumer(builder);
-                }
+            document = builder.getDocument();
 
-                generator.setup(new SourceResolverAdapter(resolver, this.manager),
-                                test.objectmodel, test.source,
-                                test.parameters);
-                generator.generate();
+            assertNotNull("Test for generator document", document);
 
-                Document document = builder.getDocument();
-
-                assertNotNull("Test for generator document", document);
-
-                assertNotNull("Test if assertion document is not null",
-                              test.assertion);
-                assertionsource = resolver.resolveURI(test.assertion);
-                assertNotNull("Test lookup of assertion source",
-                              assertionsource);
-
-                builder = new DOMBuilder();
-                assertNotNull("Test if inputstream of the assertion source is not null",
-                              assertionsource.getInputStream());
-                if ((test.assertiontype==EQUAL) ||
-                    (test.assertiontype==NOTEQUAL)) {
-                    parser.parse(new InputSource(assertionsource.getInputStream()),
-                                 new WhitespaceFilter(builder),
-                                 builder);
-                } else {
-                    parser.parse(new InputSource(assertionsource.getInputStream()),
-                                 builder,
-                                 builder);
-                }
-                Document assertiondocument = builder.getDocument();
-
-                assertNotNull("Test if assertion document exists", resolver);
-
-                assertTrue("Test if assertion type is correct",
-                           (test.assertiontype>=EQUAL) &&
-                           (test.assertiontype<=NOTIDENTICAL));
-
-                switch (test.assertiontype) {
-                    case EQUAL :
-                        document.getDocumentElement().normalize();
-                        assertiondocument.getDocumentElement().normalize();
-                        assertXMLEqual(compareXML(assertiondocument, document),
-                                       true,
-                                       "Test if the assertion document is equal");
-                        break;
-
-                    case NOTEQUAL :
-                        document.getDocumentElement().normalize();
-                        assertiondocument.getDocumentElement().normalize();
-                        assertXMLEqual(compareXML(assertiondocument, document),
-                                       false,
-                                       "Test if the assertion document is not equal");
-                        break;
-
-                    case IDENTICAL :
-                        assertXMLIdentical(compareXML(assertiondocument, document),
-                                           true,
-                                           "Test if the assertion document is identical");
-                        break;
-
-                    case NOTIDENTICAL :
-                        assertXMLIdentical(compareXML(assertiondocument, document),
-                                           false,
-                                           "Test if the assertion document is not identical");
-                        break;
-                }
-
-                selector.release(generator);
-                generator = null;
-
-                resolver.release(assertionsource);
-                assertionsource = null;
-            }
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
@@ -256,11 +149,58 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             }
             this.manager.release(selector);
             this.manager.release(resolver);
+            this.manager.release((Component) parser);
+        }
+
+        return document;
+    }
+
+    public final Document load(String source) {
+
+        SourceResolver resolver = null;
+        SAXParser parser = null;
+        Source assertionsource = null;
+
+        Document assertiondocument = null;
+        try {
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            assertNotNull("Test lookup of parser", parser);
+
+            assertNotNull("Test if assertion document is not null",
+                          source);
+            assertionsource = resolver.resolveURI(source);
+            assertNotNull("Test lookup of assertion source",
+                          assertionsource);
+
+            DOMBuilder builder = new DOMBuilder();
+            assertNotNull("Test if inputstream of the assertion source is not null",
+                          assertionsource.getInputStream());
+
+            parser.parse(new InputSource(assertionsource.getInputStream()),
+                         new WhitespaceFilter(builder),
+                         builder);
+
+            assertiondocument = builder.getDocument();
+            assertNotNull("Test if assertion document exists", assertiondocument);
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve generator", ce);
+            fail("Could not retrieve generator: " + ce.toString());
+        } catch (Exception e) {
+            getLogger().error("Could not execute test", e);
+            fail("Could not execute test: " + e);
+        } finally {
             if (resolver != null) {
                 resolver.release(assertionsource);
             }
+            this.manager.release(resolver);
             this.manager.release((Component) parser);
         }
+
+        return assertiondocument;
     }
 
     /**
@@ -274,67 +214,70 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
     }
 
     /**
-     * Assert that the result of an XML comparison is or is not similar.
-     * @param diff the result of an XML comparison
-     * @param assertion true if asserting that result is similar
+     * Assert that the result of an XML comparison is similar.
+     *
+     * @param msg The assertion message
+     * @param expected The expected XML document
+     * @param actual The actual XML Document
      */
-    public final void assertXMLEqual(Diff diff, boolean assertion) {
-        assertEquals(diff.toString(), assertion, diff.similar());
+    public final void assertEqual(String msg, Document expected, Document actual) {
+
+        expected.getDocumentElement().normalize();
+        actual.getDocumentElement().normalize();
+
+        Diff diff = compareXML(expected, actual);
+
+        assertEquals(msg + ", " + diff.toString(), true, diff.similar());
     }
 
     /**
-     * Assert that the result of an XML comparison is or is not similar.
-     * @param diff the result of an XML comparison
-     * @param assertion true if asserting that result is similar
-     * @param msg additional message to display if assertion fails
-     */
-    public final void assertXMLEqual(Diff diff, boolean assertion,
-                                     String msg) {
-        assertEquals(msg + ", " + diff.toString(), assertion, diff.similar());
+     * Assert that the result of an XML comparison is similar.
+     *
+     * @param msg The assertion message
+     * @param expected The expected XML document
+     * @param actual The actual XML Document
+     */  
+    public final void assertEqual(Document expected, Document actual) {
+
+        expected.getDocumentElement().normalize();
+        actual.getDocumentElement().normalize();
+
+        Diff diff = compareXML(expected, actual);
+
+        assertEquals("Test if the assertion document is equal, " + diff.toString(), true, diff.similar());
     }
 
     /**
-     * Assert that the result of an XML comparison is or is not identical
-     * @param diff the result of an XML comparison
-     * @param assertion true if asserting that result is identical
+     * Assert that the result of an XML comparison is identical.
+     *
+     * @param msg The assertion message
+     * @param expected The expected XML document
+     * @param actual The actual XML Document
      */
-    public final void assertXMLIdentical(Diff diff, boolean assertion) {
-        assertEquals(diff.toString(), assertion, diff.identical());
+    public final void assertIdentical(String msg, Document expected, Document actual) {
+
+        expected.getDocumentElement().normalize();
+        actual.getDocumentElement().normalize();
+
+        Diff diff = compareXML(expected, actual);
+
+        assertEquals(msg + ", " + diff.toString(), true, diff.identical());
     }
 
     /**
-     * Assert that the result of an XML comparison is or is not identical
-     * @param diff the result of an XML comparison
-     * @param assertion true if asserting that result is identical
-     * @param msg additional message to display if assertion fails
+     * Assert that the result of an XML comparison is identical.
+     *
+     * @param msg The assertion message
+     * @param expected The expected XML document
+     * @param actual The actual XML Document
      */
-    public final void assertXMLIdentical(Diff diff, boolean assertion,
-                                         String msg) {
-        assertEquals(msg + ", " + diff.toString(), assertion, diff.identical());
-    }
+    public final void assertIdentical(Document expected, Document actual) {
 
-    /**
-     * Inner class for a test step. 
-     */
-    private class TestStep
-    {
+        expected.getDocumentElement().normalize();
+        actual.getDocumentElement().normalize();
 
-        /** Hint of the generator. */
-        public String generator = null;
+        Diff diff = compareXML(expected, actual);
 
-        /** Object model. */
-        public Map objectmodel = null;
-
-        /** Source for the transformer. */
-        public String source = null;
-
-        /** Generator parameters. */
-        public Parameters parameters = null;
-
-        /** Assertion XML document. */
-        public String assertion = null;
-
-        /** (EQUAL|NOTEQUAL|IDENTICAL|NOTIDENTICAL) */
-        public int assertiontype = EQUAL;
+        assertEquals("Test if the assertion document is equal, " + diff.toString(), true, diff.identical());
     }
 }
