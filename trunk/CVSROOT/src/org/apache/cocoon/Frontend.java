@@ -1,4 +1,4 @@
-/*-- $Id: Frontend.java,v 1.9 2000-11-07 18:30:14 greenrd Exp $ -- 
+/*-- $Id: Frontend.java,v 1.10 2001-03-28 18:00:30 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * smart publishing behavior. (ECS may be used instead).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-11-07 18:30:14 $
+ * @version $Revision: 1.10 $ $Date: 2001-03-28 18:00:30 $
  */
 
 public class Frontend implements Defaults {
@@ -90,8 +90,19 @@ public class Frontend implements Defaults {
     }
 
     public static void print(ServletResponse response, String title, String message) throws IOException {
-        response.setContentType("text/html");
-        PrintWriter out = new PrintWriter(response.getWriter());
+        PrintWriter out;
+        try {
+          response.setContentType("text/html");
+        }
+        catch (Exception ex) {
+          ex.printStackTrace ();
+        }
+        try {
+          out = new PrintWriter(response.getWriter());
+        }
+        catch (Exception ex) {
+          out = new PrintWriter(response.getOutputStream ());
+        }
         header(out, 80);
         out.println("<h3 align=\"center\">" + title + "</h3>");
         if (message != null) out.println("<blockquote><pre>" + message + "</pre></blockquote>");
