@@ -141,7 +141,7 @@ public class JXPathTemplate extends AbstractGenerator {
 
     static class MyVariables implements Variables {
 
-        Map myVariables = new HashMap();
+        Map localVariables = new HashMap();
 
         static final String[] VARIABLES = new String[] {
             "continuation",
@@ -175,7 +175,7 @@ public class JXPathTemplate extends AbstractGenerator {
                     return true;
                 }
             }
-            return myVariables.containsKey(varName);
+            return localVariables.containsKey(varName);
         }
         
         public Object getVariable(String varName) {
@@ -194,15 +194,15 @@ public class JXPathTemplate extends AbstractGenerator {
             } else if (varName.equals("parameters")) {
                 return parameters;
             }
-            return myVariables.get(varName);
+            return localVariables.get(varName);
         }
         
         public void declareVariable(String varName, Object value) {
-            myVariables.put(varName, value);
+            localVariables.put(varName, value);
         }
         
         public void undeclareVariable(String varName) {
-            myVariables.remove(varName);
+            localVariables.remove(varName);
         }
     }
 
@@ -218,18 +218,21 @@ public class JXPathTemplate extends AbstractGenerator {
     final static String OTHERWISE = "otherwise";
     final static String VALUE_OF = "value-of";
     final static String IMPORT = "import";
+    final static String DEFINE = "define";
 
 
-    // get XPath expression (optionally contained in {})
+    // get XPath expression (optionally contained in #{})
     private String getExpr(String inStr) {
         try {
             inStr = inStr.trim();
-            if (inStr.length() == 0 || inStr.charAt(0) != '{') {
+            if (inStr.length() < 2 || (inStr.charAt(0) != '#' ||
+                                       inStr.charAt(1) != '{')) {
                 return inStr;
             }
             StringReader in = new StringReader(inStr);
             int ch;
             StringBuffer expr = new StringBuffer();
+            in.read(); // '#'
             in.read(); // '{'
             while ((ch = in.read()) != -1) {
                 char c = (char)ch;
@@ -321,9 +324,9 @@ public class JXPathTemplate extends AbstractGenerator {
                                 buf.append((char)ch);
                             }
                         } else {
-                            if (c == '{') {
+                            if (c == '#') {
                                 ch = in.read();
-                                if (ch != -1) {
+                                if (ch == '{') {
                                     if (buf.length() > 0) {
                                         char[] charArray = 
                                             new char[buf.length()];
@@ -333,11 +336,10 @@ public class JXPathTemplate extends AbstractGenerator {
                                         substitutions.add(charArray);
                                         buf.setLength(0);
                                     }
-                                    buf.append((char)ch);
                                     inExpr = true;
                                     continue;
                                 }
-                                buf.append('{');
+                                buf.append('#');
                             }
                             if (ch != -1) {
                                 buf.append((char)ch);
@@ -375,6 +377,7 @@ public class JXPathTemplate extends AbstractGenerator {
             super(location);
         }
         long compileTime;
+        HashMap definitions = new HashMap();
         EndDocument endDocument; // null if document fragment
     }
 
@@ -490,6 +493,7 @@ public class JXPathTemplate extends AbstractGenerator {
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.raw = raw;
+            this.qname = "{"+namespaceURI+"}"+localName;
             StringBuffer buf = new StringBuffer();
             for (int i = 0, len = attrs.getLength(); i < len; i++) {
                 String uri = attrs.getURI(i);
@@ -540,18 +544,17 @@ public class JXPathTemplate extends AbstractGenerator {
                                     buf.append((char)ch);
                                 }
                             } else {
-                                if (c == '{') {
+                                if (c == '#') {
                                     ch = in.read();
-                                    if (ch != -1) {
+                                    if (ch == '{') {
                                         if (buf.length() > 0) {
                                             substEvents.add(new Literal(buf.toString()));
                                             buf.setLength(0);
                                         }
-                                        buf.append((char)ch);
                                         inExpr = true;
                                         continue;
                                     }
-                                    buf.append('{');
+                                    buf.append('#');
                                 }
                                 if (ch != -1) {
                                     buf.append((char)ch);
@@ -595,7 +598,9 @@ public class JXPathTemplate extends AbstractGenerator {
         final String namespaceURI;
         final String localName;
         final String raw;
+        final String qname;
         final List attributeEvents = new LinkedList();
+        EndElement endElement;
     }
 
     class StartForEach extends Event {
@@ -783,6 +788,28 @@ public class JXPathTemplate extends AbstractGenerator {
         }
     }
 
+    class StartDefine extends Event {
+        StartDefine(Locator location, String namespace, String name,
+                    Map formalParameters) {
+            super(location);
+            this.namespace = namespace;
+            this.name = name;
+            this.qname = "{"+namespace+"}"+name;
+            this.parameters = formalParameters;
+        }
+        final String namespace;
+        final String name;
+        final String qname;
+        final Map parameters;
+        EndDefine endDefine;
+    }
+
+    class EndDefine extends Event {
+        EndDefine(Locator location) {
+            super(location);
+        }
+    }
+
     class Parser implements LexicalHandler, ContentHandler {
 
         StartDocument startEvent;
@@ -871,13 +898,18 @@ public class JXPathTemplate extends AbstractGenerator {
                     StartTemplate startTemplate = (StartTemplate)start;
                     newEvent =
                         startTemplate.endTemplate = new EndTemplate(locator);
+                } else if (start instanceof StartDefine) {
+                    StartDefine startDefine = (StartDefine)start;
+                    newEvent = 
+                        startDefine.endDefine = new EndDefine(locator);
+                    startEvent.definitions.put(startDefine.qname, startDefine);
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = new EndElement(locator, 
-                                          startElement);
+                newEvent = startElement.endElement = 
+                    new EndElement(locator, startElement);
             }
             addEvent(newEvent);
         }
@@ -991,6 +1023,32 @@ public class JXPathTemplate extends AbstractGenerator {
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
+                } else if (localName.equals(DEFINE)) {
+                    // <define namespace="a" name="b">
+                    // body
+                    // </define>
+                    String namespace = attrs.getValue(JXPATH_NS, "namespace");
+                    if (namespace == null) {
+                        namespace = "";
+                    }
+                    String name = attrs.getValue(JXPATH_NS, "name");
+                    if (name == null) {
+                        throw new SAXParseException("define: \"name\" is required", locator, null);
+                    }
+                    Map formalParams = new HashMap();
+                    for (int i = 0, len = attrs.getLength(); i < len; i++) {
+                        String uri = attrs.getURI(i);
+                        if (uri.equals("")) {
+                            String n = attrs.getLocalName(i);
+                            String v = attrs.getValue(i);
+                            if (v == null) v = "";
+                            formalParams.put(n, v);
+                        }
+                    }
+                    StartDefine startDefine = 
+                        new StartDefine(locator, namespace, name, 
+                                        formalParams);
+                    newEvent = startDefine;
                 } else if (localName.equals(IMPORT)) {
                     // <import uri="{root}/foo/bar.xml" select="{.}"/>
                     // Allow expression substituion in "uri" attribute
@@ -1079,6 +1137,7 @@ public class JXPathTemplate extends AbstractGenerator {
     private Variables variables;
     private static Map cache = new HashMap();
     private Source inputSource;
+    private Map definitions;
 
     public void recycle() {
         super.recycle();
@@ -1086,6 +1145,7 @@ public class JXPathTemplate extends AbstractGenerator {
         rootContext = null;
         variables = null;
         inputSource = null;
+        definitions = null;
     }
 
     public void setup(SourceResolver resolver, Map objectModel,
@@ -1121,6 +1181,7 @@ public class JXPathTemplate extends AbstractGenerator {
                                     parameters);
         rootContext = jxpathContextFactory.newContext(null, bean);
         rootContext.setVariables(variables);
+        definitions = new HashMap();
     }
 
     public void setConsumer(XMLConsumer consumer) {
@@ -1311,6 +1372,81 @@ public class JXPathTemplate extends AbstractGenerator {
                 continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement)ev;
+                StartDefine def = 
+                    (StartDefine)definitions.get(startElement.qname);
+                if (def != null) {
+                    MyVariables vars = (MyVariables)context.getVariables();
+                    final Map localVariables = vars.localVariables;
+                    vars.localVariables = new HashMap();
+                    Iterator i = startElement.attributeEvents.iterator();
+                    while (i.hasNext()) {
+                        AttributeEvent attrEvent = (AttributeEvent)i.next();
+                        Object defVal;
+                        if (attrEvent.namespaceURI.length() == 0) {
+                           defVal = def.parameters.get(attrEvent.localName);
+                           if (defVal == null) continue;
+                        }
+                        if (attrEvent instanceof CopyAttribute) {
+                            CopyAttribute copy =
+                                (CopyAttribute)attrEvent;
+                            vars.declareVariable(attrEvent.localName, 
+                                                 copy.value);
+                        } else if (attrEvent instanceof 
+                                   SubstituteAttribute) {
+                            SubstituteAttribute substEvent = 
+                                (SubstituteAttribute)attrEvent;
+                            if (substEvent.substitutions.size() == 1) {
+                                Subst subst = 
+                                    (Subst)substEvent.substitutions.get(0);
+                                if (subst instanceof Expression) {
+                                    Object val;
+                                    Expression expr = (Expression)subst;
+                                    try {
+                                        val = 
+                                            expr.compiledExpression.getValue(context);
+                                    } catch (JXPathException e) {
+                                        throw new SAXParseException(e.getMessage(),
+                                                                    ev.location,
+                                                                    e);
+                                    }
+                                    vars.declareVariable(attrEvent.localName,
+                                                         val);
+                                    continue;
+                                }
+                            }
+                            StringBuffer buf = new StringBuffer();
+                            Iterator ii = substEvent.substitutions.iterator();
+                            while (ii.hasNext()) {
+                                Subst subst = (Subst)ii.next();
+                                if (subst instanceof Literal) {
+                                    Literal lit = (Literal)subst;
+                                    buf.append(lit.value);
+                                } else if (subst instanceof Expression) {
+                                    Expression expr = (Expression)subst;
+                                    Object val;
+                                    try {
+                                        val = 
+                                            expr.compiledExpression.getValue(context);
+                                    } catch (JXPathException e) {
+                                        throw new SAXParseException(e.getMessage(),
+                                                                    ev.location,
+                                                                    e);
+                                    }
+                                    if (val == null) {
+                                        val = "";
+                                    }
+                                    buf.append(val.toString());
+                                }
+                            }
+                            vars.declareVariable(attrEvent.localName,
+                                                 buf.toString());
+                        }
+                    }
+                    execute(context, def.next, def.endDefine);
+                    vars.localVariables = localVariables;
+                    ev = startElement.endElement.next;
+                    continue;
+                }
                 Iterator i = startElement.attributeEvents.iterator();
                 AttributesImpl attrs = new AttributesImpl();
                 while (i.hasNext()) {
@@ -1413,6 +1549,10 @@ public class JXPathTemplate extends AbstractGenerator {
                 consumer.characters(ch, 0, ch.length);
             } else if (ev instanceof StartTemplate) {
                 // no action
+            } else if (ev instanceof StartDefine) {
+                StartDefine startDefine = (StartDefine)ev;
+                definitions.put(startDefine.qname, startDefine);
+                ev = startDefine.endDefine.next;
             } else if (ev instanceof StartImport) {
                 String uri;
                 StartImport startImport = (StartImport)ev;

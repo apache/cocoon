@@ -78,9 +78,6 @@ import java.lang.reflect.Method;
 import java.beans.PropertyDescriptor;
 /**
  *
- * <p>Cocoon {@link Generator} that produces dynamic XML SAX events
- *  fom an XML template file.</p>
- *
  *  <p>Provides a tag library with embedded JSTL and XPath expression substitution
  *  to access data sent by Cocoon flowscripts.</p>
  *  The embedded expression language allows a page author to access an 
@@ -88,13 +85,13 @@ import java.beans.PropertyDescriptor;
  *  <p><pre>
  *  &lt;site signOn="${accountForm.signOn}"&gt;
  *  </pre></p>
- * <p>Embedded Jexl expressions are contained in ${}.</p>
- * <p>Embedded XPath expressions are contained in {}.</p>
- * <p>Note that since this generator uses <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl, the referenced 
+ * <p>Embedded Jexl expressions are contained in <code>${}</code>.</p>
+ * <p>Embedded XPath expressions are contained in <code>#{}</code>.</p>
+ * <p>Note that since this generator uses <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the referenced 
  * objects may be Java Beans, DOM, JDOM, or JavaScript objects from a 
  * Flowscript. The current Web Continuation from the Flowscript 
  * is also available as an variable named <code>continuation</code>. You would 
- * typically access its id:
+ * typically access its <code>id</code>:
  * <p><pre>
  *    &lt;form action="${continuation.id}"&gt;
  * </pre></p>
@@ -125,7 +122,7 @@ import java.beans.PropertyDescriptor;
  *    &lt;/otherwise&gt;
  *  &lt;/choose&gt;
  * </pre></p>
- * <p>The <code>value-of</code> tag evaluates an XPath expression and outputs 
+ * <p>The <code>out</code> tag evaluates an expression and outputs 
  * the result of the evaluation:</p>
  * <p><pre>
  * &lt;out value="Expression"/&gt;
@@ -135,7 +132,10 @@ import java.beans.PropertyDescriptor;
  * <p><pre>
  *   &lt;forEach var="name" items="Expression" begin="n" end="n" step="n"&gt;
  *     body
- *  &lt;/for-each&gt;
+ *  &lt;/forEach&gt;
+ *   &lt;forEach select="XPathExpression" begin="n" end="n" step="n"&gt;
+ *     body
+ *  &lt;/forEach&gt;
  * </pre></p>
  *
  *
@@ -421,9 +421,38 @@ public class JexlTemplate extends AbstractGenerator {
         }
     }
 
-    static class MyVariables implements Variables {
+    static class MyJexlContext 
+        extends HashMap implements JexlContext {
+        public Map getVars() {
+            return this;
+        }
+        public void setVars(Map map) {
+            putAll(map);
+        }
+        public Object get(Object key) {
+            Object result = super.get(key);
+            if (result != null) {
+                return result;
+            }
+            MyJexlContext c = closure;
+            for (; c != null; c = c.closure) {
+                result = c.get(key);
+                if (result != null) {
+                    return result;
+                }
+            }
+            return result;
+        }
+        MyJexlContext closure;
+        MyJexlContext() {
+        }
+        MyJexlContext(MyJexlContext closure) {
+            this.closure = closure;
+        }
+    }
 
-        Map myVariables = new HashMap();
+    static class MyVariables implements Variables {
+        Map localVariables = new HashMap();
 
         static final String[] VARIABLES = new String[] {
             "continuation",
@@ -457,7 +486,7 @@ public class JexlTemplate extends AbstractGenerator {
                     return true;
                 }
             }
-            return myVariables.containsKey(varName);
+            return localVariables.containsKey(varName);
         }
         
         public Object getVariable(String varName) {
@@ -476,15 +505,15 @@ public class JexlTemplate extends AbstractGenerator {
             } else if (varName.equals("parameters")) {
                 return parameters;
             }
-            return myVariables.get(varName);
+            return localVariables.get(varName);
         }
         
         public void declareVariable(String varName, Object value) {
-            myVariables.put(varName, value);
+            localVariables.put(varName, value);
         }
         
         public void undeclareVariable(String varName) {
-            myVariables.remove(varName);
+            localVariables.remove(varName);
         }
     }
 
@@ -512,11 +541,12 @@ public class JexlTemplate extends AbstractGenerator {
     final static String OTHERWISE = "otherwise";
     final static String OUT = "out";
     final static String IMPORT = "import";
+    final static String DEFINE = "define";
 
 
     /**
      * Compile a single Jexl expr (contained in ${}) or XPath expression
-     * (contained in {}) 
+     * (contained in #{}) 
      */
 
     private Object compileExpr(String inStr) throws Exception {
@@ -544,22 +574,14 @@ public class JexlTemplate extends AbstractGenerator {
                         expr.append(c);
                     }
                 } else {
-                    if (c == '$') {
+                    if (c == '$' || c == '#') {
                         ch = in.read();
                         if (ch == '{') {
                             inExpr = true;
-                            xpath = false;
+                            xpath = c == '#';
                             continue;
                         }
-                    } else if (c == '{') {
-                        ch = in.read();
-                        if (ch != -1) {
-                            inExpr = true;
-                            xpath = true;
-                            expr.append((char)ch);
-                            continue;
-                        }
-                    }
+                    } 
                     // hack: invalid expression?
                     // just return the original and swallow exception
                     return inStr;
@@ -626,7 +648,7 @@ public class JexlTemplate extends AbstractGenerator {
             boolean inExpr = false;
             boolean xpath = false;
             try {
-                while ((ch = in.read()) != -1) {
+                top: while ((ch = in.read()) != -1) {
                     char c = (char)ch;
                     if (inExpr) {
                         if (c == '}') {
@@ -666,44 +688,30 @@ public class JexlTemplate extends AbstractGenerator {
                             } else {
                                 buf.append((char)ch);
                             }
-                        } else {
-                            if (c == '$') {
+                        } else if (c == '$' || c == '#') {
+                            while (c == '$' || c == '#') {
                                 ch = in.read();
                                 if (ch == '{') {
-                                    xpath = false;
+                                    xpath = c == '#';
                                     inExpr = true;
                                     if (buf.length() > 0) {
                                         char[] charArray = 
-                                        new char[buf.length()];
+                                            new char[buf.length()];
                                         
                                         buf.getChars(0, buf.length(),
                                                      charArray, 0);
                                         substitutions.add(charArray);
                                         buf.setLength(0);
                                     }
-                                    continue;
+                                    continue top;
+                                } else if (ch == -1) {
+                                    break;
                                 }
-                            } else if (c == '{') {
-                                ch = in.read();
-                                if (ch != -1) {
-                                    if (buf.length() > 0) {
-                                        char[] charArray = 
-                                        new char[buf.length()];
-                                        
-                                        buf.getChars(0, buf.length(),
-                                                 charArray, 0);
-                                        substitutions.add(charArray);
-                                        buf.setLength(0);
-                                    }
-                                    buf.append((char)ch);
-                                    inExpr = true;
-                                    xpath = true;
-                                    continue;
-                                }
+                                buf.append(c);
+                                c = (char)ch;
                             }
-                        }
-                        if (ch != -1) {
-                            buf.append((char)ch);
+                        } else {
+                            buf.append(c);
                         }
                     }
                 }
@@ -852,6 +860,7 @@ public class JexlTemplate extends AbstractGenerator {
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.raw = raw;
+            this.qname = "{"+namespaceURI+"}"+localName;
             StringBuffer buf = new StringBuffer();
             for (int i = 0, len = attrs.getLength(); i < len; i++) {
                 String uri = attrs.getURI(i);
@@ -866,7 +875,7 @@ public class JexlTemplate extends AbstractGenerator {
                 List substEvents = new LinkedList();
                 boolean xpath = false;
                 try {
-                    while ((ch = in.read()) != -1) {
+                    top: while ((ch = in.read()) != -1) {
                         char c = (char)ch;
                         if (inExpr) {
                             if (c == '}') {
@@ -903,33 +912,25 @@ public class JexlTemplate extends AbstractGenerator {
                                     buf.append((char)ch);
                                 }
                             } else {
-                                if (c == '$') {
-                                    ch = in.read();
-                                    if (ch == '{') {
-                                        if (buf.length() > 0) {
-                                            substEvents.add(new Literal(buf.toString()));
-                                            buf.setLength(0);
+                                if (c == '$' || c == '#') {
+                                    while (c == '$' || c == '#') {
+                                        ch = in.read();
+                                        if (ch == '{') {
+                                            if (buf.length() > 0) {
+                                                substEvents.add(new Literal(buf.toString()));
+                                                buf.setLength(0);
+                                            }
+                                            inExpr = true;
+                                            xpath = c == '#';
+                                            continue top;
+                                        } else if (ch == -1) {
+                                            break;
                                         }
-                                        inExpr = true;
-                                        xpath = false;
-                                        continue;
+                                        buf.append(c);
+                                        c = (char)ch;
                                     }
-                                } else if (c == '{') {
-                                    ch = in.read();
-                                    if (ch != -1) {
-                                        if (buf.length() > 0) {
-                                            substEvents.add(new Literal(buf.toString()));
-                                            buf.setLength(0);
-                                        }
-                                        buf.append((char)ch);
-                                        inExpr = true;
-                                        xpath = true;
-                                        continue;
-                                    }
-                                    buf.append('{');
-                                }
-                                if (ch != -1) {
-                                    buf.append((char)ch);
+                                } else {
+                                    buf.append(c);
                                 }
                             }
                         }
@@ -970,7 +971,9 @@ public class JexlTemplate extends AbstractGenerator {
         final String namespaceURI;
         final String localName;
         final String raw;
+        final String qname;
         final List attributeEvents = new LinkedList();
+        EndElement endElement;
     }
 
     class StartForEach extends Event {
@@ -1167,6 +1170,29 @@ public class JexlTemplate extends AbstractGenerator {
         }
     }
 
+    class StartDefine extends Event {
+        StartDefine(Locator location, String namespace, String name,
+                    Map formalParameters) {
+            super(location);
+            this.namespace = namespace;
+            this.name = name;
+            this.qname = "{"+namespace+"}"+name;
+            this.parameters = formalParameters;
+        }
+        final String namespace;
+        final String name;
+        final String qname;
+        final Map parameters;
+        EndDefine endDefine;
+    }
+
+    class EndDefine extends Event {
+        EndDefine(Locator location) {
+            super(location);
+        }
+    }
+
+
     class Parser implements LexicalHandler, ContentHandler {
 
         StartDocument startEvent;
@@ -1255,13 +1281,17 @@ public class JexlTemplate extends AbstractGenerator {
                     StartTemplate startTemplate = (StartTemplate)start;
                     newEvent =
                         startTemplate.endTemplate = new EndTemplate(locator);
+                } else if (start instanceof StartDefine) {
+                    StartDefine startDefine = (StartDefine)start;
+                    newEvent = 
+                        startDefine.endDefine = new EndDefine(locator);
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = new EndElement(locator, 
-                                          startElement);
+                newEvent = startElement.endElement = 
+                    new EndElement(locator, startElement);
             }
             addEvent(newEvent);
         }
@@ -1341,7 +1371,8 @@ public class JexlTemplate extends AbstractGenerator {
                     StartChoose startChoose = new StartChoose(locator);
                     newEvent = startChoose;
                 } else if (localName.equals(WHEN)) {
-                    if (!(stack.peek() instanceof StartChoose)) {
+                    if (stack.size() == 0 ||
+                        !(stack.peek() instanceof StartChoose)) {
                         throw new SAXParseException("<when> must be within <choose>", locator, null);
                     }
                     String test = attrs.getValue("test");
@@ -1357,19 +1388,20 @@ public class JexlTemplate extends AbstractGenerator {
                     StartWhen startWhen = new StartWhen(locator, expr);
                     newEvent = startWhen;
                 } else if (localName.equals(OUT)) {
-                    String select = attrs.getValue("value");
-                    if (select == null) {
+                    String value = attrs.getValue("value");
+                    if (value == null) {
                         throw new SAXParseException("out: \"value\" is required", locator, null);
                     }
                     Object expr;
                     try {
-                        expr = compileExpr(select);
+                        expr = compileExpr(value);
                     } catch (Exception e) {
                         throw new SAXParseException("out: \"value\": " + e.getMessage(), locator, null);
                     }
                     newEvent = new StartOut(locator, expr);
                 } else if (localName.equals(OTHERWISE)) {
-                    if (!(stack.peek() instanceof StartChoose)) {
+                    if (stack.size() == 0 ||
+                        !(stack.peek() instanceof StartChoose)) {
                         throw new SAXParseException("<otherwise> must be within <choose>", locator, null);
                     }
                     StartOtherwise startOtherwise = 
@@ -1389,6 +1421,32 @@ public class JexlTemplate extends AbstractGenerator {
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
+                } else if (localName.equals(DEFINE)) {
+                    // <define namespace="a" name="b">
+                    // body
+                    // </define>
+                    String namespace = attrs.getValue(JEXL_NS, "namespace");
+                    if (namespace == null) {
+                        namespace = "";
+                    }
+                    String name = attrs.getValue(JEXL_NS, "name");
+                    if (name == null) {
+                        throw new SAXParseException("define: template \"name\" is required", locator, null);
+                    }
+                    Map formalParams = new HashMap();
+                    for (int i = 0, len = attrs.getLength(); i < len; i++) {
+                        String uri = attrs.getURI(i);
+                        if (uri.equals("")) {
+                            String n = attrs.getLocalName(i);
+                            String v = attrs.getValue(i);
+                            if (v == null) v = "";
+                            formalParams.put(n, v);
+                        }
+                    }
+                    StartDefine startDefine = 
+                        new StartDefine(locator, namespace, name, 
+                                        formalParams);
+                    newEvent = startDefine;
                 } else if (localName.equals(IMPORT)) {
                     // <import uri="${root}/foo/bar.xml" select="{.}"/>
                     // Allow expression substituion in "uri" attribute
@@ -1474,18 +1532,20 @@ public class JexlTemplate extends AbstractGenerator {
 
     private XMLConsumer consumer;
     private JXPathContext jxpathContext;
-    private JexlContext jexlContext;
+    private MyJexlContext globalJexlContext;
     private Variables variables;
     private static Map cache = new HashMap();
     private Source inputSource;
+    private Map definitions;
 
     public void recycle() {
         super.recycle();
         consumer = null;
         jxpathContext = null;
-        jexlContext = null;
+        globalJexlContext = null;
         variables = null;
         inputSource = null;
+        definitions = null;
     }
 
     public void setup(SourceResolver resolver, Map objectModel,
@@ -1518,6 +1578,7 @@ public class JexlTemplate extends AbstractGenerator {
                     ObjectModelHelper.getResponse(objectModel),
                     ObjectModelHelper.getContext(objectModel),
                     parameters);
+        definitions = new HashMap();
     }
 
     private void setContexts(Object contextObject,
@@ -1574,9 +1635,10 @@ public class JexlTemplate extends AbstractGenerator {
             }
         }
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
-        jexlContext = JexlHelper.createContext();
-        jexlContext.setVars(map);
-        map = jexlContext.getVars();
+        jxpathContext.setVariables(variables);
+        globalJexlContext = new MyJexlContext();
+        globalJexlContext.setVars(map);
+        map = globalJexlContext.getVars();
         map.put("flowContext", contextObject);
         map.put("continuation", kont);
         map.put("request", request);
@@ -1605,7 +1667,7 @@ public class JexlTemplate extends AbstractGenerator {
                 cache.put(inputSource.getURI(), startEvent);
             }
         }
-        execute(jexlContext, jxpathContext, startEvent, null);
+        execute(globalJexlContext, jxpathContext, startEvent, null);
     }
 
     final static char[] EMPTY_CHARS = "".toCharArray();
@@ -1644,7 +1706,7 @@ public class JexlTemplate extends AbstractGenerator {
         }
     }
 
-    private void execute(JexlContext jexlContext,
+    private void execute(MyJexlContext jexlContext,
                          JXPathContext jxpathContext,
                          Event startEvent, Event endEvent) 
         throws SAXException {
@@ -1704,7 +1766,7 @@ public class JexlTemplate extends AbstractGenerator {
                 StartIf startIf = (StartIf)ev;
                 Object val;
                 try {
-                    val = getValue(startIf.test,jexlContext, jxpathContext);
+                    val = getValue(startIf.test, jexlContext, jxpathContext);
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(),
                                                 ev.location,
@@ -1757,6 +1819,8 @@ public class JexlTemplate extends AbstractGenerator {
                 int begin = startForEach.begin;
                 int end = startForEach.end;
                 int step = startForEach.step;
+                MyJexlContext localJexlContext = 
+                    new MyJexlContext(jexlContext);
                 for (i = 0; i < begin && iter.hasNext(); i++) {
                     iter.next();
                 }
@@ -1776,15 +1840,14 @@ public class JexlTemplate extends AbstractGenerator {
                     } else {
                         value = iter.next();
                     }
-                    JXPathContext newJXPathContext = 
-                        jxpathContextFactory.newContext(null, 
-                                                        jxpathContext);
-                    newJXPathContext.setVariables(variables);
+                    JXPathContext localJXPathContext = 
+                        jxpathContextFactory.newContext(null, value);
+                    localJXPathContext.setVariables(variables);
                     if (startForEach.var != null) {
-                        jexlContext.getVars().put(startForEach.var, value);
+                        localJexlContext.put(startForEach.var, value);
                     }
-                    execute(jexlContext,
-                            newJXPathContext,
+                    execute(localJexlContext,
+                            localJXPathContext,
                             startForEach.next,
                             startForEach.endForEach);
                     for (int skip = step-1; 
@@ -1828,6 +1891,93 @@ public class JexlTemplate extends AbstractGenerator {
                 continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement)ev;
+                StartDefine def = 
+                    (StartDefine)definitions.get(startElement.qname);
+                if (def != null) {
+                    MyVariables vars = 
+                        (MyVariables)jxpathContext.getVariables();
+                    MyJexlContext local = new MyJexlContext(globalJexlContext);
+                    final Map localVariables = vars.localVariables;
+                    vars.localVariables = new HashMap();
+                    Iterator i = startElement.attributeEvents.iterator();
+                    while (i.hasNext()) {
+                        AttributeEvent attrEvent = (AttributeEvent)i.next();
+                        Object defVal;
+                        if (attrEvent.namespaceURI.length() == 0) {
+                           defVal = def.parameters.get(attrEvent.localName);
+                           if (defVal == null) continue;
+                        }
+                        if (attrEvent instanceof CopyAttribute) {
+                            CopyAttribute copy =
+                                (CopyAttribute)attrEvent;
+                            vars.declareVariable(attrEvent.localName, 
+                                                 copy.value);
+                            local.put(attrEvent.localName,
+                                      copy.value);
+                        } else if (attrEvent instanceof 
+                                   SubstituteAttribute) {
+                            SubstituteAttribute substEvent = 
+                                (SubstituteAttribute)attrEvent;
+                            if (substEvent.substitutions.size() == 1) {
+                                Subst subst = 
+                                    (Subst)substEvent.substitutions.get(0);
+                                if (subst instanceof Expression) {
+                                    Object val;
+                                    Expression expr = (Expression)subst;
+                                    try {
+                                        val = 
+                                            getValue(expr.compiledExpression,
+                                                     jexlContext,
+                                                     jxpathContext);
+                                    } catch (Exception e) {
+                                        throw new SAXParseException(e.getMessage(),
+                                                                    ev.location,
+                                                                    e);
+                                    }
+                                    vars.declareVariable(attrEvent.localName,
+                                                         val);
+                                    local.put(attrEvent.localName, val);
+                                    continue;
+                                }
+                            }
+                            StringBuffer buf = new StringBuffer();
+                            Iterator ii = substEvent.substitutions.iterator();
+                            while (ii.hasNext()) {
+                                Subst subst = (Subst)ii.next();
+                                if (subst instanceof Literal) {
+                                    Literal lit = (Literal)subst;
+                                    buf.append(lit.value);
+                                } else if (subst instanceof Expression) {
+                                    Expression expr = (Expression)subst;
+                                    Object val;
+                                    try {
+                                        val = 
+                                            getValue(expr.compiledExpression,
+                                                     jexlContext,
+                                                     jxpathContext);
+                                    } catch (Exception e) {
+                                        throw new SAXParseException(e.getMessage(),
+                                                                    ev.location,
+                                                                    e);
+                                    }
+                                    if (val == null) {
+                                        val = "";
+                                    }
+                                    buf.append(val.toString());
+                                }
+                            }
+                            vars.declareVariable(attrEvent.localName,
+                                                 buf.toString());
+                            local.put(attrEvent.localName,
+                                      buf.toString());
+                        }
+                    }
+                    execute(local, jxpathContext, 
+                            def.next, def.endDefine);
+                    vars.localVariables = localVariables;
+                    ev = startElement.endElement.next;
+                    continue;
+                }
                 Iterator i = startElement.attributeEvents.iterator();
                 AttributesImpl attrs = new AttributesImpl();
                 while (i.hasNext()) {
@@ -1937,6 +2087,10 @@ public class JexlTemplate extends AbstractGenerator {
                 consumer.characters(ch, 0, ch.length);
             } else if (ev instanceof StartTemplate) {
                 // no action
+            } else if (ev instanceof StartDefine) {
+                StartDefine startDefine = (StartDefine)ev;
+                definitions.put(startDefine.qname, startDefine);
+                ev = startDefine.endDefine.next;
             } else if (ev instanceof StartImport) {
                 String uri;
                 StartImport startImport = (StartImport)ev;
