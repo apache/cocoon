@@ -19,7 +19,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 05:45:20 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:15:11 $
  */
 public class PatternTranslator extends PatternMatcher {
 
@@ -117,7 +117,13 @@ public class PatternTranslator extends PatternMatcher {
         super.sourcePattern=s;
     }
 
-    /** Internal routines for translation */
+    /** 
+     * Internal routines for translation
+     * <br>
+     * <b>FIXME: This routine doesn't match when the pattern ends with a
+     *    wildcard. Need to fix together with <code>matchPattern()</code>,
+     *    in <code>PatternMatcher</code> otherwise it won't work.</b>
+     */
     protected String translatePattern(char buff[], int expr[], int trns[])
     throws NullPointerException {
         char rslt[]=new char[expr.length+trns.length+buff.length];
