@@ -89,7 +89,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.5 2003/05/30 09:23:14 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.6 2003/06/07 20:49:24 bruno Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -349,6 +349,7 @@ implements Source, XMLizable {
      * Initialize
      */
     protected void init() {
+        this.systemIdForCaching = this.systemId;
         try {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.environment.setURI(this.prefix, this.uri);
