@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp.xsl,v 1.3 2003/07/13 17:16:54 vgritsenko Exp $-->
+<!-- $Id: xsp.xsl,v 1.4 2003/10/07 15:13:20 tcurdt Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/07/13 17:16:54 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/10/07 15:13:20 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -516,10 +516,10 @@ Either both 'uri' and 'prefix' or none of them must be specified
   <xsl:template match="text()">
     <xsl:choose>
       <xsl:when test="namespace-uri(..) = $xsp-uri and (local-name(..) = 'logic' or local-name(..) = 'expr')">
-        <xsl:value-of select="."/>
+        <xsl:value-of select="XSLTExtension:escape($extension, .)"/>
       </xsl:when>
       <xsl:otherwise>
-        this.characters("<xsl:value-of select="XSLTExtension:escape($extension, .)"/>");
+        this.characters("<xsl:value-of select="XSLTExtension:escapeJava($extension, .)"/>");
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

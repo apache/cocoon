@@ -73,7 +73,7 @@ import java.util.ArrayList;
  * The class specified will be used as a Java wrapper interpreting javascript program.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavascriptLanguage.java,v 1.1 2003/03/09 00:09:01 pier Exp $
+ * @version CVS $Id: JavascriptLanguage.java,v 1.2 2003/10/07 15:13:20 tcurdt Exp $
  */
 public class JavascriptLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
 
@@ -159,7 +159,7 @@ public class JavascriptLanguage extends AbstractProgrammingLanguage implements P
     }
 
     public String quoteString(String constant) {
-        return XSLTExtension.escapeString(constant);
+        return XSLTExtension.escapeJavaString(constant);
     }
 
     /**
