@@ -244,7 +244,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * Return the processor that is actually processing the request
      */
     public static Processor getLastProcessor(Environment env) {
-        return (Processor)env.getAttribute("CocoonComponentManager.processor");
+        return (Processor) env.getAttribute("CocoonComponentManager.processor");
     }
 
     /**
@@ -254,14 +254,14 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * processed (sub)sitemap.
      */
     static public ComponentManager getSitemapComponentManager() {
-		final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
 
-		if ( null != stack && !stack.empty()) {
-			Object[] o = (Object[])stack.peek();
-			return (ComponentManager)o[2];
-		}
+        if (null != stack && !stack.empty()) {
+            Object[] o = (Object[]) stack.peek();
+            return (ComponentManager) o[2];
+        }
 
-        // if we don't have an environment yet, just return null
+        // If we don't have an environment yet, just return null
         return null;
     }
 
@@ -270,13 +270,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
      * case, the Role's FQN is appended with "Selector", and we return a ComponentSelector.
      */
-    public Component lookup( final String role )
+    public Component lookup(final String role)
     throws ComponentException {
         if (null == role) {
             final String message =
                 "ComponentLocator Attempted to retrieve component with null role.";
-
-            throw new ComponentException( role, message );
+            throw new ComponentException(role, message);
         }
 
         if (role.equals(SourceResolver.ROLE)) {
