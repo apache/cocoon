@@ -51,7 +51,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
-* @cocoon.sitemap.component.documentation
+ * @cocoon.sitemap.component.documentation
  * This transformer triggers for the element <code>include</code> in the
  * namespace "http://apache.org/cocoon/include/1.0".
  * The <code>src</code> attribute contains the url which points to
