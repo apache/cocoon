@@ -49,7 +49,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.13 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.14 2004/04/29 01:00:43 crossley Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -264,6 +264,8 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
                         {
                             parentBundle = _select(directories, index, name, locale);
                         }
+                    } else if (++index < directories.length) {
+                        parentBundle = _select(directories, index, name, locale);
                     }
 
                     if (!isNotFoundBundle(fileName)) {
