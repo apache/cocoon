@@ -95,6 +95,12 @@
    </sample>
  </group>
  
+ <group name="Dynamic repeater template and event handling">
+    <sample name="Dynamic repeater template" href="dreamteam">
+      Create your Euro 2004 soccer dream team
+    </sample>
+ </group>
+ 
  <group name="Experimental Flowscript API for Cocoon Forms">
   <note>
     The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
