@@ -53,6 +53,7 @@ package org.apache.cocoon.bean;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.bean.helpers.Crawler;
 import org.apache.cocoon.bean.helpers.DelayedOutputStream;
 import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.cocoon.components.notification.Notifier;
@@ -86,7 +87,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.31 2003/10/01 20:27:49 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.32 2003/10/06 12:40:14 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -95,7 +96,6 @@ public class CocoonBean extends CocoonWrapper {
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
     private String defaultFilename = Constants.INDEX_URI;
-    private List targets = new ArrayList();
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
     private List excludePatterns = new ArrayList();
@@ -103,12 +103,15 @@ public class CocoonBean extends CocoonWrapper {
     private List includeLinkExtensions = null;
     
     // Internal Objects
-    private Map allProcessedLinks;
-    private Map allTranslatedLinks;
     private boolean initialized;
     private List listeners = new ArrayList();
     private boolean verbose;
     SourceResolver sourceResolver;
+    private Crawler crawler;    
+
+    public CocoonBean() {
+        this.crawler = new Crawler();
+    }
     
     //
     // INITIALISATION METHOD
@@ -118,7 +121,7 @@ public class CocoonBean extends CocoonWrapper {
         if (this.initialized == false) {
             super.initialize();
 
-            if (targets.size() == 0 && !precompileOnly) {
+            if (crawler.getRemainingCount() == 0 && !precompileOnly) {
                 String error = "Please, specify at least one starting URI.";
                 log.fatalError(error);
                 throw new ProcessingException(error);
@@ -196,7 +199,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        targets.add(target);
+        crawler.addTarget(target);
     }
 
     public void addTarget(String type, String sourceURI, String destURI)
@@ -206,7 +209,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        targets.add(target);
+        crawler.addTarget(target);
     }
 
     public void addTarget(String sourceURI, String destURI)
@@ -216,7 +219,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        targets.add(target);
+        crawler.addTarget(target);
     }
 
     public void addTargets(List uris, String destURI)
@@ -228,7 +231,7 @@ public class CocoonBean extends CocoonWrapper {
             target.setFollowLinks(this.followLinks);
             target.setConfirmExtension(this.confirmExtension);
             target.setLogger(this.logger);
-            targets.add(target);
+            crawler.addTarget(target);
         }
     }
 
@@ -254,7 +257,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(followLinks);
         target.setConfirmExtension(confirmExtension);
         target.setLogger(logger);
-        targets.add(target);
+        crawler.addTarget(target);
     }
 
     public void addExcludePattern(String pattern) {
@@ -351,60 +354,34 @@ public class CocoonBean extends CocoonWrapper {
             this.initialize();
         }
 
-        allProcessedLinks = new HashMap();
-        allTranslatedLinks = new HashMap();
-
-        Map targetMap = new HashMap();
-        Iterator i = targets.iterator();
-        while (i.hasNext()) {
-            Target target = (Target) i.next();
-            targetMap.put(target, target);
-        }
-
-        int nCount = 0;
-        while (targetMap.size() > 0) {
-            Target target = (Target) targetMap.keySet().iterator().next();
-            try {
-                if (!allProcessedLinks.containsKey(target)) {
-                    if (precompileOnly) {
-                        processXSP(target.getSourceURI());
-                    } else if (this.followLinks) {
-                        i = processTarget(target).iterator();
-                        while (i.hasNext()) {
-                            Target link = (Target) i.next();
-                            targetMap.put(link, link);
-                        }
-                    } else {
-                        processTarget(target);
-                    }
-                }
-            } catch (ResourceNotFoundException rnfe) {
-                this.sendBrokenLinkWarning(target.getSourceURI(), rnfe.getMessage());
-            }
-
-            targetMap.remove(target);
-            nCount++;
-
-            if (log.isInfoEnabled()) {
-                log.info(
-                    "  Memory used: "
-                        + (Runtime.getRuntime().totalMemory()
-                            - Runtime.getRuntime().freeMemory()));
-                log.info(
-                    "  Processed, Translated & Left: "
-                        + allProcessedLinks.size()
-                        + ", "
-                        + allTranslatedLinks.size()
-                        + ", "
-                        + targetMap.size());
-            }
-        }
-
-        if (nCount == 0) {
+        if (crawler.getRemainingCount()==0) {
             super.precompile();
+        } else {
+            Iterator iterator = crawler.iterator();
+            while (iterator.hasNext()) {
+                Target target = (Target) iterator.next();
+                if (precompileOnly) {
+                    processXSP(target.getSourceURI());
+                } else {
+                    processTarget(crawler, target);
+                }
+            }
         }
+        if (log.isInfoEnabled()) {
+              log.info(
+                  "  Memory used: "
+                      + (Runtime.getRuntime().totalMemory()
+                          - Runtime.getRuntime().freeMemory()));
+              log.info(
+                  "  Processed, Translated & Left: "
+                      + crawler.getProcessedCount()
+                      + ", "
+                      + crawler.getTranslatedCount()
+                      + ", "
+                      + crawler.getRemainingCount());
+          }
     }
-
+    
     /**
      * Processes the given Target and return all links.
      *
@@ -439,25 +416,22 @@ public class CocoonBean extends CocoonWrapper {
      * Target objects.
      * @exception Exception if an error occurs
      */
-    private Collection processTarget(Target target) throws Exception {
+    private void processTarget(Crawler crawler, Target target) throws Exception {
 
         int status = 0;
         
         int linkCount = 0;
         int newLinkCount = 0;
         int pageSize = 0;
-        
         long startTimeMillis = System.currentTimeMillis();
 
         if (target.confirmExtensions()) {
-            if (null == allTranslatedLinks.get(target.getSourceURI())) {
+            if (!crawler.hasTranslatedLink(target)) {
                 final String mimeType = getType(target.getDeparameterizedSourceURI(), target.getParameters());
                 target.setMimeType(mimeType);
-                allTranslatedLinks.put(target.getSourceURI(), target.getDestinationURI());
+                crawler.addTranslatedLink(target);
             }
         }
-        // Store processed URI list to avoid eternal loop
-        allProcessedLinks.put(target, target);
 
         // IS THIS STILL NEEDED?
         //if ("".equals(destinationURI)) {
@@ -466,7 +440,6 @@ public class CocoonBean extends CocoonWrapper {
 
         // Process links
         final HashMap translatedLinks = new HashMap();
-        final List targets = new ArrayList();
         if (target.followLinks() && target.confirmExtensions() && isCrawlablePage(target)) {
             final Iterator i =
                 this.getLinks(target.getDeparameterizedSourceURI(), target.getParameters()).iterator();
@@ -485,18 +458,22 @@ public class CocoonBean extends CocoonWrapper {
                     continue;
                 }
 
-                if (null == allTranslatedLinks.get(linkTarget.getSourceURI())) {
+                if (!crawler.hasTranslatedLink(linkTarget)) {
                     try {
                         final String mimeType = 
                                 getType(linkTarget.getDeparameterizedSourceURI(), linkTarget.getParameters());
                         linkTarget.setMimeType(mimeType);
-                        allTranslatedLinks.put(linkTarget.getSourceURI(), linkTarget.getDestinationURI());
+                        crawler.addTranslatedLink(linkTarget);
                         log.info("  Link translated: " + linkTarget.getSourceURI());
-                        targets.add(linkTarget);
+                        if (crawler.addTarget(linkTarget)) {
+                            newLinkCount++;
+                        }
                     } catch (ProcessingException pe) {
                         this.sendBrokenLinkWarning(linkTarget.getSourceURI(), pe.getMessage());
                         if (this.brokenLinkGenerate) {
-                           targets.add(linkTarget);
+                           if (crawler.addTarget(linkTarget)) {
+                               newLinkCount++;
+                           }
                         }
                     }
                 }
@@ -546,7 +523,9 @@ public class CocoonBean extends CocoonWrapper {
                             pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
                             continue;
                         }
-                        targets.add(linkTarget);
+                        if (crawler.addTarget(linkTarget)) {
+                            newLinkCount++;
+                        }
                     }
                     linkCount = gatheredLinks.size();
                 }
@@ -573,8 +552,8 @@ public class CocoonBean extends CocoonWrapper {
                                       pageSize,
                                       linkCount,
                                       newLinkCount,
-                                      0, //pagesRemaining,  @TODO@ Implement this
-                                      0, //pagesComplete,   @TODO@ Implement this
+                                      crawler.getRemainingCount(),
+                                      crawler.getProcessedCount(),
                                       System.currentTimeMillis()- startTimeMillis);
 
                     } catch (IOException ioex) {
@@ -588,8 +567,6 @@ public class CocoonBean extends CocoonWrapper {
             log.warn("Could not process URI: " + target.getSourceURI());
             this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found");
         }
-
-        return targets;
     }
 
     /**
