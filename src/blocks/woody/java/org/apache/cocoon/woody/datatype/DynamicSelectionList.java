@@ -56,6 +56,7 @@ import org.xml.sax.Attributes;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
@@ -65,6 +66,7 @@ import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
 import org.w3c.dom.Element;
 
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -89,15 +91,23 @@ public class DynamicSelectionList implements SelectionList {
         return datatype;
     }
 
+    /*
+     * This method is only used by a test case and by the public version
+     * of generateSaxFragment. 
+     */
+    void generateSaxFragment(ContentHandler contentHandler, Locale locale, Source source) throws ProcessingException, SAXException, IOException {
+        SelectionListHandler handler = new SelectionListHandler(locale);
+        handler.setContentHandler(contentHandler);
+        SourceUtil.toSAX(source, handler);
+    }
+
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         SourceResolver sourceResolver = null;
         Source source = null;
         try {
             sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(src);
-            SelectionListHandler handler = new SelectionListHandler(locale);
-            handler.setContentHandler(contentHandler);
-            SourceUtil.toSAX(source, handler);
+            generateSaxFragment(contentHandler, locale, source);
         } catch (Exception e) {
             throw new SAXException("Error while generating selection list: " + e.getMessage(), e);
         } finally {
