@@ -195,6 +195,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BD" type="add" fixes-bug="16523" due-to="Bart Guijt" due-to-email="b.guijt1@chello.nl">
+   QDox block added, parses Java source code and javadoc tags, includes samples.
+  </action>
   <action dev="CZ" type="fix" fixes-bug="19683">
    Fixing the problem with eating spaces in custom transformers.
   </action>
