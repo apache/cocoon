@@ -15,11 +15,10 @@
   limitations under the License.
 -->
 
-<!--
-  Version <![CDATA[ $Id: sitemap.xmap,v 1.4 2004/05/29 19:33:47 huber Exp $ ]]>
-  
-  Cocoon Webmail sitemap definition
--->
+<!--+
+    | Cocoon Webmail application sitemap definition
+    | Version $Id$
+    +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -27,22 +26,24 @@
 
 <map:components>
 
-  <!-- ===== selectors =====
-  -->
+  <!-- ===== selectors ===== -->
   <map:selectors default="parameter">
-    <map:selector name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector"
-      logger="sitemap.selector.request-parameter">
+    <map:selector name="request-parameter"
+                  src="org.apache.cocoon.selection.RequestParameterSelector"
+                  logger="sitemap.selector.request-parameter">
       <parameter-name>cmd</parameter-name>
     </map:selector>
-    <map:selector name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector"
-      logger="sitemap.selector.request-attribute">
+    <map:selector name="request-attribute"
+                  src="org.apache.cocoon.selection.RequestAttributeSelector"
+                  logger="sitemap.selector.request-attribute">
       <parameter-name>cmd</parameter-name>
     </map:selector>
-    <map:selector name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"
-      logger="sitemap.selector.request-exists">
+    <map:selector name="resource-exists"
+                  src="org.apache.cocoon.selection.ResourceExistsSelector"
+                  logger="sitemap.selector.request-exists">
     </map:selector>
   </map:selectors>
-  
+
   <!-- ===== actions =====
   -->
   <map:actions>
@@ -51,7 +52,7 @@
     <map:action name="mail" src="org.apache.cocoon.mail.MailAction"
       logger="sitemap.action.mail"/>
   </map:actions>
- 
+
 </map:components>
 
 
@@ -82,8 +83,8 @@
       <map:part src="cocoon:/page-{page}-bottom-col-1" element="bottom-col-1" strip-root="true"/>
     </map:aggregate>
   </map:resource>
-  
-  <!-- load a page of a section if page is not available load index page 
+
+  <!-- load a page of a section if page is not available load index page
     of this section, plain XML
   -->
   <map:resource name="load-page">
@@ -98,8 +99,8 @@
     </map:select>
     <map:serialize type="xml"/>
   </map:resource>
-  
-  <!-- load a page of a section if page is not available load index page 
+
+  <!-- load a page of a section if page is not available load index page
     of this section, assume XSP
   -->
   <map:resource name="load-xsp-page">
@@ -114,7 +115,7 @@
     </map:select>
     <map:serialize type="xml"/>
   </map:resource>
-  
+
 </map:resources>
 
 <!-- =========================== Pipelines ================================= -->
@@ -122,10 +123,10 @@
 <map:pipelines>
 
   <!-- mail/ handling, mail/ URI denotes pages of Cocoon Webmail,
-    presenting javamail objects 
+    presenting javamail objects
   -->
   <map:pipeline>
-  
+
     <map:match pattern="page-mail/*-head-col-1">
       <map:select type="resource-exists">
         <map:when test="docs/head-col-1/{1}.xsp">
@@ -144,13 +145,13 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-mail/mail-mid-col-1">
       <map:generate type="serverpages" src="docs/mid-col-1/mail.xsp"/>
       <map:transform src="stylesheets/mail2document.xsl"/>
       <map:serialize type="xml"/>
     </map:match>
-    
+
     <map:match pattern="page-mail/*-mid-col-1">
       <map:select type="resource-exists">
         <map:when test="docs/mid-col-1/{1}.xsp">
@@ -169,16 +170,16 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-mail/mail-mid-col-2">
       <map:generate type="serverpages" src="docs/mid-col-2/mail.xsp"/>
-      
+
       <!--
         select stylesheet on the cmd request parameter
       -->
       <map:select type="request-attribute">
         <map:parameter name="attribute-name" value="mail-current-working-command"/>
-        
+
         <map:when test="cat-folder">
           <map:transform src="stylesheets/mail-folder2document.xsl"/>
         </map:when>
@@ -206,7 +207,7 @@
       </map:select>
       <map:serialize type="xml"/>
     </map:match>
-    
+
     <map:match pattern="page-mail/*-mid-col-2">
       <map:select type="resource-exists">
         <map:when test="docs/mid-col-2/{1}.xsp">
@@ -225,7 +226,7 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-mail/*-mid-col-3">
       <map:select type="resource-exists">
         <map:when test="docs/mid-col-3/{1}.xml">
@@ -245,14 +246,14 @@
       </map:select>
     </map:match>
   </map:pipeline>
-  
+
   <!-- general page section handling
   -->
   <map:pipeline>
     <!-- pipeline matching a section of a page
     -->
-    
-    <!-- matched by simple URI *.html, eg. index.html becomes page-index-top-col-1 
+
+    <!-- matched by simple URI *.html, eg. index.html becomes page-index-top-col-1
       and mail/*.html, eg. mail/logout.html becomes page-mail/logout-top-col-1
     -->
     <map:match pattern="page-*-top-col-1">
@@ -273,7 +274,7 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-*-head-col-1">
       <map:select type="resource-exists">
         <map:when test="docs/head-col-1/{1}.xml">
@@ -292,7 +293,7 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-*-mid-col-1">
       <map:select type="resource-exists">
         <map:when test="docs/mid-col-1/{1}.xml">
@@ -311,12 +312,12 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <map:match pattern="page-*-mid-col-2">
       <map:generate src="docs/mid-col-2/{1}.xml"/>
       <map:serialize type="xml"/>
     </map:match>
-    
+
     <map:match pattern="page-*-mid-col-3">
       <map:select type="resource-exists">
         <map:when test="docs/mid-col-3/{1}.xml">
@@ -335,7 +336,7 @@
         </map:otherwise>
       </map:select>
     </map:match>
-    
+
     <!-- bottom-col matches mail/*, too
     -->
     <map:match pattern="page-*-bottom-col-1">
@@ -366,11 +367,11 @@
     <map:match pattern="^([^(/)0-9]+)(\(([0-9]+)+\))?\.html$" type="regexp-defaults">
       <map:parameter name="map-default:2" value="(1)"/>
       <map:parameter name="map-default:3" value="1"/>
-      
+
       <!-- setup link rewriting mapping
       -->
       <map:act type="link-translator-map" src="{1}.html"/>
-      
+
       <map:call resource="show-page">
         <map:parameter name="page" value="{1}"/>
       </map:call>
@@ -381,7 +382,7 @@
       <map:serialize/>
     </map:match>
   </map:pipeline>
-  
+
   <map:pipeline>
     <!-- handle mail/*.html, and mail/*([0-9]*).html pages
     -->
@@ -398,25 +399,25 @@
         <map:parameter name="linkMap:powered-by-cocoon.png" value="../powered-by-cocoon.png"/>
         <map:parameter name="linkMap:favicon.ico" value="../favicon.ico"/>
       </map:act>
-      
+
       <!-- create javamail objects
       -->
       <map:act type="mail" src="{1}">
-        <!-- 
+        <!--
           define the imap store url as urlname template,
         -->
         <map:parameter name="store-urlname" value="imap://''mail-userid'':''mail-passwd''@imap-server-host-name/"/>
-        <map:parameter name="javax.mail.Session.props:mail.debug" value="true"/>        
+        <map:parameter name="javax.mail.Session.props:mail.debug" value="true"/>
       </map:act>
-      
+
       <map:call resource="show-page">
         <map:parameter name="page" value="mail/{1}"/>
       </map:call>
-      
+
       <map:transform type="paginate" src="pagesheets/mailhtmlpages.xml">
         <map:parameter name="page" value="{3}"/>
       </map:transform>
-      
+
       <map:transform src="stylesheets/site2html.xsl"/>
       <map:serialize/>
     </map:match>
@@ -426,10 +427,10 @@
   -->
   <map:pipeline>
     <map:match pattern="*.css">
-      <map:read mime-type="text/css" src="resources/styles/{1}.css"/>    
+      <map:read mime-type="text/css" src="resources/styles/{1}.css"/>
     </map:match>
     <map:match pattern="*.gif">
-      <map:read mime-type="image/gif" src="resources/images/{1}.gif"/>    
+      <map:read mime-type="image/gif" src="resources/images/{1}.gif"/>
     </map:match>
     <map:match pattern="*.png">
       <map:read mime-type="image/png" src="resources/images/{1}.png"/>
@@ -440,7 +441,7 @@
     <map:match pattern="favicon.ico">
       <map:read mime-type="application/ico" src="resources/images/favicon.ico"/>
     </map:match>
-    
+
     <!-- handle ascii art, generate SVG from TXT, and serialize SVG as jpeg
     -->
     <map:match pattern="asciiart/*.jpg">

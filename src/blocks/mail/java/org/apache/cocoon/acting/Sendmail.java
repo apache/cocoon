@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,23 +36,23 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
-/** The Sendmail action class sends email. The action minimally needs four parameters:
+/**
+ * The Sendmail action class sends email.
+ * The action minimally needs four parameters:
  *
  * <dl>
- *   <dt>smtphost</dt>
- *   <dd>the smtp server to send the mail through. <code>localhost</code>
- *     by default if this parameter is not sprecified.</dd>
  *   <dt>from</dt>
  *   <dd>the email address the mail appears to be from</dd>
  *   <dt>to</dt>
  *   <dd>the email address the mail it sent to. This can
- *     be multiple addresses separated with commas.</dd>
+ *       be multiple addresses separated with commas.</dd>
  *   <dt>subject</dt>
  *   <dd>the subject line of the email</dd>
  *   <dt>src</dt>
  *   <dd>A url specifying the source of the text body of the email</dd>
  *   <dt>srcMimeType</dt>
- *   <dd>The optional Mime Type of the  source of the text body of the email if you specified src</dd>
+ *   <dd>The optional Mime Type of the  source of the text body of the email
+ *       if you specified src</dd>
  *   <dt>body</dt>
  *   <dd>the text body of the email, if src is specified, body will be ignored</dd>
  * </dl>
@@ -60,44 +60,56 @@ import javax.mail.internet.AddressException;
  * The following optionals parameters can be used:
  *
  * <dl>
- *  <dt>cc</dt>
- *  <dd>an email address of someone, who should receive a
- *    carbon copy. This can also be a list of multiple addresses
- *    separated by commas.</dd>
- *  <dt>bcc</dt>
- *  <dd>an email address of someone, who should receive a black
- *    carbon copy. This can also be a list of multiple addresses
- *    separated by commas.</dd>
- *  <dt>charset</dt>
- *  <dd>the character set, which should be used the encode the body text.
- *    This parameter is only used, if no attachements are send.</dd>
- *  <dt>attachments</dt>
- *  <dd>One or more attachments, separated by whitespace, which should be
- *    attached to the email message. If the argument contains a ':', it is
- *    assumed, that the argument describes a
- *    <code>org.apache.excalibur.source.Source</code> object. Otherwise, it
- *    is assumed, that the argument describes a request parameter of an
- *    uploaded file, which
- *    Cocoon has internally turned into a 
- *    {@link org.apache.cocoon.servlet.multipart.Part} 
- *    object.</dd>
+ *   <dt>smtp-host</dt>
+ *   <dd>The smtp server to send the mail through. If not specified,
+ *       default from cocoon.xconf will be used.</dd>
+ *   <dt>smtp-user</dt>
+ *   <dd>The smtp user. If smtp-user and smtp-host not specified,
+ *       default from cocoon.xconf will be used.</dd>
+ *   <dt>smtp-password</dt>
+ *   <dd>The smtp user's password. If smtp-user and smtp-host not
+ *       specified, default from cocoon.xconf will be used.</dd>
+ *   <dt>cc</dt>
+ *   <dd>an email address of someone, who should receive a
+ *       carbon copy. This can also be a list of multiple addresses
+ *       separated by commas.</dd>
+ *   <dt>bcc</dt>
+ *   <dd>an email address of someone, who should receive a black
+ *       carbon copy. This can also be a list of multiple addresses
+ *       separated by commas.</dd>
+ *   <dt>charset</dt>
+ *   <dd>the character set, which should be used the encode the body text.
+ *       This parameter is only used, if no attachements are send.</dd>
+ *   <dt>attachments</dt>
+ *   <dd>One or more attachments, separated by whitespace, which should be
+ *       attached to the email message. If the argument contains a ':', it is
+ *       assumed, that the argument describes a
+ *       <code>org.apache.excalibur.source.Source</code> object. Otherwise, it
+ *       is assumed, that the argument describes a request parameter of an
+ *       uploaded file, which Cocoon has internally turned into a
+ *       {@link org.apache.cocoon.servlet.multipart.Part}
+ *       object.</dd>
  * </dl>
+ *
  * <p>
- * The class loads all of these parameters from the sitemap, except the 
+ * The class loads all of these parameters from the sitemap, except the
  * attachements, which may come from file upload request parameters.
  * Note it's strongly recommended that the to, cc and bcc addresses be
  * specified by the sitemap, not the request, to prevent possible abuse of the
  * SendmailAction as a spam source.</p>
+ *
  * <p>
  * One or two parameters are returned to the sitemap depending on the outcome
  * of sending the message: <code>status</code> and <code>message</code>.</p>
+ *
  * <p>
  * If the email message could be successfully delivered only the parameter
  * <code>status</code> with the value <code>success</code> is returned.</p>
+ *
  * <p>
  * If there was a problem sending the message, <code>status</code> can have
  * the value <code>user-error</code> and the <code>message</code>
- * parameter is set to an explainatory text. This usually indicates problems with 
+ * parameter is set to an explainatory text. This usually indicates problems with
  * one or more email addresses. Other problems lead to a value of
  * <code>server-error</code> for <code>status</code> and
  * <code>message</code> contains a corresponding message.</p>
@@ -107,82 +119,94 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.9 2004/05/17 08:18:09 antonio Exp $
+ * @version CVS $Id$
  */
-public class Sendmail extends ServiceableAction implements ThreadSafe, Configurable {
-    private final static String STATUS = "status";
-    private final static String MESSAGE = "message";
-    /** Request-Attribute that holds status data*/
-    public final static String REQUEST_ATTRIBUTE = "org.apache.cocoon.acting.Sendmail";
+public class Sendmail extends ServiceableAction
+                      implements ThreadSafe, Configurable {
 
-    String smtpHost = null;
+    private static final String STATUS = "status";
+    private static final String MESSAGE = "message";
+
+    /** Request-Attribute that holds status data*/
+    public static final String REQUEST_ATTRIBUTE = "org.apache.cocoon.acting.Sendmail";
+
+    private String smtpHost;
+    private String smtpUser;
+    private String smtpPassword;
 
     public void configure(Configuration conf) throws ConfigurationException {
-        if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("SendmailAction: init");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("configure");
         }
 
-        smtpHost = conf.getAttribute("smtphost", null);
+        // FIXME Remove support of old "smtphost" attribute.
+        smtpHost = conf.getChild("smtp-host").getValue(conf.getAttribute("smtphost", null));
+        smtpUser = conf.getChild("smtp-user").getValue(null);
+        smtpPassword = conf.getChild("smtp-password").getValue(null);
 
-        if (smtpHost != null && this.getLogger().isDebugEnabled()) {
-            getLogger().debug(
-                "SendmailAction: using " + smtpHost + " as the smtp server");
+        if (getLogger().isDebugEnabled()) {
+            if (smtpHost != null)
+                getLogger().debug("Using " + smtpHost + " as the smtp server");
+            if (smtpUser != null)
+                getLogger().debug("Using " + smtpUser + " as the smtp user");
         }
     }
 
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String source,
-        Parameters parameters)
-        throws Exception {
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters parameters)
+    throws Exception {
         boolean success = false;
         Map status = null;
 
         MailSender mms = null;
         try {
-            if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("SendmailAction: act start");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("act start");
             }
 
             Request request = ObjectModelHelper.getRequest(objectModel);
 
-            if (parameters.isParameter("smtphost")) {
-                smtpHost = parameters.getParameter("smtphost", null);
+            // FIXME Remove support of old smtphost parameter
+            String smtpHost = parameters.getParameter("smtp-host", parameters.getParameter("smtphost", this.smtpHost));
+            String smtpUser = parameters.getParameter("smtp-user", this.smtpUser);
+            String smtpPassword = parameters.getParameter("smtp-password", this.smtpPassword);
 
-                if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug(
-                        "SendmailAction: overriding default smtp server, using "
-                            + smtpHost);
-                }
+            // Empty parameter means absent parameter
+            if ("".equals(smtpHost)) {
+                smtpHost = this.smtpHost;
+            }
+            if ("".equals(smtpUser)) {
+                smtpUser = this.smtpUser;
+            }
+            if ("".equals(smtpPassword)) {
+                smtpPassword = this.smtpPassword;
             }
 
             mms = (MailSender) this.manager.lookup(MailSender.ROLE);
-            if (smtpHost != null) {
-            	mms.setSmtpHost(smtpHost);
+
+            // Initialize non-default session if host or user specified.
+            if (smtpHost != null || smtpUser != null) {
+                mms.setSmtpHost(smtpHost, smtpUser, smtpPassword);
             }
 
             if (parameters.isParameter("from")) {
                 mms.setFrom(parameters.getParameter("from", null));
             }
-
             if (parameters.isParameter("to")) {
                 mms.setTo(parameters.getParameter("to", null));
             }
-
             if (parameters.isParameter("cc")) {
                 mms.setCc(parameters.getParameter("cc", null));
             }
-
             if (parameters.isParameter("bcc")) {
                 mms.setBcc(parameters.getParameter("bcc", null));
             }
-
             if (parameters.isParameter("subject")) {
                 mms.setSubject(parameters.getParameter("subject", null));
             }
-
             if (parameters.isParameter("charset")) {
                 mms.setCharset(parameters.getParameter("charset", null));
             }
@@ -205,77 +229,68 @@ public class Sendmail extends ServiceableAction implements ThreadSafe, Configura
                     if (srcName.indexOf(":") == -1) {
                         Object obj = request.get(srcName);
                         mms.addAttachment(obj);
-                        if (this.getLogger().isDebugEnabled()) {
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug("request-attachment: " + obj);
                         }
                     } else {
-                        mms.addAttachmentURL(
-                            srcName,
-                            null,
-                            srcName.substring(srcName.lastIndexOf('/') + 1));
-                        if (this.getLogger().isDebugEnabled()) {
+                        mms.addAttachmentURL(srcName,
+                                             null,
+                                             srcName.substring(srcName.lastIndexOf('/') + 1));
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug("sitemap-attachment: " + srcName);
                         }
                     }
                 }
             }
 
-            mms.send(resolver);
+            mms.send();
 
-            if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("SendmailAction: act stop");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("act stop");
             }
 
             success = true;
-            status = new HashMap(1);
+            status = new HashMap(3);
             status.put(Sendmail.STATUS, "success");
 
-        } catch (AddressException ae) {
-            this.getLogger().error(
-                "SendmailAction: AddressException: " + ae.getMessage());
+        } catch (AddressException e) {
+            getLogger().warn("AddressException: ", e);
 
-            status = new HashMap(2);
+            status = new HashMap(3);
             status.put(Sendmail.STATUS, "user-error");
-            status.put(Sendmail.MESSAGE, ae.getMessage());
+            status.put(Sendmail.MESSAGE, e.getMessage());
 
-        } catch (MessagingException me) {
-            this.getLogger().error(
-                "SendmailAction: MessagingException: "
-                    + "An error occured while sending email.",
-                me);
+        } catch (MessagingException e) {
+            getLogger().warn("MessagingException: " +
+                             "An error occured while sending email.", e);
 
-            // me contains nested exceptions providing insight on the real
-            // cause.
-            status = new HashMap(2);
+            status = new HashMap(3);
             status.put(Sendmail.STATUS, "server-error");
-            status.put(
-                Sendmail.MESSAGE,
-                "An error occured while sending email: " + me.getMessage());
-            
-        } catch (ServiceException e) {
-            this.getLogger().error(
-                    "SendmailAction: An exception was thrown while initializing mail component.",
-                    e);
+            status.put(Sendmail.MESSAGE,
+                       "An error occured while sending email: " + e.getMessage());
 
-                status = new HashMap(2);
-                status.put(Sendmail.STATUS, "server-error");
-                status.put(Sendmail.MESSAGE, "An exception was thrown while sending email: "+e.getMessage());
+        } catch (ServiceException e) {
+            getLogger().error("ServiceException: " +
+                              "An error occured while initializing.", e);
+
+            status = new HashMap(3);
+            status.put(Sendmail.STATUS, "server-error");
+            status.put(Sendmail.MESSAGE,
+                       "An exception was thrown while sending email: " + e.getMessage());
 
         } catch (Exception e) {
-            this.getLogger().error(
-                "SendmailAction: An exception was thrown while sending email.",
-                e);
+            getLogger().error("An exception was thrown while sending email.", e);
 
-            status = new HashMap(2);
+            status = new HashMap(3);
             status.put(Sendmail.STATUS, "server-error");
             status.put(Sendmail.MESSAGE, "An exception was thrown while sending email.");
 
         } finally {
-            ObjectModelHelper.getRequest(objectModel).setAttribute(
-                Sendmail.REQUEST_ATTRIBUTE,
-                status);
+            ObjectModelHelper.getRequest(objectModel).setAttribute(Sendmail.REQUEST_ATTRIBUTE,
+                                                                   status);
             this.manager.release(mms);
         }
-        return (success ? status : null);
+
+        return success ? status : null;
     }
 }

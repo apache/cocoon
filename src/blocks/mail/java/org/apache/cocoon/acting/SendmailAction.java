@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,12 +25,10 @@ import org.apache.cocoon.environment.SourceResolver;
 import java.util.Map;
 
 /**
- * The SendmailAction class sends email. Please use the {@link Sendmail Sendmail} action instead. 
- * The action needs four parameters:
+ * The SendmailAction class sends email. Please use the {@link Sendmail Sendmail}
+ * action instead. The action needs four parameters:
  *
  * <dl>
- *   <dt>smtphost</dt>
- *   <dd>the smtp server to send the mail through</dd>
  *   <dt>from</dt>
  *   <dd>the email address the mail appears to be from</dd>
  *   <dt>to</dt>
@@ -41,47 +39,40 @@ import java.util.Map;
  *   <dd>the body of the email</dd>
  * </dl>
  *
- * The class attempts to load all of these parameters from the sitemap, but
- * if they do not exist there it will read them from the request. The exception
- * is the smtphost parameter, which is assumed to be localhost if not specified
- * in the sitemap. Note it's strongly recommended that the to address be
- * specified by the sitemap, not the request, to prevent possible abuse of the
- * SendmailAction as a spam source.
+ * Action attempts to get all of these parameters from the sitemap, but
+ * if they do not exist there it will read them from the request parameters.
  *
- * @deprecated
+ * <p>It also supports all of the {@link Sendmail} action sitemap parameters.
+ * </p>
+ *
+ * @deprecated Please use the {@link Sendmail Sendmail} action instead.
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SendmailAction.java,v 1.3 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SendmailAction extends Sendmail {
 
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String source,
-        Parameters parameters) 
-        throws Exception {
-            if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("SendmailAction: act start");
-            }
-            Request request = ObjectModelHelper.getRequest(objectModel);
-            if (!parameters.isParameter("from")) {
-                parameters.setParameter("from", request.getParameter("from"));
-            }
-            if (!parameters.isParameter("to")) {
-                parameters.setParameter("to", request.getParameter("to"));
-            }
-            if (!parameters.isParameter("subject")) {
-                parameters.setParameter("subject", request.getParameter("subject"));
-            }
-            if (!parameters.isParameter("body")) {
-                parameters.setParameter("body", request.getParameter("body"));
-            }
-            if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("SendmailAction: act stop");
-            }
-            return super.act(redirector, resolver, objectModel, source, parameters);
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters parameters)
+    throws Exception {
+
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        if (!parameters.isParameter("from")) {
+            parameters.setParameter("from", request.getParameter("from"));
+        }
+        if (!parameters.isParameter("to")) {
+            parameters.setParameter("to", request.getParameter("to"));
+        }
+        if (!parameters.isParameter("subject")) {
+            parameters.setParameter("subject", request.getParameter("subject"));
+        }
+        if (!parameters.isParameter("body")) {
+            parameters.setParameter("body", request.getParameter("body"));
         }
 
+        return super.act(redirector, resolver, objectModel, source, parameters);
+    }
 }

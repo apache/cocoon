@@ -51,7 +51,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-
 /**
  * The SendMailTransformer send mails using SMTP including attachments with
  * the specific parameters read from a configuration-file and delivers
@@ -65,8 +64,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *  from http://java.sun.com/products/javabeans/glasgow/jaf.html
  *  and install it in the Cocoon lib directory.
  * </p>
+ *
  * <p>
- *    These two parameters can be defined already in the components-secion of the sitemap:
+ * These two parameters can be defined already in the components-secion of the sitemap:
  *  <ul>
  *   <li>
  *     smtphost - the name of the host, e.g. "smtphost.company.com"
@@ -76,6 +76,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </li>
  *  </ul>
  * </p>
+ *
  * <p>
  * Furthermore, these parameters can be defined in the pipeline-section:
  *  <ul>
@@ -164,14 +165,20 @@ import org.xml.sax.helpers.AttributesImpl;
  *     &lt;/email:sendmail&gt;
  *   &lt;/document&gt;
  * </p>
+ *
  * <p>
  *   After the transformation a report will be generated, where the state for each sent mail can be seen.
  *   In case of an exception, the exception-message and a stacktrace will be reported.
  * </p>
  *
+ * <p><b style="font-color: red;">FIXME: Known Issues:</b><ul>
+ * <li>Refactor to use MailSender component
+ * <li>No support for smtp user/password
+ * <li>No support for different mail servers, first one will always be used
+ * </ul></p>
+ *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
  * @version CVS $Id$
- *
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
 
