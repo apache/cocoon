@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.62 2003/06/25 07:40:21 upayavira Exp $:-->
+<!-- CVS $Id: status.xml,v 1.63 2003/06/26 08:28:13 crossley Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="DC" type="update">
+    The DTDs are now completely handled by the catalog entity resolver.
+    The old copies of DTDs at xdocs/dtd/ have been removed. If you are
+    editing the Cocoon xdocs with an xml editor, then point it to the
+    WEB-INF/entities/catalog or catalog.xcat file. If your editor cannot
+    utilise an entity resolver, then get a better editor.
+  </action>
   <action dev="JH" type="fix">
     Fixed some caching (added missing parameters and changed algorithm for cache key generation)
     and logging issues in the DirectoryGenerator. Fixed the root pattern handling (if not matching
@@ -197,7 +204,7 @@
   </action>
   <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
     Added/fixed internationalization support for HSSFSerializer by setting the output encoding
-    hardcoded to UTF-16. It's obviously only a hack, but so it's at least usable for more people.
+    hardcoded to UTF-16. It's obviously only a hack, but so it is at least usable for more people.
   </action>
   <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
     Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/>
@@ -226,7 +233,7 @@
     Modified patch from Jens Lorenz (jens.lorenz@interface-business.de)
   </action>
   <action dev="JH" type="fix" fixes-bug="15302">
-   For non-existant files XSPUtil.relativeFilename() now throws FileNotFoundException instead of NPE.
+   For non-existent files XSPUtil.relativeFilename() now throws FileNotFoundException instead of NPE.
   </action>
   <action dev="JH" type="add" fixes-bug="13559" due-to="Robert E. Parrott" due-to-email="parrott@fas.harvard.edu">
     Getter for jxcontext_ property added for subclassing reasons.
