@@ -17,75 +17,116 @@ package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.CachedResponse;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
+import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
- * This class implements a proxy like source that uses another source
- * to get the content. This implementation can cache the content for
- * a given period of time and can refresh the content async in the
- * background.
- *
- * <h2>Example</h2>
- * <pre>    
- * &lt;component-instance name="cached" 
- *      class="org.apache.cocoon.components.source.impl.CachingSourceFactory"/&gt;
- * </pre>
+ * This class implements a proxy like source caches the contents of the source
+ * it wraps. This implementation can cache the content either 
+ * for a given period of time or until an external event invalidates
+ * the cached response.
+ * <p>
+ * When using the timeout approach you have a choice between two separate
+ * revalidation strategies.
+ * </p>
+ * 1) Synchronously. This means that the cached contents are checked for validity 
+ * and thrown out on the current thread.<br>
+ * 2) Asynchronously. A cronjob is scheduled to invalidate and update the cached response
+ * in the backgound.<br><br>
  * 
- * <h2>Syntax for Protocol</h2>
+ * <h2>Protocol syntax</h2>
  * <p>
  * The URL needs to contain the URL of the cached source, an expiration
- * period in second, and optionally a cache key: <code>cached://60@http://www.s-und-n.de</code>
- * or <code>cached://60@main@http://www.s-und-n.de</code> 
+ * period in seconds, and optionally a cache key: 
+ * <code>cached:http://www.apache.org/[?cocoon:cache-expires=60][&cocoon:cache-name=main]</code>.
  * </p>
  * <p>
- * The above examples show how the real source <code>http://www.s-und-n.de</code>
+ * The above examples shows how the real source <code>http://www.apache.org/</code>
  * is wrapped and the cached contents is used for <code>60</code> seconds.
- * The second example extends the cache key with the string <code>main</code>
- * allowing multiple cache entries for the same source.
+ * The second querystring parameter instructs that the cache key be extended with the string 
+ * <code>main</code>. This allows the use of multiple cache entries for the same source.
  * </p>
  * <p>
  * This factory creates either instances of {@link org.apache.cocoon.components.source.impl.CachingSource} 
- * or {@link org.apache.cocoon.components.source.impl.AsyncCachingSource}
- * depending on the <code>async</code> parameter.
+ * or {@link org.apache.cocoon.components.source.impl.TraversableCachingSource}
+ * depending on the whether the wrapped Source is an instance of TraversableSource.
  * </p>
- *
+ * 
  * <h2>Parameters</h2>
  * <table><tbody>
- * <tr><th>cache-role</th><td>Role of component used as cache.</td><td>opt</td><td>String</td><td><code>{@link Cache.ROLE}</code></td></tr>
- * <tr><th>refresher-role</th><td>Role of component used for refreshing sources.</td><td>opt</td><td>String</td><td><code>{@link org.apache.cocoon.components.source.impl.Refresher.ROLE}</code></td></tr>
- * <tr><th>async</th><td>Indicated if the cached source should be refreshed asynchronously.</td><td>opt</td><td>String</td><td><code>false</code></td></tr>
+ * <tr>
+ *  <th>cache-role (String)</th>
+ *  <td>Role of component used as cache.</td>
+ *  <td>opt</td>
+ *  <td>String</td>
+ *  <td><code>{@link Cache.ROLE}</code></td>
+ * </tr>
+ * <tr>
+ *  <th>refresher-role (String)</th>
+ *  <td>Role of component used for refreshing sources.</td>
+ *  <td>opt</td>
+ *  <td>String</td>
+ *  <td><code>{@link org.apache.cocoon.components.source.impl.Refresher.ROLE}</code></td>
+ * </tr>
+ * <tr>
+ *  <th>async (boolean)</th>
+ *  <td>Indicated if the cached source should be refreshed asynchronously.</td>
+ *  <td>opt</td>
+ *  <td>String</td>
+ *  <td><code>false</code></td>
+ * </tr>
+ * <tr>
+ *  <th>default-expires (int)</th>
+ *  <td>Default expiration value for if it is not specified on the Source itself.</td>
+ *  <td>opt</td>
+ *  <td>String</td>
+ *  <td><code>-1</code></td>
+ * </tr>
  * </tbody></table>
  *  
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSourceFactory.java,v 1.4 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.5 2004/03/22 17:38:25 unico Exp $
  * @since 2.1.1
  */
-public final class CachingSourceFactory
-    extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer, Disposable, Parameterizable
+public final class CachingSourceFactory extends AbstractLogEnabled
+implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable, ThreadSafe
 {
+
+    /** Protocol prefix / factory name */
+    private String scheme;
+    
+    /** Asynchronous ? */
+    private boolean async;
+    
+    /** The role of the cache */
+    private String cacheRole;
+ 
     /** The role of the refresher */
     private String refresherRole;
-
+    
+    /** Default expires value */
+    private int defaultExpires;
+    
     /** Has the lazy initialization been done? */
     private boolean isInitialized;
 
@@ -93,100 +134,50 @@ public final class CachingSourceFactory
     protected ServiceManager manager;
 
     /** The {@link SourceResolver} */
-    protected SourceResolver   resolver;
-
-    /** The store */
-    protected Cache cache;
-    
-    /** Async ? */
-    protected boolean async;
-    
-    /** The role of the cache */
-    protected String cacheRole;
+    protected SourceResolver resolver;
     
     /** The refresher */
     protected Refresher refresher;
     
-    /**
-     * Serviceable
-     */
+    /** The cache */
+    protected Cache cache;
+    
+    // ---------------------------------------------------- Lifecycle
+    
+    public CachingSourceFactory() {
+    }
+    
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        // due to cyclic dependencies we can't lookup the resolver or the refresher here
+        // due to cyclic dependencies we can't lookup the resolver the refresher
+        // or the cache until after the factory is initialized.
     }
-
-    /**
-     * Get a <code>Source</code> object.
-     * @param parameters This is optional.
-     */
-    public Source getSource( String location, Map parameters )
-    throws MalformedURLException, IOException {
-        if(  this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug( "Creating source object for " + location );
+    
+    public void configure(Configuration configuration) throws ConfigurationException {
+        this.scheme = configuration.getAttribute("name");
+        Parameters parameters = Parameters.fromConfiguration(configuration);
+        
+		// 'async' parameter
+		this.async = parameters.getParameterAsBoolean("async", false);
+		
+        // 'cache-role' parameter
+        this.cacheRole = parameters.getParameter("cache-role", Cache.ROLE);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Using cache " + this.cacheRole);
         }
-
-        // we must do a lazy lookup because of cyclic dependencies
-        if (!this.isInitialized) {
-            lazyInitialize();
+        
+        // 'refresher-role' parameter
+        if (this.async) {
+            this.refresherRole = parameters.getParameter("refresher-role", Refresher.ROLE);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Using refresher " + this.refresherRole);
+            }
         }
-
-        CachingSource source;
-        if ( this.async ) {
-            source = this.getAsyncSource(location, parameters);
-        } else {
-            source = new CachingSource( location, parameters);
-        }
-        ContainerUtil.enableLogging(source, this.getLogger());
-        try {
-            // call selected avalon lifecycle interfaces. Mmmh.
-            ContainerUtil.service(source, this.manager);
-            // we pass the components for performance reasons
-            source.init(this.resolver, this.cache);
-            ContainerUtil.initialize(source);                                  
-        } catch (IOException ioe) {
-            throw ioe;
-        } catch (ServiceException se) {
-            throw new SourceException("Unable to initialize source.", se);
-        } catch (Exception e) {
-            throw new SourceException("Unable to initialize source.", e);
-        }
-        return source;
+        
+        this.defaultExpires = parameters.getParameterAsInteger("default-expires",-1);
+        
     }
-
-    /**
-     * Get an AsyncSource and register refresh period.
-     * 
-     * @param location a string holding a URI
-     * @param parameters a map of additional parameters to pass to the source
-     * @return a new AsyncCachingSource
-     * @throws MalformedURLException
-     * @throws SourceException
-     */
-    private CachingSource getAsyncSource(String location, Map parameters) throws MalformedURLException, SourceException {
-        CachingSource source;
-        source = new AsyncCachingSource( location, parameters);
-        final long expires = source.getExpiration();
-        
-        CachedResponse response = this.cache.get( source.getCacheKey() );
-        if ( response == null ) {
-            
-            // call the target the first time
-            this.refresher.refresh(source.getCacheKey(),
-                                   source.getSourceURI(),
-                                   expires,
-                                   this.cacheRole);
-        
-            response = this.cache.get( source.getCacheKey() );
-        }
-        ((AsyncCachingSource)source).setResponse(response);
-        
-        this.refresher.refreshPeriodically(source.getCacheKey(),
-                               source.getSourceURI(),
-                               expires,
-                               this.cacheRole);
-        return source;
-    }
-
+    
     /**
      * Lazy initialization of resolver and refresher because of
      * cyclic dependencies.
@@ -199,39 +190,161 @@ public final class CachingSourceFactory
             // we were waiting
             return;
         }
-        if (this.resolver != null) {
-            try {
-                this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-            } catch (ServiceException se) {
-                throw new SourceException("SourceResolver is not available.", se);
-            }
+        try {
+            this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        } catch (ServiceException se) {
+            throw new SourceException("Missing service dependency: " + SourceResolver.ROLE, se);
         }
-        if ( this.refresher == null && this.async) {
+        try {
+            this.cache = (Cache) this.manager.lookup(this.cacheRole);
+        } catch (ServiceException se) {
+            throw new SourceException("Missing service dependency: " + SourceResolver.ROLE, se);
+        }
+        if (this.async) {
             try {
-                this.refresher = (Refresher)this.manager.lookup(this.refresherRole);
+                this.refresher = (Refresher) this.manager.lookup(this.refresherRole);
             } catch (ServiceException se) {
                 // clean up
                 if (this.resolver != null){
                     this.manager.release(this.resolver);
                     this.resolver = null;
                 }
-                throw new SourceException("Refesher is not available.", se);
+                throw new SourceException("Missing service dependency: " + this.refresherRole, se);
             }
         }
         this.isInitialized = true;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if (this.manager != null) {
+            this.manager.release(this.resolver);
+            this.manager.release(this.refresher);
+            this.refresher = null;
+            this.manager = null;
+            this.resolver = null;
+        }
+    }
+    
+    // ---------------------------------------------------- SourceFactory implementation
+    
+    /**
+     * Get a <code>Source</code> object.
+     * @param parameters This is optional.
+     */
+    public Source getSource(final String location, final Map parameters)
+    throws MalformedURLException, IOException {
+        
+        if (this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Creating source object for " + location);
+        }
+        
+        // we must do lazy initialization because of cyclic dependencies
+        if (!this.isInitialized) {
+            lazyInitialize();
+        }
+        
+        // snip the cache protocol
+        int index = location.indexOf(':');
+        if (index == -1) {
+            throw new MalformedURLException("This Source requires a subprotocol to be specified.");
+        }
+        String uri = location.substring(index+1);
+        
+        // parse the query string
+        SourceParameters sp = null;
+        String queryString = null;
+        index = uri.indexOf('?');
+        if (index != -1) {
+            queryString = uri.substring(index+1);
+            uri = uri.substring(0,index);
+            sp = new SourceParameters(queryString);
+        }
+        
+        // put caching source specific query string parameters
+        // into a Parameters object
+        final Parameters params = new Parameters();
+        if (sp != null) {
+            final Iterator names = sp.getParameterNames();
+            while (names.hasNext()) {
+                String name = (String) names.next();
+                if (name.startsWith("cocoon:")) {
+                    params.setParameter(name.substring("cocoon:".length()),sp.getParameter(name));
+                    sp.removeParameter(name);
+                }
+            }
+            queryString = sp.getQueryString();
+            if (queryString != null) {
+                uri += "?" + queryString;
+            }
+        }
+        
+        final String cacheName = params.getParameter("cache-name", null);
+        int expires = params.getParameterAsInteger("cache-expires", -1);
+        if (expires == -1) {
+            expires = this.defaultExpires;
+            params.setParameter("cache-expires", String.valueOf(this.defaultExpires));
+        }
+        
+        final Source wrappedSource = this.resolver.resolveURI(uri);
+        CachingSource source;
+        if (wrappedSource instanceof TraversableSource) {
+            source = new TraversableCachingSource(scheme,
+                                                  location,
+                                                  uri,
+                                                  cacheName,
+                                                  expires,
+                                                  parameters,
+                                                  this.async);
+        }
+        else {
+            source = new CachingSource(scheme,
+                                       location,
+                                       uri,
+                                       cacheName,
+                                       expires,
+                                       parameters,
+                                       this.async);
+        }
+
+        if (this.async) {
+            // schedule it with the refresher
+            this.refresher.refresh(source.getCacheKey(), uri, this.cacheRole, params);
+        }
+
+        // set the required components directly for speed
+        source.cache = this.cache;
+        source.resolver = this.resolver;
+
+        ContainerUtil.enableLogging(source, this.getLogger());
+        try {
+            // call selected avalon lifecycle interfaces. Mmmh.
+            ContainerUtil.service(source, this.manager);
+            ContainerUtil.initialize(source);
+        } catch (ServiceException se) {
+            throw new SourceException("Unable to initialize source.", se);
+        } catch (Exception e) {
+            throw new SourceException("Unable to initialize source.", e);
+        }
+        
+        return source;
+    }
+
     /**
      * Release a {@link Source} object.
      */
-    public void release( Source source ) {
-        if ( source instanceof CachingSource) {
-            if ( this.getLogger().isDebugEnabled() ) {
+    public void release(Source source) {
+        if (source instanceof CachingSource) {
+            if (this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug("Releasing source " + source.getURI());
             }
-            ContainerUtil.dispose(source);
+            ((CachingSource) source).dispose();
         }
     }
+    
+	// ---------------------------------------------------- URIAbsolutizer implementation
 
     /*
      *  (non-Javadoc)
@@ -241,43 +354,5 @@ public final class CachingSourceFactory
         return SourceUtil.absolutize(baseURI, location, true);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.manager != null) {
-            this.manager.release(this.resolver);
-            this.manager.release(this.cache);
-            this.manager.release(this.refresher);
-            this.refresher = null;
-            this.cache = null;
-            this.manager = null;
-            this.resolver = null;
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        this.cacheRole = parameters.getParameter("cache-role", Cache.ROLE);
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Using cache " + this.cacheRole);
-        }
-        
-        try {
-            this.cache = (Cache)this.manager.lookup(this.cacheRole);
-        } catch (ServiceException se) {
-            throw new ParameterException("Unable to lookup cache: " + this.cacheRole, se);
-        }
-
-        this.async = parameters.getParameterAsBoolean("async", false);
-        if (this.async) {
-            this.refresherRole = parameters.getParameter("refresher-role", Refresher.ROLE);
-            if ( this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("Using refresher " + this.refresherRole);
-            }
-        }
-    }
 
 }

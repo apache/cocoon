@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='cached']">
+
+    <!--+
+        | Caching source protocol.
+        | This protocol extension implements a proxy-like source
+        | that can cache the contents of its delegate source.
+        | 
+        | The uri syntax is as follows:
+        | cached:subprotocol:/path[?cocoon:cache-expires=60][&cache-name=main]
+        | 
+        | Where: 
+        | - 'cached' is the caching source protocol scheme name as defined below.
+        | - 'subprotcol:/path' identifies the source to get the actual contents from
+        |   eg. http://cocoon.apache.org/doco.html?version=1.2
+        | - optional querystring parameters that start with 'cocoon:' represent special 
+        |   instructions to pass to the implementation.
+        |
+        | The protocol can be parametrized as follows:
+        | - 'async' (false). When this is set to true cached source contents are updated
+        |   in the background.
+        | - 'cache-role' (org.apache.cocoon.caching.Cache). Use this if you want to use
+        |   a Cache other than the default one.
+        | - 'refresher-role' (org.apache.cocoon.components.source.impl.Refresher). Use this
+        |   if you wish to use a Refresher other than the default one.
+        |   A Refresher is used when asynchronic caching is turned on. It is responsible for
+        |   updating the cached contents in the background.
+        | - 'default-expires' (-1). The expires value if it is not specified on the source
+        |    itself.
+        +-->
+    <component-instance name="cached"
+                        class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
+                        logger="core.source.cached">
+      <!--
+      <parameter name="async" value="true"/>
+      <parameter name="cache-role" value="org.apache.cocoon.caching.Cache"/>
+      <parameter name="refresher-role" value="org.apache.cocoon.components.source.impl.Refresher/Delay"/>
+      <parameter name="default-expires" value="-1"/>
+      -->
+    </component-instance>
+
+</xconf>
