@@ -39,7 +39,7 @@ import java.io.Serializable;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.1 2004/03/10 12:58:08 stephan Exp $
+ * @version CVS $Id: AbstractServerPage.java,v 1.1 2004/03/10 15:20:51 unico Exp $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator 

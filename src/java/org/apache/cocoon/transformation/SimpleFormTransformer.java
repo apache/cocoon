@@ -25,7 +25,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
-import org.apache.cocoon.components.transformation.helpers.FormValidatorHelper;
+import org.apache.cocoon.transformation.helpers.FormValidatorHelper;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
@@ -139,7 +139,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.12 2004/03/10 12:58:13 stephan Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.13 2004/03/10 15:19:32 unico Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
