@@ -22,10 +22,11 @@ which will be used to configure the chosen Forrest skin.
 
 <!DOCTYPE skinconfig PUBLIC "-//APACHE//DTD Skin Configuration V0.6-3//EN" "http://forrest.apache.org/dtd/skinconfig-v06-3.dtd"
 [
+  <!ENTITY heading  SYSTEM "../forrest-configuration/skinconf-heading.xml">
   <!ENTITY extracss SYSTEM "../forrest-configuration/skinconf-extracss.xml">
   <!ENTITY colors   SYSTEM "../forrest-configuration/skinconf-colors.xml">
   <!ENTITY pdf      SYSTEM "../forrest-configuration/skinconf-pdf.xml">
-  <!ENTITY credits  SYSTEM "../forrest-configuration/skinconf-credits.xml">      
+  <!ENTITY credits  SYSTEM "../forrest-configuration/skinconf-credits.xml">       
 ]>
 
 <skinconfig>
@@ -117,6 +118,7 @@ which will be used to configure the chosen Forrest skin.
   <!-- Heading types can be clean|underlined|boxed  -->
   <headings type="clean"/>
 
+  &heading;
   &extracss;
   &colors;
   &pdf;
