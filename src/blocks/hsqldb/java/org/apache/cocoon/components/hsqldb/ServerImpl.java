@@ -74,7 +74,7 @@ import org.apache.cocoon.Constants;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ServerImpl.java,v 1.1 2003/03/09 00:03:57 pier Exp $
+ * @version CVS $Id: ServerImpl.java,v 1.2 2004/02/24 17:56:55 andreas Exp $
  */
 public class ServerImpl extends AbstractLogEnabled
     implements Server,
@@ -88,7 +88,7 @@ public class ServerImpl extends AbstractLogEnabled
     private String port;
 
     /** Arguments for running the server */
-    private String arguments[] = new String[8];
+    private String arguments[] = new String[10];
 
     /** Check if the server has already been started */
     private boolean started = false;
@@ -108,11 +108,11 @@ public class ServerImpl extends AbstractLogEnabled
         arguments[0] = "-port";
         arguments[1] = this.port = params.getParameter("port", "9002");
         arguments[2] = "-silent";
-        arguments[3] = params.getParameter("silent","true");
+        arguments[3] = params.getParameter("silent", "true");
         arguments[4] = "-trace";
-        arguments[5] = params.getParameter("trace","false");
-        arguments[4] = "-no_system_exit";
-        arguments[5] = "true";
+        arguments[5] = params.getParameter("trace", "false");
+        arguments[6] = "-no_system_exit";
+        arguments[7] = "true";
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Configure ServerImpl with port: " + arguments[1]
                     + ", silent: " + arguments[3]
@@ -131,11 +131,11 @@ public class ServerImpl extends AbstractLogEnabled
         }
 
         try {
-            arguments[6] = "-database";
-            arguments[7] = new File(dbPath).getCanonicalPath();
-            arguments[7] += File.separator + "cocoondb";
+            arguments[8] = "-database";
+            arguments[9] = new File(dbPath).getCanonicalPath();
+            arguments[9] += File.separator + "cocoondb";
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("database is " + arguments[7]);
+                getLogger().debug("database is " + arguments[9]);
             }
         } catch (MalformedURLException e) {
             getLogger().error("MalformedURLException - Could not get database directory ", e);
@@ -148,7 +148,7 @@ public class ServerImpl extends AbstractLogEnabled
     public void start() {
         if (!started) {
             // FIXME (VG): This dirty hack here is till shutdown issue is resolved
-            File file = new File(arguments[7] + ".backup");
+            File file = new File(arguments[9] + ".backup");
             if (file.exists() && file.delete()) {
                 getLogger().info("HSQLDB backup file has been deleted.");
             }
@@ -191,7 +191,7 @@ public class ServerImpl extends AbstractLogEnabled
             try {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("HSQLDB Server arguments are as follows:");
-                    for(int i=0;i<8;i++) {
+                    for(int i = 0; i < arguments.length; i++) {
                         getLogger().debug(i + " : " + arguments[i]);
                     }
                 }
