@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.6 2003/10/13 18:23:45 stevenn Exp $
+    $Id: filter-slop-output.xsl,v 1.7 2003/10/14 11:54:40 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -184,7 +184,7 @@
     <!-- images are defined like "img_XX: filename" where XX is the CSS class -->
     <xsl:template mode="paragraph" match="slop:*[starts-with(name(),'img')]">
           <xsl:variable name="class" select="substring-after(name(),'img_')"/>
-            <img src="{.}" alt="{.}" class="{$class}"/>
+            <img src="{normalize-space(.)}" alt="{normalize-space(.)}" class="{$class}"/>
       </xsl:template>
 
 </xsl:stylesheet>

@@ -2,7 +2,7 @@
 
 <!--
     Generate the HTML for one or many slides
-    $Id: html-slides.xsl,v 1.4 2003/09/27 19:12:05 bdelacretaz Exp $
+    $Id: html-slides.xsl,v 1.5 2003/10/14 11:54:40 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -12,7 +12,7 @@
     <xsl:import href="heading.xsl"/>
 
     <!-- path to images -->
-    <xsl:variable name="imagePath" select="concat('../../',/yapt-presentation/heading/image-directory,'/')"/>
+    <xsl:variable name="imagePath" select="concat('../../',normalize-space(/yapt-presentation/heading/image-directory),'/')"/>
 
     <!-- single or multi-slide display? -->
     <xsl:variable name="slideCount" select="count(/yapt-presentation/content/slide)"/>

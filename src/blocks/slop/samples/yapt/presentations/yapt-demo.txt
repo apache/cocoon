@@ -2,7 +2,7 @@ presentation: YAPT demo
 image-directory: yapt-demo-images
 author: Bertrand Delacrétaz
 date: September 2003
-cvs: $Id: yapt-demo.txt,v 1.4 2003/10/11 22:37:11 stevenn Exp $
+cvs: $Id: yapt-demo.txt,v 1.5 2003/10/14 11:54:40 bdelacretaz Exp $
 A (short) journey through the (few) YAPT features.
 
 slide: What is YAPT?
@@ -46,9 +46,22 @@ You can embed source code examples using the code: demarcation.
 
 code:
 <?xml version="1.0"?>
+  <some-element-here attrib="yes">
+    <child-element-indented/>
+  </some-element-ends>
   <foo/>
 
-You'll find out that indenting is dropped, which is bad.
+Here we use the "preserve-space" option of the slop parser to preserve indentation.
+
+Currently, code cannot contain blank lines, it would be better to use an "endcode:" marker for the end:
+
+code:
+public class SomeJavaClass {
+  // the whole thing up to closing } should be in one block
+
+  // this follows a blank line
+}
+
 
 slide: Test results
 

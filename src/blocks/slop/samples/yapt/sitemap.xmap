@@ -59,6 +59,7 @@
             <map:match pattern="presentations/**/xml/presentation">
                 <map:generate label="raw-content" type="slop" src="presentations/{1}.txt">
                     <map:parameter name="encoding" value="iso-8859-1"/>
+                    <map:parameter name="preserve-space" value="true"/>
                 </map:generate>
                 <map:transform src="stylesheets/filter-slop-output.xsl"/>
                 <map:serialize type="xml"/>
