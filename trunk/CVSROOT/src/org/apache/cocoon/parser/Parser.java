@@ -1,4 +1,4 @@
-/*-- $Id: Parser.java,v 1.4 1999-11-30 16:30:08 stefano Exp $ -- 
+/*-- $Id: Parser.java,v 1.5 1999-12-16 11:43:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,10 +61,10 @@ import org.apache.cocoon.framework.*;
  * parsing capabilites in order to be used by Cocoon.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:08 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-16 11:43:51 $
  */
 
-public interface Parser extends Actor {
+public interface Parser {
     
     /**
      * Creates a DOM tree parsing the given input source and using the 

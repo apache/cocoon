@@ -1,4 +1,4 @@
-/*-- $Id: AbstractParser.java,v 1.1 1999-11-30 16:30:08 stefano Exp $ -- 
+/*-- $Id: AbstractParser.java,v 1.2 1999-12-16 11:43:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,10 +57,10 @@ import org.apache.cocoon.framework.*;
  * This class implements all the common methods used by the XML parsers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-11-30 16:30:08 $
+ * @version $Revision: 1.2 $ $Date: 1999-12-16 11:43:51 $
  */
 
-public abstract class AbstractParser extends AbstractActor implements Parser, Configurable {
+public abstract class AbstractParser implements Parser, Configurable {
     
     protected boolean validate;
     
