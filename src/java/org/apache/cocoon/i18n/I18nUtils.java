@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,25 @@
  */
 package org.apache.cocoon.i18n;
 
+import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.Response;
+
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * A helper class for i18n formatting and parsing routing.
- * Contains static methods only.
+ * A utility class for i18n formatting and parsing routing.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: I18nUtils.java,v 1.3 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id$
  */
 public class I18nUtils {
 
@@ -68,5 +78,168 @@ public class I18nUtils {
      */
     public static Locale parseLocale(String localeString) {
         return parseLocale(localeString, Locale.getDefault());
+    }
+
+
+    /**
+     * Callback interface for
+     * {@link I18nUtils#findLocale(Map, String, Parameters, Locale, boolean, boolean, boolean, I18nUtils.LocaleValidator)}
+     * @since 2.1.6
+     */
+    public interface LocaleValidator {
+
+        /**
+         * @param name of the locale (for debugging)
+         * @param locale to test
+         * @return true if locale satisfies validator's criteria
+         */
+        public boolean test(String name, Locale locale);
+    }
+
+    /**
+     * Find a suitable locale from an objectModel.
+     * @since 2.1.6
+     * @return locale found, or null if none found.
+     */
+    public static Locale findLocale(Map objectModel,
+                                    String attribute,
+                                    Parameters parameters,
+                                    Locale defaultLocale,
+                                    boolean useLocale,
+                                    boolean useLocales,
+                                    boolean useBlankLocale,
+                                    LocaleValidator test) {
+        String localeStr;
+        Locale locale;
+
+        Request request = ObjectModelHelper.getRequest(objectModel);
+
+        // 1. Request parameter 'locale'
+        localeStr = request.getParameter(attribute);
+        if (localeStr != null) {
+            locale = parseLocale(localeStr);
+            if (test == null || test.test("request", locale)) {
+                return locale;
+            }
+        }
+
+        // 2. Session attribute 'locale'
+        Session session = request.getSession(false);
+        if (session != null &&
+                ((localeStr = (String) session.getAttribute(attribute)) != null)) {
+            locale = parseLocale(localeStr);
+            if (test == null || test.test("session", locale)) {
+                return locale;
+            }
+        }
+
+        // 3. First matching cookie parameter 'locale' within each cookie sent
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                Cookie cookie = cookies[i];
+                if (cookie.getName().equals(attribute)) {
+                    localeStr = cookie.getValue();
+                    locale = parseLocale(localeStr);
+                    if (test == null || test.test("cookie", locale)) {
+                        return locale;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // 4. Sitemap parameter "locale"
+        if (parameters != null) {
+            localeStr = parameters.getParameter("locale", null);
+            if (localeStr != null) {
+                locale = parseLocale(localeStr);
+                if (test == null || test.test("sitemap", locale)) {
+                    return locale;
+                }
+            }
+        }
+
+        // 5. Locale setting of the requesting browser or server default
+        if (useLocale && !useLocales) {
+            locale = request.getLocale();
+            if (test == null || test.test("request", locale)) {
+                return locale;
+            }
+        }
+        if (useLocales) {
+            Enumeration locales = request.getLocales();
+            while (locales.hasMoreElements()) {
+                locale = (Locale)locales.nextElement();
+                if (test == null || test.test("request", locale)) {
+                    return locale;
+                }
+            }
+        }
+
+        // 6. Default
+        if (defaultLocale != null) {
+            locale = defaultLocale;
+            if (test == null || test.test("default", locale)) {
+                return locale;
+            }
+        }
+
+        // 7. Blank
+        if (useBlankLocale) {
+            locale = new Locale("");
+            if (test == null || test.test("blank", locale)) {
+                return locale;
+            }
+        }
+
+        // 8. Fail
+        return null;
+    }
+
+    /**
+     * Find a suitable locale from an objectModel.
+     * @since 2.1.6
+     * @return locale found, or server default (never null).
+     */
+    public static Locale findLocale(Map objectModel,
+                                    String attribute,
+                                    Parameters parameters,
+                                    Locale defaultLocale,
+                                    boolean useLocale) {
+        return findLocale(objectModel, attribute, parameters, defaultLocale, useLocale, false, false, null);
+    }
+
+    /**
+     * Store locale in request, session, or cookie.
+     * @since 2.1.6
+     */
+    public static void storeLocale(Map objectModel,
+                                   String attribute,
+                                   String locale,
+                                   boolean storeInRequest,
+                                   boolean storeInSession,
+                                   boolean storeInCookie,
+                                   boolean createSession) {
+        // store in a request if so configured
+        if (storeInRequest) {
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            request.setAttribute(attribute, locale);
+        }
+
+        // store in session if so configured
+        if (storeInSession) {
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            Session session = request.getSession(createSession);
+            if (session != null) {
+                session.setAttribute(attribute, locale);
+            }
+        }
+
+        // store in a cookie if so configured
+        if (storeInCookie) {
+            Response response = ObjectModelHelper.getResponse(objectModel);
+            response.addCookie(response.createCookie(attribute, locale));
+        }
     }
 }
