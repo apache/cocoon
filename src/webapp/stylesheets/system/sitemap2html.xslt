@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: sitemap2html.xslt,v 1.2 2003/12/02 16:52:51 vgritsenko Exp $ -->
+
 <xsl:stylesheet version="1.0"
-  xmlns:map="http://apache.org/cocoon/sitemap/1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:template match="/">
   <html>
