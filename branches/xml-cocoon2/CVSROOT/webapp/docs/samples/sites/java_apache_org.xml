@@ -4,53 +4,46 @@
 
  <title>The Java Apache Project News</title>
  <author>Stefano Mazzocchi</author>
- <version>$Id: java_apache_org.xml,v 1.1.2.1 2000-08-21 17:48:40 stefano Exp $</version>
+ <version>$Id: java_apache_org.xml,v 1.1.2.2 2000-10-19 18:45:59 bloritsch Exp $</version>
   
  <newscolumn>
   <news>
-   <title>Apache JServ User mail list reaches 500 subscribers!</title>
-   <link>http://java.apache.org/</link>
-   <date>8 Mar 1999</date>
+   <title>Avalon 3.0 alpha released!</title>
+   <link>http://java.apache.org/framework</link>
+   <date>11 Oct 2000</date>
    <content>
-    The Apache JServ User mail list has offically reached 500 people subscribed.
-    We would like to thank all of you for being around and for partecipating in 
-    the making of such interesting projects. This incredible amount of brain 
-    power is what makes us really proud, and we are looking forward to host
-    more projects and more people to make what open source is all about: 
-    learning, meeting people, challenging ourselves and have fun!
+     Avalon 3.0. This is the latest release of the Apache Server Framework. It includes
+     security pattern enforcement, and improved deployment and enhanced classloading.
+     Documentation has been completely renewed. 
    </content>
   </news>
   <news>
-   <title>Apache JMeter 1.1 released!</title>
-   <link>../jmeter/dist/</link>
-   <date>27 Feb 1999</date>
+   <title>Java Apache Mail Enterprise Server (JAMES) 1.1 Released!</title>
+   <link>http://java.apache.org/james</link>
+   <date>27 Jul 2000</date>
    <content>
-    This new release enhances its testing capabilities adding the possibility 
-    to test multiple URLs instead of a single one, to dump the collected 
-    samples to a file and to use aliases instead of big URLs.
+     JAMES 1.1 is the second release of a 100% pure Java Mail Server which implements our
+     Mailet (similar to Servlet) technology to provide a powerful mail based application
+     server. It is based on the Avalon server framework.  
    </content>
   </news>
   <news>
-   <title>Apache JServ 1.0b3 released!</title>
-   <link>../jserv/index.html</link>
-   <date>19 Feb 1999</date>
+   <title>Apache JServ 1.1.2 Released!</title>
+   <link>http://java.apache.org/jserv</link>
+   <date>17 Jun 2000</date>
    <content>
-    A new release of Apache JServ is out. Please see the change notes for 
-    more information.
+     Apache JServ 1.1.2 has been released. This version fixes some minor bugs. Please see
+     the change log for details.
    </content>
   </news>
   <news>
-   <title>Java Apache Server Framework project started</title>
-   <link>../framework/index.html</link>
-   <date>1 Feb 1999</date>
+   <title>Apache Jetspeed 1.2b1 Released!</title>
+   <link>http://java.apache.org/jetspeed</link>
+   <date>15 Jun 2000</date>
    <content>
-    A new project is started to design, implement and control the Java 
-    Apache Server Framework, a modular and highly flexible common ground for 
-    Java server projects. Based on latest software engineering technologies 
-    and design patterns, this framework will allow different projects to share
-    functional blocks of code as well as creating a standard environment for 
-    configuration, deployment, installation and control. Everyone, even from 
-    other projects, is welcome to partecipate in its development.
+     Apache Jetspeed 1.2b1 has been released. This version provides an implementation of
+     iCalendar (RFC 2445), Portal Structure Markup Language (PSML) and numerous
+     performance improvements.  
    </content>
   </news>
  </newscolumn>
@@ -59,69 +52,58 @@
  
   <project>
    <title>Apache JServ</title>
-   <link>../jserv/index.html</link>
+   <link>http://java.apache.org/jserv</link>
    
    <release>
-    <version>1.0b3</version>
+    <version>1.1.2</version>
     <status type="available">Released</status>
     <comment>
-     This new generation comes with: complete Servlet 2.0 compliance, 
-     enhanced security, improved installation and documentation, performance
-     improvements, tons of bug fixes, and much more.
+      This new generation comes with: major performance improvements,  improved
+      installation and documentation, tons of bug fixes, and much more. 
     </comment>
    </release>
-   
-   <release>
-    <version>0.9.12</version>
-    <status type="available">Released</status>
-    <comment>
-     It offers some new experimental features (including load balancing), 
-     performance improvements, and bug fixes, for those who want to upgrade 
-     from JServ 0.9.x, without changing to the 1.0 tree (yet). 
-     In the long term, the 0.9.x tree will probably be discontinued.
-    </comment>
-   </release>
- 
   </project>
  
   <project>
-   <title>Apache JServSSI</title>
-   <link>../jservssi/index.html</link>
+   <title>Apache Avalon Framework</title>
+   <link>http://java.apache.org/framework</link>
    
    <release>
-    <version>1.0</version>
+    <version>3.0a3</version>
     <status type="available">Released</status>
     <comment>
-     The servlet server side include servlet once contained into the Apache 
-     JServ servlet engine has been moved in a separate project to allow 
-     independent release cycles.
+      The Avalon project is an effort to create, design, develop and maintain a
+      common framework for server applications written using the Java language. This
+      framework will not be a standalone product, but will allow existing and yet to
+      be created server applications to fit into a common platform and to share code,
+      design and human resources. 
     </comment>
    </release>
   </project>
  
   <project>
    <title>Apache JMeter</title>
-   <link>../jmeter/index.html</link>
+   <link>http://java.apache.org/jmeter</link>
    
    <release>
-    <version>1.1</version>
+    <version>1.4</version>
     <status type="available">Released</status>
     <comment>
-     The 100% pure, swing enabled, Java URL profiler/analyser to test your 
-     server performance, your servlet performance, to stress your servlets 
-     with heavy multi-threading concurrent requests and much more...
+      The 100% pure, swing enabled, Java URL profiler/analyzer to test your server
+      performance, your servlet performance, to stress your servlets with heavy
+      multi-threading concurrent requests and much more...
     </comment>
    </release>
   </project>  
  </statuscolumn>
  
  <legal>
-  Sun, Sun Microsystems, Solaris, Java, JavaSoft, are trademarks or registered 
-  trademarks of Sun Microsystems, Inc. UNIX is a registered 
-  trademark in the United States and other countries, exclusively licensed 
-  through X/Open Company, Ltd. Windows, WinNT and Win32 are registered trademark 
-  of Microsoft Corp. All other product names mentioned herein and throughout 
-  the entire web site are trademarks of their respective owners.
+   Sun, Sun Microsystems, Solaris, Java, JavaSoft, are trademarks or registered
+   trademarks of Sun Microsystems, Inc. UNIX is a registered trademark in the
+   United States and other countries, exclusively licensed through X/Open Company,
+   Ltd. Windows, WinNT and Win32 are registered trademark of Microsoft Corp. All other
+   product names mentioned herein and throughout the entire web site are trademarks
+   of their respective owners.
  </legal>
  
 </page>
