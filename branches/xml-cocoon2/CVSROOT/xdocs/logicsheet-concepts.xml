@@ -47,7 +47,7 @@
   </s1>
 
   <anchor id="logicsheet"/>
-  <s1 title="Logichseets">
+  <s1 title="Logicsheets">
     <p>
       A <em>logicsheet</em> is an XML filter used to translate user-defined,
       dynamic markup into equivalent code embedding directives for a given
@@ -259,7 +259,7 @@
         should they be called more than once in the current context
       </li>
       <li>
-        If another logichseet (or the page author) has imported a class
+        If another logicsheet (or the page author) has imported a class
         called <code>Connection</code> the generated code will produce an
         ambiguous class definition compiler error
       </li>
@@ -473,7 +473,7 @@ is-indexed="true"
       transformation as well for final code generation (descibed
       in
       <jump href="xsp-internals.html" anchor="logicsheet-generator">
-        Logichseet Code Generators
+        Logicsheet Code Generators
       </jump>).
     </p>
 

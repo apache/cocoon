@@ -58,7 +58,7 @@ project, no less and no more.
 These are the meaningful targets for this build file:
 
  - package [default] -> creates ./build/cocoon/cocoon.jar
- - war -> creates ./build/webapp/cocoon.war
+ - webapp -> creates ./build/webapp/cocoon.war
  - docs -> generates the HTML documentation in ./build/cocoon/docs
  - javadocs -> generates the API documentation in ./build/cocoon/javadocs
  - dist-zip -> generates the Cocoon distribution in ./dist
