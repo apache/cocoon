@@ -15,9 +15,11 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.jxpath.JXPathCocoonContexts']">
+<xsamples xpath="/samples" unless="group[@name='Taglib']">
 
-  <component role="org.apache.cocoon.jxpath.JXPathCocoonContexts"
-             class="org.apache.cocoon.jxpath.JXPathCocoonContexts"
-             logger="core.jxpath"/>
-</xconf>
+  <group name="Taglib">
+    <sample name="Taglib Block" href="taglib/">
+      Examples of taglib transformer usage.
+    </sample>
+  </group>
+</xsamples>
