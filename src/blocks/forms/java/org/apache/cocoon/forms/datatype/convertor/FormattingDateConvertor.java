@@ -25,6 +25,7 @@ import org.apache.cocoon.xml.AttributesImpl;
 import java.util.Locale;
 import java.util.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * A Convertor for {@link java.util.Date Date} objects backed by the
@@ -44,7 +45,7 @@ import java.text.ParseException;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDateConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id: FormattingDateConvertor.java,v 1.4 2004/07/01 07:30:40 bruno Exp $
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
@@ -146,9 +147,7 @@ public class FormattingDateConvertor implements Convertor {
     private static final String CONVERTOR_EL = "convertor";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        String pattern = (String)localizedPatterns.get(locale);
-        if (pattern == null)
-            pattern = nonLocalizedPattern;
+        String pattern = getDateFormat(locale).toPattern();
 
         if (pattern != null) {
             AttributesImpl attrs = new AttributesImpl();
