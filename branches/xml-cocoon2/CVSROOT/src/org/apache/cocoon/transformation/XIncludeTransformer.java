@@ -53,7 +53,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-20 20:50:17 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-23 02:06:18 $ $Author: balld $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 
@@ -245,12 +245,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                 if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
                     String xpath = suffix.substring(9,suffix.length()-1);
                     getLogger().debug("XPath is "+xpath);
-                    DOMBuilder builder = new DOMBuilder(parser);
-                    parser.setContentHandler(builder);
-                    parser.setLexicalHandler(builder);
-                    parser.parse(input);
-
-                    Document document = builder.getDocument();
+                    Document document = parser.parseDocument(input);
                     try {
                         NodeList list = XPathAPI.selectNodeList(document,xpath);
                         DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);

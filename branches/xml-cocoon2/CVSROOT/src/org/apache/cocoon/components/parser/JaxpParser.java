@@ -28,7 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:59 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-23 02:06:16 $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler {
@@ -110,6 +110,20 @@ implements Parser, ErrorHandler {
             impl.createDocumentType(name, publicId, systemId)
         );
 
+    }
+
+    /**
+     * Parses a new Document object from the given InputSource.
+     */
+    public Document parseDocument(InputSource input) throws SAXException, IOException {
+      DocumentBuilder builder = null;
+      try {
+        builder = this.docfactory.newDocumentBuilder();
+      } catch (ParserConfigurationException pce) {
+        getLogger().error("Could not build DocumentBuilder", pce);
+        return null;
+      }
+      return builder.parse(input);
     }
 
     /**

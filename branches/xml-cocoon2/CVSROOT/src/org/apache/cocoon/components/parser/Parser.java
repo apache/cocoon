@@ -13,14 +13,17 @@ import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.dom.DOMFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-20 20:49:59 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-23 02:06:16 $
  */
 public interface Parser extends Component, XMLProducer, DOMFactory {
 
     void parse(InputSource in) throws SAXException, IOException;
+
+    Document parseDocument(InputSource in) throws SAXException, IOException;
 }
