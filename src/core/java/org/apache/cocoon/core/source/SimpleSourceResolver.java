@@ -97,17 +97,18 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
     }
 
     public Source resolveURI(String uri) throws MalformedURLException, IOException {
-        return resolveURI(contextBase, uri, null);
+        return resolveURI(uri, contextBase, null);
     }
 
-    public Source resolveURI(String base, String uri, Map params) throws MalformedURLException, IOException {
+    public Source resolveURI(String uri, String base, Map params) throws MalformedURLException, IOException {
         if (uri.startsWith("resource://")) {
             return resourceFactory.getSource(uri, null);
         } else if (uri.startsWith("context://")) {
             // Strip "context://" and resolve relative to the context base
-            return resolveURI(this.contextBase, uri.substring("context://".length()), params);
+            return resolveURI(uri.substring("context://".length()), this.contextBase, params);
         } else {
-            URL url = new URL(new URL(base), uri);
+            URL baseURL = new URL(base);
+            URL url = new URL(baseURL, uri);
             return this.urlFactory.getSource(url.toExternalForm(), params);
         }
     }

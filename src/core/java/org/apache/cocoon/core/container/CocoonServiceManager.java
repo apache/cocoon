@@ -17,6 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -298,31 +299,31 @@ implements ServiceManager, Configurable {
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         // Setup location
-        if (this.location == null) {
-            // First call to configure()
-            this.location = configuration.getLocation();
+        this.location = configuration.getLocation();
+        
+        // Find the current URI
+        String currentURI;
+        int pos = this.location.lastIndexOf(':');
+        if (pos == -1) {
+            // No available location: start at the context
+            currentURI = "context://";
+        } else {
+            pos = this.location.lastIndexOf(':', pos);
+            currentURI = this.location.substring(0, pos-1);
         }
         
         try {
             // and load configuration with a empty list of loaded configurations
-            doConfigure(configuration, new HashSet());
+            doConfigure(configuration, currentURI, new HashSet());
         } finally {
             // Release any source resolver that may have been created to load includes
             releaseCachedSourceResolver();
         }
     }
 
-    private void doConfigure(final Configuration configuration, Set loadedURIs) 
-    throws ConfigurationException {
-        
-        // Read roles
-        String rolesURI = configuration.getAttribute("roles", null);
-        if (rolesURI != null) {
-            Configuration roles = loadConfiguration(rolesURI, configuration.getLocation());
-            this.roleManager.configure(roles);
-        }
+    private void doConfigure(final Configuration configuration, String contextURI, Set loadedURIs) 
+        throws ConfigurationException {
 
-        // Set components
         final Configuration[] configurations = configuration.getChildren();
 
         for( int i = 0; i < configurations.length; i++ ) {
@@ -331,38 +332,7 @@ implements ServiceManager, Configurable {
             final String componentName = componentConfig.getName();
             
             if ("include".equals(componentName)) {
-                String includeURI = componentConfig.getAttribute("src", null);
-                String directoryURI = null;
-                if ( includeURI == null ) {
-                    // check for directories
-                    directoryURI = componentConfig.getAttribute("dir", null);                    
-                }
-                if ( includeURI == null && directoryURI == null ) {
-                    throw new ConfigurationException("Include element in component configuration must either have a src or a dir attribute.");
-                }
-                
-                if ( includeURI != null ) {
-                    this.loadURI(includeURI, componentConfig, loadedURIs);
-                } else {
-                    this.getSourceResolver();
-                    Source directory = null;
-                    try {
-                        directory = this.cachedSourceResolver.resolveURI(directoryURI);
-                        if ( directory instanceof TraversableSource ) {
-                            final Iterator children = ((TraversableSource)directory).getChildren().iterator();
-                            while ( children.hasNext() ) {
-                                Source s = (Source)children.next();
-                                this.loadURI(s.getURI(), componentConfig, loadedURIs);
-                            }
-                        } else {
-                            throw new ConfigurationException("Include.dir must point to a directory, '" + directory.getURI() + "' is not a directory.'");
-                        }
-                    } catch (IOException ioe) {
-                        throw new ConfigurationException("Unable to read configurations from " + directoryURI);
-                    } finally {
-                        this.cachedSourceResolver.release(directory);
-                    }
-                }
+                handleInclude(contextURI, loadedURIs, componentConfig);
 
             } else {
                 // Component declaration
@@ -401,46 +371,84 @@ implements ServiceManager, Configurable {
             }
         }
     }
-
-    protected void loadURI(String includeURI, Configuration componentConfig, Set loadedURIs) 
-    throws ConfigurationException {
-        // If already loaded: skip to next configuration element
-        // First get a source resolver and make uri absolute!
-        this.getSourceResolver();
-        Source src = null;
+    
+    protected void handleInclude(String contextURI, Set loadedURIs, Configuration includeStatement)
+            throws ConfigurationException {
+        String includeURI = includeStatement.getAttribute("src", null);
+        String directoryURI = null;
+        if ( includeURI == null ) {
+            // check for directories
+            directoryURI = includeStatement.getAttribute("dir", null);                    
+        }
+        if ( includeURI == null && directoryURI == null ) {
+            throw new ConfigurationException("Include statement must either have a 'src' or 'dir' attribute, at " +
+                    includeStatement.getLocation());
+        }
         
-        try {
+        // Setup the source resolver if needed
+        setupSourceResolver();
+        
+        if ( includeURI != null ) {
+            Source src;
             try {
-                src = this.cachedSourceResolver.resolveURI(includeURI);
-                includeURI = src.getURI();
+                src = this.cachedSourceResolver.resolveURI(includeURI, contextURI, null);
             } catch (Exception e) {
-                throw new ConfigurationException("Cannot load '" + includeURI + "' at " + componentConfig.getLocation(), e);
-            } 
+                throw new ConfigurationException("Cannot load '" + includeURI + "' at " + includeStatement.getLocation(), e);
+            }
             
-            if (!loadedURIs.contains(includeURI)) {
+            loadURI(src, loadedURIs, includeStatement);
+        } else {
+            Source directory = null;
+            try {
+                directory = this.cachedSourceResolver.resolveURI(directoryURI, contextURI, null);
+                if ( directory instanceof TraversableSource ) {
+                    final Iterator children = ((TraversableSource)directory).getChildren().iterator();
+                    while ( children.hasNext() ) {
+                        Source s = (Source)children.next();
+                        this.loadURI(s, loadedURIs, includeStatement);
+                    }
+                } else {
+                    throw new ConfigurationException("Include.dir must point to a directory, '" + directory.getURI() + "' is not a directory.'");
+                }
+            } catch (IOException ioe) {
+                throw new ConfigurationException("Unable to read configurations from " + directoryURI);
+            } finally {
+                this.cachedSourceResolver.release(directory);
+            }
+        }
+    }
+
+    protected void loadURI(Source src, Set loadedURIs, Configuration includeStatement) 
+    throws ConfigurationException {
+        // If already loaded: do nothing
+        try {
+            
+            String uri = src.getURI();
+            
+            if (!loadedURIs.contains(uri)) {
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
                     DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-                    includeConfig = builder.build(src.getInputStream(), includeURI);
+                    includeConfig = builder.build(src.getInputStream(), uri);
                 } catch (ConfigurationException ce) {
                     throw ce;
                 } catch (Exception e) {
-                    throw new ConfigurationException("Cannot load '" + includeURI + "' at " + componentConfig.getLocation(), e);
+                    throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);
                 }
-                loadedURIs.add(includeURI);
+                loadedURIs.add(uri);
                 
                 // what is it?
                 String includeKind = includeConfig.getName();
                 if (includeKind.equals("components")) {
                     // more components
-                    doConfigure(includeConfig, loadedURIs);
+                    doConfigure(includeConfig, uri, loadedURIs);
                 } else if (includeKind.equals("role-list")) {
                     // more roles
                     this.roleManager.configure(includeConfig);
                 } else {
                     throw new ConfigurationException("Unknow document '" + includeKind + "' included at " +
-                            componentConfig.getLocation());
+                            includeStatement.getLocation());
                 }
             }
         } finally {
@@ -637,39 +645,10 @@ implements ServiceManager, Configurable {
     }
     
     /**
-     * Load a Configuration from a given URI.
-     * 
-     * @param uri the configuration's URI
-     * @param location the location where the load occurs (used to raise meaningful errors)
-     * @return the configuration
-     * @throws ConfigurationException
-     */
-    private Configuration loadConfiguration(String uri, String location) throws ConfigurationException {
-        
-        // First get a source resolver
-        this.getSourceResolver();
-        Configuration result;
-        Source src = null;
-        try {
-            src = this.cachedSourceResolver.resolveURI(uri);
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            result = builder.build(src.getInputStream(), src.getURI());
-        } catch (ConfigurationException ce) {
-            throw ce;
-        } catch (Exception e) {
-            throw new ConfigurationException("Cannot load '" + uri + "' at " + location, e);
-        } finally {
-            this.cachedSourceResolver.release(src);
-        }
-        
-        return result;
-    }
-    
-    /**
      * If the parent manager does not exist or does not
      * provide a source resolver, a simple one is created here to load the file.
      */
-    protected void getSourceResolver() {
+    protected void setupSourceResolver() {
         if (this.cachedSourceResolver == null) {
             
             if (this.parentManager != null && this.parentManager.hasService(SourceResolver.ROLE)) {
