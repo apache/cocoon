@@ -8,6 +8,8 @@
 package org.apache.cocoon.filters;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.text.StringCharacterIterator;
 import org.apache.arch.Component;
 import org.apache.arch.ComponentManager;
 import org.apache.arch.Composer;
@@ -33,7 +35,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-28 18:39:50 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-06-24 20:16:10 $
  */
 public class XalanFilter extends DocumentHandlerWrapper
 implements Filter, Composer {
@@ -68,6 +70,14 @@ implements Filter, Composer {
         // Create the processor and set it as this documenthandler
         this.processor=XSLTProcessorFactory.getProcessor();
         this.processor.setStylesheet(stylesheet);
+		Enumeration enum = req.getParameterNames();
+		while (enum.hasMoreElements()) {
+			String name = (String)enum.nextElement();
+			if (isValidXSLTParameterName(name)) {
+				String value = req.getParameter(name);
+				processor.setStylesheetParam(name,this.processor.createXString(value));
+			}
+		}
         this.setDocumentHandler(this.processor);
 
     }
@@ -112,4 +122,26 @@ implements Filter, Composer {
      */
     public void setLexicalHandler(LexicalHandler lexical) {
     }
+
+	public static boolean isValidXSLTParameterName(String name) {
+		StringCharacterIterator iter = new StringCharacterIterator(name);
+		char c = iter.first();
+		if (!(Character.isLetter(c) || c == '_')) {
+			return false;
+		} else {
+			c = iter.next();
+		}
+		while (c != iter.DONE) {
+			if (!(Character.isLetterOrDigit(c) ||
+				c == '-' ||
+				c == '_' ||
+				c == '.')) {
+				return false;
+			} else {
+				c = iter.next();
+			}
+		}
+		return true;
+	}
+
 }
