@@ -16,7 +16,7 @@ img { border: 0; }
 
 span.year { color: #336699; }
 
-p.copyright { text-align: center; color: #336699; padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
+p.copyright { text-align: center; padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
 p.author { color: #336699; padding-bottom: 10px; }
 p.block { text-align: center; }
 
