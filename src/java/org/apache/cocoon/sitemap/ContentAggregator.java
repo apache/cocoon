@@ -80,7 +80,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.4 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.5 2003/10/24 13:45:10 vgritsenko Exp $
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
@@ -139,8 +139,8 @@ implements Generator, CacheableProcessingComponent, Serviceable {
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("ContentAggregator: generating aggregated content");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Generating aggregated content");
         }
         this.contentHandler.startDocument();
         this.startElem(this.rootElement);
@@ -167,7 +167,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
             this.endElem(this.rootElement);
             this.contentHandler.endDocument();
         }
-        getLogger().debug("ContentAggregator: finished aggregating content");
+        getLogger().debug("Finished aggregating content");
     }
 
     /**
@@ -202,7 +202,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
             }
             return buffer.toString();
         } catch (Exception e) {
-            getLogger().error("ContentAggregator: could not generateKey", e);
+            getLogger().error("Could not generateKey", e);
             return null;
         }
     }
@@ -228,7 +228,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
             }
             return v;
         } catch (Exception e) {
-            getLogger().error("ContentAggregator: could not generateKey", e);
+            getLogger().error("Could not getValidity", e);
             return null;
         }
     }
@@ -240,9 +240,9 @@ implements Generator, CacheableProcessingComponent, Serviceable {
         this.rootElement = new Element(element,
                                        namespace,
                                        prefix);
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("ContentAggregator: root element='" + element +
-                                   "' ns='" + namespace + "' prefix='" + prefix + "'");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Root element='" + element +
+                              "' ns='" + namespace + "' prefix='" + prefix + "'");
         }
     }
 
@@ -269,10 +269,10 @@ implements Generator, CacheableProcessingComponent, Serviceable {
         this.parts.add(new Part(uri,
                                 elem,
                                 stripRootElement));
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("ContentAggregator: part uri='" + uri +
-                                   "' element='" + element + "' ns='" + namespace +
-                                   "' stripRootElement='" + stripRootElement + "' prefix='" + prefix + "'");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Part uri='" + uri +
+                              "' element='" + element + "' ns='" + namespace +
+                              "' stripRootElement='" + stripRootElement + "' prefix='" + prefix + "'");
         }
     }
 
@@ -297,7 +297,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
             final Part current = (Part)this.parts.get(i);
             if (current.source != null) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("releasing " + String.valueOf(current.source));
+                    getLogger().debug("Releasing " + String.valueOf(current.source));
                 }
                 this.resolver.release(current.source);
             }
@@ -369,7 +369,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     throws SAXException {
         this.rootElementIndex++;
         if (this.rootElementIndex == 0) {
-            getLogger().debug("ContentAggregator: skipping root element start event.");
+            getLogger().debug("Skipping root element start event.");
             return;
         }
         if (namespaceURI == null || namespaceURI.equals("")) {
@@ -386,7 +386,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     public void endElement(String namespaceURI, String localName, String raw) throws SAXException {
         this.rootElementIndex--;
         if (this.rootElementIndex == -1) {
-            getLogger().debug("ContentAggregator: skipping root element end event.");
+            getLogger().debug("Skipping root element end event.");
             return;
         }
         if (namespaceURI == null || namespaceURI.equals("")) {
@@ -403,5 +403,4 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
-
 }
