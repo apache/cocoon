@@ -98,7 +98,7 @@ extends AbstractCopletTransformer {
      * Creates new CopletTransformer.
      */
     public CopletTransformer() {
-        super.defaultNamespaceURI = NAMESPACE_URI;
+        this.defaultNamespaceURI = NAMESPACE_URI;
     }
 
     /* (non-Javadoc)

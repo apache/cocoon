@@ -26,7 +26,7 @@ import org.apache.pluto.services.title.DynamicTitleService;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DynamicTitleServiceImpl.java,v 1.2 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DynamicTitleServiceImpl 
 implements DynamicTitleService {    
@@ -37,7 +37,7 @@ implements DynamicTitleService {
     public void setDynamicTitle(PortletWindow window,
                                 HttpServletRequest request,
                                 String dynamicTitle) {
-        ((PortletEntityImpl)window.getPortletEntity()).getCopletInstanceData().setAttribute("dynamic-title", dynamicTitle);
+        ((PortletEntityImpl)window.getPortletEntity()).getCopletInstanceData().setTemporaryAttribute("dynamic-title", dynamicTitle);
     }
                                 
 }

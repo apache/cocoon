@@ -57,6 +57,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version CVS $Id$
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
+
     /**
      * The namespace URI to listen for.
      */
@@ -95,7 +96,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * @see java.lang.Object#Object()
      */
     public NewEventLinkTransformer() {
-        super.defaultNamespaceURI = NAMESPACE_URI;
+        this.defaultNamespaceURI = NAMESPACE_URI;
     }
 
     /**
@@ -227,11 +228,10 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * @param portalEvent value of the "cocoon-portal-event" parameter
      * @throws SAXException if sending the SAX events failed
      */
-    private void sendHiddenFields(
-        ContentHandler contentHandler,
-        String portalAction,
-        String portalEvent)
-        throws SAXException {
+    private void sendHiddenFields(ContentHandler contentHandler,
+                                  String portalAction,
+                                  String portalEvent)
+    throws SAXException {
         AttributesImpl attributes = new AttributesImpl();
         attributes.addAttribute("", "type", "type", "CDATA", "hidden");
         attributes.addAttribute(
