@@ -31,7 +31,7 @@
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
   </role>
 
   <role name="org.apache.excalibur.source.SourceResolver"
@@ -160,7 +160,7 @@
 
   <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentSelector"
         shorthand="datasources"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
 	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
     <!-- hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.JdbcDataSource"/ -->
     <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
@@ -200,7 +200,7 @@
   <!-- Control flow layer: the interpreters selector and continuations  manager -->
   <role name="org.apache.cocoon.components.flow.Interpreter" 
         shorthand="flow-interpreters"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
   <role name="org.apache.cocoon.components.flow.ContinuationsManager" 
         shorthand="continuations-manager"
@@ -209,11 +209,11 @@
   <!-- input/output modules -->
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
   <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
         shorthand="output-modules"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
         shorthand="global-variables"

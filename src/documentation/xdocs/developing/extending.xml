@@ -92,9 +92,9 @@
 			 as basis for the <code>ServerPagesGenerator</code>, but it seems to be obsolete
 			 now?]</li>
 				<li>
-					<code>ComposerGenerator</code> - Can be used as base class if you
+					<code>ServiceableGenerator</code> - Can be used as base class if you
 			 want your <code>Generator</code> to be an <link href="avalon.html">Avalon
-		Composable</link>.</li>
+		Serviceable</link>.</li>
 				<li>
 					<code>ServletGenerator</code> - If you want to generate servlets.
 		  This is the base class for the <code>ServerPagesGenerator</code>.</li>

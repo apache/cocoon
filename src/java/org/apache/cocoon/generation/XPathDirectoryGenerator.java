@@ -180,12 +180,8 @@ extends DirectoryGenerator {
         super.recycle();
     }
 
-    /**
-     * Serviceable
-     *
-     * @param manager the ComponentManager
-     *
-     * @throws ServiceException in case a component could not be found
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager)
     throws ServiceException {

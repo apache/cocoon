@@ -29,7 +29,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * <code>OutputComponentSelector</code>), which led to a strong dependency on the chosen component
  * container implementation.
  * 
- * @version CVS $Id: ProcessorComponentInfo.java,v 1.2 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 public class ProcessorComponentInfo {
     

@@ -35,7 +35,7 @@ public interface ProgramGenerator {
      * Load a program built from an XML document written in a
      * <code>MarkupLanguage</code>
      *
-     * @param newManager  The ComponentManager that it will be loaded with
+     * @param newManager  The ServiceManager that it will be loaded with
      * @param fileName The input document's <code>File</code> name
      * @param markupLanguage The <code>MarkupLanguage</code> in which the input
      * document is written
@@ -56,7 +56,7 @@ public interface ProgramGenerator {
      * Load a program built from an XML document written in a
      * <code>MarkupLanguage</code>
      *
-     * @param newManager  The ComponentManager that it will be loaded with
+     * @param newManager  The ServiceManager that it will be loaded with
      * @param source The input document's <code>File</code> name
      * @param markupLanguage The <code>MarkupLanguage</code> in which the input
      * document is written

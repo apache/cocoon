@@ -60,7 +60,7 @@
 
   <role name="org.apache.cocoon.transformation.TransformerSelector"
         shorthand="transformers"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
         
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"

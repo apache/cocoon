@@ -60,7 +60,7 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for i18n
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testI18n1() throws Exception {
         getLogger().debug("testI18n1");
@@ -87,7 +87,7 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for i18n
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testI18n2() throws Exception {
         getLogger().debug("testI18n2");

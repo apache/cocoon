@@ -113,7 +113,7 @@ public class DefaultTreeBuilder
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.ownManager = manager;
@@ -190,7 +190,7 @@ public class DefaultTreeBuilder
     }
 
     /**
-     * Create a component manager that will be used for all <code>Composable</code>
+     * Create a service manager that will be used for all <code>Serviceable</code>
      * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
      * <p>
      * The default here is to simply return the manager set by <code>compose()</code>,

@@ -63,7 +63,7 @@ public class AugmentTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for augment transformation
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testAugment1() throws Exception {
         getLogger().debug("testAugment1");

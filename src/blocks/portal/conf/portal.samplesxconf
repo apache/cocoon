@@ -27,7 +27,7 @@
  </component>
 
  <!-- Renderer configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
+ <component class="org.apache.cocoon.core.container.CocoonServiceSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
      <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">

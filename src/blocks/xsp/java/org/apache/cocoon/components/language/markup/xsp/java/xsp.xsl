@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: xsp.xsl,v 1.3 2004/04/02 21:32:33 joerg Exp $-->
+<!-- CVS $Id$-->
 <!--
  * XSP Core logicsheet for the Java language
  *
@@ -59,16 +59,13 @@
     import java.util.List;
     import java.util.Stack;
 
-    //import org.w3c.dom.*;
     import org.xml.sax.InputSource;
     import org.xml.sax.SAXException;
     import org.xml.sax.helpers.AttributesImpl;
 
-    //import org.apache.avalon.framework.*;
-    import org.apache.avalon.framework.component.Component;
-    import org.apache.avalon.framework.component.ComponentException;
-    import org.apache.avalon.framework.component.ComponentManager;
-    import org.apache.avalon.framework.component.ComponentSelector;
+    import org.apache.avalon.framework.service.ServiceException;
+    import org.apache.avalon.framework.service.ServiceManager;
+    import org.apache.avalon.framework.service.ServiceSelector;
     import org.apache.avalon.framework.context.Context;
     //import org.apache.avalon.framework.util.*;
 

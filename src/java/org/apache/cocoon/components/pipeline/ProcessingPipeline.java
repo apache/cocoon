@@ -36,14 +36,10 @@ import org.apache.excalibur.source.SourceValidity;
  * </ul>
  *
  * <p>
- * A <code>ProcessingPipeline</code> is <code>Recomposable</code> since the
- * <code>ComponentManager</code> used to get the generator, transformers etc.
- * depends on the pipeline assembly engine where they are defined (i.e. a given
- * sitemap file).
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.7 2004/07/15 12:49:49 sylvain Exp $
+ * @version CVS $Id$
  */
 public interface ProcessingPipeline {
 
@@ -57,8 +53,7 @@ public interface ProcessingPipeline {
     /**
      * Set the generator that will be used as the initial step in the pipeline.
      * The generator role is given : the actual <code>Generator</code> is fetched
-     * from the latest <code>ComponentManager</code> given by <code>compose()</code>
-     * or <code>recompose()</code>.
+     * from the latest <code>ServiceManager</code>.
      *
      * @param role the generator role in the component manager.
      * @param source the source where to produce XML from, or <code>null</code> if no
@@ -88,10 +83,9 @@ public interface ProcessingPipeline {
     /**
      * Add a transformer at the end of the pipeline.
      * The transformer role is given : the actual <code>Transformer</code> is fetched
-     * from the latest <code>ComponentManager</code> given by <code>compose()</code>
-     * or <code>recompose()</code>.
+     * from the latest <code>ServiceManager</code>.
      *
-     * @param role the transformer role in the component manager.
+     * @param role the transformer role in the service manager.
      * @param source the source used to setup the transformer (e.g. XSL file), or
      *        <code>null</code> if no source is given.
      * @param param the parameters for the transfomer.

@@ -38,7 +38,7 @@ import java.util.Map;
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based
  * view of the document.
  * Subclass this interface and implement <code>transform(Document doc)</code>.
- * If you need a ComponentManager there is an instance variable
+ * If you need a ServiceManager there is an instance variable
  * <code>manager</code> for use.
  *
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>

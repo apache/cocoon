@@ -34,7 +34,7 @@
 
       <xsp:structure>
         <xsp:include>org.apache.cocoon.environment.Session</xsp:include>
-        <xsp:include>org.apache.avalon.framework.component.ComponentManager</xsp:include>
+        <xsp:include>org.apache.avalon.framework.service.ServiceManager</xsp:include>
         <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPSessionFwHelper</xsp:include>
         <xsp:include>org.w3c.dom.DocumentFragment</xsp:include>
       </xsp:structure>

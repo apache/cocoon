@@ -65,7 +65,7 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for encode url transformation
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testEncodeURL1() throws Exception {
         getLogger().debug("testEncodeURL1");
@@ -98,7 +98,7 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for encode url transformation
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testEncodeURL2() throws Exception {
         getLogger().debug("testEncodeURL2");

@@ -60,7 +60,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for cinclude simple include
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testCInclude1() throws Exception {
         getLogger().debug("testCInclude1");
@@ -88,7 +88,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
     /**
      * Testcase for cinclude specifying element for wrapping included content
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if  enterEnvironment fails
      */
     public void testCInclude2() throws Exception {
         getLogger().debug("testCInclude2");
@@ -116,7 +116,7 @@ public class CIncludeTransformerTestCase extends SitemapComponentTestCase {
     /**
      * Testcase for cinclude specifying select attribute, selection elements from the included document
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if  enterEnvironment fails
      */
     public void testCInclude3() throws Exception {
         getLogger().debug("testCInclude3");

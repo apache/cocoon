@@ -129,8 +129,8 @@ public abstract class AbstractProcessingPipeline
     /** The current Processor */
     protected Processor processor;
 
-    /**
-     * Composable Interface
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service (ServiceManager manager)
     throws ServiceException {
@@ -191,8 +191,7 @@ public abstract class AbstractProcessingPipeline
     /**
      * Set the generator that will be used as the initial step in the pipeline.
      * The generator role is given : the actual <code>Generator</code> is fetched
-     * from the latest <code>ComponentManager</code> given by <code>compose()</code>
-     * or <code>recompose()</code>.
+     * from the latest <code>ServiceManager</code>.
      *
      * @param role the generator role in the component manager.
      * @param source the source where to produce XML from, or <code>null</code> if no
@@ -227,8 +226,7 @@ public abstract class AbstractProcessingPipeline
     /**
      * Add a transformer at the end of the pipeline.
      * The transformer role is given : the actual <code>Transformer</code> is fetched
-     * from the latest <code>ComponentManager</code> given by <code>compose()</code>
-     * or <code>recompose()</code>.
+     * from the latest <code>ServiceManager</code>.
      *
      * @param role the transformer role in the component manager.
      * @param source the source used to setup the transformer (e.g. XSL file), or

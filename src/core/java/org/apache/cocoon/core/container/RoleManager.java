@@ -111,7 +111,7 @@ implements Configurable {
     /**
      * Retrieves a default class name for a role/hint combination.
      * This is only called when a role is mapped to a
-     * DefaultComponentSelector, and the configuration elements use
+     * CocoonServiceSelector, and the configuration elements use
      * shorthand names for the type of component.  If this RoleManager
      * does not have the match, and there is a parent RoleManager, the
      * parent will be asked to resolve the class name.

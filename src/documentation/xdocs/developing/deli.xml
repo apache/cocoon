@@ -514,7 +514,7 @@ For examples of how to call DELI, see DeliTransformer.java - here are the releva
 <source>
 import org.apache.cocoon.components.deli.Deli;
 </source>
-<p>Then in compose(), initialize DELI:</p>
+<p>Then in service(), initialize DELI:</p>
 <source>
 if (this.manager.hasComponent(Deli.ROLE)) {
  if (this.getLogger().isDebugEnabled()) {
@@ -557,15 +557,15 @@ import com.hp.hpl.deli.Profile;
 import com.hp.hpl.deli.ProfileAttribute;
 </source>
 
-<p>Add code to initialize the compose method as before</p>
+<p>Add code to initialize the service method as before</p>
 <source>
-  public void compose(ComponentManager manager) throws ComponentException
+  public void service(ServiceManager manager) throws ServiceException
   {
     try
     {
       deli = (Deli)manager.lookup(Deli.ROLE);
     } 
-    catch(ComponentException ce)
+    catch(ServiceException ce)
     {
       logger.log(Level.ERROR, "Cannot get ref to Deli", ce);
       ce.printStackTrace();

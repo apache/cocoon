@@ -276,7 +276,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 			 <ol> 
 				<li>The <code>Handler</code> creates a <code>File</code> object
 				  with the asked URL.</li> 
-				<li>The <code>Manager</code> sets the <code>Composable</code> and the
+				<li>The <code>Manager</code> sets the <code>Serviceable</code> and the
 				  <code>Configuration</code> of the <code>Handler</code>. (These are
 				  <link href="avalon.html">Avalon</link> things).</li> 
 			 <li>If necessary, the <code>Manager</code> asks the
@@ -286,7 +286,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 				<ol> 
 				  <li>The <code>Handler</code> gets the
 					 <code>"program-generator"</code> <code>Component</code> from its
-					 <code>Composable</code>.</li> 
+					 <code>Serviceable</code>.</li> 
 				  <li>The <code>load()</code> method of this
 					 <code>ProgramGeneratorImpl</code> is called. </li> 
 				  <li>The <code>ProgramGeneratorImpl</code> gets the
@@ -322,7 +322,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 		<s2 title="Cocoon"> 
 		  <p><code>org.apache.cocoon.Cocoon</code></p> 
 		  <p>While this sounds to be the most important part of the Cocoon
-			 application, it is not. It is merely a Composable, meaning that it does some
+			 application, it is not. It is merely a Serviceable, meaning that it does some
 			 administrative work and gets other classes to work.</p> 
 		</s2> 
 		<s2 title="ConfigurationBuilder"> 
@@ -339,22 +339,6 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 		  <p>This is an <link href="avalon.html">Avalon</link> interface. It
 		  assigns classes to roles. If an object needs a class for a specific role, it
 		  can ask a Configuration which class it has to use.</p> 
-		</s2> 
-		<s2 title="DefaultComponentManager"> 
-		  <p><code>org.apache.avalon.DefaultComponentManager</code></p> 
-		  <p>Something that manages <link href="avalon.html">Avalon</link>
-		  Components.</p> 
-		</s2> 
-		<s2 title="Manager"> 
-		  <p><code>org.apache.cocoon.sitemap.Manager</code></p> 
-		  <p>This one manages the sitemap: it finds out if there exists a Handler
-			 for a sitemap, and if not, makes sure that one gets created.</p> 
-		</s2> 
-		<s2 title="Handler"> 
-		  <p><code>org.apache.cocoon.sitemap.Handler</code></p> 
-		  <p>A class that is responsible for dealing with sitemaps. It holds the
-			 sourcefile of the sitemap, and the compiled code for it. It checks whether the
-			 sitemap class that it contains is still valid, and if not, regenerates it.</p> 
 		</s2> 
 		<s2 title="ProgramGenerator"> 
 		  <p><code>org.apache.cocoon.components.language.programming.ProgrammingLanguage</code></p>

@@ -32,7 +32,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.9 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode, Initializable {
@@ -61,7 +61,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
 

@@ -32,7 +32,7 @@
       Controls access to sitemap objects. It's in charge of reloading the sitemaps as necessary, and mapping sitemap filenames with sitemap objects. It operates on Environments by processing them with a sitemap.
     </class>
     <interface name="Sitemap">
-      An aggregate of avalon's Composable, Configurable, Contextualizable, and Modifiable interfaces, as well as the cocoon Processor interface.
+      An aggregate of avalon's Serviceable, Configurable, Contextualizable, and Modifiable interfaces, as well as the cocoon Processor interface.
     </interface>
     <class name="AbstractSitemap">
       Parent of the stylesheet-generated sitemap objects. It provides access to all of the cocoon components by role name. It keeps track of when the stylesheet was created. It loads components by name and configures them. It provides a utility substitute method for string manipulation.

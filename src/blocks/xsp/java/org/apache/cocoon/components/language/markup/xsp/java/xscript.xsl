@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: xscript.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $-->
+<!-- $Id$-->
 <!--
  *
  * Date: September 19, 2001
@@ -45,8 +45,8 @@
         XScriptVariableScope pageScope = new XScriptVariableScope();
         XScriptManager xscriptManager;
 
-        public void compose(ComponentManager manager) throws ComponentException {
-          super.compose(manager);
+        public void service(ServiceManager manager) throws ServiceException {
+          service(manager);
           xscriptManager = (XScriptManager)this.manager.lookup(XScriptManager.ROLE);
         }
 

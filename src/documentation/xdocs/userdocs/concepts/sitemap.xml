@@ -787,9 +787,9 @@ The name of the parent element which contains the merged XML content from each p
      <p>
      Sitemap components (generators, transformers, etc.) in a sitemap are accessible 
      from a sub-sitemap by their names. This is due to the fact that each sitemap has its 
-     own SitemapComponentManager and they are arranged in the same hierarchical 
+     own Sitemap service manager and they are arranged in the same hierarchical 
      structure as the sitemaps are and thus knows which are their parent 
-     SitemapComponentManager and can ask it for a SitemapComponent it doesn't know about.
+     sitemap service manager and can ask it for a SitemapComponent it doesn't know about.
      </p>
     <s3 title="Use Cases">
      <p>

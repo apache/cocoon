@@ -36,20 +36,20 @@ import javax.xml.rpc.server.ServiceLifecycle;
  *
  * <p>
  *  The specified <b>ROLE</b> corresponds to a particular implementation
- *  which is retrieved by a given Avalon <code>ComponentManager</code>.
+ *  which is retrieved by a given Avalon <code>ServiceManager</code>.
  *  For more information about Avalon, see the Avalon.
  *  <a href="http://jakarta.apache.org/avalon">website</a>.
  * </p>
  *
  * <p>
- *  To use this class, you need to add your Avalon <code>ComponentManager</code>
+ *  To use this class, you need to add your Avalon <code>ServiceManager</code>
  *  instance to the <code>MessageContext</code> that is Axis uses to process
  *  messages with.
  * </p>
  *
  * <p>
  *  To do this you could for example subclass the AxisServlet and override the
- *  <code>createMessageContext()</code> method adding the ComponentManager, eg:
+ *  <code>createMessageContext()</code> method adding the ServiceManager, eg:
  *
  *  <pre>
  *   protected MessageContext createMessageContext(...)
@@ -65,7 +65,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
  * </p>
  *
  * <p>
- *  This provider will use that <code>ComponentManager</code> reference to
+ *  This provider will use that <code>ServiceManager</code> reference to
  *  retrieve objects.
  * </p>
  *
@@ -175,7 +175,7 @@ public class AvalonProvider extends RPCProvider {
     )
         throws AxisFault
     {
-        // Assuming ExcaliburComponentManager semantics the ROLE name is
+        // Assuming CocoonServiceManager semantics the ROLE name is
         // actually the class name, potentially with a variant following
         // the class name with a '/' separator
 
@@ -203,12 +203,12 @@ public class AvalonProvider extends RPCProvider {
      * <code>Components</code>.
      *
      * <p>
-     *  Components retrieved from an Avalon ComponentManager must be
+     *  Components retrieved from an Avalon ServiceManager must be
      *  returned to the manager when they are no longer required.
      * </p>
      *
      * <p>
-     *  The returning of Components to their ComponentManager is handled
+     *  The returning of Components to their ServiceManager is handled
      *  by a Proxy class which uses the following InvocationHandler.
      * </p>
      *
@@ -222,7 +222,7 @@ public class AvalonProvider extends RPCProvider {
      *  When Axis is finished with the object returned by this provider,
      *  it invokes ServiceLifecycle.destroy(). This is intercepted by the
      *  InvocationHandler and the Component is returned at this time back
-     *  to the ComponentManager it was retrieved from.
+     *  to the ServiceManager it was retrieved from.
      * </p>
      *
      * <p>

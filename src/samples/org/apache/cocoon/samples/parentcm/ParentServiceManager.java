@@ -15,29 +15,28 @@
  */
 package org.apache.cocoon.samples.parentcm;
 
-import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.naming.memory.MemoryInitialContextFactory;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.core.container.CocoonServiceManager;
 
 import javax.naming.Context;
 import java.util.Hashtable;
 
 /**
  * A sample parent component manager. This manager will lookup the configuration object
- * given by the initialization parameter in JNDI, use it to configure an ExcaliburComponentManager
+ * given by the initialization parameter in JNDI, use it to configure an CocoonServiceManager
  * and delegate any requests to it.
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: ParentComponentManager.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class ParentComponentManager implements ComponentManager, LogEnabled, Initializable {
+public class ParentServiceManager implements ServiceManager, LogEnabled, Initializable {
 
     /**
      * Our logger.
@@ -53,17 +52,20 @@ public class ParentComponentManager implements ComponentManager, LogEnabled, Ini
      * The delegate that will be configured and provide the
      * functionality for this component manager.
      */
-    private final ExcaliburComponentManager delegate;
+    private final CocoonServiceManager delegate;
 
-    public ParentComponentManager(final String jndiName) {
+    public ParentServiceManager(final String jndiName) {
         this.jndiName = jndiName;
 
         // Initialize it here so we can let it be final.
-        this.delegate = new ExcaliburComponentManager();
+        this.delegate = new CocoonServiceManager(null, null);
     }
 
-    public boolean hasComponent(final String role) {
-        return delegate.hasComponent(role);
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
+     */
+    public boolean hasService(final String role) {
+        return delegate.hasService(role);
     }
 
     /**
@@ -88,7 +90,7 @@ public class ParentComponentManager implements ComponentManager, LogEnabled, Ini
 
         Configuration config = (Configuration) initialContext.lookup(this.jndiName);
 
-        // We ignore the setRoleManager call, as ExcaliburComponentManager handles that
+        // We ignore the setRoleManager call, as CocoonServiceManager handles that
         // in configure().
         this.delegate.enableLogging(logger);
         this.delegate.contextualize(new DefaultContext());
@@ -98,11 +100,17 @@ public class ParentComponentManager implements ComponentManager, LogEnabled, Ini
         this.logger.debug("Component manager successfully initialized.");
     }
 
-    public Component lookup(final String role) throws ComponentException {
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
+     */
+    public Object lookup(final String role) throws ServiceException {
         return this.delegate.lookup(role);
     }
 
-    public void release(final Component component) {
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
+     */
+    public void release(final Object component) {
         this.delegate.release(component);
     }
 
