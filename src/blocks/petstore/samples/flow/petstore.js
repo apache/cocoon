@@ -220,6 +220,7 @@ function viewProduct() {
                                                local.skipResults,
                                                maxResults);
         local.lastPage = !itemList.isLimitedByMaxRows;
+        local.rowCount = itemList.rowCount;
         var contextData = {
             accountForm: accountForm,
             fmt: formatter,
@@ -242,7 +243,7 @@ function viewProduct() {
             }
         } else if (page == "next") {
             if (!local.lastPage) {
-                local.skipResults += itemList.rowCount;
+                local.skipResults += local.rowCount;
             }
         }
     }
