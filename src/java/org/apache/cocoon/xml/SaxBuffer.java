@@ -74,7 +74,7 @@ public class SaxBuffer extends AbstractSAXFragment
      * Creates copy of another SaxBuffer
      */
     public SaxBuffer(SaxBuffer saxBuffer) {
-        this.saxbits.addAll(saxBuffer.saxbits);
+        this.saxbits = new ArrayList(saxBuffer.saxbits);
     }
 
     //
