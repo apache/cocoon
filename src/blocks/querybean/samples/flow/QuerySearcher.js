@@ -114,11 +114,26 @@ QuerySearcher.prototype.newquery = function(type, bool, match, field) {
 	return new SimpleLuceneQueryBean(type, bool, match, field, "");
 }
 
-
-
-
 QuerySearcher.prototype.getTip = function(query) {
-	return null;
+	if (query.total > this._high) {
+		return ("query.tip.high");
+	} else if (query.total < this._low) {
+		var allProhibited = true;
+		var criteria = query.getCriteria();
+		for (var i = 0; i < criteria.size(); i++) {
+			if (!criteria.get(i).isProhibited()) {
+				allProhibited = false;
+				break;
+			}
+		}
+		if (allProhibited) {
+			return ("query.tip.prohibited");
+		} else {
+			return ("query.tip.low");
+		}
+	} else {
+		return null;
+	}
 }
 
 
