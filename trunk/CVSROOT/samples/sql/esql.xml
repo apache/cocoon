@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xsp"?>
+<?xml-logicsheet href="resource://org/apache/cocoon/processor/xsp/library/sql/esql.xsl"?>
+
+<xsp:page
+  language="java"
+  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+<page>
+
+<esql:execute-query>
+<esql:driver>postgresql.Driver</esql:driver>
+<esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+<esql:username>test</esql:username>
+<esql:password>test</esql:password>
+<esql:query>select * from department_table</esql:query>
+<esql:results>
+ <department>
+ <id><esql:get-string column="id"/></id>
+ <name><esql:get-string column="name"/></name>
+ <employees>
+ <esql:execute-query>
+  <esql:query>select * from employee_table where department_id = <esql:get-string column="id" ancestor="1"/></esql:query>
+  <esql:results>
+   <employee>
+   <id><esql:get-string column="id"/></id>
+   <name><esql:get-string column="name"/></name>
+   </employee>
+  </esql:results>
+ </esql:execute-query>
+ </employees>
+ </department>
+</esql:results>
+<esql:no-results>
+ <error>no results were found</error>
+</esql:no-results>
+</esql:execute-query>
+
+</page>
+
+</xsp:page>
