@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.175 2003/12/25 15:59:21 unico Exp $:-->
+<!-- CVS $Id: status.xml,v 1.176 2004/01/26 02:34:35 antonio Exp $:-->
 
 <status>
  <developers>
@@ -188,8 +188,13 @@
 
 
   <changes>
-
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated commons-collections to 3.0
+   </action>
+       <action dev="AG" type="update">
+     Updated commons-httpclient to 2.0RC3
+   </action>
    <action dev="AG" type="fix"  fixes-bug="25664" due-to-email="karel.vervaeke@pandora.be" due-to="Karel Vervaeke">
 		build fails on windows without cygwin
    </action>

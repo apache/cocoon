@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.121 2003/12/25 15:44:31 unico Exp $
+    | CVS $Id: jars.xml,v 1.122 2004/01/26 02:34:35 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -299,8 +299,8 @@
     <title>Jakarta Commons Collections</title>
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon</used-by>
-    <lib>core/commons-collections-2.1.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/collections.html</homepage>
+    <lib>core/commons-collections-3.0.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/collections/</homepage>
   </file>
 
   <file>
@@ -379,7 +379,7 @@
       HTTP standards and recommendations.
     </description>
     <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
-    <lib>core/commons-httpclient-2.0-rc1.jar</lib>
+    <lib>core/commons-httpclient-2.0-rc3.jar</lib>
     <lib>optional/commons-logging-1.0.3.jar</lib>
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
