@@ -95,15 +95,9 @@ import java.util.Iterator;
  * (<code>&lt;empty-as-null/&gt;</code>).</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: ChainMetaModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: ChainMetaModule.java,v 1.2 2004/02/15 19:08:53 haul Exp $
  */
 public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
-
-    class ModuleHolder {
-        public String name = null;
-        public InputModule input = null;
-        public Configuration config = null;
-    }
 
     private ModuleHolder[] inputs = null;
 
@@ -189,7 +183,7 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
         Configuration[] inputConfigs = null;
         boolean allValues = this.allValues;
         boolean emptyAsNull = this.emptyAsNull;
-        if (modeConf!=null) {
+        if (modeConf!=null && modeConf.getChildren().length > 0) {
             inputConfigs = modeConf.getChildren("input-module");
             emptyAsNull = modeConf.getChild("empty-as-null").getValueAsBoolean(emptyAsNull);
             allValues = modeConf.getChild("all-values").getValueAsBoolean(allValues);
@@ -253,7 +247,7 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
         Configuration[] inputConfigs = null;
         boolean emptyAsNull = this.emptyAsNull;
         boolean allNames = this.allNames;
-        if (modeConf!=null) {
+        if (modeConf!=null && modeConf.getChildren().length > 0) {
             inputConfigs = modeConf.getChildren("input-module");
             emptyAsNull = modeConf.getChild("empty-as-null").getValueAsBoolean(emptyAsNull);
             allNames = modeConf.getChild("all-names").getValueAsBoolean(allNames);
