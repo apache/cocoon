@@ -51,7 +51,7 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * This is the default store implementation based on JCS
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: JCSDefaultStore.java,v 1.3 2004/05/20 10:48:16 cziegeler Exp $
+ * @version CVS $Id: JCSDefaultStore.java,v 1.4 2004/05/26 01:43:25 joerg Exp $
  */
 public class JCSDefaultStore 
     extends AbstractLogEnabled
@@ -354,9 +354,9 @@ public class JCSDefaultStore
             super(cacheControl);
         }
         
-        private int getSize() {
+        /*private int getSize() {
             return super.cacheControl.getSize();
-        }
+        }*/
         
         protected void dispose() {
             super.dispose();
