@@ -52,6 +52,7 @@ package org.apache.cocoon.components.source;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 
 /**
  * A source descriptor handles modifiable source properties.
@@ -81,4 +82,13 @@ public interface SourceDescriptor extends SourceInspector {
     public void removeSourceProperty(Source source, String namespace, String name) 
         throws SourceException;
 
+    /**
+     * Get the validity object that describes the validity state
+     * of the properties belonging to the given source.
+     * 
+     * @param source  the Source for which to calculate the validity
+     * its properties, <code>null</code> if the source properties
+     * are not cacheable.
+     */
+    public SourceValidity getValidity(Source source);
 }
