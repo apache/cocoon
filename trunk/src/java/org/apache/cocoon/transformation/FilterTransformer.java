@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.4 2004/03/09 00:57:27 joerg Exp $
+ * @version CVS $Id: FilterTransformer.java,v 1.5 2004/03/18 08:00:19 cziegeler Exp $
  */
 public class FilterTransformer
 extends AbstractTransformer
@@ -132,10 +132,10 @@ implements CacheableProcessingComponent {
                     super.contentHandler.startElement("", BLOCK, BLOCK, attr);
                 } else  {
                     // fix Bugzilla Bug 13904, check if counter == 1
-                    // in this case there is no startElement( uri, BLOCK, BLOCK)
+                    // in this case there is no startElement("", BLOCK, BLOCK)
                     // written, yet
                     if (this.counter > 1) {
-                        super.contentHandler.endElement(uri, BLOCK, BLOCK);
+                        super.contentHandler.endElement("", BLOCK, BLOCK);
                     }
                     super.contentHandler.startElement("", BLOCK, BLOCK, attr);
                 }

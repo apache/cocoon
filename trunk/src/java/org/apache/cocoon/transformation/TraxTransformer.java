@@ -129,7 +129,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.14 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.15 2004/03/18 08:00:19 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Transformer
@@ -500,11 +500,12 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
      * Disposable
      */
     public void dispose() {
-        this.manager.release(this.xsltProcessor);
-        this.xsltProcessor = null;
-        this.manager = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.xsltProcessor);
+            this.xsltProcessor = null;
+            this.manager = null;
+        }
     }
-
 
     /**
      * Recyclable

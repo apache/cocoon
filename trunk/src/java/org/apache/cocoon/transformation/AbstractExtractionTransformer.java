@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractExtractionTransformer.java,v 1.5 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: AbstractExtractionTransformer.java,v 1.6 2004/03/18 08:00:19 cziegeler Exp $
  */
 abstract public class AbstractExtractionTransformer extends AbstractTransformer {
 
@@ -56,10 +56,10 @@ abstract public class AbstractExtractionTransformer extends AbstractTransformer 
     }
 
     public void recycle() {
-        super.recycle();
         this.extractLevel = 0;
         this.currentBuilder = null;
         this.prefixMap = null;
+        super.recycle();
     }
 
 
@@ -393,7 +393,7 @@ abstract public class AbstractExtractionTransformer extends AbstractTransformer 
     /**
      * Receive notification of the beginning of the extracted Document. Per default send
      * startElement message to document builder. Override if necessary. Must override 
-     * {@link #endExtractingDocument} as well. 
+     * {@link #endExtractingDocument(String, String, String)} as well. 
      *
      * @param uri The Namespace URI, or the empty string if the element has no
      *            Namespace URI or if Namespace
@@ -425,7 +425,9 @@ abstract public class AbstractExtractionTransformer extends AbstractTransformer 
     /**
      * Receive notification of the end of the extracted Document. Per default, 
      * send endElement message to document builder. Override if necessary.
-     * Must override {@link #startExtractingDocument} as well.
+     * Must override
+     * {@link #startExtractingDocument(String, String, String, Attributes)}
+     * as well.
      *
      * @param uri The Namespace URI, or the empty string if the element has no
      *            Namespace URI or if Namespace

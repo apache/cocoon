@@ -51,12 +51,12 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Implementation of an XInclude transformer. It supports xml:base attributes,
- * xpointer fragment identifiers (see the xpointer package to see what exactly is supported),
- * fallback elements, and does xinclude processing on the included content and on the content
- * of fallback elements (with loop inclusion detection).
+ * XPointer fragment identifiers (see the xpointer package to see what exactly is
+ * supported), fallback elements, and does xinclude processing on the included content
+ * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.15 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.16 2004/03/18 08:00:19 cziegeler Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -151,32 +151,32 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         }
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-            if (uri.equals(XINCLUDE_NAMESPACE_URI)) {
-                if (xIncludeLevel == 1 && useFallback && name.equals(XINCLUDE_FALLBACK_ELEMENT)) {
-                    fallbackLevel++;
-    
-                    // don't need these anymore
-                    useFallback = false;
-                    fallBackException = null;
-    
-                    return;
-                } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
-                    xIncludeLevel++;
-                    return;
-                }
-    
-                xmlBaseSupport.startElement(uri, name, raw, attr);
+            if (xIncludeLevel == 1 && useFallback && XINCLUDE_NAMESPACE_URI.equals(uri) && XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
+                fallbackLevel++;
+
+                // don't need these anymore
+                useFallback = false;
+                fallBackException = null;
+
+                return;
+            } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
+                xIncludeLevel++;
+                return;
+            }
+
+            xmlBaseSupport.startElement(uri, name, raw, attr);
+            if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
                     String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
                     if (href == null) {
                         throw new SAXException(raw + " must have a 'href' attribute at " + getLocation());
                     }
-                    
+
                     String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-    
+
                     if (null == parse) parse="xml";
                     xIncludeLevel++;
-    
+
                     try {
                         processXIncludeElement(href, parse);
                     } catch (ProcessingException e) {
@@ -188,11 +188,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     }
                     return;
                 }
-                
+
                 throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
-                
+
             } else {
-                xmlBaseSupport.startElement(uri, name, raw, attr);
                 super.startElement(uri,name,raw,attr);
             }
         }
@@ -209,7 +208,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     fallBackException = null;
                     fallbackLevel = 0;
                     getLogger().error("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
-                    throw new SAXException("Exception occured during xinclude processing, and did not find a fallback element: " + localFallBackException.getMessage());
+                    throw new SAXException("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
                 }
                 return;
             }

@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.9 2004/03/08 14:03:31 cziegeler Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.10 2004/03/18 08:00:19 cziegeler Exp $
  *  @since   2.1
  * 
  * @avalon.component
@@ -360,6 +360,8 @@ public final class DefaultIncludeCacheManager
             throw new SAXException("ProcessingException", pe);
         } catch (ServiceException e) {
             throw new SAXException("Unable to lookup xml serializer.", e);
+        } finally {
+            this.manager.release(serializer);
         }
     }
 
@@ -371,6 +373,14 @@ public final class DefaultIncludeCacheManager
             this.getLogger().debug("Terminating cache manager session " + session);
         }
         session.cleanup(this.resolver);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -407,14 +417,6 @@ public final class DefaultIncludeCacheManager
         this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-    }
-
 }
 
 final class LoaderThread implements Runnable {
@@ -424,13 +426,15 @@ final class LoaderThread implements Runnable {
     boolean  finished;
     Exception exception;
     byte[]    content;
-
+    ServiceManager manager;
+    
     public LoaderThread(Source source, 
-                         XMLSerializer serializer, 
-                         ServiceManager manager) {
+                        XMLSerializer serializer,
+                        ServiceManager manager) {
         this.source = source;
         this.serializer = serializer;
         this.finished = false;
+        this.manager = manager;
     }
     
     public void run() {
@@ -440,6 +444,7 @@ final class LoaderThread implements Runnable {
         } catch (Exception local) {
             this.exception = local;
         } finally {
+            this.manager.release( this.serializer );
             this.finished = true;
         }
     }
