@@ -13,7 +13,7 @@
 
 // The global user registry, through which we add new users or access
 // existing ones.
-var userRegistry = Packages.samples.flow.prefs.logic.UserRegistry.getUserRegistry();
+var userRegistry = Packages.org.apache.cocoon.samples.flow.prefs.UserRegistry.getUserRegistry();
 
 var user;
 
@@ -78,9 +78,9 @@ function registerUser()
     // below. We ignore this problem in this example.
     var existingUser = userRegistry.isLoginNameTaken(login);
     if (!existingUser) {
-      user = new Packages.samples.flow.prefs.logic.User(login, password,
-                                                        firstName, lastName,
-                                                        email);
+      user = new Packages.org.apache.cocoon.samples.flow.prefs.User(login, password,
+                                                                    firstName, lastName,
+                                                                    email);
       userRegistry.addUser(user);
       break;
     }
