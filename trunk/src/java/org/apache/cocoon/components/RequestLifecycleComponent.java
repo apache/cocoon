@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components;
 
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
@@ -68,13 +69,13 @@ import java.util.Map;
  * the {@link #setup(SourceResolver, Map)} method is called.
  *
  * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
- *
- * TODO: POOLABLE
+ * @deprecated Use the org.apache.cocoon.components.persistence.RequestDataStore instead
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.8 2003/10/22 15:37:50 bloritsch Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.9 2004/01/08 09:25:31 cziegeler Exp $
  */
-public interface RequestLifecycleComponent {
+public interface RequestLifecycleComponent 
+extends Poolable {
 
     /**
      * Set the {@link SourceResolver} and the objectModel

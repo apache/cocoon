@@ -68,9 +68,10 @@ import java.util.Map;
  * the {@link #setup(SourceResolver, Map)} method is called.
  *
  * @see org.apache.cocoon.components.RequestLifecycleComponent
- *
+ * @deprecated Use the org.apache.cocoon.components.persistence.RequestDataStore instead
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.7 2003/10/22 15:37:50 bloritsch Exp $
+ * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.8 2004/01/08 09:25:31 cziegeler Exp $
  */
 public interface GlobalRequestLifecycleComponent {
 
