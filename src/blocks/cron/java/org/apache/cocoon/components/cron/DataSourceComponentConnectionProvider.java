@@ -36,7 +36,7 @@ public class DataSourceComponentConnectionProvider implements ConnectionProvider
     public DataSourceComponentConnectionProvider(String dsName, ServiceManager manager) throws ConfigurationException {
         m_manager = manager;
         try {
-            m_manager.lookup(DataSourceComponent.ROLE + "/" + dsName);            
+            m_ds = (DataSourceComponent) m_manager.lookup(DataSourceComponent.ROLE + "/" + dsName);            
         }
         catch (ServiceException e) {
             throw new ConfigurationException("No datasource available by that name: " + dsName);
