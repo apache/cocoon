@@ -55,7 +55,7 @@ import org.apache.avalon.utils.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-02 21:12:36 $ */
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-06 23:21:11 $ */
  
 public class DirectoryGenerator extends ComposerGenerator {
 
@@ -216,9 +216,6 @@ System.out.println("directory.file: "+contents[i]);
         attributes.addAttribute("", LASTMOD_ATTR_NAME,
                     LASTMOD_ATTR_NAME, "CDATA",
                     Long.toString(path.lastModified()));
-        attributes.addAttribute("", LASTMOD_ATTR_NAME,
-                    LASTMOD_ATTR_NAME, "CDATA",
-                    Long.toString(lastModified));
         attributes.addAttribute("", DATE_ATTR_NAME,
                     DATE_ATTR_NAME, "CDATA",
                     dateFormatter.format(new Date(lastModified)));
