@@ -52,12 +52,12 @@ package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -128,9 +128,9 @@ import java.util.Enumeration;
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SearchGenerator.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: SearchGenerator.java,v 1.3 2003/09/04 09:38:38 cziegeler Exp $
  */
-public class SearchGenerator extends ComposerGenerator
+public class SearchGenerator extends ServiceableGenerator
     implements Contextualizable, Initializable, Disposable
 {
 
@@ -401,11 +401,11 @@ public class SearchGenerator extends ComposerGenerator
     // TODO: parameterize()
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
 //        lcs = (LuceneCocoonSearcher) this.manager.lookup(LuceneCocoonSearcher.ROLE);
     }
 
@@ -732,7 +732,7 @@ public class SearchGenerator extends ComposerGenerator
                 hits = lcs.search(queryString, LuceneXMLIndexer.BODY_FIELD);
             } catch (IOException ioe) {
                 throw new ProcessingException("IOException in search", ioe);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("ComponentException in search", ce);
             } finally {
                 if (lcs != null) {

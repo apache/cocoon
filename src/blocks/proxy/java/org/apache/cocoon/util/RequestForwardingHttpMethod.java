@@ -66,7 +66,7 @@ import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
  * to a server.
  * 
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version $Id: RequestForwardingHttpMethod.java,v 1.1 2003/08/29 17:33:24 gianugo Exp $
+ * @version $Id: RequestForwardingHttpMethod.java,v 1.2 2003/09/04 09:38:36 cziegeler Exp $
  */
 public class RequestForwardingHttpMethod extends EntityEnclosingMethod {
     
@@ -124,6 +124,7 @@ public class RequestForwardingHttpMethod extends EntityEnclosingMethod {
                 String path = cookies[i].getPath();
                 String value = cookies[i].getValue();
                 Cookie cookie = new Cookie(domain, path, value);
+                cookie.setName(name);
                 newCookiesList.add(cookie);
             }
         

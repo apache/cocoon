@@ -58,8 +58,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.InspectableSource;
@@ -88,9 +88,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * for retrieving SourceProperties, SourcePermission etc.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.4 2003/05/19 10:02:06 stephan Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.5 2003/09/04 09:38:32 cziegeler Exp $
  */
-public class SourceDescriptionGenerator extends ComposerGenerator
+public class SourceDescriptionGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent, Recyclable {
 
     /** Namespace of the source description. */
@@ -544,7 +544,7 @@ public class SourceDescriptionGenerator extends ComposerGenerator
                 properties[i].toSAX(consumer);
                 this.contentHandler.endPrefixMapping("");
             }
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Could not retrieve source inspector", ce);
             }

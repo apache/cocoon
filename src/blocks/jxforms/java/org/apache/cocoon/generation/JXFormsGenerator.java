@@ -86,7 +86,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * <p><a href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</a> based implementation of <a href="http://www.w3.org/TR/xforms"><em>XForms</em></a></p>
  */
 
-public class JXFormsGenerator extends ComposerGenerator {
+public class JXFormsGenerator extends ServiceableGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();

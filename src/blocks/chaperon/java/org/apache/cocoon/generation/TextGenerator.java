@@ -78,9 +78,9 @@ import org.xml.sax.helpers.LocatorImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGenerator.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: TextGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
  */
-public class TextGenerator extends ComposerGenerator
+public class TextGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent {
 
     /** The URI of the text element */

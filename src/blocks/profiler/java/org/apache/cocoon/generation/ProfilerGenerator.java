@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.profiler.EnvironmentInfo;
 import org.apache.cocoon.components.profiler.Profiler;
@@ -79,9 +79,9 @@ import java.util.Set;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerGenerator.java,v 1.4 2003/05/16 08:49:19 bruno Exp $
+ * @version CVS $Id: ProfilerGenerator.java,v 1.5 2003/09/04 09:38:32 cziegeler Exp $
  */
-public class ProfilerGenerator extends ComposerGenerator {
+public class ProfilerGenerator extends ServiceableGenerator {
 
     /**
      * The XML PROFILER_NS for the output document.
@@ -117,10 +117,10 @@ public class ProfilerGenerator extends ComposerGenerator {
     private boolean fragmentOnly;
 
     /**
-     * Composable
+     * Serviceable
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         this.profiler = (Profiler) super.manager.lookup(Profiler.ROLE);
     }
 
@@ -505,7 +505,7 @@ public class ProfilerGenerator extends ComposerGenerator {
                 else
                     deserializer.setConsumer(this.xmlConsumer);
                 deserializer.deserialize(fragment);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 getLogger().debug("Could not retrieve XMLDeserializer component",
                                   ce);
                 throw new SAXException("Could not retrieve XMLDeserializer component",

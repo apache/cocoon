@@ -52,12 +52,11 @@ package org.apache.cocoon.webapps.portal.generation;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
 import org.apache.cocoon.webapps.session.FormManager;
 import org.xml.sax.SAXException;
@@ -66,10 +65,10 @@ import org.xml.sax.SAXException;
  * This generator generates the portal for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalGenerator.java,v 1.4 2003/05/06 17:08:53 cziegeler Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.5 2003/09/04 09:38:33 cziegeler Exp $
 */
 public final class PortalGenerator
-extends ComposerGenerator {
+extends ServiceableGenerator {
 
     public void generate()
     throws IOException, SAXException, ProcessingException {
@@ -90,10 +89,10 @@ extends ComposerGenerator {
 
             }
             this.xmlConsumer.endDocument();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of PortalManager failed.", ce);
         } finally {
-            this.manager.release( (Component)formManager);
+            this.manager.release( formManager);
             this.manager.release(portal);
         }
     }

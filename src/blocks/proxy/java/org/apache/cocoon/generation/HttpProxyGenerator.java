@@ -54,12 +54,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -89,9 +88,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
  * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2002
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HttpProxyGenerator.java,v 1.3 2003/07/05 04:27:27 joerg Exp $
+ * @version CVS $Id: HttpProxyGenerator.java,v 1.4 2003/09/04 09:38:37 cziegeler Exp $
  */
-public class HttpProxyGenerator extends ComposerGenerator implements Configurable {
+public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {
 
     /** The HTTP method to use at request time. */
     private HttpMethodBase method = null;
@@ -298,10 +297,10 @@ public class HttpProxyGenerator extends ComposerGenerator implements Configurabl
             InputSource inputSource = new InputSource(response);
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             parser.parse(inputSource, super.xmlConsumer);
-        } catch (ComponentException ex) {
+        } catch (ServiceException ex) {
             throw new ProcessingException("Unable to get parser", ex);
         } finally {
-            this.manager.release((Component) parser);
+            this.manager.release(parser);
             this.method.releaseConnection();
             connection.close();
         }

@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:peter@palserv.com">Peter Loeb</a>
  */
 
-public class XMidiGenerator extends ComposerGenerator implements Parameterizable
+public class XMidiGenerator extends AbstractGenerator implements Parameterizable
 {
 
   /** The input source */

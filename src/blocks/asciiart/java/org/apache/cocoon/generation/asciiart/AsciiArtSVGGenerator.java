@@ -67,7 +67,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -79,11 +79,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * A simple AsciiArt text SVG XML generator.
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.3 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.4 2003/09/04 09:38:35 cziegeler Exp $
  * @since Cocoon 2.1, 22 December 2002
  */
-public class AsciiArtSVGGenerator extends ComposerGenerator
-         implements CacheableProcessingComponent {
+public class AsciiArtSVGGenerator 
+    extends AbstractGenerator
+    implements CacheableProcessingComponent {
 
     /**
      * The input source
@@ -127,7 +128,7 @@ public class AsciiArtSVGGenerator extends ComposerGenerator
      *@exception  IOException          general io fails
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-             throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
         try {

@@ -54,7 +54,6 @@ import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
 import com.ibm.bsf.util.IOUtils;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -91,9 +90,9 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.2 2003/08/04 03:09:16 joerg Exp $
+ * @version CVS $Id: ScriptGenerator.java,v 1.3 2003/09/04 09:38:39 cziegeler Exp $
  */
-public class ScriptGenerator extends ComposerGenerator implements Configurable {
+public class ScriptGenerator extends ServiceableGenerator implements Configurable {
 
     protected class BSFLanguage
     {
@@ -217,7 +216,7 @@ public class ScriptGenerator extends ComposerGenerator implements Configurable {
             throw new ProcessingException(
                     "Exception in ScriptGenerator.generate()", e);
         } finally {
-            this.manager.release((Component)parser);
+            this.manager.release(parser);
         }
     }
 }
