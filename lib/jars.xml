@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.52 2003/06/26 09:09:10 bruno Exp $
+    | CVS $Id: jars.xml,v 1.53 2003/06/29 09:23:12 crossley Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -356,7 +356,7 @@
    Batik is a Java based toolkit for applications which handle images in
    the Scalable Vector Graphics (SVG) format for various purposes, such as
    viewing, generation or manipulation.</description>
-  <used-by>SVG serializer(batik block)</used-by>
+  <used-by>SVG serializer (batik block)</used-by>
   <lib>batik/lib/batik-all-1.5b5.jar</lib>
   <homepage>http://xml.apache.org/batik/</homepage>
  </file>
@@ -371,7 +371,7 @@
    supports additional languages, the application will automatically
    support the additional languages.
   </description>
-  <used-by>Script generator, script action(bsf block)</used-by>
+  <used-by>Script generator, script action (bsf block)</used-by>
   <lib>bsf/lib/bsf-2.2.jar</lib>
   <homepage>http://oss.software.ibm.com/developerworks/projects/bsf</homepage>
  </file>
@@ -386,7 +386,7 @@
    it requires a description of the capabilities of the client known as the
    delivery context.
   </description>
-  <used-by>DELI(deli block)</used-by>
+  <used-by>DELI (deli block)</used-by>
   <lib>deli/lib/deli-0.9.1.jar</lib>
   <homepage>http://delicon.sourceforge.net</homepage>
  </file>
@@ -430,7 +430,7 @@
    conforming to the XSL candidate release and then turns it into a PDF
    document or allows you to preview it directly on screen.
   </description>
-  <used-by>FOP serializer(fop block)</used-by>
+  <used-by>FOP serializer (fop block)</used-by>
   <lib>fop/lib/fop-0.20.4.jar</lib>
   <homepage>http://xml.apache.org/fop/</homepage>
  </file>
@@ -441,7 +441,7 @@
         and converts them to RTF format, allowing them to be loaded in
         common wordprocessors.
     </description>
-  <used-by>RTF serializer(jfor block)</used-by>
+  <used-by>RTF serializer (jfor block)</used-by>
   <lib>jfor/lib/jfor-0.7.1.jar</lib>
   <homepage>http://www.jfor.org</homepage>
  </file>
@@ -463,7 +463,7 @@
    various file formats based upon Microsoft's OLE 2 Compound Document
    format using pure Java.
   </description>
-  <used-by>MS Excel serializer(poi block)</used-by>
+  <used-by>MS Excel serializer (poi block)</used-by>
   <lib>poi/lib/jakarta-poi-1.7.0-dev-20020624.jar</lib>
   <homepage>http://jakarta.apache.org/poi/</homepage>
  </file>
@@ -471,7 +471,7 @@
  <file>
   <title>Jena RDF framework</title>
   <description>Jena is a java API for manipulating RDF models.</description>
-  <used-by>DELI(deli block)</used-by>
+  <used-by>DELI (deli block)</used-by>
   <lib>deli/lib/jena-1.4.0.jar</lib>
   <homepage>http://www.hpl.hp.com/semweb/jena-top.html</homepage>
  </file>
@@ -496,7 +496,7 @@
  <file>
   <title>Transform HTML to XML</title>
   <description>Tidy is a HTML syntax checker and pretty printer.</description>
-  <used-by>HTML generator(html block)</used-by>
+  <used-by>HTML generator (html block)</used-by>
   <lib>html/lib/jtidy-04aug2000r7-dev.jar</lib>
   <homepage>http://lempinen.net/sami/jtidy/</homepage>
  </file>
@@ -505,7 +505,7 @@
   <title>Search engine</title>
   <description>jakarta-lucene is a search engine toolkit designed for 
        indexing and searching of documents.</description>
-  <used-by>?</used-by>
+  <used-by>Lucene block</used-by>
   <lib>lucene/lib/lucene-1.2.jar</lib>
   <homepage>http://jakarta.apache.org/lucene/</homepage>
  </file>
@@ -521,7 +521,7 @@
  <file>
   <title>XML RDF parser</title>
   <description></description>
-  <used-by>DELI(deli block)</used-by>
+  <used-by>DELI (deli block)</used-by>
   <lib>deli/lib/rdffilter.jar</lib>
   <homepage>http://sourceforge.net/projects/rdf-filter</homepage>
  </file>
@@ -548,7 +548,7 @@
  <file>
   <title>Velocity engine</title>
   <description>Velocity is a general purpose template engine written in Java.</description>
-  <used-by>Velocity Generator(velocity block)</used-by>
+  <used-by>Velocity Generator (velocity block)</used-by>
   <lib>velocity/lib/velocity-1.4-dev-20030301.jar</lib>
   <homepage>http://jakarta.apache.org/velocity/</homepage>
  </file>
@@ -556,7 +556,7 @@
  <file>
   <title>XML DB APIs</title>
   <description>Database tailored for the storage of XML data.</description>
-  <used-by>XML:DB source(xmldb block)</used-by>
+  <used-by>XML:DB source (xmldb block)</used-by>
   <lib>xmldb/lib/xmldb-api-20011111.jar</lib>
   <homepage>http://www.xmldb.org/</homepage>
  </file>
@@ -588,7 +588,7 @@
  <file>
   <title>Spark</title>
   <description>Spark is XML2SWF and SWF2XML converter</description>
-  <used-by>SWF Serializer(swf block)</used-by>
+  <used-by>SWF Serializer (swf block)</used-by>
   <lib>swf/lib/spark.jar</lib>
   <homepage>http://www.tivano.de/software/spark/</homepage>
  </file>
