@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.44 2000-03-23 12:00:43 stefano Exp $
+  $Id: changes.xml,v 1.45 2000-03-25 12:42:26 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Michael French" due-to-email="mfrench@zycor.lgc.com">
+   Patched problem with empty string and the LDAPProcessor.
+  </action>
   <action dev="SM" type="update">
    Updated to Xalan 1.0 (finally!).
   </action>
