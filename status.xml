@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.389 2004/07/08 10:11:38 upayavira Exp $:-->
+<!-- CVS $Id: status.xml,v 1.390 2004/07/10 09:06:18 unico Exp $:-->
 
 <status>
  <developers>
@@ -203,7 +203,19 @@
 
 
   <changes>
- <release version="@version@" date="@date@">
+  <release version="@version@" date="@date@">
+   <action dev="UH" type="add">
+     Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
+     This component replaces the JMSConnection component which only supported 
+     publish/subscribe messaging and which mixed some concerns. Two abstract classes: 
+     AbstractMessageListener and AbstractMessagePublisher should be used as basis for
+     custom publish/subscribe components.
+   </action>
+   <action dev="UH" type="add">
+     Still in the scratchpad area at the time of this writing, added a 
+     CachedSource proxy subclass for Sources that implement TraversableSource and
+     InspectableSource (for instance WebDAVSource).
+   </action>
    <action dev="UV" type="add">
      Added a NekoHTMLGenerator to HTML block. This is a simpler HTML parser than
      JTidy, which preserves more of the original HTML, primarily just balancing
@@ -211,7 +223,7 @@
    </action>
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
     added support for stripping root elements in the CIncludeTransformer
-   <action>
+   </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
      current sitemap even if you are in a sub sitemap. Added an abstract request
