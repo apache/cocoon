@@ -594,7 +594,7 @@ public class ScriptableWidget extends ScriptableObject {
                     Scriptable thisObj = scope;
                     Context cx = Context.getCurrentContext();
                     args[0] = vce.getOldValue();
-                    args[0] = vce.getNewValue();
+                    args[1] = vce.getNewValue();
                     fun.call(cx, scope, thisObj, args);
                 } catch (Exception exc) {
                     throw Context.reportRuntimeError(exc.getMessage());
