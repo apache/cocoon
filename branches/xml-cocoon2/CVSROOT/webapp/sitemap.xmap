@@ -239,10 +239,6 @@
      <map:serialize/>
    </map:match>
 
-   <map:match pattern="forms/*/process">
-     <map:generate type="serverpages" src="docs/samples/forms/process-{1}.xsp"/>
-   </map:match>
-
    <!-- ========================= Server ================================ -->
    <map:match pattern="generror">
     <map:generate src="docs/samples/error-giving-page.xml"/>
