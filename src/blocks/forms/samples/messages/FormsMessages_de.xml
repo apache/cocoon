@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in Woody messages. -->
+<catalogue xml:lang="de">
+  <message key="general.field-required">Dieses Feld muss aufgefüllt werden.</message>
+
+  <message key="datatype.conversion-failed">Keine gültige {0}.</message>
+  <message key="datatype.long">natürliche Zahl</message>
+  <message key="datatype.date">Datum</message>
+
+  <message key="validation.string.exact-length">Bitte geben Sie genau {0} Zeichen ein.</message>
+  <message key="validation.string.range-length">Bitte geben Sie zwischen {0} und {1} Zeichen ein.</message>
+  <message key="validation.string.min-length">Bitte geben Sie mindestens {0} Zeichen ein.</message>
+  <message key="validation.string.max-length">Bitte geben Sie höchstens {0} Zeichen ein.</message>
+  <message key="validation.string.regexp">Die Eingabe entspricht nicht dem regulären Ausdruck: {0}</message>
+
+  <message key="validation.string.invalidemail">Dieses Feld enthält keine gültige Email Adresse</message>
+
+  <message key="validation.array.exact-valuecount">Es müssen genau {0} Objekt(e) selektiert sein.</message>
+  <message key="validation.array.range-valuecount">Es müssen mindestens {0} Objekt(e)  und höchstens {1} Objekt(e) selektiert werden.</message>
+  <message key="validation.array.min-valuecount">Es müssen mindestens {0} Objekt(e) selektiert sein.</message>
+  <message key="validation.array.max-valuecount">Es dürfen höchstens {0} Objekt(e) selektiert werden.</message>
+
+  <message key="multivaluefield.conversionfailed">Eines der selektierten Objekte ist vom falschen Typ.</message>
+
+  <message key="validation.numeric.range">Die Zahl sollte aus dem Bereich {0} und {1} sein.</message>
+  <message key="validation.numeric.min">Die Zahl sollte grösser oder gleich {0} sein.</message>
+  <message key="validation.numeric.max">Die Zahl sollte kleiner oder gleich {0} sein.</message>
+
+  <message key="validation.mod10">Modulo 10 Test gescheitert.</message>
+
+
+  <message key="aggregatedfield.split-failed">Der Inhalt des Feldes entspricht nicht dem regul. Ausdruck: {0}</message>
+  <message key="upload.invalid-type">Falscher Inhaltstyp.</message>
+</catalogue>
