@@ -30,7 +30,6 @@
 
    <map:action name="auth-protect" logger="sitemap.action.auth-protect" 
                src="org.apache.cocoon.webapps.authentication.acting.AuthAction"/>
-
    <map:action name="auth-login" logger="sitemap.action.auth-login"
                src="org.apache.cocoon.webapps.authentication.acting.LoginAction"/>
    <map:action name="auth-logout" logger="sitemap.action.auth-logout"
@@ -38,7 +37,6 @@
    <map:action name="auth-loggedIn" logger="sitemap.action.auth-loggedIn"
                src="org.apache.cocoon.webapps.authentication.acting.LoggedInAction"/>
   </map:actions>
-
  </map:components>
 
 <!-- =========================== Views =================================== -->
@@ -99,11 +97,9 @@
 
    <map:match pattern="authenticate">
     <map:generate src="cocoon:/principallist"/>
-
-	  <map:transform type="xslt" src="principal2auth.xsl"> 
+    <map:transform type="xslt" src="principal2auth.xsl"> 
      <map:parameter name="use-request-parameters" value="true"/>
     </map:transform>
-
     <map:serialize type="xml"/>
    </map:match>
 
@@ -117,7 +113,6 @@
      <map:parameter name="locks" value="true"/>
      <map:parameter name="depth" value="1"/>
     </map:generate>
-
     <map:serialize type="xml"/>
    </map:match>
   </map:pipeline>
@@ -133,9 +128,11 @@
     <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
      <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
+    <!--
     <map:transform src="redirect4login.xsl">
      <map:parameter name="destination" value="{request-param:resource}"/>
     </map:transform>
+    -->
     <map:serialize/>
    </map:match>
 
@@ -151,9 +148,11 @@
     <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
      <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
+    <!--
     <map:transform src="redirect4login.xsl">
      <map:parameter name="destination" value="{request-param:resource}"/>
     </map:transform>
+    -->
     <map:serialize/>
    </map:match>
 
@@ -184,6 +183,7 @@
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
       <map:transform src="description2html4content.xsl">
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -199,7 +199,9 @@
       </map:act>
 
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
-      <map:transform src="description2html4properties.xsl"/>
+      <map:transform src="description2html4properties.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
@@ -217,7 +219,9 @@
        <map:part src="cocoon:/principallist"/>
       </map:aggregate>
 
-      <map:transform src="description2html4permissions.xsl"/>
+      <map:transform src="description2html4permissions.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
@@ -231,7 +235,9 @@
       </map:act>
 
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
-      <map:transform src="description2html4locks.xsl"/>
+      <map:transform src="description2html4locks.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
@@ -254,7 +260,9 @@
        <map:parameter name="principalprovider" value="slide"/>
        <map:parameter name="principalcaller" value="{../ID}"/>
       </map:generate>
-      <map:transform src="principal2html4users.xsl"/>
+      <map:transform src="principal2html4users.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>

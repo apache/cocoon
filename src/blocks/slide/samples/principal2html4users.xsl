@@ -2,17 +2,18 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pl="http://apache.org/cocoon/principal/1.0" version="1.0">
 
   <xsl:output indent="yes"/>
+  <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="/cocoon/samples/slide/users/"/>
-        <tab title="content" href="/cocoon/samples/slide/content/"/>
-        <tab title="properties" href="/cocoon/samples/slide/properties/"/>
-        <tab title="permissions" href="/cocoon/samples/slide/permissions/"/>
-        <tab title="locks" href="/cocoon/samples/slide/locks/"/>
-        <tab title="logout" href="/cocoon/samples/slide/logout.html"/>
+        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
+        <tab title="content" href="{$contextPath}/samples/slide/content/"/>
+        <tab title="properties" href="{$contextPath}/samples/slide/properties/"/>
+        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/"/>
+        <tab title="locks" href="{$contextPath}/samples/slide/locks/"/>
+        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
       </header>
       <body>
         <row>

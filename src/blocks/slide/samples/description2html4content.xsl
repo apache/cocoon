@@ -2,19 +2,19 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:source="http://apache.org/cocoon/description/2.0" xmlns:dav="DAV:" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0">
 
   <xsl:output indent="yes"/>
-
   <xsl:param name="cocoon-source-principal">guest</xsl:param>
+  <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="/cocoon/samples/slide/users/"/>
-        <tab title="content" href="/cocoon/samples/slide/content/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="properties" href="/cocoon/samples/slide/properties/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="permissions" href="/cocoon/samples/slide/permissions/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="locks" href="/cocoon/samples/slide/locks/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="logout" href="/cocoon/samples/slide/logout.html"/>
+        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
+        <tab title="content" href="{$contextPath}/samples/slide/content/{substring-after(source:source/@uri,'://')}"/>
+        <tab title="properties" href="{$contextPath}/samples/slide/properties/{substring-after(source:source/@uri,'://')}"/>
+        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/{substring-after(source:source/@uri,'://')}"/>
+        <tab title="locks" href="{$contextPath}/samples/slide/locks/{substring-after(source:source/@uri,'://')}"/>
+        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
       </header>
       <body>
         <row>
@@ -30,7 +30,7 @@
         <xsl:if test="@parent">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="/cocoon/samples/slide/content/{substring-after(@parent,'://')}">Back</a>
+              <a href="{$contextPath}/samples/slide/content/{substring-after(@parent,'://')}">Back</a>
             </td>
           </tr>
         </xsl:if>
@@ -43,7 +43,7 @@
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="/cocoon/samples/slide/content/{substring-after(@uri,'://')}">
+                <a href="{$contextPath}/samples/slide/content/{substring-after(@uri,'://')}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -75,7 +75,7 @@
               <xsl:for-each select="source:children/source:source">
                 <tr>
                   <td align="left">&#xA0;&#xA0;
-                   <a href="/cocoon/samples/slide/content/{substring-after(@uri,'://')}"><xsl:value-of select="@name"/></a>
+                   <a href="{$contextPath}/samples/slide/content/{substring-after(@uri,'://')}"><xsl:value-of select="@name"/></a>
                   </td>
                   <td align="left">
                     <xsl:value-of select="@mime-type"/>
@@ -122,10 +122,10 @@
           </table>
         </xsl:when>
         <xsl:when test="@mime-type='image/gif'">
-          <img src="/cocoon/samples/slide/view/{substring-after(@uri,'://')}"/>
+          <img src="{$contextPath}/samples/slide/view/{substring-after(@uri,'://')}"/>
         </xsl:when>
         <xsl:when test="@mime-type='image/jpeg'">
-          <img src="/cocoon/samples/slide/view/{substring-after(@uri,'://')}"/>
+          <img src="{$contextPath}/samples/slide/view/{substring-after(@uri,'://')}"/>
         </xsl:when>
         <xsl:when test="@mime-type='text/plain'">
           <pre>
