@@ -25,10 +25,15 @@
 
   <!-- Runs JUnit tests -->
   <target name="junit-tests" depends="compile-tests">
-    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+    <delete dir="${build.test.output}"/>
+    <mkdir dir="${build.test.output}"/>
+    <junit printsummary="yes" fork="yes">
+      <!--jvmarg value="-Xdebug"/>
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"/-->
       <classpath refid="test.classpath"/>
-      <formatter type="plain" usefile="no" />
-      <batchtest>
+      <formatter type="plain"/>
+      <formatter type="xml"/>
+      <batchtest todir="${build.test.output}">
         <fileset dir="${build.test}">
           <include name="**/*TestCase.class"/>
           <include name="**/*Test.class" />
@@ -39,6 +44,12 @@
         </fileset>
       </batchtest>
     </junit>
+    <junitreport todir="${build.test.output}">
+      <fileset dir="${build.test.output}">
+       <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${build.test.output}"/>
+    </junitreport>
   </target>
 
   <!-- Anteater tests  -->
