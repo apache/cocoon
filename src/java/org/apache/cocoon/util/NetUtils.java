@@ -19,22 +19,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.StringTokenizer;
 
-import org.apache.excalibur.source.SourceParameters;
 import org.apache.cocoon.environment.Request;
 import org.apache.commons.lang.StringUtils;
+import org.apache.excalibur.source.SourceParameters;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.13 2004/04/29 00:20:53 joerg Exp $
+ * @version CVS $Id: NetUtils.java,v 1.14 2004/04/29 20:10:04 ugo Exp $
  */
 
 public class NetUtils {
@@ -321,47 +322,37 @@ public class NetUtils {
      * @return The normalized uri
      */
     public static String normalize(String uri) {
-        String[] dirty = org.apache.cocoon.util.StringUtils.split(uri, "/");
-        int length = dirty.length;
-        String[] clean = new String[length];
-
-        boolean path;
-        boolean finished;
-        while (true) {
-            path = false;
-            finished = true;
-            for (int i = 0, j = 0; (i < length) && (dirty[i] != null); i++) {
-                if (".".equals(dirty[i])) {
-                    // ignore
-                } else if ("..".equals(dirty[i])) {
-                    clean[j++] = dirty[i];
-                    if (path) finished = false;
-                } else {
-                    if ((i+1 < length) && ("..".equals(dirty[i+1]))) {
-                        i++;
-                    } else {
-                        clean[j++] = dirty[i];
-                        path = true;
-                    }
+        if ("".equals(uri)) {
+            return uri;
+        }
+        boolean isAbs = (uri.charAt(0) == '/');
+        boolean isDir = (uri.charAt(uri.length() - 1) == '/');
+        StringTokenizer st = new StringTokenizer(uri, "/");
+        LinkedList clean = new LinkedList();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if ("..".equals(token)) {
+                if (! clean.isEmpty()) {
+                    clean.removeLast();
                 }
-            }
-            if (finished) {
-                break;
-            } else {
-                dirty = clean;
-                clean = new String[length];
+            } else if (! ".".equals(token) && ! "".equals(token)) {
+                clean.add(token);
             }
         }
-
-        StringBuffer b = new StringBuffer(uri.length());
-        
-        for (int i = 0; (i < length) && (clean[i] != null); i++) {
-            b.append(clean[i]);
-            if ((i+1 < length) && (clean[i+1] != null)) {
-                b.append("/");
-            } 
+        StringBuffer sb = new StringBuffer();
+        if (isAbs) {
+            sb.append('/');
         }
-        return b.toString();
+        for (Iterator it = clean.iterator() ; it.hasNext() ; ) {
+            sb.append(it.next());
+            if (it.hasNext()) {
+                sb.append('/');
+            }
+        }
+        if (isDir && sb.length() > 0 && sb.charAt(sb.length() - 1) != '/') {
+            sb.append('/');
+        }
+        return sb.toString();
     }
 
     /**
