@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLSerializer.java,v 1.3 2004/04/30 22:57:22 joerg Exp $
+ * @version CVS $Id: XHTMLSerializer.java,v 1.4 2004/04/30 22:58:34 joerg Exp $
  */
 public class XHTMLSerializer extends XMLSerializer {
 
@@ -127,7 +127,6 @@ public class XHTMLSerializer extends XMLSerializer {
                 this.closeElement(false);
             } else if (local.equalsIgnoreCase("head")) {
                 String loc = "meta";
-                String pre = namespaces.getPrefix(XHTML1_NAMESPACE);
                 String qua = namespaces.qualify(XHTML1_NAMESPACE, loc, "meta");
                 String nsp[][] = new String[0][0];
                 String att[][] = new String[2][ATTRIBUTE_LENGTH];
