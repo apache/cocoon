@@ -1,4 +1,13 @@
 /*
+ +-----------------------------------------------------------------------------+
+ |                                                                             |
+ |   This flowscript is based upon a unsupported object model. The flow        |
+ |   interpreter that supports it has been commented out in cocoon.xcon        |
+ |                                                                             | 
+ +-----------------------------------------------------------------------------+
+*/
+
+/*
  * Yeah, I know that hardwiring those is hacky as hell. But I'll try to
  * fix this with link translation later on.
  */
