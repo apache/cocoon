@@ -68,7 +68,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.5 2004/01/28 17:25:30 unico Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.6 2004/02/22 15:07:57 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -79,7 +79,6 @@ public class GenerateNode extends ViewablePipelineComponentNode
 implements ProcessingNode {
 
     private VariableResolver m_src;
-    private String m_generatorRole;
 
     public GenerateNode() {
     }
@@ -96,21 +95,12 @@ implements ProcessingNode {
         super.m_labels.add(ViewNode.FIRST_POS_LABEL);
     }
     
-    public void initialize() throws Exception {
-        super.initialize();
-        m_generatorRole = Generator.ROLE;
-        String hint = m_component.getComponentHint();
-        if (hint != null) {
-            m_generatorRole += "/" + hint;
-        }
-    }
-    
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
         
         Map objectModel = env.getObjectModel();
         
         context.getProcessingPipeline().setGenerator(
-            m_generatorRole,
+            super.m_component.getComponentHint(),
             m_src.resolve(context, objectModel),
             VariableResolver.buildParameters(super.m_parameters, context, objectModel),
             super.m_pipelineHints == null

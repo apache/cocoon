@@ -67,7 +67,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: TransformNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
+ * @version CVS $Id: TransformNode.java,v 1.4 2004/02/22 15:07:57 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -77,7 +77,6 @@ import org.apache.cocoon.transformation.Transformer;
 public class TransformNode extends ViewablePipelineComponentNode {
 
     private VariableResolver m_src;
-    private String m_transformerRole;
 
     public TransformNode() {
     }
@@ -93,21 +92,12 @@ public class TransformNode extends ViewablePipelineComponentNode {
         }
     }
     
-    public void initialize() throws Exception {
-        super.initialize();
-        m_transformerRole = Transformer.ROLE;
-        String hint = m_component.getComponentHint();
-        if (hint != null) {
-            m_transformerRole += "/" + hint;
-        }
-    }
-    
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
 
         Map objectModel = env.getObjectModel();
         
         context.getProcessingPipeline().addTransformer(
-            m_transformerRole,
+            m_component.getComponentHint(),
             m_src.resolve(context, objectModel),
             VariableResolver.buildParameters(super.m_parameters, context, objectModel),
             super.m_pipelineHints == null

@@ -76,22 +76,22 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.20 2004/01/05 13:54:37 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.21 2004/02/22 15:07:58 unico Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
 
-    /** The role name of the generator */
-    protected String generatorRole;
+    /** The generator hint */
+    protected String generatorHint;
 
-    /** The role names of the transfomrers */
-    protected ArrayList transformerRoles = new ArrayList();
+    /** The transformers hints */
+    protected ArrayList transformerHints = new ArrayList();
 
-    /** The role name of the serializer */
-    protected String serializerRole;
+    /** The serializer hint */
+    protected String serializerHint;
 
-    /** The role name of the reader */
-    protected String readerRole;
+    /** The reader hint */
+    protected String readerHint;
 
     /** The cached byte stream */
     protected byte[]           cachedResponse;
@@ -125,7 +125,7 @@ public abstract class AbstractCachingProcessingPipeline
      * Abstract methods defined in subclasses
      */
     protected abstract void cacheResults(Environment environment, OutputStream os)  throws Exception;
-    protected abstract ComponentCacheKey newComponentCacheKey(int type, String role,Serializable key);
+    protected abstract ComponentCacheKey newComponentCacheKey(int type, String hint,Serializable key);
     protected abstract void connectCachingPipeline(Environment   environment) throws ProcessingException;
 
     /**
@@ -149,38 +149,38 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Set the generator.
      */
-    public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
+    public void setGenerator (String hint, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
-        super.setGenerator(role, source, param, hintParam);
-        this.generatorRole = role;
+        super.setGenerator(hint, source, param, hintParam);
+        this.generatorHint = hint;
     }
 
     /**
      * Add a transformer.
      */
-    public void addTransformer (String role, String source, Parameters param, Parameters hintParam)
+    public void addTransformer (String hint, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
-        super.addTransformer(role, source, param, hintParam);
-        this.transformerRoles.add(role);
+        super.addTransformer(hint, source, param, hintParam);
+        this.transformerHints.add(hint);
     }
 
 
     /**
      * Set the serializer.
      */
-    public void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
+    public void setSerializer (String hint, String source, Parameters param, Parameters hintParam, String mimeType)
     throws ProcessingException {
-        super.setSerializer(role, source, param, hintParam, mimeType);
-        this.serializerRole = role;
+        super.setSerializer(hint, source, param, hintParam, mimeType);
+        this.serializerHint = hint;
     }
 
     /**
      * Set the Reader.
      */
-    public void setReader (String role, String source, Parameters param, String mimeType)
+    public void setReader (String hint, String source, Parameters param, String mimeType)
     throws ProcessingException {
-        super.setReader(role, source, param, mimeType);
-        this.readerRole = role;
+        super.setReader(hint, source, param, mimeType);
+        this.readerHint = hint;
     }
 
     /**
@@ -320,7 +320,7 @@ public abstract class AbstractCachingProcessingPipeline
         if (key != null) {
             this.toCacheKey = new PipelineCacheKey();
             this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Generator,
-                                       this.generatorRole,
+                                       this.generatorHint,
                                        key)
                               );
 
@@ -338,7 +338,7 @@ public abstract class AbstractCachingProcessingPipeline
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Transformer,
-                                                 (String)this.transformerRoles.get(this.firstNotCacheableTransformerIndex),
+                                                 (String)this.transformerHints.get(this.firstNotCacheableTransformerIndex),
                                                  key));
 
                     this.firstNotCacheableTransformerIndex++;
@@ -357,7 +357,7 @@ public abstract class AbstractCachingProcessingPipeline
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Serializer,
-                                                 this.serializerRole,
+                                                 this.serializerHint,
                                                  key)
                                                 );
                     this.cacheCompleteResponse = true;
@@ -683,7 +683,7 @@ public abstract class AbstractCachingProcessingPipeline
                 // response is cacheable, build the key
                 pcKey = new PipelineCacheKey();
                 pcKey.addKey(new ComponentCacheKey(ComponentCacheKey.ComponentType_Reader,
-                                                   this.readerRole,
+                                                   this.readerHint,
                                                    readerKey)
                             );
 
@@ -898,10 +898,10 @@ public abstract class AbstractCachingProcessingPipeline
      */
     public void recycle() {
 
-        this.generatorRole = null;
-        this.transformerRoles.clear();
-        this.serializerRole = null;
-        this.readerRole = null;
+        this.generatorHint = null;
+        this.transformerHints.clear();
+        this.serializerHint = null;
+        this.readerHint = null;
 
         this.fromCacheKey = null;
         this.cachedResponse = null;

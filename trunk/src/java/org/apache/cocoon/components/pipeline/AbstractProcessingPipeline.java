@@ -89,7 +89,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.31 2004/02/13 16:03:14 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.32 2004/02/22 15:07:58 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -213,26 +213,27 @@ public abstract class AbstractProcessingPipeline
      * from the latest <code>ComponentManager</code> given by <code>compose()</code>
      * or <code>recompose()</code>.
      *
-     * @param role the generator role in the component manager.
+     * @param hint the generator hint in the component manager.
      * @param source the source where to produce XML from, or <code>null</code> if no
      *        source is given.
      * @param param the parameters for the generator.
      * @throws ProcessingException if the generator couldn't be obtained.
      */
-    public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
+    public void setGenerator (String hint, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator != null) {
-            throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
+            throw new ProcessingException ("Generator already set. Cannot set generator '" + hint +
                 "' at " + getLocation(param));
         }
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. Cannot set generator '" + role +
+            throw new ProcessingException ("Reader already set. Cannot set generator '" + hint +
                 "' at " + getLocation(param));
         }
         try {
+            String role = hint == null ? Generator.ROLE : Generator.ROLE + "/" + hint;
             this.generator = (Generator) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator selector failed at " +getLocation(param), ce);
+            throw new ProcessingException("Lookup of generator failed at " + getLocation(param), ce);
         }
         this.generatorSource = source;
         this.generatorParam = param;
@@ -244,27 +245,28 @@ public abstract class AbstractProcessingPipeline
      * from the latest <code>ComponentManager</code> given by <code>compose()</code>
      * or <code>recompose()</code>.
      *
-     * @param role the transformer role in the component manager.
+     * @param hint the transformer hint in the component manager.
      * @param source the source used to setup the transformer (e.g. XSL file), or
      *        <code>null</code> if no source is given.
      * @param param the parameters for the transfomer.
      * @throws ProcessingException if the generator couldn't be obtained.
      */
-    public void addTransformer (String role, String source, Parameters param, Parameters hintParam)
+    public void addTransformer (String hint, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot add transformer '" + role +
+            throw new ProcessingException ("Reader already set. Cannot add transformer '" + hint +
                 "' at " + getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before adding transformer '" + role +
+            throw new ProcessingException ("Must set a generator before adding transformer '" + hint +
                 "' at " + getLocation(param));   
         }
         try {
+            String role = hint == null ? Transformer.ROLE : Transformer.ROLE + "/" + hint;
             this.transformers.add(newManager.lookup(role));
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
+            throw new ProcessingException("Lookup of transformer '" + hint + "' failed at " + getLocation(param), ce);
         }
         this.transformerSources.add(source);
         this.transformerParams.add(param);
@@ -274,27 +276,28 @@ public abstract class AbstractProcessingPipeline
      * Set the serializer for this pipeline
      * @param mimeType Can be null
      */
-    public void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
+    public void setSerializer (String hint, String source, Parameters param, Parameters hintParam, String mimeType)
     throws ProcessingException {
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
-            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
+            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + hint +
                 "' at " + getLocation(param));
         }
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot set serializer '" + role +
+            throw new ProcessingException ("Reader already set. Cannot set serializer '" + hint +
                 "' at " + getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before setting serializer '" + role +
+            throw new ProcessingException ("Must set a generator before setting serializer '" + hint +
                 "' at " + getLocation(param));
         }
 
         try {
+            String role = hint == null ? Serializer.ROLE : Serializer.ROLE + "/" + hint;
             this.serializer = (Serializer) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
+            throw new ProcessingException("Lookup of serializer '" + hint + "' failed at " + getLocation(param), ce);
         }
         this.serializerSource = source;
         this.serializerParam = param;
@@ -306,23 +309,24 @@ public abstract class AbstractProcessingPipeline
      * Set the reader for this pipeline
      * @param mimeType Can be null
      */
-    public void setReader (String role, String source, Parameters param, String mimeType)
+    public void setReader (String hint, String source, Parameters param, String mimeType)
     throws ProcessingException {
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot set reader '" + role +
+            throw new ProcessingException ("Reader already set. Cannot set reader '" + hint +
                 "' at " + getLocation(param));
         }
         if (this.generator != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Generator already set. Cannot use reader '" + role +
+            throw new ProcessingException ("Generator already set. Cannot use reader '" + hint +
                 "' at " + getLocation(param));
         }
 
         try {
+            String role = hint == null ? Reader.ROLE : Reader.ROLE + "/" + hint;
             this.reader = (Reader) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of reader '"+role+"' failed at " + getLocation(param), ce);
+            throw new ProcessingException("Lookup of reader '" + hint + "' failed at " + getLocation(param), ce);
         }
         this.readerSource = source;
         this.readerParam = param;

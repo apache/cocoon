@@ -67,7 +67,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ReadNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
+ * @version CVS $Id: ReadNode.java,v 1.4 2004/02/22 15:07:57 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -80,7 +80,6 @@ public class ReadNode extends AbstractPipelineComponentNode implements Processin
     private VariableResolver m_src;
     private VariableResolver m_mimeType;
     private int m_statusCode;
-    private String m_readerLookupKey;
 
     public ReadNode() {
     }
@@ -98,11 +97,6 @@ public class ReadNode extends AbstractPipelineComponentNode implements Processin
         }
         m_statusCode = config.getAttributeAsInteger("status-code",-1);
         m_type = config.getAttribute("type",null);
-        
-        m_readerLookupKey = Reader.ROLE;
-        if (m_type != null) {
-            m_readerLookupKey += "/" + m_type;
-        }
     }
 
     public final boolean invoke(Environment env,  InvokeContext context) throws Exception {
@@ -118,7 +112,7 @@ public class ReadNode extends AbstractPipelineComponentNode implements Processin
         }
         
         pipeline.setReader(
-            m_readerLookupKey,
+            m_type,
             m_src.resolve(context, objectModel),
             VariableResolver.buildParameters(m_parameters, context, objectModel),
             mimeType
