@@ -21,7 +21,7 @@ To get it running add these components to the cocoon.xconf:
         <trigger name="test"
                  target="org.apache.avalon.cornerstone.services.scheduler.Target/test">
             <timed type="periodic">
-                <period>480000</period> <!-- ms, e.g. 8 minutes --
+                <period>480000</period> <!-- ms, e.g. 8 minutes -->
             </timed>
         </trigger>
     </triggers>
