@@ -58,6 +58,15 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.ServletConfig;
 
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.pluto.factory.PortletObjectAccess;
 import org.apache.pluto.invoker.PortletInvoker;
@@ -68,19 +77,59 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LocalPortletInvokerImpl.java,v 1.1 2004/01/27 08:05:35 cziegeler Exp $
+ * @version CVS $Id: LocalPortletInvokerImpl.java,v 1.2 2004/01/27 09:56:38 cziegeler Exp $
  */
-public class LocalPortletInvokerImpl 
-implements PortletInvoker {
+public class LocalPortletInvokerImpl
+extends AbstractLogEnabled
+implements PortletInvoker, Contextualizable, Serviceable, Initializable {
     
     /** servlet configuration */
     protected final ServletConfig servletConfig;
+
     /** The portlet definition */
     protected final PortletDefinition portletDefinition;
 
     /** The portlet */
     protected Portlet portlet;
     
+    /** The avalon context */
+    protected Context context;
+    
+    /** The service manager */
+    protected ServiceManager manager;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        if (this.portlet != null) {
+            try {
+                ContainerUtil.enableLogging(this.portlet, this.getLogger());
+                ContainerUtil.contextualize(this.portlet, this.context);
+                ContainerUtil.service(this.portlet, this.manager);
+                ContainerUtil.initialize(this.portlet);
+            } catch (Exception ignore) {
+                // we ignore the exception here and throw later on a portlet exception
+                this.getLogger().warn("Unable to initialize local portlet invoker.", ignore);
+                this.portlet = null;
+            }
+        }
+    }
+
     /**
      * Constructor
      */
@@ -94,6 +143,7 @@ implements PortletInvoker {
             this.portlet = (Portlet)ClassUtils.newInstance(clazzName);
         } catch (Exception ignore) {
             // we ignore the exception here and throw later on a portlet exception
+            this.getLogger().warn("Unable to initialize local portlet invoker.", ignore);
         }
     }
 

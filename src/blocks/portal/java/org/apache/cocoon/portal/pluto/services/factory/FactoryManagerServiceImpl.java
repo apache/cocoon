@@ -65,9 +65,14 @@ import javax.servlet.ServletConfig;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.portal.pluto.factory.ControllerFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.ObjectIDFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.PortletInvokerFactoryImpl;
@@ -100,20 +105,36 @@ import org.apache.pluto.util.impl.NamespaceMapperFactoryImpl;
  * @see Factory
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.3 2004/01/27 08:05:35 cziegeler Exp $
+ * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.4 2004/01/27 09:56:51 cziegeler Exp $
  */
 public class FactoryManagerServiceImpl 
-implements FactoryManagerService, Initializable, Contextualizable, Disposable {
+extends AbstractLogEnabled
+implements FactoryManagerService, Initializable, Contextualizable, Serviceable, Disposable {
 
+    /** The servlet configuration */
     protected ServletConfig servletConfig;
+    
+    /** The avalon context */
+    protected Context context;
+    
+    /** The service manager */
+    protected ServiceManager manager;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
+        this.context = context;
         this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
@@ -153,9 +174,14 @@ implements FactoryManagerService, Initializable, Contextualizable, Disposable {
             Class factoryImpl = Class.forName (factoryImplName);
             Factory factory = (Factory) factoryImpl.newInstance ();
 
+            ContainerUtil.enableLogging(factory, this.getLogger());
+            ContainerUtil.contextualize(factory, this.context);
+            ContainerUtil.service(factory, this.manager);
+            ContainerUtil.initialize(factory);
+            
             factory.init(this.servletConfig, new HashMap());
 
-            factoryMap.put (factoryInterface, factory);
+            factoryMap.put (factoryInterface.getName(), factory);
 
             // build up list in reverse order for later destruction
             factoryList.add (0, factory);
@@ -195,7 +221,7 @@ implements FactoryManagerService, Initializable, Contextualizable, Disposable {
     public Factory getFactory (Class theClass) {
         // at this state the services map is read-only,
         // therefore we can go without synchronization
-        return ((Factory) factoryMap.get (theClass));
+        return ((Factory) factoryMap.get (theClass.getName()));
     }
 
     private Map  factoryMap  = new HashMap();

@@ -47,6 +47,8 @@ package org.apache.cocoon.portal.pluto.factory;
 
 import java.util.Map;
 import javax.servlet.ServletConfig;
+
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.pluto.factory.Factory;
 
 
@@ -55,9 +57,10 @@ import org.apache.pluto.factory.Factory;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractFactory.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: AbstractFactory.java,v 1.2 2004/01/27 09:56:37 cziegeler Exp $
  */
 public abstract class AbstractFactory 
+extends AbstractLogEnabled
 implements Factory {
 
     /** The servlet config */
