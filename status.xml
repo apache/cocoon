@@ -202,6 +202,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="all" type="update">
+    Make Cocoon compilable and buildable using JDK 5.0.
+   </action>
+   <action dev="CZ" type="update">
+    Remove scratchpad block - the scratchpad area is only available in trunk.
+   </action>
    <action dev="AG" type="update">
      Deprecated Pizza compiler support in XSP. To be removed in Cocoon 2.2.
    </action>
@@ -593,7 +599,7 @@
      sources in the IncludeTransformer.
    </action>
    <action dev="AG" type="update">
-     Updated commons-lang to 2.0-20041007T2305. Now cocoon compiles in java 1.5.
+     Updated commons-lang to 2.0-20041007T2305.
    </action>
    <action dev="AG" type="update">
      Updated jdt-core to 3.0.1.
