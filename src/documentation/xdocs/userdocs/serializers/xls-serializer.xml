@@ -166,10 +166,9 @@
                     <code>gmr:Content</code> - Defines the start of the value contained
                     in the cell. This is obsolete as of Gnumeric 1.03. It's not
                     recommended to use it, because it may not be supported in future
-                    versions. In the release 1.5.1 I used I didn't use
-                    <code>gmr:Content</code>, but I had to specify '10' as
-                    <code>ValueType</code> of empty cells. Otherwise I got strange
-                    output.
+                    versions. With POI release 1.5.1 I didn't use <code>gmr:Content</code>,
+                    but I had to specify '10' as <code>ValueType</code> on empty cells.
+                    Otherwise I got strange output.
                 </li>
                 <li>
                     <code>gmr:Styles</code> - Required if you want to use styles.
