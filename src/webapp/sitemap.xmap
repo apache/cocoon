@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.22 2003/06/21 14:22:08 jefft Exp $
+    | CVS $Id: sitemap.xmap,v 1.23 2003/06/27 15:10:02 upayavira Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -557,6 +557,7 @@
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="pageTitle" value="Resource not found"/>
           </map:transform>
+          <map:serialize status-code="404"/>
         </map:when>
 
         <map:when test="invalid-continuation">
@@ -564,6 +565,7 @@
           <map:transform src="welcome.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
           </map:transform>
+          <map:serialize status-code="404"/>
         </map:when>
 
         <map:otherwise>
@@ -571,10 +573,10 @@
           <map:transform src="stylesheets/system/error2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
           </map:transform>
+          <map:serialize status-code="500"/>
         </map:otherwise>
       </map:select>
 
-      <map:serialize/>
     </map:handle-errors>
 
   </map:pipeline>
