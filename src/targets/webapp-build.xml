@@ -97,7 +97,7 @@
     <!-- patch the welcome page to tell we have idldocs to show -->
     <xpatch file="${build.webapp}/welcome.xml"
             srcdir="${idl}" 
-            extension="**/*.xwelcome"/>
+            includes="**/*.xwelcome"/>
   </target>
   
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
