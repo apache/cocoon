@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-01-22 21:56:34 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-01 21:16:48 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe, Loggable
@@ -145,22 +145,6 @@ public class ProgramGeneratorImpl
       this.languageSelector.select(programmingLanguageName);
 
     programmingLanguage.setLanguageName(programmingLanguageName);
-
-    if (markupLanguage instanceof Loggable) {
-        ((Loggable) markupLanguage).setLogger(this.log);
-    }
-
-    if (markupLanguage instanceof Composer) {
-        ((Composer) markupLanguage).compose(this.manager);
-    }
-
-    if (programmingLanguage instanceof Loggable) {
-       ((Loggable) programmingLanguage).setLogger(this.log);
-    }
-
-    if (programmingLanguage instanceof Composer) {
-        ((Composer) programmingLanguage).compose(this.manager);
-    }
 
     // Create filesystem store
     FilesystemStore repository = new FilesystemStore(this.workDir);
