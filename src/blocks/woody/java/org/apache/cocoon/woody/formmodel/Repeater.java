@@ -50,14 +50,17 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.*;
 
 /**
  * A repeater is a widget that repeats a number of other widgets.
@@ -70,7 +73,7 @@ import java.util.*;
  * <p>Using the methods {@link #getSize} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.18 2004/02/11 10:43:30 antonio Exp $
+ * @version $Id: Repeater.java,v 1.19 2004/02/12 07:32:29 antonio Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;
