@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.332 2004/05/24 09:56:53 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.333 2004/05/24 11:04:54 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -211,8 +211,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="NN" type="fix">
-     Dummy placeholder
+   <action dev="CZ" type="fix">
+     Change the mime-type setting of a reader. For more information, see
+     <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.
    </action>
  </release>
  <release version="2.1.5" date="May 24 2004">
