@@ -53,7 +53,7 @@
  * woody.js in the future.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.4 2003/12/23 11:06:45 mpo Exp $
+ * @version CVS $Id: woody2.js,v 1.5 2004/01/17 14:55:17 vgritsenko Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -141,11 +141,11 @@ Form.prototype.showForm = function(uri, bizData) {
         var formContext = 
             Packages.org.apache.cocoon.woody.flow.javascript.WoodyFlowHelper.getFormContext(cocoon, this.locale);
 
-		// Prematurely add the bizData as a request attribute so that event listeners can use it
-		// (the same is done by cocoon.sendPage())
-		cocoon.request.setAttribute(Packages.org.apache.cocoon.components.flow.FlowHelper.CONTEXT_OBJECT, bizData);
+        // Prematurely add the bizData as a request attribute so that event listeners can use it
+        // (the same is done by cocoon.sendPage())
+        cocoon.request.setAttribute(Packages.org.apache.cocoon.components.flow.FlowHelper.CONTEXT_OBJECT, bizData);
 
-		finished = this.form.process(formContext);
+        finished = this.form.process(formContext);
         
         // Additional flow-level validation
         if (finished && this.form.isValid()) {
