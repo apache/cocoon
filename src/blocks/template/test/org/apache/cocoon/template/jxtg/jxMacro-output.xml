@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<root>
+  <m>
+    <macroTest a="foo">
+      <content b="3"/>
+    </macroTest>
+  </m>
+</root>

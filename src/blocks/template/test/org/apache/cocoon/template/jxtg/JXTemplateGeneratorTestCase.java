@@ -37,8 +37,6 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         super.setUp();
 
         // Make the FOM objects available to the view layer
-        FOM_JavaScriptFlowHelper.setFOM_Request(getObjectModel(),
-                                                new FOM_Cocoon.FOM_Request(getRequest()));
         FlowHelper.setContextObject(getObjectModel(), flowContext);
     }
 
@@ -87,6 +85,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
         getFlowContext().put("test", "bar");
+        assertEquals("HTTP/1.1", getRequest().getProtocol());
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 
@@ -103,6 +102,20 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         String[] array = {"one", "two", "three"};
         getFlowContext().put("test", array);
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+    }
+
+    public void testJXMacro() throws Exception {
+        String inputURI = docBase + "jxMacro.xml";
+        String outputURI = docBase + "jxMacro-output.xml";
+
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+    }
+
+    public void testJXDynamicMacro() throws Exception {
+        String inputURI = docBase + "jxDynamicMacro.xml";
+        String outputURI = docBase + "jxDynamicMacro-output.xml";
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 }
