@@ -112,4 +112,5 @@ public final class ContextHelper {
             throw new CascadingRuntimeException("Unable to get the service manager from the context.", ce);
         }        
     }
+
 }

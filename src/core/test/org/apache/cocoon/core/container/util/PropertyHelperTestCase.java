@@ -31,11 +31,11 @@ public class PropertyHelperTestCase extends TestCase {
         final String testC = "and this is the } end token";
         final String testD = "${this.does.not.exists}";
         // some tests for not! replacing
-        assertEquals(PropertyHelper.replace(testA), testA);
-        assertEquals(PropertyHelper.replace(testB), testB);
-        assertEquals(PropertyHelper.replace(testC), testC);
-        assertEquals(PropertyHelper.replace(testD), testD);
+        assertEquals(PropertyHelper.replace(testA, null), testA);
+        assertEquals(PropertyHelper.replace(testB, null), testB);
+        assertEquals(PropertyHelper.replace(testC, null), testC);
+        assertEquals(PropertyHelper.replace(testD, null), testD);
         // and finally we have something to replace
-        assertEquals(PropertyHelper.replace("${java.home}"), System.getProperty("java.home"));
+        assertEquals(PropertyHelper.replace("${java.home}", null), System.getProperty("java.home"));
     }
 }

@@ -57,6 +57,11 @@ public class Settings {
     public static final boolean MANAGE_EXCEPTIONS = true;
 
     /**
+     * The list of properties used to configure Cocoon
+     */
+    protected List properties = new ArrayList();
+
+    /**
      * This parameter tells Cocoon to set the thread's context classloader to
      * its own classloader. If you experience strange classloader issues,
      * try setting this parameter to "true".
@@ -252,7 +257,7 @@ public class Settings {
                     key = key.substring("org.apache.cocoon.".length());
                     final String value = current.getValue().toString();
 
-                    if ( key.equals("init.classloader") ) { 
+                    if ( key.equals("init.classloader") ) {
                         this.initClassloader = BooleanUtils.toBoolean(value);
                     } else if ( key.equals("configuration") ) {
                         this.configuration = value;
@@ -300,6 +305,7 @@ public class Settings {
                     // TODO - force property, load classes, extra class path
                 }
             }
+            this.properties.add(props);
         }
     }
     
@@ -673,5 +679,75 @@ public class Settings {
                "- Log4J Configuration: " + this.log4jConfiguration + "\n" +
                "- Override Loglevel: " + this.overrideLogLevel + "\n";
 
+    }
+
+    public String getProperty(String name) {
+        return this.getProperty(name, null);
+    }
+
+    public String getProperty(String key, String defaultValue) {
+        if ( key == null ) {
+            return defaultValue;
+        }
+        String value = null;
+        if ( key.startsWith("org.apache.cocoon.") ) {
+            final String sKey = key.substring("org.apache.cocoon.".length());
+            if ( sKey.equals("init.classloader") ) {
+                value = String.valueOf(this.initClassloader);
+            } else if ( sKey.equals("configuration") ) {
+                value = this.configuration;
+            } else if ( sKey.equals("logging.configuration") ) {
+                value = this.loggingConfiguration;
+            } else if ( sKey.equals("logging.logger.access") ) {
+                value = this.accessLogger;
+            } else if ( sKey.equals("logging.logger.cocoon") ) {
+                value = this.cocoonLogger;
+            } else if ( sKey.equals("logging.bootstrap.level") ) {
+                value = this.bootstrapLogLevel;
+            } else if ( sKey.equals("logging.manager.class") ) {
+                value = this.loggerClassName;
+            } else if ( sKey.equals("logging.log4j.configuration") ) {
+                value = this.log4jConfiguration;
+            } else if ( sKey.equals("allow.reload") ) {
+                value = String.valueOf(this.allowReload);
+            } else if ( sKey.equals("uploads.enable") ) {
+                value = String.valueOf(this.enableUploads);
+            } else if ( sKey.equals("uploads.directory") ) {
+                value = this.uploadDirectory = value;
+            } else if ( sKey.equals("uploads.autosave") ) {
+                value = String.valueOf(this.autosaveUploads);
+            } else if ( sKey.equals("uploads.overwrite") ) {
+                value = this.overwriteUploads;
+            } else if ( sKey.equals("uploads.maxsize") ) {
+                value = String.valueOf(this.maxUploadSize);
+            } else if ( sKey.equals("cache.directory") ) {
+                value = this.cacheDirectory;
+            } else if ( sKey.equals("work.directory") ) {
+                value = this.workDirectory;
+            } else if ( sKey.equals("parentservicemanager") ) {
+                value = this.parentServiceManagerClassName;
+            } else if ( sKey.equals("showtime") ) {
+                value = String.valueOf(this.showTime);
+            } else if ( sKey.equals("hideshowtime") ) {
+                value = String.valueOf(this.hideShowTime);
+            } else if ( sKey.equals("manageexceptions") ) {
+                value = String.valueOf(this.manageExceptions);
+            } else if ( sKey.equals("formencoding") ) {
+                value = this.formEncoding;
+            } else if ( sKey.equals("override.loglevel") ) {
+                value = this.overrideLogLevel;
+            }
+        }
+
+        int i = 0;
+        while ( i < this.properties.size() && value == null ) {
+            final Properties p = (Properties)this.properties.get(i);
+            value = p.getProperty(key);
+            i++;
+        }
+        if ( value == null ) {
+            value = defaultValue;
+        }
+        return value;
     }
 }

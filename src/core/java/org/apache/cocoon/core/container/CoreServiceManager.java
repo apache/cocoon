@@ -44,6 +44,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.AliasComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
@@ -715,7 +717,8 @@ public class CoreServiceManager
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
-                    ConfigurationBuilder builder = new ConfigurationBuilder();
+                    final Settings settings = Core.getSettings(context);
+                    ConfigurationBuilder builder = new ConfigurationBuilder(settings);
                     includeConfig = builder.build(src.getInputStream(), uri);
                 } catch (ConfigurationException ce) {
                     throw ce;

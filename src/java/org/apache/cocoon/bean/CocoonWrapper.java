@@ -43,6 +43,8 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
@@ -158,6 +160,8 @@ public class CocoonWrapper {
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
             appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
             appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.context.toURL().toExternalForm());
+            // FIXME - add settings
+            appContext.put(Core.CONTEXT_SETTINGS, new Settings());
 
             loadClasses(classList);
 

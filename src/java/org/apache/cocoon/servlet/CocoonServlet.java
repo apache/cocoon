@@ -59,6 +59,7 @@ import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -230,6 +231,7 @@ public class CocoonServlet extends HttpServlet {
 
         // initialize settings
         this.settings = this.getSettings();
+        this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
         
         if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly
@@ -427,6 +429,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore this
             }
         }
 

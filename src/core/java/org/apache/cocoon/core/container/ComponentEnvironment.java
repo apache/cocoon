@@ -25,6 +25,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 
 /**
  * The component enviromnent contains all objects necessary to create
@@ -71,7 +73,8 @@ public class ComponentEnvironment {
         ComponentInfo ci = null;
         final InputStream is = this.classLoader.getResourceAsStream(bu.toString());
         if ( is != null ) {
-            final ConfigurationBuilder cb = new ConfigurationBuilder();
+            final Settings settings = Core.getSettings(this.context);
+            final ConfigurationBuilder cb = new ConfigurationBuilder(settings);
             final Configuration conf = cb.build(is);
             ci = new ComponentInfo();
             ci.fill(conf);
