@@ -55,34 +55,39 @@ public abstract class AbstractProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void register(CopletInstanceData coplet) {
+        // overwrite in subclass
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
      */
     public void register(Layout layout) {
+        // overwrite in subclass
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
+        // overwrite in subclass
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void unregister(CopletInstanceData coplet) {
+        // overwrite in subclass
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
      */
     public void unregister(Layout layout) {
+        // overwrite in subclass
     }
 
-    /**
-     * Change the default layout key for most functions
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#setDefaultLayoutKey(java.lang.String)
      */
     public void setDefaultLayoutKey(String layoutKey) {
         PortalService service = null;
@@ -101,8 +106,8 @@ public abstract class AbstractProfileManager
         }
     }
     
-    /**
-     * Get the default layout key
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getDefaultLayoutKey()
      */
     public String getDefaultLayoutKey() {
         PortalService service = null;
@@ -126,12 +131,14 @@ public abstract class AbstractProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#login()
      */
     public void login() {
+        // overwrite in subclass
     }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#logout()
      */
     public void logout() {
+        // overwrite in subclass
     }
 
     /* (non-Javadoc)
