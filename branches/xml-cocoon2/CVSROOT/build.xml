@@ -361,7 +361,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <copydir src="${lib.dir}"        dest="${dist.dir}/lib"/>
 
     <copydir src="." dest="${dist.dir}" includes="README, LICENSE, build.*, index.html" filtering="on"/>
-    <copydir src="${build.wap}"      dest="${dist.dir}/webapp"/>
+    <copydir src="${build.war}"      dest="${dist.dir}/webapp"/>
 
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.sh"  cr="remove"/>
