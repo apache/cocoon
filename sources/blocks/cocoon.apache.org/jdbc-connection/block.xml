@@ -1,0 +1,22 @@
+<interface xmlns="http://apache.org/cocoon/blocks/descriptor/1.0"
+           id="http://cocoon.apache.org/blocks/jdbc-connection/1.0">
+
+  <name>JDBC Connection Interface</name>
+
+  <description href="http://cocoon.apache.org/blocks/jdbc-connection">
+    The JDBC Connection Interface block defines a block providing
+    JDBC connections to wired blocks.
+  </description>
+
+  <license href="http://www.apache.org/licenses/LICENSE-2.0"
+           family="http://www.opensource.org/licenses/apache2.0.php">
+    Apache License, 2.0
+  </license>
+
+  <author href="http://www.vnunet.com/">Pier Fumagalli</author>
+
+  <exposes interface="java.sql.Connection"/>
+
+  <!-- No libraries -->
+
+</interface>
