@@ -36,6 +36,9 @@
                   <user><esql:get-string column="name"/></user>
                 </esql:row-results>
               </esql:results>
+              <esql:no-results>
+                <user>No employees</user>
+              </esql:no-results>
             </esql:execute-query>
           </esql:connection>
         </department>
