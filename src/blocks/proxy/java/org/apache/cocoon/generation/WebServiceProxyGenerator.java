@@ -105,8 +105,8 @@ import java.util.StringTokenizer;
  *
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
- * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.3 2003/09/04 09:38:37 cziegeler Exp $
+ * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2, 2002
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.4 2003/09/25 19:59:24 tony Exp $
  */
 public class WebServiceProxyGenerator extends ServiceableGenerator {
 
@@ -265,8 +265,8 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
      * Create one per client session. 
      */
     protected HttpClient getHttpClient() throws ProcessingException {
-    	URI uri = null;
-	String host = null;
+        URI uri = null;
+        String host = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(true);
         HttpClient httpClient = null;
