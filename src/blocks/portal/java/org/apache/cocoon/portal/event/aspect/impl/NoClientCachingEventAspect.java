@@ -30,7 +30,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: NoClientCachingEventAspect.java,v 1.1 2004/04/02 13:51:45 cziegeler Exp $
+ * @version CVS $Id: NoClientCachingEventAspect.java,v 1.2 2004/04/07 12:03:46 cziegeler Exp $
  */
 public class NoClientCachingEventAspect
 	extends AbstractLogEnabled
@@ -44,6 +44,7 @@ public class NoClientCachingEventAspect
 
         final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
+        response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
         

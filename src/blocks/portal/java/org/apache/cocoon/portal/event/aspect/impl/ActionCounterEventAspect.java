@@ -32,7 +32,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ActionCounterEventAspect.java,v 1.4 2004/03/16 10:21:39 cziegeler Exp $
+ * @version CVS $Id: ActionCounterEventAspect.java,v 1.5 2004/04/07 12:03:46 cziegeler Exp $
  */
 public class ActionCounterEventAspect
 	extends AbstractLogEnabled
@@ -83,6 +83,7 @@ public class ActionCounterEventAspect
         
         final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
+        response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
 	}
