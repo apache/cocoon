@@ -68,7 +68,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 25, 2002
- * @version CVS $Id: ContinueNode.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: ContinueNode.java,v 1.3 2003/10/24 13:36:40 vgritsenko Exp $
  */
 public class ContinueNode
         extends AbstractProcessingNode
@@ -118,9 +118,10 @@ public class ContinueNode
         List params = null;
 
         // Resolve parameters
-        if (this.parameters != null)
+        if (this.parameters != null) {
             params = CallFunctionNode.resolveList(this.parameters, this.manager,
                                                   context, env.getObjectModel());
+        }
 
         String contId = continuationId;
 

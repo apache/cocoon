@@ -79,7 +79,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.5 2003/08/12 15:48:02 sylvain Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.6 2003/10/24 13:36:40 vgritsenko Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
@@ -178,7 +178,7 @@ implements OutputComponentSelector, SitemapComponentSelector {
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setting up sitemap component selector for " +
-                role + " (role id = " + this.roleId + ")");
+                              role + " (role id = " + this.roleId + ")");
         }
 
         // Only matchers and serializers can have a MIME type
@@ -353,9 +353,3 @@ implements OutputComponentSelector, SitemapComponentSelector {
         this.parentSitemapSelector = null;
     }
 }
-
-
-
-
-
-
