@@ -26,6 +26,7 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -41,7 +42,7 @@ import java.util.Locale;
  * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version $Id: DynamicSelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version $Id: DynamicSelectionList.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;
@@ -139,10 +140,11 @@ public class DynamicSelectionList implements SelectionList {
                         // Empty (or null) value translates into the empty string
                         currentValueAsString = "";
                     } else {
-                        currentValue = convertor.convertFromString(unparsedValue, locale, fromFormatCache);
-                        if (currentValue == null) {
+                        ConversionResult conversionResult = convertor.convertFromString(unparsedValue, locale, fromFormatCache);
+                        if (!conversionResult.isSuccessful()) {
                             throw new SAXException("Could not interpret the following value: \"" + unparsedValue + "\".");
                         }
+                        currentValue = conversionResult.getResult();
                         currentValueAsString = datatype.getConvertor().convertToString(currentValue, locale, toFormatCache);
                     }
                     AttributesImpl attrs = new AttributesImpl();

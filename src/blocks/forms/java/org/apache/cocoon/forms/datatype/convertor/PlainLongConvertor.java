@@ -24,14 +24,14 @@ import java.util.Locale;
  * Convertor for java.lang.Longs that does not do any (Locale-dependent)
  * formatting. It simply uses String.valueOf() and Long.parseLong().
  *
- * @version CVS $Id: PlainLongConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: PlainLongConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class PlainLongConvertor implements Convertor {
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         try {
-            return new Long(Long.parseLong(value));
+            return new ConversionResult(new Long(Long.parseLong(value)));
         } catch (NumberFormatException e) {
-            return null;
+            return ConversionResult.create("long");
         }
     }
 

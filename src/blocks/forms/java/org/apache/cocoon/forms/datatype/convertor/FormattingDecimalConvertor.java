@@ -43,7 +43,7 @@ import java.math.BigInteger;
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDecimalConvertor.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: FormattingDecimalConvertor.java,v 1.4 2004/05/06 14:59:44 bruno Exp $
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;
@@ -66,7 +66,7 @@ public class FormattingDecimalConvertor implements Convertor {
         return NUMBER;
     }
 
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
         try {
             Number decimalValue = decimalFormat.parse(value);
@@ -81,11 +81,11 @@ public class FormattingDecimalConvertor implements Convertor {
             else if (decimalValue instanceof BigInteger)
                 decimalValue = new BigDecimal((BigInteger)decimalValue);
             else
-                return null;
+                return ConversionResult.create("decimal");
 
-            return decimalValue;
+            return new ConversionResult(decimalValue);
         } catch (ParseException e) {
-            return null;
+            return ConversionResult.create("decimal");
         }
     }
 

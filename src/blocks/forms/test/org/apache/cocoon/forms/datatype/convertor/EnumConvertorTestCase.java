@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 /**
  * Test case for the {@link EnumConvertor} class.
  * 
- * @version CVS $Id: EnumConvertorTestCase.java,v 1.2 2004/03/10 09:13:22 stephan Exp $
+ * @version CVS $Id: EnumConvertorTestCase.java,v 1.3 2004/05/06 14:59:45 bruno Exp $
  */
 public class EnumConvertorTestCase extends TestCase {
 
@@ -38,9 +38,9 @@ public class EnumConvertorTestCase extends TestCase {
      */
     public void testConvertFromString() {
         EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.forms.datatype.Sex");
-        Object sex = convertor.convertFromString
+        ConversionResult conversionResult = convertor.convertFromString
             (Sex.class.getName() + ".FEMALE", Locale.getDefault(), null);
-        assertSame("Returned sex must be FEMALE", Sex.FEMALE, sex);
+        assertSame("Returned sex must be FEMALE", Sex.FEMALE, conversionResult.getResult());
     }
     
     /**

@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -29,7 +30,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id: MultiValueJXPathBinding.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id: MultiValueJXPathBinding.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
@@ -76,7 +77,9 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
 
                 if (value != null && convertor != null) {
                     if (value instanceof String) {
-                        value = convertor.convertFromString((String)value, convertorLocale, null);
+                        ConversionResult conversionResult = convertor.convertFromString((String)value, convertorLocale, null);
+                        if (conversionResult.isSuccessful())
+                            value = conversionResult.getResult();
                     } else {
                         getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
                     }

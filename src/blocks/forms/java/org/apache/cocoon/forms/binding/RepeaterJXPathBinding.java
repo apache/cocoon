@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -33,7 +34,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.6 2004/04/23 23:32:26 joerg Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.7 2004/05/06 14:59:44 bruno Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -302,8 +303,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 Object value = rowContext.getValue(vBinding.getXPath());
                 if (value != null && vBinding.getConvertor() != null) {
                     if (value instanceof String) {
-                        value = vBinding.getConvertor().convertFromString(
+                        ConversionResult conversionResult = vBinding.getConvertor().convertFromString(
                                 (String)value, vBinding.getConvertorLocale(), null);
+                        if (conversionResult.isSuccessful())
+                            value = conversionResult.getResult();
                     } else {
                         if (getLogger().isWarnEnabled()) {
                             getLogger().warn("Convertor ignored on backend-value " +

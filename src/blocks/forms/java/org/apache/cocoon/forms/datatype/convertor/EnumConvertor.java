@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * typesafe enum</a> pattern.
  * 
  * @see org.apache.cocoon.forms.datatype.typeimpl.EnumType
- * @version CVS $Id: EnumConvertor.java,v 1.3 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: EnumConvertor.java,v 1.4 2004/05/06 14:59:44 bruno Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -54,7 +54,7 @@ public class EnumConvertor implements Convertor {
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.datatype.convertor.Convertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      */
-    public Object convertFromString(String value,
+    public ConversionResult convertFromString(String value,
 									Locale locale,
 									FormatCache formatCache) {
         try {
@@ -62,7 +62,7 @@ public class EnumConvertor implements Convertor {
             try {
                 Method method = getTypeClass().
                     getMethod("fromString", new Class[] { String.class, Locale.class});
-                return method.invoke(null, new Object[] { value, locale});
+                return new ConversionResult(method.invoke(null, new Object[] { value, locale}));
             } catch(NoSuchMethodException nsme) {
                 // fromString method was not found, try to convert
                 // the value to a field via reflection.
@@ -73,7 +73,7 @@ public class EnumConvertor implements Convertor {
                 }
                 Class clazz = getTypeClass();
                 Field field = clazz.getField(value);
-                return field.get(null);
+                return new ConversionResult(field.get(null));
             }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Got exception trying to convert " + value, e);

@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.SelectionList;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.util.I18nMessage;
@@ -44,7 +45,7 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id: MultiValueField.java,v 1.10 2004/05/06 14:59:44 bruno Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -77,8 +78,10 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             Object[] tempValues = new Object[enteredValues.length];
             for (int i = 0; i < enteredValues.length; i++) {
                 String param = enteredValues[i];
-                tempValues[i] = definition.getDatatype().convertFromString(param, formContext.getLocale());
-                if (tempValues[i] == null) {
+                ConversionResult conversionResult = definition.getDatatype().convertFromString(param, formContext.getLocale());
+                if (conversionResult.isSuccessful()) {
+                    tempValues[i] = conversionResult.getResult();
+                } else {
                     conversionFailed = true;
                     break;
                 }
@@ -98,7 +101,6 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else
             validationError = new ValidationError(new I18nMessage("multivaluefield.conversionfailed", Constants.I18N_CATALOGUE));
-
 
         return validationError == null ? super.validate() : false;
     }

@@ -28,7 +28,7 @@ import java.text.ParseException;
  * so see there for more information.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: FormattingIntegerConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: FormattingIntegerConvertor.java,v 1.2 2004/05/06 14:59:44 bruno Exp $
 */
 public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
 
@@ -36,16 +36,16 @@ public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
         super();
     }
 
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
         try {
             Number decimalValue = decimalFormat.parse(value);
             if (decimalValue instanceof Integer)
-                return decimalValue;
+                return new ConversionResult(decimalValue);
             else
-                return new Integer(decimalValue.intValue());
+                return new ConversionResult(new Integer(decimalValue.intValue()));
         } catch (ParseException e) {
-            return null;
+            return ConversionResult.create("integer");
         }
     }
 

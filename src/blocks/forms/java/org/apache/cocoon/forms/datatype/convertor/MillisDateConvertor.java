@@ -25,15 +25,15 @@ import java.util.Date;
  * A Convertor for Date objects which uses the number of milliseconds since
  * January 1, 1970, 00:00:00 GMT as string representation.
  *
- * @version CVS $Id: MillisDateConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: MillisDateConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class MillisDateConvertor implements Convertor {
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         try {
             long date = Long.parseLong(value);
-            return new Date(date);
+            return new ConversionResult(new Date(date));
         } catch (NumberFormatException e) {
-            return null;
+            return ConversionResult.create("date");
         }
     }
 

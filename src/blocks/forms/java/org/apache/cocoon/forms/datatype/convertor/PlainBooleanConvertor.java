@@ -23,11 +23,11 @@ import java.util.Locale;
 /**
  * Convertor for java.lang.Boolean's.
  *
- * @version CVS $Id: PlainBooleanConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: PlainBooleanConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class PlainBooleanConvertor implements Convertor {
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
-        return Boolean.valueOf(value);
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+        return new ConversionResult(Boolean.valueOf(value));
     }
 
     public String convertToString(Object value, Locale locale, Convertor.FormatCache formatCache) {

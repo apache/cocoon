@@ -25,14 +25,14 @@ import java.util.Locale;
  * formatting. It simply uses String.valueOf() and Long.parseLong().
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PlainIntegerConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $ 
+ * @version CVS $Id: PlainIntegerConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $ 
  */
 public class PlainIntegerConvertor implements Convertor {
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         try {
-            return new Integer(Integer.parseInt(value));
+            return new ConversionResult(new Integer(Integer.parseInt(value)));
         } catch (NumberFormatException e) {
-            return null;
+            return ConversionResult.create("integer");
         }
     }
 

@@ -24,11 +24,11 @@ import java.util.Locale;
  * Convertor that converts between strings and strings, in other words,
  * it does nothing.
  *
- * @version CVS $Id: DummyStringConvertor.java,v 1.2 2004/04/10 13:40:27 bruno Exp $
+ * @version CVS $Id: DummyStringConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
  */
 public class DummyStringConvertor implements Convertor {
-    public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
-        return value;
+    public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+        return new ConversionResult(value);
     }
 
     public String convertToString(Object value, Locale locale, Convertor.FormatCache formatCache) {
