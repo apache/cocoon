@@ -86,7 +86,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.27 2003/09/18 12:11:50 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.28 2003/09/19 09:09:43 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -169,6 +169,13 @@ public class CocoonBean extends CocoonWrapper {
         this.brokenLinkExtension = brokenLinkExtension;
     }
 
+    public boolean followLinks() {
+        return followLinks;
+    }
+    
+    public boolean confirmExtensions() {
+        return confirmExtension;
+    }
     /**
      * Adds a target for processing
      *
@@ -179,21 +186,26 @@ public class CocoonBean extends CocoonWrapper {
      * @throws IllegalArgumentException if destURI is missing
      */
     public void addTarget(
-        String type,
-        String root,
-        String sourceURI,
-        String destURI)
-        throws IllegalArgumentException {
+            String type,
+            String root,
+            String sourceURI,
+            String destURI)
+            throws IllegalArgumentException {
         Target target = new Target(type, root, sourceURI, destURI);
         target.setDefaultFilename(this.defaultFilename);
+        target.setFollowLinks(this.followLinks);
+        target.setConfirmExtension(this.confirmExtension);
+        target.setLogger(this.logger);
         targets.add(target);
-
     }
 
     public void addTarget(String type, String sourceURI, String destURI)
         throws IllegalArgumentException {
         Target target = new Target(type, sourceURI, destURI);
         target.setDefaultFilename(this.defaultFilename);
+        target.setFollowLinks(this.followLinks);
+        target.setConfirmExtension(this.confirmExtension);
+        target.setLogger(this.logger);
         targets.add(target);
     }
 
@@ -201,6 +213,9 @@ public class CocoonBean extends CocoonWrapper {
         throws IllegalArgumentException {
         Target target = new Target(sourceURI, destURI);
         target.setDefaultFilename(this.defaultFilename);
+        target.setFollowLinks(this.followLinks);
+        target.setConfirmExtension(this.confirmExtension);
+        target.setLogger(this.logger);
         targets.add(target);
     }
 
@@ -210,8 +225,36 @@ public class CocoonBean extends CocoonWrapper {
         while (i.hasNext()) {
             Target target = new Target((String) i.next(), destURI);
             target.setDefaultFilename(this.defaultFilename);
+            target.setFollowLinks(this.followLinks);
+            target.setConfirmExtension(this.confirmExtension);
+            target.setLogger(this.logger);
             targets.add(target);
         }
+    }
+
+    public void addTarget(
+        String type,
+        String root,
+        String sourceURI,
+        String destURI,
+        boolean followLinks,
+        boolean confirmExtension,
+        String logger)
+        throws IllegalArgumentException {
+        
+        Target target;
+        if (root == null && type == null) {
+            target = new Target(sourceURI, destURI);
+        } else if (root == null) {
+            target = new Target(type, sourceURI, destURI);
+        } else {
+            target = new Target(type, root, sourceURI, destURI);
+        }
+        target.setDefaultFilename(this.defaultFilename);
+        target.setFollowLinks(followLinks);
+        target.setConfirmExtension(confirmExtension);
+        target.setLogger(logger);
+        targets.add(target);
     }
 
     public void addExcludePattern(String pattern) {
@@ -406,7 +449,7 @@ public class CocoonBean extends CocoonWrapper {
         
         long startTimeMillis = System.currentTimeMillis();
 
-        if (confirmExtension) {
+        if (target.confirmExtensions()) {
             if (null == allTranslatedLinks.get(target.getSourceURI())) {
                 final String mimeType = getType(target.getDeparameterizedSourceURI(), target.getParameters());
                 target.setMimeType(mimeType);
@@ -424,7 +467,7 @@ public class CocoonBean extends CocoonWrapper {
         // Process links
         final HashMap translatedLinks = new HashMap();
         final List targets = new ArrayList();
-        if (followLinks && confirmExtension && isCrawlablePage(target)) {
+        if (target.followLinks() && target.confirmExtensions() && isCrawlablePage(target)) {
             final Iterator i =
                 this.getLinks(target.getDeparameterizedSourceURI(), target.getParameters()).iterator();
 
@@ -469,7 +512,7 @@ public class CocoonBean extends CocoonWrapper {
             DelayedOutputStream output = new DelayedOutputStream();
             try {
                 List gatheredLinks;
-                if (!confirmExtension && followLinks && isCrawlablePage(target)) {
+                if (!target.confirmExtensions() && target.followLinks() && isCrawlablePage(target)) {
                     gatheredLinks = new ArrayList();
                 } else {
                     gatheredLinks = null;
@@ -480,7 +523,7 @@ public class CocoonBean extends CocoonWrapper {
                         target.getDeparameterizedSourceURI(),
                         getLastModified(target),
                         target.getParameters(),
-                        confirmExtension ? translatedLinks : null,
+                        target.confirmExtensions() ? translatedLinks : null,
                         gatheredLinks,
                         output);
 
@@ -495,13 +538,12 @@ public class CocoonBean extends CocoonWrapper {
                         Target linkTarget = target.getDerivedTarget(linkURI);
 
                         if (linkTarget == null) {
-                            System.out.println("Skipping "+ linkURI);
-                            //@TODO@ Log/report skipped link
+                            pageSkipped(linkURI, "link does not share same root as parent");
                             continue;
                         }
 
                         if (!isIncluded(linkTarget.getSourceURI())) {
-                            //@TODO@ Log/report skipped link
+                            pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
                             continue;
                         }
                         targets.add(linkTarget);
