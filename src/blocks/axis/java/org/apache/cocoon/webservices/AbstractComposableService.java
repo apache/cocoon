@@ -17,9 +17,8 @@ package org.apache.cocoon.webservices;
 
 import javax.xml.rpc.ServiceException;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
 
 /**
@@ -40,10 +39,10 @@ import org.apache.cocoon.components.axis.providers.AvalonProvider;
  */
 public abstract class AbstractComposableService
         extends AbstractLogEnabledService
-        implements Composable {
+        implements Serviceable {
     
-    // component manager reference
-    protected ComponentManager m_manager;
+    // service manager reference
+    protected ServiceManager m_manager;
 
     /**
      * ServiceLifecycle <code>init</code> method. Updates an internal
@@ -58,20 +57,18 @@ public abstract class AbstractComposableService
         super.init(context);
 
         try {
-            setComponentManager();
+            setServiceManager();
 
-        } catch (ComponentException e) {
+        } catch (org.apache.avalon.framework.service.ServiceException e) {
             throw new ServiceException("ComponentException generated", e);
         }
     }
 
-    /**
-     * Compose this service.
-     *
-     * @param manager a <code>ComponentManager</code> instance
-     * @exception ComponentException if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(final ComponentManager manager) throws ComponentException {
+    public void service(final ServiceManager manager) 
+    throws org.apache.avalon.framework.service.ServiceException {
         m_manager = manager;
     }
 
@@ -80,10 +77,10 @@ public abstract class AbstractComposableService
      * from the context.
      * @exception ComponentException if an error occurs
      */
-    private void setComponentManager() throws ComponentException {
-        compose(
-            (ComponentManager) m_context.getProperty(
-                AvalonProvider.COMPONENT_MANAGER
+    private void setServiceManager() throws org.apache.avalon.framework.service.ServiceException {
+        service(
+            (ServiceManager) m_context.getProperty(
+                AvalonProvider.SERVICE_MANAGER
             )
         );
     }

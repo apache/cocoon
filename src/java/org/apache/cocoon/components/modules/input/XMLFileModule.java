@@ -15,12 +15,12 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.commons.collections.map.AbstractReferenceMap;
@@ -83,9 +83,9 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.22 2004/06/30 21:04:08 pier Exp $
+ * @version CVS $Id$
  */
-public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
+public class XMLFileModule extends AbstractJXPathModule implements Serviceable, ThreadSafe {
 
     /** Static (cocoon.xconf) configuration location, for error reporting */
     String staticConfLocation;
@@ -101,7 +101,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     String src;
 
     SourceResolver resolver;
-    ComponentManager manager;
+    ServiceManager manager;
 
     //
     // need two caches for Object and Object[]
@@ -150,7 +150,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
          * @return a <code>Document</code> value
          * @exception Exception if an error occurs
          */
-        public synchronized Document getDocument(ComponentManager manager, SourceResolver resolver, Logger logger)
+        public synchronized Document getDocument(ServiceManager manager, SourceResolver resolver, Logger logger)
         throws Exception {
             Source src = null;
             Document dom = null;
@@ -218,11 +218,10 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
 
 
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
     }

@@ -16,11 +16,10 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -45,10 +44,10 @@ import java.util.Map;
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: AbstractDOMTransformer.java,v 1.3 2004/04/28 16:35:21 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
-        implements Transformer, DOMBuilder.Listener, Composable, Disposable, Recyclable {
+        implements DOMBuilder.Listener, Serviceable, Disposable {
 
     /**
      *  The SAX entity resolver
@@ -71,9 +70,9 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
     protected Parameters parameters;
 
     /**
-     * A <code>ComponentManager</code> which is available for use.
+     * A <code>ServiceManager</code> which is available for use.
      */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /**
      * The <code>DOMBuilder</code> used to build DOM tree out of
@@ -87,10 +86,10 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
         this.builder = new DOMBuilder(this);
     }
 
-    /**
-     * Set the component manager.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -119,10 +118,11 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
         this.objectModel = null;
         this.parameters = null;
         this.builder.recycle();
+        super.recycle();
     }
 
-    /**
-     * dispose
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         this.builder = null;

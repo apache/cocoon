@@ -15,11 +15,11 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.excalibur.source.Source;
@@ -54,16 +54,16 @@ import java.util.Vector;
  * getAttributeNames() will return an Iterator to an empty collection.</p>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: LocateResource.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class LocateResource extends AbstractInputModule implements Composable, ThreadSafe {
+public class LocateResource extends AbstractInputModule implements Serviceable, ThreadSafe {
 
-    protected static Collection col = null;
+    protected static Collection col;
     static {
         col = new TreeSet();
     }
 
-    protected ComponentManager manager = null;
+    protected ServiceManager manager;
 
     /**
      * Calculate the minimal length of the URL, that is the position
@@ -146,7 +146,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
                     urlstring = shortenURI(urlstring, minLen);
                 }
             }
-        } catch (ComponentException e1) {
+        } catch (ServiceException e1) {
             if (this.getLogger().isErrorEnabled())
                 this.getLogger().error("Exception obtaining source resolver ", e1);
         } finally {
@@ -157,11 +157,10 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         return (found ? urlstring : null);
     }
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
