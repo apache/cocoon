@@ -290,6 +290,12 @@ public class XSPRequestLibrary {
     return element;
   }
 
+  public Element getServerName(HttpServletRequest request, Document document) {
+    Element element = document.createElement("request:server-name");
+    element.appendChild(document.createTextNode(String.valueOf(request.getServerName())));
+    return element;
+  }
+
   public Element getServerPort(HttpServletRequest request, Document document) {
     Element element = document.createElement("request:server-port");
     element.appendChild(document.createTextNode(String.valueOf(request.getServerPort())));
