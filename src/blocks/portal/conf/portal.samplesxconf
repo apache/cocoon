@@ -101,42 +101,18 @@
             <renderers default="column">
                 <renderer name="column"/>
             </renderers>
-            <aspects>
-               <aspect name="static"
-                       class="java.lang.Boolean"
-                       store="persistent"
-                       auto-create="true"
-                       value="false">
-               </aspect>
-            </aspects>
         </layout>
         <layout name="row" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
             <renderers default="row">
                 <renderer name="row"/>
             </renderers>
-            <aspects>
-               <aspect name="static"
-                       class="java.lang.Boolean"
-                       store="persistent"
-                       auto-create="true"
-                       value="false">
-               </aspect>
-            </aspects>
         </layout>
         <layout name="tab" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
             <renderers default="tab">
                 <renderer name="tab"/>
             </renderers>
-            <aspects>
-               <aspect name="static"
-                       class="java.lang.Boolean"
-                       store="persistent"
-                       auto-create="true"
-                       value="false">
-               </aspect>
-            </aspects>
         </layout>
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout"
@@ -144,28 +120,12 @@
             <renderers default="frame">
                 <renderer name="frame"/>
             </renderers>
-            <aspects>
-               <aspect name="static"
-                       class="java.lang.Boolean"
-                       store="persistent"
-                       auto-create="true"
-                       value="false">
-               </aspect>
-            </aspects>
         </layout>
         <layout name="coplet" 
                 class="org.apache.cocoon.portal.layout.impl.CopletLayout">
             <renderers default="window">
                 <renderer name="window"/>
             </renderers>
-            <aspects>
-               <aspect name="static"
-                       class="java.lang.Boolean"
-                       store="persistent"
-                       auto-create="true"
-                       value="false">
-               </aspect>
-            </aspects>
         </layout>
         <layout name="link"
                 class="org.apache.cocoon.portal.layout.impl.LinkLayout"
@@ -184,12 +144,14 @@
                        store="session"
                        auto-create="false">
                </aspect>
+            <!--
                <aspect name="static"
                        class="java.lang.Boolean"
                        store="persistent"
                        auto-create="true"
                        value="false">
                </aspect>
+             -->
             </aspects>
          </layout>
     </layouts>
@@ -212,11 +174,13 @@
                         store="persistent"
                         auto-create="true"
                         value="false"/>
+               <!--         
                 <aspect name="maxpageable"
                         class="java.lang.Boolean"
                         store="persistent"
                         auto-create="true"
                         value="true"/>
+               -->
             </coplet-data-aspects>
             
             <coplet-instance-data-aspects>
