@@ -56,7 +56,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
@@ -71,7 +70,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.5 2003/10/15 20:57:43 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.6 2003/10/15 21:03:38 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -89,8 +88,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * Constructor
      * @param processor The processor for this sitemap
      */
-    public PipelinesNode(Processor processor) {
-        //this.processor = processor;
+    public PipelinesNode() {
     }
 
     /**
@@ -140,8 +138,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         context.recompose(this.manager);
 
         // Build a redirector
-        ForwardRedirector redirector = new ForwardRedirector(
-            env, context.isBuildingPipelineOnly());
+        ForwardRedirector redirector = new ForwardRedirector(env);
         this.setupLogger(redirector);
 
         Map objectModel = env.getObjectModel();
