@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.13 2004/03/16 16:25:31 mpo Exp $
+# $Id$
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -130,7 +130,7 @@ ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
-LOADER_LIB="${COCOON_HOME}/tools/loader${PATHSEP}${COCOON_WEBAPP_HOME}/WEB-INF/classes"
+LOADER_LIB="${COCOON_HOME}/tools/loader"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
