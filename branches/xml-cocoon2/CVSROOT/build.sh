@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # build.sh - Unix Build Script for Apache Cocoon
 #
-# $Id: build.sh,v 1.10.2.22 2001-02-07 19:16:46 bloritsch Exp $
+# $Id: build.sh,v 1.10.2.23 2001-02-28 13:26:01 dims Exp $
 # -----------------------------------------------------------------------------
 
 # ----- Verify and Set Required Environment Variables -------------------------
@@ -18,7 +18,7 @@ fi
 
 # ----- Set Up The Runtime Classpath ------------------------------------------
 
-CP=$JAVA_HOME/lib/tools.jar:$ANT_HOME/lib/ant_1_2.jar:./lib/xerces_1_2_3.jar
+CP=$JAVA_HOME/lib/tools.jar:$ANT_HOME/lib/ant_1_2.jar:./lib/xerces_1_3_0.jar
  
 # ----- Make sure Ant script is executable ------------------------------------
 
