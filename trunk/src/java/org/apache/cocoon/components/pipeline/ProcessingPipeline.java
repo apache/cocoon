@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.1 2003/03/09 00:09:07 pier Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.2 2003/03/12 09:10:07 jefft Exp $
  */
 public interface ProcessingPipeline
        extends   Component, Recomposable {
@@ -122,7 +122,7 @@ public interface ProcessingPipeline
     /**
      * Informs pipeline we have come across a branch point
      */
-    public void informBranchPoint(); 
+    void informBranchPoint(); 
 
     /**
      * Add a transformer at the end of the pipeline.
