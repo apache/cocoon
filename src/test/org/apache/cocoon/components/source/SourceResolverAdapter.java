@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.5 2003/03/18 01:01:26 vgritsenko Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.6 2003/05/17 11:51:42 vgritsenko Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
@@ -129,7 +129,7 @@ public class SourceResolverAdapter implements SourceResolver
         throws ProcessingException, SAXException, IOException {
 
         try {
-            return new AvalonToCocoonSource(this.resolver.resolveURI(systemID), this.resolver, null);
+            return new AvalonToCocoonSource(this.resolver.resolveURI(systemID), this.resolver, null, manager);
         } catch (org.apache.excalibur.source.SourceException se) {
             throw new ProcessingException(se.toString());
         }
