@@ -36,7 +36,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-04 15:42:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 21:25:54 $
  */
 public class NonCachingEventPipeline extends AbstractXMLProducer implements EventPipeline {
     private Generator generator;
@@ -90,7 +90,7 @@ public class NonCachingEventPipeline extends AbstractXMLProducer implements Even
         }
         
         setupPipeline(environment);
-        connectPipeline();
+        connectPipeline(environment);
 
         // execute the pipeline:
         try {
@@ -168,7 +168,7 @@ public class NonCachingEventPipeline extends AbstractXMLProducer implements Even
 
     /** Connect the pipeline.
      */
-    private void connectPipeline() throws ProcessingException {
+    private void connectPipeline(Environment environment) throws ProcessingException {
         XMLProducer prev = (XMLProducer) this.generator;
         XMLConsumer next;
 
@@ -177,6 +177,7 @@ public class NonCachingEventPipeline extends AbstractXMLProducer implements Even
             while ( itt.hasNext() ) {
                 // connect SAXConnector
                 SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
+                connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
                 this.connectors.add(connect);
                 next = (XMLConsumer) connect;
                 prev.setConsumer(next);
@@ -198,6 +199,16 @@ public class NonCachingEventPipeline extends AbstractXMLProducer implements Even
 
             // insert this consumer
             prev.setConsumer(super.xmlConsumer);
+        } catch ( IOException e ) {
+            throw new ProcessingException(
+                "Could not connect pipeline.",
+                e
+            );
+        } catch ( SAXException e ) {
+            throw new ProcessingException(
+                "Could not connect pipeline.",
+                e
+            );
         } catch ( ComponentManagerException e ) {
             throw new ProcessingException(
                 "Could not connect pipeline.",
