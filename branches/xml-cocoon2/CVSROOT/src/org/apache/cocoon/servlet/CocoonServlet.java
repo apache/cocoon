@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.10 $ $Date: 2000-07-11 03:10:02 $
+ * @version CVS $Revision: 1.1.4.11 $ $Date: 2000-07-13 12:17:20 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -122,7 +122,9 @@ public class CocoonServlet extends HttpServlet {
             return;
         }
         // We got it... Process the request
-        String uri=req.getPathInfo();
+        // We should use getServletPath(), otherwise we break compatability with
+        // other Servlet 2.2 engines (like Gefion LWS and Orion)
+        String uri=req.getServletPath();
         if (uri!=null) try {
             if (uri.charAt(0)=='/') uri=uri.substring(1);
             CocoonServletRequest request=new CocoonServletRequest(req,uri);
@@ -137,7 +139,7 @@ public class CocoonServlet extends HttpServlet {
             out.println("<hr>");
             out.print("The requested URI \""+req.getRequestURI());
             out.print("\" was not found.");
-            out.println("<!-- PATH_INFO=\""+req.getPathInfo()+"\" -->");
+            out.println("<!-- PATH_INFO=\""+req.getServletPath()+"\" -->");
             out.println("<hr></body></html>");
             }
         } catch (Exception e) {
@@ -171,7 +173,7 @@ public class CocoonServlet extends HttpServlet {
             out.println("<hr>");
             if (reloaded) out.println("Configurations reloaded.<br>");
             out.println("Ready to process requests...");
-            out.println("<!-- PATH_INFO=\""+req.getPathInfo()+"\" -->");
+            out.println("<!-- PATH_INFO=\""+req.getServletPath()+"\" -->");
             out.println("<hr></body></html>");
         }
         out.flush();
