@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.template.jxtg.script.event;
+package org.apache.cocoon.template.jxtg.instructions;
 
 
 public class LoopTagStatus {

@@ -27,6 +27,8 @@ import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.Literal;
 import org.apache.cocoon.template.jxtg.expression.Subst;
+import org.apache.cocoon.template.jxtg.instructions.StartDefine;
+import org.apache.cocoon.template.jxtg.instructions.StartParameter;
 import org.apache.cocoon.template.jxtg.script.event.*;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;

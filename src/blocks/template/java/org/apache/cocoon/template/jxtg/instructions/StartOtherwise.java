@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.template.jxtg.script.event;
+package org.apache.cocoon.template.jxtg.instructions;
 
 import java.util.Stack;
 
+import org.apache.cocoon.template.jxtg.script.event.StartElement;
+import org.apache.cocoon.template.jxtg.script.event.StartInstruction;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
