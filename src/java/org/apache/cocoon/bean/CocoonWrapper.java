@@ -96,7 +96,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.7 2003/09/19 09:09:43 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.8 2003/09/19 10:10:12 gcasper Exp $
  */
 public class CocoonWrapper {
 
@@ -109,7 +109,7 @@ public class CocoonWrapper {
 
     private String workDir = Constants.DEFAULT_WORK_DIR;
     private String logKit = null;
-    private String logger = null;
+    protected String logger = null;
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
     private List classList = new ArrayList();
