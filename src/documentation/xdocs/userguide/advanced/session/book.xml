@@ -12,6 +12,8 @@
   <menu label="2.2 Sessions">
     <menu-item label="2.2.1 Intro" href="preface.html"/>
     <menu-item label="2.2.2 Sessions" href="session.html"/>
+    <menu-item label="2.2.3 Contexts" href="contexts.html"/>
+    <menu-item label="2.2.4 Simple Forms" href="forms.html"/>
   </menu>
 
 </book>
