@@ -15,13 +15,32 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartOut extends StartInstruction {
-    public StartOut(StartElement raw, JXTExpression expr, Boolean lenient) {
+    private final JXTExpression compiledExpression;
+    private final Boolean lenient;
+
+    public StartOut(StartElement raw, Attributes attrs, Stack stack)
+        throws SAXException {
+
         super(raw);
-        this.compiledExpression = expr;
-        this.lenient = lenient;
+        Locator locator = getLocation();
+        String value = attrs.getValue("value");
+        if (value != null) {
+            this.compiledExpression = Parser.compileExpr(value, "out: \"value\": ", locator);
+            String lenientValue = attrs.getValue("lenient");
+            this.lenient = lenientValue == null ? null : Boolean.valueOf(lenientValue);
+        } else {
+            throw new SAXParseException("out: \"value\" is required", locator, null);
+        }
     }
 
     public JXTExpression getCompiledExpression() {
@@ -31,7 +50,4 @@ public class StartOut extends StartInstruction {
     public Boolean getLenient() {
         return lenient;
     }
-
-    private final JXTExpression compiledExpression;
-    private final Boolean lenient;
 }

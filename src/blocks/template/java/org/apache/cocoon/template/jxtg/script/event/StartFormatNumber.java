@@ -20,12 +20,17 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public class StartFormatNumber extends StartInstruction {
 
@@ -57,25 +62,32 @@ public class StartFormatNumber extends StartInstruction {
         }
     }
 
-    public StartFormatNumber(StartElement raw, JXTExpression var,
-            JXTExpression value, JXTExpression type, JXTExpression pattern,
-            JXTExpression currencyCode, JXTExpression currencySymbol,
-            JXTExpression isGroupingUsed, JXTExpression maxIntegerDigits,
-            JXTExpression minIntegerDigits, JXTExpression maxFractionDigits,
-            JXTExpression minFractionDigits, JXTExpression locale) {
+    public StartFormatNumber(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException {
+
         super(raw);
-        this.var = var;
-        this.value = value;
-        this.type = type;
-        this.pattern = pattern;
-        this.currencyCode = currencyCode;
-        this.currencySymbol = currencySymbol;
-        this.isGroupingUsed = isGroupingUsed;
-        this.maxIntegerDigits = maxIntegerDigits;
-        this.minIntegerDigits = minIntegerDigits;
-        this.maxFractionDigits = maxFractionDigits;
-        this.minFractionDigits = minFractionDigits;
-        this.locale = locale;
+
+        Locator locator = getLocation();
+
+        this.value = Parser.compileExpr(attrs.getValue("value"), null, locator);
+        this.type = Parser.compileExpr(attrs.getValue("type"), null, locator);
+        this.pattern = Parser.compileExpr(attrs.getValue("pattern"), null, locator);
+        this.currencyCode =
+            Parser.compileExpr(attrs.getValue("currencyCode"), null, locator);
+        this.currencySymbol =
+            Parser.compileExpr(attrs.getValue("currencySymbol"), null, locator);
+        this.isGroupingUsed =
+            Parser.compileBoolean(attrs.getValue("isGroupingUsed"), null, locator);
+        this.maxIntegerDigits =
+            Parser.compileInt(attrs.getValue("maxIntegerDigits"), null, locator);
+        this.minIntegerDigits =
+            Parser.compileInt(attrs.getValue("minIntegerDigits"), null, locator);
+        this.maxFractionDigits =
+            Parser.compileInt(attrs.getValue("maxFractionDigits"), null, locator);
+        this.minFractionDigits =
+            Parser.compileInt(attrs.getValue("minFractionDigits"), null, locator);
+        this.locale = Parser.compileExpr(attrs.getValue("locale"), null, locator);
+        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
     }
 
     public String format(JexlContext jexl, JXPathContext jxp) throws Exception {

@@ -131,23 +131,6 @@ public class Parser implements ContentHandler, LexicalHandler {
             EndInstruction endInstruction = new EndInstruction(locator,
                     startInstruction);
             newEvent = endInstruction;
-            if (start instanceof StartWhen) {
-                StartWhen startWhen = (StartWhen) start;
-                StartChoose startChoose = (StartChoose) stack.peek();
-                if (startChoose.getFirstChoice() != null) {
-                    StartWhen w = startChoose.getFirstChoice();
-                    while (w.getNextChoice() != null) {
-                        w = w.getNextChoice();
-                    }
-                    w.setNextChoice(startWhen);
-                } else {
-                    startChoose.setFirstChoice(startWhen);
-                }
-            } else if (start instanceof StartOtherwise) {
-                StartOtherwise startOtherwise = (StartOtherwise) start;
-                StartChoose startChoose = (StartChoose) stack.peek();
-                startChoose.setOtherwise(startOtherwise);
-            }
         } else {
             StartElement startElement = (StartElement) start;
             newEvent = new EndElement(locator, startElement);
@@ -211,234 +194,39 @@ public class Parser implements ContentHandler, LexicalHandler {
                 localName, qname, elementAttributes);
         if (JXTemplateGenerator.NS.equals(namespaceURI)) {
             if (localName.equals(FOR_EACH)) {
-                String items = attrs.getValue("items");
-                String select = attrs.getValue("select");
-                JXTExpression begin = compileInt(attrs.getValue("begin"),
-                        FOR_EACH, locator);
-                JXTExpression end = compileInt(attrs.getValue("end"), FOR_EACH,
-                        locator);
-                JXTExpression step = compileInt(attrs.getValue("step"),
-                        FOR_EACH, locator);
-                JXTExpression var = compileExpr(attrs.getValue("var"), null,
-                        locator);
-                JXTExpression varStatus = compileExpr(attrs
-                        .getValue("varStatus"), null, locator);
-                if (items == null) {
-                    if (select == null && (begin == null || end == null)) {
-                        throw new SAXParseException(
-                                "forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified",
-                                locator, null);
-                    }
-                } else if (select != null) {
-                    throw new SAXParseException(
-                            "forEach: only one of \"select\" or \"items\" may be specified",
-                            locator, null);
-                }
-                JXTExpression expr = compileExpr(
-                        items == null ? select : items, null, locator);
-                String lenientValue = attrs.getValue("lenient");
-                Boolean lenient = (lenientValue == null) ? null : Boolean
-                        .valueOf(lenientValue);
-                StartForEach startForEach = new StartForEach(startElement,
-                        expr, var, varStatus, begin, end, step, lenient);
-                newEvent = startForEach;
+                newEvent = new StartForEach(startElement, attrs, stack);
             } else if (localName.equals(FORMAT_NUMBER)) {
-                JXTExpression value = compileExpr(attrs.getValue("value"),
-                        null, locator);
-                JXTExpression type = compileExpr(attrs.getValue("type"), null,
-                        locator);
-                JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
-                        null, locator);
-                JXTExpression currencyCode = compileExpr(attrs
-                        .getValue("currencyCode"), null, locator);
-                JXTExpression currencySymbol = compileExpr(attrs
-                        .getValue("currencySymbol"), null, locator);
-                JXTExpression isGroupingUsed = compileBoolean(attrs
-                        .getValue("isGroupingUsed"), null, locator);
-                JXTExpression maxIntegerDigits = compileInt(attrs
-                        .getValue("maxIntegerDigits"), null, locator);
-                JXTExpression minIntegerDigits = compileInt(attrs
-                        .getValue("minIntegerDigits"), null, locator);
-                JXTExpression maxFractionDigits = compileInt(attrs
-                        .getValue("maxFractionDigits"), null, locator);
-                JXTExpression minFractionDigits = compileInt(attrs
-                        .getValue("minFractionDigits"), null, locator);
-                JXTExpression var = compileExpr(attrs.getValue("var"), null,
-                        locator);
-                JXTExpression locale = compileExpr(attrs.getValue("locale"),
-                        null, locator);
-                StartFormatNumber startFormatNumber = new StartFormatNumber(
-                        startElement, var, value, type, pattern, currencyCode,
-                        currencySymbol, isGroupingUsed, maxIntegerDigits,
-                        minIntegerDigits, maxFractionDigits, minFractionDigits,
-                        locale);
-                newEvent = startFormatNumber;
+                newEvent = new StartFormatNumber(startElement, attrs, stack);
             } else if (localName.equals(FORMAT_DATE)) {
-                JXTExpression var = compileExpr(attrs.getValue("var"), null,
-                        locator);
-                JXTExpression value = compileExpr(attrs.getValue("value"),
-                        null, locator);
-                JXTExpression type = compileExpr(attrs.getValue("type"), null,
-                        locator);
-                JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
-                        null, locator);
-                JXTExpression timeZone = compileExpr(
-                        attrs.getValue("timeZone"), null, locator);
-                JXTExpression dateStyle = compileExpr(attrs
-                        .getValue("dateStyle"), null, locator);
-                JXTExpression timeStyle = compileExpr(attrs
-                        .getValue("timeStyle"), null, locator);
-                JXTExpression locale = compileExpr(attrs.getValue("locale"),
-                        null, locator);
-                StartFormatDate startFormatDate = new StartFormatDate(
-                        startElement, var, value, type, pattern, timeZone,
-                        dateStyle, timeStyle, locale);
-                newEvent = startFormatDate;
+                newEvent = new StartFormatDate(startElement, attrs, stack);
             } else if (localName.equals(CHOOSE)) {
-                StartChoose startChoose = new StartChoose(startElement);
-                newEvent = startChoose;
+                newEvent = new StartChoose(startElement, attrs, stack);
             } else if (localName.equals(WHEN)) {
-                if (stack.size() == 0 || !(stack.peek() instanceof StartChoose)) {
-                    throw new SAXParseException(
-                            "<when> must be within <choose>", locator, null);
-                }
-                String test = attrs.getValue("test");
-                if (test != null) {
-                    JXTExpression expr = compileExpr(test, "when: \"test\": ",
-                            locator);
-                    StartWhen startWhen = new StartWhen(startElement, expr);
-                    newEvent = startWhen;
-                } else {
-                    throw new SAXParseException("when: \"test\" is required",
-                            locator, null);
-                }
+                newEvent = new StartWhen(startElement, attrs, stack);
             } else if (localName.equals(OUT)) {
-                String value = attrs.getValue("value");
-                if (value != null) {
-                    JXTExpression expr = compileExpr(value, "out: \"value\": ",
-                            locator);
-                    String lenientValue = attrs.getValue("lenient");
-                    Boolean lenient = lenientValue == null ? null : Boolean
-                            .valueOf(lenientValue);
-                    newEvent = new StartOut(startElement, expr, lenient);
-                } else {
-                    throw new SAXParseException("out: \"value\" is required",
-                            locator, null);
-                }
+                newEvent = new StartOut(startElement, attrs, stack);
             } else if (localName.equals(OTHERWISE)) {
-                if (stack.size() != 0 && (stack.peek() instanceof StartChoose)) {
-                    StartOtherwise startOtherwise = new StartOtherwise(
-                            startElement);
-                    newEvent = startOtherwise;
-                } else {
-                    throw new SAXParseException(
-                            "<otherwise> must be within <choose>", locator,
-                            null);
-                }
+                newEvent = new StartOtherwise(startElement, attrs, stack);
             } else if (localName.equals(IF)) {
-                String test = attrs.getValue("test");
-                if (test != null) {
-                    JXTExpression expr = compileExpr(test, "if: \"test\": ",
-                            locator);
-                    StartIf startIf = new StartIf(startElement, expr);
-                    newEvent = startIf;
-                } else {
-                    throw new SAXParseException("if: \"test\" is required",
-                            locator, null);
-                }
+                newEvent = new StartIf(startElement, attrs, stack);
             } else if (localName.equals(MACRO)) {
-                // <macro name="myTag" targetNamespace="myNamespace">
-                // <parameter name="paramName" required="Boolean"
-                // default="value"/>
-                // body
-                // </macro>
-                String namespace = StringUtils.defaultString(attrs
-                        .getValue("targetNamespace"));
-                String name = attrs.getValue("name");
-                if (name != null) {
-                    StartDefine startDefine = new StartDefine(startElement,
-                            namespace, name);
-                    newEvent = startDefine;
-                } else {
-                    throw new SAXParseException("macro: \"name\" is required",
-                            locator, null);
-                }
+                newEvent = new StartDefine(startElement, attrs, stack);
             } else if (localName.equals(PARAMETER)) {
-                if (stack.size() == 0 || !(stack.peek() instanceof StartDefine)) {
-                    throw new SAXParseException("<parameter> not allowed here",
-                            locator, null);
-                } else {
-                    String name = attrs.getValue("name");
-                    String optional = attrs.getValue("optional");
-                    String default_ = attrs.getValue("default");
-                    if (name != null) {
-                        StartParameter startParameter = new StartParameter(
-                                startElement, name, optional, default_);
-                        newEvent = startParameter;
-                    } else {
-                        throw new SAXParseException(
-                                "parameter: \"name\" is required", locator,
-                                null);
-                    }
-                }
+                newEvent = new StartParameter(startElement, attrs, stack);
             } else if (localName.equals(EVALBODY)) {
-                newEvent = new StartEvalBody(startElement);
+                newEvent = new StartEvalBody(startElement, attrs, stack);
             } else if (localName.equals(EVAL)) {
-                String value = attrs.getValue("select");
-                JXTExpression valueExpr = compileExpr(value,
-                        "eval: \"select\":", locator);
-                newEvent = new StartEval(startElement, valueExpr);
+                newEvent = new StartEval(startElement, attrs, stack);
             } else if (localName.equals(SET)) {
-                String var = attrs.getValue("var");
-                String value = attrs.getValue("value");
-                JXTExpression varExpr = null;
-                JXTExpression valueExpr = null;
-                if (var != null) {
-                    varExpr = compileExpr(var, "set: \"var\":", locator);
-                }
-                if (value != null) {
-                    valueExpr = compileExpr(value, "set: \"value\":", locator);
-                }
-                StartSet startSet = new StartSet(startElement, varExpr,
-                        valueExpr);
-                newEvent = startSet;
+                newEvent = new StartSet(startElement, attrs, stack);
             } else if (localName.equals(IMPORT)) {
-                // <import uri="${root}/foo/bar.xml" context="${foo}"/>
-                AttributeEvent uri = null;
-                Iterator iter = startElement.getAttributeEvents().iterator();
-                while (iter.hasNext()) {
-                    AttributeEvent e = (AttributeEvent) iter.next();
-                    if (e.getLocalName().equals("uri")) {
-                        uri = e;
-                        break;
-                    }
-                }
-                if (uri != null) {
-                    // If "context" is present then its value will be used
-                    // as the context object in the imported template
-                    String select = attrs.getValue("context");
-                    JXTExpression expr = null;
-                    if (select != null) {
-                        expr = compileExpr(select, "import: \"context\": ",
-                                locator);
-                    }
-                    StartImport startImport = new StartImport(startElement,
-                            uri, expr);
-                    newEvent = startImport;
-                } else {
-                    throw new SAXParseException("import: \"uri\" is required",
-                            locator, null);
-                }
+                newEvent = new StartImport(startElement, attrs, stack);
             } else if (localName.equals(TEMPLATE)) {
-                StartTemplate startTemplate = new StartTemplate(startElement);
-                newEvent = startTemplate;
+                newEvent = new StartTemplate(startElement, attrs, stack);
             } else if (localName.equals(COMMENT)) {
-                // <jx:comment>This will be parsed</jx:comment>
-                StartComment startJXComment = new StartComment(startElement);
-                newEvent = startJXComment;
+                newEvent = new StartComment(startElement, attrs, stack);
             } else {
-                throw new SAXParseException("unrecognized tag: " + localName,
-                        locator, null);
+                throw new SAXParseException("unrecognized tag: " + localName, locator, null);
             }
         } else {
             newEvent = startElement;

@@ -15,8 +15,12 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+
 public class StartEvalBody extends StartInstruction {
-    public StartEvalBody(StartElement raw) {
+    public StartEvalBody(StartElement raw, Attributes attrs, Stack stack) {
         super(raw);
     }
 }

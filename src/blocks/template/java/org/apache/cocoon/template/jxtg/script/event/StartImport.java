@@ -15,12 +15,48 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Iterator;
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartImport extends StartInstruction {
-    public StartImport(StartElement raw, AttributeEvent uri,
-            JXTExpression select) {
+
+    private final AttributeEvent uri;
+    private final JXTExpression select;
+
+    public StartImport(StartElement raw, Attributes attrs, Stack stack)
+        throws SAXException {
+
         super(raw);
+
+        // <import uri="${root}/foo/bar.xml" context="${foo}"/>
+        Locator locator = getLocation();
+        Iterator iter = raw.getAttributeEvents().iterator();
+        AttributeEvent uri = null;
+        JXTExpression select = null;
+        while (iter.hasNext()) {
+            AttributeEvent e = (AttributeEvent) iter.next();
+            if (e.getLocalName().equals("uri")) {
+                uri = e;
+                break;
+            }
+        }
+        if (uri != null) {
+            // If "context" is present then its value will be used
+            // as the context object in the imported template
+            String context = attrs.getValue("context");
+            if (context != null) {
+                select = Parser.compileExpr(context, "import: \"context\": ", locator);
+            }
+        } else {
+            throw new SAXParseException("import: \"uri\" is required", locator, null);
+        }
         this.uri = uri;
         this.select = select;
     }
@@ -32,7 +68,4 @@ public class StartImport extends StartInstruction {
     public JXTExpression getSelect() {
         return select;
     }
-
-    private final AttributeEvent uri;
-    private final JXTExpression select;
 }

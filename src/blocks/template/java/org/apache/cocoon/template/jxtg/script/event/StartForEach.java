@@ -15,21 +15,16 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartForEach extends StartInstruction {
-    public StartForEach(StartElement raw, JXTExpression items,
-            JXTExpression var, JXTExpression varStatus, JXTExpression begin,
-            JXTExpression end, JXTExpression step, Boolean lenient) {
-        super(raw);
-        this.items = items;
-        this.var = var;
-        this.varStatus = varStatus;
-        this.begin = begin;
-        this.end = end;
-        this.step = step;
-        this.lenient = lenient;
-    }
 
     final JXTExpression items;
     final JXTExpression var;
@@ -38,6 +33,36 @@ public class StartForEach extends StartInstruction {
     final JXTExpression end;
     final JXTExpression step;
     final Boolean lenient;
+
+    public StartForEach(StartElement raw, Attributes attrs, Stack stack)
+        throws SAXException {
+
+        super(raw);
+
+        String name = raw.getLocalName();
+        Locator locator = getLocation();
+
+        String items = attrs.getValue("items");
+        String select = attrs.getValue("select");
+        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
+        this.varStatus = Parser.compileExpr(attrs.getValue("varStatus"), null, locator);
+        this.begin = Parser.compileInt(attrs.getValue("begin"), name, locator);
+        this.end = Parser.compileInt(attrs.getValue("end"), name, locator);
+        this.step = Parser.compileInt(attrs.getValue("step"), name, locator);
+        String lenientValue = attrs.getValue("lenient");
+        this.lenient = (lenientValue == null) ? null : Boolean.valueOf(lenientValue);
+
+        if (items == null) {
+            if (select == null && (begin == null || end == null)) {
+                throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified",
+                                            locator, null);
+            }
+        } else if (select != null) {
+            throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified",
+                                        locator, null);
+        }
+        this.items = Parser.compileExpr(items == null ? select : items, null, locator);
+    }
 
     public JXTExpression getBegin() {
         return begin;

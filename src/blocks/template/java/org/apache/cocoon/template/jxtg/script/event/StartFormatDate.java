@@ -18,12 +18,17 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Stack;
 import java.util.TimeZone;
 
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jxpath.JXPathContext;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public class StartFormatDate extends StartInstruction {
 
@@ -40,19 +45,21 @@ public class StartFormatDate extends StartInstruction {
     JXTExpression timeStyle;
     JXTExpression locale;
 
-    public StartFormatDate(StartElement raw, JXTExpression var,
-            JXTExpression value, JXTExpression type, JXTExpression pattern,
-            JXTExpression timeZone, JXTExpression dateStyle,
-            JXTExpression timeStyle, JXTExpression locale) {
+    public StartFormatDate(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException{
+        
         super(raw);
-        this.var = var;
-        this.value = value;
-        this.type = type;
-        this.pattern = pattern;
-        this.timeZone = timeZone;
-        this.dateStyle = dateStyle;
-        this.timeStyle = timeStyle;
-        this.locale = locale;
+
+        Locator locator = getLocation();
+
+        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
+        this.value = Parser.compileExpr(attrs.getValue("value"), null, locator);
+        this.type = Parser.compileExpr(attrs.getValue("type"), null, locator);
+        this.pattern = Parser.compileExpr(attrs.getValue("pattern"), null, locator);
+        this.timeZone = Parser.compileExpr(attrs.getValue("timeZone"), null, locator);
+        this.dateStyle = Parser.compileExpr(attrs.getValue("dateStyle"), null, locator);
+        this.timeStyle = Parser.compileExpr(attrs.getValue("timeStyle"), null, locator);
+        this.locale = Parser.compileExpr(attrs.getValue("locale"), null, locator);
     }
 
     public String format(JexlContext jexl, JXPathContext jxp) throws Exception {
