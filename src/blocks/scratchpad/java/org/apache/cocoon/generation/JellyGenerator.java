@@ -116,8 +116,15 @@ public class JellyGenerator extends ServiceableGenerator
             // Execute Jelly script
             XMLOutput xmlOutput = new XMLOutput(this.contentHandler, this.lexicalHandler);
             
+            // TODO - get the Jelly parser and feed an input stream into the parser
+            //        This allows us to use our own protocols (like cocoon:)
+            //        Compile the script and cache the compiled version
+            
             scriptSource = this.resolver.resolveURI(this.source);
+            // the script does not output startDocument/endDocument events
+            this.contentHandler.startDocument();
             this.jellyContext.runScript(scriptSource.getURI(), xmlOutput);
+            this.contentHandler.endDocument();
             xmlOutput.flush();
             
         } catch (IOException e) {
