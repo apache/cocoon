@@ -48,6 +48,10 @@
           <td valign="top"><wt:widget-label id="number"/></td>
           <td valign="top"><wt:widget id="number"/></td>
         </tr>
+        <tr>
+          <td/>
+          <td valign="top"><wt:widget id="choose"/> <wt:widget-label id="choose"/></td>
+        </tr>
       </table>
 
       <wt:widget-label id="contacts"/><br/>

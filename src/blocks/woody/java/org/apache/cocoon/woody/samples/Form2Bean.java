@@ -67,6 +67,7 @@ public class Form2Bean {
     private String ipAddress;
     private Date birthday;
     private int aNumber;
+    private boolean choose;
 
     private Collection contacts = new ArrayList();
 
@@ -127,6 +128,14 @@ public class Form2Bean {
 
     public void setaNumber(int aNumber) {
         this.aNumber = aNumber;
+    }
+
+    public boolean isChoose() {
+        return choose;
+    }
+
+    public void setChoose(boolean choose) {
+        this.choose = choose;
     }
 
     public Collection getContacts() {
