@@ -609,7 +609,7 @@
     <title>Servlet API</title>
     <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
-    <lib>scratchpad/lib/servlet-2_3.jar</lib>
+    <lib>optional/servlet-2_3.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
@@ -625,7 +625,7 @@
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-api-20030701.jar</lib>
+    <lib>optional/xmldb-api-20030701.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -633,7 +633,7 @@
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-common-20030701.jar</lib>
+    <lib>optional/xmldb-common-20030701.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -641,7 +641,7 @@
     <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-xupdate-20040205.jar</lib>
+    <lib>optional/xmldb-xupdate-20040205.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -649,7 +649,7 @@
     <title>XML Xindice</title>
     <description>Native XML Database by Apache XML project</description>
     <used-by>xmldb block</used-by>
-    <lib>xmldb/lib/xindice-1.1b4.jar</lib>
+    <lib>optional/xindice-1.1b4.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
   </file>
 
@@ -660,7 +660,7 @@
       HTTP to implement remote procedure calls.
     </description>
     <used-by>xmldb block</used-by>
-    <lib>xmldb/lib/xmlrpc-1.1.jar</lib>
+    <lib>optional/xmlrpc-1.1.jar</lib>
     <homepage>http://ws.apache.org/xmlrpc/</homepage>
   </file>
 
@@ -801,7 +801,7 @@
     <title>JDOM</title>
     <description>JDOM</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/jdom-b9.jar</lib>
+    <lib>optional/jdom-b9.jar</lib>
     <homepage>http://www.jdom.org/</homepage>
   </file>
 
@@ -957,7 +957,7 @@
        specification.
     </description>
     <used-by>BetwixtTransformer</used-by>
-    <lib>scratchpad/lib/commons-betwixt-0.5.jar</lib>
+    <lib>optional/commons-betwixt-0.5.jar</lib>
     <homepage>http://jakarta.apache.org/commons/betwixt/</homepage>
   </file>
 
@@ -1042,7 +1042,7 @@
       under the Apache license and therefore freely distributable.
     </description>
     <used-by>JMS</used-by>
-    <lib>jms/lib/geronimo-spec-jms-DEV-20031120.jar</lib>
+    <lib>optional/geronimo-spec-jms-DEV-20031120.jar</lib>
     <homepage>http://incubator.apache.org/projects/geronimo/index.html</homepage>
   </file>
   <!--
@@ -1136,7 +1136,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/myfaces-20041005m.jar</lib>
+    <lib>optional/myfaces-20041005m.jar</lib>
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
@@ -1147,7 +1147,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/myfaces-jsf-api-20041005.jar</lib>
+    <lib>optional/myfaces-jsf-api-20041005.jar</lib>
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
@@ -1157,7 +1157,7 @@
       EL is the JSP 2.0 Expression Language Interpreter from Apache.
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/commons-el-1.0.jar</lib>
+    <lib>optional/commons-el-1.0.jar</lib>
     <homepage>http://jakarta.apache.org/commons/el/</homepage>
   </file>
 
@@ -1167,7 +1167,7 @@
       JSP API classes from Apache Tomcat
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/jsp-api-2.0.jar</lib>
+    <lib>optional/jsp-api-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
