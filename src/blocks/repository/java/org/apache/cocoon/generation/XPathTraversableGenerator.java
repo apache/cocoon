@@ -109,21 +109,21 @@ import org.xml.sax.helpers.AttributesImpl;
  * Request:
  *   http://www.some.host/documents/test
  * Result:
- * &lt;dir:directory
+ * &lt;collection:collection
  *   name="test" lastModified="1010400942000"
  *   date="1/7/02 11:55 AM" requested="true"
- *   xmlns:dir="http://apache.org/cocoon/directory/2.0"&gt;
- *   &lt;dir:directory name="subdirectory" lastModified="1010400942000" date="1/7/02 11:55 AM" /&gt;
- *   &lt;dir:file name="test.xml" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
- *     &lt;dir:xpath docid="test.xml" query="/article/title"&gt;
+ *   xmlns:collection="http://apache.org/cocoon/collection/1.0"&gt;
+ *   &lt;collection:collection name="subdirectory" lastModified="1010400942000" date="1/7/02 11:55 AM" /&gt;
+ *   &lt;collection:resource name="test.xml" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
+ *     &lt;collection:xpath docid="test.xml" query="/article/title"&gt;
  *       &lt;title&gt;This is a test document&lt;/title&gt;
  *       &lt;abstract&gt;
  *         &lt;para&gt;Abstract of my test article&lt;/para&gt;
  *       &lt;/abstract&gt;
- *     &lt;/dir:xpath&gt;
- *   &lt;/dir:file&gt;
- *   &lt;dir:file name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
- * &lt;/dir:directory&gt;
+ *     &lt;/collection:xpath&gt;
+ *   &lt;/collection:resource&gt;
+ *   &lt;collection:resource name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
+ * &lt;/collection:collection&gt;
  * 
  * If you need to use namespaces, you can set them as sitemap parameters in
  * the form:
@@ -131,7 +131,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.2 2003/10/24 08:47:33 cziegeler Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.3 2003/10/28 14:08:50 unico Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
