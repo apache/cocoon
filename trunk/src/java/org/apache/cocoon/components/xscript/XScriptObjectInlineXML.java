@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.apache.cocoon.ProcessingException;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 
@@ -65,10 +63,11 @@ import java.io.StringReader;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XScriptObjectInlineXML.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: XScriptObjectInlineXML.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
  * @since July 7, 2001
  */
 public class XScriptObjectInlineXML extends XScriptObject {
+
     StringBuffer stringBuffer;
     StringBufferContentHandler streamHandler;
 
@@ -92,17 +91,15 @@ public class XScriptObjectInlineXML extends XScriptObject {
         streamHandler = new StringBufferContentHandler(stringBuffer);
     }
 
-    public InputStream getInputStream()
-            throws ProcessingException, IOException {
+    public InputStream getInputStream() throws IOException {
         // FIXME(VG): This method should never be used because it
         // incorrectly converts characters into bytes.
         return new StringBufferInputStream(stringBuffer.toString());
     }
 
-    public InputSource getInputSource()
-            throws ProcessingException, IOException {
+    public InputSource getInputSource() throws IOException {
         InputSource is = new InputSource(new StringReader(stringBuffer.toString()));
-        is.setSystemId(getSystemId());
+        is.setSystemId(getURI());
         return is;
     }
 
@@ -122,7 +119,7 @@ public class XScriptObjectInlineXML extends XScriptObject {
         return stringBuffer.toString();
     }
 
-    public String getSystemId() {
+    public String getURI() {
         // FIXME: Implement a URI scheme to be able to refer to XScript
         // variables by URI
         return "xscript:inline:" + System.identityHashCode(this);
