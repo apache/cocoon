@@ -60,7 +60,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.21 2004/03/11 14:21:56 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.22 2004/03/12 14:57:59 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -578,6 +578,14 @@ public class TreeProcessor
 
         public String getContentType() {
             return environment.getContentType();
+        }
+
+        public boolean isResponseModified(long lastModified) {
+            return environment.isResponseModified(lastModified);
+        }
+        
+        public void setResponseIsNotModified() {
+            environment.setResponseIsNotModified();
         }
     }
 
