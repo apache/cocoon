@@ -56,7 +56,9 @@
 
 # NOTE: "[dependency]" indicates blocks that are required by other blocks.
 # Disabling batik, for example, will result in a RuntimeException when using
-# fop. On the other hand some dependencies come only from the block samples.
+# fop. Dependencies only needed for the block's samples are marked explicitely.
+# This latter information was introduced only short time ago, so do not expect
+# it to be complete.
 
 # NOTE: (to Cocoon committers): blocks.properties is generated from gump.xml
 # using "build generate-blocks.properties". Any changes to blocks definitions
@@ -91,7 +93,9 @@
 # Deprecated blocks ------------------------------------------------------------
 
 # Although some of these blocks may have been stable, they are now deprecated
-# in favour of other blocks and therefore are excluded by default from the build
+# in favour of other blocks and therefore are excluded by default from the build.
+# For including one of them you have to set the exclude property into comment in
+# blocks.properties.
 
 </desc:desc>
 
@@ -150,6 +154,7 @@
     <xsl:text> "</xsl:text>
     <xsl:value-of select="substring-after(concat(@name, @project), 'cocoon-block-')"/>
     <xsl:text>"</xsl:text>
+    <xsl:if test="@type='samples'"> (for samples)</xsl:if>
     <xsl:choose>
         <xsl:when test="position() = last()">.&#10;</xsl:when>
         <xsl:otherwise>,</xsl:otherwise>

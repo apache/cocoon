@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.130 2004/03/23 20:03:20 tcurdt Exp $
+    | CVS $Id: gump.xml,v 1.131 2004/03/25 02:22:05 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -145,7 +145,7 @@
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
-    <depend project="cocoon-block-batik"/>
+    <depend project="cocoon-block-batik" type="samples"/>
     <depend project="cocoon-block-xsp"/>
 
     <work nested="tools/anttasks"/>
@@ -756,6 +756,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
@@ -777,6 +778,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/woody/test"/>
     <work nested="tools/anttasks"/>
@@ -941,8 +943,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <!-- following dependency is only for samples -->
-    <depend project="cocoon-block-forms" />
+    <depend project="cocoon-block-forms" type="samples"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1007,7 +1008,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-    <project name="cocoon-block-ojb" status="unstable">
+  <project name="cocoon-block-ojb" status="unstable">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1017,6 +1018,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
+    <depend project="cocoon-block-forms" type="samples"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
