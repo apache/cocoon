@@ -74,6 +74,7 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
@@ -87,7 +88,7 @@ import org.apache.excalibur.source.SourceUtil;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.10 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.11 2003/05/23 12:35:32 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -386,6 +387,7 @@ implements AuthenticationManager,
     }
 
     protected void setState(RequestState status) {
+        AuthenticationContext.state.set(status);
         final Request req = ContextHelper.getRequest(this.context);
         if ( status != null ) {
             req.setAttribute(  REQUEST_STATE_KEY, status);
