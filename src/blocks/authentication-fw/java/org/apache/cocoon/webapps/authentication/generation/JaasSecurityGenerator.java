@@ -150,10 +150,12 @@ public class JaasSecurityGenerator extends ServiceableGenerator {
 	
 	/**
 	 * Callback Handler
-	 * @author <a href="sascha.kulawik@juwimm.com">Sascha-Matthias Kulawik</a>
-	 * @version $Id: 1.1 $
 	 */
 	private class InternalCallbackHandler implements CallbackHandler {
+        
+		/* (non-Javadoc)
+		 * @see javax.security.auth.callback.CallbackHandler#handle(javax.security.auth.callback.Callback[])
+		 */
 		public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
 
 			for (int i = 0; i < callbacks.length; i++) {
