@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,15 +22,14 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.6 2004/06/11 08:51:57 cziegeler Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.7 2004/06/11 20:03:35 vgritsenko Exp $
  */
-
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
 
     public AbstractParentProcessingNode(String type) {
         super(type);
     }
-    
+
     public AbstractParentProcessingNode() {
     }
 
@@ -40,14 +39,12 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
      * @param currentMap the <code>Map<code> of parameters produced by this node,
      *            which is added to <code>listOfMap</code>.
      */
-
-    protected final boolean invokeNodes(
-        ProcessingNode[] nodes,
-        Environment env,
-        InvokeContext context,
-        String currentName,
-        Map currentMap)
-      throws Exception {
+    protected final boolean invokeNodes(ProcessingNode[] nodes,
+                                        Environment env,
+                                        InvokeContext context,
+                                        String currentName,
+                                        Map currentMap)
+    throws Exception {
 
         currentMap = this.executor.pushVariables(this, env.getObjectModel(), currentName, currentMap);
         context.pushMap(currentName,currentMap);
@@ -70,11 +67,10 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
     /**
      * Invoke all nodes of a node array in order, until one succeeds.
      */
-    protected final boolean invokeNodes (
-        ProcessingNode[] nodes,
-        Environment env,
-        InvokeContext context)
-      throws Exception {
+    protected final boolean invokeNodes (ProcessingNode[] nodes,
+                                         Environment env,
+                                         InvokeContext context)
+    throws Exception {
 
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i].invoke(env, context)) {

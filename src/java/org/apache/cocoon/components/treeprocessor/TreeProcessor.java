@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -50,7 +51,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.37 2004/06/09 09:47:47 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.38 2004/06/11 20:03:35 vgritsenko Exp $
  */
 
 public class TreeProcessor
@@ -102,16 +103,16 @@ public class TreeProcessor
 
     /** The source resolver */
     protected SourceResolver resolver;
-    
+
     /** The environment helper */
     private EnvironmentHelper environmentHelper;
-    
+
     /** The actual processor (package-private as needs to be accessed by ConcreteTreeProcessor) */
     ConcreteTreeProcessor concreteProcessor;
 
     /** The tree builder configuration */
     private Configuration treeBuilderConfiguration;
-    
+
     /**
      * Create a TreeProcessor.
      */
@@ -123,10 +124,10 @@ public class TreeProcessor
     /**
      * Create a child processor for a given language
      */
-    protected TreeProcessor(TreeProcessor parent, 
-                            DelayedRefreshSourceWrapper sitemapSource, 
-                            boolean checkReload, 
-                            String prefix) 
+    protected TreeProcessor(TreeProcessor parent,
+                            DelayedRefreshSourceWrapper sitemapSource,
+                            boolean checkReload,
+                            String prefix)
     throws Exception {
         this.parent = parent;
 
@@ -138,7 +139,7 @@ public class TreeProcessor
         this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
-        
+
         // We have our own CM
         this.manager = parent.concreteProcessor.sitemapComponentManager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
@@ -155,9 +156,9 @@ public class TreeProcessor
      *
      * @return a new child processor.
      */
-    public TreeProcessor createChildProcessor(String src, 
+    public TreeProcessor createChildProcessor(String src,
                                               boolean checkReload,
-                                              String  prefix) 
+                                              String  prefix)
     throws Exception {
         DelayedRefreshSourceWrapper delayedSource = new DelayedRefreshSourceWrapper(
             this.resolver.resolveURI(src), this.lastModifiedDelay);
@@ -199,16 +200,16 @@ public class TreeProcessor
         ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(manager));
     }
 
-    /** 
+    /**
      * Configure the tree processor:
-     * &lt;processor file="{Location of the sitemap}" 
+     * &lt;processor file="{Location of the sitemap}"
      *               check-reload="{true|false}"
      *               config="{Location of sitemap tree processor config}&gt;
      *   &lt;reload delay="10"/&gt;
      * &lt;/processor&gt;
-     * 
+     *
      * Only the file attribute is required; everything else is optional.
-     * 
+     *
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config)
@@ -244,7 +245,7 @@ public class TreeProcessor
     /**
      * Create a new tree builder for this sitemap
      */
-    protected void createTreeBuilder() 
+    protected void createTreeBuilder()
     throws ConfigurationException {
         // Create a builder for the sitemap language
         try {
@@ -253,19 +254,18 @@ public class TreeProcessor
                     .loadClass("org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage").newInstance();
 
             LifecycleHelper.setupComponent(this.treeBuilder,
-                getLogger(),
-                this.context,
-                this.manager,
-                this.roleManager,
-                this.treeBuilderConfiguration
-            );
+                                           getLogger(),
+                                           this.context,
+                                           this.manager,
+                                           this.roleManager,
+                                           this.treeBuilderConfiguration);
         } catch(ConfigurationException ce) {
             throw ce;
         } catch(Exception e) {
             throw new ConfigurationException("Could not setup sitemap builder.", e);
         }
     }
-    
+
     /**
      * Process the given <code>Environment</code> producing the output.
      * @return If the processing is successfull <code>true</code> is returned.
@@ -277,13 +277,13 @@ public class TreeProcessor
      *         ConnectionResetException  If the connection was reset
      */
     public boolean process(Environment environment) throws Exception {
-    	
+
         setupConcreteProcessor(environment);
-    		
+
         return this.concreteProcessor.process(environment);
     }
 
-    
+
     /**
      * Process the given <code>Environment</code> to assemble
      * a <code>ProcessingPipeline</code>.
@@ -291,12 +291,12 @@ public class TreeProcessor
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
-    	
+
         setupConcreteProcessor(environment);
-    		
+
         return this.concreteProcessor.buildPipeline(environment);
     }
-      
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getRootProcessor()
      */
@@ -305,7 +305,7 @@ public class TreeProcessor
         while(result.parent != null) {
             result = result.parent;
         }
-        
+
         return result;
     }
 
@@ -339,10 +339,10 @@ public class TreeProcessor
 
     /**
      * The current environment helper used by the MountNode
-     * @return EnvironmentHelper 
+     * @return EnvironmentHelper
      */
     public EnvironmentHelper getEnvironmentHelper() {
-        return this.environmentHelper;   
+        return this.environmentHelper;
     }
 
     private void setupConcreteProcessor(Environment env) throws Exception {
@@ -352,7 +352,7 @@ public class TreeProcessor
             buildConcreteProcessor(env);
         }
     }
-    
+
     private synchronized void buildConcreteProcessor(Environment env) throws Exception {
 
         // Now that we entered the synchronized area, recheck what's already
@@ -368,14 +368,18 @@ public class TreeProcessor
         ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
         long newLastModified;
         this.setupLogger(newProcessor);
+
         // We have to do a call to enterProcessor() here as during building
-        // of the tree, components (e.g. actions) are already instantiated 
+        // of the tree, components (e.g. actions) are already instantiated
         // (ThreadSafe ones mostly).
         // If these components try to access the current processor or the
         // current service manager they must get this one - which is currently
         // in the process of initialization.
         EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
         try {
+            if (this.treeBuilder instanceof Recyclable) {
+                ((Recyclable)this.treeBuilder).recycle();
+            }
             if (this.treeBuilder instanceof Recomposable) {
                 ((Recomposable)this.treeBuilder).recompose(this.manager);
             }
@@ -385,14 +389,17 @@ public class TreeProcessor
             }
 
             if (this.source == null) {
-                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName), lastModifiedDelay);
+                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
+                                                              lastModifiedDelay);
             }
-            
+
             newLastModified = this.source.getLastModified();
 
             ProcessingNode root = this.treeBuilder.build(this.source);
 
-            newProcessor.setProcessorData(this.treeBuilder.getSitemapComponentManager(), root, this.treeBuilder.getDisposableNodes());
+            newProcessor.setProcessorData(this.treeBuilder.getSitemapComponentManager(),
+                                          root,
+                                          this.treeBuilder.getDisposableNodes());
         } finally {
             EnvironmentHelper.leaveProcessor();
         }
@@ -426,14 +433,14 @@ public class TreeProcessor
         ContainerUtil.dispose(this.treeBuilder);
         this.treeBuilder = null;
 
-	    if ( this.manager != null ) {
-	        if ( this.source != null ) {
-	            this.resolver.release(this.source.getSource());
-	            this.source = null;
-	        }
-	        this.manager.release(this.resolver);
-	        this.resolver = null;
-	        this.manager = null;
-	    }
-	}
+        if (this.manager != null) {
+            if (this.source != null) {
+                this.resolver.release(this.source.getSource());
+                this.source = null;
+            }
+            this.manager.release(this.resolver);
+            this.resolver = null;
+            this.manager = null;
+        }
+    }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import java.util.Properties;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: LogicsheetCodeGenerator.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: LogicsheetCodeGenerator.java,v 1.2 2004/06/11 20:03:35 vgritsenko Exp $
  */
 public class LogicsheetCodeGenerator extends AbstractLogEnabled implements MarkupCodeGenerator {
 
@@ -85,8 +85,7 @@ public class LogicsheetCodeGenerator extends AbstractLogEnabled implements Marku
     /**
      * Helper for TransformerFactory.
      */
-    private SAXTransformerFactory getTransformerFactory()
-    {
+    private SAXTransformerFactory getTransformerFactory() {
         if(tfactory == null)  {
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
@@ -131,7 +130,7 @@ public class LogicsheetCodeGenerator extends AbstractLogEnabled implements Marku
      * @exception Exception If an error occurs during code generation
      */
     public String generateCode(Source source, AbstractXMLPipe filter)
-            throws Exception {
+    throws Exception {
         try {
             // set the root XMLReader of the transformer chain
             this.end = filter;

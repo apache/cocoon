@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,14 +31,13 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.12 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.13 2004/06/11 20:03:35 vgritsenko Exp $
  */
-
 public final class PipelinesNode extends SimpleParentProcessingNode
-  implements Composable, Disposable {
+                                 implements Composable, Disposable {
 
     private ComponentManager manager;
-    
+
     private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
     private ProcessingNode errorHandler;
@@ -67,7 +66,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     public void setErrorHandler(ProcessingNode node) {
         this.errorHandler = node;
     }
-    
+
     public void setChildren(ProcessingNode[] nodes) {
         // Mark the last pipeline so that it can throw a ResourceNotFoundException
         ((PipelineNode)nodes[nodes.length - 1]).setLast(true);
@@ -82,8 +81,8 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
-    
-        // Perform any common invoke functionality 
+
+        // Perform any common invoke functionality
         super.invoke(env, context);
 
         // Recompose context (and pipelines) to the local component manager

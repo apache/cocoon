@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,9 +45,8 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.11 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.12 2004/06/11 20:03:35 vgritsenko Exp $
  */
-
 public class SitemapLanguage extends DefaultTreeBuilder {
 
     // Regexp's for splitting expressions
@@ -70,11 +69,11 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             }
             config = new DefaultConfiguration("", "");
         }
-        
+
         final CocoonComponentManager manager = new CocoonComponentManager(this.parentManager);
-        
+
         manager.enableLogging(getLogger());
-        
+
         final LoggerManager loggerManager = (LoggerManager) this.parentManager.lookup(LoggerManager.ROLE);
         manager.setLoggerManager(loggerManager);
 
@@ -314,9 +313,9 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         return result;
     }
-    
+
     /**
-     * Extract pipeline-hints from the given statement (if any exist) 
+     * Extract pipeline-hints from the given statement (if any exist)
      *
      * @param role the component role (e.g. <code>Generator.ROLE</code>)
      * @param hint the component hint, i.e. the 'type' attribute
@@ -348,7 +347,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             componentHintParams = selector.getPipelineHint(hint);
         } catch (Exception ex) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("pipeline-hints: Component Exception: could not " + 
+                getLogger().warn("pipeline-hints: Component Exception: could not " +
                              "check for component level hints " + ex);
             }
         } finally {
@@ -359,7 +358,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             hintParams = componentHintParams;
 
             if (statementHintParams != null) {
-                hintParams = hintParams + "," + statementHintParams; 
+                hintParams = hintParams + "," + statementHintParams;
             }
         } else {
             hintParams = statementHintParams;
@@ -379,19 +378,19 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         String[]  expressions = commaSplit.split(hintParams.trim());
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("pipeline-hints: (aggregate-hint) " + hintParams); 
+            getLogger().debug("pipeline-hints: (aggregate-hint) " + hintParams);
         }
 
         for (int i=0; i<expressions.length;i++) {
-            String [] nameValuePair = equalsSplit.split(expressions[i]); 
+            String [] nameValuePair = equalsSplit.split(expressions[i]);
 
             try {
                 if (nameValuePair.length < 2) {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("pipeline-hints: (name) " + nameValuePair[0] 
+                        getLogger().debug("pipeline-hints: (name) " + nameValuePair[0]
                                        + "\npipeline-hints: (value) [implicit] true");
                     }
-  
+
                     params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
                                 VariableResolverFactory.getResolver("true", this.manager));
                 } else {
@@ -399,7 +398,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
                         getLogger().debug("pipeline-hints: (name) " + nameValuePair[0]
                                           + "\npipeline-hints: (value) " + nameValuePair[1]);
                     }
-  
+
                     params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
                                 VariableResolverFactory.getResolver(nameValuePair[1], this.manager));
                 }
@@ -424,5 +423,5 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         } else {
             return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
         }
-    }   
+    }
 }
