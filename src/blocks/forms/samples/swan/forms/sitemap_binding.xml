@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+Binding for example CForms form model GUI.
+
+@version CVS $Id: form_model_gui_binding.xml,v 1.3 2004/04/12 14:05:09 tim Exp $
+-->
+
+<fb:context
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+  path="/map:sitemap"
+  lenient="true">
+
+  <fb:new id="items-class"/>
+
+  <fb:class id="call-class">
+    <fb:case id="call" path=".">
+      <fb:insert-node><map:call/>
+</fb:insert-node>
+      <fb:struct id="call" path="map:call">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="continuation" path="@continuation"/>
+          <fb:value id="resource" path="@resource"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="components-class">
+    <fb:case id="components" path=".">
+      <fb:insert-node><map:components/>
+</fb:insert-node>
+      <fb:struct id="components" path="map:components">
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="views-class">
+    <fb:case id="views" path=".">
+      <fb:insert-node><map:views/>
+</fb:insert-node>
+      <fb:struct id="views" path="map:views">
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="resources-class">
+    <fb:case id="resources" path=".">
+      <fb:insert-node><map:resources/>
+</fb:insert-node>
+      <fb:struct id="resources" path="map:resources">
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="flow-class">
+    <fb:case id="flow" path=".">
+      <fb:insert-node><map:flow/>
+</fb:insert-node>
+      <fb:struct id="flow" path="map:flow">
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="generate-class">
+    <fb:case id="generate" path=".">
+      <fb:insert-node><map:generate/>
+</fb:insert-node>
+      <fb:struct id="generate" path="map:generate">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="type" path="@type"/>
+          <fb:value id="src" path="@src"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="match-class">
+    <fb:case id="match" path=".">
+      <fb:insert-node><map:match/>
+</fb:insert-node>
+      <fb:struct id="match" path="map:match">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="pattern" path="@pattern"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="parameter-class">
+    <fb:case id="parameter" path=".">
+      <fb:insert-node><map:parameter/>
+</fb:insert-node>
+      <fb:struct id="parameter" path="map:parameter">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="name" path="@name"/>
+          <fb:value id="value" path="@value"/>
+        </fb:struct>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="pipeline-class">
+    <fb:case id="pipeline" path=".">
+      <fb:insert-node><map:pipeline/>
+</fb:insert-node>
+      <fb:struct id="pipeline" path="map:pipeline">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="type" path="@type"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="pipelines-class">
+    <fb:case id="pipelines" path=".">
+      <fb:insert-node><map:pipelines/>
+</fb:insert-node>
+      <fb:struct id="pipelines" path="map:pipelines">
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="read-class">
+    <fb:case id="read" path=".">
+      <fb:insert-node><map:read/>
+</fb:insert-node>
+      <fb:struct id="read" path="map:read">
+        <fb:struct id="stuff" path=".">
+          <fb:new id="type-class"/>
+          <fb:new id="src-class"/>
+          <fb:insert-node>
+  <fd:widgets/>
+  </fb:insert-node>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="redirect-to-class">
+    <fb:case id="redirect-to" path=".">
+      <fb:insert-node><map:redirect-to/>
+</fb:insert-node>
+      <fb:struct id="redirect-to" path="map:redirect-to">
+        <fb:struct id="stuff" path=".">
+          <fb:new id="uri-class"/>
+          <fb:insert-node>
+  <fd:widgets/>
+  </fb:insert-node>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="serialize-class">
+    <fb:case id="serialize" path=".">
+      <fb:insert-node><map:serialize/>
+</fb:insert-node>
+      <fb:struct id="serialize" path="map:serialize">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="type" path="@type"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="transform-class">
+    <fb:case id="transform" path=".">
+      <fb:insert-node><map:transform/>
+</fb:insert-node>
+      <fb:struct id="transform" path="map:transform">
+        <fb:struct id="stuff" path=".">
+          <fb:value id="type" path="@type"/>
+          <fb:value id="src" path="@src"/>
+        </fb:struct>
+        <fb:new id="items-class"/>
+      </fb:struct>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="view-selector-class">
+    <fb:javascript id="view-selector" path="." direction="load">
+      <fb:load-form>
+        // View is selected by buttons.
+        widget.setProcessRequests(false);
+        widget.setValue("view");
+      </fb:load-form>
+    </fb:javascript>
+  </fb:class>
+
+  <fb:class id="items-class">
+    <fb:temp-repeater id="items"
+      parent-path="."
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind><fb:new id="item-row-class"/></fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="item-row-class">
+    <fb:javascript id="type-selector" path="." direction="load">
+      <fb:load-form>
+        widget.setValue(jxpathPointer.getNode().getFirstChild().getLocalName());
+      </fb:load-form>
+    </fb:javascript>
+    <fb:union id="union" path=".">
+      <fb:new id="components-class"/>
+      <fb:new id="pipelines-class"/>
+      <fb:new id="pipeline-class"/>
+      <fb:new id="match-class"/>
+      <fb:new id="generate-class"/>
+      <fb:new id="transform-class"/>
+      <fb:new id="serialize-class"/>
+      <fb:new id="call-class"/>
+      <fb:new id="read-class"/>
+      <fb:new id="redirect-to-class"/>
+      <fb:new id="parameter-class"/>
+    </fb:union>
+    <!-- The view-selector initalization has to happen last, -->
+    <!-- so setProcessRequests() has widgets to work on.     -->
+    <fb:new id="view-selector-class"/>
+  </fb:class>
+
+  <fb:class id="label-class">
+    <fb:value id="label" path="fd:label"/>
+  </fb:class>
+
+  <fb:class id="src-class">
+    <fb:value id="src" path="@src"/>
+  </fb:class>
+
+  <fb:class id="type-class">
+    <fb:value id="type" path="@type"/>
+  </fb:class>
+
+  <fb:class id="uri-class">
+    <fb:value id="uri" path="@uri"/>
+  </fb:class>
+
+</fb:context>
