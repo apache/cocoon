@@ -109,6 +109,9 @@ public class SitemapContainer extends DefaultContainer {
         }
     }
     
+    /**
+     * FIXME: Only the root sitemap container needs to provide these.
+     */
     public void initialize() throws CompositeException, Exception {
         
         addNativeComponent("<notifier>",NotifyingGenerator.class);
@@ -123,6 +126,9 @@ public class SitemapContainer extends DefaultContainer {
         return (ProcessingNode) super.getServiceManager().lookup(ProcessingNode.ROLE);
     }
     
+    /**
+     * Overide from super class to provide custom implementation.
+     */
     protected ServiceManager provideServiceManager(ServiceManager parent)
         throws ServiceException {
         
@@ -144,11 +150,17 @@ public class SitemapContainer extends DefaultContainer {
         }
     }
     
+    /**
+     * Custom service manager implementation that adds component default
+     * management.
+     */
     private static final class SitemapServiceManager extends FortressServiceManager {
         
         private final Map m_defaultHints;
         
-        private SitemapServiceManager(SitemapContainer container, ServiceManager parent, Map defaultHints) {
+        private SitemapServiceManager(SitemapContainer container, 
+                                      ServiceManager   parent, 
+                                      Map              defaultHints) {
             super(container,parent);
             m_defaultHints = defaultHints;
         }
