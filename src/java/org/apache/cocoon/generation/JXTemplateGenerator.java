@@ -78,7 +78,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -361,7 +360,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.36 2004/02/05 19:32:18 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.37 2004/02/13 00:24:31 vgritsenko Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -974,7 +973,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                             location, exc);
         } catch (Error err) {
             throw new SAXParseException(errorPrefix + err.getMessage(),
-                                                            location, 
+                                                            location,
                                         new ErrorHolder(err));
         }
     }
@@ -1257,7 +1256,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     throw new SAXParseException(err.getMessage(),
                                                                 this.location,
                                                                 new ErrorHolder(err));
-                                                                
+
                                 }
                                 substitutions.add(new Expression(str,
                                                                  compiledExpression));
@@ -2884,7 +2883,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         cocoon.put("context",
                    FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
-        cocoon.put("continuation", 
+        cocoon.put("continuation",
                    FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel));
         cocoon.put("parameters", Parameters.toProperties(parameters));
         this.variables = new MyVariables(cocoon, contextObject, kont, request,
@@ -2909,8 +2908,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             // FIXME (VG): Is this required (what it's used for - examples)?
             // Here I use Rhino's live-connect objects to allow Jexl to call
             // java constructors
-            Object javaPkg = JavaScriptFlow.getJavaPackage(objectModel);
-            Object pkgs = JavaScriptFlow.getPackages(objectModel);
+            Object javaPkg = FOM_JavaScriptFlowHelper.getJavaPackage(objectModel);
+            Object pkgs = FOM_JavaScriptFlowHelper.getPackages(objectModel);
             map.put("java", javaPkg);
             map.put("Packages", pkgs);
         }
@@ -2986,7 +2985,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                     event.location, e);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                event.location, 
+                                                event.location,
                                                 new ErrorHolder(err));
                 }
             }
@@ -3082,9 +3081,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 */
+
     private void executeDOM(final XMLConsumer consumer,
-            MyJexlContext jexlContext, JXPathContext jxpathContext,
-            Node node) throws SAXException {
+                            MyJexlContext jexlContext,
+                            JXPathContext jxpathContext,
+                            Node node) throws SAXException {
         DOMStreamer streamer = new DOMStreamer(consumer);
         streamer.stream(node);
    }
@@ -3196,7 +3197,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                         ev.location, e);
                         } catch (Error err) {
                             throw new SAXParseException(err.getMessage(),
-                                                        ev.location, 
+                                                        ev.location,
                                                         new ErrorHolder(err));
                         }
                     }
@@ -3245,7 +3246,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 ev.location, e);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
                 boolean result = false;
@@ -3332,7 +3333,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 ev.location, exc);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
                 MyJexlContext localJexlContext =
@@ -3510,7 +3511,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                                 ev.location, e);
                                 } catch (Error err) {
                                     throw new SAXParseException(err.getMessage(),
-                                                                ev.location, 
+                                                                ev.location,
                                                                 new ErrorHolder(err));
                                 }
                                 if (val == null) {
@@ -3539,7 +3540,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                         } catch (Error err) {
                                             throw new SAXParseException(
                                                     err.getMessage(),
-                                                    ev.location, 
+                                                    ev.location,
                                                     new ErrorHolder(err));
                                         }
                                         if (val == null) {
@@ -3619,7 +3620,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                                 ev.location, e);
                                 } catch (Error err) {
                                     throw new SAXParseException(err.getMessage(),
-                                                                ev.location, 
+                                                                ev.location,
                                                                 new ErrorHolder(err));
                                }
                                 if (val == null) {
@@ -3650,7 +3651,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             ev.location, e);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
             } else if (ev instanceof StartFormatDate) {
@@ -3667,7 +3668,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 ev.location, e);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
             } else if (ev instanceof StartPrefixMapping) {
@@ -3758,7 +3759,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 ev.location, exc);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
                 ev = startEval.endInstruction.next;
@@ -3773,7 +3774,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 ev.location, exc);
                 } catch (Error err) {
                     throw new SAXParseException(err.getMessage(),
-                                                ev.location, 
+                                                ev.location,
                                                 new ErrorHolder(err));
                 }
                 ev = startEval.endInstruction.next;
@@ -3810,7 +3811,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                             ev.location, exc);
                             } catch (Error err) {
                                 throw new SAXParseException(err.getMessage(),
-                                                            ev.location, 
+                                                            ev.location,
                                                             new ErrorHolder(err));
                             }
                             if (val == null) {
@@ -3884,7 +3885,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                     ev.location, exc);
                     } catch (Error err) {
                         throw new SAXParseException(err.getMessage(),
-                                                    ev.location, 
+                                                    ev.location,
                                                     new ErrorHolder(err));
                     }
                 }
