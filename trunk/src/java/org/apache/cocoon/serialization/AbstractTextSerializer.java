@@ -55,6 +55,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -84,7 +85,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.3 2003/03/19 17:37:12 sylvain Exp $
  */
 public abstract class AbstractTextSerializer
 extends AbstractSerializer
@@ -162,10 +163,6 @@ implements Configurable, CacheableProcessingComponent {
      */
     protected SAXTransformerFactory getTransformerFactory()
     {
-        if(tfactory == null)  {
-            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
-        }
         return tfactory;
     }
 
@@ -250,6 +247,24 @@ implements Configurable, CacheableProcessingComponent {
         if (! version.getLocation().equals("-")) {
             format.put(OutputKeys.VERSION,version.getValue());
         }
+
+        Configuration tFactoryConf = conf.getChild("transformer-factory", false);
+        if (tFactoryConf != null) {
+            String tFactoryClass = tFactoryConf.getValue();
+            try {
+            	this.tfactory = (SAXTransformerFactory)ClassUtils.newInstance(tFactoryClass);
+            	if (getLogger().isDebugEnabled()) {
+            	   getLogger().debug("Using transformer factory " + tFactoryClass);
+            	}
+            } catch(Exception e) {
+            	throw new ConfigurationException("Cannot load transformer factory " + tFactoryClass, e);
+            }
+        } else {
+           // Standard TrAX behaviour
+           this.tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
+        }
+        
+        tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
 
         // Check if we need namespace as attributes.
         try {
