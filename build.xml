@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.24 2003/03/21 08:40:09 stefano Exp $:
+       CVS $Id: build.xml,v 1.25 2003/03/21 14:23:38 stephan Exp $:
 
 ============================================================================ -->
 
@@ -840,7 +840,7 @@
     <xmlvalidate failonerror="true" lenient="no" warn="yes">
       <!-- FIXME: we can use xmlcatalog with Ant-1.6 -->
       <fileset dir="${build.context}/xdocs" includes="**/*.xml"
-               excludes="drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml"/>
+               excludes="drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml"/>
     </xmlvalidate>
 
     <echo message="Validating the documentation sitemap.xmap using RELAX NG ..."/>
