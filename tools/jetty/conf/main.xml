@@ -46,7 +46,7 @@
   <Call name="addWebApplication">
     <Arg>/</Arg>
     <Arg><SystemProperty name="webapp" default="."/></Arg>
-    <Set name="defaultsDescriptor">./tools/jetty/conf/webdefaults.xml</Set>
+    <Set name="defaultsDescriptor"><SystemProperty name="home" default="."/>/tools/jetty/conf/webdefaults.xml</Set>
   </Call>
 
 </Configure>
