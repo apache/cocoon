@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.18 2003/03/17 23:12:54 vgritsenko Exp $:
+       CVS $Id: build.xml,v 1.19 2003/03/18 02:21:03 vgritsenko Exp $:
 
 ============================================================================ -->
 
@@ -901,12 +901,17 @@
   <!-- Anteater tests  -->
   <target name="anteater.tests" description="Runs the functional tests">
     <property name="host" value="localhost"/>
-    <property name="port" value="8080"/>
-    <property name="base" value="cocoon"/>
+    <property name="port" value="8888"/>
+    <property name="base" value="/"/>
 
+    <!-- FIXME: Anteater invocation is platform specific
+    <exec executable="cmd">
+      <arg line="/C C:\Java\anteater-0.9.15\bin\anteater.bat -f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
     <exec executable="anteater">
       <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
     </exec>
+    -->
   </target>
 
 <!-- IDE targets =========================================================== -->
