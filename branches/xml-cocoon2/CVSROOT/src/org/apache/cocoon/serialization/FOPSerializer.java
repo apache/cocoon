@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-30 14:17:38 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-30 20:55:35 $
  *
  */
 public class FOPSerializer extends AbstractSerializer
@@ -55,11 +55,7 @@ implements MessageListener, Recyclable, Cacheable {
         MessageHandler.setOutputMethod(MessageHandler.EVENT);
         MessageHandler.addListener(this);
 
-        this.driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
-        this.driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
-        this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-        this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
-        this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
+        this.driver.setRenderer(new org.apache.fop.render.pdf.PDFRenderer());
         this.driver.setOutputStream(out);
         this.setContentHandler(this.driver.getContentHandler());
      }
@@ -95,6 +91,7 @@ implements MessageListener, Recyclable, Cacheable {
         // XXX (SM)
         // we should consume the events in some meaningful way
         // for example formatting them on the metapipeline
+	getLogger().debug("FOP Message: "+event.getMessage());
     }
 
     /**
