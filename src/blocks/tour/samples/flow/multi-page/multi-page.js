@@ -33,7 +33,7 @@ function public_startMultiPage() {
     while(true) {
 
         // decide which page to show based on request parameters
-        page = "page1";
+        var page = "page1";
         if(cocoon.request.getParameter("action_send") != null) {
             break;
         } else if(cocoon.request.getParameter("action_page2") != null) {
@@ -45,7 +45,7 @@ function public_startMultiPage() {
 
         // now for the boring part: copy form data into message
         // that's where Forms bindings would help
-        tmp = cocoon.request.getParameter("sender");
+        var tmp = cocoon.request.getParameter("sender");
         if(tmp != null) message.sender = tmp;
 
         tmp = cocoon.request.getParameter("subject");
