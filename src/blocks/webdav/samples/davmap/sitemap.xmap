@@ -31,7 +31,7 @@
     </map:transformers>
     
     <!-- If event caching is enabled you'll need to uncomment this in order
-         for PROPPATCH to work properly 
+         for PROPPATCH to work properly
     <map:pipes default="caching">
       <map:pipe name="event-caching" 
         src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
@@ -98,13 +98,6 @@
       <map:match pattern="request/PUT">
         <map:generate type="stream" />
         <map:serialize type="xml" />
-      </map:match>
-      
-      <map:match pattern="status/*">
-        <map:generate type="jx" src="status.jx">
-          <map:parameter name="status" value="{1}" />
-        </map:generate>
-        <map:serialize type="xml" status-code="{1}" />
       </map:match>
       
     </map:pipeline>
@@ -189,8 +182,7 @@
       <map:match pattern="MKCOL/**">
         <map:match pattern="MKCOL/**.*">
           <map:call function="sendStatus">
-            <map:parameter name="status" value="409" />
-            <map:parameter name="message" value="Not a valid collection name." />
+            <map:parameter name="status" value="405" />
           </map:call>
         </map:match>
         <map:call function="mkcol">
@@ -215,7 +207,6 @@
         </map:match>
         <map:call function="sendStatus">
           <map:parameter name="status" value="405" />
-          <map:parameter name="message" value="Destination resource out of scope." />
         </map:call>
       </map:match>
       
@@ -230,7 +221,6 @@
         </map:match>
         <map:call function="sendStatus">
           <map:parameter name="status" value="405" />
-          <map:parameter name="message" value="Destination resource out of scope." />
         </map:call>
       </map:match>
       
