@@ -47,9 +47,10 @@
       <li>Use a transparent proxy in front of your web server! The fastest
       response is the one that is not even processed. Cocoon is very slow
       (compared to a proxy server) to read resources such as stylesheets and
-      images. A transparent proxy (SQUID, for example, don't use Apache's
+      images. A transparent proxy (SQUID, for example, don't use Apache 1.3
       mod_proxy because it is not fully compatible with HTTP/1.1 and disables
-      connection keep-alive). Make sure you tune how long the static resources
+      connection keep-alive - Apache 2 mod_proxy is fine).
+      Make sure you tune how long the static resources
       that Cocoon "read"s from the sitemap are cached (look into the readers
       code to find out more).</li>
       
