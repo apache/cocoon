@@ -1,4 +1,4 @@
-/*-- $Id: XSPPage.java,v 1.8 2000-11-20 01:43:56 greenrd Exp $ -- 
+/*-- $Id: XSPPage.java,v 1.9 2001-01-17 16:02:20 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,10 +60,11 @@ import javax.servlet.http.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.producer.*;
 import org.apache.cocoon.framework.*;
+import org.apache.cocoon.xml.XMLFragment;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.8 $ $Date: 2000-11-20 01:43:56 $
+ * @version $Revision: 1.9 $ $Date: 2001-01-17 16:02:20 $
  */
 public abstract class XSPPage extends AbstractProducer implements Cacheable {
   protected Parser xspParser;
@@ -172,8 +173,17 @@ public abstract class XSPPage extends AbstractProducer implements Cacheable {
     }
 
     // Convertible to DOM
-    if (v instanceof XObject){
-      DocumentFragment fragment = factory.createDocumentFragment();
+    if (v instanceof XMLFragment) {
+      DocumentFragment fragment = factory.createDocumentFragment ();
+      ((XMLFragment) v).toDOM(fragment);
+      return fragment;
+    }
+ 
+    // Deprecated version of XMLFragment (see prev)
+    if (v instanceof XObject) {
+      // XXX: Should use logger instead
+      System.err.println ("Warning: XObject is deprecated and WILL NOT WORK in Cocoon 2. Use XMLFragment instead.");
+      DocumentFragment fragment = factory.createDocumentFragment ();
       ((XObject) v).toDOM(fragment);
       return fragment;
     }

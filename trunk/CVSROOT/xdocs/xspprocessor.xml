@@ -392,7 +392,7 @@
                   <code>Text</code>. <strong>WARNING:</strong> This means that if you try to
                   insert some XML as a <code>String</code> using <code>&lt;xsp:expr&gt;</code>,
                   it will not work! Instead, you will need to <em>either</em> use
-                  <code>&lt;util:include-expr&gt;</code>, <em>or</em> build <code>XObject</code>s
+                  <code>&lt;util:include-expr&gt;</code>, <em>or</em> build <code>XMLFragment</code>s
                   or <code>org.w3c.dom.Node</code>s instead - please read the
                   <link href="faqs.html#faq-xspinsertxml">FAQ</link> on this before asking
                   questions about it.

@@ -59,6 +59,7 @@ import org.xml.sax.DocumentHandler;
  * to provide an XML representation of their current state
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
+ * @deprecated
  */
 
 public interface XObject {
