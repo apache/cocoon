@@ -11,25 +11,30 @@ package org.apache.cocoon.sitemap;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configuration;
 
-//import org.apache.avalon.Poolable;
-//import org.apache.avalon.Sharable;
+import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.SingleThreaded;
 
+import org.apache.cocoon.util.ClassUtils;
 /**
  * This factory instantiate the corresponding ComponentHolder according to the
  * interfaces the passed component implements.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:58:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-09 09:30:12 $
  */
 public class ComponentHolderFactory {
 
-    public static ComponentHolder getComponentHolder (String componentName, Configuration configuration, ComponentManager manager) {
-//        if (ClassUtil.implementsInterface (componentClass, Poolable)) {
-//            return new PoolableComponentHolder (componentClass, configuration, manager);
-//        } else if (ClassUtil.implementsInterface (componentClass, Sharable)) {
-//            return new SharableComponentHolder (componentClass, configuration, manager);
-//        } else  {
+    public static ComponentHolder getComponentHolder (String componentName, Configuration configuration, ComponentManager manager)
+    throws Exception {
+        if (ClassUtils.implementsInterface (componentName, Poolable.class.getName())) {
+            return new PoolableComponentHolder (componentName, configuration, manager);
+        } else if (ClassUtils.implementsInterface (componentName, SingleThreaded.class.getName())) {
             return new DefaultComponentHolder (componentName, configuration, manager);
-//        } 
+        } else if (ClassUtils.implementsInterface (componentName, ThreadSafe.class.getName())) {
+            return new ThreadSafeComponentHolder (componentName, configuration, manager);
+        } else  {
+            return new DefaultComponentHolder (componentName, configuration, manager);
+        }
     }
 }
