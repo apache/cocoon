@@ -77,14 +77,14 @@ import java.util.List;
  * that the setDocumentLocator event is not recorded.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: SaxBuffer.java,v 1.8 2004/02/13 11:50:30 cziegeler Exp $
+ * @version CVS $Id: SaxBuffer.java,v 1.9 2004/03/01 08:22:23 cziegeler Exp $
  */
 public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
 
     /**
      * Stores list of {@link SaxBit} objects.
      */
-    private List saxbits = new ArrayList();
+    protected List saxbits = new ArrayList();
 
     /**
      * Creates empty SaxBuffer
