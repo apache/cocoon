@@ -17,6 +17,7 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -144,7 +145,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.12 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.13 2004/07/02 08:33:42 antonio Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Serviceable, Configurable, CacheableProcessingComponent, Disposable {
@@ -326,7 +327,7 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         Map map = getLogicSheetParameters();
         if (map == null) {
             return this.inputSource.getURI();

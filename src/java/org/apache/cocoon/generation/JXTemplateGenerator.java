@@ -117,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.50 2004/06/28 09:25:39 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.51 2004/07/02 08:33:42 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -807,17 +807,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return getValue(expr, jexlContext, jxpathContext, null);
     }
 
-    static private int getIntValue(JXTExpression expr, JexlContext jexlContext,
-                                JXPathContext jxpathContext) throws Exception {
+    static private int getIntValue(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
-        if (res instanceof Number) {
-            return ((Number)res).intValue();
-        }
-        return 0;
+        return res instanceof Number ? ((Number)res).intValue() : 0;
     }
 
-    static private Number getNumberValue(JXTExpression expr, JexlContext jexlContext,
-                               JXPathContext jxpathContext) throws Exception {
+    static private Number getNumberValue(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
         if (res instanceof Number) {
             return (Number)res;
@@ -846,10 +841,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return res instanceof Boolean ? (Boolean)res : null;
     }
 
+    private Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
+        return getNode(expr, jexlContext, jxpathContext, null);
+    }
+
     // Hack: try to prevent JXPath from converting result to a String
-    private Object getNode(JXTExpression expr, JexlContext jexlContext,
-                           JXPathContext jxpathContext, Boolean lenient)
-        throws Exception {
+    private Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext, Boolean lenient)
+        	throws Exception {
         try {
             Object compiled = expr.compiledExpression;
             if (compiled instanceof CompiledExpression) {
@@ -858,29 +856,29 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 if (lenient != null) jxpathContext.setLenient(lenient.booleanValue());
                 try {
                     Iterator iter = e.iteratePointers(jxpathContext);
-                    if (!iter.hasNext()) {
-                        return null;
+                    if (iter.hasNext()) {
+	                    Pointer first = (Pointer)iter.next();
+	                    if (iter.hasNext()) {
+		                    List result = new LinkedList();
+		                    result.add(first.getNode());
+		                    boolean dom = (first.getNode() instanceof Node);
+		                    while (iter.hasNext()) {
+		                        Object obj = ((Pointer)iter.next()).getNode();
+		                        dom = dom && (obj instanceof Node);
+		                        result.add(obj);
+		                    }
+		                    Object[] arr;
+		                    if (dom) {
+		                        arr = new Node[result.size()];
+		                    } else {
+		                        arr = new Object[result.size()];
+		                    }
+		                    result.toArray(arr);
+		                    return arr;
+                    	}
+                    	return first.getNode();                    
                     }
-                    Pointer first = (Pointer)iter.next();
-                    if (!iter.hasNext()) {
-                        return first.getNode();
-                    }
-                    List result = new LinkedList();
-                    result.add(first.getNode());
-                    boolean dom = (first.getNode() instanceof Node);
-                    while (iter.hasNext()) {
-                        Object obj = ((Pointer)iter.next()).getNode();
-                        dom = dom && (obj instanceof Node);
-                        result.add(obj);
-                    }
-                    Object[] arr;
-                    if (dom) {
-                        arr = new Node[result.size()];
-                    } else {
-                        arr = new Object[result.size()];
-                    }
-                    result.toArray(arr);
-                    return arr;
+                    return null;
                 } finally {
                     jxpathContext.setLenient(oldLenient);
                 }
@@ -896,10 +894,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
             throw (Error)t;
         }
-    }
-
-    private Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
-        return getNode(expr, jexlContext, jxpathContext, null);
     }
 
     static class Event {
@@ -2001,10 +1995,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             stack.push(lastEvent);
         }
 
-        public void startElement(String namespaceURI, String localName,
-                          String qname, Attributes attrs) throws SAXException {
+        public void startElement(String namespaceURI, String localName, String qname, Attributes attrs) throws SAXException {
             Event newEvent = null;
-            AttributesImpl elementAttributes = new AttributesImpl( attrs );
+            AttributesImpl elementAttributes = new AttributesImpl(attrs);
             int attributeCount = elementAttributes.getLength();
             for (int i = 0; i < attributeCount; i++) {
             	String attributeURI = elementAttributes.getURI(i);
@@ -2140,10 +2133,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         throw new SAXParseException("macro: \"name\" is required", locator, null);
                     }
                 } else if (localName.equals(PARAMETER)) {
-                    boolean syntaxErr = false;
-                    if (stack.size() < 1 ||
-                        !(stack.peek() instanceof StartDefine)) {
-                        syntaxErr = true;
+                    if (stack.size() == 0 || !(stack.peek() instanceof StartDefine)) {
+                        throw new SAXParseException("<parameter> not allowed here", locator, null);
                     } else {
                         String name = attrs.getValue("name");
                         String optional = attrs.getValue("optional");
@@ -2154,9 +2145,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         } else {
                             throw new SAXParseException("parameter: \"name\" is required", locator, null);
                         }
-                    }
-                    if (syntaxErr) {
-                        throw new SAXParseException("<parameter> not allowed here", locator, null);
                     }
                 } else if (localName.equals(EVALBODY)) {
                     newEvent = new StartEvalBody(startElement);
@@ -2336,7 +2324,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        if ( this.resolver != null) {
+        if (this.resolver != null) {
             this.resolver.release(this.inputSource);
         }
         this.inputSource = null;
@@ -3057,6 +3045,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     throw new SAXParseException(e.getMessage(), ev.location, e);
                 }
             } else if (ev instanceof StartTemplate) {
+                // EMPTY
             } else if (ev instanceof StartEval) {
                 StartEval startEval = (StartEval)ev;
                 JXTExpression expr = startEval.value;
@@ -3229,12 +3218,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 	}
 	
 	private Object getCurrentTemplateProperty(String propertyName) {
-    	final String uri = inputSource.getURI();
+    	final String uri = this.inputSource.getURI();
     	StartDocument startEvent;
         synchronized (cache) {
             startEvent = (StartDocument)cache.get(uri);
         }
-        return startEvent != null ? startEvent.templateProperties.get(propertyName) : null;
+        return (startEvent != null) ? startEvent.templateProperties.get(propertyName) : null;
 	}
 	
 	private NodeList toDOMNodeList(String elementName, StartInstruction si,
@@ -3242,8 +3231,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
         builder.startElement(NS, elementName, elementName, EMPTY_ATTRS);
-        execute(builder, jexlContext, jxpathContext, macroCall,
-                si.next, si.endInstruction);
+        execute(builder, jexlContext, jxpathContext, macroCall, si.next, si.endInstruction);
         builder.endElement(NS, elementName, elementName);
         builder.endDocument();
         Node node = builder.getDocument().getDocumentElement();

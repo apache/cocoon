@@ -26,6 +26,7 @@ import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.9 2004/06/11 20:32:20 vgritsenko Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.10 2004/07/02 08:33:42 antonio Exp $
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -88,7 +89,7 @@ implements CacheableProcessingComponent {
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return this.inputSource.getURI();
     }
 
