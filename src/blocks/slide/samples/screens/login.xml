@@ -11,7 +11,7 @@
       <column title="Login">
         <p class="samplesNote">These Slide examples require Java Transaction
         API library to be present. Get jta.jar and place it to the lib folder
-        before trying these examples.
+        before trying these examples. You will also need enabled uploads in web.xml .
         </p>
         <table border="0" cellspacing="0" cellpadding="2">
           <form action="login" method="post">
