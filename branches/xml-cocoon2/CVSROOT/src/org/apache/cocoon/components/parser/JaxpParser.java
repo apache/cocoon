@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.w3c.dom.Document;
+import org.w3c.dom.DOMImplementation;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-07 17:35:19 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-08 11:59:37 $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, ThreadSafe {
@@ -70,7 +71,15 @@ implements Parser, ErrorHandler, ThreadSafe {
      * Create a new Document object.
      */
     public Document newDocument() {
-        return this.newDocument(null, null, null);
+        DocumentBuilder builder = null;
+        
+        try {
+            builder = this.docfactory.newDocumentBuilder();
+        } catch (ParserConfigurationException pce) {
+            log.error("Could not create DocumentBuilder", pce);
+            return null;
+        }
+        return builder.newDocument();
     }
 
     /**
@@ -94,10 +103,12 @@ implements Parser, ErrorHandler, ThreadSafe {
             return null;
         }
 
-        return builder.getDOMImplementation()
-               .createDocument(null, name,
-                   builder.getDOMImplementation()
-                   .createDocumentType(name, publicId, systemId)
+        // Fixme: is there a better way to achieve this?
+        DOMImplementation impl = builder.newDocument().getImplementation();
+        return impl.createDocument(
+            null,
+            name,
+            impl.createDocumentType(name, publicId, systemId)
         );
 
     }

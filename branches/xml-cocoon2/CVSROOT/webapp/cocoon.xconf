@@ -3,7 +3,7 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <parser class="org.apache.cocoon.components.parser.XercesParser"/>
+  <parser class="org.apache.cocoon.components.parser.JaxpParser"/>
   <store class="org.apache.cocoon.components.store.MemoryStore"/>
 
   <programming-languages>
