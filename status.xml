@@ -182,9 +182,9 @@
 
  <release version="@version@" date="@date@">
   <action dev="JH" type="fix">
-    Fixed some caching and logging issues in the DirectoryGenerator.
-    Fixed the root pattern handling (if not matching directory found leave out the ancestors).
-    Fixed empty src attribute handling.
+    Fixed some caching (added missing parameters and changed algorithm for cache key generation)
+    and logging issues in the DirectoryGenerator. Fixed the root pattern handling (if not matching
+    directory found leave out the ancestors). Fixed empty src attribute handling.
   </action>
   <action dev="GP" type="update">
     Upgraded to new Axis 1.1 release
