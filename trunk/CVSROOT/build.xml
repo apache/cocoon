@@ -209,28 +209,28 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare">
+  <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare-xt" if="xt.present">
+  <target name="prepare-xt" depends="init" if="xt.present">
     <copydir src="${src.dir}"
              dest="${build.src}"
              includes="**/XT*"
              filtering="on"/>
   </target>
 
-  <target name="prepare-ldap" if="jndi.present">
+  <target name="prepare-ldap" depends="init" if="jndi.present">
     <copydir src="${src.dir}"
              dest="${build.src}"
              includes="**/ldap/**"
              filtering="on"/>
   </target>
 
-  <target name="prepare-ecma" if="fesi.present">
+  <target name="prepare-ecma" depends="init" if="fesi.present">
     <copydir src="${src.dir}"
              dest="${build.src}"
              includes="**/ecmascript/**"
@@ -275,7 +275,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
-  <target name="prepare-docs">
+  <target name="prepare-docs" depends="init">
     <copyfile src="changes.xml" dest="${docs.dir}/changes.xml" filtering="on"/>
     <copyfile src="todo.xml" dest="${docs.dir}/todo.xml"/>
 
@@ -373,7 +373,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
-  <target name="clean">
+  <target name="clean" depends="init">
     <deltree dir="${build.dir}"/>
     <delete file="${docs.dir}/changes.xml"/>
     <delete file="${docs.dir}/todo.xml"/>
