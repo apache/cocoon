@@ -55,9 +55,6 @@ import de.tivano.flash.swf.parser.SWFReader;
 import de.tivano.flash.swf.parser.SWFVerboseDefineFont2Reader;
 import de.tivano.flash.swf.parser.SWFVerboseDefineFontReader;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -72,21 +69,15 @@ import java.util.Map;
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: SWFGenerator.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: SWFGenerator.java,v 1.3 2003/09/05 07:40:20 cziegeler Exp $
  */
-public class SWFGenerator extends FileGenerator implements Configurable {
+public class SWFGenerator extends FileGenerator {
+    
     private boolean pVerbose = false;
     private SWFReader parser;
 
-    public void configure(Configuration configuration) throws ConfigurationException {
-        pVerbose = false;
-    }
-
-
-
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException
-    {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         parser = new SWFReader();
         if (pVerbose) {
@@ -96,8 +87,7 @@ public class SWFGenerator extends FileGenerator implements Configurable {
     }
 
     public void generate()
-            throws IOException, SAXException, ProcessingException
-    {
+    throws IOException, SAXException, ProcessingException {
 
         try {
             if (this.getLogger().isDebugEnabled()) {
@@ -126,14 +116,6 @@ public class SWFGenerator extends FileGenerator implements Configurable {
             }
             throw e;
         }
-    }
-
-    public void recycle() {
-        super.recycle();
-    }
-
-    public void dispose() {
-        super.dispose();
     }
 
 }
