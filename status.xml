@@ -205,6 +205,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     Scratchpad block: Implemented support of parallel loading of included
+     sources in the IncludeTransformer.
+   </action>
    <action dev="AG" type="update">
      Updated commons-lang to 2.0-20041007T2305. Now cocoon compiles in java 1.5
    </action>
