@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.7 2004/04/15 16:15:50 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.8 2004/04/19 15:58:58 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -144,14 +144,11 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         locale = Locale.getDefault();
         if (langString != null) {
             this.cacheKeyParList.add(langString);
-            String countryString = par.getParameter("country", null);
-            if (countryString != null) {
+            String countryString = par.getParameter("country", "");
+            if (! "".equals(countryString)) {
                 this.cacheKeyParList.add(countryString);
-                locale = new Locale(langString, countryString);
-            } else {
-                locale = new Locale(langString);
             }
-            
+            locale = new Locale(langString, countryString);
         }
         
         // Determine year and month. Default is current year and month.
