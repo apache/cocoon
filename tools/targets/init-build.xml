@@ -126,7 +126,7 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           target="${target.vm}"
+           target="1.3"
            nowarn="on"
            compiler="${compiler}"
            classpathref="tasks.classpath"/>
@@ -147,7 +147,7 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           target="${target.vm}"
+           target="1.3"
            nowarn="on"
            compiler="${compiler}"/>
 
