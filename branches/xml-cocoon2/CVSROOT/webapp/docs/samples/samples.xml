@@ -34,7 +34,7 @@
     This pages shows the XML-ized version of the Apache Jakarta web site.
    </sample>
   </group>
-  
+<!--  
   <group name="Static Content">
    <sample name="formatting objects" href="fo">
     This is an example of FO translated to PDF by Apache FOP.
@@ -42,13 +42,13 @@
    <sample name="scalable vector graphics" href="svg">
     An example of a SVG file rendered to a PNG image.
    </sample>
-   <sample name="slides" href="slides/slides" xlink:role="dynamic">
+   <sample name="slides" href="slides/slides">
     Example of complex XSLT usage.
    </sample>
   </group>
 
   <group name="Dynamic Content">
-   <sample name="Simple XSP" href="xsp/simple" xlink:role="dynamic">
+   <sample name="Simple XSP" href="xsp/simple">
     Simple XSP example.
    </sample>
    <sample name="Simple SQL" href="sql/sql-page" xlink:role="dynamic">
@@ -59,12 +59,12 @@
   </group>
 
   <group name="System Pages">
-   <sample name="Status Page" href="status" xlink:role="dynamic">
+   <sample name="Status Page" href="status">
     Cocoon status page.
    </sample>
-   <sample name="Error Page" href="generror" xlink:role="dynamic">
+   <sample name="Error Page" href="generror">
     This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>
-  
+-->  
 </samples>
