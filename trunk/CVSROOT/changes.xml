@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.169 2001-01-10 23:24:01 greenrd Exp $ 
+  $Id: changes.xml,v 1.170 2001-01-10 23:42:31 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Sylvain Wallez" 
+   due-to-email="sylvain.wallez@anyware-tech.com">
+   Added workaround for FOP/PDF problem on Internet Explorer. This causes a "Open/Save" dialog
+   to pop up - but it's infinitely better than a blank screen, which is what we had before,
+   and it's the best workaround anyone's reported so far.
+  </action>
   <action dev="RDG" type="add">
    Added very brief notes on ESQL to documentation
   </action>

@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.5 2000-12-01 18:00:13 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.6 2001-01-10 23:42:31 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,12 +58,13 @@ import org.apache.fop.apps.Driver;
 import org.apache.cocoon.framework.*;
 import org.apache.cocoon.parser.Parser;
 import org.apache.xerces.parsers.SAXParser;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This class wraps around FOP to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-12-01 18:00:13 $
+ * @version $Revision: 1.6 $ $Date: 2001-01-10 23:42:31 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -125,6 +126,12 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
     }
 
     public void format(Document document, Writer writer, Dictionary parameters) throws Exception {
+
+            // Big thanks to Sylvain Wallez for this workaround for IE!!
+            // It should not affect Netscape's plugin integration, apparently.
+            HttpServletResponse response = (HttpServletResponse) parameters.get ("response");
+            response.setHeader ("Content-Disposition", "attachment; filename=untitled.pdf");
+ 
 	    Driver driver = new Driver();
 	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", FOP_VERSION);
 	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");

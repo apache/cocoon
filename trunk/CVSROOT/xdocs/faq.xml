@@ -552,6 +552,7 @@
  </faq>
 
  <faq id="iepdfbug">
+
   <question>Why is Internet Explorer not showing PDF or VRML samples?</question>
   <answer>
    <p>This is a long-time problem with Internet Explorer which doesn't look for
@@ -584,6 +585,14 @@
     Adobe Support Knowledgebase (1)</link>, 
     <link href="http://www.adobe.com/support/techdocs/98fe.htm">(2)</link>.
    </note>
+  </answer>
+ </faq>
+
+ <faq>
+  <question>Why is Internet Explorer bringing up an Open/Save dialog when I view PDF pages?</question>
+  <answer>
+   <p>This is a workaround for a bug in Internet Explorer (see previous question). We think you'll agree
+    it's preferable to just an empty page!</p>
   </answer>
  </faq>
 
