@@ -52,14 +52,13 @@ package org.apache.cocoon.woody.samples;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.cocoon.woody.datatype.Enum;
 
 /**
  * Description of Sex.
- * @version CVS $Id: Sex.java,v 1.3 2003/11/07 22:04:38 ugo Exp $
+ * @version CVS $Id: Sex.java,v 1.4 2003/11/08 14:27:03 joerg Exp $
  */
 public class Sex implements Enum {
 
