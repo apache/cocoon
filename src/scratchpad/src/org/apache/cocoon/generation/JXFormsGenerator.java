@@ -175,6 +175,9 @@ public class JXFormsGenerator extends AbstractGenerator {
     final static String CONTINUATION = "continuation";
     final static String PHASE = "phase";
 
+    final static String XF = "xf";
+    final static String XF_VALUE = "xf:value";
+
 
     static class XPathExpr {
 
@@ -223,26 +226,7 @@ public class JXFormsGenerator extends AbstractGenerator {
             if (absolute) {
                 ctx = root;
             }
-            // Hack: iterate doesn't always do the right thing for non-
-            // collections
-            final NodePointer ptr = (NodePointer)jxpath.getPointer(ctx, "???");
-            if (ptr.isCollection()) {
-                return jxpath.iterate(ctx);
-            } 
-            final Object value = ptr.getValue();
-            return new Iterator() {
-                    Object val = value;
-                    public boolean hasNext() {
-                        return val != null;
-                    }
-                    public Object next() {
-                        Object result = val;
-                        val = null;
-                        return result;
-                    }
-                    public void remove() {
-                    }
-                };
+            return jxpath.iterate(ctx);
         }
     }
 
@@ -1453,7 +1437,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                     JXPathContext localJXPathContext = 
                         jxpathContextFactory.newContext(null, value);
                     AttributesImpl attrs = new AttributesImpl();
-                    attrs.addAttribute(NS, "ref", "ref", "CDATA",
+                    attrs.addAttribute(null, "ref", "ref", "CDATA",
                                        ptr.asPath());
                     consumer.startElement(NS, "item", "item",
                                           attrs);
@@ -1498,11 +1482,14 @@ public class JXFormsGenerator extends AbstractGenerator {
                                                 currentContext);
                     while (iter.hasNext()) {
                         Object val = iter.next();
-                        consumer.startElement(NS, VALUE, VALUE, EMPTY_ATTRS);
+                        consumer.startPrefixMapping(XF, NS);
+                        consumer.startElement(NS, VALUE, 
+                                              XF_VALUE, EMPTY_ATTRS);
                         if (val == null) val = "";
                         String str = String.valueOf(val);
                         consumer.characters(str.toCharArray(), 0, str.length());
-                        consumer.endElement(NS, VALUE, VALUE);
+                        consumer.endElement(NS, VALUE, XF_VALUE);
+                        consumer.endPrefixMapping(XF);
 
                     }
                 }
@@ -1604,7 +1591,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                     if (i >= 0) {
                         newAttrs.setValue(i, kontId + ":" + phase + ":" +id);
                     } else {
-                        newAttrs.addAttribute("", ID, ID, "CDATA", 
+                        newAttrs.addAttribute(null, ID, ID, "CDATA", 
                                               kontId + ":" + phase + ":" + id);
                     }
                     attrs = newAttrs;
@@ -1696,10 +1683,12 @@ public class JXFormsGenerator extends AbstractGenerator {
                     val = startOutput.value.getValue(rootCtx, ctx);
                 }
                 if (val != null) {
-                    consumer.startElement(NS, VALUE, VALUE, EMPTY_ATTRS);
+                    consumer.startPrefixMapping(XF, NS);
+                    consumer.startElement(NS, VALUE, XF_VALUE, EMPTY_ATTRS);
                     String str = String.valueOf(val);
                     consumer.characters(str.toCharArray(), 0, str.length());
-                    consumer.endElement(NS, VALUE, VALUE);
+                    consumer.endElement(NS, VALUE, XF_VALUE);
+                    consumer.endPrefixMapping(XF);
                     
                 }
             } else if (ev instanceof EndOutput) {
