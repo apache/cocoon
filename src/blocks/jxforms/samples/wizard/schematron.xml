@@ -1,17 +1,16 @@
 <?xml version="1.0" ?>
 <!--
 
-	Validating Schematron schema for the xmlform example wizard
+	Validating Schematron schema for the JXForms example wizard
   
   Schematron Schema language home page:
   http://www.ascc.net/xml/schematron/
   
-	Author: Ivelin Ivanov, ivelin@apache.org, April 2002
 
 -->
-<schema ns="http://xml.apache.cocoon/xmlform"
+<schema ns="http://xml.apache.cocoon/jxforms"
 	xmlns="http://www.ascc.net/xml/schematron">
-	<title>Schema for the XML Form example</title>
+	<title>Schema for the JXForms example</title>
 	<phase id="userIdentity">
 		<p>For user identity information.</p>
 		<active pattern="user"/>

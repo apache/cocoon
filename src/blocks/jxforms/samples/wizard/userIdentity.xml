@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <document xmlns:xf="http://apache.org/cocoon/jxforms/1.0">
-  <xf:form id="form-feedback" view="userIdentity" action="" method="GET">
+  <xf:form id="form-feedback" view="userIdentity">
     <xf:label>Personal Information</xf:label>
     <error>
       <xf:violations class="error"/>

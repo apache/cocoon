@@ -69,7 +69,7 @@ function feedbackWizard(form) {
 
     form.setModel(bean);
 
-    form.sendView("view/userIdentity.xml",
+    form.sendView("wizard/userIdentity.xml",
                   function(form) {
         var bean = form.getModel();
         cocoon.log.info("I can also do validation in JavaScript");
@@ -81,7 +81,7 @@ function feedbackWizard(form) {
     });
     cocoon.log.info("handling user identity");
 
-    form.sendView("view/deployment.xml", 
+    form.sendView("wizard/deployment.xml", 
                   function(form) {
         var bean = form.getModel();
         cocoon.log.info("I can also do validation in JavaScript");
@@ -91,12 +91,12 @@ function feedbackWizard(form) {
     });
     cocoon.log.info("handling deployment");
 
-    form.sendView("view/system.xml");
+    form.sendView("wizard/system.xml");
     cocoon.log.info("handling system");
 
-    form.sendView("view/confirm.xml");
+    form.sendView("wizard/confirm.xml");
     cocoon.log.info("handling confirm");
 
-    form.finish("view/end.xml");
+    form.finish("wizard/end.xml");
     cocoon.log.info("done");
 }

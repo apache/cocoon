@@ -73,7 +73,6 @@ public class JXForm extends ScriptableObject {
     String id;
     String validatorNamespace;
     String validatorDocument;
-    String scope;
     String submitId;
 
     private FOM_Cocoon getCocoon() {
@@ -91,18 +90,26 @@ public class JXForm extends ScriptableObject {
                                            boolean inNewExpr)
         throws Exception {
         String id;
-        String validatorNS;
-        String validatorDoc;
-        String scope;
+        String validatorNS = null;
+        String validatorDoc = null;
+        if (args.length < 1) {
+            throw new JavaScriptException("Expected an argument");
+        }
         id = org.mozilla.javascript.Context.toString(args[0]);
-        validatorNS = args[1] == null ? null : org.mozilla.javascript.Context.toString(args[1]);
-        validatorDoc = args[2] == null ? null : org.mozilla.javascript.Context.toString(args[2]);
-        scope = org.mozilla.javascript.Context.toString(args[3]);
+        if (args.length > 1) {
+            validatorNS = (args[1] == null || args[1] == Undefined.instance) ?
+                null : 
+                org.mozilla.javascript.Context.toString(args[1]);
+            if (args.length > 2) {
+                validatorDoc = (args[2] == null || args[2] == Undefined.instance) ? 
+                    null : 
+                    org.mozilla.javascript.Context.toString(args[2]);
+            }
+        }
         JXForm result = new JXForm();
         result.id = id;
         result.validatorNamespace = validatorNS;
         result.validatorDocument = validatorDoc;
-        result.scope = scope;
         return result;
     }
 
