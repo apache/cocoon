@@ -108,7 +108,6 @@
          <map:parameter name="base" value="{global:base}"/>
          <map:parameter name="contextPath" value="{request:contextPath}"/>
        </map:transform>
-       <map:transform type="xinclude"/>
        <map:serialize type="html"/>
      </map:match>
      
