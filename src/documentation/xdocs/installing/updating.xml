@@ -7,173 +7,186 @@
   <authors>
    <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
    <person name="J&#246;rg Heinicke" email="joerg@apache.org"/>
+   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org"/>
   </authors>
  </header>
 
  <body>
 
  <s1 title="Updating Cocoon">
-  <p>Please take your time and read this document completly before you try to upgrade from
+  <p>Please take your time to read this document completely before trying to upgrade from
      a Cocoon 2.0.x version to 2.1 (or above).</p>
   <p>
    This is a brief discussion of the changes between the latest official release @released.version@
-   and the current development version of Apache Cocoon. So, if you are interested in
-   installing the official release, ignore this document. But if you want to know what is going
-   on in the development of Cocoon, have a look...
+   and the current development version of Apache Cocoon.
+   You only need this information if you are updating an existing Cocoon installation, or
+   if you want to know what is going on in the development of Cocoon.
   </p>
   <p>
-   Cocoon has developed many Avalon components which are of a more general nature. So, the best
-   solution was to donate these components to the Avalon Excalibur project and move them out 
-   of Cocoon. This move has lead to some changes in configuration etc. which are described
-   by this document.
+   The Cocoon team has developed many Avalon components which are not specific to Cocoon and have
+   been donated to the Avalon Excalibur project and moved out
+   of Cocoon. This has led to some configuration changes which are described
+   in this document.
   </p>
-  <p>In addition there were some disadvantages in the internal architecture of Cocoon. The
-    new version removes these bottlenecks and gives more flexibility, usability and performance.
+  <p>
+    The internal architecture of cocoon has also been improved to give more flexibility, usability and performance.
   </p>
  </s1>
   <s1 title="Sitemap">
-   <p>There are some changes in the sitemap and the configuration of some components in
+   <p>There are some changes in the sitemap and in the configuration of some components in
      the sitemap.</p>
    <s2 title="FOP Serializer">
-    <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
-      to sitemap's directory. All Cocoon URIs are supported too.</p>
+    <p>Relative paths in FOP serializer's &lt;user-config&gt; are now resolved relatively
+      to the directory that contains the sitemap.</p>
+    <p>All Cocoon URIs are supported too.</p>
    </s2>
   <s2 title="Namespace changes">
-    <p>In order to follow strict rules for the namespace handling, some transformers
-       and generators changed their namespace, so if you use any of these components
-       make sure to change the namespaces.</p>
+    <p>
+        In order have more consistent namespaces, some transformers
+       and generators (listed below) use new namespaces. If you use any of these components, you will
+       need to use the new namespaces.
+    </p>
     <s3 title="Request Generator">
-    <p>RequestGenerator changed namespace from http://xml.apache.org/cocoon/requestgenerator/2.0 to
-       http://apache.org/cocoon/request/2.0.   
+    <p>RequestGenerator changed its namespace from http://xml.apache.org/cocoon/requestgenerator/2.0 to
+       http://apache.org/cocoon/request/2.0.
     </p>
     </s3>
     <s3 title="I18nTransformer">
-      <p>The I18nTransformer changed its namespace from 
-         http://apache.org/cocoon/i18n/2.0 to http://apache.org/cocoon/i18n/2.1</p>
-    </s3>
-    <s3 title="I18nTransformer">
-      <p>The I18nTransformer changed its namespace from 
+      <p>The I18nTransformer changed its namespace from
          http://apache.org/cocoon/i18n/2.0 to http://apache.org/cocoon/i18n/2.1</p>
     </s3>
   </s2>
   </s1>
-  <s1 title="Recompiling Own Code">
-    <p>Due to some changes in the logging of Cocoon components, for example own generators,
-       transformers or actions, code compiled for Cocoon 2.0.x will not run using
-       Cocoon 2.1.</p>
-    <p>In order to get your own components running, you only have to recompile your code
-       and then everything should work fine.</p>
+  <s1 title="Changes in logging interfaces require recompilation">
+    <p>
+       Due to some interface changes in the Cocoon logging components, custom java
+       components (generators,transformers or actions for example) compiled for Cocoon 2.0.x will not run
+       under Cocoon 2.1 unless recompiled.</p>
   </s1>
   <s1 title="Components">
    <p>
-    The Cocoon architecture has had some significant changes. However, great care has been
-    taken that all changes are in a compatible way. This effort has been successful except
+    The Cocoon architecture has changed significantly. However, great care has been
+    taken to preserve backwards compatibility.
+    This effort has been successful except for
     one change which shouldn't affect anybody (see below).
    </p>
-   <s2 title="Source Resolving">
-    <p>Under Cocoon 2.0.x, the SourceResolver was not an Avalon component, so it could not be
-      looked up using a component manager. Under 2.1, the SourceResolver is now an Avalon component
-      and can be requested using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>
+   <s2 title="Source Resolver">
+    <p>The SourceResolver is an now Avalon component
+      which can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>
    </s2>
    <s2 title="XSLT Processor">
+    <p>
+        The default XSLT processor has changed, and there are some issues related to JDK 1.4
+    </p>
     <s3 title="Xalan vs. XSLTC">
      <p>The most important change is the switch from
       <link href="http://xml.apache.org/xalan-j">Xalan</link> to
-      <link href="http://xml.apache.org/xalan-j/xsltc_usage.html">XSLTC</link> as default XSLT
-      processor. It's configured in the root sitemap in the <code>map:components</code> section.
-      Simply search for <code>map:transformers</code>.</p>
-     <p>XSLTC is used, because it shell be faster than Xalan, but it is maybe not as stable as
-      Xalan. Another little problem are the not very meaningful messages when the transformation
-      fails. Bruno provided already a
+      <link href="http://xml.apache.org/xalan-j/xsltc_usage.html">XSLTC</link> as the default XSLT
+      processor (configured in the root sitemap in the <code>map:components</code> section under
+      <code>map:transformers</code>).</p>
+     <p>We decided to switch to XSLTC for performance reasons, but it might not be as stable as
+      Xalan, and XSLTC's error messages are currently not as good as Xalan's.
+     </p>
+     <p>
+      Bruno Dumon has queued a
       <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=20114">patch</link>
-      to the Xalan team hoping it will be applied soon. At the moment if you only get the error
-      message like <em>"unable to create templates for stylesheet ..."</em>, simply switch the
-      processor to Xalan for this transformation (you don't need to change the default processor)
-      and you will hopefully get more expressive messages.</p>
+      for XSLTC, which improves error handling and will hopefully be applied soon. For now, if you get error
+      messages like <em>"unable to create templates for stylesheet ..."</em>, simply switch the
+      processor to Xalan in the <code>map:transform</code> element to get better error reporting (hopefully).
+      You don't necessarily need to switch the default processor, it can be done individually for the transformation
+      that gives errors.
+    </p>
      </s3>
      <s3 title="XML/XSLT with JDK 1.4">
-      <p>Another important and really error and exception prone issue is the Xalan and Xerces
+      <p>Another serious issue is the presence of the Xalan and Xerces
        package in the JDK 1.4. For general information on this please read the
-       <link href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</link>. What I want to
-       point out here, is that you have to update your libraries in the endorsed dirs of the JDK
+       <link href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</link> and our own
+       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=EndorsedLibsProblem">EndorsedLibsProblem</link>
+       wiki page.
+      </p>
+      <p>
+       Basically, you have to update your libraries in the endorsed dirs of the JDK
        or the servlet containers with every new version of Xalan and Xerces delivered with Cocoon.
-       Sometimes an error occurs, because there are different versions of these packages in the
+       Strange errors can occur if you have different versions of these packages in the
        classpath (independent of those in the JDK).
       </p>
      </s3>
    </s2>
    <s2 title="XML Parser">
-    <p>The XML parser has also been moved to Excalibur.
-     In the cocoon.xconf the hint name has therefore changed from <em>parser</em> to
-     <em>xml-parser</em>. The configuration has not changed, so if you want to
-     manually update swap the hint names.</p>
-    <p>From within your source code you should not lookup the
+    <p>The XML parser component has been moved to Excalibur.
+     In cocoon.xconf, the hint name has therefore changed from <em>parser</em> to
+     <em>xml-parser</em>. The configuration has not changed, so changing the hint
+     names is sufficent.</p>
+    <p>Java code should not use
       <em>org.apache.cocoon.components.parser.Parser.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.sax.SAXParser.ROLE</em> instead.
     </p>
    </s2>
    <s2 title="XML Entity Resolver">
-    <p>The resolver used for resolving XML entities has also been moved to Excalibur.
-     In the cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
-     <em>entity-resolver</em>. The configuration has not changed, so if you want to
-     manually update swap the hint names and the implementation.</p>
-    <p>From within your source code you should not lookup the
+    <p>Similarly, the XML entity resolver component has been moved to Excalibur.
+     In cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
+     <em>entity-resolver</em>. The configuration has not changed, so changing the hint
+     names is sufficent.</p>
+    <p>Java code should not use
       <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
     </p>
    </s2>
    <s2 title="Stores">
-    <p>The Store and StoreJanitor components and implementations have moved to
+    <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
     <p>TODO:Changes in cocoon.xconf...</p>
-    <p>In general the packages changed from org.apache.cocoon.components.store
-       to org.apache.excalibur.store (resp. org.apache.excalibur.store.impl). So
-       if you have custom java code using this components, you have to change
+    <p>In general the package names changed from <em>org.apache.cocoon.components.store</em>
+       to <em>org.apache.excalibur.store</em> (and <em>org.apache.excalibur.store.impl</em>). So
+       if you have custom java code using these components, you have to change
        your imports.</p>
-    <p>The roles PERSISTENT_CACHE and TRANSIENT_CACHE have been renamed to
-       PERSISTENT_STORE and TRANSIENT_STORE. The hold() method has been removed
+    <p>The roles <em>PERSISTENT_CACHE</em> and <em>TRANSIENT_CACHE</em> have been renamed to
+       <em>PERSISTENT_STORE</em> and <em>TRANSIENT_STORE</em>. The hold() method has been removed
        from the Store interface.</p>
    </s2>
    <s2 title="SAXConnectors, Stream and Event Pipeline">
     <p>This is the only real incompatible change (But don't panic, this will
-       not affect you, well at least only a little bit :). The internal architecture of Cocoon
-       has changed. In the older version, the processing pipeline - constructed by
-       a generator, the transformers and a serializer - was represented by two components,
-       called stream and event pipeline.</p>
-    <p>For a simpler architecture, enhanced functionality and improved performance,
-       these components have been combined into one: the processing pipeline.
-       The very rarely used feature of SAXConnectors has been removed,
-       to avoid overcomponentization.</p>
-    <p>In addition the map:pipeline element of the sitemap has gained more meaning
-      as it is now possible to configure each map:pipeline section in the sitemap
-      differently. So there can be one section using caching, another one not 
-      caching at all and a third one using a different caching implementation etc.
+       not affect you, or maybe just a little bit..).
     </p>
-    <s3 title="Changed Configuration">
+    <p>
+       The internal architecture of Cocoon
+       has changed: previously, the processing pipeline - consisting of
+       a generator, the transformers and a serializer - was represented by two components,
+       called <em>stream</em> and <em>event pipeline</em>.</p>
+    <p>For a simpler architecture, enhanced functionality and improved performance,
+       these components have been combined into one: the <em>processing pipeline</em>.
+       The <em>SAXConnectors</em>, which were rarely used, have been removed
+       to avoid overcomponentization.</p>
+   <s3 title="Individual configuration of pipelines">
+    <p>The sitemap now provides individual configuration of <code>map:pipeline</code> sections.
+       You can now define one pipeline using caching, another one not using
+      caching at all and a third one using a different caching implementation, for example.
+    </p>
+   </s3>
+   <s3 title="Pipelines configuration in the sitemap">
      <p>
-      The configuration of the pipelines has moved from the cocoon.xconf to the sitemap.
-      So, for updating you have to remove the "event-pipeline" and "stream-pipeline" section
-      from your cocoon.xconf and add the map:pipes section to the map:components section
-      in your sitemap. You can find the pipelines components definition in the sample
-      sitemap of Cocoon. Here is an example:
+      The configuration of the pipelines has moved from cocoon.xconf to the sitemap.
+      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline" section
+      from your cocoon.xconf and add the <code>map:pipes</code> section to the <code>map:components</code> section
+      of your sitemap. You can find the pipelines components definition in the sample
+      main sitemap of Cocoon. Here is an example:
      </p>
      <source><![CDATA[
 <map:sitemap>
  <map:components>
       ...
   <map:pipes default="caching">
-     <map:pipe name="caching" 
+     <map:pipe name="caching"
                    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
-     <map:pipe name="noncaching" 
+     <map:pipe name="noncaching"
                    src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
   </map:pipes>
  </map:components>
    ...
 </map:sitemap>
      ]]></source>
-     <p>The configuration is similar to the configuration of other sitemap components, like
-       generators or actions. You can choose these different implementations of pipelines
-       in the map:pipeline section by specifying the type attribute:
+     <p>You can choose these different pipeline implementations
+       in the <code>map:pipeline</code> section by specifying their <code>type</code> attribute:
      </p>
      <source><![CDATA[
 <map:sitemap>
@@ -188,21 +201,20 @@
   </map:pipelines>
 </map:sitemap>
      ]]></source>
-     <p>So again, this is similar to choosing the type of the generator or any other sitemap
-       component. If you omit the type attribute the default configuration from the components
+     <p>This is similar to choosing the type of a generator or any other sitemap
+       component. If the type attribute is omitted, the default configuration from the <code>map:components</code>
        section is used.
      </p>
-     <p>The SAXConnectors have been removed, so if you manually upgrade you have to remove
-        the <em>sax-connectors</em> configuration from the <em>cocoon.xconf</em>.</p>
-     <p>So you see, although this is an incompatible change in the Java code, you have only
+     <p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
+        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
+     <p>So it's not that bad, despite incompatible changes in the Cocoon code there is
        little to do to update your Cocoon installation.</p>
     </s3>
    </s2>
    <s2 title="File Upload">
-     <p>File upload class name changed from org.apache.cocoon.components.request.multipart.FilePart to
-        org.apache.cocoon.servlet.multipart.Part.
-        File upload method names changed from FilePart.getFilePath() to
-        Part.getUploadName()
+     <p>The class name for file upload has changed from <em>org.apache.cocoon.components.request.multipart.FilePart</em> to
+        <em>org.apache.cocoon.servlet.multipart.Part</em>, and the <em>getFilePath()</em> has been renamed
+        <em>Part.getUploadName().</em>
      </p>
    </s2>
   </s1>
