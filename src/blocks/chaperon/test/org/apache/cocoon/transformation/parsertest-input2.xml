@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<lexemes xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0">
+<output xmlns="http://chaperon.sourceforge.net/schema/lexer/2.0">
  <lexeme symbol="number" text="1"/>
  <lexeme symbol="plus" text="+"/>
- <lexeme symbol="minus" text="-"/>
  <lexeme symbol="number" text="5"/>
-</lexemes>
+</output>

@@ -1,44 +1,46 @@
 <?xml version="1.0"?>
-<exp xmlns="http://chaperon.sourceforge.net/schema/syntaxtree/1.0">
- <exp>
-  <number>1</number>
- </exp>
- <plus>+</plus>
+<output xmlns="http://chaperon.sourceforge.net/schema/syntaxtree/2.0">
  <exp>
   <exp>
-   <exp>
-    <exp>
-     <number>5</number>
-    </exp>
-    <mult>*</mult>
-    <exp>
-     <number>67</number>
-    </exp>
-   </exp>
-   <div>/</div>
-   <exp>
-    <exp>
-     <pleft>(</pleft>
-     <exp>
-      <exp>
-       <number>7</number>
-      </exp>
-      <minus>-</minus>
-      <exp>
-       <number>2</number>
-      </exp>
-     </exp>
-     <pright>)</pright>
-    </exp>
-    <mult>*</mult>
-    <exp>
-     <id>pH</id>
-    </exp>
-   </exp>
+   <number>1</number>
   </exp>
   <plus>+</plus>
   <exp>
-   <number>5</number>
+   <exp>
+    <exp>
+     <exp>
+      <number>5</number>
+     </exp>
+     <mult>*</mult>
+     <exp>
+      <number>67</number>
+     </exp>
+    </exp>
+    <div>/</div>
+    <exp>
+     <exp>
+      <pleft>(</pleft>
+      <exp>
+       <exp>
+        <number>7</number>
+       </exp>
+       <minus>-</minus>
+       <exp>
+        <number>2</number>
+       </exp>
+      </exp>
+      <pright>)</pright>
+     </exp>
+     <mult>*</mult>
+     <exp>
+      <id>pH</id>
+     </exp>
+    </exp>
+   </exp>
+   <plus>+</plus>
+   <exp>
+    <number>5</number>
+   </exp>
   </exp>
  </exp>
-</exp>
+</output>
