@@ -65,8 +65,7 @@ import java.util.Map;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public abstract class CocoonContainer
-        extends DefaultContainer
+public class CocoonContainer extends DefaultContainer
 {
     /**
      * Provide some validation for the core Cocoon components
