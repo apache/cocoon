@@ -92,6 +92,12 @@
     </input>
   </xsl:template>
 
+  <xsl:template match="wi:button">
+    <button name="{@id}" value="selected" type="submit">
+      <xsl:copy-of select="wi:label/node()"/>
+    </button>
+  </xsl:template>
+
   <xsl:template match="wi:multivaluefield">
     <xsl:if test="wi:validation-message">
       <xsl:call-template name="validation-message">

@@ -60,6 +60,7 @@
            <map:act type="woody-handle-form-submit">
              <map:parameter name="form-definition" value="forms/form1.xml"/>
              <map:parameter name="attribute-name" value="form1"/>
+             <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.Form1Handler"/>
 
              <!-- the content of this action is only executed in case validation
                   succeeded, thus if the form handling is completed -->

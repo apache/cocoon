@@ -59,6 +59,7 @@
           <th><wt:repeater-widget-label id="contacts" widget-id="lastname"/></th>
           <th><wt:repeater-widget-label id="contacts" widget-id="phone"/></th>
           <th><wt:repeater-widget-label id="contacts" widget-id="email"/></th>
+          <th><wt:repeater-widget-label id="contacts" widget-id="select"/></th>
         </tr>
 
         <!-- The contents of the repeater-widget element is a template that will
@@ -69,8 +70,16 @@
             <td><wt:widget id="lastname"/></td>
             <td><wt:widget id="phone"/></td>
             <td><wt:widget id="email"/></td>
+            <td><wt:widget id="select"/></td>
           </tr>
         </wt:repeater-widget>
+
+        <tr>
+          <td colspan="4" align="right">
+            <wt:widget id="addcontact"/>
+            <wt:widget id="removecontacts"/>
+          </td>
+        </tr>
       </table>
 
       <input type="submit"/>
