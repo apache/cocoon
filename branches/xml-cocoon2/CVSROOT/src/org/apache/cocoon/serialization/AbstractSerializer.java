@@ -20,14 +20,13 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.sitemap.SitemapOutputComponent;
-import org.apache.cocoon.xml.AbstractXMLConsumer;
-import org.apache.cocoon.xml.util.XMLConsumerBridge;
+import org.apache.cocoon.xml.XMLConsumerBridge;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:36:25 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-05 17:27:28 $
  */
 public abstract class AbstractSerializer extends XMLConsumerBridge 
 implements Serializer, Configurable {

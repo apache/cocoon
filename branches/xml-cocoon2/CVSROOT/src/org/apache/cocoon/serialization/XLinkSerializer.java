@@ -16,15 +16,14 @@ import org.apache.cocoon.Cocoon;
 
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.xml.AbstractXMLConsumer;
-import org.apache.cocoon.xml.xlink.XLinkConsumer;
+import org.apache.cocoon.xml.xlink.XLinkConsumerBridge;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-23 22:44:29 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:27:29 $
  */
 
-public class LinkSerializer extends XLinkConsumer implements Serializer {
+public class XLinkSerializer extends XLinkConsumerBridge implements Serializer {
 
     private PrintStream out;
     

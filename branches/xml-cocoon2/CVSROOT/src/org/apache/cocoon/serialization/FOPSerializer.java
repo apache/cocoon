@@ -20,7 +20,7 @@ import org.apache.fop.messaging.MessageListener;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.messaging.MessageEvent;
 
-import org.apache.cocoon.xml.util.XMLConsumerBridge;
+import org.apache.cocoon.xml.XMLConsumerBridge;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-21 17:36:26 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-05 17:27:28 $
  *
  */
 public class FOPSerializer extends XMLConsumerBridge implements Serializer, MessageListener {

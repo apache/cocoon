@@ -12,7 +12,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.image.ImageEncoder;
 import org.apache.cocoon.xml.*;
-import org.apache.cocoon.xml.util.*;
+import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.*;
 import java.io.*;
 import java.awt.*;
