@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.7 2003/12/11 09:41:35 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.8 2003/12/11 09:44:14 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -143,11 +143,11 @@ extends AbstractCopletTransformer {
             
             PortalService portalService = null;
             try {
-                final CopletInstanceData cid = this.getCopletInstanceData();
                 portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
                 final LinkService linkService = portalService.getComponentManager().getLinkService();
                 if ( attr.getValue("href") != null ) {
+                    final CopletInstanceData cid = this.getCopletInstanceData();
                     ChangeCopletInstanceAspectDataEvent event = new ChangeCopletInstanceAspectDataEvent(cid, null, null);
                     
                     String value = linkService.getLinkURI(event);
@@ -167,6 +167,7 @@ extends AbstractCopletTransformer {
                         Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
                         event = new JXPathEvent(layout, path, value);
                     } else {
+                        final CopletInstanceData cid = this.getCopletInstanceData();
                         event = new CopletJXPathEvent(cid, path, value);
                     }
                     newAttrs.addCDATAAttribute("href", linkService.getLinkURI(event));
