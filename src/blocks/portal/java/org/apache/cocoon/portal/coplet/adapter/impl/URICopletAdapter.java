@@ -51,9 +51,12 @@
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
@@ -61,6 +64,11 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.EventManager;
+import org.apache.cocoon.portal.event.Filter;
+import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -72,11 +80,11 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.7 2003/05/26 10:15:01 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.8 2003/05/26 10:34:52 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
-    implements Disposable {
+    implements Disposable, Subscriber, Initializable {
 	
     /** The source resolver */
     protected SourceResolver resolver;
@@ -98,18 +106,27 @@ public class URICopletAdapter
 		PortalService portalService = null;
 		try {
 			if (uri.startsWith("cocoon:")) {
+                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+
                 Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters");
                 
                 String sourceUri = uri;
                 
                 if ( handlePars != null && handlePars.booleanValue() ) {
-                    // remove parameters
-                    if (!uri.startsWith("cocoon:raw:") ) {
-                        sourceUri = "cocoon:raw:" + uri.substring(7);
+                    List list = (List) portalService.getAttribute(URICopletAdapter.class.getName());
+                    if ( list != null && list.contains( coplet )) {
+                        // add parameters
+                        if ( uri.startsWith("cocoon:raw:") ) {
+                            sourceUri = "cocoon:" + uri.substring(11); 
+                        }
+                    } else {
+                        // remove parameters
+                        if (!uri.startsWith("cocoon:raw:") ) {
+                            sourceUri = "cocoon:raw:" + uri.substring(7);
+                        }
                     }
                 }
                 
-				portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 				HashMap par = new HashMap();
 				par.put(Constants.PORTAL_NAME_KEY, portalService.getPortalName());
 				par.put(Constants.COPLET_ID_KEY, coplet.getId());
@@ -136,9 +153,65 @@ public class URICopletAdapter
      */
     public void dispose() {
         if ( this.manager != null ) {
+            EventManager eventManager = null;
+            try { 
+                eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+                eventManager.getRegister().unsubscribe( this );
+            } catch (Exception ignore) {
+            } finally {
+                this.manager.release( eventManager ); 
+            }
+            
             this.manager.release( this.resolver );
             this.resolver = null;
             this.manager = null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+     */
+    public Class getEventType() {
+        return ChangeCopletInstanceAspectDataEvent.class;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
+     */
+    public Filter getFilter() {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(Event e) {
+        ChangeCopletInstanceAspectDataEvent event = (ChangeCopletInstanceAspectDataEvent)e;
+        PortalService service = null;
+        try {
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            List list = (List)service.getTemporaryAttribute(URICopletAdapter.class.getName());
+            if ( list == null ) {
+                list = new ArrayList();
+            }
+            list.add(event.getCopletInstanceData());
+            service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
+        } catch (ComponentException ignore ) {            
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        EventManager eventManager = null;
+        try { 
+            eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+            eventManager.getRegister().subscribe( this );
+        } finally {
+            this.manager.release( eventManager );
         }
     }
 

@@ -48,52 +48,20 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.aspect.Aspectalizable;
-import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 
 /**
- * This events set the aspect data for an {@link Aspectalizable} object
+ * This interface marks an event as an event for a coplet instance.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ChangeAspectDataEvent.java,v 1.2 2003/05/26 10:34:52 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceEvent.java,v 1.1 2003/05/26 10:34:53 cziegeler Exp $
  */
-public class ChangeAspectDataEvent
-    implements Event {
-
-    protected Aspectalizable target;
-    
-    protected String aspectName;
-    
-    protected Object data;
-    
-    public ChangeAspectDataEvent(Aspectalizable target, String aspectName, Object data) {
-        this.target = target;
-        this.aspectName = aspectName;
-        this.data = data;
-    }
-
-    /**
-     * @return
-     */
-    public String getAspectName() {
-        return aspectName;
-    }
-
-    /**
-     * @return
-     */
-    public Object getData() {
-        return data;
-    }
-
-    /**
-     * @return
-     */
-    public Aspectalizable getTarget() {
-        return target;
-    }
+public interface CopletInstanceEvent 
+    extends Event {
+        
+    CopletInstanceData getCopletInstanceData();
 
 }
