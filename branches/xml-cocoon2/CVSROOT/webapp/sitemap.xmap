@@ -84,15 +84,9 @@
   </map:matchers>
 
   <map:actions>
-   <map:action name="add-employee" src="org.apache.cocoon.acting.AddEmployeeAction">
-     <use-connection>personnel</use-connection>
-   </map:action>
-   <map:action name="del-employee" src="org.apache.cocoon.acting.DelEmployeeAction">
-     <use-connection>personnel</use-connection>
-   </map:action>
-   <map:action name="upd-employee" src="org.apache.cocoon.acting.UpdEmployeeAction">
-     <use-connection>personnel</use-connection>
-   </map:action>
+   <map:action name="add-employee" src="org.apache.cocoon.acting.DatabaseAddAction"/>
+   <map:action name="del-employee" src="org.apache.cocoon.acting.DatabaseDeleteAction"/>
+   <map:action name="upd-employee" src="org.apache.cocoon.acting.DatabaseUpdateAction"/>
   </map:actions>
 
  </map:components>
@@ -125,9 +119,15 @@
 
  <map:action-sets>
   <map:action-set name="employee">
-   <map:act type="add-employee" action="Add"/>
-   <map:act type="del-employee" action="Delete"/>
-   <map:act type="upd-employee" action="Update"/>
+   <map:act type="add-employee" action="Add">
+    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
+   </map:act>
+   <map:act type="del-employee" action="Delete">
+    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
+   </map:act>
+   <map:act type="upd-employee" action="Update">
+    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
+   </map:act>
   </map:action-set>
  </map:action-sets>
 

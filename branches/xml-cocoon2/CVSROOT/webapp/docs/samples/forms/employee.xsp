@@ -45,7 +45,9 @@
       </form>
       <form action="" method="POST" name="EmployeeEntry">
         <script>document.forms["EmployeeEntry"].action = window.location.pathname</script>
-        <input type="hidden" name="employee"/>
+        <input type="hidden" name="employee">
+	  <xsp:attribute name="value"><xsp:expr>((empID != null) ? empID : "")</xsp:expr></xsp:attribute>
+	</input>
         <para>Employee Name:
 	  <input name="name" type="text">
 	   <xsp:attribute name="value"><xsp:expr>((name != null) ? name : "")</xsp:expr></xsp:attribute>
