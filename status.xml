@@ -368,6 +368,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="32011" due-to="wchao@yahoo.com" due-to-email="wchao@yahoo.com">
+     Fix: buildList() in AbstractDatabaseAction generates incorrect parameter list.
+   </action>
    <action dev="AG" type="fix" fixes-bug="32124" due-to="Leo Leonid" due-to-email="tek@leonid.de">
      Fix: Webmail sample broken.
    </action>
