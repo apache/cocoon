@@ -2,28 +2,16 @@
 rem ----------------------------------------------------------------------------
 rem build.bat - Win32 Build Script for Apache Cocoon
 rem
-rem $Id: build.bat,v 1.5 2003/10/06 16:07:22 upayavira Exp $
+rem $Id: build.bat,v 1.6 2004/03/04 07:53:55 antonio Exp $
 rem ----------------------------------------------------------------------------
-
-rem ----- Copy Xalan and Xerces for the build system    ------------------------
-if not exist "tools\lib\xerces*.jar" copy lib\local\xerces*.jar tools\lib
-if not exist "tools\lib\xerces*.jar" copy lib\endorsed\xerces*.jar tools\lib
-if not exist "tools\lib\xerces*.jar" copy lib\optional\xerces*.jar tools\lib
-if not exist "tools\lib\xerces*.jar" copy lib\core\xerces*.jar tools\lib
-if not exist "tools\lib\xalan*.jar" copy lib\local\xalan*.jar tools\lib
-if not exist "tools\lib\xalan*.jar" copy lib\endorsed\xalan*.jar tools\lib
-if not exist "tools\lib\xalan*.jar" copy lib\optional\xalan*.jar tools\lib
-if not exist "tools\lib\xalan*.jar" copy lib\core\xalan*.jar tools\lib
-if not exist "tools\lib\xml-api*.jar" copy lib\local\xml-api*.jar tools\lib
-if not exist "tools\lib\xml-api*.jar" copy lib\endorsed\xml-api*.jar tools\lib
-if not exist "tools\lib\xml-api*.jar" copy lib\optional\xml-api*.jar tools\lib
-if not exist "tools\lib\xml-api*.jar" copy lib\core\xml-api*.jar tools\lib
 
 rem ----- Verify and Set Required Environment Variables ------------------------
 
 rem ----- Ignore system CLASSPATH variable
 set OLD_CLASSPATH=%CLASSPATH%
 set CLASSPATH=
+for %%i in (.\lib\endorsed\*.jar) do call appendcp.bat %%i
+echo Using classpath: "%CLASSPATH%"
 
 rem ----- Use Java in JAVA_HOME if JAVA_HOME is set.
 set OLD_PATH=%PATH%
