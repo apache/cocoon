@@ -136,7 +136,7 @@
  
  <s1 title="Where do I get it?">
   <p>
-   Here is the <link href="http://xml.apache.org/cocoon/dist/">download area</link>.
+   The official distribution site is <link href="http://xml.apache.org/cocoon/dist/">here</link>.
   </p>
   <note>
    Since Cocoon requires many different packages to work (Xerces, Xalan, FOP, etc...)
@@ -145,6 +145,9 @@
    binary libraries inside the Cocoon distribution. So, after you
    downloaded the latest Cocoon distribution, <strong>you don't need anything else</strong>.
   </note>
+  <p>
+   But, if you want, you can find unofficial RPM packages <link href="http://grapeape.codingapes.com/cocoon.html">here</link>.
+  </p>
  </s1>
 
  <s1 title="How do I Contribute?">
