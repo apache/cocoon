@@ -15,9 +15,15 @@
  */
 package org.apache.cocoon.template.jxtg;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
@@ -25,56 +31,78 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
     String JX = "jx";
+    Map flowContext = new HashMap();
+
+    public void setUp() throws Exception {
+        super.setUp();
+
+        // Make the FOM objects available to the view layer
+        FOM_JavaScriptFlowHelper.setFOM_Request(getObjectModel(),
+                                                new FOM_Cocoon.FOM_Request(getRequest()));
+        FlowHelper.setContextObject(getObjectModel(), flowContext);
+    }
+
+    public Map getFlowContext() {
+        return this.flowContext;
+    }
 
     public Logger getLogger() {
         return this.logger;
     }
 
     public void testGenerate() throws Exception {
-        String inputURI = docBase + "JXTemplateGenerator-generate.xml";
+        String inputURI = docBase + "generate.xml";
 
         assertEqual(load(inputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 
     public void testJexlExpression() throws Exception {
-        String inputURI = docBase + "JXTemplateGenerator-jexlExpression.xml";
-        String outputURI = docBase + "JXTemplateGenerator-jexlExpression-output.xml";
+        String inputURI = docBase + "jexlExpression.xml";
+        String outputURI = docBase + "jexlExpression-output.xml";
 
-        String protocol = ObjectModelHelper.getRequest(getObjectModel()).getProtocol();
-        assertEquals("HTTP/1.1", protocol);
-
-        Parameters parameters = new Parameters();
-        parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 
     public void testJexlEnvExpression() throws Exception {
-        String inputURI = docBase + "JXTemplateGenerator-jexlEnvExpression.xml";
-        String outputURI = docBase + "JXTemplateGenerator-jexlEnvExpression-output.xml";
-
-        String protocol = ObjectModelHelper.getRequest(getObjectModel()).getProtocol();
-        assertEquals("HTTP/1.1", protocol);
+        String inputURI = docBase + "jexlEnvExpression.xml";
+        String outputURI = docBase + "jexlEnvExpression-output.xml";
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
+        getFlowContext().put("test", "bar");
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
     }
 
     public void testJXPathExpression() throws Exception {
-        String inputURI = docBase + "JXTemplateGenerator-jxpathExpression.xml";
-        String outputURI = docBase + "JXTemplateGenerator-jxpathExpression-output.xml";
+        String inputURI = docBase + "jxpathExpression.xml";
+        String outputURI = docBase + "jxpathExpression-output.xml";
 
-        Parameters parameters = new Parameters();
-        parameters.setParameter("test", "foo");
-        assertEqual(load(outputURI), generate(JX, inputURI, parameters));
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 
     public void testJXPathEnvExpression() throws Exception {
-        String inputURI = docBase + "JXTemplateGenerator-jxpathEnvExpression.xml";
-        String outputURI = docBase + "JXTemplateGenerator-jxpathEnvExpression-output.xml";
+        String inputURI = docBase + "jxpathEnvExpression.xml";
+        String outputURI = docBase + "jxpathEnvExpression-output.xml";
 
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
+        getFlowContext().put("test", "bar");
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
+    }
+
+    public void testJXChoose() throws Exception {
+        String inputURI = docBase + "jxChoose.xml";
+        String outputURI = docBase + "jxChoose-output.xml";
+
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+    }
+
+    public void testJXForEach() throws Exception {
+        String inputURI = docBase + "jxForEach.xml";
+        String outputURI = docBase + "jxForEach-output.xml";
+
+        String[] array = {"one", "two", "three"};
+        getFlowContext().put("test", array);
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 }

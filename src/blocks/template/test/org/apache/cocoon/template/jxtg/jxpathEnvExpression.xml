@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <root>
-  protocol: #{$cocoon.request.protocol}
+  protocol: #{$cocoon/request/protocol}
 
   <item attr="** #{$cocoon/parameters/test} **">
-    Some text
+    context: #{test}
   </item>
 
 </root>
