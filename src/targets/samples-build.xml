@@ -46,7 +46,7 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="scratchpad-samples" depends="prepare" unless="unless.exclude.scratchpad">
+  <target name="scratchpad-samples" depends="prepare" unless="unless.exclude.scratchpad.samples">
  
     <!-- copy sample files -->
     <copy todir="${build.webapp.samples}" filtering="on">
