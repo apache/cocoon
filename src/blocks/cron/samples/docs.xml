@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: docs.xml,v 1.5 2004/07/11 19:47:56 antonio Exp $ -->
+<!-- CVS $Id$ -->
 <document>
     <body>
         <section>
@@ -26,10 +26,7 @@
                 <code>JobScheduler</code></link> 
                 is based on the <link href="http://quartz.sf.net">Quartz</link>
                 job scheduling project and the 
-                <link href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html">
-                <code>PooledExecutor</code></link> of 
-                <link href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
-                Doug Leas Concurrency Package</link> as a ThreadPool implementation for the Quartz Scheduler.
+                <code>RunnableManager</code></link> as a ThreadPool implementation for the Quartz Scheduler.
             </p>
             
             <p style="background-color: yellow">
@@ -113,9 +110,8 @@
 &lt;/thread-pool&gt;
                 </source>
                 <p>
-                    As mentioned in the beginning, more information about the thread pool details of the base
-                    <link href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html">
-                    <code>PooledExecutor</code></link> class can be found there.
+                    As mentioned in the beginning, more information about the thread pool details base on the
+                    <code>RunnableManager#createPool(...)</code></link> method can be found there.
                 </p>
             </section>
             

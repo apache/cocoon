@@ -59,10 +59,6 @@ import org.quartz.utils.ConnectionProvider;
 import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.JNDIConnectionProvider;
 
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-
 /**
  * This component can either schedule jobs or directly execute one.
  *
