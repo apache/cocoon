@@ -19,9 +19,12 @@
         default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
   </role>
 
+  <!-- This is the source resolver for Cocoon - do not change this!
+       If you want to use your own source resolver, define a 
+       component for the role org.apache.excalibur.source.SourceResolver/Cocoon -->
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+        default-class="org.apache.cocoon.components.source.CocoonSourceResolver"/>
 
   <!-- The entity resolver used by most parsers -->
   <role name="org.apache.excalibur.xml.EntityResolver"

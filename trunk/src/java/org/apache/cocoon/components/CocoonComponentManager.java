@@ -83,11 +83,10 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.19 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.20 2003/10/19 15:58:15 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
-implements SourceResolver
 {
 
     /** The key used to store the current process environment */
@@ -305,12 +304,6 @@ implements SourceResolver
 
             throw new ServiceException( role, message );
         }
-        if ( role.equals(SourceResolver.ROLE) ) {
-            if ( null == this.sourceResolver ) {
-                this.sourceResolver = (SourceResolver) super.lookup( role );
-            }
-            return this;
-        }
 
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( null != stack && !stack.empty()) {
@@ -414,9 +407,6 @@ implements SourceResolver
              || component instanceof GlobalRequestLifecycleComponent) {
             return;
         }
-        if ( component == this ) {
-            return;
-        }
         super.release( component);
     }
 
@@ -494,39 +484,6 @@ implements SourceResolver
         }
         super.dispose();
     }
-
-    /**
-     * Get a <code>Source</code> object.
-     */
-    public Source resolveURI(final String location)
-    throws MalformedURLException, IOException, SourceException {
-        return this.resolveURI(location, null, null);
-    }
-
-    /**
-     * Get a <code>Source</code> object.
-     */
-    public Source resolveURI(final String location,
-                             String baseURI,
-                             final Map    parameters)
-    throws MalformedURLException, IOException, SourceException {
-        if (baseURI == null) {
-            final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-            if ( null != stack && !stack.empty()) {
-                final Object[] objects = (Object[])stack.getCurrent();
-                baseURI = ((Environment)objects[0]).getContext();
-            }
-        }
-        return this.sourceResolver.resolveURI(location, baseURI, parameters);
-    }
-
-    /**
-     * Releases a resolved resource
-     */
-    public void release( final Source source ) {
-        this.sourceResolver.release( source );
-    }
-
 
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
