@@ -75,11 +75,6 @@
     <xsl:if test="@required='true'">
       <span class="woody-field-required"> * </span>
     </xsl:if>
-    <xsl:apply-templates select="wi:help"/>
-  </xsl:template>
-
-  <xsl:template match="wi:help">
-    <a href="#" style="color:orange; font-weight: bold" onclick="alert('{normalize-space(.)}'); return false;">&#160;?&#160;</a>
   </xsl:template>
 
   <xsl:template match="wi:validation-message">
