@@ -204,12 +204,12 @@
     </wd:booleanfield>
   </wd:repeater>
 
-  <wd:button id="addcontact" action-command="add-contact">
+  <wd:action id="addcontact" action-command="add-contact">
     <wd:label>Add contact</wd:label>
-  </wd:button>
+  </wd:action>
 
-  <wd:button id="removecontacts" action-command="remove-selected-contacts">
+  <wd:action id="removecontacts" action-command="remove-selected-contacts">
     <wd:label>Remove selected contacts</wd:label>
-  </wd:button>
+  </wd:action>
 
 </wd:form>

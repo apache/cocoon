@@ -20,8 +20,8 @@
     </wd:selection-list>
   </wd:field>
 
-  <wd:button id="updatemodels" action-command="updatemodels">
+  <wd:action id="updatemodels" action-command="updatemodels">
     <wd:label>Update models</wd:label>
-  </wd:button>
+  </wd:action>
 
 </wd:form>

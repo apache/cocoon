@@ -50,21 +50,21 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.w3c.dom.Element;
+import org.apache.cocoon.woody.util.DomHelper;
+
 /**
- * The {@link WidgetDefinition} part of a Button widget, see {@link Button} for more information.
+ * Builds {@link ActionDefinition}s.
  */
-public class ButtonDefinition extends AbstractWidgetDefinition {
-    private String actionCommand;
+public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        ActionDefinition actionDefinition = new ActionDefinition();
+        setId(widgetElement, actionDefinition);
+        setLabel(widgetElement, actionDefinition);
 
-    public void setActionCommand(String actionCommand) {
-        this.actionCommand = actionCommand;
-    }
+        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
+        actionDefinition.setActionCommand(actionCommand);
 
-    public String getActionCommand() {
-        return actionCommand;
-    }
-
-    public Widget createInstance() {
-        return new Button(this);
+        return actionDefinition;
     }
 }
