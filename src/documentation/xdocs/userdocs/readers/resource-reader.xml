@@ -91,13 +91,7 @@
       </s2>
       <s2 title="Configuration">
         <p>
-          The <code>ImageReader</code> has no configuration options. 
-        </p>
-      </s2>
-      <s2 title="Setup">
-        <p>
-          The <code>ResourceReader</code> accepts following sitemap
-          setup parameters
+          The <code>ResourceReader</code> accepts the following configuration parameters:
         </p>
         <table>
           <tr><th>Parametername</th><th>Type</th><th>Comment</th></tr>
@@ -143,8 +137,57 @@
     logger="sitemap.reader.resource" 
     pool-max="32" pool-min="1" pool-grow="4"/>
     <!-- optional reader configuration -->
-    <map:parameter name="expires" value="86400000"/>
+    <parameter name="expires" value="86400000"/>
   </map:readers>
+...
+        ]]></source>
+      </s2>
+      <s2 title="Setup">
+        <p>
+          The <code>ResourceReader</code> accepts following sitemap
+          setup parameters that override the configuration settings:
+        </p>
+        <table>
+          <tr><th>Parametername</th><th>Type</th><th>Comment</th></tr>
+          <tr><td>expires</td><td>Time in milliseconds</td>
+            <td>
+              This parameter is optional. When specified it determines how long
+              in miliseconds the resources can be cached by any proxy or browser
+              between Cocoon2 and the requesting visitor.
+            </td>
+          </tr>
+          <tr><td>quick-modified-test</td><td>boolean</td>
+            <td>
+              This parameter is optional. This boolean parameter controls the
+              last modified test. If set to true (default is false), only the
+              last modified of the current source is tested, but not if the
+              same source is used as last time.
+            </td>
+          </tr>
+          <tr><td>byte-ranges</td><td>boolean</td>
+            <td>
+              This parameter is optional. This boolean parameter enables or disables
+              support for the byte ranges. 
+              By default this parameter is set to true.
+            </td>
+          </tr>
+          <tr><td>buffer-size</td><td>integer</td>
+            <td>
+              This parameter is optional. It specifies the buffer/block size when
+              reading from a resource.
+              By default this parameter is set to 8192.
+            </td>
+          </tr>
+        </table>
+        <p>
+          The following <code>ResourceReader</code> declaration snippet
+          parameterizes the default reader for having an expiration of
+          1 day (ie. 24 * 60 * 60 * 1000 ms = 86400000 ms)
+        </p>
+        <source><![CDATA[
+  <map:read src="images/picture.gif"/>
+    <map:parameter name="expires" value="86400000"/>
+  </map:read>
 ...
         ]]></source>
       </s2>

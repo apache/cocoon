@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.234 2004/02/01 21:37:30 giacomo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.235 2004/02/04 12:18:54 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     ResourceReader: Is now configurable as well. All parameters can be defined during configuration
+     of the reader. Fixed also a minor bug in the last-modified detection.
+   </action>
    <action dev="GP" type="add" >
      OJB-Block: Added our own OJB ConnectionFactory which uses the 
      DataSources configured in cocoon.xconf
