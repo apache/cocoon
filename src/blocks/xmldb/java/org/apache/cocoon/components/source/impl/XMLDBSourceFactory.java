@@ -73,7 +73,7 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.2 2003/04/30 01:50:02 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.3 2003/10/25 11:38:37 joerg Exp $
  */
 public final class XMLDBSourceFactory
         extends AbstractLogEnabled
@@ -147,7 +147,7 @@ public final class XMLDBSourceFactory
         int start = location.indexOf(':') + 1;
         int end = location.indexOf(':', start);
 
-        if (start == -1 || end == -1) {
+        if (start == 0 || end == -1) {
             throw new MalformedURLException("Mispelled XML:DB URL. " +
                                             "The syntax is \"xmldb:databasetype://host/collection/resource\"");
         }
