@@ -24,7 +24,7 @@ BODY {background-color: #FFFFFF; color: #000066; font-family: Verdana, Helvetica
   </tr>
   <tr> 
     <td width="25%"><a href="hello.jsp">hello.jsp</a></td>
-    <td width="56%">Displays a hello page using JspGenerator to get XML from a 
+    <td width="56%">Displays a hello page using JSPGenerator to get XML from a 
       JSP then transformes it to HTML using a stylesheet.</td>
   </tr>
   <tr> 

@@ -8,7 +8,7 @@
            then output it as XML (SAX events)
       -->
       <map:generator logger="sitemap.generator.jsp" name="jsp"
-                     src="org.apache.cocoon.generation.JspGenerator"/>
+                     src="org.apache.cocoon.generation.JSPGenerator"/>
     </map:generators>
     <map:transformers default="xslt"/>
     <map:readers default="resource">

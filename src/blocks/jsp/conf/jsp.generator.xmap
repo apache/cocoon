@@ -3,6 +3,6 @@
 <xmap xpath="/sitemap/components/generators" unless="generator[@name='jsp']">
 
     <map:generator name="jsp"
-                   src="org.apache.cocoon.generation.JspGenerator"
+                   src="org.apache.cocoon.generation.JSPGenerator"
                    label="content"/>
 </xmap>
