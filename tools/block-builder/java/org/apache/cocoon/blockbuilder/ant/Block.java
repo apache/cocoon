@@ -58,6 +58,7 @@ public class Block {
     
     public void setDynamicEclipseReference(boolean dynamicEclipseReference) {
         System.out.println("dynamic reference: " + dynamicEclipseReference);
+        this.dynamicEclipseReference = dynamicEclipseReference;
     }
     
     public boolean isDynamicEclipseReference() {
