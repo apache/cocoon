@@ -2219,7 +2219,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(FORMAT_NUMBER)) {
                     Expression value = 
                         compileExpr(attrs.getValue("value"),
-                                    null, locator);;
+                                    null, locator);
                     Expression type = 
                         compileExpr(attrs.getValue("type"),
                                     null, locator);
