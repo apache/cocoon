@@ -269,6 +269,10 @@ public class MockRequest implements Request {
         return requestURI;
     }
     
+    public String getSitemapPath() {
+        return "";
+    }
+
     public String getServletPath() {
         return servletPath;
     }

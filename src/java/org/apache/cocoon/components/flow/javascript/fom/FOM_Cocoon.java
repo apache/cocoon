@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P\u00F6tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.36 2004/05/28 12:20:20 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.37 2004/07/07 07:58:49 cziegeler Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -764,6 +764,10 @@ public class FOM_Cocoon extends ScriptableObject {
 
         public String getSitemapURI() {
             return request.getSitemapURI();
+        }
+
+        public String getSitemapPath() {
+            return request.getSitemapPath();
         }
 
         public String getServletPath() {
