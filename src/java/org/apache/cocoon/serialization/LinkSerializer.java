@@ -61,7 +61,7 @@ import java.io.PrintStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSerializer.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: LinkSerializer.java,v 1.2 2003/10/06 16:36:15 stefano Exp $
  */
 
 public class LinkSerializer 
@@ -88,11 +88,13 @@ public class LinkSerializer
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)
     throws SAXException {
         if (traversable(href)) this.print(href);
+        super.simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
     }
 
     public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr)
     throws SAXException {
         if (traversable(href)) this.print(href);
+        super.startLocator(href, role, title, label, uri, name, raw, attr);
     }
 
     private boolean traversable(String href) {

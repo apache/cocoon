@@ -50,13 +50,14 @@
 */
 package org.apache.cocoon.xml.xlink;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This class extends the XLink semantic capabilities to understand those
@@ -72,82 +73,153 @@ import java.util.Set;
  * be a way to remove this, that will be a happy day for XML and for Cocoon too.</p>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:torstenknodt@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.4 2003/09/24 21:26:51 cziegeler Exp $
+ * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
+ * @version CVS $Id: ExtendedXLinkPipe.java,v 1.5 2003/10/06 16:35:37 stefano Exp $
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
     protected static Set arrayToSet(Object[] array) {
         final Set set = new HashSet(array.length);
 
-        for (int i = 0; i<array.length; i++)
+        for (int i = 0; i < array.length; i++)
             set.add(array[i]);
         return set;
     }
-
+    
     private final Map MAP = new HashMap() {
         {
-            put("", arrayToSet(new String[] {
-                "about", "action", "background", "data", "discuri", "href",
-                "longdesc", "src"
-            }));
-            put("http://www.w3.org/1999/xhtml", arrayToSet(new String[] {
-                "action", "background", "data", "href", "longdesc", "src"
-            }));
-            put("http://www.w3.org/2002/01/P3Pv1",
-                arrayToSet(new String[]{ "about",
-                                         "discuri" }));
+            put(
+                "",
+                arrayToSet(
+                    new String[] {
+                        "about",
+                        "action",
+                        "background",
+                        "data",
+                        "discuri",
+                        "href",
+                        "longdesc",
+                        "onenterforward",
+                        "onenterbackward",
+                        "ontimer",
+                        "onpick",
+                        "src" }));
+            put(
+                "http://www.w3.org/1999/xhtml",
+                arrayToSet(
+                    new String[] {
+                        "action",
+                        "background",
+                        "data",
+                        "href",
+                        "longdesc",
+                        "src" }));
+            put(
+                "http://www.w3.org/2001/XInclude",
+                arrayToSet(new String[] { "href" }));
+            put(
+                "http://www.wapforum.org/2001/wml",
+                arrayToSet(
+                    new String[] {
+                        "onenterforward",
+                        "onenterbackward",
+                        "ontimer",
+                        "href",
+                        "onpick",
+                        "src" }));
+            put(
+                "http://www.w3.org/2002/01/P3Pv1",
+                arrayToSet(
+                    new String[] { "about", "discuri", "src", "service" }));            
         }
     };
 
     private int attrIndex = -1;
 
-    public void startElement(String uri, final String name, final String raw,
-                             final Attributes attr) throws SAXException {
-        final Set attrList = (Set) MAP.get((uri==null) ? "" : uri);
+    public void startElement(
+        String uri,
+        final String name,
+        final String raw,
+        final Attributes attr)
+        throws SAXException {
+        final Set attrList = (Set) MAP.get((uri == null) ? "" : uri);
 
-        if (attrList!=null) {
-            for (int i = 0; i<attr.getLength(); i++)
-                if (attr.getURI(i).equals("") &&
-                    attrList.contains(attr.getLocalName(i))) {
+        if (attrList != null) {
+            for (int i = attrIndex + 1; i < attr.getLength(); i++)
+                if (attr.getURI(i).equals("")
+                    && attrList.contains(attr.getLocalName(i))) {
+
                     final String att = attr.getValue(i);
 
-                    if (att!=null) {
-                        final String str = ": URI="+uri+" NAME="+name+" RAW="+
-                                           raw+" ATT="+attr.getLocalName(i)+
-                                           " NS="+uri+" VALUE="+att;
+                    if (att != null) {
+                        final String str =
+                            ": URI="
+                                + uri
+                                + " NAME="
+                                + name
+                                + " RAW="
+                                + raw
+                                + " ATT="
+                                + attr.getLocalName(i)
+                                + " NS="
+                                + uri
+                                + " VALUE="
+                                + att;
 
-                        if (attrIndex!=-1) {
-                            getLogger().warn("Possible internal error"+str);
-                        }
-                        getLogger().debug("Transforming to XLink"+str);
+                        if (getLogger().isDebugEnabled())
+                           getLogger().debug("Transforming to XLink" + str);
+                           
                         attrIndex = i;
-                        simpleLink(att, null, null, null, null, null, uri,
-                                   name, raw, attr);
+                        
+                        simpleLink(
+                            att,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            uri,
+                            name,
+                            raw,
+                            attr);
+                        
                         return;
                     }
                 }
+            attrIndex = -1;
         }
 
         super.startElement(uri, name, raw, attr);
     }
 
-    public void simpleLink(final String href, final String role,
-                           final String arcrole, final String title,
-                           final String show, final String actuate,
-                           final String uri, final String name,
-                           final String raw,
-                           final Attributes attr) throws SAXException {
-        if (attrIndex!=-1) {
-            AttributesImpl newattr = new AttributesImpl(attr);
-
+    public void simpleLink(
+        final String href,
+        final String role,
+        final String arcrole,
+        final String title,
+        final String show,
+        final String actuate,
+        final String uri,
+        final String name,
+        final String raw,
+        final Attributes attr)
+        throws SAXException {
+        if (attrIndex != -1) {
+            final AttributesImpl newattr = new AttributesImpl(attr);
             newattr.setValue(attrIndex, href);
-            attrIndex = -1;
-            super.startElement(uri, name, raw, newattr);
+            startElement(uri, name, raw, newattr);
         } else {
-            super.simpleLink(href, role, arcrole, title, show, actuate, uri,
-                             name, raw, attr);
+            super.simpleLink(
+                href,
+                role,
+                arcrole,
+                title,
+                show,
+                actuate,
+                uri,
+                name,
+                raw,
+                attr);
         }
-
     }
 }
