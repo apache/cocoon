@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./docs/dtd/todo-v10.dtd">
+
+<!-- 
+  History of Cocoon changes
+  $Id: todo.xml,v 1.16 2000-01-27 03:40:22 stefano Exp $
+-->
+
+<todo title="Things To Do">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricard@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code">
+   Implement the sitemap.
+  </action>
+  <action context="code">
+   Move everything under SAX and build SAX2DOM and DOM2SAX adaptors (hopefully
+   using some Xerces code for this).
+  </action>
+  <action context="code">
+   Pass request/session parameters to the XSLT processors for dynamic
+   stylesheet operation. (follows sitemap)
+  </action>
+  <action context="code">
+   Fix problems on Xalan liaison that breaks &lt;xsl:import&gt; (follows SAX usage).
+  </action>
+  <action context="code">
+   Create a caching virtual URL file system for external inclusions.
+  </action>
+  <action context="code">
+   Add logging.
+  </action>
+ </actions>
+ 
+ <actions priority="medium">
+  <action context="code">
+   Implement the error handler subsystem
+  </action>
+  <action assigned-to="PF" context="design">
+   Merge stylebook technology with Cocoon
+  </action>
+ </actions>
+ 
+ <actions priority="low">
+  <action context="docs">
+   Make the section title an element to allow entities to be included
+  </action>
+ </actions>
+ 
+</todo>
