@@ -37,7 +37,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: LuceneIndexContentHandler.java,v 1.4 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: LuceneIndexContentHandler.java,v 1.5 2004/03/06 14:44:46 joerg Exp $
  */
 public class LuceneIndexContentHandler implements ContentHandler
 {
@@ -120,12 +120,12 @@ public class LuceneIndexContentHandler implements ContentHandler
     public void characters(char[] ch, int start, int length) {
 
         if (ch.length > 0 && start >= 0 && length > 1) {
-            String text = new String(ch, start, length);
             if (elementStack.size() > 0) {
                 IndexHelperField tos = (IndexHelperField) elementStack.peek();
-                tos.appendText(text);
+                tos.appendText(ch, start, length);
             }
-            bodyText.append(text);
+            bodyText.append(' ');
+            bodyText.append(ch, start, length);
         }
     }
 
@@ -166,10 +166,10 @@ public class LuceneIndexContentHandler implements ContentHandler
             String atts_value = atts.getValue(i);
             bodyDocument.add(Field.UnStored(lname + "@" + atts_lname, atts_value));
             if (attributesToText) {
-                text.append(atts_value);
                 text.append(' ');
-                bodyText.append(atts_value);
+                text.append(atts_value);
                 bodyText.append(' ');
+                bodyText.append(atts_value);
             }
         }
 
