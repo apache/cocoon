@@ -48,6 +48,7 @@ public class Repeater extends AbstractWidget
     private final List rows = new ArrayList();
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
+        super(repeaterDefinition);
         this.definition = repeaterDefinition;
         // setup initial size
         removeRows();
@@ -179,6 +180,9 @@ public class Repeater extends AbstractWidget
     }
     
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+
         // read number of rows from request, and make an according number of rows
         String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");
         if (sizeParameter != null) {
@@ -215,6 +219,9 @@ public class Repeater extends AbstractWidget
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+        
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
@@ -303,6 +310,8 @@ public class Repeater extends AbstractWidget
     public class RepeaterRow extends AbstractContainerWidget {
 
         public RepeaterRow(AbstractWidgetDefinition definition) {
+            super(definition);
+            setParent(Repeater.this);
             ((ContainerDefinition)definition).createWidgets(this);
         }
 
@@ -319,10 +328,6 @@ public class Repeater extends AbstractWidget
             return String.valueOf(rows.indexOf(this));
         }
 
-        public Widget getParent() {
-            return Repeater.this;
-        }
-        
         public Form getForm() {
             return Repeater.this.getForm();
         }
@@ -334,10 +339,6 @@ public class Repeater extends AbstractWidget
 //        public String getFullyQualifiedId() {
 //            return getParent().getNamespace() + "." + getId();
 //        }
-
-        public void setParent(Widget widget) {
-            throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
-        }
 
         public boolean validate() {
             // Validate only child widtgets, as the definition's validators are those of the parent repeater

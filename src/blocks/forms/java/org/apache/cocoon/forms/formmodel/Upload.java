@@ -43,6 +43,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     private ValidationError validationError;
 
     public Upload(UploadDefinition uploadDefinition) {
+        super(uploadDefinition);
         this.uploadDefinition = uploadDefinition;
     }
 
@@ -67,6 +68,9 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+
         Object obj = formContext.getRequest().get(getRequestParameterName());
         
         // If the request object is a Part, keep it
@@ -97,6 +101,9 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
