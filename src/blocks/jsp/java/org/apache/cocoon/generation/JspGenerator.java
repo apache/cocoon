@@ -56,6 +56,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
@@ -74,7 +75,7 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.5 2003/07/12 14:45:26 joerg Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.6 2003/08/04 09:44:23 joerg Exp $
  */
 public class JspGenerator extends ServletGenerator implements Configurable {
 
@@ -108,8 +109,9 @@ public class JspGenerator extends ServletGenerator implements Configurable {
             if (!url.startsWith("/")) {
                 // get current request path
                 String servletPath = httpRequest.getServletPath();
-                // remove file part
-                servletPath = servletPath.substring(0, servletPath.lastIndexOf('/') + 1);
+                // remove sitemap URI part
+                String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
+                servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
                 url = servletPath + url;
             }
 
@@ -126,15 +128,15 @@ public class JspGenerator extends ServletGenerator implements Configurable {
             parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
             parser.parse(input, this.xmlConsumer);
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException in JspGenerator.generate()",e.getRootCause());
+            throw new ProcessingException("ServletException in JspGenerator.generate()", e.getRootCause());
         } catch (SAXException e) {
-            throw new ProcessingException("SAXException JspGenerator.generate()",e.getException());
+            throw new ProcessingException("SAXException JspGenerator.generate()", e.getException());
         } catch (IOException e) {
-            throw new ProcessingException("IOException JspGenerator.generate()",e);
+            throw new ProcessingException("IOException JspGenerator.generate()", e);
         } catch (ProcessingException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProcessingException("Exception JspGenerator.generate()",e);
+            throw new ProcessingException("Exception JspGenerator.generate()", e);
         } finally {
             this.manager.release((Component)parser);
             this.manager.release(engine);
