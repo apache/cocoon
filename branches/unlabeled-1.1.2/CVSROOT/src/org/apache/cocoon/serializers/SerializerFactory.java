@@ -8,6 +8,7 @@
 package org.apache.cocoon.serializers;
 
 import org.apache.cocoon.framework.Configurable;
+import org.apache.cocoon.framework.ConfigurationException;
 
 /**
  *
@@ -15,8 +16,9 @@ import org.apache.cocoon.framework.Configurable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:41 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 13:14:46 $
  */
 public interface SerializerFactory extends Configurable {
-    public Serializer getSerializer();
+    public Serializer getSerializer()
+    throws ConfigurationException;
 }

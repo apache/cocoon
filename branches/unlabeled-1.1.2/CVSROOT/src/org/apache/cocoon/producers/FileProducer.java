@@ -10,7 +10,8 @@ package org.apache.cocoon.producers;
 import java.io.File;
 import java.io.IOException;
 import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.Job;
+import org.apache.cocoon.sitemap.Request;
+import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.sax.XMLProducer;
 import org.apache.cocoon.sax.XMLSource;
@@ -28,7 +29,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-09 08:34:46 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-11 13:14:43 $
  * @since Cocoon 2.0
  */
 public class FileProducer extends AbstractComponent implements Producer {
@@ -39,11 +40,11 @@ public class FileProducer extends AbstractComponent implements Producer {
      * Return an <code>XMLSource</code> instance producing XML data from a
      * file.
      *
-     * @param job The current <code>Job</code>.
-     * @param source The sitemap-translate source URI that will be parsed.
+     * @param req The cocoon <code>Request</code>.
+     * @param res The cocoon <code>Response</code>.
      */
-    public XMLSource getXMLSource(Job job, String source) {
-        return(Source.create(this.parserFactory,source));
+    public XMLSource getXMLSource(Request req, Response res) {
+        return(Source.create(this.parserFactory,req.getPathTranslated()));
     }
 
     /**

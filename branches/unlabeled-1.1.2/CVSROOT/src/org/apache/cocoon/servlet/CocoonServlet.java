@@ -13,6 +13,7 @@ import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.*;
+import org.apache.cocoon.sitemap.*;
 import org.apache.cocoon.framework.*;
 import org.xml.sax.SAXException;
 
@@ -22,7 +23,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 13:14:47 $
  * @since Cocoon 2.0
  */
 public class CocoonServlet extends HttpServlet {
@@ -83,8 +84,9 @@ public class CocoonServlet extends HttpServlet {
         ServletOutputStream os=res.getOutputStream();
         String uri=req.getPathInfo();
         if (uri!=null) try {
-            Job job=new ServletJob(req,res);
-            if (!this.cocoon.handle(job,os)) res.sendError(res.SC_NOT_FOUND);
+            Request rq=new CocoonServletRequest(req);
+            Response rs=new CocoonServletResponse(res);
+            if (!this.cocoon.handle(rq,rs,os)) res.sendError(res.SC_NOT_FOUND);
         } catch (IOException e) {
             throw(e);    
         } catch (SAXException e) {

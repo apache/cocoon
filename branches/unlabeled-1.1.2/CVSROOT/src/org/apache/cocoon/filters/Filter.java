@@ -7,7 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.filters;
 
-import org.apache.cocoon.Job;
+import org.apache.cocoon.sitemap.Request;
+import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.framework.Component;
 import org.apache.cocoon.framework.Configurable;
@@ -21,7 +22,7 @@ import org.apache.cocoon.framework.Modificable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-09 08:34:28 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-11 13:14:42 $
  * @since Cocoon 2.0
  */
 public interface Filter extends Component, Configurable, Modificable {
@@ -30,10 +31,10 @@ public interface Filter extends Component, Configurable, Modificable {
      * modify them, and then forward them to the specified 
      * <code>XMLConsumer</code>.
      *
-     * @param job The current <code>Job</code>.
-     * @param src The sitemap-translate source URI.
+     * @param req The cocoon <code>Request</code>.
+     * @param res The cocoon <code>Response</code>.
      * @param cons The <code>XMLConsumer</code> listening to the modified
      *             SAX events.
      */
-    public XMLConsumer getXMLConsumer(Job job, String src, XMLConsumer cons);
+    public XMLConsumer getXMLConsumer(Request req, Response res, XMLConsumer cons);
 }

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.cocoon.Job;
 import org.xml.sax.SAXException;
 
 /**
@@ -20,7 +19,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:43 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 13:14:50 $
  */
 public class Sitemap {
     /** This sitemap Partition table */
@@ -33,14 +32,17 @@ public class Sitemap {
         this.partitions=new Hashtable();
     }
     
-    public boolean handle(Job job, OutputStream out)
+    public boolean handle(Request req, Response res, OutputStream out)
     throws IOException, SAXException {
-        // Try to handle the job to the default partition.
-        if(this.defaultPartition.handle(job,out)) return(true);
-        // Iterate thru all partitions handling the job
+        // Try to handle the request to the default partition.
+        if(this.defaultPartition.handle(req,res,out)) return(true);
+        // Iterate thru all partitions handling the request
         Enumeration enum=this.partitions.elements();
-        while(enum.hasMoreElements())
-            if (((Partition)enum.nextElement()).handle(job,out)) return(true);
+        while(enum.hasMoreElements()) {
+            if (((Partition)enum.nextElement()).handle(req,res,out)) {
+                return(true);
+            }
+        }
         return(false);
     }
 }

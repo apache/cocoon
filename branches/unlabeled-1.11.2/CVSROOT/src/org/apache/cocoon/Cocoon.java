@@ -24,6 +24,8 @@ import org.apache.cocoon.filters.Filter;
 import org.apache.cocoon.filters.FilterFactory;
 import org.apache.cocoon.serializers.Serializer;
 import org.apache.cocoon.serializers.SerializerFactory;
+import org.apache.cocoon.sitemap.Request;
+import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.sitemap.SitemapFactory;
 import org.w3c.dom.Document;
@@ -48,7 +50,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.11.2.1 $ $Date: 2000-02-07 15:35:34 $
+ * @version CVS $Revision: 1.11.2.2 $ $Date: 2000-02-11 13:14:41 $
  * @since Cocoon 2.0
  */
 public class Cocoon implements Configurable, Modificable {
@@ -241,9 +243,9 @@ public class Cocoon implements Configurable, Modificable {
         return(s);
     }
 
-    public boolean handle(Job job, OutputStream out)
+    public boolean handle(Request req, Response res, OutputStream out)
     throws IOException, SAXException {
-        return(this.sitemap.handle(job,out));
+        return(this.sitemap.handle(req,res,out));
     }
 
     /** Create a new instance for a specified class */

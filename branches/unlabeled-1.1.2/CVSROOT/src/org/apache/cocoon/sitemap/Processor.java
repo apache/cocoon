@@ -10,7 +10,6 @@ package org.apache.cocoon.sitemap;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import org.apache.cocoon.Job;
 import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.ConfigurationException;
@@ -25,7 +24,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 08:35:07 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-11 13:14:50 $
  */
 public class Processor {
     /** The int representing '*' */
@@ -80,18 +79,18 @@ public class Processor {
     }
 
     /**
-     * Handle a given Job.
+     * Handle a given Request.
      */
-    public boolean handle(Job job, OutputStream out)
+    public boolean handle(Request req, Response res, OutputStream out)
     throws IOException, SAXException {
-        String uri=job.getUri();
+        String uri=req.getPathInfo();
         if(!this.matchTarget(uri)) return(false);
-        String source=this.translateTarget(uri);
-        XMLConsumer consumer=this.serializer.getXMLConsumer(job,source,out);
+        req.setPathTranslated(this.translateTarget(uri));
+        XMLConsumer consumer=this.serializer.getXMLConsumer(req,res,out);
         for (int x=0; x<this.filters.length; x++) {
-            consumer=this.filters[x].getXMLConsumer(job,source,consumer);
+            consumer=this.filters[x].getXMLConsumer(req,res,consumer);
         }
-        this.producer.getXMLSource(job,source).produce(consumer);
+        this.producer.getXMLSource(req,res).produce(consumer);
         return(true);
     }
 

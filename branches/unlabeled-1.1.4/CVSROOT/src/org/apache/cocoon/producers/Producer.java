@@ -7,7 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.producers;
 
-import org.apache.cocoon.Job;
+import org.apache.cocoon.sitemap.Request;
+import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.Component;
 import org.apache.cocoon.framework.Configurable;
@@ -20,15 +21,15 @@ import org.apache.cocoon.framework.Configurable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-09 08:34:46 $
+ * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-11 13:14:44 $
  * @since Cocoon 2.0
  */
 public interface Producer extends Component, Configurable {
     /**
      * Get the <code>XMLSource</code> object that will produce SAX events.
      *
-     * @param job The current <code>Job</code>.
-     * @param source The sitemap-translate source URI.
+     * @param req The cocoon <code>Request</code>.
+     * @param res The cocoon <code>Response</code>.
      */
-    public XMLSource getXMLSource(Job job, String source);
+    public XMLSource getXMLSource(Request req, Response res);
 }

@@ -5,11 +5,7 @@
  * version 1.1,  a copy of wich has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon;
-
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Enumeration;
+package org.apache.cocoon.sitemap;
 
 /**
  *
@@ -17,24 +13,27 @@ import java.util.Enumeration;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:34 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-11 13:14:50 $
  */
-public interface Job {
-    public String getType();
-
-    public String getUri();
-    
-    public String getParameter(String name);
-    public Enumeration getParameterNames();
-    
-    public int getContentLength();
-    public String getContentType();
-    public InputStream getContent()
-    throws IOException;
-    
-    public String getRequestHeader(String name);
-    public Enumeration getRequestHeaderNames();
-
+public interface Response {
+    /**
+     * Adds a field to the response header with the given name and value.
+     */
     public void setHeader(String name, String value);
+
+    /**
+     * Adds a field to the response header with the given name and int value.
+     */
+    public void setIntHeader(String name, int value);
+
+    /**
+     * Adds a field to the response header with the given name and date-valued
+     * field.
+     */
+    public void setDateHeader(java.lang.String name, long date);
+
+    /**
+     * Sets the content type for this response.
+     */
     public void setContentType(String type);
 }

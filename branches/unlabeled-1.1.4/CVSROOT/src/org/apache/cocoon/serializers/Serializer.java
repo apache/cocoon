@@ -9,7 +9,8 @@ package org.apache.cocoon.serializers;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.cocoon.Job;
+import org.apache.cocoon.sitemap.Request;
+import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.framework.Component;
 import org.apache.cocoon.framework.Configurable;
@@ -21,9 +22,9 @@ import org.apache.cocoon.framework.Modificable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-09 08:34:55 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-11 13:14:45 $
  */
 public interface Serializer extends Component, Configurable, Modificable {
-    public XMLConsumer getXMLConsumer(Job job, String src, OutputStream out)
+    public XMLConsumer getXMLConsumer(Request req, Response res, OutputStream out)
     throws IOException;
 }

@@ -9,7 +9,6 @@ package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.cocoon.Job;
 import org.xml.sax.SAXException;
 
 /**
@@ -18,7 +17,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 13:14:49 $
  */
 public class Partition {
     /** This Partition array of Processor. */
@@ -39,10 +38,10 @@ public class Partition {
         this.sitemap=smap;
     }
 
-    public boolean handle(Job job, OutputStream out)
+    public boolean handle(Request req, Response res, OutputStream out)
     throws IOException, SAXException {
         for(int x=0; x<processors.length; x++)
-            if (processors[x].handle(job,out)) return(true);
+            if (processors[x].handle(req,res,out)) return(true);
         return(false);
     }
 }
