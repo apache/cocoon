@@ -25,7 +25,7 @@
         </form>
         <annotation>
             <i18n:translate>
-                <i18n:text i18n:key="doclink"/>
+                <i18n:text key="doclink"/>
                 <i18n:param>
                     <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
                 </i18n:param>
@@ -33,7 +33,7 @@
         </annotation>
         <sub-title>
             <i18n:translate>
-                <i18n:text i18n:key="count_title"/>
+                <i18n:text key="count_title"/>
                 <i18n:param type="number" pattern="000000">
                     <xsp:expr>count</xsp:expr>
                 </i18n:param>
@@ -46,14 +46,14 @@
         </sub-title>
         <content>
             <para title="first" name="article" i18n:attr="title name">
-                <i18n:text i18n:key="a_key">article_text1</i18n:text>
+                <i18n:text key="a_key">article_text1</i18n:text>
             </para>
             <para title="second" name="article" i18n:attr="title name">
                 <i18n:text>article_text2</i18n:text>
             </para>
             <para title="third" name="article" i18n:attr="title name">
                 <i18n:translate>
-                    <i18n:text i18n:key="Hello"/>
+                    <i18n:text key="Hello"/>
                     <i18n:param>
                         <strong>
                             <xsp-request:get-parameter name="username" default="none" as="string" form-encoding="UTF-8"/>
