@@ -403,8 +403,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
             Configuration config = configHandler.getConfiguration();
             
             this.componentConfigurations = config.getChild("pipelines-node")
-                                             .getChild("component-configurations")
-                                             .getChild("global-variables");
+                                             .getChild("component-configurations");
             return config;
         } finally {
             m_manager.release(parser);
