@@ -112,7 +112,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.17 2003/12/31 08:47:37 antonio Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.18 2004/01/06 12:37:21 joerg Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -455,7 +455,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 }
                 String s = ((NativeJavaClass) cl).getClassObject().getName();
                 String n = s.substring(s.lastIndexOf('.')+1);
-                Object val = thisObj.get(n, thisObj);
                 thisObj.put(n, thisObj, cl);
             }
         }
