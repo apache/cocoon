@@ -584,7 +584,15 @@
     <lib>core/rhino1_6R1pre_20041102T2302.jar</lib>
     <homepage>http://www.mozilla.org/rhino</homepage>
   </file>
-
+  
+  <file>
+    <title>Apache XMLBeans</title>
+    <description>XMLBeans is an XML-Java binding tool.</description>
+    <used-by>Rhino</used-by>
+    <lib>core/xmlbeans-1.0.3.jar</lib>
+    <homepage>http://xmlbeans.apache.org/</homepage>
+  </file>
+  
   <file>
     <title>JavacAPI</title>
     <description>Embedded Java Compiler API</description>
