@@ -65,7 +65,7 @@ import org.apache.excalibur.source.SourceResolver;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class AuthenticationContextProvider
 implements SessionContextProvider {
@@ -84,14 +84,14 @@ implements SessionContextProvider {
                                             SourceResolver   resolver,
                                             ComponentManager manager)
     throws ProcessingException {
-        SessionContext context = null;
+        AuthenticationContext context = null;
         if (name.equals(org.apache.cocoon.webapps.authentication.AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
             RequestState state = RequestState.getState();
             if ( null != state ) {
                 UserHandler handler = state.getHandler();
                 if ( handler != null ) {
                     context = handler.getContext();
-                }
+                    context.setApplicationName(state.getApplicationName());                }
             }
         }
         return context;

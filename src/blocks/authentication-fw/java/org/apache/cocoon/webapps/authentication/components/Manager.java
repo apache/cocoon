@@ -54,6 +54,7 @@ import java.io.IOException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceParameters;
 
 
@@ -65,7 +66,7 @@ import org.apache.excalibur.source.SourceParameters;
  * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.4 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: Manager.java,v 1.5 2003/05/01 09:49:14 cziegeler Exp $
 */
 public interface Manager {
 
@@ -74,9 +75,9 @@ public interface Manager {
 
     /**
      * Is the current user authenticated for the given handler?
-     * @return Returns true of the user is authenticated.
+     * @return Returns the corresponding handler if the user is authenticated.
      */
-    boolean isAuthenticated(String handlerName)
+    UserHandler isAuthenticated(String handlerName)
     throws ProcessingException;
 
     /**
@@ -91,12 +92,12 @@ public interface Manager {
 
     /**
      * Try to login the user.
-     * If the authentication is successful, <code>true</code> is returned.
-     * If not, <code>false</code> is returned.
+     * If the authentication is successful, the user handler is returned.
+     * If not, <code>null</code> is returned.
      */
-    boolean login(String              handlerName,
-                   String              applicationName,
-                   SourceParameters    parameters)
+    UserHandler login(String              handlerName,
+                      String              applicationName,
+                      SourceParameters    parameters)
     throws ProcessingException;
 
     /**

@@ -59,13 +59,13 @@ import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.components.Manager;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 
 /**
  *  This action tests if the user is logged in for a given handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NewLoggedInAction.java,v 1.1 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: NewLoggedInAction.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class NewLoggedInAction
 extends ComposerAction
@@ -90,9 +90,9 @@ implements ThreadSafe {
 
         try {
             authManager = (Manager) this.manager.lookup(Manager.ROLE);
-            if (authManager.isAuthenticated(handlerName) ) {
-                RequestState state = RequestState.getState();
-                map = state.getHandler().getContext().getContextInfo();
+            UserHandler handler = authManager.isAuthenticated(handlerName);
+            if ( handler != null ) {
+                map = handler.getContext().getContextInfo();
             }
         } finally {
             this.manager.release( (Component)authManager);

@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceUtil;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.6 2003/04/27 14:45:04 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.7 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -111,8 +111,8 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
     static {
         // add the provider for the authentication context
         AuthenticationContextProvider contextProvider = new AuthenticationContextProvider();
-        // TODO
-/*        try {
+        // FIXME - TODO
+   /*     try {
             // FIXME - this is static!!!
             SessionManager.addSessionContextProvider(contextProvider, AuthenticationConstants.SESSION_CONTEXT_NAME);
         } catch (ProcessingException local) {
@@ -213,9 +213,9 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#authenticate(java.lang.String, java.lang.String, org.apache.excalibur.source.SourceParameters)
 	 */
-	public boolean login(String handlerName,
-                           String applicationName,
-                           SourceParameters parameters)
+	public UserHandler login(String handlerName,
+                             String applicationName,
+                             SourceParameters parameters)
     throws ProcessingException {
         HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
         if ( config == null ) {
@@ -240,9 +240,11 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
             // update RequestState
             RequestState state = new RequestState( handler, applicationName, this.resolver );
             RequestState.setState( state );
+            
+            handler.getContext().setApplicationName( applicationName );
         }
         
- 		return (handler != null);
+ 		return handler;
 	}
 
 	/* (non-Javadoc)
@@ -284,9 +286,9 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#isAuthenticated(java.lang.String)
 	 */
-	public boolean isAuthenticated(String handlerName)
+	public UserHandler isAuthenticated(String handlerName)
     throws ProcessingException {
-        return ( this.getUserHandler( handlerName ) != null);
+        return this.getUserHandler( handlerName  );
 	}
 
 	/* (non-Javadoc)
