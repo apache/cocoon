@@ -38,7 +38,7 @@
     <depend project="excalibur-datasource" version="supplied"/>
     <depend project="excalibur-component" version="supplied"/>
     <depend project="excalibur-logger" version="supplied"/>
-    <depend project="excalibur-event" version="supplied"/>
+    <depend project="excalibur-event" inherit="runtime"/>
 
     <depend project="jakarta-regexp" version="supplied"/>
     <depend project="jakarta-servletapi-4" version="supplied"/>
