@@ -16,7 +16,7 @@ function protect() {
   if (auth_checkAuthentication(handler,"")) {
     success();
   } else {
-    failure();
+    // already redirected by auth_checkAuthentication
   }
 }
 
