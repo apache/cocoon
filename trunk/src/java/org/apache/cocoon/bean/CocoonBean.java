@@ -69,9 +69,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.CocoonContainer;
-import org.apache.cocoon.components.ComponentContext;
-import org.apache.cocoon.components.SitemapConfigurableAccessor;
+import org.apache.cocoon.components.container.CocoonContainer;
+import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.components.container.SitemapConfigurableCreator;
 
 /**
  * CocoonBean does XYZ
@@ -326,7 +326,7 @@ public class CocoonBean
     private LifecycleExtensionManager getLifecycleExtensionManager()
     {
         LifecycleExtensionManager manager = new LifecycleExtensionManager();
-        manager.addCreatorExtension(new SitemapConfigurableAccessor());
+        manager.addCreatorExtension(new SitemapConfigurableCreator());
 
         return manager;
     }

@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +61,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.GlobalRequestLifecycleComponent;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentContext;
 import org.apache.cocoon.environment.EnvironmentHelper;

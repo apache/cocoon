@@ -48,17 +48,21 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.components.ChainedConfiguration;
+import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.EnvironmentHelper;
 
 /**
- *
+ * This is the implementation for the sitemap configuration holder that implements
+ * the the sitemap component configurations
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.7 2003/10/29 18:58:05 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder
     implements SitemapConfigurationHolder {

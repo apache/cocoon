@@ -48,54 +48,64 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
+import org.apache.avalon.fortress.ContainerManagerConstants;
+import org.apache.avalon.fortress.MetaInfoManager;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.cocoon.ProcessingException;
+import org.apache.avalon.lifecycle.Creator;
+import org.apache.cocoon.components.SitemapConfigurable;
+import org.apache.cocoon.components.SitemapConfigurationHolder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Cocoon Component Manager.
- * This manager extends the ///////
- * by a special lifecycle handling for a {@link RequestLifecycleComponent}
+ * SitemapConfigurableCreator is the Lifecycle extension for [@link SitemapConfigurable}
  *
- * WARNING: This is a "private" Cocoon core class - do NOT use this class
- * directly - and do not assume that a {@link org.apache.avalon.framework.service.ServiceManager} you get
- * via the compose() method is an instance of CocoonComponentManager.
- *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.30 2004/01/07 15:48:32 cziegeler Exp $
+ * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
+ * @author <a href="cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $ Revision: 1.1 $
  */
-public final class CocoonComponentManager
-{
+public class SitemapConfigurableCreator 
+implements Creator {
 
-    /**
-     * Add an automatically released component
+    /** 
+     * The {@link SitemapConfigurationHolder}s 
      */
-    public static void addComponentForAutomaticRelease(final ServiceSelector selector,
-                                                       final Object          component,
-                                                       final ServiceManager  manager)
-    throws ProcessingException {
-        RequestLifecycleHelper.addComponentForAutomaticRelease(selector, component, manager);
+    private Map m_sitemapConfigurationHolders = new HashMap( 15 );
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.lifecycle.Creator#create(java.lang.Object, org.apache.avalon.framework.context.Context)
+     */
+    public void create(Object object, Context context) 
+    throws Exception {
+        if ( object instanceof SitemapConfigurable ) {
+            ServiceManager manager = (ServiceManager) context.get(ContainerManagerConstants.SERVICE_MANAGER);
+            MetaInfoManager metaInfoManager = (MetaInfoManager)manager.lookup(MetaInfoManager.ROLE);
+            try {
+                String role = metaInfoManager.getMetaInfoForClassname(object.getClass().getName()).getConfigurationName();
+                SitemapConfigurationHolder holder;
+                
+                holder = (SitemapConfigurationHolder) m_sitemapConfigurationHolders.get( role );
+                if ( null == holder ) {
+                    // create new holder
+                    holder = new DefaultSitemapConfigurationHolder( role );
+                    m_sitemapConfigurationHolders.put( role, holder );
+                }
+                
+                ( (SitemapConfigurable) object ).configure( holder );
+            } finally {
+                manager.release(metaInfoManager);
+            }
+        }
     }
 
-    /**
-     * Add an automatically released component
+    /* (non-Javadoc)
+     * @see org.apache.avalon.lifecycle.Creator#destroy(java.lang.Object, org.apache.avalon.framework.context.Context)
      */
-    public static void addComponentForAutomaticRelease(final ServiceManager manager,
-                                                       final Object         component)
-    throws ProcessingException {
-        RequestLifecycleHelper.addComponentForAutomaticRelease(manager, component);
+    public void destroy(Object object, Context context) {
     }
 
-    /**
-     * Remove from automatically released components
-     */
-    public static void removeFromAutomaticRelease(final Object component)
-    throws ProcessingException {
-        RequestLifecycleHelper.removeFromAutomaticRelease(component);
-    }
 }
-
-

@@ -48,92 +48,55 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.cocoon.environment.EnvironmentHelper;
-
-import java.util.Map;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingException;
 
 /**
- * This is the {@link Context} implementation for Cocoon components.
- * It extends the {@link DefaultContext} by a special handling for
- * getting objects from the object model.
+ * Cocoon Component Manager.
+ * This class is just only used for auto-releasing components.
+ * Auto-releasing is currently required for the RequestLifeCycle Components
+ * and the pipeline implementations.
+ * 
+ * WARNING: This is a "private" Cocoon core class - do NOT use this class
+ * directly - and do not assume that a {@link org.apache.avalon.framework.service.ServiceManager} you get
+ * via the compose() method is an instance of CocoonComponentManager.
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.7 2004/01/05 12:41:48 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
  */
-
-public class ComponentContext
-    extends DefaultContext {
-
-    protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '.';
+public final class CocoonComponentManager
+{
 
     /**
-     * Create a Context with specified data and parent.
-     *
-     * @param contextData the context data
-     * @param parent the parent Context (may be null)
+     * Add an automatically released component
      */
-    public ComponentContext(final Map contextData, final Context parent) {
-        super( contextData, parent );
+    public static void addComponentForAutomaticRelease(final ServiceSelector selector,
+                                                       final Object          component,
+                                                       final ServiceManager  manager)
+    throws ProcessingException {
+        RequestLifecycleHelper.addComponentForAutomaticRelease(selector, component, manager);
     }
 
     /**
-     * Create a Context with specified data.
-     *
-     * @param contextData the context data
+     * Add an automatically released component
      */
-    public ComponentContext(final Map contextData) {
-        super( contextData );
+    public static void addComponentForAutomaticRelease(final ServiceManager manager,
+                                                       final Object         component)
+    throws ProcessingException {
+        RequestLifecycleHelper.addComponentForAutomaticRelease(manager, component);
     }
 
     /**
-     * Create a Context with specified parent.
-     *
-     * @param parent the parent Context (may be null)
+     * Remove from automatically released components
      */
-    public ComponentContext(final Context parent) {
-        super( parent );
+    public static void removeFromAutomaticRelease(final Object component)
+    throws ProcessingException {
+        RequestLifecycleHelper.removeFromAutomaticRelease(component);
     }
-
-    /**
-     * Create a Context with no parent.
-     *
-     */
-    public ComponentContext() {
-        super();
-    }
-
-    /**
-     * Retrieve an item from the Context.
-     *
-     * @param key the key of item
-     * @return the item stored in context
-     * @throws ContextException if item not present
-     */
-    public Object get( final Object key )
-    throws ContextException {
-        if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
-            return EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
-        }
-        if ( key instanceof String ) {
-            String stringKey = (String)key;
-            if ( stringKey.startsWith(OBJECT_MODEL_KEY_PREFIX) ) {
-                final Map objectModel = EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
-                String objectKey = stringKey.substring(OBJECT_MODEL_KEY_PREFIX.length());
-
-                Object o = objectModel.get( objectKey );
-                if ( o == null ) {
-                    final String message = "Unable to locate " + key;
-                    throw new ContextException( message );
-                }
-                return o;
-            }
-        }
-        return super.get( key );
-    }
-
 }
+
+

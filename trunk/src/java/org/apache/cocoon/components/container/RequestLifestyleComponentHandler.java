@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
 import org.apache.avalon.fortress.impl.handler.AbstractComponentHandler;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -56,6 +56,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.GlobalRequestLifecycleComponent;
+import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.excalibur.mpool.Pool;
 import org.apache.excalibur.mpool.PoolManager;
 
@@ -66,8 +68,9 @@ import org.apache.excalibur.mpool.PoolManager;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public class RequestLifestyleComponentHandler extends AbstractComponentHandler implements Configurable
-{
+public class RequestLifestyleComponentHandler 
+extends AbstractComponentHandler 
+implements Configurable {
     private static int lastInstance = 0;
 
     /** The instance of the PoolManager to create the Pool for the Handler */

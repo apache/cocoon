@@ -48,72 +48,93 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
-import org.apache.avalon.fortress.impl.AbstractContainer;
-import org.apache.avalon.fortress.impl.DefaultContainer;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.Constants;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.EnvironmentHelper;
 
 import java.util.Map;
 
 /**
- * Customize the Fortress container to handle Cocoon semantics.
+ * This is the {@link Context} implementation for Cocoon components.
+ * It extends the {@link DefaultContext} by a special handling for
+ * getting objects from the object model.
  *
- * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
- * @version CVS $ Revision: 1.1 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: ComponentContext.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
  */
-public class CocoonContainer extends DefaultContainer
-{
+
+public class ComponentContext
+    extends DefaultContext {
+
+    protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '.';
+
     /**
-     * Provide some validation for the core Cocoon components
+     * Create a Context with specified data and parent.
      *
-     * @param conf The configuration
-     * @throws ConfigurationException if the coniguration is invalid
+     * @param contextData the context data
+     * @param parent the parent Context (may be null)
      */
-    public void configure( Configuration conf ) throws ConfigurationException
-    {
-        if ( !"cocoon".equals( conf.getName() ) ) throw new ConfigurationException( "Invalid configuration format",
-                conf );
-        String confVersion = conf.getAttribute( "version" );
-
-        if ( !Constants.CONF_VERSION.equals( confVersion ) ) throw new ConfigurationException(
-                "Uncompatible configuration format", conf );
-
-        super.configure( conf );
+    public ComponentContext(final Map contextData, final Context parent) {
+        super( contextData, parent );
     }
 
     /**
-     * Ensure that we return the latest and greatest component for the role/hint combo if possible.
-     * Otherwise default to normal behavior.
+     * Create a Context with specified data.
      *
-     * @param role The role of the component we are looking up.
-     * @param hint The hint for the component we are looking up.
-     * @return The component for the role/hint combo
-     * @throws ServiceException if the role/hint combo cannot be resolved.
+     * @param contextData the context data
      */
-    public Object get( final String role, final Object hint ) throws ServiceException
-    {
-        Object component = null;
+    public ComponentContext(final Map contextData) {
+        super( contextData );
+    }
 
-        if ( null != hint
-             && !AbstractContainer.DEFAULT_ENTRY.equals( hint )
-             && !AbstractContainer.SELECTOR_ENTRY.equals( hint ) )
-        {
-            Map implementations = (Map) m_mapper.get( role );
-            if ( null != implementations )
-            {
-                component = implementations.get( hint );
+    /**
+     * Create a Context with specified parent.
+     *
+     * @param parent the parent Context (may be null)
+     */
+    public ComponentContext(final Context parent) {
+        super( parent );
+    }
+
+    /**
+     * Create a Context with no parent.
+     *
+     */
+    public ComponentContext() {
+        super();
+    }
+
+    /**
+     * Retrieve an item from the Context.
+     *
+     * @param key the key of item
+     * @return the item stored in context
+     * @throws ContextException if item not present
+     */
+    public Object get( final Object key )
+    throws ContextException {
+        if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
+            return EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
+        }
+        if ( key instanceof String ) {
+            String stringKey = (String)key;
+            if ( stringKey.startsWith(OBJECT_MODEL_KEY_PREFIX) ) {
+                final Map objectModel = EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
+                String objectKey = stringKey.substring(OBJECT_MODEL_KEY_PREFIX.length());
+
+                Object o = objectModel.get( objectKey );
+                if ( o == null ) {
+                    final String message = "Unable to locate " + key;
+                    throw new ContextException( message );
+                }
+                return o;
             }
         }
-
-        if ( null == component )
-        {
-            component = super.get( role, hint );
-        }
-
-        return component;
+        return super.get( key );
     }
+
 }

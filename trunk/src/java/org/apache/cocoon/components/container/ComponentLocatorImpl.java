@@ -48,61 +48,36 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
-import org.apache.avalon.fortress.ContainerManagerConstants;
-import org.apache.avalon.fortress.MetaInfoManager;
-import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.lifecycle.Creator;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.cocoon.components.ComponentLocator;
 
 /**
- * SitemapConfigurableAccessor does XYZ
+ * This object is set to a {@link ParentAware} component and allows
+ * access to the parent component.
  *
- * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
- * @version CVS $ Revision: 1.1 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
  */
-public class SitemapConfigurableAccessor 
-implements Creator {
+public class ComponentLocatorImpl
+    implements ComponentLocator {
 
-    /** 
-     * The {@link SitemapConfigurationHolder}s 
-     */
-    private Map m_sitemapConfigurationHolders = new HashMap( 15 );
+    protected ServiceManager manager;
+    protected String           role;
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.lifecycle.Creator#create(java.lang.Object, org.apache.avalon.framework.context.Context)
-     */
-    public void create(Object object, Context context) 
-    throws Exception {
-        if ( object instanceof SitemapConfigurable ) {
-            ServiceManager manager = (ServiceManager) context.get(ContainerManagerConstants.SERVICE_MANAGER);
-            MetaInfoManager metaInfoManager = (MetaInfoManager)manager.lookup(MetaInfoManager.ROLE);
-            try {
-                String role = metaInfoManager.getMetaInfoForClassname(object.getClass().getName()).getConfigurationName();
-                SitemapConfigurationHolder holder;
-                
-                holder = (SitemapConfigurationHolder) m_sitemapConfigurationHolders.get( role );
-                if ( null == holder ) {
-                    // create new holder
-                    holder = new DefaultSitemapConfigurationHolder( role );
-                    m_sitemapConfigurationHolders.put( role, holder );
-                }
-                
-                ( (SitemapConfigurable) object ).configure( holder );
-            } finally {
-                manager.release(metaInfoManager);
-            }
-        }
+    public ComponentLocatorImpl(ServiceManager manager, String role) {
+        this.manager = manager;
+        this.role = role;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.lifecycle.Creator#destroy(java.lang.Object, org.apache.avalon.framework.context.Context)
-     */
-    public void destroy(Object object, Context context) {
+    public Object lookup()
+    throws ServiceException {
+        return this.manager.lookup( this.role );
     }
 
+    public void release(Object parent) {
+        this.manager.release( parent);
+    }
 }

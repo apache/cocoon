@@ -48,35 +48,72 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
+import org.apache.avalon.fortress.impl.AbstractContainer;
+import org.apache.avalon.fortress.impl.DefaultContainer;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Constants;
+
+import java.util.Map;
 
 /**
- * This object is set to a {@link ParentAware} component and allows
- * access to the parent component.
+ * Customize the Fortress container to handle Cocoon semantics.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.5 2003/10/22 15:37:50 bloritsch Exp $
+ * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
+ * @version CVS $ Revision: 1.1 $
  */
-public class ComponentLocatorImpl
-    implements ComponentLocator {
+public class CocoonContainer extends DefaultContainer
+{
+    /**
+     * Provide some validation for the core Cocoon components
+     *
+     * @param conf The configuration
+     * @throws ConfigurationException if the coniguration is invalid
+     */
+    public void configure( Configuration conf ) throws ConfigurationException
+    {
+        if ( !"cocoon".equals( conf.getName() ) ) throw new ConfigurationException( "Invalid configuration format",
+                conf );
+        String confVersion = conf.getAttribute( "version" );
 
-    protected ServiceManager manager;
-    protected String           role;
+        if ( !Constants.CONF_VERSION.equals( confVersion ) ) throw new ConfigurationException(
+                "Uncompatible configuration format", conf );
 
-    public ComponentLocatorImpl(ServiceManager manager, String role) {
-        this.manager = manager;
-        this.role = role;
+        super.configure( conf );
     }
 
-    public Object lookup()
-    throws ServiceException {
-        return this.manager.lookup( this.role );
-    }
+    /**
+     * Ensure that we return the latest and greatest component for the role/hint combo if possible.
+     * Otherwise default to normal behavior.
+     *
+     * @param role The role of the component we are looking up.
+     * @param hint The hint for the component we are looking up.
+     * @return The component for the role/hint combo
+     * @throws ServiceException if the role/hint combo cannot be resolved.
+     */
+    public Object get( final String role, final Object hint ) throws ServiceException
+    {
+        Object component = null;
 
-    public void release(Object parent) {
-        this.manager.release( parent);
+        if ( null != hint
+             && !AbstractContainer.DEFAULT_ENTRY.equals( hint )
+             && !AbstractContainer.SELECTOR_ENTRY.equals( hint ) )
+        {
+            Map implementations = (Map) m_mapper.get( role );
+            if ( null != implementations )
+            {
+                component = implementations.get( hint );
+            }
+        }
+
+        if ( null == component )
+        {
+            component = super.get( role, hint );
+        }
+
+        return component;
     }
 }
