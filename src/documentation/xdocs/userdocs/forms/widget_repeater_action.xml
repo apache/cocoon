@@ -36,9 +36,9 @@
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>
   <fd:hint>...</fd:hint>
-  <fd:on-activate>
+  <fd:on-action>
     ...
-  </fd:on-activate>
+  </fd:on-action>
 </fd:repeater-action>]]></source>
 
       <p>The <strong>action-command</strong> attribute should have either
@@ -56,10 +56,13 @@
       returns a boolean) that is part of the repeater and used to mark
       the rows to be deleted.</p>
 
-      <p><strong>fd:on-activate</strong> allows additional event handlers
+      <p><strong>fd:on-action</strong> allows additional event handlers
       to be defined, see also <link href="eventhandling.html">Event Handling</link>. The interface to be
       implemented for Java event listeners is <code>org.apache.cocoon.forms.event.ActionListener</code>.
-      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.</p>
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.
+	  The event handlers are called <em>after</em> the action is performed except for the
+	  <code>delete-rows</code> action where event handlers are called <em>before</em> the
+	  selected rows are deleted.</p>
     </s1>
   </body>
 </document>
