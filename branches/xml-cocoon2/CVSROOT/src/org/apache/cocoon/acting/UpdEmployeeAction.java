@@ -25,7 +25,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-12-30 22:39:16 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-30 23:01:01 $
  */
 public class UpdEmployeeAction extends ComposerAction {
 
@@ -41,8 +41,7 @@ public class UpdEmployeeAction extends ComposerAction {
      */
     public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
-        req.setAttribute("message", "Hy, you are about to Update the Employee table");
-        System.err.println("Hy, you are about to Update the Employee table");
+        req.setAttribute("message", "You have update the employee " + req.getParameter("name"));
         return null;
     }
 }

@@ -79,7 +79,6 @@
   </map:matchers>
 
   <map:actions>
-   <map:action name="employee" src="org.apache.cocoon.acting.EmployeeAction"/>
    <map:action name="add-employee" src="org.apache.cocoon.acting.AddEmployeeAction"/>
    <map:action name="del-employee" src="org.apache.cocoon.acting.DelEmployeeAction"/>
    <map:action name="upd-employee" src="org.apache.cocoon.acting.UpdEmployeeAction"/>
@@ -115,13 +114,9 @@
 
  <map:action-sets>
   <map:action-set name="employee">
-   <map:act type="employee" src="foo"/>
    <map:act type="add-employee" action="Add"/>
-   <map:act type="del-employee" action="Delete" src="bar">
-    <parameter name="foo" value="bar"/>
-   </map:act>
+   <map:act type="del-employee" action="Delete"/>
    <map:act type="upd-employee" action="Update"/>
-   <map:act type="employee"/>
   </map:action-set>
  </map:action-sets>
 
