@@ -77,7 +77,7 @@
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org">
       <regexp pattern="/BUILD FAILED/"   subject="Build Failure - Cocoon2"/>
-      <regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon2"/>
+      <!--regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon2"/-->
     </nag>
   </project>
 
