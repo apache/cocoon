@@ -110,22 +110,20 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.4 2003/04/09 12:17:20 stephan Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.5 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class ParserTransformer extends ParserProcessorAdapter
   implements Transformer, LogEnabled, Composable, Parameterizable,
              Recyclable, Disposable, CacheableProcessingComponent {
 
-    private XMLConsumer consumer = null;
+    private String grammar;
+    private Source grammarSource;
 
-    private String grammar = null;
-    private Source grammarSource = null;
+    private Logger logger;
+    private ComponentManager manager;
+    private SourceResolver resolver;
 
-    private Logger logger = null;
-    private ComponentManager manager = null;
-    private SourceResolver resolver = null;
-
-    private ParserAutomaton automaton = null;
+    private ParserAutomaton automaton;
     private ParserHandlerAdapter adapter = new ParserHandlerAdapter(true);
     private boolean recovery = false;
 
@@ -169,8 +167,6 @@ public class ParserTransformer extends ParserProcessorAdapter
      * @param consumer
      */
     public void setConsumer(XMLConsumer consumer) {
-        this.consumer = consumer;
-
         setContentHandler(consumer);
         setLexicalHandler(consumer);
 

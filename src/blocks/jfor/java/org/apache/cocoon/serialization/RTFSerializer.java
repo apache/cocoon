@@ -56,10 +56,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.LogEnabled;
-
 import org.jfor.jfor.converter.Converter;
 
 /**
@@ -67,24 +64,15 @@ import org.jfor.jfor.converter.Converter;
  * to serialize XSL:FO documents to RTF streams.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: RTFSerializer.java,v 1.1 2003/03/09 00:04:08 pier Exp $
+ * @version CVS $Id: RTFSerializer.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
  */
 
 public class RTFSerializer extends AbstractTextSerializer
-  implements Composable, LogEnabled {
+  implements LogEnabled {
 
-    private Writer rtfWriter = null;
-    private Converter handler = null;
-    private ComponentManager manager = null;
+    private Writer rtfWriter;
+    private Converter handler;
 
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) {
-      this.manager = manager;
-    }
 
     /**
      * Set the OutputStream where the serializer will write to.
@@ -93,13 +81,13 @@ public class RTFSerializer extends AbstractTextSerializer
      */
     public void setOutputStream(OutputStream out) {
         try {
-          rtfWriter =
+            rtfWriter =
             new BufferedWriter(new OutputStreamWriter(out, "ISO-8859-1"));
 
-          // FIXME Find a way to work with the org.apache.avalon.framework.logger.Logger
-          handler = new Converter(rtfWriter,
-            Converter.createConverterOption(System.out));
-          super.setContentHandler(handler);
+            // FIXME Find a way to work with the org.apache.avalon.framework.logger.Logger
+            handler = new Converter(rtfWriter,
+               Converter.createConverterOption(System.out));
+            super.setContentHandler(handler);
 
         } catch (Exception e) {
             getLogger().error("RTFSerializer.setOutputStream()", e);
@@ -112,7 +100,7 @@ public class RTFSerializer extends AbstractTextSerializer
      */
     public void recycle() {
         super.recycle();
-        rtfWriter = null;
-        handler = null;
+        this.rtfWriter = null;
+        this.handler = null;
     }
 }

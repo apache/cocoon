@@ -107,7 +107,7 @@ import org.apache.excalibur.source.Source;
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
  *
- * @version CVS $Id: JDBCTypeConversions.java,v 1.4 2003/07/01 11:29:55 haul Exp $
+ * @version CVS $Id: JDBCTypeConversions.java,v 1.5 2003/09/24 21:54:49 cziegeler Exp $
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;
@@ -311,7 +311,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Part) {
                 Part anyFile = (Part) value;
                 asciiStream = new BufferedInputStream(anyFile.getInputStream());
-                length = (int) anyFile.getSize();
+                length = anyFile.getSize();
                 clob = new ClobHelper(asciiStream, length);
             } else if (value instanceof JDBCxlobHelper) {
                 asciiStream = ((JDBCxlobHelper) value).inputStream;
@@ -347,7 +347,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Part) {
                 Part anyFile = (Part) value;
                 asciiStream = new BufferedInputStream(anyFile.getInputStream());
-                length = (int) anyFile.getSize();
+                length = anyFile.getSize();
                 clob = new ClobHelper(asciiStream, length);
             } else {
                 String asciiText = value.toString();

@@ -119,7 +119,7 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.3 2003/07/01 11:23:19 haul Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.4 2003/09/24 21:54:48 cziegeler Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -245,7 +245,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                 } catch (NumberFormatException nfe) {
                     if (getLogger().isWarnEnabled())
                         getLogger().warn("problem parsing first row option "+tmp+" using default instead.");
-                };
+                }
             }
             tmp = (String) this.settings.get("fail-on-empty",String.valueOf(this.failOnEmpty));
             this.failOnEmpty = tmp.equalsIgnoreCase("true") || tmp.equalsIgnoreCase("yes");
@@ -366,7 +366,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                     queryData = this.getQuery( table, modeTypes, defaultModeNames );
                     this.cachedQueryData.put(luk,queryData);
                 }
-            };
+            }
 
             if (getLogger().isDebugEnabled())
                 getLogger().debug("query: "+queryData.queryString);
@@ -414,7 +414,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
 
         String modeAll = "all";
         Configuration[] modes = conf.getChildren("mode");
-        Configuration modeConfig = null;;
+        Configuration modeConfig = null;
 
         for ( int i=0; i<modes.length; i++ ) {
             String modeType = modes[i].getAttribute("type", "others");
@@ -423,7 +423,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                     getLogger().debug("requested mode was \""+type+"\" returning \""+modeType+"\"");
                 modeConfig = modes[i];
                 break;
-            };
+            }
         }
 
         return modeConfig;
