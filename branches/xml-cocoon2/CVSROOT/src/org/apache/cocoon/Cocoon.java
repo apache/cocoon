@@ -35,6 +35,7 @@ import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.avalon.component.DefaultComponentManager;
+import org.apache.avalon.component.DefaultRoleManager;
 import org.apache.avalon.AbstractLoggable;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
@@ -48,7 +49,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.68 $ $Date: 2001-04-05 20:15:26 $
+ * @version CVS $Revision: 1.4.2.69 $ $Date: 2001-04-10 17:09:03 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -130,6 +131,29 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     /** Configure this <code>Cocoon</code> instance. */
     public void configure() throws ConfigurationException {
         Parser p = null;
+        Configuration roleConfig = null;
+
+        try {
+            p = (Parser)this.componentManager.lookup(Roles.PARSER);
+            SAXConfigurationHandler b = new SAXConfigurationHandler();
+            ClassLoader cl = (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER);
+            InputSource is = new InputSource(cl.getResourceAsStream("/org/apache/cocoon/cocoon.roles"));
+            p.setContentHandler(b);
+            is.setSystemId(this.configurationFile.toExternalForm());
+            p.parse(is);
+            roleConfig = b.getConfiguration();
+        } catch (Exception e) {
+            getLogger().error("Could not configure Cocoon environment", e);
+            throw new ConfigurationException("Error trying to load configurations");
+        } finally {
+            if (p != null) this.componentManager.release((Component) p);
+        }
+
+        DefaultRoleManager drm = new DefaultRoleManager();
+        drm.setLogger(getLogger());
+        drm.configure(roleConfig);
+        this.componentManager.setRoleManager(drm);
+        roleConfig = null;
 
         try {
             p = (Parser)this.componentManager.lookup(Roles.PARSER);

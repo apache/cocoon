@@ -269,6 +269,7 @@ by the main ones.
       <fileset dir="${build.src}">
         <include name="**/Manifest.mf"/>
         <include name="**/*.xsl"/>
+	<include name="**/*.roles"/>
       </fileset>
     </copy>
 

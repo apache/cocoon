@@ -3,7 +3,6 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <parser class="org.apache.cocoon.components.parser.JaxpParser"/>
   <store class="org.apache.cocoon.components.store.MemoryStore"/>
 
   <url-factory>
@@ -103,100 +102,4 @@
 <!-- ======================== The sitemap  ============================== -->
 
   <sitemap file="sitemap.xmap"/>
-
-<!-- ====================== Component Roles ============================= -->
-
- <role name="org.apache.cocoon.components.parser.Parser"
-       shorthand="parser"
-       default-class="org.apache.cocoon.components.parser.JaxpParser"/>
-
- <role name="org.apache.cocoon.Processor"
-       shorthand="processor"/>
-
- <role name="org.apache.cocoon.components.store.Store"
-       shorthand="store"
-       default-class="org.apache.cocoon.components.store.MemoryStore"/>
-
- <role name="org.apache.cocoon.components.store.Repository"
-       shorthand="repository"
-       default-class="org.apache.cocoon.components.store.FilesystemStore"/>
-
- <role name="org.apache.cocoon.components.language.generator.ServerPagesSelector"
-       shorthand="server-pages"
-       default-class="org.apache.cocoon.components.language.generator.GeneratorSelector"/>
-
- <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
-       shorthand="markup-languages"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
-       shorthand="programming-languages"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.components.language.generator.ProgramGenerator"
-       shorthand="program-generator"
-       default-class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl"/>
-
- <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
-       shorthand="classloader"
-       default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-
- <role name="org.apache.avalon.util.pool.PoolController"
-       shorthand="pool-controller"
-       default-class="org.apache.avalon.component.DefaultComponentPoolController"/>
-
- <role name="org.apache.cocoon.components.saxconnector.SAXConnector"
-       shorthand="sax-connector"
-       default-class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
-
- <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
-       shorthand="image-encoder"/>
-
- <role name="org.apache.avalon.util.datasource.DataSourceComponentSelector"
-       shorthand="datasources"
-       default-class="org.apache.avalon.component.DefaultComponentSelector">
-    <hint shorthand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
-    <hint shorthand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
-</role>
-
- <role name="org.apache.cocoon.components.url.URLFactory"
-       shorthand="url-factory"
-       default-class="org.apache.cocoon.components.url.URLFactoryImpl"/>
-
- <role name="org.apache.cocoon.components.pipeline.StreamPipeline"
-       shorthand="stream-pipeline"
-       default-class="org.apache.cocoon.components.pipeline.NonCachingStreamPipeline"/>
-
- <role name="org.apache.cocoon.components.pipeline.EventPipeline"
-       shorthand="event-pipeline"
-       default-class="org.apache.cocoon.components.pipeline.NonCachingEventPipeline"/>
-
- <role name="org.apache.cocoon.acting.ActionSelector"
-       shorthand="action"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.selection.SelectorSelector"
-       shorthand="selector"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.matching.MatcherSelector"
-       shorthand="matcher"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.generation.GeneratorSelector"
-       shorthand="generator"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.transformation.TransformerSelector"
-       shorthand="transformer"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
-
- <role name="org.apache.cocoon.serialization.SerializerSelector"
-       shorthand="serializer"
-       default-class="org.apache.cocoon.sitemap.SitemapComponentSelector"/>
-
- <role name="org.apache.cocoon.reading.ReaderSelector"
-       shorthand="reader"
-       default-class="org.apache.cocoon.sitemap.SitemapComponentSelector"/>
-
 </cocoon>
