@@ -17,7 +17,6 @@ package org.apache.cocoon.components.sax;
 
 import org.apache.cocoon.xml.AbstractSAXFragment;
 import org.apache.cocoon.xml.EmbeddedXMLPipe;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
