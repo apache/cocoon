@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.39 2003/04/14 12:32:46 stephan Exp $
+  CVS $Id: gump.xml,v 1.40 2003/04/15 10:37:35 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -70,6 +70,7 @@
 
     <work nested="build/cocoon-@@DATE@@/classes"/>
     <work nested="build/cocoon-@@DATE@@/deprecated"/>
+    <work nested="build/cocoon-@@DATE@@/test"/>
     <work nested="tools/anttasks"/>
     <work nested="tools/loader"/>
 
@@ -168,6 +169,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon"/>
 
+    <work nested="blocks/chaperon/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -666,6 +668,7 @@
 
     <depend project="cocoon" inherit="all"/>
 
+    <work nested="blocks/asciiart/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
