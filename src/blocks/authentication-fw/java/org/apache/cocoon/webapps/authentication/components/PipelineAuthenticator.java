@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -91,7 +90,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.3 2003/08/26 06:43:32 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.4 2003/09/24 21:22:33 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -317,7 +316,7 @@ public class PipelineAuthenticator
             } catch ( ServiceException se ) {
                 throw new ProcessingException("Unable to lookup session manager.", se);
             } finally {
-                this.manager.release( (Component)sessionManager );
+                this.manager.release( sessionManager );
             }
         }
             

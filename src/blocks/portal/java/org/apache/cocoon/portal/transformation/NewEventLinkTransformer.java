@@ -91,7 +91,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: NewEventLinkTransformer.java,v 1.2 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
@@ -198,8 +198,8 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
             //cut all query parameters from actions with method get, as these will be normaly ignored!
             formSpecialTreatment = true;
             if ("GET".equalsIgnoreCase(newAttributes.getValue("method"))
-                && link.indexOf((int) '?') > 0) {
-                link = link.substring(0, link.indexOf((int) '?'));
+                && link.indexOf('?') > 0) {
+                link = link.substring(0, link.indexOf('?'));
             }
         }
 
@@ -222,7 +222,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                     int begin =
                         eventLink.indexOf("cocoon-portal-action=")
                             + "cocoon-portal-action=".length();
-                    int end = eventLink.indexOf((int) '&', begin);
+                    int end = eventLink.indexOf('&', begin);
                     if (end == -1) {
                         end = eventLink.length();
                     }
@@ -232,14 +232,14 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                     begin =
                         eventLink.indexOf("cocoon-portal-event=")
                             + "cocoon-portal-event=".length();
-                    end = eventLink.indexOf((int) '&', begin);
+                    end = eventLink.indexOf('&', begin);
                     if (end == -1) {
                         end = eventLink.length();
                     }
                     portalEvent = eventLink.substring(begin, end);
 
                     eventLink =
-                        eventLink.substring(0, eventLink.indexOf((int) '?'));
+                        eventLink.substring(0, eventLink.indexOf('?'));
                 }
 
                 // insert event link

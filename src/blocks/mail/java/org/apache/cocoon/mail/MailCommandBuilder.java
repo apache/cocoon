@@ -67,7 +67,7 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *
  * @author Bernhard Huber
  * @since 28. Dezember 2002
- * @version CVS $Id: MailCommandBuilder.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: MailCommandBuilder.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class MailCommandBuilder extends AbstractLogEnabled {
 
@@ -97,7 +97,7 @@ public class MailCommandBuilder extends AbstractLogEnabled {
             if (cmd == null) {
                 cmd = (String)mailContext.get( MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY );
             }
-            Class clazz = (Class) getClassForCommand(cmd);
+            Class clazz = getClassForCommand(cmd);
             if (clazz != null) {
                 ama = (AbstractMailCommand) clazz.newInstance();
                 // enable logging of the mail command

@@ -70,7 +70,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * This is the default implementation for the transaction manager.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultTransactionManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: DefaultTransactionManager.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
 */
 public final class DefaultTransactionManager
 extends AbstractLogEnabled
@@ -112,7 +112,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
      *  Reset the transaction management state.
      */
     public void resetTransactions(SessionContext context) {
-        TransactionState ts = (TransactionState)this.getSessionContextsTransactionState(context);
+        TransactionState ts = this.getSessionContextsTransactionState(context);
         ts.nr=0;
         ts.nrtotal=0;
         ts.nw=0;
@@ -126,7 +126,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
      */
     public synchronized void startReadingTransaction(SessionContext context)
     throws ProcessingException {
-        TransactionState ts = (TransactionState)this.getSessionContextsTransactionState(context);
+        TransactionState ts = this.getSessionContextsTransactionState(context);
         ts.nrtotal++;
         while (ts.nw!=0) {
             try {
@@ -144,7 +144,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
      *  Otherwise the session context is blocked.
      */
     public synchronized void stopReadingTransaction(SessionContext context) {
-        TransactionState ts = (TransactionState)this.getSessionContextsTransactionState(context);
+        TransactionState ts = this.getSessionContextsTransactionState(context);
         ts.nr--;
         ts.nrtotal--;
         if (ts.nrtotal==0) notify();
@@ -157,7 +157,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
      */
      public synchronized void startWritingTransaction(SessionContext context)
      throws ProcessingException {
-         TransactionState ts = (TransactionState)this.getSessionContextsTransactionState(context);
+         TransactionState ts = this.getSessionContextsTransactionState(context);
          ts.nwtotal++;
          while (ts.nrtotal+ts.nw != 0) {
             try {
@@ -175,7 +175,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
      *  Otherwise the session context is blocked.
      */
     public synchronized void stopWritingTransaction(SessionContext context) {
-        TransactionState ts = (TransactionState)this.getSessionContextsTransactionState(context);
+        TransactionState ts = this.getSessionContextsTransactionState(context);
         ts.nw=0;
         ts.nwtotal--;
         notifyAll();

@@ -94,7 +94,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.16 2003/09/20 21:22:33 upayavira Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.17 2003/09/24 21:22:33 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -381,7 +381,7 @@ implements AuthenticationManager,
                 } catch (ServiceException ce) {
                     throw new ProcessingException("Unable to create session context.", ce);
                 } finally {
-                    this.manager.release( (Component)contextManager);
+                    this.manager.release( contextManager);
                 }
             }
     
@@ -460,7 +460,6 @@ implements AuthenticationManager,
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
-
     }
 
     protected void setState(RequestState status) {
@@ -500,7 +499,7 @@ implements AuthenticationManager,
             } catch (SAXException saxe) {
                 throw new ProcessingException("Unable to create session context.", saxe);
             } finally {
-                manager.release( (Component)contextManager);
+                manager.release( contextManager);
             }
         } else {
             throw new ProcessingException("No handler defined. Unable to create application context.");

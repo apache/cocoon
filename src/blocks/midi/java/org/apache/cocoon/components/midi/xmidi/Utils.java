@@ -295,7 +295,7 @@ public final class Utils
     {
       int k = j - i - 1;
       int p = pow(128, i);
-      int m = (int) ba[k];
+      int m = ba[k];
       s += m * p;
       /*this.getLogger().debug(
       	"deltaToInt: in loop: s = "

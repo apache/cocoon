@@ -75,7 +75,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
-import org.apache.excalibur.xml.xslt.XSLTProcessorImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -85,7 +84,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.6 2003/06/17 17:54:47 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.7 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class XSLTAspect 
     extends AbstractAspect
@@ -164,7 +163,7 @@ public class XSLTAspect
     public Object prepareConfiguration(Parameters configuration) 
     throws ParameterException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.xsltRole = configuration.getParameter("xslt-processor-role", XSLTProcessorImpl.ROLE);
+        pc.xsltRole = configuration.getParameter("xslt-processor-role", XSLTProcessor.ROLE);
         String stylesheet = configuration.getParameter("style");
         try {
             pc.stylesheet = this.variableFactory.lookup( stylesheet );

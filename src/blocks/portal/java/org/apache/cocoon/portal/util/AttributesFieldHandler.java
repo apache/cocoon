@@ -66,7 +66,7 @@ import org.exolab.castor.mapping.MapItem;
  * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.5 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: AttributesFieldHandler.java,v 1.6 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class AttributesFieldHandler extends AbstractFieldHandler {
 
@@ -101,6 +101,6 @@ public class AttributesFieldHandler extends AbstractFieldHandler {
 
     public void setValue(Object object, Object value) {
         MapItem item = (MapItem) value;
-        this.getAttributes(object).put((String) item.getKey(), item.getValue());
+        this.getAttributes(object).put(item.getKey(), item.getValue());
     }
 }

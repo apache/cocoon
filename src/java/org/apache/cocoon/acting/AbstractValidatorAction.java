@@ -219,7 +219,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.4 2003/08/16 02:27:35 joerg Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.5 2003/09/24 21:26:51 cziegeler Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -529,7 +529,7 @@ public abstract class AbstractValidatorAction
                         if (getLogger().isDebugEnabled())
                             getLogger().debug("and it does not match");
                         return new ValidatorActionHelper(value, ValidatorActionResult.NOMATCH);
-                    };
+                    }
                 } catch (RESyntaxException rese) {
                     if (getLogger().isDebugEnabled())
                         getLogger().error("String parameter " + name + " regex error ", rese);
