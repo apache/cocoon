@@ -28,9 +28,9 @@ import org.apache.commons.jxpath.DynamicPropertyHandler;
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version CVS $Id$
  */
-public class VarMapHandler implements DynamicPropertyHandler {
+public final class VarMapHandler implements DynamicPropertyHandler {
 
-    public String[] getPropertyNames(Object object){
+    public String[] getPropertyNames(final Object object){
 
         Map map = ((VarMap)object).getMap();
         ArrayList list = new ArrayList();
@@ -41,13 +41,13 @@ public class VarMapHandler implements DynamicPropertyHandler {
         return array;
     }
 
-    public Object getProperty(Object object, String property){
+    public Object getProperty(final Object object, final String property){
 
         Map map = ((VarMap)object).getMap();
         return map.get(property);
     }
 
-    public void setProperty(Object object, String property, Object value){
+    public void setProperty(final Object object, final String property, final Object value){
 
         Map map = ((VarMap)object).getMap();
         map.put(property, value);

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   Copyright 1999-2004 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +12,12 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
-
-<logkit>
+--><logkit>
   <factories>
-    <factory type="priority-filter" class="org.apache.avalon.excalibur.logger.factory.PriorityFilterTargetFactory"/>
-    <factory type="servlet" class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory"/>
-    <factory type="cocoon" class="org.apache.cocoon.util.log.CocoonTargetFactory"/>
-    <factory type="lf5" class="org.apache.avalon.excalibur.logger.factory.LF5TargetFactory"/>
+    <factory class="org.apache.avalon.excalibur.logger.factory.PriorityFilterTargetFactory" type="priority-filter"/>
+    <factory class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory" type="servlet"/>
+    <factory class="org.apache.cocoon.util.log.CocoonTargetFactory" type="cocoon"/>
+    <factory class="org.apache.avalon.excalibur.logger.factory.LF5TargetFactory" type="lf5"/>
   </factories>
 
   <targets>
@@ -99,7 +96,66 @@
         <append>false</append>
       </cocoon>
     </priority-filter>
-  </targets>
+  
+    
+    <cocoon id="forms">
+      <filename>${context-root}/WEB-INF/logs/forms.log</filename>
+
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+    
+
+    
+    <cocoon id="apples">
+      <filename>${context-root}/WEB-INF/logs/apples.log</filename>
+
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+    
+
+    <!-- The logger for the cron components -->
+    <cocoon id="cron">
+        <filename>${context-root}/WEB-INF/logs/cron.log</filename>
+        <format type="cocoon">
+            %7.7{priority} %{time}   [%{category}] %{thread}/%{class:short}: %{message}\n%{throwable}
+        </format>
+        <append>true</append>
+    </cocoon>
+
+    
+    <cocoon id="portal">
+      <filename>${context-root}/WEB-INF/logs/portal.log</filename>
+
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+    
+
+    <!-- The logger for the Slide components -->
+    <cocoon id="slide">
+      <filename>${context-root}/WEB-INF/logs/slide.log</filename>
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+
+    <cocoon id="commons">
+      <filename>${context-root}/WEB-INF/logs/commons.log</filename>
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+</targets>
 
   <categories>
     <!--
@@ -112,20 +168,50 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="core" log-level="@loglevel@">
+
+
+    <category log-level="DEBUG" name="org">
+      <log-target id-ref="commons"/>
+      <log-target id-ref="error"/>
+
+      <category log-level="DEBUG" name="apache">
+        <log-target id-ref="commons"/>
+        <log-target id-ref="error"/>
+    
+        <category log-level="DEBUG" name="jci">
+          <log-target id-ref="commons"/>
+          <log-target id-ref="error"/>
+        </category>
+
+        <category log-level="DEBUG" name="commons">
+          <log-target id-ref="commons"/>
+          <log-target id-ref="error"/>
+
+          <category log-level="DEBUG" name="javaflow">
+            <log-target id-ref="commons"/>
+            <log-target id-ref="error"/>
+          </category>
+        </category>
+
+      </category>
+    </category>
+
+    <category log-level="INFO" name="core">
+
       <!-- Startup component manager logger -->
-      <category name="startup" log-level="@loglevel@">
+
+      <category log-level="INFO" name="startup">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
-      <category name="roles" log-level="@loglevel@">
+      <category log-level="INFO" name="roles">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
-      <category name="instrument" log-level="@loglevel@">
-        <category name="values" log-level="@loglevel@">
+      <category log-level="INFO" name="instrument">
+        <category log-level="INFO" name="values">
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
         </category>
@@ -134,14 +220,14 @@
       </category>
 
       <!-- Cocoon component manager logger -->
-      <category name="manager" log-level="@loglevel@">
+      <category log-level="INFO" name="manager">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
       <!-- Cocoon cache and stores logger -->
-      <category name="store" log-level="@loglevel@">
-        <category name="janitor" log-level="@loglevel@">
+      <category log-level="INFO" name="store">
+        <category log-level="INFO" name="janitor">
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
         </category>
@@ -153,32 +239,65 @@
       <log-target id-ref="error"/>
     </category>
 
-    <category name="sitemap" log-level="@loglevel@">
+    <category log-level="INFO" name="sitemap">
       <log-target id-ref="sitemap"/>
       <log-target id-ref="error"/>
 
-      <category name="handled-errors" log-level="@loglevel@">
+      <category log-level="INFO" name="handled-errors">
         <!-- Exceptions that will be handled by a sitemap errorhandler are
              logged to this target. -->
         <log-target id-ref="handled-errors"/>
       </category>
     </category>
 
-    <category name="access" log-level="@loglevel@">
+    <category log-level="INFO" name="access">
       <log-target id-ref="access"/>
       <log-target id-ref="error"/>
     </category>
 
-    <category name="flow" log-level="@loglevel@">
+    <category log-level="DEBUG" name="flow">
       <log-target id-ref="flow"/>
       <log-target id-ref="error"/>
     </category>
 
-    <category name="" log-level="@loglevel@">
+    <category log-level="INFO" name="">
       <log-target id-ref="core"/>
       <log-target id-ref="error"/>
     </category>
-  </categories>
+  
+    
+    <category log-level="ERROR" name="forms">
+      <log-target id-ref="forms"/>
+      <log-target id-ref="error"/>
+    </category>
+    
+
+
+    <category log-level="ERROR" name="apples">
+      <log-target id-ref="apples"/>
+      <log-target id-ref="error"/>
+    </category>
+
+
+
+    <category log-level="INFO" name="cron">
+        <log-target id-ref="cron"/>
+        <log-target id-ref="error"/>
+    </category>
+    
+
+    
+    <category log-level="ERROR" name="portal">
+      <log-target id-ref="portal"/>
+      <log-target id-ref="error"/>
+    </category>
+    
+
+    <category log-level="INFO" name="slide">
+      <log-target id-ref="slide"/>
+      <log-target id-ref="error"/>
+    </category>
+</categories>
   
   <!-- Include logging confs from different blocks -->
   <include dir="context://WEB-INF/xconf" pattern="*.logkit"/>

@@ -202,6 +202,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="add">
+    javaflow: updated to the API change,
+    lazy method lookups,
+    cleaner context handling,
+    for the moment removed the dependency to the form block
+   </action>
    <action dev="RP" type="add">
      hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
    </action>   

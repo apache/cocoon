@@ -76,7 +76,9 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 if [ "$JAVA_OPTIONS" = "" ] ; then
-  JAVA_OPTIONS='-Xms32M -Xmx512M'
+#  JAVA_OPTIONS='-Xms32M -Xmx512M'
+  JAVA_OPTIONS='-Xms32M -Xmx512M -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.LogKitLogger'
+#  JAVA_OPTIONS='-Xms32M -Xmx512M -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog'
 fi
 
 if [ "$COCOON_HOME" = "" ] ; then

@@ -20,11 +20,12 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
+  <!-- Include dependencies
   <include src="context://WEB-INF/xconf/cocoon-forms.xconf"/>
   <include src="context://WEB-INF/xconf/cocoon-ojb.xconf"/>
+  -->
 
   <flow-interpreters>
-    <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter"/>
+    <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter" logger="flow"/>
   </flow-interpreters>
 </components>
