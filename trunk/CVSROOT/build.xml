@@ -1,142 +1,123 @@
-
-
 <!-- ===========================================================================
 
- Cocoon build file 
- 
-Authors:
- Stefano Mazzocchi <stefano@apache.org>
- 
-Todo:
- - write the target rule that reacts on class presence.
- - !!!!!!!!!! update build instructions !!!!!!!!!!
- 
-================================================================================
+
+                           * ==================== *
+                           |  How to build Cocoon |
+                           * ==================== *
+
+                                     by
+
+                     Stefano Mazzocchi <stefano@apache.org>
 
 
-                             How to build Cocoon
-                             ===================
-                             
-                           
-Cocoon is an highly componentized software and for its full compilation 
-requires many different packages to be present in the compiler classpath.
+
+Introduction
+============
+
+Cocoon is an highly componentized software. This means: we are lazy and reuse
+whatever possible. But also means: we avoid duplication of efforts and Cocoon
+development can go on concurrently with the other used projects without
+interference. At the end: Cocoon evolves much faster :)
+
+Anyway, any componentized software is based on "contracts" between the core
+and the modules used. Normally, these "contracts" are standard APIs (such as
+Java API or externally standardized API) but since Cocoon is a pioneer in many
+fields, these APIs do not (yet) exist.
+
+For this reason, Cocoon itself provides some "glue" classes that wrap around
+existing packages (for example, the different XSLT processors) and come up with
+a simple interface for Cocoon to use them.
+
+Unfortunately, this requires the "glued" classes to be present at compile time,
+that is: you have to download the packages to compile the glue classes.
 
 This is the main reason why the distribution includes a precompiled version
 that should be handy for most users, but power users willing to further tune
 the software or developers willing to play around with it, must be able
 to compile it and test it.
 
+Note, however, that Cocoon comes with all the packages required to build a
+fully functional distribution. You'll have to download external packages
+only if you have special requirements. See the FAQ section for more info on
+this.
+
+
+Installing the build tools
+==========================
+
 The Cocoon build system is based on Jakarta Ant, which is a Java building tool
 originally developed for the Jakarta Tomcat project but now used in many other
 Apache projects and extended by many developers.
 
-Ant is a little but very handy tool that uses a build file written in XML 
-(this file) as building instructions. There are targets (like in make) and
-tasks. Each task is indicated by an element and it's implemented by a 
-dynamically loaded class which is "introspected" at runtime with the 
-element attributes, using bean-like 'setter' methods.
+Ant is a little but very handy tool that uses a build file written in XML
+(this file) as building instructions. For more information refer to
+"http://jakarta.apache.org/ant/".
 
-First thing you should do to be able to compile Cocoon or generate its 
-<<<<<<< build.xml
-documentation, is to install Ant on your system. To do this, look into the 
-/lib directory of the distribution where you will find
-=======
-documentation, is to install Ant on your system.  Ant is available
-under the jakarta.apache.org project, but unfortunately at the moment
-the latest milestone build does not include some fixes required to
-build cocoon in its entirety, so you will have to use CVS to checkout
-the "jakarta-ant" module under the jakarta.apache.org CVS repository.
+To make things easier for you, the Cocoon distribution contains a precompiled
+version of Ant and the build scripts take care of all the classpath issues.
 
-Once, you've done the checkout, generate ant.jar by running the bootstrap script
-(.bat for win32, .sh for unix). Then, look into the /lib directory where you 
-should find
+The only thing that you have to make sure, is the "JAVA_HOME" environment
+property should be set to match the JVM you want to use. That's it.
 
-  - ant.jar
-  - xml.jar
-  
-that you should place into your classpath.
 
-Ok, at this point, you need to make the java compiler available to Ant.
+Building instructions
+=====================
 
-If you are using Java 1.1 you can go ahead since your java compiler is already
-in your classpath. Otherwise, if you're using Java 1.2 or later, you should
-add
- 
-  - tools.jar
+Ok, let's build the baby. First, make sure your current working directory is
+where this very file is located. Then type
 
-that you find in your <java_home>/lib/ directory, to your classpath (or place
-it into the <java_home>/jre/lib/ext directory).
-
-Now that the build tool is in place, you need to download the following
-packages from the indicated URL:
-
- Apache Xerces 1.0.1+   - in the /lib directory or http://xml.apache.org/dist/
- Apache Xalan 0.19.1+   - in the /lib directory or http://xml.apache.org/dist/
- Apache FOP 0.12.0+     - in the /lib directory or http://xml.apache.org/dist/
- 
- Sun Servlet API (2.2+) - http://jakarta.apache.org (download any Tomcat version)
- Sun JNDI API (1.2.1+)  - http://java.sun.com/products/jndi/index.html
-
- James Clark XT         - ftp://ftp.jclark.com/pub/xml/xt.zip
- FESI (1.21+)           - http://home.worldcom.ch/jmlugrin/fesi/download.html
-
- StyleBook (1.0b1+)     - xml-stylebook CVS module from xml.apache.org
-
-[xml-stylebook are required only for documentation generation, not for compilation]
-
-Some of these packages will require you to download an archive file (.zip or .jar)
-and extract a jar file from that (typically the name of the program, e.g. xerces.jar)
- 
-You should have the following jar files in your classpath before going on:
-
- - tools.jar
- - ant.jar
- - xml.jar
- - xerces.jar
- - xalan.jar
- - fop_bin_0_12_0.jar
- - servlet.jar
- - jndi.jar
- - ldap.jar
- - xt.jar
- - fesi.jar
- - gnu-regexp-1.0.8.jar 
- 
-once you have placed all the ".jar" files in your classpath, you're ready to
-build the whole thing.
-
-To do this, make your current working directory the one where this very file
-if located and type
-
-  java org.apache.tools.ant.Main
+  ./build.sh (unix)
+  .\build.bat (win32)
 
 if everything is right and all the required packages are visible, this action
 will generate a file called "cocoon.jar" in the "./build" directory. Note, that
 if you do further development, compilation time is reduced since Ant is able
 to detect which files have changed an to recompile them at need.
 
+If something went wrong, go to the FAQ section below.
+
 Also, you'll note that reusing a single JVM instance for each task, increases
 tremendously the performance of the whole build system, compared to other
 tools (i.e. make or shell scripts) where a new JVM is started for each task.
 
+
+Build targets
+=============
+
+The build system is not only responsible of compiling Cocoon into a jar file,
+but is also responsible for creating the HTML documentation, javadocs,
+distributions and web site. In fact, what you have here is _exactly_ what
+is used by the cocoon main developers to take care of everything in the Cocoon
+project, no less and no more.
+
 These are the meaningful targets for this build file:
 
- - package -> creates ./build/cocoon.jar
+ - package [default] -> creates ./build/cocoon.jar
  - docs -> generates the HTML documentation in ./build/docs (requires StyleBook)
  - javadocs -> generates the API documentation in ./build/javadocs
- - dist -> generates the Cocoon distribution
- - site -> generates the web site [useful only for site maintainers]
+ - dist-zip -> generates the Cocoon distribution
+ - dist-tgz -> generates the Cocoon distribution
+ - clean -> restores the distribution to its original and clean state
+ - site -> generates the web site [meaningful only for site maintainers]
 
-    ================================ FAQ ================================
+====================================== FAQ =====================================
 
-1) do I really need to download all these packages?
- 
-No, the core Cocoon classes only require the Servlet API for compilation, but
-each Cocoon module requires one of more of the above packages. We are working
-to allow Ant to execute a target if a specified class is found in the classpath:
-this will allow you to place only the packages you care about, leaving the
-unsupported classes out of the compilation. For now, it's easier to download
-all the required packages or to remove/rename the Cocoon modules you don't use.
+1) Why some of the classes present in the original jar are not built anymore?
+
+The cocoon build system is very flexible: if a module requires a package that
+is not present in the classpath at build time, the module is skipped but
+the built process is not stopped.
+
+Here is a list of such modules and what you have to download to build them:
+
+ org.apache.cocoon.transformer.XTTransformer ===>
+       James Clark's XT (http://www.jclark.com/)
+
+ org.apache.cocoon.processor.ldap.LdapProcessor ===>
+       Sun JNDI API 1.2.1+ (http://java.sun.com/products/jndi/index.html)
+
+ org.apache.cocoon.processor.dcp.DCPProcessor ===>
+       FESI 1.21+ (http://home.worldcom.ch/jmlugrin/fesi/download.html)
 
 ============================================================================ -->
 
@@ -152,14 +133,14 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
     <property name="version" value="1.6.2-dev"/>
     <property name="year" value="1999-2000"/>
 
-    <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>  
-    
+    <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
+
     <property name="build.compiler" value="classic"/>
     <!-- <property name="build.compiler" value="jikes"/> -->
     <property name="debug" value="off"/>
     <property name="optimize" value="on"/>
     <property name="deprecation" value="off"/>
-    
+
     <property name="src.dir" value="./src"/>
     <property name="lib.dir" value="./lib"/>
     <property name="docs.dir" value="./xdocs"/>
@@ -170,21 +151,23 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
     <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
     <property name="packages" value="org.apache.cocoon.*"/>
 
-    <property name="classpath" value="${lib.dir}/xerces_1_0_1.jar:${lib.dir}/xalan_0_19_2.jar:${lib.dir}/fop_0_12_0.jar:${lib.dir}/servlet_2_2.jar"/>
-  
     <property name="skin" value="./skins/xml.apache.org/"/>
     <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
     <property name="doc.generator.package" value="${lib.dir}/stylebook-1.0-b2.jar"/>
-  
+
     <property name="build.dir" value="./build"/>
     <property name="build.src" value="./build/src"/>
     <property name="build.dest" value="./build/classes"/>
     <property name="build.docs" value="./build/docs"/>
     <property name="build.javadocs" value="./build/javadocs"/>
-  
+
     <property name="dist.dir" value="./dist"/>
-  
+
     <property name="site" value="../xml-site/targets/cocoon"/>
+
+    <available property="xt.present" class="com.jclark.xsl.sax.XSLProcessor"/>
+    <available property="fesi.present" class="FESI.interpreter.interpret"/>
+    <available property="jndi.present" class="javax.naming.Name"/>
   </target>
 
   <!-- =================================================================== -->
@@ -221,15 +204,30 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
   </target>
 
   <!-- =================================================================== -->
-  <!-- Compiles the source code                                            -->
+  <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare">
+  <target name="prepare-xt" if="xt.present">
+    <copydir src="${src.dir}" dest="${build.src}" includes="**/XTTransformer.java"/>
+  </target>
+
+  <target name="prepare-ldap" if="jndi.present">
+    <copydir src="${src.dir}" dest="${build.src}" includes="**/ldap/**"/>
+  </target>
+
+  <target name="prepare-dcp" if="fesi.present">
+    <copydir src="${src.dir}" dest="${build.src}" includes="**/dcp/**, **/*DCP**, **/interpreter/**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="prepare-src" depends="prepare, prepare-xt, prepare-dcp, prepare-ldap">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
 
     <!-- copy src files -->
-    <copydir src="${src.dir}" dest="${build.src}"/>
+    <copydir src="${src.dir}" dest="${build.src}" excludes="**/XTTransformer.java, **/ldap/**, **/dcp/**, **/*DCP**, **/interpreter/**"/>
 
     <!-- substitute tokens as needed -->
     <replace file="${build.src}/${version.file}" token="@@version@@" value="${version}"/>
@@ -240,9 +238,8 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
   <target name="compile" depends="prepare-src">
-    <javac srcdir="${build.src}" 
-           destdir="${build.dest}" 
-           classpath="${classpath}" 
+    <javac srcdir="${build.src}"
+           destdir="${build.dest}"
            debug="${debug}"
            optimize="${optimize}"/>
   </target>
@@ -251,9 +248,9 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
   <!-- Creates the class package                                           -->
   <!-- =================================================================== -->
   <target name="package" depends="compile">
-    <jar jarfile="${build.dir}/${name}.jar" 
-         basedir="${build.dest}" 
-         manifest="${build.src}/Manifest.mf" 
+    <jar jarfile="${build.dir}/${name}.jar"
+         basedir="${build.dest}"
+         manifest="${build.src}/Manifest.mf"
          includes="org/**"/>
   </target>
 
@@ -278,7 +275,7 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml"/>
     <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}" 
+    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}"
           args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
   </target>
 
@@ -286,13 +283,13 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
   <target name="site" depends="prepare-docs">
-    <mkdir dir="${site.dir}"/>  
+    <mkdir dir="${site.dir}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml"/>
     <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}" 
+    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}"
           args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
@@ -343,11 +340,11 @@ all the required packages or to remove/rename the Cocoon modules you don't use.
     <replace file="${dist.dir}/README" token="@@version@@" value="${version}"/>
 
     <copydir src="." dest="${dist.dir}" includes="build.*"/>
-    
+
     <copyfile src="${docs.dir}/changes.xml" dest="${dist.dir}/changes.xml"/>
     <copyfile src="${docs.dir}/todo.xml" dest="${dist.dir}/todo.xml"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
