@@ -125,7 +125,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.11 2003/12/10 14:09:07 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.12 2003/12/10 17:22:47 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -151,7 +151,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     /* Source specifics */
     private String m_scheme = "slide";
     private String m_path;
-
+    private String m_scope;
+    // uri = scope + path;
+    private String m_uri;
+    
     private ObjectNode m_node;
     private NodeRevisionNumber m_version;
     private NodeRevisionDescriptors m_descriptors;
@@ -176,6 +179,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      */
     public SlideSource(NamespaceAccessToken nat, 
                        String scheme, 
+                       String scope,
                        String path,
                        SourceCredential sourcecredential, 
                        String version) {
@@ -183,6 +187,16 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         m_nat = nat;
         m_scheme = scheme;
         m_path = path;
+        m_scope = scope;
+        if (path.equals("/")) {
+            m_uri = scope;
+        }
+        else if (scope.equals("/")){
+            m_uri = path;
+        }
+        else {
+            m_uri = scope + path;
+        }
         m_credential = sourcecredential;
         if (version != null) {
             m_version = new NodeRevisionNumber(version);
@@ -225,10 +239,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         
         try {
             if (m_node == null) {
-                m_node = m_structure.retrieve(m_slideToken,getRepositoryPath());
+                m_node = m_structure.retrieve(m_slideToken,m_uri);
             }
                 
-            m_descriptors = m_content.retrieve(m_slideToken,getRepositoryPath());
+            m_descriptors = m_content.retrieve(m_slideToken,m_uri);
             if (m_version != null) {
                 // get a specific version
                 m_descriptor = m_content.retrieve(m_slideToken,m_descriptors,m_version);
@@ -442,7 +456,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     public void delete() {
         try {
             m_nat.begin();
-            m_macro.delete(m_slideToken,getRepositoryPath());
+            m_macro.delete(m_slideToken,m_uri);
             m_nat.commit();
         } catch (Exception se) {
             getLogger().error("Could not delete source.",se);
@@ -467,8 +481,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
         try {
             m_nat.begin();
-            m_structure.create(m_slideToken,collection,getRepositoryPath());
-            m_content.create(m_slideToken,getRepositoryPath(),descriptor,null);
+            m_structure.create(m_slideToken,collection,m_uri);
+            m_content.create(m_slideToken,m_uri,descriptor,null);
             m_nat.commit();
         } catch (Exception se) {
             try {
@@ -481,11 +495,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     public Source getChild(String name) throws SourceException {
-        return getChildByUri(m_path+"/"+name);
+        return getChildByPath(m_path+"/"+name);
     }
     
-    private Source getChildByUri(String uri) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,uri,m_credential,null);
+    private Source getChildByPath(String path) throws SourceException {
+        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_credential,null);
         child.enableLogging(getLogger());
         child.contextualize(m_context);
         child.service(m_manager);
@@ -501,17 +515,15 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         final Enumeration children = m_node.enumerateChildren();
         while (children.hasMoreElements()) {
             String child = (String) children.nextElement();
-            if (child.startsWith(m_config.getFilesPath())) {
-                child = child.substring(m_config.getFilesPath().length());
-            }
-            result.add(getChildByUri(child));
+            child = child.substring(m_scope.length());
+            result.add(getChildByPath(child));
         }
         return result;
     }
     
     public String getName() {
         int index = m_path.lastIndexOf('/');
-        if (index > 0) {
+        if (index != -1) {
             return m_path.substring(index+1);
         }
         return m_path;
@@ -537,7 +549,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             parentPath = m_path.substring(0,index);
         }
-        SlideSource parent = new SlideSource(m_nat,m_scheme,parentPath,m_credential,null);
+        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_credential,null);
         parent.enableLogging(getLogger());
         parent.contextualize(m_context);
         parent.service(m_manager);
@@ -594,14 +606,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
                 if (m_descriptor == null) {
                     m_descriptor = new NodeRevisionDescriptor(0);
-
-                    String resourceName = m_config.getFilesPath()+m_path;
-                    int lastSlash = resourceName.lastIndexOf('/');
-
-                    if (lastSlash != -1) {
-                        resourceName = resourceName.substring(lastSlash+1);
-                    }
-                    m_descriptor.setName(resourceName);
+                    m_descriptor.setName(getName());
                 }
 
                 m_descriptor.setContentLength(bytes.length);
@@ -609,9 +614,9 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
                 m_nat.begin();
                 if (m_version == null) {
-                    m_content.create(m_slideToken,getRepositoryPath(),m_descriptor,null);
+                    m_content.create(m_slideToken,m_uri,m_descriptor,null);
                 }
-                m_content.store(m_slideToken,getRepositoryPath(),m_descriptor,content);
+                m_content.store(m_slideToken,m_uri,m_descriptor,content);
                 try {
                     m_nat.commit();
                 } catch (Exception cme) {
@@ -625,7 +630,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
                 try {
                     // Creating an object
-                    m_structure.create(m_slideToken,subject,getRepositoryPath());
+                    m_structure.create(m_slideToken,subject,m_uri);
                 } catch (SlideException se) {
                     throw new CascadingIOException(se);
                 }
@@ -653,7 +658,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                 
                 content.setContent(bytes);
                 try {
-                    m_content.create(m_slideToken,getRepositoryPath(),descriptor,content);
+                    m_content.create(m_slideToken,m_uri,descriptor,content);
                     try {
                         m_nat.commit();
                     } catch (Exception cme) {
@@ -718,8 +723,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         if (source instanceof SlideSource) {
             try {
                 m_nat.begin();
-                String destination = m_config.getFilesPath()+((SlideSource) source).m_path;
-                m_macro.move(m_slideToken,getRepositoryPath(),destination);
+                String destination = m_scope+((SlideSource) source).m_path;
+                m_macro.move(m_slideToken,m_uri,destination);
                 m_nat.commit();
             } catch (Exception se) {
                 try {
@@ -745,8 +750,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         if (source instanceof SlideSource) {
             try {
                 m_nat.begin();
-                String destination = m_config.getFilesPath()+((SlideSource) source).m_path;
-                m_macro.copy(m_slideToken,getRepositoryPath(),destination);
+                String destination = m_scope+((SlideSource) source).m_path;
+                m_macro.copy(m_slideToken,m_uri,destination);
                 m_nat.commit();
             } catch (Exception se) {
                 try {
@@ -759,6 +764,153 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             }
         } else {
             SourceUtil.copy(this,source);
+        }
+    }
+
+    // ---------------------------------------------------- InspectableSource
+    
+    /**
+     * Returns a property from a source.
+     *
+     * @param namespace Namespace of the property
+     * @param name Name of the property
+     *
+     * @return Property of the source.
+     *
+     * @throws SourceException If an exception occurs.
+     */
+    public SourceProperty getSourceProperty(String namespace, String name) 
+        throws SourceException {
+
+        if (m_descriptor == null) {
+            return null;
+        }
+
+        final String quote = "\"";
+        NodeProperty property = m_descriptor.getProperty(name, namespace);
+
+        if (property == null) {
+            return null;
+        }
+
+        String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
+        String post = "</"+name+" >";
+
+        StringReader reader = new StringReader(pre+property.getValue().toString()+post);
+        InputSource src = new InputSource(reader);
+
+        DOMParser parser = null;
+        Document doc = null;
+
+        try {
+            parser = (DOMParser) this.m_manager.lookup(DOMParser.ROLE);
+            doc = parser.parseDocument(src);
+        } catch (Exception e) {
+            throw new SourceException("Could not parse property", e);
+        } finally {
+            this.m_manager.release(parser);
+        }
+
+        return new SourceProperty(doc.getDocumentElement());
+    }
+    
+    /**
+     * Sets a property for a source.
+     *
+     * @param sourceproperty Property of the source
+     *
+     * @throws SourceException If an exception occurs during this operation
+     */
+    public void setSourceProperty(SourceProperty sourceproperty)
+      throws SourceException {
+        getLogger().debug("Set source property");
+        try {
+            m_descriptor.setProperty(sourceproperty.getName(),
+                                           sourceproperty.getNamespace(),
+                                           sourceproperty.getValueAsString());
+
+            // Last modification date
+            m_descriptor.setLastModified(new Date());
+
+            m_nat.begin();
+            m_content.store(m_slideToken,m_uri,m_descriptor, null);
+            m_nat.commit();
+        } catch (Exception se) {
+            try {
+                m_nat.rollback();
+            } catch (Exception rbe) {
+                getLogger().error("Rollback failed for setting a source property", rbe);
+            }
+            throw new SourceException("Could not set source property", se);
+        }
+    }
+
+    /**
+     * Returns a enumeration of the properties
+     *
+     * @return Enumeration of SourceProperty
+     *
+     * @throws SourceException If an exception occurs.
+     */
+    public SourceProperty[] getSourceProperties() throws SourceException {
+
+        if (m_descriptor == null) {
+            return new SourceProperty[0];
+        }
+
+        List properties = new ArrayList();
+        DOMParser parser = null;
+        String xml = "";
+
+        try {
+            parser = (DOMParser) m_manager.lookup(DOMParser.ROLE);
+            final String quote = "\"";
+            Enumeration e = m_descriptor.enumerateProperties();
+            while (e.hasMoreElements()) {
+                NodeProperty property = (NodeProperty) e.nextElement();
+                String name = property.getName();
+                String namespace = property.getNamespace();
+                String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
+                String post = "</"+name+" >";
+                xml = pre+property.getValue().toString()+post;
+                
+                StringReader reader = new StringReader(xml);
+                Document doc = parser.parseDocument(new InputSource(reader));
+                properties.add(new SourceProperty(doc.getDocumentElement()));
+            }
+        } catch (Exception e) {
+            throw new SourceException("Could not parse property "+xml, e);
+        } finally {
+            m_manager.release(parser);
+        }
+
+        return (SourceProperty[]) properties.toArray(new SourceProperty[properties.size()]);
+    }
+
+    /**
+     * Remove a specified source property.
+     *
+     * @param namespace Namespace of the property.
+     * @param name Name of the property.
+     *
+     * @throws SourceException If an exception occurs.
+     */
+    public void removeSourceProperty(String namespace, String name) throws SourceException {
+        try {
+            if (m_descriptor != null && !namespace.equals("DAV:")) {
+                m_descriptor.removeProperty(name, namespace);
+                m_descriptor.setLastModified(new Date());
+                m_nat.begin();
+                m_content.store(m_slideToken,m_uri,m_descriptor,null);
+                m_nat.commit();
+            }
+        } catch (Exception se) {
+            try {
+                m_nat.rollback();
+            } catch (Exception rbe) {
+                getLogger().error("Rollback failed for removing a source property", rbe);
+            }
+            throw new SourceException("Could not remove property", se);
         }
     }
 
@@ -980,12 +1132,12 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                                boolean negative,
                                boolean inheritable) throws SourceException {
         try {
-            NodePermission permission = new NodePermission(m_config.getFilesPath()+m_path,
-                                                           subject,action,inheritable,negative);
+            NodePermission permission = new NodePermission(
+                m_uri,subject,action,inheritable,negative);
             m_nat.begin();
             m_security.grantPermission(m_slideToken, permission);
             m_descriptor.setLastModified(new Date());
-            m_content.store(m_slideToken, m_config.getFilesPath()+m_path,m_descriptor,null);
+            m_content.store(m_slideToken, m_uri,m_descriptor,null);
             m_nat.commit(); 
         } catch (Exception se) {
             try {
@@ -1180,8 +1332,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
                                   boolean inheritable)
                                     throws SourceException {
         try {
-            NodePermission permission = new NodePermission(this.m_config.getFilesPath()+
-                                            this.m_path, subject, action,
+            NodePermission permission = new NodePermission(m_uri, subject, action,
                                                        inheritable, negative);
 
             m_nat.begin();
@@ -1190,7 +1341,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             // Last modification date
             m_descriptor.setLastModified(new Date());
 
-            m_content.store(m_slideToken, this.m_config.getFilesPath()+this.m_path,
+            m_content.store(m_slideToken, m_uri,
                           m_descriptor, null);
             m_nat.commit();
         } catch (Exception se) {
@@ -1496,12 +1647,9 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             Vector sourcelocks = new Vector();
 
             NodeLock lock;
-
-            for (Enumeration locks = this.m_lock.enumerateLocks(this.m_slideToken,
-                this.m_config.getFilesPath()+this.m_path, false);
-                locks.hasMoreElements(); ) {
+            Enumeration locks = m_lock.enumerateLocks(m_slideToken,m_uri, false);
+            while (locks.hasMoreElements()) {
                 lock = (NodeLock) locks.nextElement();
-
                 sourcelocks.addElement(new SourceLock(lock.getSubjectUri(),
                                                       lock.getTypeUri(),
                                                       lock.getExpirationDate(),
@@ -1512,154 +1660,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             return sourcelocks.elements();
         } catch (SlideException se) {
             throw new SourceException("Could not retrieve locks", se);
-        }
-    }
-
-    // ---------------------------------------------------- InspectableSource
-    
-    /**
-     * Sets a property for a source.
-     *
-     * @param sourceproperty Property of the source
-     *
-     * @throws SourceException If an exception occurs during this operation
-     */
-    public void setSourceProperty(SourceProperty sourceproperty)
-      throws SourceException {
-        getLogger().debug("Set source property");
-        try {
-            m_descriptor.setProperty(sourceproperty.getName(),
-                                           sourceproperty.getNamespace(),
-                                           sourceproperty.getValueAsString());
-
-            // Last modification date
-            m_descriptor.setLastModified(new Date());
-
-            m_nat.begin();
-            m_content.store(m_slideToken, this.m_config.getFilesPath()+this.m_path,
-                          m_descriptor, null);
-            m_nat.commit();
-        } catch (Exception se) {
-            try {
-                m_nat.rollback();
-            } catch (Exception rbe) {
-                getLogger().error("Rollback failed for setting a source property", rbe);
-            }
-            throw new SourceException("Could not set source property", se);
-        }
-    }
-
-    /**
-     * Returns a property from a source.
-     *
-     * @param namespace Namespace of the property
-     * @param name Name of the property
-     *
-     * @return Property of the source.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public SourceProperty getSourceProperty(String namespace, String name) 
-        throws SourceException {
-
-        if (m_descriptor == null) {
-            return null;
-        }
-
-        final String quote = "\"";
-        NodeProperty property = m_descriptor.getProperty(name, namespace);
-
-        if (property == null) {
-            return null;
-        }
-
-        String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
-        String post = "</"+name+" >";
-
-        StringReader reader = new StringReader(pre+property.getValue().toString()+
-                                               post);
-        InputSource src = new InputSource(reader);
-
-        DOMParser parser = null;
-        Document doc = null;
-
-        try {
-            parser = (DOMParser) this.m_manager.lookup(DOMParser.ROLE);
-            doc = parser.parseDocument(src);
-        } catch (Exception e) {
-            throw new SourceException("Could not parse property", e);
-        } finally {
-            this.m_manager.release(parser);
-        }
-
-        return new SourceProperty(doc.getDocumentElement());
-    }
-
-    /**
-     * Returns a enumeration of the properties
-     *
-     * @return Enumeration of SourceProperty
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public SourceProperty[] getSourceProperties() throws SourceException {
-
-        if (m_descriptor == null) {
-            return new SourceProperty[0];
-        }
-
-        List properties = new ArrayList();
-        DOMParser parser = null;
-        String xml = "";
-
-        try {
-            parser = (DOMParser) m_manager.lookup(DOMParser.ROLE);
-            final String quote = "\"";
-            Enumeration e = m_descriptor.enumerateProperties();
-            while (e.hasMoreElements()) {
-                NodeProperty property = (NodeProperty) e.nextElement();
-                String name = property.getName();
-                String namespace = property.getNamespace();
-                String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
-                String post = "</"+name+" >";
-                xml = pre+property.getValue().toString()+post;
-                
-                StringReader reader = new StringReader(xml);
-                Document doc = parser.parseDocument(new InputSource(reader));
-                properties.add(new SourceProperty(doc.getDocumentElement()));
-            }
-        } catch (Exception e) {
-            throw new SourceException("Could not parse property "+xml, e);
-        } finally {
-            m_manager.release(parser);
-        }
-
-        return (SourceProperty[]) properties.toArray(new SourceProperty[properties.size()]);
-    }
-
-    /**
-     * Remove a specified source property.
-     *
-     * @param namespace Namespace of the property.
-     * @param name Name of the property.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public void removeSourceProperty(String namespace, String name) throws SourceException {
-        try {
-            if (m_descriptor != null && !namespace.equals("DAV:")) {
-                m_descriptor.removeProperty(name, namespace);
-
-                // Last modification date
-                m_descriptor.setLastModified(new Date());
-
-                m_content.store(m_slideToken,
-                                m_config.getFilesPath()+m_path,
-                                m_descriptor, 
-                                null);
-            }
-        } catch (SlideException se) {
-            throw new SourceException("Could not remove property", se);
         }
     }
 
@@ -1738,10 +1738,5 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         return m_descriptors.getLatestRevision().toString();
     }
 
-    // ---------------------------------------------------- private helper methods
-    
-    private String getRepositoryPath() {
-        return m_config.getFilesPath()+m_path;
-    }
 }
 

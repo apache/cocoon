@@ -77,7 +77,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.8 2003/12/09 17:55:13 unico Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.9 2003/12/10 17:22:47 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceFactory"
@@ -151,9 +151,16 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
             namespace = authority.substring(index+1);
         }
         
-        
         if (path == null || path.length() == 0) {
             path = "/";
+        }
+        
+        SourceCredential credential;
+        credential = new SourceCredential(principal);
+        
+        NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
+        if (nat == null) {
+            throw new SourceException("No such namespace: " + namespace);
         }
 
         SourceParameters queryParameters = null;
@@ -163,27 +170,22 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         } else {
             queryParameters = new SourceParameters(query);
         }
-        
-        // TODO: pass in version as parameter?
-        String version = queryParameters.getParameter("version",null);
 
+        String version = queryParameters.getParameter("version",null);
+        String scope   = queryParameters.getParameter("scope",
+            nat.getNamespaceConfig().getFilesPath());
+        
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("scheme: " + scheme);
             getLogger().debug("principal: " + principal);
             getLogger().debug("namespace: " + namespace);
             getLogger().debug("path: " + path);
             getLogger().debug("version: " + version);
+            getLogger().debug("scope: " + scope);
         }
 
-        SourceCredential credential;
-        credential = new SourceCredential(principal);
+        SlideSource source = new SlideSource(nat,scheme,scope,path,credential,version);
 
-        NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
-        if (nat == null) {
-            throw new SourceException("No such namespace: "+namespace);
-        }
-        SlideSource source = new SlideSource(nat,scheme,path,credential,version);
-        
         source.enableLogging(getLogger());
         source.contextualize(m_context);
         source.service(m_manager);
