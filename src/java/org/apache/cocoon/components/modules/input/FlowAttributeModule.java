@@ -28,7 +28,7 @@ import java.util.Map;
  * object is not found then an exception will be thrown.
  *
  * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstrom</a>
- * @version CVS $Id: FlowAttributeModule.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: FlowAttributeModule.java,v 1.1 2004/04/04 09:43:43 gcasper Exp $
  */
 public class FlowAttributeModule extends AbstractJXPathModule
     implements ThreadSafe {
