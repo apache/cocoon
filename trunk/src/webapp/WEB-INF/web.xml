@@ -9,7 +9,7 @@
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <web-app>
- 
+
   <!-- Servlet Configuration ========================================== -->
 
   <servlet>
@@ -25,7 +25,7 @@
     <!--
       In cases you're facing class loading problems, you can alternatively
       use the following servlet-class instead of the above one
-      
+
       <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
     -->
 
@@ -38,7 +38,7 @@
       <param-name>init-classloader</param-name>
       <param-value>false</param-value>
     </init-param>
-    
+
     <!--
       This parameter points to the main configuration file for Cocoon.
       Note that the path is specified in absolute notation but it will be
@@ -79,17 +79,17 @@
     </init-param>
 
     <!--
-      This parameter indicates the log level to use throughout startup of the system.
-      As soon as the logkit.xconf the setting of the logkit.xconf configuration is
-      used instead! Only for startup and if the logkit.xconf is not readable/available
-      this log level is of importance.
+      This parameter indicates the log level to use throughout startup of the
+      system. As soon as the logkit.xconf the setting of the logkit.xconf
+      configuration is used instead! Only for startup and if the logkit.xconf is
+      not readable/available this log level is of importance.
 
       Available levels are:
         DEBUG:        prints all level of log messages.
         INFO:         prints all level of log messages except DEBUG ones.
         WARN:         prints all level of log messages except DEBUG and INFO ones.
         ERROR:        prints all level of log messages except DEBUG, INFO and WARN ones.
-        FATAL_ERROR: prints only log messages of this level
+        FATAL_ERROR:  prints only log messages of this level
     -->
     <init-param>
       <param-name>log-level</param-name>
@@ -99,7 +99,7 @@
     <!--
       Allow reinstantiating (reloading) of the cocoon instance. If this is
       set to "yes" or "true", a new cocoon instance can be created using
-      the request parameter "cocoon-reload".
+      the request parameter "cocoon-reload". Default is no for security reasons.
     -->
     <init-param>
       <param-name>allow-reload</param-name>
@@ -107,11 +107,10 @@
     </init-param>
 
     <!--
-      This parameter is used to list classes that should be loaded
-      at initialization time of the servlet.
-      For example, JDBC Drivers used need to be named here.
-      Additional entries may be inserted here during build depending on your 
-      build properties.
+      This parameter is used to list classes that should be loaded at
+      initialization time of the servlet. For example, JDBC Drivers used need to
+      be named here. Additional entries may be inserted here during build
+      depending on your build properties.
     -->
     <init-param>
       <param-name>load-class</param-name>
@@ -125,17 +124,17 @@
 
     <!--
       Causes all files in multipart requests to be processed.
-      Default is false for security reasons.  
+      Default is false for security reasons.
       Unsupported values will be interpreted as false.
     -->
     <init-param>
       <param-name>enable-uploads</param-name>
       <param-value>false</param-value>
     </init-param>
-    
+
     <!--
       This parameter allows to specify where Cocoon should put uploaded files.
-      The path specified can be either absolute or relative to the context 
+      The path specified can be either absolute or relative to the context
       path of the servlet. On windows platform, absolute directory must start
       with volume: C:\Path\To\Upload\Directory
 
@@ -149,7 +148,7 @@
 
     <!--
       Causes all files in multipart requests to be saved to upload-dir.
-      Default is true for security reasons.  
+      Default is true for security reasons.
       Unsupported values will be interpreted as false.
     -->
     <init-param>
@@ -158,10 +157,10 @@
     </init-param>
 
     <!--
-      Specify handling of name conflicts when saving uploaded files
-      to disk.  Acceptable values are deny, allow, rename (default).
-      Files are renamed x_filename where x is an integer value incremented
-      to make the new filename unique.
+      Specify handling of name conflicts when saving uploaded files to disk.
+      Acceptable values are deny, allow, rename (default). Files are renamed
+      x_filename where x is an integer value incremented to make the new
+      filename unique.
     -->
     <init-param>
       <param-name>overwrite-uploads</param-name>
@@ -174,7 +173,7 @@
     <init-param>
       <param-name>upload-max-size</param-name>
       <param-value>10000000</param-value>
-    </init-param>    
+    </init-param>
     -->
 
     <!--
@@ -182,7 +181,7 @@
       and other objects cache. The path specified can be either absolute or
       relative to the context path of the servlet. On windows platform,
       absolute directory must start with volume: C:\Path\To\Cache\Directory
-      
+
       The default directory is "cache-dir" in the work-directory
 
     <init-param>
@@ -194,7 +193,7 @@
     <!--
       This parameter allows to specify where Cocoon should put it's
       working files. The path specified is either absolute or relative
-      to the context path of the Cocoon servlet.  On windows platform,
+      to the context path of the Cocoon servlet. On windows platform,
       absolute directory must start with volume: C:\Path\To\Work\Directory
 
       The default directory is "cocoon-files" directory in the servlet
@@ -211,7 +210,7 @@
       which Cocoon should put into it's own classpath.
       Note that you must separate them using the platforms path.separator
       (":" for *nix and ";" for Windows systems). Also note that absolute
-      pathes are take as such but relative pathes are rooted at the context
+      pathes are taken as such but relative pathes are rooted at the context
       root of the Cocoon servlet.
 
     <init-param>
@@ -226,12 +225,12 @@
       String as a parameter. That String will be equal to the text after the
       '/'.
 
-      Cocoon honors the LogEnabled, Initializable and Disposable interfaces for this class,
-      if it implements them.
+      Cocoon honors the LogEnabled, Initializable and Disposable interfaces for
+      this class, if it implements them.
 
-      If you uncomment the following lines the parent CM is set to the Parent CM sample, which will look up
-      a configuration via JNDI at org/apache/cocoon/samples/parentcm/ParentCMConfiguration
-      and use it.
+      If you uncomment the following lines the parent CM is set to the Parent CM
+      sample, which will look up a configuration via JNDI at
+      org/apache/cocoon/samples/parentcm/ParentCMConfiguration and use it.
     <init-param>
       <param-name>parent-component-manager</param-name>
       <param-value>org.apache.cocoon.samples.parentcm.ParentComponentManager/org/apache/cocoon/samples/parentcm/ParentCMConfiguration</param-value>
@@ -240,8 +239,9 @@
 
     <!--
       If you set this parameter to 'true' or 'yes', Cocoon will add processing
-      time to the end of each response. Value 'hide' adds processing time as an HTML
-      comment. By default, processing time is not added (corresponds to value 'no').
+      time to the end of each response. Value 'hide' adds processing time as an
+      HTML comment. By default, processing time is not added (corresponds to
+      value 'no').
 
     <init-param>
       <param-name>show-time</param-name>
@@ -250,17 +250,17 @@
     -->
 
     <!--
-       If true or not set, this class will try to catch and handle all Cocoon exceptions.
-       If false, it will rethrow them to the servlet container.
+       If true or not set, this class will try to catch and handle all Cocoon
+       exceptions. If false, it will rethrow them to the servlet container.
     -->
     <init-param>
       <param-name>manage-exceptions</param-name>
       <param-value>true</param-value>
     </init-param>
-    
+
     <!--
-       If true, Avalon Excalibur instrumentation will be enabled on all Instrumentable
-       components with Cocoon and your Cocoon application.
+       If true, Avalon Excalibur instrumentation will be enabled on all
+       Instrumentable components with Cocoon and your Cocoon application.
 
     <init-param>
       <param-name>enable-instrumentation</param-name>
@@ -269,17 +269,18 @@
     -->
 
     <!--
-       This defines the location of the instrument manager configuration, only used
-       if the init-param enable-instrumentation is enabled.
+       This defines the location of the instrument manager configuration, only
+       used if the init-param enable-instrumentation is enabled.
 
     <init-param>
       <param-name>instrumentation-config</param-name>
       <param-value>/WEB-INF/instrumentation.xconf</param-value>
-    </init-param>    
+    </init-param>
     -->
 
     <!--
-      Set encoding used by the container. If not set the ISO-8859-1 encoding will be assumed.
+      Set encoding used by the container. If not set the ISO-8859-1 encoding
+      will be assumed.
     -->
     <!--
     <init-param>
@@ -289,8 +290,8 @@
     -->
 
     <!--
-      Set form encoding. This will be the character set used to decode request parameters.
-      If not set the ISO-8859-1 encoding will be assumed. 
+      Set form encoding. This will be the character set used to decode request
+      parameters. If not set the ISO-8859-1 encoding will be assumed.
     -->
     <!--
     <init-param>
@@ -326,7 +327,6 @@
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
     <url-pattern>*.jsp</url-pattern>
-  
   </servlet-mapping>
   <!--
     Some servlet engines (WebLogic) have defaults which are not overriden
@@ -338,7 +338,7 @@
   </servlet-mapping>
 
   <!-- various MIME type mappings ====================================== -->
-  
+
   <mime-mapping>
     <extension>css</extension>
     <mime-type>text/css</mime-type>
@@ -375,3 +375,4 @@
   </mime-mapping>
 
 </web-app>
+
