@@ -47,8 +47,8 @@ import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.impl.DirectSchedulerFactory;
-import org.quartz.impl.jdbcjobstore.JobStoreSupport;
 import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
+import org.quartz.impl.jdbcjobstore.JobStoreSupport;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.spi.JobStore;
 import org.quartz.utils.ConnectionProvider;
@@ -333,7 +333,6 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         if (getLogger().isDebugEnabled() && (triggers.length == 0)) {
             getLogger().debug("no triggers configured at startup");
         }
-
     }
 
     /* (non-Javadoc)
@@ -666,32 +665,32 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     }
 
     /**
-     * Create the tiggers
+     * Create the triggers
      *
-     * @param tiggers array of tigger configuration elements
+     * @param triggers array of trigger configuration elements
      *
      * @throws ConfigurationException thrown in case of configuration failures
      */
-    private void createTriggers(final Configuration[] tiggers)
+    private void createTriggers(final Configuration[] triggers)
     throws ConfigurationException {
-        for (int i = 0; i < tiggers.length; i++) {
-            String cron = tiggers[i].getChild("cron").getValue(null);
+        for (int i = 0; i < triggers.length; i++) {
+            String cron = triggers[i].getChild("cron").getValue(null);
 
             if (null == cron) {
-                final String seconds = tiggers[i].getChild("seconds").getValue("0");
-                final String minutes = tiggers[i].getChild("minutes").getValue("*");
-                final String hours = tiggers[i].getChild("hours").getValue("*");
-                final String days = tiggers[i].getChild("days").getValue("*");
-                final String months = tiggers[i].getChild("months").getValue("*");
-                final String weekdays = tiggers[i].getChild("weekdays").getValue("?");
-                final String years = tiggers[i].getChild("years").getValue("*");
+                final String seconds = triggers[i].getChild("seconds").getValue("0");
+                final String minutes = triggers[i].getChild("minutes").getValue("*");
+                final String hours = triggers[i].getChild("hours").getValue("*");
+                final String days = triggers[i].getChild("days").getValue("*");
+                final String months = triggers[i].getChild("months").getValue("*");
+                final String weekdays = triggers[i].getChild("weekdays").getValue("?");
+                final String years = triggers[i].getChild("years").getValue("*");
                 cron = seconds + " " + minutes + " " + hours + " " + days + " " + months + " " + weekdays + " " +
                        years;
             }
 
             try {
-                addJob(tiggers[i].getAttribute("name"), tiggers[i].getAttribute("target"), cron,
-                       tiggers[i].getAttributeAsBoolean("concurrent-runs", true));
+                addJob(triggers[i].getAttribute("name"), triggers[i].getAttribute("target"), cron,
+                       triggers[i].getAttributeAsBoolean("concurrent-runs", true));
             } catch (final CascadingException ce) {
                 throw new ConfigurationException("failed adding trigger to scheduler", ce);
             }

@@ -28,7 +28,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
-
 /**
  * A simple test CronJob which also calls a pipeline internally.
  *
@@ -78,27 +77,29 @@ public class TestCronJob extends ServiceableCronJob
         SourceResolver resolver = null;
         Source src = null;
         try {
-            resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            src = resolver.resolveURI("cocoon://" + pipeline);
-            InputStream is = src.getInputStream();
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            src = resolver.resolveURI("cocoon://" + this.pipeline);
 
-            InputStreamReader reader = new InputStreamReader(is);
-            StringBuffer sb = new StringBuffer();
-            char[] b = new char[8192];
-            int n;
+            InputStreamReader r = new InputStreamReader(src.getInputStream());
+            try {
+                StringBuffer sb = new StringBuffer();
+                char[] b = new char[8192];
+                int n;
 
-            while((n = reader.read(b)) > 0) {
-                sb.append(b, 0, n);
+                while((n = r.read(b)) > 0) {
+                    sb.append(b, 0, n);
+                }
+
+                getLogger().info("CronJob " + name + " called pipeline " + pipeline +
+                                 " and received following content:\n" + sb.toString());
+            } finally {
+                r.close();
             }
 
-            reader.close();
-
-            getLogger().info("Cronjob " + name + " called pipeline " + pipeline +
-                             " and received following content:\n" + sb.toString() );
         } catch(Exception e) {
             throw new CascadingRuntimeException("CronJob " + name + " raised an exception", e);
         } finally {
-            if ( resolver != null ) {
+            if (resolver != null) {
                 resolver.release(src);
                 this.manager.release(resolver);
                 resolver = null;
@@ -114,7 +115,6 @@ public class TestCronJob extends ServiceableCronJob
 
         getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
                          "' and sleep timeout of " + m_sleep + "ms");
-
     }
 
     /* (non-Javadoc)
