@@ -24,7 +24,7 @@
   </tstamp>
 
   <target
-    name="woody2CocoonForms-renaming"
+    name="Woody2CocoonForms"
     description="Updates from Woody to CocoonForms">
 
 <echo>
@@ -121,13 +121,6 @@ The update process is now going to start.
       <replacevalue><![CDATA[exclude-result-prefixes="fi"]]></replacevalue>
     </replace>
 
-    <xslt basedir="${target.dir}" destdir="${temp.dir}"
-          includes="**/*.xml" extension=".xml"
-          style="tools/src/cforms-repeater-syntax.xsl"/>
-    <move todir="${target.dir}">
-      <fileset dir="${temp.dir}"/>
-    </move>
-
     <!-- updating sitemaps -->
     <replace dir="${target.dir}">
       <include name="**/*.xmap"/>
@@ -185,6 +178,30 @@ The update process is now going to start.
 
 <echo>
 -----------------------------------------------------------------------------
+Please read carefully!
+In the next step you can update the repeater binding syntax in your binding
+files. This can only be done by an XSLT and this transformation can neither
+preserve possibly available DocType declarations nor every layout detail
+(e.g. attribute order).
+You will be asked for a directory for the binding files.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Do you want to update the repeater binding syntax in your binding files automatically? (yes|no)"
+           addproperty="updateRepeaterSyntaxInput"
+           defaultvalue="no"/>
+
+    <condition property="updateRepeaterSyntax">
+      <or>
+        <equals arg1="yes" arg2="${updateRepeaterSyntaxInput}" casesensitive="false" trim="true"/>
+        <equals arg1="y" arg2="${updateRepeaterSyntaxInput}" casesensitive="false" trim="true"/>
+      </or>
+    </condition>
+
+    <antcall target="Woody2CocoonForms-repeater-syntax"/>
+
+<echo>
+-----------------------------------------------------------------------------
 The update was successful so far. You can now choose whether you want to copy
 the updated files from the target directory back to the source directory.
 
@@ -204,25 +221,7 @@ are also asked for a backup directory if you choose to copy.
       </or>
     </condition>
 
-<fail unless="copyFiles">
-The update was not completed as you chose not to copy the updated files.
-Either do this by hand or restart this update process.
-The updated files can be found at:
-${target.dir}
-</fail>
-
-    <input
-           message="Please enter the backup dir (default is ${target.dir}_orig):"
-           addproperty="backup.dir"
-           defaultvalue="${target.dir}_orig"/>
-
-    <copy todir="${backup.dir}">
-      <fileset dir="${src.dir}"/>
-    </copy>
-
-    <copy todir="${src.dir}">
-      <fileset dir="${target.dir}"/>
-    </copy>
+    <antcall target="Woody2CocoonForms-copy-files"/>
 
 <echo>
 -----------------------------------------------------------------------------
@@ -234,4 +233,41 @@ The update is now complete. Have much fun with the new Cocoon Forms.
 
   </target>
 
+  <target name="Woody2CocoonForms-repeater-syntax" if="updateRepeaterSyntax">
+
+    <input message="Please enter the binding dir *relative* to the above entered source dir ${target.dir}:"
+           addproperty="binding.dir"
+           defaultvalue="."/>
+
+    <xslt basedir="${target.dir}/${binding.dir}" destdir="${temp.dir}"
+          includes="**/*.xml" extension=".xml"
+          style="tools/src/cforms-repeater-syntax.xsl"/>
+    <move todir="${target.dir}/${binding.dir}">
+      <fileset dir="${temp.dir}"/>
+    </move>
+  </target>
+
+  <target name="Woody2CocoonForms-copy-files" if="copyFiles"
+          depends="Woody2CocoonForms-do-not-copy-files">
+    <input message="Please enter the backup dir (default is ${target.dir}_orig):"
+           addproperty="backup.dir"
+           defaultvalue="${target.dir}_orig"/>
+
+    <copy todir="${backup.dir}">
+      <fileset dir="${src.dir}"/>
+    </copy>
+<!--
+    <copy todir="${src.dir}">
+      <fileset dir="${target.dir}"/>
+    </copy>
+-->
+  </target>
+
+  <target name="Woody2CocoonForms-do-not-copy-files" unless="copyFiles">
+<echo>
+You chosed not to copy the updated files. Either do this by hand or restart
+this update process. The updated files can be found at:
+${target.dir}
+</echo>
+  </target>
 </project>
