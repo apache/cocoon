@@ -213,6 +213,9 @@
      Portal: CocoonPortlet has new configuration parameter,
      default-session-scope.
    </action>
+   <action dev="CZ" type="add">
+     Add configuration support for log4j.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="29373">
      Portal: Fix NPE when non-caching pipelines are used for the portal profile.
    </action>
