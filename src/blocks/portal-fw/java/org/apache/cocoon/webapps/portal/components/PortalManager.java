@@ -100,7 +100,7 @@ import org.w3c.dom.NamedNodeMap;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: PortalManager.java,v 1.3 2003/04/27 15:04:48 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -1694,33 +1694,6 @@ extends AbstractSessionComponent {
 
         return result;
     }
-
-    /**
-     * Check if the profile is already cached
-     * 
-     * FIXME: This method is not used. Should be removed?
-     * 
-    private boolean isProfileCached(String profileID, Map configuration)
-    throws ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN isProfileCached id="+profileID+", configuration="+configuration);
-        }
-        boolean result = false;
-
-        if (configuration != null && this.getIsAdminProfile(profileID) == false) {
-            String storePrefix = (String)configuration.get(PortalConstants.CONF_PROFILE_CACHE);
-            if (storePrefix != null) {
-                String key = profileID.substring(1);
-                result = this.getProfileStore().containsKey(key);
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END isProfileCached result="+result);
-        }
-        return result;
-    } */
 
     /**
      * Cache the profile (if cache is turned on)
