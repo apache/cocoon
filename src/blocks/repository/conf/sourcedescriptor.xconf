@@ -2,7 +2,7 @@
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceInspector']">
 
   <component 
-    role="org.apache.cocoon.components.source.impl.SourceDescriptor" 
+    role="org.apache.cocoon.components.source.SourceDescriptor" 
     class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
     logger="core.source.sourcedescriptor">
     
@@ -15,6 +15,12 @@
     
     <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
     <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
+    
+    <!--
+    <sourcedescriptor class="org.apache.cocoon.components.source.impl.SimpleJdbcSourceDescriptor">
+      <property name="meta" namespace="author" />
+    </sourcedescriptor>
+    -->
     
   </component>
  
