@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
+
+<!--+
+    | Batik block samples sitemap
+    |
+    | CVS $Id: sitemap.xmap,v 1.3 2003/05/07 19:15:02 vgritsenko Exp $
+    +-->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<!-- batik block samples sitemap -->
 
 <!-- =========================== Components ================================ -->
 
@@ -34,13 +40,11 @@
   <map:view from-position="last" name="links">
    <map:serialize type="links"/>
   </map:view>
-
  </map:views>
 
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
-
   <map:pipeline type="caching">  
    <map:match pattern="">
     <map:redirect-to uri="welcome"/>
@@ -72,7 +76,6 @@
    </map:match>
 
   </map:pipeline>
-
  </map:pipelines>
 
 </map:sitemap>

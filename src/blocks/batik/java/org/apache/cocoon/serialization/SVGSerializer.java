@@ -66,6 +66,7 @@ import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.util.ParsedURL;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -85,7 +86,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.5 2003/05/07 11:36:30 cziegeler Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.6 2003/05/07 19:15:02 vgritsenko Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -225,10 +226,22 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
     public void notify(Document doc) throws SAXException {
         try {
             TranscoderInput transInput = new TranscoderInput(doc);
- 
+
             // Buffering is done by the pipeline (See shouldSetContentLength)
             TranscoderOutput transOutput = new TranscoderOutput(this.output);
             transcoder.transcode(transInput, transOutput);
+        } catch (TranscoderException ex) {
+            if (ex.getException() != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Got transcoder exception writing image, rethrowing nested exception", ex);
+                }
+                throw new SAXException("Exception writing image", ex.getException());
+            }
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got transcoder exception writing image, rethrowing", ex);
+            }
+            throw new SAXException("Exception writing image", ex);
         } catch (Exception ex) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Got exception writing image, rethrowing", ex);
