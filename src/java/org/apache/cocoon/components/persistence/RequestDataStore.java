@@ -52,7 +52,7 @@ package org.apache.cocoon.components.persistence;
 
 
 /**
- * A request data store is a component that manages data that are
+ * A request data store is a component that manages data that is
  * linked to the current request.
  * With the setRequestData() method you can link any object to the
  * current request. This object can be fetched via getRequestData()
@@ -64,9 +64,9 @@ package org.apache.cocoon.components.persistence;
  * This component is a replacement for the request lifecycle and
  * global request lifecycle components.
  * 
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStore.java,v 1.1 2003/09/01 14:45:07 cziegeler Exp $
+ * @version CVS $Id: RequestDataStore.java,v 1.2 2004/01/08 09:23:14 cziegeler Exp $
  * @since 2.1.1
  */
 public interface RequestDataStore {
