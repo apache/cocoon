@@ -61,6 +61,8 @@ import org.apache.cocoon.woody.datatype.convertor.Convertor;
  *
  * <p>Implementations may implement Avalon's Composable interface to get access to
  * other components.
+ * 
+ * @version $Id: DatatypeBuilder.java,v 1.3 2004/02/11 09:53:43 antonio Exp $
  */
 public interface DatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception;

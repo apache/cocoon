@@ -73,6 +73,8 @@ import org.w3c.dom.Element;
  * by delegating the creation of them to {@link DatatypeBuilder}s and {@link ValidationRuleBuilder}s.
  * Currently the list of datatype and validationrule builders is hardcoded, but this will
  * become externally configurable in the future.
+ * 
+ * @version $Id: DefaultDatatypeManager.java,v 1.7 2004/02/11 09:53:43 antonio Exp $
  *
  */
 public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Serviceable,

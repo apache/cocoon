@@ -54,6 +54,10 @@ import java.util.Locale;
 
 import org.apache.cocoon.environment.Request;
 
+/**
+ * @version $Id: FormContext.java,v 1.6 2004/02/11 09:53:44 antonio Exp $
+ * 
+ */
 public class FormContext {
     
     protected Request request;

@@ -57,6 +57,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link StringType}s.
+ * @version $Id: StringTypeBuilder.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class StringTypeBuilder extends AbstractDatatypeBuilder {
 

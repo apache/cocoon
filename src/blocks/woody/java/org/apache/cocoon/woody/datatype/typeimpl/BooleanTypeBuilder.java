@@ -56,6 +56,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link BooleanType}s.
+ * @version $Id: BooleanTypeBuilder.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class BooleanTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

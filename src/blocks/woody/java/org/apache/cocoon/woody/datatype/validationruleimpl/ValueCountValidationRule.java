@@ -71,6 +71,8 @@ import java.math.BigDecimal;
  *  <li>check maximum array size
  *  <li>check min and max array size
  * </ul>
+ * 
+ * @version $Id: ValueCountValidationRule.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class ValueCountValidationRule extends AbstractValidationRule {
     private Expression exactExpr;

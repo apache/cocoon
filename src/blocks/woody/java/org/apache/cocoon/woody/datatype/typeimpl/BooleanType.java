@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.datatype.typeimpl;
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
  * java.lang.Boolean's.
+ * @version $Id: BooleanType.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class BooleanType extends AbstractDatatype {
     public Class getTypeClass() {

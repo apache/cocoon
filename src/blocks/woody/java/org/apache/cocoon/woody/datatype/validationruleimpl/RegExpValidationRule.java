@@ -64,6 +64,8 @@ import org.outerj.expression.ExpressionContext;
  *
  * <p>The <a href="http://jakarta.apache.org/oro/">Jakarta ORO</a> library
  * is used as regexp engine.
+ * 
+ * @version $Id: RegExpValidationRule.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class RegExpValidationRule extends AbstractValidationRule {
 	/** Compiled regular expression. */

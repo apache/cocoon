@@ -56,6 +56,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link DecimalType}s.
+ * @version $Id: DecimalTypeBuilder.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class DecimalTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

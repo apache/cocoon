@@ -59,6 +59,8 @@ import org.outerj.expression.Expression;
 /**
  * Generic validation rule that evaluates an expression. If the outcome of the expression is true,
  * the validation is successful, otherwise not.
+ * 
+ * @version $Id: AssertValidationRule.java,v 1.4 2004/02/11 09:53:44 antonio Exp $
  */
 public class AssertValidationRule extends AbstractValidationRule {
     private Expression testExpression;

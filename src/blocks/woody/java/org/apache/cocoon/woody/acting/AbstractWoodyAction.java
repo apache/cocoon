@@ -60,6 +60,8 @@ import org.apache.avalon.framework.service.ServiceException;
 
 /**
  * Abstract base class for Woody actions.
+ * 
+ * @version $Id: AbstractWoodyAction.java,v 1.4 2004/02/11 09:53:45 antonio Exp $
  */
 public abstract class AbstractWoodyAction 
   implements Action, ThreadSafe, Serviceable, Disposable {

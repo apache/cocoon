@@ -55,6 +55,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link Mod10ValidationRule}s.
+ * 
+ * @version $Id: Mod10ValidationRuleBuilder.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public class Mod10ValidationRuleBuilder extends AbstractValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception {

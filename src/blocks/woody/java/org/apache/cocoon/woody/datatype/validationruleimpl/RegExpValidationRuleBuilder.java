@@ -60,6 +60,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link RegExpValidationRule}s.
+ * 
+ * @version $Id: RegExpValidationRuleBuilder.java,v 1.3 2004/02/11 09:53:44 antonio Exp $
  */
 public class RegExpValidationRuleBuilder extends AbstractValidationRuleBuilder {
 

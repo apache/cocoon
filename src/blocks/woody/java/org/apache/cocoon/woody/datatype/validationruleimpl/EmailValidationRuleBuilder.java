@@ -55,6 +55,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link EmailValidationRule}s.
+ * 
+ * @version $Id: EmailValidationRuleBuilder.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public class EmailValidationRuleBuilder extends AbstractValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception {

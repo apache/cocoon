@@ -70,6 +70,8 @@ import org.outerj.expression.ExpressionContext;
  *  <li>check maximum value
  *  <li>check min and max values (range check)
  * </ul>
+ * 
+ * @version $Id: RangeValidationRule.java,v 1.7 2004/02/11 09:53:44 antonio Exp $
  */
 public class RangeValidationRule extends AbstractValidationRule {
     private Expression minExpr;

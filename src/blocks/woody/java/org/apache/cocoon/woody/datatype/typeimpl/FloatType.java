@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.datatype.typeimpl;
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation
  * for float numbers (backed by the java.lang.Float class).
+ * @version $Id: FloatType.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public class FloatType extends AbstractDatatype {
     public Class getTypeClass() {

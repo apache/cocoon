@@ -57,6 +57,8 @@ import org.outerj.expression.Expression;
 
 /**
  * Builds {@link ValueCountValidationRule}s.
+ * 
+ * @version $Id: ValueCountValidationRuleBuilder.java,v 1.2 2004/02/11 09:53:44 antonio Exp $
  */
 public class ValueCountValidationRuleBuilder extends AbstractValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception {

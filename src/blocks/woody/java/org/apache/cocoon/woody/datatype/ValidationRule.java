@@ -56,6 +56,8 @@ import org.outerj.expression.ExpressionContext;
  * Interface for validation rules. Most {@link Datatype} implementations will
  * perform their validation by checking a number of these validation rules
  * (though strictly spoken this is not required).
+ * 
+ * @version $Id: ValidationRule.java,v 1.4 2004/02/11 09:53:43 antonio Exp $
  */
 public interface ValidationRule {
     /**
