@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.19 2000-04-08 10:18:18 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.20 2000-04-28 02:40:26 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.19 $ $Date: 2000-04-08 10:18:18 $
+ * @version $Revision: 1.20 $ $Date: 2000-04-28 02:40:26 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -279,7 +279,11 @@ public class XSPProcessor extends AbstractActor
     String filename = Utils.getBasename(request, servletContext);
 
     File sourceFile = new File(filename);
-    filename = sourceFile.getCanonicalPath();
+    try {
+      filename = sourceFile.getCanonicalPath();
+    } catch (IOException e) {
+      filename = sourceFile.getAbsolutePath();
+    }
 
     // Get page from Cocoon cache
     PageEntry pageEntry = (PageEntry) this.store.get(filename);
@@ -373,8 +377,24 @@ public class XSPProcessor extends AbstractActor
 
       // Retrieve and format generated source code
       Element sourceElement = document.getDocumentElement();
-      sourceElement.normalize();
-      String sourceCode = sourceElement.getFirstChild().getNodeValue();
+      // sourceElement.normalize();
+      // String sourceCode = sourceElement.getFirstChild().getNodeValue();
+      /*
+        For large XSP pages normalize() can be
+	_really_ slow so we do it ourselves
+      */
+      StringBuffer buffer = new StringBuffer();
+      Node node = sourceElement.getFirstChild();
+      while (node != null) {
+        switch(node.getNodeType()) {
+          case Node.TEXT_NODE:
+          case Node.CDATA_SECTION_NODE:
+            buffer.append(((Text)node).getData());
+            break;
+        }
+        node = node.getNextSibling();
+      }
+      String sourceCode = languageProcessor.formatCode(buffer.toString());      
 
       sourceCode = languageProcessor.formatCode(sourceCode);
 
@@ -412,7 +432,9 @@ public class XSPProcessor extends AbstractActor
         languageProcessor.unload(page);
       }
 
+System.err.println("Start compilation: " + new Date());
       languageProcessor.compile(baseName);
+System.err.println("End compilation: " + new Date());
       this.loadPage(languageProcessor, pageEntry, baseName);
     }
 
