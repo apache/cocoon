@@ -20,7 +20,7 @@
     <content>
         <p>
             A question which often comes when starting with Cocoon
-            is <em>how to implement my business layer</em>.
+            is, <em>"How do I implement my business layer?"</em>
         </p>
         <p>
             The short answer: <em>it is up to you</em> ;-)
@@ -29,6 +29,12 @@
             More precisely, you could say that Cocoon leaves a lot
             of freedom regarding how to access databases and run
             business processes or apply business rules.
+        </p>
+        <p>
+            Similarly, people often ask about "best practices" with Cocoon --
+            that is, "What's the best way to implement X or Y?"  While we
+            generally don't have a set list of best practices, we can provide 
+            some simple guidance to help you along your way.
         </p>
         <p>
             Here's a brief discussion of possible options. Some are real
