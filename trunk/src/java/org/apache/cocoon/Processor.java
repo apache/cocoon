@@ -58,19 +58,19 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentHelper;
 
 /**
- *
+ * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.9 2003/10/30 12:20:45 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.10 2003/11/14 16:31:49 unico Exp $
  */
-public interface Processor extends Component {
+public interface Processor {
 
     String ROLE = Processor.class.getName();
 
     /**
      * Process the given <code>Environment</code> producing the output.
-     * @return If the processing is successfull <code>true</code> is returned.
+     * @return If the processing is successful <code>true</code> is returned.
      *         If no match is found in the sitemap <code>false</code>
      *         is returned.
      * @throws ResourceNotFoundException If a sitemap component tries
@@ -97,7 +97,6 @@ public interface Processor extends Component {
 
     /**
      * Get the root processor parent of this processor.
-     *
      * @since 2.1.1
      */
     Processor getRootProcessor();
