@@ -104,7 +104,7 @@ import org.xml.sax.SAXException;
  * </p>
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSource.java,v 1.3 2004/02/15 20:33:19 haul Exp $
+ * @version CVS $Id: CachingSource.java,v 1.4 2004/02/15 20:48:53 haul Exp $
  */
 public class CachingSource
 extends AbstractLogEnabled
@@ -405,7 +405,7 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
 	 * @throws IOException
 	 * @throws CascadingIOException
 	 */
-	private byte[] readXMLResponse() throws SAXException, IOException, CascadingIOException {
+	protected byte[] readXMLResponse() throws SAXException, IOException, CascadingIOException {
 		XMLSerializer serializer = null;
 		SAXParser parser = null;
         byte[] result = null;
@@ -439,7 +439,7 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
 	 * @throws IOException
 	 * @throws SourceNotFoundException
 	 */
-	private byte[] readBinaryResponse() throws IOException, SourceNotFoundException {
+	protected byte[] readBinaryResponse() throws IOException, SourceNotFoundException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final byte[] buffer = new byte[2048];
 		final InputStream inputStream = this.source.getInputStream();
