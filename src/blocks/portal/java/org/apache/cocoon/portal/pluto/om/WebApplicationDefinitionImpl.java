@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,13 +41,13 @@ import org.apache.cocoon.portal.pluto.om.common.DescriptionSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
 
 /**
- * 
+ *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
-public class WebApplicationDefinitionImpl 
+public class WebApplicationDefinitionImpl
 implements WebApplicationDefinition, Support {
 
 
@@ -66,7 +66,7 @@ implements WebApplicationDefinition, Support {
     public String ejbRef;
     // </not used variables - only for castor>
 
-    private String contextPath;        
+    private String contextPath;
     private DescriptionSet descriptions = new DescriptionSetImpl();
     private DisplayNameSet displayNames =  new DisplayNameSetImpl();
     private String id = "";
@@ -196,15 +196,15 @@ implements WebApplicationDefinition, Support {
 
         ((Support)servlets).preStore(this);
     }
-    
+
     // additional methods.
-    
-    public void setCastorId(String id) {        
+
+    public void setCastorId(String id) {
         this.id = id;
         objectId = null;
     }
-    
-    public String getCastorId() {                
+
+    public String getCastorId() {
         if (id.length() > 0) {
             return getId().toString();
         } else {
@@ -235,7 +235,7 @@ implements WebApplicationDefinition, Support {
     public Collection getServletMappings() {
         return servletMappings;
     }
-    
+
     protected void setContextRoot(String contextRoot) {
         // PATCH for IBM WebSphere
         if (contextRoot != null && contextRoot.endsWith(".war") ) {
@@ -243,7 +243,7 @@ implements WebApplicationDefinition, Support {
         } else {
             this.contextPath = contextRoot;
         }
-    }    
+    }
 
     public void setDescriptions(DescriptionSet descriptions) {
         this.descriptions = descriptions;
@@ -262,7 +262,7 @@ implements WebApplicationDefinition, Support {
     }
 
     /**
-     * @return
+     *
      */
     public Collection getCastorTagDefinitions() {
         return castorTagDefinitions;
