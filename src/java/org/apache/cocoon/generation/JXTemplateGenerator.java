@@ -356,7 +356,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.20 2003/12/10 01:57:09 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.21 2003/12/10 16:24:35 vgritsenko Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -2776,7 +2776,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         cocoon.put("context", 
                    FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
         cocoon.put("continuation", kont);
-        cocoon.put("parameters", parameters.toProperties(parameters));
+        cocoon.put("parameters", Parameters.toProperties(parameters));
         this.variables = new MyVariables(cocoon,
                                          contextObject,
                                          kont,
