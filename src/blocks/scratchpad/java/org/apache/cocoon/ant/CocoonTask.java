@@ -96,7 +96,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.5 2003/10/24 08:49:49 cziegeler Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.6 2004/02/28 04:17:50 antonio Exp $
  */
 public class CocoonTask extends Task {
 
@@ -166,8 +166,8 @@ public class CocoonTask extends Task {
         this.logger = "cocoon";
         this.acceptHeader = DEFAULT_ACCEPT;
         this.agentHeader = DEFAULT_USER_AGENT;
-        //this.preCompileOnly = new Boolean(false);
-        this.followLinks = new Boolean(true);
+        //this.preCompileOnly = Boolean.FALSE;
+        this.followLinks = Boolean.TRUE;
         this.targets = new ArrayList();
     }
 

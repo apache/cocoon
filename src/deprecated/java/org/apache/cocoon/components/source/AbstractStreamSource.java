@@ -93,7 +93,7 @@ import java.util.Properties;
  * @deprecated Use the new Avalon Excalibur Source Resolving
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractStreamSource.java,v 1.4 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: AbstractStreamSource.java,v 1.5 2004/02/28 04:17:50 antonio Exp $
  */
 public abstract class AbstractStreamSource extends AbstractLogEnabled
     implements ModifiableSource {
@@ -153,11 +153,11 @@ public abstract class AbstractStreamSource extends AbstractLogEnabled
             try {
                 final Object xhtmlconvert = jtidyClass.newInstance();
                 Method m = jtidyClass.getMethod("setXmlOut", new Class[] { Class.forName("java.lang.Boolean")});
-                m.invoke(xhtmlconvert, new Object[] { new Boolean(true) });
+                m.invoke(xhtmlconvert, new Object[] { Boolean.TRUE });
                 m = jtidyClass.getMethod("setXHTML", new Class[] {Class.forName("java.lang.Boolean")});
-                m.invoke(xhtmlconvert, new Object[] { new Boolean(true) });
+                m.invoke(xhtmlconvert, new Object[] { Boolean.TRUE });
                 m = jtidyClass.getMethod("setShowWarnings", new Class[] { Class.forName("java.lang.Boolean")});
-                m.invoke(xhtmlconvert, new Object[] { new Boolean(false) });
+                m.invoke(xhtmlconvert, new Object[] { Boolean.FALSE });
                 m = jtidyClass.getMethod("parseDOM", new Class[] { Class.forName("java.io.InputStream"), Class.forName("java.io.OutputStream")});
                 final Document doc = (Document)m.invoke(xhtmlconvert, new Object[] { stream, null });
                 final StringWriter writer = new StringWriter();

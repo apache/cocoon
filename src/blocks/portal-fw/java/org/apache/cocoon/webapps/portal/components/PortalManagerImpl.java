@@ -113,7 +113,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.2 2004/02/06 15:13:54 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.3 2004/02/28 04:17:50 antonio Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -3380,7 +3380,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         if (config != null) {
                             result.put(PortalConstants.CONF_PARALLEL_COPLETS, new Boolean(config.getValueAsBoolean(false)));
                         } else {
-                            result.put(PortalConstants.CONF_PARALLEL_COPLETS, new Boolean(false));
+                            result.put(PortalConstants.CONF_PARALLEL_COPLETS, Boolean.FALSE);
                         }
 
                         // timeout
