@@ -52,7 +52,11 @@
     import org.apache.avalon.Configurable;
     import org.apache.avalon.Configuration;
     import org.apache.avalon.ConfigurationException;
+    import org.apache.avalon.DefaultConfiguration;
     import org.apache.avalon.Parameters;
+
+    import org.apache.regexp.RE;
+    import org.apache.regexp.REProgram;
 
     import org.apache.cocoon.Cocoon;
     import org.apache.cocoon.ProcessingException;
@@ -63,17 +67,13 @@
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.Manager;
-    import org.apache.cocoon.xml.SAXConfigurationBuilder;
     import org.apache.cocoon.matching.helpers.WildcardURIMatcher;
-
-    import org.xml.sax.SAXException;
-    import org.xml.sax.helpers.AttributesImpl;
 
     /**
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.51 $ $Date: 2000-10-23 19:44:45 $
+     * @version CVS $Revision: 1.1.2.52 $ $Date: 2000-10-23 21:17:46 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -187,19 +187,16 @@
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
       public void configure(Configuration conf) throws ConfigurationException {
-        SAXConfigurationBuilder confBuilder = new SAXConfigurationBuilder ();
-        Configuration cconf = null;
-        AttributesImpl attr = new AttributesImpl();
+	DefaultConfiguration cconf;
+	DefaultConfiguration current;
+	DefaultConfiguration nested;
 
         this.sitemapManager = new Manager(super.sitemapComponentManager);
         this.sitemapManager.compose(this.manager);
         this.sitemapManager.configure(conf);
         try {
           <!-- configure all components -->
-          /* Configure special ErrorNotifier and LinkTransformer */
-          confBuilder.startDocument ();
-          confBuilder.endDocument ();
-          Configuration cconf2 = confBuilder.getConfiguration();
+          Configuration cconf2 = new DefaultConfiguration("");
           load_component ("!generator:error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", cconf2, null);
           load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", cconf2, null);
 
@@ -716,20 +713,13 @@
       <xsl:variable name="is-factory-component"
         select="(@factory and ($name = 'matcher' or $name = 'selector')) or (@src and ($name = 'matcher' or $name = 'selector') and java:isFactory($factory-loader, string(@src)))"/>
       <xsl:if test="$is-factory-component=false()">
-        confBuilder.startDocument ();
-        <xsl:if test="$ns">
-          confBuilder.startPrefixMapping("","<xsl:value-of select="namespace-uri(.)"/>");
-        </xsl:if>
+        cconf = new DefaultConfiguration("");
 
-        <!-- Create root configuration -->
-        attr.clear();
+        current = new DefaultConfiguration("<xsl:value-of select="translate(@name, '- ', '__')"/>");
         <xsl:for-each select="attribute::*[name(.)!=$qname]">
-          attr.addAttribute ("", "<xsl:value-of select="local-name(.)"/>",
-              "<xsl:value-of select="name(.)"/>", "CDATA",
-              "<xsl:value-of select="."/>");
+          current.addAttribute ("<xsl:value-of select="name(.)"/>",
+                                "<xsl:value-of select="."/>");
         </xsl:for-each>
-        confBuilder.startElement ("", "<xsl:value-of select="translate(@name, '- ', '__')"/>",
-                                      "<xsl:value-of select="translate(@name, '- ', '__')"/>", attr);
 
         <!-- get nested configuration definitions -->
         <xsl:call-template name="nested-config-components">
@@ -740,14 +730,8 @@
           <xsl:with-param name="ns" select="$ns"/>
         </xsl:call-template>
 
-        <!-- end of the configurations root element -->
-        confBuilder.endElement ("", "<xsl:value-of select="translate(@name, '- ', '__')"/>",
-                                    "<xsl:value-of select="translate(@name, '- ', '__')"/>");
-        <xsl:if test="$ns">
-          confBuilder.endPrefixMapping("");
-        </xsl:if>
-        confBuilder.endDocument ();
-        cconf = confBuilder.getConfiguration();
+ 	cconf.addChild(current);
+
         <xsl:choose>
           <xsl:when test="@mime-type">
             load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf, "<xsl:value-of select="@mime-type"/>");
@@ -775,19 +759,15 @@
 
     <!-- process content -->
     <xsl:for-each select="$components">
-      <xsl:if test="$ns!=namespace-uri(.)">
-        confBuilder.startPrefixMapping("","<xsl:value-of select="namespace-uri(.)"/>");
-      </xsl:if>
-      attr.clear();
+      nested = new DefaultConfiguration("<xsl:value-of select="name(.)"/>");
       <xsl:for-each select="attribute::*[name(.)!=$qname]">
-        attr.addAttribute ("", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>", "CDATA", "<xsl:value-of select="."/>");
+        nested.addAttribute ("<xsl:value-of select="name(.)"/>", "<xsl:value-of select="."/>");
       </xsl:for-each>
-      confBuilder.startElement("<xsl:value-of select="namespace-uri(.)"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>", attr);
       <xsl:for-each select="attribute::*[name(.)=$qname]">
-        confBuilder.characters("<xsl:value-of select="."/>".toCharArray(), 0, <xsl:value-of select="string-length(.)"/>);
+        nested.appendValueData("<xsl:value-of select="."/>");
       </xsl:for-each>
       <xsl:if test="normalize-space(text())">
-        confBuilder.characters("<xsl:value-of select="text()"/>".toCharArray(), 0, <xsl:value-of select="string-length(text())"/>);
+        nested.appendValueData("<xsl:value-of select="text()"/>");
       </xsl:if>
       <xsl:variable name="newsubname">
         <xsl:choose>
@@ -803,10 +783,7 @@
         <xsl:with-param name="ns"><xsl:value-of select="namespace-uri(.)"/></xsl:with-param>
         <xsl:with-param name="subname"><xsl:value-of select="$newsubname"/></xsl:with-param>
       </xsl:call-template>
-      confBuilder.endElement("<xsl:value-of select="namespace-uri(.)"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>");
-      <xsl:if test="$ns!=namespace-uri(.)">
-        confBuilder.endPrefixMapping("");
-      </xsl:if>
+      current.addChild(nested);
     </xsl:for-each>
   </xsl:template>
 

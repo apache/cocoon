@@ -20,7 +20,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-19 14:44:00 $ 
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-23 21:17:47 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
@@ -51,9 +51,9 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
                 sb.append("0x").append(hex).append(", ");
             }
             sb.append("\n    };")
-              .append("\n    static org.apache.regexp.RE ") 
+              .append("\n    static RE ") 
               .append(name)
-              .append("Pattern = new org.apache.regexp.RE(new org.apache.regexp.REProgram(")
+              .append("Pattern = new RE(new REProgram(")
               .append(instructions)
               .append("));");
             return sb.toString();
@@ -69,8 +69,8 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         String name         = prefix;
         String instructions = name + "PatternInstructions";
         String pat = correctPattern (pattern);
-        sb.append("java.util.ArrayList list = new java.util.ArrayList ();")
-          .append("if(").append(name).append("Pattern.match(((javax.servlet.http.HttpServletRequest)objectModel.get(org.apache.cocoon.Cocoon.REQUEST_OBJECT)).getRequestURI())) {");
+        sb.append("ArrayList list = new ArrayList ();")
+          .append("if(").append(name).append("Pattern.match(((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI())) {");
         // Count number of parens
         int i = 0;
         int j = -1;
