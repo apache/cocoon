@@ -1,0 +1,6 @@
+The MIDI file parsing parts of the "midi" block classes are based
+on code from the XMidi project, written by Peter Arthur Loeb
+(http://www.palserv.com/XMidi/) and used with permission.
+The warranty disclaimer of the MIT license 
+(http://www.opensource.org/licenses/mit-license.html)
+applies to Peter Arthur Loeb's code.
