@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.27 2001-04-04 20:56:36 giacomo Exp $
+  $Id: changes.xml,v 1.9.2.28 2001-04-05 13:44:51 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -51,6 +51,8 @@
   <action dev="DM" type="update">
     Eliminated dependency on Xerces for the serializers by using TRaX Serializers.
   </action>
+</release>
+<release version="Cocoon 2.0a3" date="March 2001">
   <action dev="BL" type="update">
     Made Cocoon load classpath independent of Servlet Engine Classpath
     Attribute.
