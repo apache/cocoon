@@ -25,9 +25,8 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-02 18:59:25 $
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 16:54:46 $
  */
 
 public class ResourcePipeline {
