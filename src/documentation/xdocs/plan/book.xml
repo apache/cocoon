@@ -26,6 +26,7 @@
 
   <menu label="Overview">
     <menu-item label="Planning Overview" href="index.html"/>
+    <menu-item label="Roadmap" href="roadmap.html"/>
   </menu>
 
   <menu label="Documentation">

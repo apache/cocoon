@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<!--
+  $Id: roadmap.xml,v 1.1 2004/05/27 12:34:41 cziegeler Exp $
+-->
+
+<document>
+ <header>
+  <title>Release Plan</title>
+  <subtitle>Planning Documentation</subtitle>
+  <authors>
+     <person email="users@cocoon.apache.org" name="The Cocoon Community"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="Timeframe">
+  <p>This is the current time frame for the next releases:</p>
+  <ul>
+   <li>July/August 2004   : 2.1.6 (maintenance release)</li>
+   <li>Not schedulded yet : 2.2 Milestone 1</li>
+  </ul>
+ </s1>
+ <s1 title="Roadmap">
+   <p>
+     In general, the next Cocoon version 2.2 can be seen as the 
+     "consolidation version". In the past a lot of new features, blocks
+     and components were added which resulted in the fact that 
+     in some places concurring solutions were developed that could be 
+     combined a little bit.
+   </p>
+   <p>
+     One good example is form handling where we now are concentrating 
+     on CForms. We will try this in other areas as well. Of course this 
+     does not mean that we won't add new features to 2.2, but we try to 
+     consolidate what we currently have as well.
+   </p>   
+   <p>
+     The follow is a list of items that are planned for the next minor release
+     of Cocoon (2.2). This is a dynamic list that might change over time :)
+   </p>
+   <p>
+     We have come to the conclusion that real blocks might take a little bit 
+     longer than we have expected. So we agreed on not affecting the current 
+     development of Cocoon by the real blocks development. Which means we have 
+     to develop the blocks system separately from Cocoon until the block 
+     system is stable enough to be "merged" into Cocoon. This allows us to 
+     release new versions of Cocoon (like 2.2) without waiting for blocks to 
+     be working/finished.
+   </p>
+   <ul>
+     <li>Official Versioning Guide (will be published soon).</li>
+     <li>Move source repository to Subversion.</li>
+     <li>Virtual sitemap components.</li>
+     <li>First finished version of CForms.</li>
+     <li>Deprecate XSP (and provide a viable alternative).</li>
+     <li>Cleaning up the caching/store mess.</li>
+     <li>Remove deprecated blocks etc.</li>
+     <li>Deprecate blocks that haven't been maintained in a long while 
+        or don't serve any evident purpose. Web3, apples, python, php, 
+        asciiart might be some candidates. We will decide this on a 
+        case-by-case basis.
+     </li>
+     <li>Differentiate between blocks that provide a service to other 
+        blocks and blocks that contain just samples or small applications 
+        built upon cocoon (petstore, tour, linotpye). Maybe "samples-only" 
+        blocks should be a separate download.</li>
+     <li>
+       Review the implications and the implementation of pooling.
+     </li>
+     <li>
+       Reduce unneeded dependencies on Avalon, where possible.
+     </li>
+     <li>
+       Review the logging framework. Log4j is the de-facto standard and 
+       we have blocks that complain if Log4j is not properly configured, 
+       so let's accept it and stop reinventing the wheel.
+     </li>
+     <li>
+       Drop that Excalibur datasource. Components that need a DS should get 
+       one provided by the container via JNDI. If we don't have a container 
+       (running via the CLI, for instance), let the environment provide one 
+       and bind it to a JNDI namespace.
+     </li>
+     <li>
+       Write more tests (you knew this one was coming ;-) ).
+     </li>
+   </ul>
+   <p>
+     The <link href="updating.html">updating to 2.2</link> document contains 
+     more information on how to prepare your application for the next mino 
+     release.
+   </p>
+  </s1>
+  <s1 title="The Future">
+    <p>
+      We already have plans for further versions of Cocoon that might be 
+      long in the future...
+    </p>
+    <ul>
+      <li>Design and implement blocks.</li>
+      <li>Move to a new Avalon container implementation (Fortress).</li>
+    </ul>
+  </s1>
+  
+ </body>
+</document>
