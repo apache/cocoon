@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.9 $ $Date: 2000-09-29 01:02:51 $
+ * @version CVS $Revision: 1.1.4.10 $ $Date: 2000-10-01 00:21:30 $
  */
 
 public class Main {
@@ -111,9 +111,9 @@ public class Main {
             File conf = getConfigurationFile(context);
             Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
             log("Warming up...");
-            log("Note: Cocoon is compiling the sitemaps, this might take a while...");
+            log(" [Cocoon is compiling the sitemap, this might take a while]");
             main.warmup();
-            log("Ok, let's go...\n");
+            log("...ready, let's go:");
             main.process(targets);
             log("Done");
         } catch (Exception e) {
@@ -224,7 +224,7 @@ public class Main {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
             String uri = (String) i.next();
-            this.processURI(uri, 0);
+            this.processURI(uri, uri, 0);
         }
     }
 
@@ -246,7 +246,7 @@ public class Main {
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
-    public String processURI(String uri, int level) throws Exception {
+    public String processURI(String uri, String origUri, int level) throws Exception {
         log(leaf(level) + uri);
 
         Collection links = getLinks(uri);
@@ -254,8 +254,9 @@ public class Main {
         Iterator i = links.iterator();
         while (i.hasNext()) {
             log(tree(level));
-            String link = adjustContext(uri, (String) i.next());
-            translatedLinks.put(link, processURI(link, level + 1));
+            String origLink = (String) i.next();
+            String link = adjustContext(uri, origLink);
+            translatedLinks.put(link, processURI(link, origLink, level + 1));
         }
         
         File outputFile = getFile(uri);
@@ -270,7 +271,8 @@ public class Main {
         if (!ext.equals(defaultExt)) {
             File newFile = getFile(uri + "." + defaultExt);
             outputFile.renameTo(newFile);
-            outputName = newFile.getPath();
+            outputName = outputFile.getPath();
+            origUri += "." + defaultExt;
         }
 
         log(tree(level));
@@ -290,7 +292,7 @@ public class Main {
             log(leaf(level + 1) + "[" + type + "]--> " + outputName);
         }
         
-        return outputName;
+        return origUri;
     }        
 
     String leaf(int level) {
