@@ -58,8 +58,7 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.4 2004/02/27 17:27:04
- *          unico Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.6 2004/02/28 22:01:55 ghoward Exp $
  */
 public class StoreEventRegistryImpl
     extends AbstractDoubleMapEventRegistry
