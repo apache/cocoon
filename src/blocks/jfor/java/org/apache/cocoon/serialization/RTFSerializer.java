@@ -21,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.jfor.jfor.converter.Converter;
 
 /**
@@ -29,11 +28,10 @@ import org.jfor.jfor.converter.Converter;
  * to serialize XSL:FO documents to RTF streams.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: RTFSerializer.java,v 1.3 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public class RTFSerializer extends AbstractTextSerializer
-  implements LogEnabled {
+public class RTFSerializer extends AbstractTextSerializer {
 
     private Writer rtfWriter;
     private Converter handler;
