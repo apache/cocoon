@@ -30,22 +30,25 @@ import java.util.Map;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public class CocoonContainer extends DefaultContainer
-{
+public class CocoonContainer extends DefaultContainer {
+    
     /**
      * Provide some validation for the core Cocoon components
      *
      * @param conf The configuration
      * @throws ConfigurationException if the coniguration is invalid
      */
-    public void configure( Configuration conf ) throws ConfigurationException
-    {
-        if ( !"cocoon".equals( conf.getName() ) ) throw new ConfigurationException( "Invalid configuration format",
+    public void configure( Configuration conf ) 
+    throws ConfigurationException {
+        if ( !"cocoon".equals( conf.getName() ) ) {
+            throw new ConfigurationException( "Invalid configuration format",
                 conf );
-        String confVersion = conf.getAttribute( "version" );
+        }
+        final String confVersion = conf.getAttribute( "version" );
 
-        if ( !Constants.CONF_VERSION.equals( confVersion ) ) throw new ConfigurationException(
-                "Uncompatible configuration format", conf );
+        if ( !Constants.CONF_VERSION.equals( confVersion ) ) {
+            throw new ConfigurationException("Uncompatible configuration format", conf );
+        }
 
         super.configure( conf );
     }
@@ -59,23 +62,21 @@ public class CocoonContainer extends DefaultContainer
      * @return The component for the role/hint combo
      * @throws ServiceException if the role/hint combo cannot be resolved.
      */
-    public Object get( final String role, final Object hint ) throws ServiceException
-    {
+    public Object get( final String role, final Object hint ) 
+    throws ServiceException {
         Object component = null;
 
         if ( null != hint
              && !AbstractContainer.DEFAULT_ENTRY.equals( hint )
-             && !AbstractContainer.SELECTOR_ENTRY.equals( hint ) )
-        {
+             && !AbstractContainer.SELECTOR_ENTRY.equals( hint ) ) {
+            
             Map implementations = (Map) m_mapper.get( role );
-            if ( null != implementations )
-            {
+            if ( null != implementations ) {
                 component = implementations.get( hint );
             }
         }
 
-        if ( null == component )
-        {
+        if ( null == component ) {
             component = super.get( role, hint );
         }
 
