@@ -45,7 +45,14 @@
       <xsl:apply-templates select="fi:value/node()" mode="htmlarea-copy"/>
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
-    <script language="JavaScript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>
+    <xsl:choose>
+      <xsl:when test="fi:styling/initFunction">
+        <script language="JavaScript"><xsl:value-of select="fi:styling/initFunction"/>('<xsl:value-of select="@id"/>');</script>
+      </xsl:when>
+      <xsl:otherwise>
+        <script language="JavaScript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>        
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="@*|*" mode="htmlarea-copy">
