@@ -45,6 +45,12 @@
 */
 package org.apache.cocoon.portal.pluto.factory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -52,6 +58,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionImpl;
 import org.apache.pluto.factory.PortletInvokerFactory;
 import org.apache.pluto.invoker.PortletInvoker;
@@ -63,17 +70,20 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletInvokerFactoryImpl.java,v 1.2 2004/01/27 09:56:37 cziegeler Exp $
+ * @version CVS $Id: PortletInvokerFactoryImpl.java,v 1.3 2004/02/02 08:39:37 cziegeler Exp $
  */
 public class PortletInvokerFactoryImpl 
 extends AbstractFactory
-implements PortletInvokerFactory, Serviceable, Contextualizable {
+implements PortletInvokerFactory, Serviceable, Contextualizable, ThreadSafe, Disposable {
 
     /** The avalon context */
     protected Context context;
     
     /** The service manager */
     protected ServiceManager manager;
+    
+    /** All local portlets */
+    protected List localPortlets = Collections.synchronizedList(new ArrayList());
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -90,6 +100,20 @@ implements PortletInvokerFactory, Serviceable, Contextualizable {
     }
 
     /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        final Iterator i = this.localPortlets.iterator();
+        while (i.hasNext()) {
+            LocalPortletInvokerImpl current = (LocalPortletInvokerImpl)i.next();
+            current.destroy();
+        }
+        this.localPortlets.clear();
+        this.manager = null;
+        this.context = null;
+    }
+
+    /* (non-Javadoc)
      * @see org.apache.pluto.factory.PortletInvokerFactory#getPortletInvoker(org.apache.pluto.om.portlet.PortletDefinition)
      */
     public PortletInvoker getPortletInvoker(PortletDefinition portletDefinition) {
@@ -103,6 +127,7 @@ implements PortletInvokerFactory, Serviceable, Contextualizable {
             invoker = ((PortletDefinitionImpl)portletDefinition).getLocalPortletInvoker();
             if ( invoker == null ) {
                 invoker = new LocalPortletInvokerImpl(portletDefinition, this.servletConfig);
+                this.localPortlets.add(invoker);
                 ((PortletDefinitionImpl)portletDefinition).setLocalPortletInvoker(invoker);
                 try {
                     ContainerUtil.enableLogging(invoker, this.getLogger());
