@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.23 2000-07-20 00:16:22 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.24 2000-07-21 20:10:50 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,13 +71,14 @@ import org.apache.cocoon.framework.*;
 
 import org.apache.cocoon.processor.xsp.language.*;
 
+// (SM) there should not be direct dependency on Turbine!!!!
 import org.apache.turbine.services.resources.TurbineResourceService;
 
 /**
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.23 $ $Date: 2000-07-20 00:16:22 $
+ * @version $Revision: 1.24 $ $Date: 2000-07-21 20:10:50 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -265,11 +266,10 @@ public class XSPProcessor extends AbstractActor
       this.byNamespace.put(namespace, byLanguage);
     }
     
-    // Load connection pool information
-    // Load namespace-mapped logicsheets
     Configurations poolConf = conf.getConfigurations("pool");
     Properties poolProperties = poolConf.getProperties();
-    
+    poolProperties.put("services.TurbineResourceService.classname", "org.apache.turbine.services.resources.TurbineResourceService");
+
 /*
     Enumeration en = poolConf.keys();
     
