@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.7 2004/07/12 13:36:43 cziegeler Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.8 2004/07/13 14:30:11 cziegeler Exp $
  */
 public class ProxyReader extends ServiceableReader {
 
@@ -177,9 +177,9 @@ public class ProxyReader extends ServiceableReader {
                         query.append('&');
                     }
 
-                    query.append(NetUtils.encode(paramName, null));
+                    query.append(NetUtils.encode(paramName, "utf-8"));
                     query.append('=');
-                    query.append(NetUtils.encode(paramValues[i], null));
+                    query.append(NetUtils.encode(paramValues[i], "utf-8"));
 
                 }
             }
