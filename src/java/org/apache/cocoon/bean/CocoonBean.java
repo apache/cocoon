@@ -83,11 +83,9 @@ import org.apache.log.Hierarchy;
 import org.apache.log.Logger;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
@@ -107,7 +105,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.12 2003/06/24 16:44:35 cziegeler Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.13 2003/06/27 13:50:38 upayavira Exp $
  */
 public class CocoonBean {
 
@@ -118,8 +116,6 @@ public class CocoonBean {
     private String contextDir = Constants.DEFAULT_CONTEXT_DIR;
     private String configFile = null;
 
-    private String brokenLinkReportFile = null;
-    private String brokenLinkReportType = "text";
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
 
@@ -133,7 +129,6 @@ public class CocoonBean {
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
     private List classList = new ArrayList();
-    private List brokenLinks = null;
     private List targets = new ArrayList();
 
     // Objects used alongside User Supplied Parameters
@@ -151,6 +146,7 @@ public class CocoonBean {
     private Map allTranslatedLinks;
     private boolean initialized;
     private boolean verbose;
+    private List listeners = new ArrayList();
     SourceResolver sourceResolver;
     //
     // INITIALISATION METHOD
@@ -167,23 +163,20 @@ public class CocoonBean {
             String error =
                 "Careful, you must specify a configuration file when using the -c/--contextDir argument";
             log.fatalError(error);
-            System.out.println(error);
-            System.exit(1);
+            throw new ProcessingException(error);
         }
 
         if (workDir.equals("")) {
             String error =
                 "Careful, you must specify a destination dir when using the -w/--workDir argument";
             log.fatalError(error);
-            System.out.println(error);
-            System.exit(1);
+            throw new ProcessingException(error);
         }
 
         if (targets.size() == 0 && !precompileOnly) {
             String error = "Please, specify at least one starting URI.";
             log.fatalError(error);
-            System.out.println(error);
-            System.exit(1);
+            throw new ProcessingException(error);
         }
         setLogLevel("ERROR");
         this.context = getDir(this.contextDir, "context");
@@ -243,14 +236,6 @@ public class CocoonBean {
             cocoon.setLogKitManager(logKitManager);
             ContainerUtil.initialize(cocoon);
 
-            // I don't understand why not having an error file (on startup) is an error (JT)
-            //if (brokenLinkReportFile!=null && !(new File(brokenLinkReportFile).exists())) {
-            //  log.error("Broken Link Report File does not exist: " + brokenLinkReportFile);
-            //}
-
-            if (brokenLinkReportFile != null) {
-                brokenLinks = new ArrayList();
-            }
             this.sourceResolver =
                 (SourceResolver) cocoon.getComponentManager().lookup(
                     SourceResolver.ROLE);
@@ -449,14 +434,6 @@ public class CocoonBean {
         this.confirmExtension = confirmExtension;
     }
 
-    public void setBrokenLinkReportFile(String filename) {
-        this.brokenLinkReportFile = filename;
-    }
-
-    public void setBrokenLinkReportType(String brokenLinkReportType) {
-        this.brokenLinkReportType = brokenLinkReportType;
-    }
-
     public void setBrokenLinkGenerate(boolean brokenLinkGenerate) {
         this.brokenLinkGenerate = brokenLinkGenerate;
     }
@@ -518,6 +495,41 @@ public class CocoonBean {
         }
     }
 
+    public void addListener(BeanListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void pageGenerated(String uri, int linksInPage, int pagesRemaining) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.pageGenerated(uri, linksInPage, pagesRemaining);
+        }
+    }
+
+    public void sendMessage(String msg) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.messageGenerated(msg);
+        }
+    }
+
+    public void sendWarning(String uri, String warning) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.warningGenerated(uri, warning);
+        }
+    }
+
+    public void sendBrokenLinkWarning(String uri, String warning) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.brokenLinkFound(uri, warning);
+        }
+    }
     /**
      * Process single URI into given output stream.
      *
@@ -633,7 +645,7 @@ public class CocoonBean {
                     }
                 }
             } catch (ResourceNotFoundException rnfe) {
-                printBroken(target.getSourceURI(), rnfe.getMessage());
+                this.sendBrokenLinkWarning(target.getSourceURI(), rnfe.getMessage());
             }
 
             targetMap.remove(target);
@@ -657,79 +669,6 @@ public class CocoonBean {
         if (nCount == 0) {
             recursivelyPrecompile(context, context);
         }
-        outputBrokenLinks();
-    }
-
-    /**
-     * Recurse the directory hierarchy and process the XSP's.
-     * @param contextDir a <code>File</code> value for the context directory
-     * @param file a <code>File</code> value for a single XSP file or a directory to scan recursively
-     */
-    private void recursivelyPrecompile(File contextDir, File file) {
-        if (file.isDirectory()) {
-            String entries[] = file.list();
-            for (int i = 0; i < entries.length; i++) {
-                recursivelyPrecompile(contextDir, new File(file, entries[i]));
-            }
-        } else if (file.getName().toLowerCase().endsWith(".xmap")) {
-            try {
-                this.processXMAP(
-                    IOUtils.getContextFilePath(
-                        contextDir.getCanonicalPath(),
-                        file.getCanonicalPath()));
-            } catch (Exception e) {
-                //Ignore for now.
-            }
-        } else if (file.getName().toLowerCase().endsWith(".xsp")) {
-            try {
-                this.processXSP(
-                    IOUtils.getContextFilePath(
-                        contextDir.getCanonicalPath(),
-                        file.getCanonicalPath()));
-            } catch (Exception e) {
-                //Ignore for now.
-            }
-        }
-    }
-
-    /**
-     * Process a single XSP file
-     *
-     * @param uri a <code>String</code> pointing to an xsp URI
-     * @exception Exception if an error occurs
-     */
-    private void processXSP(String uri) throws Exception {
-        String markupLanguage = "xsp";
-        String programmingLanguage = "java";
-        Environment env =
-            new LinkSamplingEnvironment(
-                "/",
-                context,
-                attributes,
-                null,
-                cliContext,
-                new LogKitLogger(log));
-        this.cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
-    }
-
-    /**
-     * Process a single XMAP file
-     *
-     * @param uri a <code>String</code> pointing to an xmap URI
-     * @exception Exception if an error occurs
-     */
-    private void processXMAP(String uri) throws Exception {
-        String markupLanguage = "sitemap";
-        String programmingLanguage = "java";
-        Environment env =
-            new LinkSamplingEnvironment(
-                "/",
-                context,
-                attributes,
-                null,
-                cliContext,
-                new LogKitLogger(log));
-        this.cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
     /**
@@ -767,9 +706,9 @@ public class CocoonBean {
      * @exception Exception if an error occurs
      */
     private Collection processTarget(Target target) throws Exception {
-        System.out.print(" * ");
 
         String uri = target.getSourceURI();
+        int linkCount = 0;
 
         // Get parameters, deparameterized URI and path from URI
         final TreeMap parameters = new TreeMap();
@@ -853,7 +792,7 @@ public class CocoonBean {
                             translatedAbsoluteLink);
                         absoluteLinks.add(absoluteLink);
                     } catch (ProcessingException pe) {
-                        printBroken(absoluteLink, pe.getMessage());
+                        this.sendBrokenLinkWarning(absoluteLink, pe.getMessage());
                     }
                 }
 
@@ -865,7 +804,7 @@ public class CocoonBean {
                 translatedLinks.put(link, translatedRelativeLink);
             }
 
-            printInfo("[" + translatedLinks.size() + "] ");
+            linkCount = translatedLinks.size();
         }
 
         try {
@@ -904,21 +843,15 @@ public class CocoonBean {
                         }
                         absoluteLinks.add(absoluteLink);
                     }
-                    printInfo("[" + gatheredLinks.size() + "] ");
+                    linkCount = gatheredLinks.size();
                 }
 
-                printlnInfo(uri); // (can also output type returned by getPage)
+                pageGenerated(uri, linkCount, 0); // @todo@ get the number of pages remaining here
             } catch (ProcessingException pe) {
                 output.close();
                 output = null;
-                if (brokenLinkGenerate) {
-                    String brokenFile = NetUtils.decodePath(filename);
-                    if (brokenLinkExtension != null) {
-                        brokenFile = brokenFile + brokenLinkExtension;
-                    }
-                    resourceUnavailable(target, uri);
-                }
-                printBroken(
+                this.resourceUnavailable(target, uri, filename);
+                this.sendBrokenLinkWarning(
                     filename,
                     DefaultNotifyingBuilder.getRootCause(pe).getMessage());
             } finally {
@@ -942,11 +875,8 @@ public class CocoonBean {
                 }
             }
         } catch (Exception rnfe) {
-            System.out.println("XXX" + rnfe);
             log.warn("Could not process URI: " + deparameterizedURI);
-            if (verbose)
-                System.out.println(
-                    "Could not process URI: " + deparameterizedURI);
+            this.sendBrokenLinkWarning(deparameterizedURI, "URI not found");
         }
 
         List targets = new ArrayList();
@@ -961,6 +891,60 @@ public class CocoonBean {
     }
 
     /**
+     * Recurse the directory hierarchy and process the XSP's.
+     * @param contextDir a <code>File</code> value for the context directory
+     * @param file a <code>File</code> value for a single XSP file or a directory to scan recursively
+     */
+    private void recursivelyPrecompile(File contextDir, File file) {
+        if (file.isDirectory()) {
+            String entries[] = file.list();
+            for (int i = 0; i < entries.length; i++) {
+                recursivelyPrecompile(contextDir, new File(file, entries[i]));
+            }
+        } else if (file.getName().toLowerCase().endsWith(".xmap")) {
+            try {
+                this.processXMAP(IOUtils.getContextFilePath(contextDir.getCanonicalPath(),file.getCanonicalPath()));
+            } catch (Exception e){
+                //Ignore for now.
+            }
+        } else if (file.getName().toLowerCase().endsWith(".xsp")) {
+            try {
+                this.processXSP(IOUtils.getContextFilePath(contextDir.getCanonicalPath(),file.getCanonicalPath()));
+            } catch (Exception e){
+                //Ignore for now.
+            }
+        }
+    }
+
+    /**
+     * Process a single XSP file
+     *
+     * @param uri a <code>String</code> pointing to an xsp URI
+     * @exception Exception if an error occurs
+     */
+    private void processXSP(String uri) throws Exception {
+        String markupLanguage = "xsp";
+        String programmingLanguage = "java";
+        Environment env = new LinkSamplingEnvironment("/", context, attributes, null, cliContext,
+                                                      new LogKitLogger(log));
+        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
+    }
+
+    /**
+     * Process a single XMAP file
+     *
+     * @param uri a <code>String</code> pointing to an xmap URI
+     * @exception Exception if an error occurs
+     */
+    private void processXMAP(String uri) throws Exception {
+        String markupLanguage = "sitemap";
+        String programmingLanguage = "java";
+        Environment env = new LinkSamplingEnvironment("/", context, attributes, null, cliContext,
+                                                      new LogKitLogger(log));
+        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
+    }
+
+    /**
      * Translate an URI into a file name.
      *
      * @param uri a <code>String</code> value to map
@@ -969,9 +953,8 @@ public class CocoonBean {
      */
     private String translateURI(String uri) throws Exception {
         if (null == uri || "".equals(uri)) {
-            log.warn("translate empty uri");
-            if (verbose)
-                System.out.println("translate empty uri");
+            log.warn("cannot translate empty uri");
+            if (verbose) sendMessage("cannot translate empty uri");
             return "";
         }
         HashMap parameters = new HashMap();
@@ -995,135 +978,41 @@ public class CocoonBean {
     }
 
     /**
-      * Print the message of a broken link.
-      *
-      * @param url the <code>URL</code> of the broken link
-      * @param cause of the broken link
-      */
-    private void printBroken(String url, String cause) {
-        int screenWidth = 67;
-        int causeWidth = screenWidth - 6;
-
-        printlnInfo("");
-        printlnInfo("-> [broken page] " + url + " <- ");
-        printlnInfo("");
-        printInfo("     ");
-
-        int causeLength = cause.length(),
-            currentStart = -causeWidth,
-            currentEnd = 0;
-        do {
-            currentStart += causeWidth;
-            currentEnd += causeWidth;
-
-            if (currentEnd > causeLength) {
-                currentEnd = causeLength;
-            }
-
-            printlnInfo(cause.substring(currentStart, currentEnd));
-            printInfo("     ");
-        } while (currentEnd < causeLength);
-
-        printlnInfo("");
-
-        if (null != this.brokenLinks) {
-            brokenLinks.add(url);
-        }
-    }
-
-    /**
-     * Print an info message.
-     *
-     * @param message the message to print
-     */
-    private void printlnInfo(String message) {
-        log.info(message);
-        if (verbose)
-            System.out.println(message);
-    }
-
-    /**
-     * Print an info message.
-     *
-     * @param message the message to print
-     */
-    private void printInfo(String message) {
-        log.info(message);
-        if (verbose)
-            System.out.print(message);
-    }
-
-    /**
      * Generate a <code>resourceUnavailable</code> message.
      *
      * @param target being unavailable
      * @exception IOException if an error occurs
      */
-    private void resourceUnavailable(Target target, String uri)
+    private void resourceUnavailable(Target target, String uri, String filename)
         throws IOException, ProcessingException {
-        SimpleNotifyingBean n = new SimpleNotifyingBean(this);
-        n.setType("resource-not-found");
-        n.setTitle("Resource not Found");
-        n.setSource("Cocoon commandline (Main.java)");
-        n.setMessage("Page Not Available.");
-        n.setDescription("The requested resource couldn't be found.");
-        n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
-        n.addExtraDescription("missing-file", uri);
-
-        ModifiableSource source = target.getSource(uri);
-        try {
-            OutputStream stream = source.getOutputStream();
-
-            PrintStream out = new PrintStream(stream);
-            Notifier.notify(n, out, "text/html");
-            out.flush();
-            out.close();
-        } finally {
-            target.releaseSource(source);
-        }
-    }
-
-    private void outputBrokenLinks() {
-        if (brokenLinkReportFile == null) {
-            return;
-        } else if ("text".equalsIgnoreCase(brokenLinkReportType)) {
-            outputBrokenLinksAsText();
-        } else if ("xml".equalsIgnoreCase(brokenLinkReportType)) {
-            outputBrokenLinksAsXML();
-        }
-    }
-    private void outputBrokenLinksAsText() {
-        PrintWriter writer;
-        try {
-            writer =
-                new PrintWriter(
-                    new FileWriter(new File(brokenLinkReportFile)),
-                    true);
-            for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
-                writer.println((String) i.next());
+        if (brokenLinkGenerate) {
+            String brokenFile = NetUtils.decodePath(filename);
+            if (brokenLinkExtension != null) {
+                brokenFile = brokenFile + brokenLinkExtension;
             }
-            writer.close();
-        } catch (IOException ioe) {
-            log.error("File does not exist: " + brokenLinkReportFile);
-        }
-    }
-    private void outputBrokenLinksAsXML() {
-        PrintWriter writer;
-        try {
-            writer =
-                new PrintWriter(
-                    new FileWriter(new File(brokenLinkReportFile)),
-                    true);
-            writer.println("<broken-links>");
-            for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
-                writer.println("  <link>" + (String) i.next() + "</link>");
+            SimpleNotifyingBean n = new SimpleNotifyingBean(this);
+            n.setType("resource-not-found");
+            n.setTitle("Resource not Found");
+            n.setSource("Cocoon commandline (Main.java)");
+            n.setMessage("Page Not Available.");
+            n.setDescription("The requested resource couldn't be found.");
+            n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
+            n.addExtraDescription("missing-file", uri);
+
+            ModifiableSource source = target.getSource(filename);
+            try {
+                OutputStream stream = source.getOutputStream();
+
+                PrintStream out = new PrintStream(stream);
+                Notifier.notify(n, out, "text/html");
+                out.flush();
+                out.close();
+            } finally {
+                target.releaseSource(source);
             }
-            writer.println("</broken-links>");
-            writer.close();
-        } catch (IOException ioe) {
-            log.error("File does not exist: " + brokenLinkReportFile);
         }
     }
+
     /**
      * Mangle a URI.
      *
