@@ -53,6 +53,18 @@ import org.xml.sax.helpers.AttributesImpl;
 
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML directory listing performing XPath queries on XML files. It can be used both as a plain
+ * DirectoryGenerator or, by specifying a parameter <code>xpath</code>, it will perform an XPath query on every XML
+ * resource. 
+ * 
+ * @cocoon.sitemap.component.name   xpathdirectory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.xpathdirectory
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the directory and the contained documents
+ * 
+ * 
  * <p>
  * Generates an XML directory listing performing XPath queries on XML files. It can be used both as a plain
  * DirectoryGenerator or, by specifying a parameter <code>xpath</code>, it will perform an XPath query on every XML
@@ -111,7 +123,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">J\u00F6rg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.9 2004/05/07 21:13:50 joerg Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.10 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class XPathDirectoryGenerator
 extends DirectoryGenerator {
@@ -316,7 +328,7 @@ extends DirectoryGenerator {
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
      * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
-     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.9 2004/05/07 21:13:50 joerg Exp $
+     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.10 2004/05/26 14:11:34 cziegeler Exp $
      */
     private static class MappingInfo
     implements PrefixResolver {

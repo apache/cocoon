@@ -17,6 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
 	<header>
 		<title>Stream Generator</title>
 		<version>0.9</version>

@@ -45,12 +45,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates a list of links that are reachable from the src and their status.
+ * 
+ * @cocoon.sitemap.component.name   linkstatus
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.linkstatus
  *
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.9 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.10 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */

@@ -97,6 +97,18 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Provides a generic page template with embedded JSTL and XPath
+ * expression substitution to access data sent by Cocoon Flowscripts.
+ *  
+ * @cocoon.sitemap.component.name   jx
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.jx
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ * 
  * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a>
  * and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>).</p>
  * <p>Uses the namespace <code>http://apache.org/cocoon/templates/jx/1.0</code></p>
@@ -327,7 +339,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.42 2004/04/24 21:35:35 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.43 2004/05/26 14:11:33 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 

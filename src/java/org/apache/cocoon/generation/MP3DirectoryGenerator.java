@@ -22,8 +22,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * An extension of DirectoryGenerators that adds extra attributes for MP3
  * files.
+ * 
+ * @cocoon.sitemap.component.name   mp3directory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.mp3directory
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the directory and the contained files
+ * 
  * <p>
  * Following extra attributes added to valid MP3 files:
  * <blockquote>
@@ -43,7 +51,7 @@ import java.io.RandomAccessFile;
  * </blockquote>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: MP3DirectoryGenerator.java,v 1.5 2004/05/26 14:11:33 cziegeler Exp $
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {

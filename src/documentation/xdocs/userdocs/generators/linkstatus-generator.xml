@@ -17,9 +17,9 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
  <header>
   <title>LinkStatus Generator</title>
-  <subtitle>in @doctitle@</subtitle>
   <version>0.9</version>
   <type>Technical document</type>
   <authors>
