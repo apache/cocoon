@@ -19,12 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-
 import junit.framework.AssertionFailedError;
-
 import org.apache.cocoon.environment.Environment;
 
 public class MockEnvironment implements Environment {
@@ -37,7 +34,7 @@ public class MockEnvironment implements Environment {
     private int contentlength;
     private int status;
     private ByteArrayOutputStream outputstream;
-    private HashMap objectmodel;
+    private Map objectmodel;
     private Hashtable attributes = new Hashtable();
 
     public MockEnvironment() {

@@ -20,19 +20,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.AssertionFailedError;
-
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Session;
 
 public class MockResponse implements Response {
 
     private String encoding;
     private Locale locale;
-    private HashSet cookies = new HashSet();
-    private HashMap header = new HashMap();
+    private Set cookies = new HashSet();
+    private Map header = new HashMap();
 
+    private Session session;
+    
     public void setCharacterEncoding(String encoding) {
         this.encoding = encoding;
     }
@@ -69,7 +69,14 @@ public class MockResponse implements Response {
     }
 
     public String encodeURL(String url) {
-        throw new AssertionFailedError("Not implemented");
+        //throw new AssertionFailedError("Not implemented");
+        StringBuffer sb = new StringBuffer();
+            sb.append( url );
+        if (session != null) {
+            sb.append( "?JSESSIONID=");
+            sb.append( session.getId() );
+        }
+        return sb.toString();
     }
 
     public void setDateHeader(String name, long date) {
@@ -105,5 +112,9 @@ public class MockResponse implements Response {
         locale = null;
         cookies.clear();
         header.clear();
+    }
+    
+    public void setSession( Session session ) {
+        this.session = session;
     }
 }
