@@ -52,6 +52,8 @@ package org.apache.cocoon.xml.dom;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -70,9 +72,9 @@ import java.net.URL;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.4 2003/05/07 19:15:02 vgritsenko Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.5 2003/08/13 08:44:54 bruno Exp $
  */
-public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled {
+public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled, Recyclable {
     protected Logger log;
 
     protected Locator locator;
@@ -148,15 +150,18 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             super.endDocument();
 
             // FIXME: Hack.
+            URL baseURL = null;
             try {
                 if (this.locator != null) {
-                    ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL(this.locator.getSystemId()));
+                    baseURL = new URL(this.locator.getSystemId());
                 } else {
-                    getLogger().warn("setDocumentLocator was not called, URI resolution will not work");
+                    baseURL = new URL("http://localhost/");
+                    getLogger().warn("setDocumentLocator was not called, will use http://localhost/ as base URI");
                 }
+                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(baseURL);
             } catch (MalformedURLException e) {
-                getLogger().warn("Unable to set document base URI to " + this.locator.getSystemId(), e);
-                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL("http://xml.apache.org/"));
+                getLogger().warn("Unable to set document base URI to " + baseURL + ", will default to http://localhost/", e);
+                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL("http://localhost/"));
             }
 
             notify(super.document);
@@ -175,4 +180,9 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
      */
     protected void notify(Document doc) throws SAXException {
     }
+
+    public void recycle() {
+        locator = null;
+    }
+
 }
