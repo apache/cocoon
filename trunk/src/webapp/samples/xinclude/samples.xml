@@ -7,6 +7,7 @@
 
  <group name="XInclude Samples">
    <sample name="General" href="test.html">Demonstration of various XInclude and XPointer features.</sample>
+   <sample name="XML Base" href="xmlbase.html">Demonstration of xml:base support.</sample>
 
    <sample name="Loop inclusion" href="loopinclusion.html">Example of a loop inclusion. This will show an error page.</sample>
  </group>
