@@ -59,6 +59,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
+import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
@@ -70,13 +71,11 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.6 2003/10/24 13:36:40 vgritsenko Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.7 2004/01/18 22:27:15 sylvain Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
   implements Composable, Disposable {
-
-    private static final String REDIRECTOR_ATTR = "sitemap:redirector";
 
     private ComponentManager manager;
     
@@ -116,7 +115,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     }
 
     public static Redirector getRedirector(Environment env) {
-        return (Redirector)env.getAttribute(REDIRECTOR_ATTR);
+        return (Redirector)env.getAttribute(TreeProcessor.REDIRECTOR_ATTR);
     }
 
     /**
@@ -133,18 +132,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         // Recompose context (and pipelines) to the local component manager
         context.recompose(this.manager);
 
-        // Build a redirector
-        ForwardRedirector redirector = new ForwardRedirector(env);
-        setupLogger(redirector);
-
-        Map objectModel = env.getObjectModel();
-
-        Object oldResolver = objectModel.get(OBJECT_SOURCE_RESOLVER);
-        Object oldRedirector = env.getAttribute(REDIRECTOR_ATTR);
-
-        objectModel.put(OBJECT_SOURCE_RESOLVER, env);
-        env.setAttribute(REDIRECTOR_ATTR, redirector);
-
         try {
             // FIXME : is there any useful information that can be passed as top-level parameters,
             //         such as the URI of the mount point ?
@@ -158,10 +145,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
                 // No handler : propagate
                 throw ex;
             }
-        } finally {
-            // Restore old redirector and resolver
-            env.setAttribute(REDIRECTOR_ATTR, oldRedirector);
-            objectModel.put(OBJECT_SOURCE_RESOLVER, oldResolver);
         }
     }
 

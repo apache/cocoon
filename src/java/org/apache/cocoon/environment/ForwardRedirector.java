@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.10 2003/11/14 18:57:43 unico Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.11 2004/01/18 22:27:26 sylvain Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -72,7 +72,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
     private boolean hasRedirected = false;
     
     /** The <code>Environment to use for redirection (either internal or external) */
-    private Environment env;
+    protected Environment env;
 
     public ForwardRedirector(Environment env) {
         this.env = env;
@@ -133,7 +133,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         this.hasRedirected = true;
     }
 
-    private void cocoonRedirect(String uri) {
+    protected void cocoonRedirect(String uri)  throws IOException, ProcessingException {
         // Simply notify the Processor.
         this.env.setAttribute(TreeProcessor.COCOON_REDIRECT_ATTR, uri);
     }

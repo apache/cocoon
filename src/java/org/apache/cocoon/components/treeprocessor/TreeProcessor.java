@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,6 +74,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -81,7 +83,9 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
@@ -91,7 +95,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.16 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.17 2004/01/18 22:27:14 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -104,7 +108,9 @@ public class TreeProcessor
                Contextualizable,
                Disposable {
 
-    public static final String COCOON_REDIRECT_ATTR = "cocoon: redirect url";
+    public static final String REDIRECTOR_ATTR = "sitemap:redirector";
+
+    private static final String OBJECT_SOURCE_RESOLVER = "sitemap:sourceresolver";
 
     private static final String XCONF_URL =
         "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
@@ -350,33 +356,32 @@ public class TreeProcessor
 
         // and now process
         CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
+
+        Map objectModel = environment.getObjectModel();
+
+        Object oldResolver = objectModel.get(OBJECT_SOURCE_RESOLVER);
+        Object oldRedirector = environment.getAttribute(REDIRECTOR_ATTR);
+
+        // Build a redirector
+        TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
+        setupLogger(redirector);
+
+        objectModel.put(OBJECT_SOURCE_RESOLVER, environment);
+        environment.setAttribute(REDIRECTOR_ATTR, redirector);
         try {
             boolean success = this.rootNode.invoke(environment, context);
             
-            if (success) {
-                // Do we have a cocoon: redirect ?
-                String cocoonRedirect = (String)environment.getAttribute(COCOON_REDIRECT_ATTR);
-                if (cocoonRedirect != null) {
-                    // Remove the redirect indication
-                    environment.removeAttribute(COCOON_REDIRECT_ATTR);
-                    // and handle the redirect
-                    return handleCocoonRedirect(cocoonRedirect, environment, context);
-                } else {
-                    // "normal" success
-                    return true;
-                }
-           
-            } else {
-                return false;
-            }
+            return success;
 
         } finally {
             CocoonComponentManager.leaveEnvironment();
+            // Restore old redirector and resolver
+            environment.setAttribute(REDIRECTOR_ATTR, oldRedirector);
+            objectModel.put(PipelinesNode.OBJECT_SOURCE_RESOLVER, oldResolver);
         }
     }
-    
-    private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception
-    {
+        
+    private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
         
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
@@ -407,7 +412,8 @@ public class TreeProcessor
         }
         
         // Process the redirect
-        context.reset();
+// No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
+//        context.reset();
         return processor.process(newEnv, context);
     }
     
@@ -556,6 +562,29 @@ public class TreeProcessor
                 ((Disposable)disposableNodes.get(i)).dispose();
             }
             this.disposableNodes = null;
+        }
+    }
+    
+    private class TreeProcessorRedirector extends ForwardRedirector {
+        
+        private InvokeContext context;
+        public TreeProcessorRedirector(Environment env, InvokeContext context) {
+            super(env);
+            this.context = context;
+        }
+        
+        protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
+            try {
+                TreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
+            } catch(IOException ioe) {
+                throw ioe;
+            } catch(ProcessingException pe) {
+                throw pe;
+            } catch(RuntimeException re) {
+                throw re;
+            } catch(Exception ex) {
+                throw new ProcessingException(ex);
+            }
         }
     }
     
