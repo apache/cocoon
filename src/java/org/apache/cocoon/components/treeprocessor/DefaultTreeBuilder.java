@@ -39,6 +39,7 @@ import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.excalibur.source.Source;
@@ -56,38 +57,62 @@ public class DefaultTreeBuilder
 
     protected Map attributes = new HashMap();
 
-    /**
-     * The tree processor that we're building.
-     */
-    protected ConcreteTreeProcessor processor;
-
     //----- lifecycle-related objects ------
-    protected Context context;
 
     /**
-     * The parent component manager. Either the one of the parent processor, or that provided
-     * by Cocoon in service()
+     * This component's avalon context
      */
-    protected ServiceManager ownManager;
+    private Context context;
+
+    /**
+     * This component's service manager
+     */
+    private ServiceManager manager;
 
     // -------------------------------------
 
     /**
-     * Component processor of the parent manager (can be null for the root sitemap)
+     * The tree processor that we are building.
+     */
+    protected ConcreteTreeProcessor processor;
+
+    /**
+     * The namespace of configuration for the processor that we are building.
+     */
+    protected String itsNamespace;
+
+    /**
+     * The context for the processor that we are building
+     * It is created by {@link #createContext(Configuration)}.
+     */
+    private Context itsContext;
+
+    /**
+     * The service manager for the processor that we are building.
+     * It is created by {@link #createServiceManager(Context, Configuration)}.
+     */
+    private ServiceManager itsManager;
+
+    /**
+     * Helper object which sets up components in the context
+     * of the processor that we are building.
+     */
+    private LifecycleHelper itsLifecycle;
+
+    /**
+     * Selector for ProcessingNodeBuilders which is set up
+     * in the context of the processor that we are building.
+     */
+    private ServiceSelector itsBuilders;
+
+    // -------------------------------------
+
+    /**
+     * Component processor of the parent manager
+     * (can be null for the root sitemap)
      */
     protected ServiceManager parentProcessorManager;
 
-    /**
-     * Component manager created by {@link #createServiceManager(Configuration)}.
-     */
-    protected ServiceManager processorManager;
-
-    /** Selector for ProcessingNodeBuilders */
-    protected ServiceSelector builderSelector;
-
-    protected LifecycleHelper lifecycle;
-
-    protected String namespace;
 
     /** Nodes gone through setupNode() that implement Initializable */
     private List initializableNodes = new ArrayList();
@@ -116,8 +141,12 @@ public class DefaultTreeBuilder
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
-        this.ownManager = manager;
+        this.manager = manager;
     }
+
+    public void initialize() throws Exception {
+    }
+
 
     /**
      * Get the location of the treebuilder config file. Can be overridden for other versions.
@@ -126,51 +155,6 @@ public class DefaultTreeBuilder
     protected String getBuilderConfigURL() {
         return "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
     }
-
-    public void initialize() throws Exception {
-        // Load the builder config file
-        SourceResolver resolver = (SourceResolver) this.ownManager.lookup(SourceResolver.ROLE);
-        String url = getBuilderConfigURL();
-        Configuration config;
-        try {
-            Source src = resolver.resolveURI(url);
-            try {
-                SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX(this.ownManager, src, null, handler);
-                config = handler.getConfiguration();
-            } finally {
-                resolver.release(src);
-            }
-        } catch (Exception e) {
-            throw new ConfigurationException("Could not load TreeBuilder configuration from " + url, e);
-        } finally {
-            this.ownManager.release(resolver);
-        }
-
-        // Create the NodeBuilder selector.
-        CocoonServiceSelector selector = new CocoonServiceSelector() {
-            protected String getComponentInstanceName() {
-                return "node";
-            }
-
-            protected String getClassAttributeName() {
-                return "builder";
-            }
-        };
-
-        // Automagically initialize the selector
-        LifecycleHelper.setupComponent(selector,
-            getLogger(),
-            this.context,
-            this.ownManager,
-            config.getChild("nodes", false),
-            true
-        );
-
-        this.builderSelector = selector;
-
-    }
-
 
     public void setParentProcessorManager(ServiceManager manager) {
         this.parentProcessorManager = manager;
@@ -191,23 +175,44 @@ public class DefaultTreeBuilder
     }
 
     /**
+     * Create a context that will be used for all <code>Contextualizable</code>
+     * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
+     *
+     * <p>The default here is to simply return the context set in
+     * <code>contextualize()</code>, i.e. the context set by the calling
+     * <code>TreeProcessor</code>.
+     *
+     * <p>Subclasses can redefine this method to create a context local to
+     * a tree, such as for sitemap's &lt;map:components&gt;.
+     *
+     * @return a context
+     */
+    protected Context createContext(Configuration tree)
+    throws Exception {
+        return this.context;
+    }
+
+    /**
      * Create a service manager that will be used for all <code>Serviceable</code>
      * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
-     * <p>
-     * The default here is to simply return the manager set by <code>compose()</code>,
-     * i.e. the component manager set by the calling <code>TreeProcessor</code>.
-     * <p>
-     * Subclasses can redefine this method to create a component manager local to a tree,
-     * such as for sitemap's &lt;map:components&gt;.
+     *
+     * <p>The default here is to simply return the manager set in
+     * <code>compose()</code>, i.e. the component manager set by the calling
+     * <code>TreeProcessor</code>.
+     *
+     * <p>Subclasses can redefine this method to create a service manager local to
+     * a tree, such as for sitemap's &lt;map:components&gt;.
      *
      * @return a component manager
      */
-    protected ServiceManager createServiceManager(Configuration tree) throws Exception {
-        return this.ownManager;
+    protected ServiceManager createServiceManager(Context context, Configuration tree)
+    throws Exception {
+        return this.manager;
     }
 
+
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setProcessor(org.apache.cocoon.components.treeprocessor.ConcreteTreeProcessor)
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setProcessor(ConcreteTreeProcessor)
      */
     public void setProcessor(ConcreteTreeProcessor processor) {
         this.processor = processor;
@@ -219,6 +224,7 @@ public class DefaultTreeBuilder
     public ConcreteTreeProcessor getProcessor() {
         return this.processor;
     }
+
 
     /**
      * Register a <code>ProcessingNode</code> under a given name.
@@ -241,17 +247,16 @@ public class DefaultTreeBuilder
         // FIXME : check namespace
         String nodeName = config.getName();
 
-        if (this.getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating node builder for " + nodeName);
         }
 
         ProcessingNodeBuilder builder;
         try {
-            builder = (ProcessingNodeBuilder)this.builderSelector.select(nodeName);
-
-        } catch(ServiceException ce) {
+            builder = (ProcessingNodeBuilder) this.itsBuilders.select(nodeName);
+        } catch (ServiceException ce) {
             // Is it because this element is unknown ?
-            if (this.builderSelector.isSelectable(nodeName)) {
+            if (this.itsBuilders.isSelectable(nodeName)) {
                 // No : rethrow
                 throw ce;
             } else {
@@ -299,25 +304,63 @@ public class DefaultTreeBuilder
      * Get the namespace URI that builders should use to find their nodes.
      */
     public String getNamespace() {
-        return this.namespace;
+        return this.itsNamespace;
     }
 
     /**
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree) throws Exception {
+        // The namespace used in the whole sitemap is the one of the root element
+        this.itsNamespace = tree.getNamespace();
 
-        // The namespace use in the whole sitemap is the one of the root element
-        this.namespace = tree.getNamespace();
-
-        this.processorManager = createServiceManager(tree);
+        // Context and manager for the sitemap we build
+        this.itsContext = createContext(tree);
+        this.itsManager = createServiceManager(this.itsContext, tree);
 
         // Create a helper object to setup components
-        this.lifecycle = new LifecycleHelper(getLogger(),
-            this.context,
-            this.processorManager,
-            null // configuration
-        );
+        this.itsLifecycle = new LifecycleHelper(getLogger(),
+                                             this.itsContext,
+                                             this.itsManager,
+                                             null /* configuration */);
+
+        // Create & initialize the NodeBuilder selector.
+        {
+            CocoonServiceSelector selector = new CocoonServiceSelector() {
+                protected String getComponentInstanceName() {
+                    return "node";
+                }
+
+                protected String getClassAttributeName() {
+                    return "builder";
+                }
+            };
+            // Load the builder config file
+            SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            String url = getBuilderConfigURL();
+            Configuration config;
+            try {
+                Source src = resolver.resolveURI(url);
+                try {
+                    SAXConfigurationHandler handler = new SAXConfigurationHandler();
+                    SourceUtil.toSAX(this.manager, src, null, handler);
+                    config = handler.getConfiguration();
+                } finally {
+                    resolver.release(src);
+                }
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load TreeBuilder configuration from " + url, e);
+            } finally {
+                this.manager.release(resolver);
+            }
+            LifecycleHelper.setupComponent(selector,
+                                           getLogger(),
+                                           this.itsContext,
+                                           this.itsManager,
+                                           config.getChild("nodes", false),
+                                           true);
+            this.itsBuilders = selector;
+        }
 
         // Calls to getRegisteredNode() are forbidden
         this.canGetNode = false;
@@ -366,7 +409,7 @@ public class DefaultTreeBuilder
             ((AbstractProcessingNode)node).setSitemapExecutor(this.processor.getSitemapExecutor());
         }
 
-        this.lifecycle.setupComponent(node, false);
+        this.itsLifecycle.setupComponent(node, false);
 
         if (node instanceof ParameterizableProcessingNode) {
             Map params = getParameters(config);
@@ -407,9 +450,7 @@ public class DefaultTreeBuilder
                 String name = child.getAttribute("name");
                 String value = child.getAttribute("value");
                 try {
-                    params.put(
-                        VariableResolverFactory.getResolver(name, this.processorManager),
-                        VariableResolverFactory.getResolver(value, this.processorManager));
+                    params.put(resolve(name), resolve(value));
                 } catch(PatternException pe) {
                     String msg = "Invalid pattern '" + value + "' at " + child.getLocation();
                     throw new ConfigurationException(msg, pe);
@@ -442,25 +483,30 @@ public class DefaultTreeBuilder
 
         // Check that this type actually exists
         ServiceSelector selector = null;
-
         try {
-            selector = (ServiceSelector)this.processorManager.lookup(role + "Selector");
-        } catch(ServiceException ce) {
+            selector = (ServiceSelector) this.itsManager.lookup(role + "Selector");
+        } catch (ServiceException e) {
             throw new ConfigurationException("Cannot get service selector for 'map:" +
-                statement.getName() + "' at " + statement.getLocation(),
-                ce
-            );
+                                             statement.getName() + "' at " + statement.getLocation(),
+                                             e);
         }
 
-        this.processorManager.release(selector);
+        this.itsManager.release(selector);
 
         if (!selector.isSelectable(type)) {
             throw new ConfigurationException("Type '" + type + "' does not exist for 'map:" +
-                statement.getName() + "' at " + statement.getLocation()
-            );
+                                             statement.getName() + "' at " + statement.getLocation());
         }
 
         return type;
+    }
+
+    /**
+     * Resolve expression using its manager
+     */
+    protected VariableResolver resolve (String expression)
+    throws PatternException {
+        return VariableResolverFactory.getResolver(expression, this.itsManager);
     }
 
     public void recycle() {
@@ -469,15 +515,18 @@ public class DefaultTreeBuilder
         this.canGetNode = false;
         this.disposableNodes = new ArrayList(); // Must not be cleared as it's used for processor disposal
         this.initializableNodes.clear();
-        this.lifecycle = null; // Created in build()
         this.linkedBuilders.clear();
-        this.namespace = null; // Set in build()
         this.parentProcessorManager = null; // Set in setParentProcessorManager()
-        this.processor = null; // Set in setProcessor()
-        this.processorManager = null; // Set in build()
-        this.registeredNodes.clear();
+        this.processor = null;          // Set in setProcessor()
 
-        this.lifecycle = null; // Created in build()
+        this.itsNamespace = null;       // Set in build()
+        LifecycleHelper.dispose(this.itsBuilders);
+        this.itsBuilders = null;        // Set in build()
+        this.itsLifecycle = null;       // Set in build()
+        this.itsManager = null;         // Set in build()
+        this.itsContext = null;         // Set in build()
+
+        this.registeredNodes.clear();
         this.initializableNodes.clear();
         this.linkedBuilders.clear();
         this.canGetNode = false;
@@ -487,8 +536,6 @@ public class DefaultTreeBuilder
     }
 
     public void dispose() {
-        LifecycleHelper.dispose(this.builderSelector);
-
         // Don't dispose manager or roles: they are used by the built tree
         // and thus must live longer than the builder.
     }
