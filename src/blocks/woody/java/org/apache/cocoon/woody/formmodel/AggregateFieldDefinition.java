@@ -65,17 +65,17 @@ public class AggregateFieldDefinition extends AbstractWidgetDefinition {
     private Expression combineExpr;
     private Pattern splitPattern;
     /**
-     * The original regexp expression from which the {@link splitPattern} was compiled,
+     * The original regexp expression from which the {@link #splitPattern} was compiled,
      * used purely for informational purposes.
      */
     private String splitRegexp;
     /**
-     * Message to be displayed when the {@link splitPattern} does not match what the
+     * Message to be displayed when the {@link #splitPattern} does not match what the
      * user entered. Optional.
      */
     protected Object splitFailMessage;
     /**
-     * List containing instances of {@link splitMapping}, i.e. the mapping between
+     * List containing instances of {@link #splitMappings}, i.e. the mapping between
      * a group (paren) from the regular expression and corresponding field id.
      */
     private List splitMappings = new ArrayList();

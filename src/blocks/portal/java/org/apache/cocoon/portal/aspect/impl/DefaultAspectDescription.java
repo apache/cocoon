@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.aspect.AspectDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDescription.java,v 1.4 2003/07/03 09:26:03 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDescription.java,v 1.5 2003/07/03 11:36:09 cziegeler Exp $
  */
 public class DefaultAspectDescription 
     implements AspectDescription {
@@ -121,7 +121,7 @@ public class DefaultAspectDescription
     }
 
     /**
-     * @return
+     * @return The role of the store
      */
     public String getStoreName() {
         return persistence;
