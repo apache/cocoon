@@ -59,6 +59,9 @@ import java.net.URLClassLoader;
 import java.net.URL;
 
 import org.apache.cocoon.Constants;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.avalon.framework.logger.NullLogger;
 
 /**
  * CocoonBeanTestCase does XYZ
@@ -85,6 +88,7 @@ public class CocoonBeanTestCase
         String logConfig = "logger";
         String category = "category";
         ClassLoader loader = new URLClassLoader(new URL[0]);
+        Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG);
         int threadsPC = 2;
         long timeout = 1000l;
         File workDir = new File("work-dir");
@@ -100,6 +104,7 @@ public class CocoonBeanTestCase
         bean.setThreadTimeOut(timeout);
         bean.setWorkDirectory(workDir);
         bean.setParentClassLoader(loader);
+        bean.setInitializationLogger(logger);
 
         assertEquals( forcedLoadList, bean.getClassForceLoadList() );
         assertEquals( classPath, bean.getClassPath());
@@ -112,6 +117,7 @@ public class CocoonBeanTestCase
         assertEquals(threadsPC, bean.getThreadsPerCPU());
         assertEquals(timeout, bean.getThreadTimeOut());
         assertEquals(workDir, bean.getWorkDirectory());
+        assertEquals(logger, bean.getInitializationLogger());
     }
 
     public void testInitialValues()
@@ -140,6 +146,7 @@ public class CocoonBeanTestCase
         assertEquals( threadsPC, bean.getThreadsPerCPU() );
         assertEquals( timeout, bean.getThreadTimeOut() );
         assertEquals( workDir, bean.getWorkDirectory() );
+        assertTrue( bean.getInitializationLogger() instanceof NullLogger );
     }
 
     private List getForcedClassLoadList()
