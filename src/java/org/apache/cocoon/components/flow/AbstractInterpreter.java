@@ -85,9 +85,6 @@ public abstract class AbstractInterpreter
      */
     protected long checkTime;
 
-    public AbstractInterpreter() {
-    }
-
     /**
      * Set the unique ID for this interpreter, which can be used to distinguish user value scopes
      * attached to the session.
