@@ -155,6 +155,12 @@ public interface Widget {
     public Object getValue();
 
     /**
+     * Sets the value of this widget to the given object. Some widgets may not support this
+     * method, those should throw an runtime exception if you try to set their value anyway.
+     */
+    public void setValue(Object object);
+
+    /**
      * Returns wether this widget is required to be filled in. As with {@link #getValue}, for some
      * widgets this may not make sense, those should return false here.
      */

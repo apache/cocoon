@@ -85,6 +85,10 @@ public abstract class AbstractWidget implements Widget {
         return null;
     }
 
+    public void setValue(Object object) {
+        throw new RuntimeException("Cannot set the value of widget " + getFullyQualifiedId());
+    }
+
     public boolean isRequired() {
         return false;
     }
