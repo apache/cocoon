@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -18,7 +18,7 @@
 <!--+
     | German message catalogue file for menu in Cocoon 2 i18n sample
     |
-    | CVS $Id: menu_de.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id: menu_de.xml,v 1.4 2004/04/05 12:34:23 antonio Exp $
     +-->
 
 <catalogue xml:lang="de">

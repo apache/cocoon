@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.4 2004/03/06 02:26:19 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.5 2004/04/05 12:34:23 antonio Exp $ -->
 
 <samples name="XML-ized Web Sites">
 
