@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.1 2003/03/09 00:08:35 pier Exp $
+ * @version CVS $Id: Constants.java,v 1.2 2003/03/16 11:19:54 stefano Exp $
  */
 public final class Constants {
 
@@ -92,20 +92,20 @@ public final class Constants {
     public static final String VERSION = properties.getProperty("version");
 
     /** The full name of this project. */
-    public static final String COMPLETE_NAME = NAME + " " + VERSION;
+    public static final String COMPLETE_NAME = properties.getProperty("fullname") + " " + VERSION;
 
     /** The version of the configuration schema */
     public static final String CONF_VERSION  = "2.1";
 
     /** The year of the build */
-    public static final String YEAR          = properties.getProperty("year");
+    public static final String YEAR = properties.getProperty("year");
 
     /**
      * The request parameter name to reload the configuration.
      *
      * FIXME(GP): Isn't this Servlet specific?
      */
-    public static final String RELOAD_PARAM   = "cocoon-reload";
+    public static final String RELOAD_PARAM = "cocoon-reload";
 
     /**
      * The request parameter name to add a line of the request duration.
@@ -119,21 +119,21 @@ public final class Constants {
      *
      * FIXME(GP): Isn't this Servlet specific?
      */
-    public static final String VIEW_PARAM     = "cocoon-view";
+    public static final String VIEW_PARAM = "cocoon-view";
 
     /**
      * The request parameter name to trigger a specific action.
      *
      * FIXME(GP): Isn't this Servlet specific?
      */
-    public static final String ACTION_PARAM   = "cocoon-action";
+    public static final String ACTION_PARAM = "cocoon-action";
 
     /**
      * The request parameter prefix to trigger a specific action.
      *
      * FIXME(GP): Isn't this Servlet specific?
      */
-    public static final String ACTION_PARAM_PREFIX   = "cocoon-action-";
+    public static final String ACTION_PARAM_PREFIX = "cocoon-action-";
 
     /**
      * The directory to use as context root.
@@ -147,21 +147,21 @@ public final class Constants {
      *
      * FIXME(GP): Isn't this CLI specific?
      */
-    public static final String DEFAULT_DEST_DIR    = "./site";
+    public static final String DEFAULT_DEST_DIR = "./site";
 
     /**
      * The diretory to use for generated files.
      *
      * FIXME(GP): Isn't this CLI specific?
      */
-    public static final String DEFAULT_WORK_DIR    = "./work";
+    public static final String DEFAULT_WORK_DIR = "./work";
 
     /**
      * How a default configuration file is named.
      *
      * FIXME(GP): Isn't this CLI specific?
      */
-    public static final String DEFAULT_CONF_FILE   = "cocoon.xconf";
+    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
     /** The name of the property holding the class for a XML parser */
     public static final String PARSER_PROPERTY = "org.apache.excalibur.xml.sax.SAXParser";
@@ -174,56 +174,56 @@ public final class Constants {
     public static final String DEPRECATED_PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
 
     /** The namespace for the XSP core logicsheet. */
-    public static final String XSP_URI                   = "http://apache.org/xsp";
+    public static final String XSP_URI = "http://apache.org/xsp";
 
     /**
      * The namespace prefix for the request logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_REQUEST_PREFIX        = "xsp-request";
+    public static final String XSP_REQUEST_PREFIX = "xsp-request";
 
     /**
      * The namespace for the request logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_REQUEST_URI           = XSP_URI + "/request/2.0";
+    public static final String XSP_REQUEST_URI = XSP_URI + "/request/2.0";
 
     /**
      * The namespace prefix for the response logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_RESPONSE_PREFIX       = "xsp-response";
+    public static final String XSP_RESPONSE_PREFIX = "xsp-response";
 
     /**
      * The namespace for the response logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_RESPONSE_URI          = XSP_URI + "/response/2.0";
+    public static final String XSP_RESPONSE_URI = XSP_URI + "/response/2.0";
 
     /**
      * The namespace prefix for the cookie logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_COOKIE_PREFIX         = "xsp-cookie";
+    public static final String XSP_COOKIE_PREFIX = "xsp-cookie";
 
     /**
      * The namespace for the cookie logicsheet.
      *
      * FIXME(GP): Would logicsheets belong to the core?
      */
-    public static final String XSP_COOKIE_URI            = XSP_URI + "/cookie/2.0";
+    public static final String XSP_COOKIE_URI = XSP_URI + "/cookie/2.0";
 
     /**
      * Don't know exactly what this is for. (I can guess it's for the FormValidator)
      *
      * FIXME(GP): Isn't this component specific?
      */
-    public static final String XSP_FORMVALIDATOR_PATH    = "org.apache.cocoon.acting.FormValidatorAction.results";
+    public static final String XSP_FORMVALIDATOR_PATH = "org.apache.cocoon.acting.FormValidatorAction.results";
 
     /** The URI for xml namespaces */
     public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
@@ -233,17 +233,17 @@ public final class Constants {
      *
      * FIXME(GP): Isn't this Environment specific?
      */
-    public static final String LINK_CONTENT_TYPE     = "application/x-cocoon-links";
+    public static final String LINK_CONTENT_TYPE = "application/x-cocoon-links";
 
     /**
      * Name of the request value for the link view
      *
      * FIXME(GP): Isn't this Environment specific?
      */
-    public static final String LINK_VIEW             = "links";
+    public static final String LINK_VIEW = "links";
 
     /** Don't know exactly what this is for (and it is not used in the code base) */
-    public static final String LINK_CRAWLING_ROLE    = "static";
+    public static final String LINK_CRAWLING_ROLE = "static";
 
     /**
      * The name of a <code>Request</code> object in the so called objectModel <code>Map</code>.
@@ -252,7 +252,7 @@ public final class Constants {
      * FIXME(GP): Shouldn't this definition here be removed?
      * @deprecated Use the {@link org.apache.cocoon.environment.ObjectModelHelper#getRequest(java.util.Map)} instead.
      */
-    public static final String REQUEST_OBJECT  = org.apache.cocoon.environment.ObjectModelHelper.REQUEST_OBJECT;
+    public static final String REQUEST_OBJECT = org.apache.cocoon.environment.ObjectModelHelper.REQUEST_OBJECT;
 
     /**
      * The name of a <code>Response</code> object in the so called objectModel <code>Map</code>.
@@ -270,7 +270,7 @@ public final class Constants {
      * FIXME(GP): Shouldn't this definition here be removed?
      * @deprecated Use the {@link org.apache.cocoon.environment.ObjectModelHelper#getContext(java.util.Map)} instead.
      */
-    public static final String CONTEXT_OBJECT  = org.apache.cocoon.environment.ObjectModelHelper.CONTEXT_OBJECT;
+    public static final String CONTEXT_OBJECT = org.apache.cocoon.environment.ObjectModelHelper.CONTEXT_OBJECT;
 
     /**
      * Key of the Map of index translation table.
@@ -281,7 +281,7 @@ public final class Constants {
      * <p>
      * TODO(VG): Move this declaration to ObjectModelHelper
      */
-    public static final String LINK_OBJECT     = "link";
+    public static final String LINK_OBJECT = "link";
 
     /**
      * The name of a <code>NotifyingObject</code> in the so called objectModel <code>Map</code>.
@@ -305,25 +305,25 @@ public final class Constants {
     public static final String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
 
     /** Application <code>Context</code> Key for the global classloader */
-    public static final String CONTEXT_CLASS_LOADER    = "class-loader";
+    public static final String CONTEXT_CLASS_LOADER = "class-loader";
 
     /** Application <code>Context</code> Key for the work directory path */
-    public static final String CONTEXT_WORK_DIR        = "work-directory";
+    public static final String CONTEXT_WORK_DIR = "work-directory";
 
     /** Application <code>Context</code> Key for the upload directory path */
-    public static final String CONTEXT_UPLOAD_DIR      = "upload-directory";
+    public static final String CONTEXT_UPLOAD_DIR = "upload-directory";
 
     public static final /** Application <code>Context</code> Key for the cache directory path */
-    String CONTEXT_CACHE_DIR       = "cache-directory";
+    String CONTEXT_CACHE_DIR = "cache-directory";
 
     /** Application <code>Context</code> Key for the current classpath */
-    public static final String CONTEXT_CLASSPATH       = "classpath";
+    public static final String CONTEXT_CLASSPATH = "classpath";
 
     /**
      * Application <code>Context</code> Key for the URL to the configuration file
      * (usually named cocoon.xconf)
      */
-    public static final String CONTEXT_CONFIG_URL      = "config-url";
+    public static final String CONTEXT_CONFIG_URL = "config-url";
 
     /**
      *  @deprecated used only by deprecated SessionStateSelector
