@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.80 2001-05-21 18:29:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.81 2001-05-23 16:57:53 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -326,7 +326,7 @@
         <xsl:otherwise>
           <xsl:if test="esql:driver">
           try {
-            Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
+            Thread.currentThread().getContextClassLoader().loadClass(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
             throw new RuntimeException("Error loading driver: "+String.valueOf(<xsl:copy-of select="$driver"/>));
           }
