@@ -62,10 +62,10 @@ package org.apache.cocoon.workflow;
  * <li>state variables.</li>
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: Workflow.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
+ * @version $Id: Workflow.java,v 1.3 2004/03/01 20:56:49 cziegeler Exp $
  */
 public interface Workflow {
-    String NAMESPACE = "http://apache.org/cocoon/lenya/workflow/1.0";
+    String NAMESPACE = "http://apache.org/cocoon/workflow/1.0";
     String DEFAULT_PREFIX = "wf";
 
     /**
