@@ -58,7 +58,9 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -89,7 +91,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.8 $ $Date: 2003/06/21 06:53:55 $
+ * @version CVS $Revision: 1.9 $ $Date: 2003/11/17 15:40:33 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -212,6 +214,8 @@ public final class XConfToolTask extends MatchingTask {
             throw new BuildException("TransformerException: "+e);
         } catch (SAXException e) {
             throw new BuildException("SAXException: "+e);
+        } catch (DOMException e) {
+            throw new BuildException("DOMException:" +e);           
         } catch (ParserConfigurationException e) {
             throw new BuildException("ParserConfigurationException: "+e);
         } catch (UnknownHostException e) {
@@ -233,7 +237,7 @@ public final class XConfToolTask extends MatchingTask {
     private boolean patch(final Document configuration,
                           final Document component,
                           String file)
-                          throws TransformerException, IOException {
+                          throws TransformerException, IOException, DOMException {
         // Check to see if Document is an xconf-tool document
         Element elem = component.getDocumentElement();
 
@@ -337,6 +341,11 @@ public final class XConfToolTask extends MatchingTask {
             log("Processing: "+file);
             NodeList componentNodes = component.getDocumentElement().getChildNodes();
 
+            String replacePropertiesStr = component.getDocumentElement().getAttribute("replace-properties");
+
+            boolean replaceProperties = "yes".equalsIgnoreCase(replacePropertiesStr) ||
+                                        "true".equalsIgnoreCase(replacePropertiesStr);
+
             if (this.addComments) {
                 root.appendChild(configuration.createComment("..... Start configuration from '"+basename+"' "));
                 root.appendChild(configuration.createTextNode(NL));
@@ -345,6 +354,9 @@ public final class XConfToolTask extends MatchingTask {
                 Node node = configuration.importNode(componentNodes.item(i),
                                                      true);
 
+                if (replaceProperties) {
+                    replaceProperties(node);
+                }
                 if (before==null) {
                     root.appendChild(node);
                 } else {
@@ -356,6 +368,38 @@ public final class XConfToolTask extends MatchingTask {
                 root.appendChild(configuration.createTextNode(NL));
             }
             return true;
+        }
+    }
+
+    private void replaceProperties(Node n) throws DOMException {
+        
+        NamedNodeMap attrs = n.getAttributes();
+        if (attrs!=null) {
+            for (int i = 0; i< attrs.getLength(); i++) {
+                Node attr = attrs.item(i);
+                attr.setNodeValue(getProject().replaceProperties(attr.getNodeValue()));     
+            } 
+        }
+        switch (n.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+            case Node.CDATA_SECTION_NODE:
+            case Node.TEXT_NODE: {
+                n.setNodeValue(getProject().replaceProperties(n.getNodeValue()));
+                break;
+            }
+            case Node.DOCUMENT_NODE:
+            case Node.DOCUMENT_FRAGMENT_NODE:
+            case Node.ELEMENT_NODE: {
+                Node child = n.getFirstChild();
+                while (child != null) {
+                    replaceProperties(child);
+                    child = child.getNextSibling();
+                }
+                break;
+            }
+            default: {
+                // ignore all other node types
+            }
         }
     }
 
