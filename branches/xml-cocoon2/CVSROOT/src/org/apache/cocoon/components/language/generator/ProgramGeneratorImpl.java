@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-17 17:04:09 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-31 15:48:14 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -96,7 +96,7 @@ public class ProgramGeneratorImpl
 
     //this.repositoryName = params.getParameter("repository");
     if (this.repositoryName == null) {
-        this.repositoryName = System.getProperty(Cocoon.TEMPDIR_PROPERTY, "./repository");
+        this.repositoryName = System.getProperty(Cocoon.TEMPDIR_PROPERTY, Cocoon.DEFAULT_TEMP_DIR);
     }
     this.autoReload = params.getParameterAsBoolean("auto-reload", autoReload);
   }
