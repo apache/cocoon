@@ -83,7 +83,7 @@ import org.apache.cocoon.environment.Environment;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.4 2003/04/21 16:14:54 coliver Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer
 {
@@ -529,14 +529,15 @@ public class XMLFormTransformer extends AbstractSAXTransformer
 		  WebContinuation kont
 		      = (WebContinuation)((Environment)resolver).getAttribute("kont");
 		  if (kont != null) {
-		      String id;
 		      int level = 0;
 		      if (continuation.equals("back")) {
 			  level = 3;
 		      }
-		      id = kont.getContinuation(level).getId();
 		      AttributesImpl impl = new AttributesImpl(attributes);
 		      int index = impl.getIndex("id");
+		      String id = impl.getValue(index);
+		      String kId = kont.getContinuation(level).getId();
+		      id = kId + ":"+id;
 		      if (index >= 0) {
 			  impl.setValue(index, id);
 		      } else {
