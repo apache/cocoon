@@ -50,10 +50,14 @@
 */
 package org.apache.cocoon.caching.impl;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -62,10 +66,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.excalibur.store.Store;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * This is the Cocoon cache. This component is responsible for storing
@@ -75,7 +76,7 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.4 2003/07/13 03:10:10 ghoward Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.5 2003/07/31 14:28:18 cziegeler Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -112,7 +113,7 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * @param response    the cached response
      */
     public void store(Map              objectModel,
-                      PipelineCacheKey key,
+                      Serializable     key,
                       CachedResponse   response)
     throws ProcessingException {
         try {
@@ -128,7 +129,7 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      */
-    public CachedResponse get(PipelineCacheKey key) {
+    public CachedResponse get(Serializable key) {
         return (CachedResponse)this.store.get(key);
     }
 
@@ -138,7 +139,7 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      */
-    public void remove(PipelineCacheKey key) {
+    public void remove(Serializable key) {
         this.store.remove(key);
     }
 
@@ -146,13 +147,14 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * clear cache of all cached responses 
      */
     public void clear() {
+        // FIXME this clears the whole store!
         this.store.clear();
     }
 
 	/**
 	 * See if a response is cached under this key
 	 */
-	public boolean containsKey(PipelineCacheKey key) {
+	public boolean containsKey(Serializable key) {
 		return this.store.containsKey(key);
 	}
 
