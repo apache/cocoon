@@ -5,42 +5,43 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+
 package org.apache.cocoon.matching.helpers;
 
-import java.util.Stack;
+import java.util.List;
 
 /**
  * This class is an utility class that perform wilcard-patterns matching and
  * isolation.
- * <br>
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:36 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:37:13 $
  */
 public class WildcardURIMatcher {
 
     /** The int representing '*' in the pattern <code>int []</code>. */
-    protected static final int MATCH_FILE=-1;
+    protected static final int MATCH_FILE = -1;
     /** The int representing '**' in the pattern <code>int []</code>. */
-    protected static final int MATCH_PATH=-2;
+    protected static final int MATCH_PATH = -2;
     /** The int value that terminates the pattern <code>int []</code>. */
-    protected static final int MATCH_END=-3;
+    protected static final int MATCH_END = -3;
 
     /**
      * match a pattern agains a string and isolates wildcard replacement into a 
      * <code>Stack</code>.
      */
-    public static boolean match (Stack stack, String data, int[] expr) 
+    public static boolean match (List list, String data, int[] expr) 
     throws NullPointerException {
-        if (stack == null) throw new NullPointerException ("No Stack provided");
+        if (list == null) throw new NullPointerException ("No list provided");
         if (data == null) throw new NullPointerException ("No data provided");
         if (expr == null) throw new NullPointerException ("No pattern expression provided");
         
-        char buff[] = data.toCharArray ();
+        char buff[] = data.toCharArray();
         // Allocate the result buffer
-        char rslt[]=new char[expr.length+buff.length];
+        char rslt[] = new char[expr.length + buff.length];
         
         // The previous and current position of the expression character
         // (MATCH_*)
@@ -71,7 +72,7 @@ public class WildcardURIMatcher {
                 
             if (exprchr == MATCH_END) {
                 if (rsltpos > 0)
-                    stack.push (new String(rslt, 0, rsltpos));
+                    list.add (new String(rslt, 0, rsltpos));
                 return (true);
             }
             
@@ -95,8 +96,9 @@ public class WildcardURIMatcher {
                     if (buff[buffpos] == '/') return (false);
                     rslt[rsltpos++] = buff[buffpos++];
                 }
-            stack.push (new String (rslt, 0, rsltpos));
-            rsltpos = 0;
+                
+                list.add (new String (rslt, 0, rsltpos));
+                rsltpos = 0;
             }
         }
     }
@@ -145,61 +147,5 @@ public class WildcardURIMatcher {
         // The remaining chars in d buffer were not enough or the string 
         // wasn't matched
         return (-1);
-    }
-
-    protected static int[] convertPattern(String data)
-    throws NullPointerException {
-        // Prepare the arrays
-        int expr[]=new int[data.length()+1];
-        char buff[]=data.toCharArray();
-        // Prepare variables for the translation loop
-        int y=0;
-        boolean slash=false;
-        if(buff[0]=='\\') slash=true;
-        else if(buff[0]=='*') expr[y++]=MATCH_FILE;
-        else expr[y++]=buff[0];
-        // Main translation loop
-        for (int x=1; x<buff.length; x++) {
-            // If the previous char was '\' simply copy this char.
-            if (slash) {
-                expr[y++]=buff[x];
-                slash=false;
-            // If the previous char was not '\' we have to do a bunch of checks
-            } else {
-                int prev=(y-1);
-                // If this char is '\' declare that and continue
-                if(buff[x]=='\\') {
-                    slash=true;
-                // If this char is '*' check the previous one
-                } else if(buff[x]=='*') {
-                    // If the previous character als was '*' match a path
-                    if(expr[y-1]<=MATCH_FILE) expr[y-1]=MATCH_PATH;
-                    else expr[y++]=MATCH_FILE;
-                } else expr[y++]=buff[x];
-            }
-        }
-        // Declare the end of the array and return it
-        expr[y]=MATCH_END;
-        return(expr);
-    }        
-    
-    /** Testing */
-    public static void main(String argv[]) {
-        try {
-            if (argv.length<2) return;
-            Stack stack = new Stack();
-            int expr[] = convertPattern (argv[0]);
-            System.out.println("Matching Expr.    \""+argv[0]+"\"");
-            System.out.println("Uri String. \""+argv[1]+"\"");
-            if (WildcardURIMatcher.match (stack, argv[1], expr)) {
-                System.out.println("Matched");
-                for (int i = 0; i < stack.size(); i++)
-                    System.out.println(i+" "+(String)stack.elementAt (i));
-            } else
-                System.out.println("Not matched");
-        } catch (Exception e) {
-            System.out.println(e.getClass().getName());
-            System.out.println(e.getMessage());
-        }
     }
 }
