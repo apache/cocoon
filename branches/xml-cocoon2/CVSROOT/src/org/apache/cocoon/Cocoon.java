@@ -49,7 +49,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.49 $ $Date: 2001-02-14 03:58:36 $
+ * @version CVS $Revision: 1.4.2.50 $ $Date: 2001-02-14 04:10:31 $
  */
 public class Cocoon extends AbstractLoggable
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Contextualizable {
@@ -87,7 +87,7 @@ public class Cocoon extends AbstractLoggable
     /**
      * Create a new <code>Cocoon</code> instance.
      */
-    protected Cocoon() throws ConfigurationException {
+    public Cocoon() throws ConfigurationException {
         // Set the system properties needed by Xalan2.
         setSystemProperties();
     }
