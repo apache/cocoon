@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.367 2004/06/16 20:00:07 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.368 2004/06/18 07:10:45 antonio Exp $:-->
 
 <status>
  <developers>
@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated commons-logging to 1.0.4
+   </action>
    <action dev="VG" type="add">
      NamingInputModule provides access to the JNDI context.
    </action>
