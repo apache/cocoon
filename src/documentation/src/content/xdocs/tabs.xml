@@ -42,5 +42,6 @@
     <tab id="docs-2.0" label="2.0 docs" href="http://not-available-yet/index.html"/>    
   </tab>
   <tab id="blocks" label="Blocks" dir="" indexfile="blocks.html"/>
-  
+  <tab id="legacy" label="Legacy" dir="" indexfile="c21_index.html"/>
+
 </tabs>

@@ -148,5 +148,14 @@
       <doc label="List"/>    
     </doc>      
   </doc>
-  
+
+  <legacy label="Legacy" tab="legacy">
+    <doc label="Overview" href="c21_index.html"/>
+    <doc label="Misc.">
+      <doc label="introduction" href="c21_introduction.html"/>
+    </doc>
+    <doc label="Concepts">
+      <doc label="index" href="c21_concepts_index.html"/>
+    </doc>
+  </legacy>
 </site>
