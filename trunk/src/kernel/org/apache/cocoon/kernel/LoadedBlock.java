@@ -35,7 +35,7 @@ import org.apache.cocoon.kernel.resolution.LocalResolver;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class LoadedBlock implements Block {
     
@@ -78,7 +78,7 @@ public class LoadedBlock implements Block {
             extended = (LoadedBlock)loader.load(descriptor.extendedBlock());
             Iterator iterator = this.extended.implementedBlocks();
             while (iterator.hasNext()) {
-                this.implemented.add((Block)iterator.next());
+                this.implemented.add(iterator.next());
             }
         }
 

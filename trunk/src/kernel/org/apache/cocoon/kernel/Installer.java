@@ -18,17 +18,13 @@ package org.apache.cocoon.kernel;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.cocoon.kernel.identification.BlockDescriptor;
 import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.identification.IdentificationException;
 import org.apache.cocoon.kernel.identification.Identifier;
-import org.apache.cocoon.kernel.archival.Library;
 import org.apache.cocoon.kernel.identification.ParsedIdentifier;
 import org.apache.cocoon.kernel.configuration.Configuration;
-import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
 import org.apache.cocoon.kernel.configuration.Parameters;
 import org.apache.cocoon.kernel.deployment.Deployer;
@@ -41,7 +37,7 @@ import org.apache.cocoon.kernel.deployment.Instance;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class Installer {
 

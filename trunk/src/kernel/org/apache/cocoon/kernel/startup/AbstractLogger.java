@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.kernel.startup;
 
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.xml.sax.SAXException;
@@ -26,7 +25,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public abstract class AbstractLogger extends Logger {
 

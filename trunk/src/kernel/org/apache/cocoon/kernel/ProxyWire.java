@@ -49,7 +49,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
@@ -174,6 +174,7 @@ public final class ProxyWire implements InvocationHandler {
 
             /* Record the original composer, resolver, and instance */
             this.composer = composer;
+            // FIXME ??? This assignment has no effect, is it correct?
             this.instance = instance;
             this.resolver = resolver;
         } catch (Throwable t) {
