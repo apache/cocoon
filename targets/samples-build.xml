@@ -30,6 +30,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            compiler="${compiler}"
            classpathref="classpath"/>
 
