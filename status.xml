@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.223 2004/01/14 17:54:27 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.224 2004/01/16 14:01:22 unico Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UH" type="update">
+     Renamed JspGenerator to JSPGenerator to match JSPEngine and JSPReader naming convention.
+   </action>
    <action dev="UH" type="fix" fixes-bug="25694" due-to-email="johan@hippo.nl" due-to="Johan Stuyts">
      JSPEngineImpl incorrectly converts bytes to characters.
    </action>
