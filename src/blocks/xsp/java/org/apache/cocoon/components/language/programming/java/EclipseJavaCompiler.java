@@ -19,6 +19,8 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.ClassFile;
@@ -54,7 +56,7 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id: EclipseJavaCompiler.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
@@ -63,12 +65,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
     static {
         // Detect JDK version we are running under
-        String version = System.getProperty("java.specification.version");
-        try {
-            source14 = target14 = Float.parseFloat(version) >= 1.4;
-        } catch (NumberFormatException e) {
-            source14 = target14 = false;
-        }
+        source14 = target14 = SystemUtils.isJavaVersionAtLeast(140);
     }
 
     boolean debug;
@@ -154,8 +151,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         if (fileName.endsWith(".java")) {
             fileName = fileName.substring(0, fileName.length() - 5);
         }
-        fileName = fileName.replace('\\', '.');
-        return fileName.replace('/', '.');
+        return StringUtils.replaceChars(fileName, "\\/", "..");
     }
 
     public boolean compile() throws IOException {
@@ -330,13 +326,14 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
             };
         final IErrorHandlingPolicy policy = 
             DefaultErrorHandlingPolicies.proceedWithAllProblems();
-        final Map settings = new HashMap();
+        final Map settings = new HashMap(8);
         settings.put(CompilerOptions.OPTION_LineNumberAttribute,
                      CompilerOptions.GENERATE);
         settings.put(CompilerOptions.OPTION_SourceFileAttribute,
                      CompilerOptions.GENERATE);
         settings.put(CompilerOptions.OPTION_ReportDeprecation,
                      CompilerOptions.IGNORE);
+        settings.put(CompilerOptions.OPTION_ReportUnusedImport, CompilerOptions.IGNORE);
         if (sourceEncoding != null) {
             settings.put(CompilerOptions.OPTION_Encoding,
                          sourceEncoding);
