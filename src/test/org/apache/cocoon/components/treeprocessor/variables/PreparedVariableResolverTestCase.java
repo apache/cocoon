@@ -30,7 +30,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * Test case for the nested variant of the PreparedVariableResolver
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.3 2004/04/04 06:38:16 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.4 2004/04/14 09:39:45 upayavira Exp $
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
@@ -187,6 +187,21 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         assertEquals(":colon-starts-this", resolver.resolve(context, getObjectModel()));
     }
     
+    public void testEmbeddedColon() throws PatternException {
+        String expr = "{1}:{1}";
+        
+        InvokeContext context = new InvokeContext(true);
+        context.enableLogging(new LogKitLogger(getLogger()));
+
+        Map sitemapElements;
+        sitemapElements = new HashMap();
+        sitemapElements.put("1", "abc");
+        context.pushMap("label", sitemapElements);
+        
+        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, manager);
+        assertEquals("abc:abc", resolver.resolve(context, getObjectModel()));
+    }
+
     public void testEscapedBraces() throws PatternException {
         String expr = "This is a \\{brace\\}";
         
@@ -200,4 +215,5 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         PreparedVariableResolver resolver = new PreparedVariableResolver(expr, manager);
         assertEquals("This is a {brace}", resolver.resolve(context, getObjectModel()));
     }
+
 }
