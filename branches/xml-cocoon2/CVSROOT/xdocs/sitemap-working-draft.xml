@@ -269,16 +269,16 @@ methods such as CVS, WebDAV or other forms of databases.
       rules for <moutn> apply here as well.
   -->
   <process uri="cocoon/dist/*">
-   <match type="ip-filter" allowed-address="true">
+   <if test="ip-filter allows-address">
      <!-- 
           the <redirect> element is used to redirect one requested URI 
           to another. This is somewhat equivalent to URI rewriting
      -->
     <redirect to="dist/cocoon/*"/>
-   </match>
-   <otherwise>
+   </if>
+   <else>
     <resource name="Access refused"/>
-   </otherwise>
+   </else>
   </process>
 
   <process uri="printer-friendly/*">
@@ -288,34 +288,34 @@ methods such as CVS, WebDAV or other forms of databases.
   </process>
 
   <process uri="images/logo">
-    <match type="browser" accepts="image/svg">
+    <if test="browser accepts image/svg">
      <!-- 
          the <read> element is used to read the src directly without 
          applying any processing. This is mostly useful when clients
          are capable of handling XML content directly.
      -->
      <read src:local="./images/logo.svg"/>
-    </match>
-    <otherwise>
+    </if>
+    <else>
      <generate type="parser" src:local="./images/logo.svg"/>
-     <match type="browser" accepts="image/png">
+     <if type="browser accepts image/png">
       <serialize type="svg2png"/>
-     </match>
-     <otherwise>
+     </if>
+     <else>
       <serialize type="svg2jpg"/>
-     </otherwise>
-    </otherwise>
+     </else>
+    </else>
   </process>
 
   <process uri="restricted/*">
-    <match type="user" is="administrator">
+    <if test="user is administrator">
      <generate type="parser" src:local="./restricted/*"/>
      <filter type="xslt" src:local="./stylesheets/restricted.xsl"/>
      <serialize type="html"/>
-    </match>
-    <otherwise>
+    </if>
+    <else>
      <resource name="Access refused"/>
-    </otherwise>
+    </else>
   </process>
 
   <process uri="complex-semantics/*">
@@ -324,27 +324,27 @@ methods such as CVS, WebDAV or other forms of databases.
      <filter type="xslt" src:local="./stylesheet/rdf-izer.xsl"/>
      <filter type="xslt" src:local="./stylesheet/xlink-izer.xsl"/>
     </semantic-source>
-    <match type="browser" accepts="text/vnd.wap.wml">
+    <if type="browser accepts text/vnd.wap.wml">
      <filter type="xslt" src:local="./stylesheet/rdf2wml.xsl"/>
      <serialize type="xml"/>
-    </match>
-    <otherwise>
+    </if>
+    <else>
      <filter type="xslt" src:local="./stylesheet/rdf2html.xsl"/>
      <serialize type="html"/>
-    </otherwise>
+    </else>
   </process>
 
   <process uri="*">
    <generate type="parser" src:local="*.xml"/>
-   <match type="load" greater-then="2.5">
+   <if test="load greater-then 2.5">
     <filter type="xslt" src:local="./stylesheet/low-graphics.xsl"/>
-   </match>
-   <match type="browser" is="Mozilla5">
+   </if>
+   <else-if text="browser is Mozilla5">
     <filter type="xslt" src:local="./stylesheet/xul-enabled.xsl"/>
-   </match>
-   <otherwise>
+   </else-if>
+   <else>
     <filter type="xslt" src:local="./stylesheet/general-browser.xsl"/>
-   </otherwise>
+   </else>
    <serializer type="html"/>
   </process>
 
