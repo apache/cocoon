@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:47 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-26 17:58:06 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -259,6 +259,21 @@ public class XSPRequestHelper extends XSPObjectHelper {
     return session.getAttribute(name);
   }
 
+
+    /**
+     * Sets the given session attribute value
+     *
+     * @param objectModel The Map objectModel
+     * @param name The parameter name
+     * @param content The parameter value
+     */
+    public static void setSessionAttribute(Map objectModel, String name, Object content) {
+        
+        Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+        Session session = request.getSession(false);
+        session.setAttribute(name, content);
+    }
+    
   /**
    * Return the given session attribute value or a user-provided default if
    * none was specified.
@@ -361,6 +376,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
 
+    
     /**
      * Output the login of the user making the request
      * Could be null if user is not authenticated.
