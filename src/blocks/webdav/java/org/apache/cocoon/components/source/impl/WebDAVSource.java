@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.26 2004/03/29 10:52:46 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.27 2004/04/13 14:20:35 stephan Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
@@ -189,30 +189,27 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @throws SourceNotFoundException
      */
     private void initResource(int action, int depth) throws SourceException, SourceNotFoundException {
-		try {
+        try {
             boolean update = false;
             if (action != WebdavResource.NOACTION) {
                 if (action > this.action) {
                     this.action = action;
                     update = true;
-                }
-                else {
+                } else {
                     action = this.action;
                 }
             }
             if (depth > this.depth) {
                 this.depth = depth;
                 update = true;
-            }
-            else {
+            } else {
                 depth = this.depth;
             }
-			if (this.resource == null) {
-			    this.resource = new WebdavResource(this.url, action, depth);
-			}
-			else if (update) {
-			    this.resource.setProperties(action, depth);
-			}
+            if (this.resource == null) {
+                this.resource = new WebdavResource(this.url, action, depth);
+            } else if (update) {
+                this.resource.setProperties(action, depth);
+            }
             if (this.action > WebdavResource.NOACTION) {
                 if (this.resource.isCollection()) {
                     String path = this.url.getPath();
@@ -221,18 +218,16 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                     }
                 }
             }
- 		}
-		catch (HttpException e) {
+       } catch (HttpException e) {
             if (e.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
                 throw new SourceNotFoundException("Not found: " + getSecureURI(), e);
             }
             final String msg = "Could not initialize webdav resource. Server responded " 
                 + e.getReasonCode() + " (" + e.getReason() + ") - " + e.getMessage();
             throw new SourceException(msg, e);
-		}
-		catch (IOException e) {
+       } catch (IOException e) {
             throw new SourceException("Could not initialize webdav resource", e);
-		}
+       }
     }
 
     /**
@@ -282,8 +277,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
             final String userinfo = this.url.getEscapedUserinfo();
             if (userinfo != null) {
                 uri = this.protocol + "://" + userinfo + "@" + uri;
-            }
-            else {
+            } else {
                 uri = this.protocol + "://" + uri;
             }
             this.uri = uri;
@@ -366,8 +360,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
     public String getMimeType() {
         try {
             initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return null;
         }
         return this.resource.getGetContentType();
@@ -398,8 +391,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
     public long getLastModified() {
         try {
             initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return 0;
         }
         return this.resource.getGetLastModified();
@@ -413,11 +405,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
     public boolean exists() {
         try {
             initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
-        }
-        catch (SourceNotFoundException e) {
+        } catch (SourceNotFoundException e) {
             return false;
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return true;
         }
         return this.resource.getExistence();
@@ -540,13 +530,11 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
             HttpURL childURL;
             if (this.url instanceof HttpsURL) {
                 childURL = new HttpsURL((HttpsURL) this.url, childName);
-            }
-            else {
+            } else {
                 childURL = new HttpURL(this.url, childName);
             }
             return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger());
-        }
-        catch (URIException e) {
+        } catch (URIException e) {
             throw new SourceException("Failed to create child", e);
         }        
     }
@@ -565,8 +553,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                 HttpURL childURL;
                 if (this.url instanceof HttpsURL) {
                     childURL = new HttpsURL((HttpsURL) this.url,resources[i].getName());
-                }
-                else {
+                } else {
                     childURL = new HttpURL(this.url,resources[i].getName());
                 }
                 WebDAVSource src = WebDAVSource.newWebDAVSource(resources[i],
@@ -576,8 +563,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                 src.enableLogging(getLogger());
                 children.add(src);
             }
-        }
-        catch (HttpException e) {
+        } catch (HttpException e) {
             if (getLogger().isDebugEnabled()) {
                 final String message =
                     "Unable to get WebDAV children. Server responded " +
@@ -586,11 +572,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                 getLogger().debug(message);
             }
             throw new SourceException("Failed to get WebDAV collection children.", e);
-        } 
-        catch (SourceException e) {
+        } catch (SourceException e) {
             throw e;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new SourceException("Failed to get WebDAV collection children.", e);
         }
         return children;
@@ -616,17 +600,17 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
+        String path = isCollection()?"..":".";
+      
         try {
             HttpURL parentURL;
             if (url instanceof HttpsURL) {
-                parentURL = new HttpsURL((HttpsURL) this.url, ".");
-            }
-            else {
-                parentURL = new HttpURL(this.url, ".");
+                parentURL = new HttpsURL((HttpsURL) this.url, path);
+            } else {
+                parentURL = new HttpURL(this.url, path);
             }
             return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger());
-        }
-        catch (URIException e) {
+        } catch (URIException e) {
             throw new SourceException("Failed to create parent", e);
         }
     }
@@ -700,13 +684,13 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.ModifiableSource#delete()
      */
     public void delete() throws SourceException {
-    	initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+      initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
         try {
             this.resource.deleteMethod();
         } catch (HttpException e) {
-        	throw new SourceException("Unable to delete source: " + getSecureURI(), e);
+            throw new SourceException("Unable to delete source: " + getSecureURI(), e);
         } catch (IOException e) {
-			throw new SourceException("Unable to delete source: " + getSecureURI(), e);
+            throw new SourceException("Unable to delete source: " + getSecureURI(), e);
         }
     }
 
@@ -760,7 +744,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
     public void makeCollection() throws SourceException {
         initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
         if (this.resource.exists()) return;
-    	try {
+        try {
             if (!this.resource.mkcolMethod()) {
                 int status = this.resource.getStatusCode();
                 // Ignore status 405 - Not allowed: collection already exists
@@ -772,15 +756,12 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                     throw new SourceException(msg);
                 }
             }
-        }
-    	catch (HttpException e) {
+        } catch (HttpException e) {
             throw new SourceException("Unable to create collection(s) " + getSecureURI(), e);
-        }
-    	catch (SourceException e) {
+        } catch (SourceException e) {
             throw e;
-        }
-        catch (IOException e) {
-            throw new SourceException("Unable to create collection(s)"  + getSecureURI(), e);			
+        } catch (IOException e) {
+            throw new SourceException("Unable to create collection(s)"  + getSecureURI(), e);      
         }
     }
     
@@ -890,7 +871,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
         initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
         
         try {
-			Node node = null;
+            Node node = null;
             NodeList list = sourceproperty.getValue().getChildNodes();
             for (int i=0; i<list.getLength(); i++) {
                 if ((list.item(i) instanceof Text && !"".equals(list.item(i).getNodeValue()))
