@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document><header><title>SQL Taglib</title><authors><person name="Donald A. Ball Jr." email="balld@webslingerz.com"/></authors></header><body>
+
+	<s1 title="Description">
+		<p>SQL Taglib is an XSP taglibrary that performs sql queries and serializes their results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
+	</s1>
+
+	<s1 title="Installation">
+		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
+		<source>processor.xsp.logicsheet.sql.java = resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
+	</s1>
+
+	<s1 title="Configuration">
+		<p>Map the</p>
+		<source>http://www.apache.org/1999/SQL</source>
+		<p>namespace to the sql prefix (FIXME - how do we avoid doing this now?). Elements in the sql taglib namespace will be interpreted as input to the sql taglib and will be stripped from the output.</p>
+		<p>This is typically done like this:</p>
+		<source><![CDATA[
+<xsp:page
+	language="java"
+	xmlns:sql="http://www.apache.org/1999/SQL"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+	. . .
+
+</xsp:page>
+]]></source>
+	</s1>
+	<s1 title="Usage">
+		<p>The only element in the sql taglib namespace that may appear as a descendent of an element in another namespace is the <code>execute-query</code> element. It indicates that a sql query should be executed. The result XML will replace this element.</p>
+		<p>The <code>execute-query</code> element will contain child elements in the sql taglib namespace which specify parameters for the query. It is an error if it contains children (not necessarily descendents) in another namespace. No other element in the sql taglib namespace may contain children in the sql taglib namespace.</p>
+		<p>The list of valid sql taglib configuration elements is:</p>
+		<dl>
+		<dt><code>driver</code> <strong>mandatory</strong></dt>
+		<dd>The fully qualified class name of the JDBC driver</dd>
+		<dt><code>dburl</code> <strong>mandatory</strong></dt>
+		<dd>The JDBC URL to the data source</dd>
+		<dt><code>doc-element</code></dt>
+		<dd>The name of the element which will wrap the entire resultset, if there are any results. If this is not set, there will be no top-level wrapper.</dd>
+		<dt><code>row-element</code></dt>
+		<dd>The name of the element which will wrap each row in the resultset. If this is not set, there will be no row-level wrapper.</dd>
+		</dl>
+	</s1>
+<!--
+	<s1 title="
+		<p>Username and password are optional. This tagset will be removed from the document after processing. Multiple connectiondefs should be processed properly, but there's no good reason I can think of to do that. It's probably desirable to put the connectiondefs in a standalone XML file and link it in with external entities. The syntax for that is:</p>
+		<source>&lt;!DOCTYPE page [
+ &lt;!ENTITY connection_defs SYSTEM "http://www.example.com/cdefs.xml"&gt;
+]&gt;
+
+&lt;page&gt;
+ &amp;connection_defs;
+ ... other XML data ...
+&lt;/page&gt;</source>
+		<p>but this has the significant disadvantage that your database usernames and passwords are by default accessible from the WWW. You may wish to protect the cdefs.xml file by restricting access to the directory it lives in to the ip address(es) of your server(s).</p>
+		<p>The other warning here is that if cocoon is operating on the www.example.com site, it will try to process the cdefs.xml file before giving it to the XML parser. As long as cdefs.xml has no cocoon:process PI, you will not have any trouble but it will be somewhat slower than if cocoon is not involved. A simple trick to get around this is to rename the file to an extension that does not trigger cocoon. I use .sxml, shorthand for Source XML. Those of you with real operating systems can just make a link to the .xml file.</p>
+		<p>In addition to the connection element, you can also have querydefs tags in your connectiondefs node. A querydefs node must have a unique name attribute. query tags (described below) may reference a querydefs tag in their defs attribute, which causes the query tag's attributes to default to the attributes of the querydefs tag. This is useful for setting commonly used groups of attributes. You may also specify a default querydefs. Here is an example:</p>
+<source>&lt;querydefs name="standard" doc-element="options" 
+  row-element="option" connection="foo"/&gt;
+&lt;query defs="standard"/&gt;</source>
+		<p>is equivalent to</p>
+		<source>&lt;query doc-element="options" row-element="option" connection="foo"/&gt;</source>
+		<p>You can also flag a querydefs node as the default for all query tags by setting the default attribute to yes. Note that query tags can always override the defaults.</p>
+	</s1>
+
+	<s1 title="Usage">
+		<p>Add SQL queries to your XML files. The tagset looks like this:</p>
+		<source>&lt;query connection="foo_connection"&gt;
+ select name,number,message from foo_table order by name
+&lt;/query&gt;</source>
+		<p>This will be replaced by a tagset that looks like this:</p>
+		<source>&lt;ROWSET&gt;
+ &lt;ROW ID="0"&gt;
+  &lt;NAME&gt;Donald Ball&lt;/NAME&gt;
+  &lt;NUMBER&gt;23&lt;/NUMBER&gt;
+  &lt;MESSAGE&gt;
+   The Illuminati do not exist. 
+   This message paid for by the Illuminati.&lt;/MESSAGE
+  &gt;
+ &lt;/ROW&gt;
+ ... other rows ...
+&lt;/ROWSET&gt;</source>
+		<p>You can also have SQLProcessor substitute values from the servlet request into your query. The syntax for that is:</p>
+		<source>&lt;query connection="foo_connection"&gt;
+ select name,number,message from foo_table where id={@id} order by name
+&lt;/query&gt;</source>
+		<p>This is, of course, highly configurable by setting attributes of the query tag. A partial list of attributes is:</p>
+		<dl>
+			<dt>doc-element</dt><dd>The tag with which to wrap the whole shebang. Default is ROWSET. If an empty string is specified, e.g. doc-element="", the whole shebang will not be wrapped.</dd>
+			<dt>row-element</dt><dd>The tag with which to wrap each row. Default is ROW. Same deal as with doc-element.</dd>
+			<dt>tag-case</dt><dd>The case in which to present the column name tags. Default is "preserve", meaning use whatever the JDBC driver likes to call the columns. Options are "upper" for forced uppercase (boo) or "lower" for forced lowercase (yay).</dd>
+			<dt>null-indicator</dt><dd>What do we do with null columns. default is to not print anything for null columns, not even a column tag. If this is set to "y" or "yes", we add a NULL="YES" attribute to the column and put an empty string inside.</dd>
+			<dt>id-attribute</dt><dd>What is the name of the attribute that uniquely identifies the rows? Default is ID. This is, of course, meaningless if row-element is set to an empty string.</dd>
+			<dt>id-attribute-column</dt><dd>Which column should we use for the id attribute value (think primary key column). Default is to use the offset of this row in the query's resultset.</dd>
+			<dt>max-rows</dt><dd>How many rows should we display</dd>
+			<dt>skip-rows</dt><dd>How many rows should we skip before starting to display rows</dd>
+			<dt>variable-left-delimiter</dt><dd>What string delimits variables in the query on the left side? Default is {@.</dd>
+			<dt>variable-right-delimiter</dt><dd>What string delimits variables in the query on the right side? Default is }.</dd>
+		</dl>
+	</s1>
+
+	<s1 title="Creating Complex Queries">
+		<p>URL request parameter substitution using {@var} is fine for many situations, but is inadequate for handling queries whose conditions are dependent on the state of many variables. To accomodate these queries, you can specify the name of a subclass of SQLQueryCreator that will create the query string. The method that should be overridden is:</p>
+		<source>public String getQuery(Connection conn, String query, 
+  Element query_element, Properties query_props, Hashtable parameters) 
+  throws Exception;</source>
+		<p>This looks like a lot of parameters. I didn't figure that it made sense to deny any of the potential information available to the query creator. Just ignore what you don't care about. The parameters that deserve explanation are query_props, which is a Properties object containing all of the attribute values of the query tag, keyed by name. The parameters table is passed from cocoon to its processors, and contains lots of informatin, notable the original HttpServletRequest, keyed by the string "request".</p>
+		<p>You specify the particular subclass of SQLQueryCreator in the creator attribute of the query tag. It's probably easiest if you put your query creators in a package, e.g. com.webslingerZ.cocoon.ComplexQueryCreator.</p>
+		<p>One utility method is provided for your convenience. The SQLEscape method should parse a string for apostrophes and replace them with whichever string their database likes to use instead. It's not working correctly for my database drivers, so the default getQuery method does not use it. If anyone can suggest the correct way to go about doing this, please contact me with your suggestion or, ideally, a patch.</p>
+		<p>This is probably an overly complex way to handle most complex queries. It is hopefully the case that a more sophisticated variable substitution scheme or alternate attribute set will arise that accomodates more common complex queries without the need to write Java code. There is also some rationale for making SQLQueryCreator an interface. I welcome suggestions along these lines.</p>
+	</s1>
+
+	<s1 title="Error Handling">
+		<p>In a perfect world, nothing would ever go wrong in your queries but this is not a perfect world. In our world, you can check for SQLExceptions in your stylesheets and present them to your users in a nice way. The tags used to render the error are configurable using attributes from the query tag. The attributes in question are:</p>
+		<dl>
+			<dt>error-element</dt><dd>The name of the error-element to create, default is sqlerror.</dd>
+			<dt>error-message-attribute</dt><dd>The name of the attribute of the error-element in which to put the Exception's message. Default is message.</dd>
+			<dt>error-message-element</dt><dd>The name of the child element of the error-element in which to put the Exception's message. The default is to not do so.</dd>
+			<dt>error-stacktrace-attribute</dt><dd>The name of the attribute of the error-element in which to put the Exception's stacktrace. The default is to not do so.</dd>
+			<dt>error-stacktrace-element</dt><dd>The name of the child element of the error-element in which to put the Exception's stacktrace. The default is to not do so.</dd>
+			<dt>error-message-text</dt><dd>The text to pass out as an error message instead of the Exception's own message. This is useful for displaying user friendly error messages. The default is to use the Exception's message.</dd>
+		</dl>
+		<p>So by default, when an SQLException occurs, the processor generates this XML:</p>
+		<source>&lt;sqlerror message="The database server is on fire."/&gt;</source>
+	</s1>
+
+	<s1 title="Notes and Disclaimers">
+		<p>I sure hope this is useful to you. It's proving to be very useful to me. The DTD used here is a superset of that used by Oracle's XSQL servlet (which provides no methods for specifying alternate variable delimiters, creating complex queries, query default attributes, or error handling). Technical notes for the XSQL servlet are available - note you apparantly must now fill out an annoying survey to get access to this page. We're sharing the DTD with the tacit approval of Steve Meunch, who kindly pointed me in that direction when he saw a) how similar our methodologies were and b) how horrible my original DTD was. Thanks also go out to Stefano Mazzocchi, who started this whole cocoon business in the first place, and Ricardo Rocha, whose DCP processor provided the framework for SQLProcessor's parent, XMLResultSet. Stefano Malimpensa has suggested many useful features that are beginning to make their way into the code.</p>
+	</s1>
+
+	<s1 title="Planned Features">
+		<ul>
+			<li>support for a &lt;querydefs&gt; tag for setting default query attributes</li>
+			<li>time-based caching of query results</li>
+			<li>simple postprocessing of SQL values (e.g. date formats)</li>
+			<li>error message display</li>
+		</ul>
+	</s1>
+-->
+</body></document>
