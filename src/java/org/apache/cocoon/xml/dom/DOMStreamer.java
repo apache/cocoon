@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.5 2003/03/11 06:50:00 jefft Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.6 2003/03/11 11:19:29 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -340,10 +340,15 @@ public class DOMStreamer implements XMLProducer {
                     String namespaceURI = node.getNamespaceURI();
                     String prefix = node.getPrefix();
                     String localName = node.getLocalName();
-                    String nodeName = node.getNodeName();  // SAX 1 node name, for debugging
 
-                    if (localName == null)
-                        throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered a DOM Element '"+nodeName+"' without a localName. DOM Level 1 trees are not supported by this DOMStreamer.");
+                    if (localName == null) {
+                        // this is an element created with createElement instead of createElementNS
+                        String[] prefixAndLocalName = getPrefixAndLocalName(node.getNodeName());
+                        prefix = prefixAndLocalName[0];
+                        localName = prefixAndLocalName[1];
+                        // note: if prefix is null, there can still be a default namespace...
+                        namespaceURI = getNamespaceForPrefix(prefix, (Element)node);
+                    }
 
                     if (namespaceURI != null) {
                         // no prefix means: make this the default namespace
@@ -388,45 +393,66 @@ public class DOMStreamer implements XMLProducer {
                     for (int i = 0; i < nAttrs; i++) {
                         Node attr = atts.item(i);
                         String attrName = attr.getNodeName();
-                        String attrPrefix = null;
-
-                        if (attr.getLocalName() == null)
-                            throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered an attribute '"+attrName+"' without a local name, on node '"+nodeName+"'. This DOM streamer does not support DOM 1 attributes.");
+                        String assignedAttrPrefix = null;
 
                         // only do non-namespace attributes
                         if (!(attrName.equals("xmlns") || attrName.startsWith("xmlns:"))) {
-                            if (attr.getNamespaceURI() != null) {
-                                String declaredUri = currentElementInfo.findNamespaceURI(attr.getPrefix());
+                            String attrPrefix;
+                            String attrLocalName;
+                            String attrNsURI;
+
+                            if (attr.getLocalName() == null) {
+                                // this is an attribute created with setAttribute instead of setAttributeNS
+                                String[] prefixAndLocalName = getPrefixAndLocalName(attrName);
+                                attrPrefix = prefixAndLocalName[0];
+                                // the statement below causes the attribute to keep its prefix even if it is not
+                                // bound to a namespace (to support pre-namespace XML).
+                                assignedAttrPrefix = attrPrefix;
+                                attrLocalName = prefixAndLocalName[1];
+                                // note: if prefix is null, the attribute has no namespace (namespace defaulting
+                                // does not apply to attributes)
+                                if (attrPrefix != null)
+                                    attrNsURI = getNamespaceForPrefix(attrPrefix, (Element)node);
+                                else
+                                    attrNsURI = null;
+                            } else {
+                                attrLocalName = attr.getLocalName();
+                                attrPrefix = attr.getPrefix();
+                                attrNsURI = attr.getNamespaceURI();
+                            }
+
+                            if (attrNsURI != null) {
+                                String declaredUri = currentElementInfo.findNamespaceURI(attrPrefix);
                                 // if the prefix is null, or the prefix has not been declared, or conflicts with an in-scope binding
-                                if (declaredUri == null || !declaredUri.equals(attr.getNamespaceURI())) {
-                                    String availablePrefix = currentElementInfo.findPrefix(attr.getNamespaceURI());
+                                if (declaredUri == null || !declaredUri.equals(attrNsURI)) {
+                                    String availablePrefix = currentElementInfo.findPrefix(attrNsURI);
                                     if (availablePrefix != null)
-                                        attrPrefix = availablePrefix;
+                                        assignedAttrPrefix = availablePrefix;
                                     else {
-                                        if (attr.getPrefix() != null && declaredUri == null) {
+                                        if (attrPrefix != null && declaredUri == null) {
                                             // prefix is not null and is not yet declared: declare it
-                                            attrPrefix = attr.getPrefix();
-                                            currentElementInfo.put(attrPrefix, attr.getNamespaceURI());
+                                            assignedAttrPrefix = attrPrefix;
+                                            currentElementInfo.put(assignedAttrPrefix, attrNsURI);
                                         } else {
                                             // attribute has no prefix (which is not allowed for namespaced attributes) or
                                             // the prefix is already bound to something else: generate a new prefix
                                             newPrefixCounter++;
-                                            attrPrefix = "NS" + newPrefixCounter;
-                                            currentElementInfo.put(attrPrefix, attr.getNamespaceURI());
+                                            assignedAttrPrefix = "NS" + newPrefixCounter;
+                                            currentElementInfo.put(assignedAttrPrefix, attrNsURI);
                                         }
                                     }
                                 } else {
-                                    attrPrefix = attr.getPrefix();
+                                    assignedAttrPrefix = attrPrefix;
                                 }
                             }
 
-                            String attrNamespaceURI = attr.getNamespaceURI() != null ? attr.getNamespaceURI() : "";
+                            String assignedAttrNsURI = attrNsURI != null ? attrNsURI : "";
                             String attrQName;
-                            if (attrPrefix != null)
-                                attrQName = attrPrefix + ":" + attr.getLocalName();
+                            if (assignedAttrPrefix != null)
+                                attrQName = assignedAttrPrefix + ":" + attrLocalName;
                             else
-                                attrQName = attr.getLocalName();
-                            newAttrs.addAttribute(attrNamespaceURI, attr.getLocalName(), attrQName, "CDATA", attr.getNodeValue());
+                                attrQName = attrLocalName;
+                            newAttrs.addAttribute(assignedAttrNsURI, attrLocalName, attrQName, "CDATA", attr.getNodeValue());
                         }
                     }
 
@@ -488,6 +514,78 @@ public class DOMStreamer implements XMLProducer {
             }
         }
 
+        /**
+         * Searches the namespace for a given namespace prefix starting from a
+         * given Element.
+         *
+         * <p>Note that this resolves the prefix in the orginal DOM-tree, not in
+         * the {@link ElementInfo} objects. This is used to resolve prefixes
+         * of elements or attributes created with createElement or setAttribute
+         * instead of createElementNS or setAttributeNS.
+         *
+         * <p>The code in this method is largely based on
+         * org.apache.xml.utils.DOMHelper.getNamespaceForPrefix() (from Xalan).
+         *
+         * @param prefix the prefix to look for, can be empty or null to find the
+         * default namespace
+         *
+         * @return the namespace, or null if not found.
+         */
+        public String getNamespaceForPrefix(String prefix, Element namespaceContext) {
+            // TODO cache this information in the ElementInfo objects?
+            int type;
+            Node parent = namespaceContext;
+            String namespace = null;
+
+            if (prefix == null)
+                prefix = "";
+
+            if (prefix.equals("xml")) {
+                namespace = "http://www.w3.org/XML/1998/namespace";
+            } else if(prefix.equals("xmlns")) {
+                namespace = "http://www.w3.org/2000/xmlns/";
+            } else {
+                // Attribute name for this prefix's declaration
+                String declname = (prefix == "") ? "xmlns" : "xmlns:" + prefix;
+
+                // Scan until we run out of Elements or have resolved the namespace
+                while ((null != parent) && (null == namespace)
+                   && (((type = parent.getNodeType()) == Node.ELEMENT_NODE)
+                       || (type == Node.ENTITY_REFERENCE_NODE))) {
+                    if (type == Node.ELEMENT_NODE) {
+                        Attr attr=((Element)parent).getAttributeNode(declname);
+                        if(attr!=null) {
+                            namespace = attr.getNodeValue();
+                            break;
+                        }
+                    }
+
+                    parent = parent.getParentNode();
+                }
+            }
+
+            return namespace;
+        }
+
+        /**
+         * Splits a nodeName into a prefix and a localName
+         *
+         * @return an array containing two elements, the first one is the prefix (can be null), the
+         * second one is the localName
+         */
+        private String[] getPrefixAndLocalName(String nodeName) {
+            String prefix, localName;
+            int colonPos = nodeName.indexOf(":");
+            if (colonPos != -1) {
+                prefix = nodeName.substring(0, colonPos);
+                localName = nodeName.substring(colonPos + 1, nodeName.length());
+            } else {
+                prefix = null;
+                localName = nodeName;
+            }
+            return new String[] {prefix, localName};
+        }
+
 
         /**
          * End processing of given node
@@ -536,9 +634,9 @@ public class DOMStreamer implements XMLProducer {
             public String namespaceURI;
             public String qName;
             public Map namespaceDeclarations = null;
-            public NamespaceNormalizingDOMStreamer.ElementInfo parent;
+            public ElementInfo parent;
 
-            public ElementInfo(NamespaceNormalizingDOMStreamer.ElementInfo parent) {
+            public ElementInfo(ElementInfo parent) {
                 this.parent = parent;
             }
 
@@ -583,12 +681,11 @@ public class DOMStreamer implements XMLProducer {
              * Finds a prefix declaration on this element or containing elements.
              */
             public String findPrefix(String namespaceURI) {
-                if (namespaceDeclarations == null || namespaceDeclarations.size() == 0)
-                    return null;
-
-                String prefix = getPrefix(namespaceURI);
-                if (prefix != null)
-                    return prefix;
+                if (namespaceDeclarations != null && namespaceDeclarations.size() != 0) {
+                    String prefix = getPrefix(namespaceURI);
+                    if (prefix != null)
+                        return prefix;
+                }
                 if (parent != null)
                     return parent.findPrefix(namespaceURI);
                 else
@@ -599,13 +696,12 @@ public class DOMStreamer implements XMLProducer {
              * Finds a namespace declaration on this element or containing elements.
              */
             public String findNamespaceURI(String prefix) {
-                if (namespaceDeclarations == null || namespaceDeclarations.size() == 0)
-                    return null;
-
-                String uri = (String) namespaceDeclarations.get(prefix);
-                if (uri != null)
-                    return uri;
-                else if (parent != null)
+                if (namespaceDeclarations != null && namespaceDeclarations.size() != 0) {
+                    String uri = (String) namespaceDeclarations.get(prefix);
+                    if (uri != null)
+                        return uri;
+                }
+                if (parent != null)
                     return parent.findNamespaceURI(prefix);
                 else
                     return null;
