@@ -123,7 +123,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.2 2003/05/13 20:19:54 sylvain Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.3 2003/05/13 22:14:51 vgritsenko Exp $
  */
 public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent  {
   private static final String FILE = "file:";
@@ -494,8 +494,6 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
      *
      * @param   nodeName
      *      the name of the new node
-     * @param   path
-     *      the file/directory to use when setting attributes
      *
      * @throws  SAXException
      *      if an error occurs while closing the node
