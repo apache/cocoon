@@ -357,6 +357,36 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
 
   </s2>
 
+<s2 title="Installing Cocoon on New Atlanta's ServletExec 2.2">
+
+<p>After you have obtained all the jar packages you need
+(see the above section), you should add
+them to your <code>Classpath.pref</code> file.
+Then, add this to the <code>servlets.properties</code> file:</p>
+
+<source>servlet.Cocoon.code=org.apache.cocoon.Cocoon
+servlet.Cocoon.initArgs=properties=/web/var/tmp/cocoon/cocoon.properties
+</source>
+
+<p>and this to the <code>rules.properties</code> file:</p>
+
+<source>*.xml=Cocoon</source>
+
+<p>
+to provide the initArgs and extension association for Cocoon.  Once
+the web server is restarted to pick up the new configuration,
+everything should work ok - try accessing the samples contained in the
+distribution to see Cocoon in action or the /Cocoon.xml page for
+Cocoon internal status.
+</p>
+
+<p>
+You could also make these three configuration changes via
+ the servlet/admin GUI interface if you're not into editing files.
+</p>
+
+</s2>
+
   <s2 title="Installing Cocoon on other platforms">
    <p>Yet to be written! <em>Volunteers welcome!</em></p>
   </s2>
@@ -537,6 +567,12 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <td>Apache 1.3.11</td>
    <td>Apache JServ 1.1</td>
    <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Solaris 2.5.1</td>
+   <td>Netscape-Enterprise/3.6 SP3</td>
+   <td>ServletExec 2.2</td>
+   <td>Sun JDK 1.2.1</td>
   </tr>
   </table>
 
