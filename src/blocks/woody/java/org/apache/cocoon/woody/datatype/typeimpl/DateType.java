@@ -53,7 +53,7 @@ package org.apache.cocoon.woody.datatype.typeimpl;
 import java.util.Date;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype} implementation for
+ * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
  * java.util.Date's (so includes a time-component).
  */
 public class DateType extends AbstractDatatype {
