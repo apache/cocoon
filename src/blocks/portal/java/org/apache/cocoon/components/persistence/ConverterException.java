@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.persistance;
+package org.apache.cocoon.components.persistence;
 
 import org.apache.avalon.framework.CascadingException;
 
@@ -57,7 +57,7 @@ import org.apache.avalon.framework.CascadingException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ConverterException.java,v 1.1 2003/05/07 06:22:30 cziegeler Exp $
+ * @version CVS $Id: ConverterException.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
  */
 public class ConverterException extends CascadingException {
 

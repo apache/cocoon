@@ -48,14 +48,14 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.persistance;
+package org.apache.cocoon.components.persistence;
 
 
 /**
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStore.java,v 1.1 2003/08/20 07:34:36 cziegeler Exp $
+ * @version CVS $Id: RequestDataStore.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
  */
 public interface RequestDataStore {
         

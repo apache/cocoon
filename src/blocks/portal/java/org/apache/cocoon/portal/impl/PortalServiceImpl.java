@@ -69,7 +69,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.persistance.RequestDataStore;
+import org.apache.cocoon.components.persistence.RequestDataStore;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 
@@ -80,7 +80,7 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.7 2003/08/20 07:34:36 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.8 2003/08/21 06:41:19 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
