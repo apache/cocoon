@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlQuery.java,v 1.8 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
@@ -445,7 +445,7 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
         }
     }
 
-    final class EsqlGroup {
+    final static class EsqlGroup {
         public String var = null;
         public Object value = null;
 
