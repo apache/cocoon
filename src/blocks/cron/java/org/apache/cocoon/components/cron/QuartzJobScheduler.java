@@ -15,6 +15,12 @@
  */
 package org.apache.cocoon.components.cron;
 
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -32,12 +38,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.Constants;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -55,11 +55,9 @@ import org.quartz.utils.ConnectionProvider;
 import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.JNDIConnectionProvider;
 
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
  * This component can either schedule jobs or directly execute one.
@@ -105,9 +103,6 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     /** Map key for the service manager */
     static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
 
-    /** Map key for the environment context (needed by BackgroundEnvironment) */
-    static final String DATA_MAP_ENV_CONTEXT = "QuartzJobScheduler.EnvironmentContext";
-
     /** Map key for the logger */
     static final String DATA_MAP_LOGGER = "QuartzJobScheduler.Logger";
 
@@ -134,10 +129,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     static final String DEFAULT_QUARTZ_SCHEDULER_NAME = "Cocoon";
 
     /** The Avalon Context instance */
-    private Context applicationContext;
-
-    /** The Cocoon environment Context instance */
-    private org.apache.cocoon.environment.Context environmentContext;
+    private Context context;
 
     /** The PooledExecutor instance */
     private PooledExecutor executor;
@@ -314,8 +306,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-    	this.applicationContext = context;
-        this.environmentContext = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    	this.context = context;
     }
 
     public void initialize() throws Exception {
@@ -555,9 +546,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
-        jobDataMap.put(DATA_MAP_CONTEXT, this.applicationContext);
+        jobDataMap.put(DATA_MAP_CONTEXT, this.context);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
-        jobDataMap.put(DATA_MAP_ENV_CONTEXT, this.environmentContext);
         jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));
 
         if (null != params) {
@@ -715,9 +705,9 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
         JobStoreSupport store = null;
         if (type.equals("tx")) {
-            store = new QuartzJobStoreTX(getLogger(), this.manager, this.environmentContext);
+            store = new QuartzJobStoreTX(getLogger(), this.manager, this.context);
         } else if (type.equals("cmt")) {
-            store = new QuartzJobStoreCMT(getLogger(), this.manager, this.environmentContext);
+            store = new QuartzJobStoreCMT(getLogger(), this.manager, this.context);
         } else {
             throw new ConfigurationException("Unknown store type: " + type);
         }

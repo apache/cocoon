@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.components.cron;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.environment.Context;
 
 import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.impl.jdbcjobstore.DriverDelegate;
@@ -31,9 +30,10 @@ import org.quartz.impl.jdbcjobstore.NoSuchDelegateException;
  * @since 2.1.6
  */
 public class QuartzJobStoreTX extends JobStoreTX {
-    private Logger logger;
-    private ServiceManager manager;
-    private Context context;
+
+	private final Logger logger;
+    private final ServiceManager manager;
+    private final Context context;
     private DriverDelegate delegate;
 
     public QuartzJobStoreTX(Logger logger, ServiceManager manager, Context context) {
