@@ -155,7 +155,7 @@ The following goals were identified as engineering constraints:
        final client consumption. 
    --> 
   <map:readers default="binary"> 
-   <map:reader name="binary" src="class:///org.apache.cocoon.reading.BinaryReader"/> 
+   <map:reader name="binary" mime-type="image/svg" src="class:///org.apache.cocoon.reading.BinaryReader"/> 
   </map:readers> 
  
    <!--  
@@ -412,7 +412,7 @@ The following goals were identified as engineering constraints:
          applying any processing. This is mostly useful when clients
          are capable of handling XML content directly.
         -->
-      <map:read src="./images/logo.svg" mime-type="image/svg"/>
+      <map:read src="./images/logo.svg"/>
      </map:when>
      <map:otherwise>
       <map:generate src="./images/logo.svg"/>
