@@ -60,13 +60,15 @@ import org.apache.cocoon.portal.aspect.AspectDataHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractParameters 
     implements Layout {
     
     protected String rendererName;
+    
+    protected String name;
     
     protected String id;
     
@@ -144,4 +146,18 @@ public abstract class AbstractLayout
         this.aspectDataHandler = handler;
     }
     
+    /**
+     * @return the name of the layout
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param string the layout name
+     */
+    public void setName(String string) {
+        name = string;
+    }
+
 }

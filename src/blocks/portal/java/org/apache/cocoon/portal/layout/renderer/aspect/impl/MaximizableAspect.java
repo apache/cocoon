@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
@@ -57,8 +59,10 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.MaximizeEvent;
+import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.aspect.MaximizableLayoutStatus;
+import org.apache.cocoon.portal.layout.impl.CompositeLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.XMLUtils;
@@ -70,7 +74,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: MaximizableAspect.java,v 1.1 2003/05/08 13:38:11 cziegeler Exp $
+ * @version CVS $Id: MaximizableAspect.java,v 1.2 2003/05/08 14:01:03 cziegeler Exp $
  */
 public class MaximizableAspect 
     extends AbstractAspect
@@ -114,6 +118,26 @@ public class MaximizableAspect
      */
     public void inform(final Event e) {
         final MaximizeEvent event = (MaximizeEvent)e;
+        // now we have to search the first parent that has static childs
+        boolean found = false;
+        Layout layout = event.getLayout();
+        while (!found) {
+            if ( layout.getParent() != null) {
+                CompositeLayout parent = (CompositeLayout)layout.getParent().getLayout();
+                Iterator iter = parent.getItems().iterator();
+                while ( iter.hasNext() && !found) {
+                    Layout current = ((Item)iter.next()).getLayout();
+                    found = current.isStatic();
+                }
+                if ( !found ) layout = parent;
+            } else {
+                found = true;
+            }
+        }
+        // now we have to set the maximizable status
+        // and indicate the layout that has to replaced by
+        // the maximized one!
+        // TODO - implement this
     }
 
     /* (non-Javadoc)
