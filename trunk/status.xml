@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.157 2003/09/26 14:46:23 bdelacretaz Exp $:-->
+<!-- CVS $Id: status.xml,v 1.158 2003/09/28 05:01:05 antonio Exp $:-->
 
 <status>
  <developers>
@@ -191,6 +191,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="add">
+     OJB block: Object Relational mapping tool integration.
+   </action>
    <action dev="BD" type="add">
      Slop block: New YAPT sample, lightweight presentation tool.
    </action>
