@@ -15,6 +15,8 @@
      <link rel="stylesheet" type="text/css" href="{$home}/styles/editor.css"/>
  	 <script type="text/javascript"><![CDATA[
 		
+		prefixImageSrc="image-";
+
 		function doAction(action) {
 		    var form = document.forms[0];
 
@@ -41,7 +43,7 @@
 		}
 
 	 ]]></script>
- 	 <script src="{$home}/scripts/editor.js" type="text/javascript"/>	 
+     <script src="{$home}/scripts/editor.js" type="text/javascript"></script>
      <noscript>
       <h1>Dude, you don't go anywhere around here without Javascript enabled. ;-)</h1>
      </noscript>
