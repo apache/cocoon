@@ -15,8 +15,8 @@
   limitations under the License.
 -->
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.caching.impl.JMSEventMessageListener']">
-	<component class="org.apache.cocoon.caching.impl.JMSEventMessageListener"
-               role="org.apache.cocoon.caching.impl.JMSEventMessageListener" logger="core.jms">
+       <component class="org.apache.cocoon.caching.impl.JMSEventMessageListener"
+                  role="org.apache.cocoon.caching.impl.JMSEventMessageListener" logger="core.jms">
        <parameter name="connection" value="local-topics"/>
        <parameter name="topic" value="topic1"/>
        <!--
