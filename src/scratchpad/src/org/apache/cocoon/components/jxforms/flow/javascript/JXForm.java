@@ -220,7 +220,7 @@ public class JXForm extends ScriptableObject {
 
     public void jsFunction_removeForm() {
         FOM_Cocoon cocoon = getCocoon();
-        form.remove(cocoon.getEnvironment().getObjectModel(), id);
+        Form.remove(cocoon.getEnvironment().getObjectModel(), id);
         cocoon.getRequest().removeAttribute(this.id);
     }
 
