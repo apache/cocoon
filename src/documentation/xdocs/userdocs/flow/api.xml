@@ -14,12 +14,7 @@
     <s1 title="Flowscript">
 	  <p>Cocoon Flowscript is a JavaScript API to manage control flow based on an
         <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link>
-        version of <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> that supports continuations.</p>
-   <s2 title="Table of Contents">
-   <p><link href="#FOM">Flow Object Model</link></p>
-   <p><link href="#Java">Calling Java</link></p>
-   </s2>
-
+        version of the <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> JavaScript interpreter that supports continuations.</p>
     </s1>
     <anchor id="FOM"/><s1 title="Flow Object Model">
       <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the <em>Flow Object Model</em> (FOM).
@@ -732,65 +727,6 @@
     </p>
     </s3>
     </s2>
-    </s1>
-    <anchor id="Java"/><s1 title="Calling Java">
-    <p>
-    You can easily call any Java code from your Flowscripts, for example:
-    </p>
-    <source>
-    var map = new java.util.HashMap();
-    map.put("foo", "bar");
-    </source>
-
-    <p>Classes in packages under <code>java</code> are accessible directly in your scripts.</p>
-    <p>Note that classes under <code>java.lang</code> are not automatically imported, however:</p>
-
-    <source>var n = new java.lang.Integer(3);</source>
-
-    <p>All other java packages and classes are accessible under the property <code>Packages</code>:</p>
-
-    <source>var tree = new Packages.javax.swing.JTree();</source>
-
-    <p>You can get the effect of Java imports using the <code>importPackage()</code> and <code>importClass()</code> functions:</p>
-    <table>
-     <tr>
-       <td>
-       In Java:
-       </td>
-       <td>
-       In JavaScript:
-       </td>
-     </tr>
-     <tr>
-       <td>
-       import foo.*;
-       </td>
-       <td>
-       importPackage(Packages.foo);
-       </td>
-     </tr>
-     <tr>
-       <td>
-       import foo.Bar;
-       </td>
-       <td>
-       importClass(Packages.foo.Bar);
-       </td>
-     </tr>
-    </table>
-    <p>Example:</p>
-     <source>
-    importPackage(java.util);   
-    var set = new TreeSet();</source>     
-    <p>
-    </p>
-    <p>
-      If your Java classes have getters and setters you can access them as properties in JavaScript:</p>
-<source>
-    var d = new java.util.Date();
-    d.year = 2003;    // same effect as d.setYear(2003);
-</source>     
-      <p/>
     </s1>
   </body>
 </document>
