@@ -124,4 +124,9 @@ public interface ProfileManager {
      * one.
      */
     void storeProfile(Layout rootLayout, String layoutKey);
+    
+    /**
+     * Get current user information
+     */
+    PortalUser getUser();
 }
