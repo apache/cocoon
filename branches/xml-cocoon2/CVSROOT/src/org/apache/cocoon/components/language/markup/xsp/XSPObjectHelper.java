@@ -7,19 +7,28 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup.xsp;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
-
 import org.xml.sax.SAXException;
+
+import org.w3c.dom.Node;
 
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
+
+import org.apache.cocoon.xml.XMLFragment;
+import org.apache.cocoon.xml.dom.DOMStreamer;
 
 /**
  * Base class for XSP's object model manipulation logicsheets
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-08 20:39:04 $
+ * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
+ *         (Cocoon1 <code>xspExpr()</code> methods port)
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-03 15:38:02 $
  */
 public class XSPObjectHelper {
   /**
@@ -153,5 +162,214 @@ public class XSPObjectHelper {
     throws SAXException
   {
     contentHandler.characters(data.toCharArray(), 0, data.length());
+  }
+
+  // <xsp:expr> methods
+  
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>char</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, char v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>byte</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, byte v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>boolean</code> :
+   * outputs characters representing the value (true / false).
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, boolean v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>int</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, int v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>long</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, long v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>long</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, float v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>double</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, double v) throws SAXException
+  {
+    data(contentHandler, String.valueOf(v));
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>String</code> :
+   * outputs characters representing the value.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, String text) throws SAXException
+  {
+    if (text != null)
+    {
+      data(contentHandler, text);
+    }
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>XMLFragment</code> :
+   * outputs the value by calling <code>v.toSax(contentHandler)</code>.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the XML fragment
+   */
+  public static void xspExpr(ContentHandler contentHandler, XMLFragment v) throws SAXException
+  {
+    if (v != null)
+    {
+      v.toSAX(contentHandler);
+    }
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>org.w3c.dom.Node</code> :
+   * converts the Node to a SAX event stream.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, Node v) throws SAXException
+  {
+    if (v != null)
+    {
+      DOMStreamer streamer = new DOMStreamer(contentHandler);
+      streamer.stream(v);
+    }
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>java.util.Collection</code> :
+   * outputs the value by calling <code>xspExpr()</code> on each element of the
+   * collection.
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the XML fragment
+   */
+  public static void xspExpr(ContentHandler contentHandler, Collection v) throws SAXException
+  {
+    if (v != null)
+    {
+      Iterator iterator = v.iterator();
+      while (iterator.hasNext())
+      {
+      	xspExpr(contentHandler, iterator.next());
+      }
+    }
+  }
+
+  /**
+   * Implementation of &lt;xsp:expr&gt; for <code>Object</code> depending on its class :
+   * <ul>
+   * <li>if it's an array, call <code>xspExpr()</code> on all its elements,</li>
+   * <li>if it's class has a specific <code>xspExpr()</code>implementation, use it,</li>
+   * <li>else, output it's string representation.</li>
+   * </ul>
+   *
+   * @param contentHandler the SAX content handler
+   * @param v the value
+   */
+  public static void xspExpr(ContentHandler contentHandler, Object v) throws SAXException
+  {
+    if (v == null)
+    {
+      return;
+    }
+
+    // Array: recurse over each element
+    if (v.getClass().isArray())
+    {
+      Object[] elements = (Object[]) v;
+
+      for (int i = 0; i < elements.length; i++)
+      {
+        xspExpr(contentHandler, elements[i]);
+      }
+      return;
+    }
+
+    // Check handled object types in case they were not typed in the XSP
+
+    // XMLFragment
+    if (v instanceof XMLFragment)
+    {
+      xspExpr(contentHandler, (XMLFragment)v);
+      return;
+    }
+
+    // Node
+    if (v instanceof Node)
+    {
+      xspExpr(contentHandler, (Node)v);
+      return;
+    }
+
+    // Collection
+    if (v instanceof Collection)
+    {
+      xspExpr(contentHandler, (Collection)v);
+      return;
+    }
+
+    // Give up: hope it's a string or has a meaningful string representation
+    data(contentHandler, String.valueOf(v));
   }
 }

@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-08 20:41:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-03 15:38:23 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -126,7 +126,9 @@ public class DOMStreamer extends AbstractXMLProducer {
                     // Do nothing for ENTITY and NOTATION nodes
                     break;
                 case Node.DOCUMENT_FRAGMENT_NODE:
-                    throw new SAXException("Unexpected Document Fragment node");
+                    // Process all children
+                    processChildren(n);
+                    break;
                 case Node.ATTRIBUTE_NODE:
                     throw new SAXException("Unexpected Attribute node");
                 default:

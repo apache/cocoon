@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-02 11:09:51 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-03 15:38:11 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -51,6 +51,7 @@
     import org.apache.cocoon.util.*;
 
     import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
+    import org.apache.cocoon.components.language.markup.xsp.XSPObjectHelper;
     import org.apache.cocoon.components.language.markup.xsp.XSPRequestHelper;
     import org.apache.cocoon.components.language.markup.xsp.XSPResponseHelper;
 
@@ -278,8 +279,8 @@ Either both 'uri' and 'prefix' or none of them must be specified
         (<xsl:value-of select="."/>)
       </xsl:when>
       <xsl:otherwise>
-        <!-- Coerce to String and output as character data -->
-        this.characters(String.valueOf(<xsl:value-of select="."/>));
+        <!-- Output the value as elements or character data depending on its type -->
+        XSPObjectHelper.xspExpr(contentHandler, <xsl:value-of select="."/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
