@@ -28,6 +28,7 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.SingleThreaded;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
@@ -43,7 +44,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-01 15:45:26 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-03-03 16:00:36 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
@@ -259,6 +260,21 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
     }
 
     public void release(Component component) {
+        if (component instanceof Disposable) {
+            try {
+                ((Disposable) component).dispose();
+            } catch (Exception e) {
+                this.log.warn(
+                    "Could not dispose of instance of component " + component.getClass().getName() + ".",
+                    e
+                );
+            }
+        }
+        
+        if (component instanceof Recyclable) {
+            ((Recyclable) component).recycle();
+        }
+        
         if (component instanceof Poolable) {
             ComponentPool pool = (ComponentPool) pools.get(component.getClass());
 
@@ -267,9 +283,8 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
             } else {
                 log.debug("Could not find pool for:" + component.getClass());
             }
-        } else if (component instanceof Recyclable) {
-            ((Recyclable) component).recycle();
         }
+
     }
 
     /** Configure a new component.
