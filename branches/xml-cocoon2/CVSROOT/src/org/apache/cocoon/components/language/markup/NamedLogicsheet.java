@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  * namespace 
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:56 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:33 $
  */
 public class NamedLogicsheet extends Logicsheet {
   /**

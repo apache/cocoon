@@ -8,12 +8,12 @@
 package org.apache.cocoon.selection;
 
 import org.apache.cocoon.sitemap.SitemapComponent;
-import org.apache.cocoon.Request;
+import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:51 $
  */
 public interface Selector extends SitemapComponent {
     /**
@@ -24,7 +24,7 @@ public interface Selector extends SitemapComponent {
      *                   to select values to test the expression.
      * @return boolean   Signals successfull test.
      */
-    public boolean select (String expression, Request request);
+    public boolean select (String expression, Environment environment);
 }
 
 

@@ -19,7 +19,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:08 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-07-22 20:41:55 $
  */
 public class CocoonServletResponse implements Response {
 

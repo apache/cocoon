@@ -12,6 +12,7 @@ import java.util.Date;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,10 +20,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.ComponentNotAccessibleException;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -30,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.12 $ $Date: 2000-07-14 14:03:45 $
+ * @version CVS $Revision: 1.1.4.13 $ $Date: 2000-07-22 20:41:54 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -133,9 +138,8 @@ public class CocoonServlet extends HttpServlet {
         if (!uri.equals("")) {
             try {
                 if (uri.charAt(0)=='/') uri=uri.substring(1);
-                CocoonServletRequest request=new CocoonServletRequest(req,uri);
-                CocoonServletResponse response=new CocoonServletResponse(res);
-                if (!this.cocoon.process(request,response,out)) {
+                HttpEnvironment env = new HttpEnvironment (uri, req, res);
+                if (!this.cocoon.process(env,out)) {
                     res.setStatus(res.SC_NOT_FOUND);
                     res.setContentType("text/html");
                     out.println("<html><head>");

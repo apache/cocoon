@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:45:07 $
+ * @version $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
  */
 public class ImageDirectoryGenerator extends DirectoryGenerator {
 

@@ -18,7 +18,7 @@ import org.apache.avalon.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:09:52 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:43 $
  */
 public interface Store extends Component {
 

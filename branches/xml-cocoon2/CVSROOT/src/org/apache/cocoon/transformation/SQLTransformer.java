@@ -8,8 +8,7 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -35,7 +34,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:58 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $ $Author: giacomo $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -88,7 +87,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     /** BEGIN SitemapComponent methods **/
 
-    public void setup(Request request, Response response, 
+    public void setup(Environment environment, 
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {
         current_state = STATE_OUTSIDE;

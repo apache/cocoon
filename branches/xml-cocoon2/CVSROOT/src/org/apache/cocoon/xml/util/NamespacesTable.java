@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-06-06 12:54:08 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:42:05 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */

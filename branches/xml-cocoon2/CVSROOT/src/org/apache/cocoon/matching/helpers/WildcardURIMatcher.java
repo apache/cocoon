@@ -17,7 +17,7 @@ import java.util.Stack;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:45 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:51 $
  */
 public class WildcardURIMatcher {
 

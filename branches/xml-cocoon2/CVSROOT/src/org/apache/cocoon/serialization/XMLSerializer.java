@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
 import org.xml.sax.Attributes;
@@ -23,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:52 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:53 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -65,7 +66,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     public void startDocument()
     throws SAXException {
         String c=super.parameters.getParameter("contentType","text/xml");
-        super.response.setContentType(c);
+        ((HttpEnvironment)(super.environment)).getResponse().setContentType(c);
         this.print("<?xml version=\"1.0\"?>\n");
     }
 

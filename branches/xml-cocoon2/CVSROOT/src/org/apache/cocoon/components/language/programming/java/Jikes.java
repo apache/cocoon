@@ -15,7 +15,7 @@ import org.apache.cocoon.components.language.programming.*;
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:06 $
+ * @version $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:40 $
  * @since 2.0
  */
 

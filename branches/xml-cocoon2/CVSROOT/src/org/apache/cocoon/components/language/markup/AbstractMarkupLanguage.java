@@ -49,7 +49,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:38 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:32 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent

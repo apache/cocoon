@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * request...
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:45:08 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
  */
 public class PhpGenerator extends ComposerGenerator {
 

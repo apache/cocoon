@@ -12,8 +12,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.xml.util.DocumentHandlerWrapper; 
 
 import org.apache.fop.apps.Driver;
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:13 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:52 $
  *
  */
 public class FO2PDFSerializer extends DocumentHandlerWrapper 
@@ -43,15 +43,15 @@ public class FO2PDFSerializer extends DocumentHandlerWrapper
     private Driver driver = null;
 
     /**
-     * Set the <code>Request</code>, <code>Response</code> and sitemap
+     * Set the <code>Environment</code> and sitemap
      * <code>Parameters</code> used to process the request.
      */
-    public void setup(Request req, Response res, String src, Parameters par) {
+    public void setup(Environment environment, String src, Parameters par) {
         driver = new Driver();
         driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
         driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
         driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-        res.setContentType(par.getParameter("contentType","application/pdf"));
+        ((HttpEnvironment)environment).getResponse().setContentType(par.getParameter("contentType","application/pdf"));
         this.setDocumentHandler (driver.getDocumentHandler());
     }
 

@@ -7,7 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+
 import java.util.Enumeration;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -15,7 +19,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:45:09 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
  */
 public class RequestGenerator extends AbstractGenerator {
 
@@ -31,7 +35,7 @@ public class RequestGenerator extends AbstractGenerator {
         this.contentHandler.startPrefixMapping("",URI);
         AttributesImpl attr=new AttributesImpl();
         
-        this.attribute(attr,"target",this.request.getUri());
+        this.attribute(attr,"target",this.environment.getUri());
         this.attribute(attr,"source",this.source);
         this.start("request",attr);
         this.data("\n");
@@ -40,13 +44,13 @@ public class RequestGenerator extends AbstractGenerator {
         this.data("  ");
         this.start("requestHeaders",attr);
         this.data("\n");
-        Enumeration headers=super.request.getHeaderNames();
+        Enumeration headers=((HttpEnvironment)(super.environment)).getRequest().getHeaderNames();
         while (headers.hasMoreElements()) {
             String header=(String)headers.nextElement();
             this.attribute(attr,"name",header);
             this.data("    ");
             this.start("header",attr);
-            this.data(this.request.getHeader(header));
+            this.data(((HttpEnvironment)(super.environment)).getRequest().getHeader(header));
             this.end("header");
             this.data("\n");
         }
@@ -58,14 +62,14 @@ public class RequestGenerator extends AbstractGenerator {
         this.data("  ");
         this.start("requestParameters",attr);
         this.data("\n");
-        Enumeration parameters=super.request.getParameterNames();
+        Enumeration parameters=((HttpEnvironment)(super.environment)).getRequest().getParameterNames();
         while (parameters.hasMoreElements()) {
             String parameter=(String)parameters.nextElement();
             this.attribute(attr,"name",parameter);
             this.data("    ");
             this.start("parameter",attr);
             this.data("\n");
-            String values[]=super.request.getParameterValues(parameter);
+            String values[]=((HttpEnvironment)(super.environment)).getRequest().getParameterValues(parameter);
             if (values!=null) for (int x=0; x<values.length; x++) {
                 this.data("      ");
                 this.start("value",attr);

@@ -33,8 +33,8 @@ public class HttpEnvironment implements Environment {
      * Constructs a HttpEnvironment object from a HttpServletRequest 
      * and HttpServletResponse objects
      */
-    public HttpEnvironment (HttpServletRequest req, HttpServletResponse res) {
-        this.uri = req.getRequestURI();
+    public HttpEnvironment (String uri, HttpServletRequest req, HttpServletResponse res) {
+        this.uri = uri;
         this.view = req.getHeader("cocoon-view");
         this.req = new HttpRequest (req, this);
         this.res = new HttpResponse (res);

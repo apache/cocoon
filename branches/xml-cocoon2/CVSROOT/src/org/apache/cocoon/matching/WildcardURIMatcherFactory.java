@@ -17,7 +17,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-20 21:57:03 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:49 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {

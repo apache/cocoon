@@ -19,7 +19,7 @@ import org.apache.avalon.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-11 03:09:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:43 $
  */
 public class MemoryStore implements Store {
     

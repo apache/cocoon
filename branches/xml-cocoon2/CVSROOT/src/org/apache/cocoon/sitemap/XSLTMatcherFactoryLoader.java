@@ -19,7 +19,7 @@ import org.w3c.dom.DocumentFragment;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-20 21:57:19 $ 
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:41:58 $ 
  */ 
 
 public class XSLTMatcherFactoryLoader {

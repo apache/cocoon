@@ -33,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-04-17 00:13:49 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:42:05 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 

@@ -10,8 +10,7 @@ package org.apache.cocoon.sitemap;
 import java.io.IOException;
 import org.apache.avalon.Component;
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.SAXException;
 
@@ -19,7 +18,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:10:04 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:57 $
  */
 public interface SitemapComponent extends Component {
 
@@ -27,6 +26,6 @@ public interface SitemapComponent extends Component {
      * Set the <code>Request</code>, <code>Response</code> and sitemap
      * <code>Parameters</code> used to process the request.
      */
-    public void setup(Request req, Response res, String src, Parameters par)
+    public void setup(Environment environment, String src, Parameters par)
     throws ProcessingException, SAXException, IOException;
 }

@@ -15,7 +15,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-07-11 03:10:03 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-07-22 20:41:56 $
  */
 public interface LinkResolver {
 

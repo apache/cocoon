@@ -12,7 +12,7 @@ package org.apache.cocoon.components.language.programming;
  * This class encapsulates an error message produced by a programming language
  * processor (whether interpreted or compiled)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:03 $
+ * @version $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:39 $
  * @since 2.0
  */
 

@@ -9,8 +9,7 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 
 import org.xml.sax.Attributes;
@@ -44,7 +43,7 @@ import java.util.Date;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:57 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -65,7 +64,7 @@ public class LogTransformer extends AbstractTransformer {
 
     /** BEGIN SitemapComponent methods **/
 
-    public void setup(Request request, Response response, 
+    public void setup(Environment environment, 
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {
         if (logfile == null) {

@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-06-06 12:54:08 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:42:05 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */

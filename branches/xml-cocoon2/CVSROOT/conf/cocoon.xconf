@@ -39,7 +39,7 @@
 
       <component-instance name="sitemap" class="org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage">
         <parameter name="prefix" value="map"/>
-        <parameter name="uri" value="http://xml.apache.org/cocoon/sitemap"/>
+        <parameter name="uri" value="http://apache.org/cocoon/sitemap/1.0"/>
   
         <target-language name="java">
           <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
@@ -53,100 +53,5 @@
     <parameter name="auto-reload" value="true"/>
   </component>
 
-<!-- ===================== Pipeline Components =========================== -->
-
-  <generator  name="file"      class="org.apache.cocoon.generation.FileGenerator"/>
-  <generator  name="request"   class="org.apache.cocoon.generation.RequestGenerator"/>
-  <generator  name="directory" class="org.apache.cocoon.generation.DirectoryGenerator"/>
-  <generator  name="serverpages" class="org.apache.cocoon.generation.ServerPagesGenerator"/>
-  <generator  name="status"    class="org.apache.cocoon.generation.StatusGenerator"/>  
-
-  <transformer     name="xslt"      class="org.apache.cocoon.transformation.XalanTransformer"/>
-  <transformer     name="log"       class="org.apache.cocoon.transformation.LogTransformer"/>
-  <transformer     name="sql"       class="org.apache.cocoon.transformation.SQLTransformer"/>
-  <transformer     name="xinclude"  class="org.apache.cocoon.transformation.XIncludeTransformer"/>
-  
-  <serializer name="xml"       class="org.apache.cocoon.serialization.XMLSerializer"/>
-  <serializer name="html"      class="org.apache.cocoon.serialization.HTMLSerializer"/>
-  <serializer name="fo2pdf"    class="org.apache.cocoon.serialization.FO2PDFSerializer"/>
-  <serializer name="svg2jpg"   class="org.apache.cocoon.serialization.SVGSerializer"/>
-  <serializer name="image"     class="org.apache.cocoon.serialization.ImageSerializer"/>
-  
-<!-- ============================== Sitemap ================================ -->
-  
-  <sitemap>
-    <partition>
-
-      <process uri="welcome" source="documents/welcome.xml">
-        <generator name="file"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/simple-welcome2html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-      <process uri="hello" source="documents/hello-page.xml">
-        <generator name="file"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/simple-page2html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-      <process uri="java.apache.org" source="documents/java_apache_org.xml">
-        <generator name="file"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/java_apache_org-html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-      <process uri="jakarta.apache.org" source="documents/jakarta_apache_org.xml">
-        <generator name="file"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/jakarta_apache_org-html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-      <process uri="simple_dynamic_page" source="documents/simple-dynamic-page.xsp">
-        <generator name="serverpages"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/dynamic-page2html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-      <process uri="status" source="status">
-        <generator name="status"/>
-        <filter name="xslt">
-          <parameter name="stylesheet" value="stylesheets/simple-status.xsl"/>
-        </filter>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>      
-
-      <process uri="**/" source="**/">
-        <generator name="directory"/>
-        <transformer name="xslt">
-          <parameter name="stylesheet" value="stylesheets/simple-directory2html.xsl"/>
-        </transformer>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-
-    </partition>
-  </sitemap>
+  <sitemap file="/opt/tomcatc2/webapps/cocoon/sitemap.xmap"/> 
 </cocoon>

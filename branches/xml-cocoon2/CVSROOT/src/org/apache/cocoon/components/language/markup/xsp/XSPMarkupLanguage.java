@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/xsp.html">XSP</a>.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:36 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
   /**

@@ -14,9 +14,9 @@ import java.io.OutputStream;
 //import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -26,18 +26,22 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-17 21:06:14 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:41:57 $
  */
 public class ResourcePipeline {
     private Generator generator = null;
     private Parameters generatorParam = null;
     private String generatorSource = null;
+    private Reader reader = null;
+    private Parameters readerParam = null;
+    private String readerSource = null;
     private Vector transformers = new Vector();
     private Vector transformerParams = new Vector();
     private Vector transformerSources = new Vector();
     private Serializer serializer = null;
     private Parameters serializerParam = null;
     private String serializerSource = null;
+    private boolean isReader = false;
 
     public ResourcePipeline () {
     }
@@ -46,6 +50,13 @@ public class ResourcePipeline {
         this.generator = generator;
         this.generatorSource = source;
         this.generatorParam = param;
+    }
+
+    public void setReader (Reader reader, String source, Parameters param) {
+        this.reader = reader;
+        this.readerSource = source;
+        this.readerParam = param;
+        this.isReader = true;
     }
 
     public void setSerializer (Serializer serializer, String source, Parameters param) {
@@ -60,33 +71,39 @@ public class ResourcePipeline {
         this.transformerParams.add (param);
     }
 
-    public boolean process (Request req, Response res, OutputStream out)
+    public boolean process (Environment environment, OutputStream out)
                             throws ProcessingException, IOException, SAXException {
-        if (generator == null) {
-            throw new ProcessingException ("Generator not specified");
+        if (isReader) {
+            reader.setup (environment, serializerSource, generatorParam);
+            reader.setOutputStream (out);
+            reader.generate();
+        } else {
+            if (generator == null) {
+                throw new ProcessingException ("Generator not specified");
+            }
+
+            if (serializer == null) {
+                throw new ProcessingException ("Serializer not specified");
+            }
+
+            generator.setup (environment, generatorSource, generatorParam);
+            Transformer transformer = null;
+            XMLProducer producer = generator;
+            int i = transformers.size();
+
+            for (int j=0; j < i; j++) {
+                transformer = (Transformer) transformers.elementAt (j);
+                transformer.setup (environment, (String)transformerSources.elementAt (j),
+                               (Parameters)transformerParams.elementAt (j));
+                producer.setConsumer (transformer);
+                producer = transformer;
+            }
+
+            serializer.setup (environment, serializerSource, generatorParam);
+            serializer.setOutputStream (out);
+            producer.setConsumer (serializer);
+            generator.generate();
         }
-
-        if (serializer == null) {
-            throw new ProcessingException ("Serializer not specified");
-        }
-
-        generator.setup (req, res, generatorSource, generatorParam);
-        Transformer transformer = null;
-        XMLProducer producer = generator;
-        int i = transformers.size();
-
-        for (int j=0; j < i; j++) {
-            transformer = (Transformer) transformers.elementAt (j);
-            transformer.setup (req, res, (String)transformerSources.elementAt (j),
-                           (Parameters)transformerParams.elementAt (j));
-            producer.setConsumer (transformer);
-            producer = transformer;
-        }
-
-        serializer.setup (req, res, serializerSource, generatorParam);
-        serializer.setOutputStream (out);
-        producer.setConsumer (serializer);
-        generator.generate();
         return true;
     }
 } 

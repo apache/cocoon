@@ -43,7 +43,7 @@ import org.xml.sax.ContentHandler;
  * </code>
  * 
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-12 22:15:09 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:48 $
  */
 public class StatusGenerator extends ComposerGenerator {
 

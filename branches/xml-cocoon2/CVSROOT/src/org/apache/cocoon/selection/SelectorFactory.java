@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentFragment;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-19 22:19:58 $ 
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:41:52 $ 
  */ 
 
 public interface SelectorFactory {

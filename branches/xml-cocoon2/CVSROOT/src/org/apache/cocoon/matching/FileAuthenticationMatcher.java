@@ -9,11 +9,9 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.cocoon.environment.Environment; 
-import org.apache.cocoon.Request; 
-import org.apache.cocoon.Response; 
 import org.apache.avalon.utils.Parameters; 
 
-public class FileAuthenticationMatcher extends AuthenticationMatcher /* implements Configurable */ {
+public class FileAuthenticationMatcher extends AuthenticationMatcher implements Configurable {
 
 	private Hashtable users = new Hashtable();
 
@@ -46,7 +44,7 @@ public class FileAuthenticationMatcher extends AuthenticationMatcher /* implemen
 		}
 	}
 
-        public void setup (Request req, Response res, String src, Parameters param) {
-        }
+   public void setup (Environment environment, String src, Parameters param) {
+   }
 
 }

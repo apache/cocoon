@@ -23,8 +23,7 @@ import org.xml.sax.ContentHandler;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -42,7 +41,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:59 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -76,7 +75,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
 	protected Stack xmlbase_element_name_stack = new Stack();
 
-    public void setup(Request request, Response response, 
+    public void setup(Environment environment, 
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {}
 	/*

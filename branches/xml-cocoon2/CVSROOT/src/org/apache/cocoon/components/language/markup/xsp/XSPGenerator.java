@@ -17,7 +17,7 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 23:46:37 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:36 $
  */
 public abstract class XSPGenerator extends AbstractServerPage {
   /** The XSP Object Model */

@@ -17,8 +17,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Response;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * Generates an XML directory listing.
@@ -53,7 +52,7 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:45:05 $ */
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
@@ -81,17 +80,15 @@ public class DirectoryGenerator extends ComposerGenerator {
      * Set the request parameters. Must be called before the generate
      * method.
      *
-     * @param	req
-     * 		the incoming request object
-     * @param	res
-     * 		the outgoing response object
+     * @param	environment
+     * 		the calling environment object
      * @param	src
      * 		the URI for this request (?)
      * @param	par
      * 		configuration parameters
      */
-    public void setup(Request req, Response res, String src, Parameters par) {
-	super.setup(req, res, src, par);
+    public void setup(Environment environment, String src, Parameters par) {
+	super.setup(environment, src, par);
 
 	String dateFormatString = par.getParameter("dateFormat", null);
 

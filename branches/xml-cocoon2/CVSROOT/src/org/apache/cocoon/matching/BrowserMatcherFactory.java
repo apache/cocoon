@@ -22,7 +22,7 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-19 22:19:53 $ 
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:41:49 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {

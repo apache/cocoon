@@ -18,14 +18,14 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-20 21:57:02 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:49 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
     public String generateClassLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
         StringBuffer sb = new StringBuffer ();
         RECompiler r = new RECompiler();
-        String name         = prefix+"_re";
+        String name         = prefix;
         String instructions = name + "PatternInstructions";
         sb.append("\n    // Pre-compiled regular expression '")
           .append(pattern).append("'\n")
@@ -55,10 +55,10 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
 
     public String generateMethodLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
         StringBuffer sb = new StringBuffer ();
-        String name         = prefix+"_re";
+        String name         = prefix;
         String instructions = name + "PatternInstructions";
         sb.append("java.util.ArrayList list = new java.util.ArrayList ();")
-          .append("if (").append(name).append("Pattern.match(request.getURI())) {");
+          .append("if (").append(name).append("Pattern.match(environment.getUri())) {");
         // Count number of parens
         int i = 0;
         int j = -1;

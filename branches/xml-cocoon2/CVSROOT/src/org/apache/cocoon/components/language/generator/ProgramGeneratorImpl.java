@@ -48,7 +48,7 @@ import java.io.FileNotFoundException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 03:09:37 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:31 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable

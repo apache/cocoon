@@ -11,7 +11,7 @@ package org.apache.cocoon;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 01:33:05 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:29 $
  */
 public interface Response {
     /**

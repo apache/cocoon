@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
@@ -25,10 +26,12 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.SAXConfigurationBuilder;
+
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.sitemap.SitemapManager;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -37,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.11 $ $Date: 2000-07-20 21:56:53 $
+ * @version CVS $Revision: 1.4.2.12 $ $Date: 2000-07-22 20:41:29 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -47,17 +50,17 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
     private Hashtable components=new Hashtable();
     /** The table of role-configuration */
     private Hashtable configurations=new Hashtable();
-    /** The configuration file */
-    private File configurationFile=null;
+    /** The configuration file */ 
+    private File configurationFile=null; 
+    /** The sitemap file */ 
+    private String sitemapFileName=null; 
     /** The configuration tree */
     private Configuration configuration=null;
-    /** The sitemap */
-    private Sitemap sitemap=null;
+    /** The sitemap manager */
+    private SitemapManager sitemapManager=null;
     /** The root uri/path */
     private URL root=null;
         
-    private org.apache.cocoon.sitemap.SitemapProcessor processor = null;
-
     /**
      * Create a new <code>Cocoon</code> instance.
      */
@@ -119,12 +122,12 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
             throw new ComponentNotFoundException("Can't find component "+role);
         try {
             Component comp=(Component)c.newInstance();
+            if (comp instanceof Composer)
+                ((Composer)comp).setComponentManager(this);
             if (comp instanceof Configurable) {
                 Configuration conf=(Configuration)this.configurations.get(role);
                 if (conf!=null) ((Configurable)comp).setConfiguration(conf);
             }
-            if (comp instanceof Composer)
-                ((Composer)comp).setComponentManager(this);
             return(comp);
         } catch (Exception e) {
             throw new ComponentNotAccessibleException("Can't access class "+
@@ -143,20 +146,6 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
             throw new ConfigurationException("Invalid configuration file",conf);
         if (!conf.getAttribute("version").equals("2.0"))
             throw new ConfigurationException("Invalid version",conf);
-        // Set generators, transformers and serializers
-        String buf[]={"generator","transformer","serializer"};
-        for (int x=0; x<buf.length; x++) {
-            Enumeration e=conf.getConfigurations(buf[x]);
-            while (e.hasMoreElements()) {
-                Configuration co=(Configuration)e.nextElement();
-                String na=co.getAttribute("name");
-                String cl=co.getAttribute("class");
-                String ro=buf[x]+":"+na;
-                System.out.println("Adding component: "+ro);
-                this.components.put(ro,this.getClass(cl,co));
-                this.configurations.put(ro,co);
-            }
-        }
         // Set components
         Enumeration e=conf.getConfigurations("component");
         while (e.hasMoreElements()) {
@@ -171,9 +160,11 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         Configuration sconf=conf.getConfiguration("sitemap");
         if (sconf==null)
             throw new ConfigurationException("No sitemap configuration",conf);
-        this.sitemap=new Sitemap();
-        this.sitemap.setComponentManager(this);
-        this.sitemap.setConfiguration(sconf);
+        this.sitemapManager=new SitemapManager();
+        this.sitemapManager.setComponentManager(this);
+        this.sitemapManager.setConfiguration(conf);
+        this.sitemapFileName = sconf.getAttribute("file");
+        System.out.println("The root sitemap is located at \""+this.sitemapFileName+"\"");
     }
 
     /**
@@ -184,14 +175,14 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
     }
 
     /**
-     * Process the given <code>Request</code> producing the output to the
-     * specified <code>Response</code> and <code>OutputStream</code>.
+     * Process the given <code>Environment</code> producing the output to the
+     * specified <code>OutputStream</code>.
      */
-    public boolean process(Environment environment, OutputStream out) {return true;}
-    public boolean process(Request req, Response res, OutputStream out)
-    throws SAXException, IOException, ProcessingException {
-        return(this.sitemap.process(req,res,out));
-//        return(this.processor.process(req,res,out));
+    public boolean process(Environment environment, OutputStream out) 
+    throws SAXException, IOException, ProcessingException, 
+           InterruptedException  {
+        return (this.sitemapManager.invoke (environment, "",
+                                    this.sitemapFileName, true, out));
     }
 
     /**
@@ -229,45 +220,6 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         } catch (ClassNotFoundException e) {
             throw new ConfigurationException("Cannot load class "+className,
                 conf);
-        }
-    }
-
-    /** Generate the Sitemap class */
-    private void generateSitemap (String sitemapName) 
-            throws java.net.MalformedURLException, IOException, 
-                   org.apache.cocoon.ProcessingException {
-
-        InputSource inputSource = new InputSource (sitemapName);
-        String systemId = inputSource.getSystemId();
-        System.out.println ("C2 generateSitemap: "+systemId);
-
-        File file = new File(systemId);
-
-        if (!file.canRead()) {
-            throw new IOException("Can't read file: " + systemId);
-        }
-
-        String markupLanguage = "sitemap";
-        String programmingLanguage = "java";
-
-        org.apache.cocoon.components.language.generator.ProgramGenerator programGenerator = null;
-
-        System.out.println ("C2 generateSitemap: obtaining programGenerator");
-        programGenerator = 
-            (org.apache.cocoon.components.language.generator.ProgramGenerator) getComponent("program-generator");
-        System.out.println ("C2 generateSitemap: programGenerator obtained");
-
-        System.out.println ("C2 generateSitemap: obtaining generator");
-        try {
-            processor = (org.apache.cocoon.sitemap.SitemapProcessor)
-                programGenerator.load(file, markupLanguage, programmingLanguage);
-            System.out.println ("C2 generateSitemap: generator obtained");
-            processor.setComponentManager(this);
-            processor.setConfiguration(null);
-            System.out.println ("C2 generateSitemap: generator called");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new org.apache.cocoon.ProcessingException (e.getMessage());    
         }
     }
 }
