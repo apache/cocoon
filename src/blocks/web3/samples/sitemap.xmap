@@ -24,7 +24,7 @@
      </map:view>
 
      <map:view name="pretty-content" from-label="data">
-       <map:transform src="context://samples/common/style/xsl/html/simple-xml2html.xsl"/>
+       <map:transform src="context://stylesheets/system/xml2html.xsl"/>
        <map:serialize type="html"/>
      </map:view>
      
