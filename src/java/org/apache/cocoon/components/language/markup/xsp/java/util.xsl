@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: util.xsl,v 1.3 2003/03/13 14:13:08 stevenn Exp $-->
+<!-- $Id: util.xsl,v 1.4 2003/06/03 14:34:29 haul Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author ported by <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/03/13 14:13:08 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/06/03 14:34:29 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -194,9 +194,9 @@
   <xsl:template match="util:include-expr">
     <xsl:variable name="expr">
       <xsl:choose>
-        <xsl:when test="@expr">"<xsl:value-of select="@expr"/>"</xsl:when>
+        <xsl:when test="@expr"><xsl:value-of select="@expr"/></xsl:when>
         <xsl:when test="util:expr">
-          <xsl:apply-templates select="util:expr/*|util:expr/text()"/>
+          <xsp:expr><xsl:apply-templates select="util:expr/*|util:expr/text()"/></xsp:expr>
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
