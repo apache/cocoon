@@ -66,6 +66,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.components.SitemapConfigurable;
+import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -96,7 +97,7 @@ import org.xml.sax.SAXException;
  *  This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationManager.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
+ * @version CVS $Id: AuthenticationManager.java,v 1.3 2003/03/20 11:45:59 cziegeler Exp $
 */
 public final class AuthenticationManager
 extends AbstractSessionComponent
@@ -161,10 +162,10 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
     /**
      * Set the <code>Configuration</code>.
      */
-    public void setSitemapConfiguration(Configuration config)
+    public void configure(SitemapConfigurationHolder holder)
     throws ConfigurationException {
-        this.handlerManager.addConfiguration( config, this.resolver, this.request );
-        this.handlerManager.addAvailableHandlers( config );
+        this.handlerManager.addConfiguration( holder.getConfiguration(), this.resolver, this.request );
+        this.handlerManager.addAvailableHandlers( holder.getConfiguration() );
     }
 
     /**

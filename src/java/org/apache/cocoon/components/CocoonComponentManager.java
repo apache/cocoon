@@ -63,8 +63,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
@@ -84,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.4 2003/03/20 08:54:18 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.5 2003/03/20 11:45:58 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -153,8 +152,6 @@ implements SourceResolver
 		final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
 		stack.push(new Object[] {env, processor, manager});
     
-        final EnvironmentDescription desc = (EnvironmentDescription)env.getObjectModel().get(PROCESS_KEY);
-        desc.addSitemapConfiguration(processor.getComponentConfigurations());
         env.setAttribute("CocoonComponentManager.processor", processor);
     }
 
@@ -164,8 +161,6 @@ implements SourceResolver
     public static void leaveEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         final Object[] objects = (Object[])stack.pop();
-        final EnvironmentDescription desc = (EnvironmentDescription)((Environment)objects[0]).getObjectModel().get(PROCESS_KEY);
-        desc.removeLastSitemapConfiguration();
     }
 
     /**
@@ -314,29 +309,6 @@ implements SourceResolver
                         }
                         ((RequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
                                                                       objectModel);
-                        if (component instanceof SitemapConfigurable) {
-                            List configs = desc.getSitemapConfigurations();
-                            for(int i=0; i < configs.size(); i++) {
-                                Configuration parent = (Configuration)configs.get(i);
-                                Configuration cc = parent.getChild( role, false );
-                                if ( null != cc ) {
-                                    ((SitemapConfigurable) component).setSitemapConfiguration(cc);
-                                } else if ( null != this.roleManager) {
-
-                                    // check for hint
-                                    Configuration[] childs = parent.getChildren();
-                                    if ( null != childs ) {
-                                        for(int m = 0; m < childs.length; m++) {
-                                            final String r = this.roleManager.getRoleForName(childs[m].getName());
-                                            if ( role.equals(r) ) {
-                                                ((SitemapConfigurable) component).setSitemapConfiguration(childs[m]);
-                                                m = childs.length;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     } catch (Exception local) {
                         throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
                     }
@@ -345,18 +317,24 @@ implements SourceResolver
             }
         }
         
-        /*
-         if ( null != component && component instanceof SitemapConfigurable) {
+        if ( null != component && component instanceof SitemapConfigurable) {
+
             // FIXME: how can we prevent that this is called over and over again?
             SitemapConfigurationHolder holder;
             
             holder = (SitemapConfigurationHolder)sitemapConfigurationHolders.get( role );
             if ( null == holder ) {
                 // create new holder
+                holder = new DefaultSitemapConfigurationHolder( role );
                 sitemapConfigurationHolders.put( role, holder );
             }
-            ((SitemapConfigurable)component).configure(holder);
-        }*/
+
+            try {
+                ((SitemapConfigurable)component).configure(holder);
+            } catch (ConfigurationException ce) {
+                throw new ComponentException(role, "Exception during setup of SitemapConfigurable.", ce);
+            }
+        }
         return component;
     }
 
@@ -482,14 +460,11 @@ implements SourceResolver
 
 final class EnvironmentDescription {
     
-    private static final Configuration EMPTY_CONFIGURATION = 
-            new DefaultConfiguration("config", "");
-    
     Environment environment;
     Map         objectModel;
     Map         requestLifecycleComponents = new HashMap(5);
     List        autoreleaseComponents      = new ArrayList(2);
-    List        sitemapConfigurations      = new ArrayList(4);    
+
     /**
      * Constructor
      */
@@ -525,7 +500,6 @@ final class EnvironmentDescription {
         }
         this.requestLifecycleComponents.clear();
         this.autoreleaseComponents.clear();
-        this.sitemapConfigurations.clear();
         this.environment = null;
         this.objectModel = null;
     }
@@ -601,22 +575,6 @@ final class EnvironmentDescription {
         }
     }
     
-          
-    void addSitemapConfiguration(Configuration conf) {
-        if (conf != null) {
-            this.sitemapConfigurations.add(conf);
-        } else {
-            this.sitemapConfigurations.add(EMPTY_CONFIGURATION);
-        }
-    }
-      
-    List getSitemapConfigurations() {
-        return this.sitemapConfigurations;
-    }
- 
-    void removeLastSitemapConfiguration() {
-        this.sitemapConfigurations.remove(this.sitemapConfigurations.size()-1);
-    }               
 }
 
 final class CloningInheritableThreadLocal 

@@ -48,59 +48,43 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon;
+package org.apache.cocoon.components;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.environment.Environment;
-
 /**
- * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
- * It is necessary to avoid infinite dispose loops
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.2 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2003/03/20 11:45:58 cziegeler Exp $
  */
-public final class ProcessorWrapper
-implements Processor, Component, Disposable, ThreadSafe {
+public final class DefaultSitemapConfigurationHolder 
+    implements SitemapConfigurationHolder {
 
-    private Processor processor;
-
-    public void dispose() {
-        this.processor = null;
+    private String role;
+    
+    public DefaultSitemapConfigurationHolder(String role) {
+        this.role = role;
     }
-
-    public ProcessorWrapper(Processor processor) {
-        this.processor = processor;
+    
+    /**
+     * @see org.apache.cocoon.components.SitemapConfigurationHolder#getConfiguration()
+     */
+    public ChainedConfiguration getConfiguration() {
+        Map confs = CocoonComponentManager.getCurrentProcessor().getComponentConfigurations();
+        return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 
     /**
-     * Process the given <code>Environment</code> producing the output
+     * @see org.apache.cocoon.components.SitemapConfigurationHolder#getPreparedConfiguration()
      */
-    public boolean process(Environment environment)
-    throws Exception {
-        return this.processor.process(environment);
+    public Object getPreparedConfiguration() {
+        return null;
     }
 
     /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
+     * @see org.apache.cocoon.components.SitemapConfigurationHolder#setPreparedConfiguration(java.lang.Object)
      */
-    public ProcessingPipeline processInternal(Environment environment)
-    throws Exception {
-        return this.processor.processInternal(environment);
-    }
-
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
-     */
-    public Map getComponentConfigurations() {
-        return this.processor.getComponentConfigurations();
+    public void setPreparedConfiguration(ChainedConfiguration configuration, Object preparedConfig) {
     }
 
 }

@@ -61,13 +61,14 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.SitemapConfigurable;
+import org.apache.cocoon.components.SitemapConfigurationHolder;
 
 /**
  * This "component" is a trick to get global variables on a per
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
@@ -110,10 +111,10 @@ public final class SitemapVariableHolder
     /**
      * Set the <code>Configuration</code> from a sitemap
      */
-    public void setSitemapConfiguration(Configuration config)
+    public void configure(SitemapConfigurationHolder holder)
     throws ConfigurationException {
         // add sitemap configuration
-        this.manager.add(config);
+        this.manager.add(holder.getConfiguration());
     }
 
     /**

@@ -69,6 +69,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -88,7 +89,7 @@ import java.util.Map;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.2 2003/03/20 08:54:17 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -150,9 +151,9 @@ public class TreeProcessor
     /** Check for reload? */
     protected boolean checkReload;
 
-    /** component configurations */
+    /** The component configurations from the sitemap (if any) */
     protected Configuration componentConfigurations;
-
+    
     /** The different sitemap component configurations */
     protected Map sitemapComponentConfigurations;
     
@@ -203,6 +204,7 @@ public class TreeProcessor
         // FIXME(VG): Why child isn't configure()d/contextualize(d)/etc ???
         TreeProcessor child = new TreeProcessor(this, manager, language);
         child.enableLogging(getLogger());
+        child.setRoleManager(this.roleManager);
         child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
         return child;
     }
@@ -361,41 +363,47 @@ public class TreeProcessor
      * Get the sitemap component configurations
      * @since 2.1
      */
-    public Configuration getComponentConfigurations() {
+    public Map getComponentConfigurations() {
         // do we have the sitemap configurations prepared for this processor?
-        /*if ( null == sitemapComponentConfigurations ) {
-
-            // do we have configurations?
-            final Configuration[] childs = (this.componentConfigurations == null ? null : this.componentConfigurations.getChildren());
+        if ( null == this.sitemapComponentConfigurations ) {
             
-            if ( childs == null ) {
-                Map configurationMap = null;
-                if ( null == this.parent ) {
-                    this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
-                } else {
-                    // use configuration from parent
-                    this.sitemapComponentConfigurations = (Map)this.parent.getComponentConfigurations(); 
-                }
+            synchronized (this) {
 
-            } else {
-
-                Map configurationMap = null;
-                if ( null == this.parent ) {
-                    configurationMap = new HashMap(12);
-                } else {
-                    // copy all configurations from parent
-                    configurationMap = new HashMap((Map)this.parent.getComponentConfigurations()); 
-                }
-                
-                // and now check for new configurations
-                for(int m = 0; m < childs.length; m++) {
+                if ( this.sitemapComponentConfigurations == null ) {
+                    // do we have configurations?
+                    final Configuration[] childs = (this.componentConfigurations == null 
+                                                     ? null 
+                                                     : this.componentConfigurations.getChildren());
                     
-                    //final String r = this.roleManager.getRoleForName(childs[m].getName());
+                    if ( null != childs ) {
+        
+                        if ( null == this.parent ) {
+                            this.sitemapComponentConfigurations = new HashMap(12);
+                        } else {
+                            // copy all configurations from parent
+                            this.sitemapComponentConfigurations = new HashMap(this.parent.getComponentConfigurations()); 
+                        }
+                        
+                        // and now check for new configurations
+                        for(int m = 0; m < childs.length; m++) {
+                            
+                            final String r = this.roleManager.getRoleForName(childs[m].getName());
+                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
+                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
+                        }
+                    } else {
+                        // we don't have configurations
+                        if ( null == this.parent ) {
+                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
+                        } else {
+                            // use configuration from parent
+                            this.sitemapComponentConfigurations = this.parent.getComponentConfigurations(); 
+                        }
+                    }
                 }
             }
-        }*/
-        
-        return this.componentConfigurations;
+        }
+        return this.sitemapComponentConfigurations;
     }
 
     protected synchronized void setupRootNode(Environment env) throws Exception {
