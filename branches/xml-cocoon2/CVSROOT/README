@@ -1,0 +1,68 @@
+
+                        C   O   C   O   O   N 
+                        
+                              @@version@@
+                                
+                      
+  What is it?
+  -----------
+
+  Cocoon is a 100% pure Java publishing framework that relies on 
+  new W3C technologies (such as XML, and XSL) to provide web content.
+
+  The Cocoon project aims to change the way web information is created, 
+  rendered and delivered. This new paradigm is based on fact that document 
+  content, style and logic are often created by different individuals or 
+  working groups.
+  
+  Cocoon aims to a complete separation of the three layers, allowing the 
+  three layers to be indipendently designed, created and managed, reducing 
+  management overhead, increasing work reuse and reducing time to market.
+
+
+  Where is it?
+  ------------
+
+  The home page for the Cocoon project can be found in the Apache XML Project 
+  web site (http://xml.apache.org/cocoon/). There you also find information
+  on how to download the latest release as well as all the other information
+  you might need regarding this project.
+
+
+  Requirements
+  ------------
+
+  Cocoon is implemented both as a Java servlet and a Java command line
+  application. The following requirements exist for installing it:
+  
+   o  A Java 1.1 or later compatible virtual machine for your operating system.
+
+   o  Server API 2.x Servlet Engine (optional for command line operation).
+   
+   o  XML Parser with DOM support.
+
+   o  XSL Processor with DOM support.
+
+
+  Installation Instructions and Documentation
+  -------------------------------------------
+
+  The documentation available as of the date of this release is
+  included in the "docs/" directory.
+  
+  Look for the most updated documentation on the Cocoon web site under
+  the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Licensing and legal issues
+  --------------------------
+
+  For legal and licensing issues, please read the LICENSE file.
+
+
+  Thanks for using Cocoon.
+
+                                           The Apache XML Project
+                                           http://xml.apache.org/                                         
+                                           
+  

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>DCPProcessor User Guide</title>
+  <authors>
+   <person name="Ricardo Rocha" email="ricardo@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Introduction">
+   <p>Yet to be XML-ized!</p>
+  </s1>
+ </body>
+</document>
