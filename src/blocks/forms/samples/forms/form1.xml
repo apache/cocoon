@@ -16,12 +16,27 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.5 2004/04/17 18:33:56 bruno Exp $
+    | CVS $Id: form1.xml,v 1.6 2004/05/07 10:55:08 vgritsenko Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
          xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
-  
+
+  <fd:validation>
+    <!-- This demonstrates form level validation -->
+    <fd:javascript>
+      var success = true;
+      var price = widget.getWidget("dieselprice");
+      if (price.value &lt; 1) {
+          price.setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("It can not be that low!", false));
+          success = false;
+      }
+      
+      // Must return true/false
+      return success;
+    </fd:javascript>
+  </fd:validation>
+
   <fd:widgets>
     <fd:field id="tab-state">
       <fd:datatype base="string"/>
