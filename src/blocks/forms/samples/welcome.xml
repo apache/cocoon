@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.7 2004/04/20 19:38:16 vgritsenko Exp $-->
+<!-- $Id: welcome.xml,v 1.8 2004/05/06 14:23:04 vgritsenko Exp $-->
 <samples name="CForms Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
  <group name="Back">
   <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -37,7 +37,6 @@
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
-  <sample name="Custom validation" href="customvalidationdemo">Shows custom validation and messages widget.</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
   <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
   <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>

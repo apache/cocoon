@@ -75,7 +75,6 @@ Form.prototype.getWidget = function(name) {
  * redisplayed. If setBookmark() is not called, this is implicitly set to 
  * the beginning of showForm().
  */
-
 Form.prototype.setBookmark = function() {
     return (this.local_.webContinuation = cocoon.createWebContinuation());
 }
@@ -83,7 +82,6 @@ Form.prototype.setBookmark = function() {
 /**
  * Returns the bookmark continuation associated with this form, or undefined
  * if setBookmark() has not been called.
- * 
  */
 Form.prototype.getBookmark = function() {
     return this.local_.webContinuation;
@@ -96,7 +94,6 @@ Form.prototype.getBookmark = function() {
  * @parameter ttl Time to live (in milliseconds) for the continuation created
  * @returns The web continuation associated with submitting this form
  */
-
 Form.prototype.showForm = function(uri, fun, ttl) {
     if (!this.getBookmark()) {
         this.setBookmark();
