@@ -83,8 +83,8 @@
   </markup-languages>
 
   <datasources>
-    <hint short-hand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
-    <hint short-hand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
+    <hint shorthand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
+    <hint shorthand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
 
     <jdbc name="personnel">
       <pool-controller min="5" max="10"/>
