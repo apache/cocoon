@@ -7,7 +7,7 @@
             <c:forEach var="prod" items="${productList}" >
                 <product name="${prod.name}" id="${prod.productId}"/>
             </c:forEach>
-            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
+            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${cocoon.continuation.id}"/>
         </category>
     </site>
 </page>
