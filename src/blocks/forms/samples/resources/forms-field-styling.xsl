@@ -14,15 +14,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--
+  This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
+
+  @version $Id$
+-->
+
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
-  <!--+
-      | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id$
-      +-->
-
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 

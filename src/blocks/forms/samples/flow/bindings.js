@@ -66,7 +66,7 @@ function bindingSample(sampleCode, backendType) {
     // all back-end models are bound to essentially the same form, using the same binding!
     var form = createFormForSample(sampleCode);
 
-    // the beack-end model itself however depends on sample and type. 
+    // the back-end model itself however depends on sample and type. 
     var bean = createBeanForSample(backendType, sampleCode);
 	
     // loads the backend-bean into the form
@@ -78,7 +78,7 @@ function bindingSample(sampleCode, backendType) {
     // saves the form into the backend-bean
     form.save(bean);
     var bizData = new Object();
-    //hack the XML content to a string for display
+    // hack the XML content to a string for display
     if (backendType.equals("XML")) {
     	bean = {xml: serializeNode(bean)};
     }

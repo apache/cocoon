@@ -15,11 +15,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | A form for a work breakdown in a tree of tasks.
-    |
-    | CVS $Id$
-    +-->
+<!--
+  A form for a work breakdown in a tree of tasks.
+
+  @version $Id$
+-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
          xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
@@ -37,7 +37,7 @@
         </fd:repeater>
         <fd:repeater-action id="addsub" repeater="tasks" action-command="add-row">
           <fd:label>Add subtasks</fd:label>
-	  <fd:hint>Creates a task subtree</fd:hint>
+          <fd:hint>Creates a task subtree</fd:hint>
         </fd:repeater-action>
       </fd:widgets>
     </fd:class>

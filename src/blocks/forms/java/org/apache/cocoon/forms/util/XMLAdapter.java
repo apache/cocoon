@@ -306,7 +306,7 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
                 data(datatype.convertToString(widget.getValue(), this.locale));
         } else if (widget instanceof BooleanField) {
             // FIXME: BooleanField should implement DataWidget, which
-            // would make this case unnecesary
+            // would make this case unnecessary
             if (widget.getValue() != null) {
                 data(BooleanUtils.toStringTrueFalse((Boolean)widget.getValue()));
             }
