@@ -96,6 +96,7 @@
              <aspect type="coplet-full-screen"/>
              <aspect type="coplet-sizing"/>
              <aspect type="history"/>
+             <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
      </renderer>
@@ -127,6 +128,7 @@
              </aspect>
              <aspect type="coplet-removing"/>
              <aspect type="history"/>
+             <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
      </renderer>

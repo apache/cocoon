@@ -92,8 +92,11 @@ import org.apache.commons.jxpath.JXPathContext;
  *	&lt;/map:action&gt;
  * &lt;/map:action&gt;</pre>
  *
+ * Using the path '#' you get the current copletId: {coplet:#}
+ * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.9 2004/02/09 09:11:12 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: CopletModule.java,v 1.10 2004/02/12 09:33:30 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Serviceable, ThreadSafe {
@@ -138,6 +141,10 @@ implements InputModule, Serviceable, ThreadSafe {
                 return null;
             }
             
+            // return the coplet id
+            if ( name.equals("#") ) {
+                return copletId;
+            }
             JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
             Object value = jxpathContext.getValue(name);
                 

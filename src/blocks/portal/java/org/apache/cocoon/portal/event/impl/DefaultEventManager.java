@@ -83,18 +83,12 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
-/**
  * This is the default implementation of the event manager.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.12 2003/12/10 14:07:32 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.13 2004/02/12 09:33:29 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -241,10 +235,10 @@ public class DefaultEventManager
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Register#subscribe(org.apache.cocoon.portal.event.Subscriber)
      */
-    public void subscribe( final Subscriber subscriber )
-    throws InvalidEventTypeException {
+    public void subscribe( final Subscriber subscriber ) {
         if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
-            throw new InvalidEventTypeException();
+            throw new RuntimeException("Invalid event type " + subscriber.getEventType()
+                                      +" for subscriber " + subscriber);
         }
 
         if ( getLogger().isDebugEnabled() ) {
@@ -264,11 +258,11 @@ public class DefaultEventManager
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Register#unsubscribe(org.apache.cocoon.portal.event.Subscriber)
      */
-    public void unsubscribe( Subscriber subscriber )
-    throws InvalidEventTypeException {
+    public void unsubscribe( Subscriber subscriber ) {
         
         if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
-            throw new InvalidEventTypeException();
+            throw new RuntimeException("Invalid event type " + subscriber.getEventType()
+                    +" for unsubscribing " + subscriber);
         }
         if ( subscribers.contains( subscriber ) ) {
             subscribers.remove( subscriber );
