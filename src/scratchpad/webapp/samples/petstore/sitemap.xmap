@@ -58,12 +58,22 @@
       </map:match>
   </map:pipeline>
 
-    <map:pipeline>
-   <map:match pattern="view/templates/*.vm">
-    <map:generate src="view/templates/{1}.vm" type="flow_velocity"/>
-    <map:serialize type="html"/>
-   </map:match>
+   <map:pipeline>
+     <map:match pattern="view/*.html">
+     <map:redirect-to uri="view/xsp/{1}.xsp">
    </map:pipeline>
+   <map:pipeline>
+     <map:match pattern="view/templates/*.vm">
+      <map:generate src="view/templates/{1}.vm" type="flow_velocity"/>
+      <map:serialize type="html"/>
+     </map:match>
+    <map:match pattern="view/xsp/*.xsp">
+        <map:generate src="view/xsp/{1}.xsp" type="serverpages"/>
+        <map:transform src="stylesheets/site2html.xsl" />
+        <map:serialize type="html"/>
+    </map:match>
+   </map:pipeline>
+            
 
    <map:pipeline>
    <map:match pattern="images/*.gif">

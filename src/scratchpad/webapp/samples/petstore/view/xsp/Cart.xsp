@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site>
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
+        <backpointer name="Main Menu" do="index.do" />
+        <cart name="Shopping Cart" >
+        <!-- this doesn't work !!! how do I have to access the required field via jpath?? -->
+            <jpath:for-each select="cartItems" >
+                <item>
+                    <xsp:attribute name="product-id"><jpath:value-of select="item/productId"/></xsp:attribute>
+                    <xsp:attribute name="id"><jpath:value-of select="item/itemId"/></xsp:attribute>
+                    <desc>
+                        <jpath:value-of select="item/attr1"/> 
+                        <jpath:value-of select="item/attr2"/> 
+                        <jpath:value-of select="item/attr3"/> 
+                        <jpath:value-of select="item/attr4"/> 
+                        <jpath:value-of select="item/attr5"/> 
+                        <jpath:value-of select="item/product/name"/> 
+                    </desc>
+                    <price><jpath:value-of select="item/listPrice"/></price>
+                    <quantity><jpath:value-of select="quantity"/></quantity>
+                </item>
+            </jpath:for-each>
+            <total><jpath:value-of select="cartForm/cart/subTotal"/></total>
+        </cart>
+    </site>
+
+</xsp:page>
+
+
+
+
