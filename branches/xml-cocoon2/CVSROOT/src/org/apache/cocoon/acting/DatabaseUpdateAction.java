@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-26 21:16:39 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-26 22:22:08 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -84,7 +84,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
             statement.execute();
         } catch (Exception e) {
-            throw new ProcessingException("Could not delete record", e);
+            throw new ProcessingException("Could not updaterecord", e);
         } finally {
             if (conn != null) {
                 try {

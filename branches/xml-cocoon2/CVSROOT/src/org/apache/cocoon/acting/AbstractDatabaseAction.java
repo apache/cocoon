@@ -139,7 +139,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-26 21:46:45 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 22:22:07 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
@@ -177,16 +177,21 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
     protected Configuration getConfiguration(String descriptor) throws ConfigurationException {
         Configuration conf = null;
 
+        if (descriptor == null) {
+            throw new ConfigurationException("The form descriptor is not set!");
+        }
+
         synchronized (AbstractDatabaseAction.configurations) {
             conf = (Configuration) AbstractDatabaseAction.configurations.get(descriptor);
 
             if (conf == null) {
                 URLFactory urlFactory = null;
                 Parser parser = null;
+                URL resource = null;
 
                 try {
                     urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-                    URL resource = urlFactory.getURL(descriptor);
+                    resource = urlFactory.getURL(descriptor);
 
                     parser = (Parser)this.manager.lookup(Roles.PARSER);
                     SAXConfigurationHandler builder = new SAXConfigurationHandler();
@@ -199,7 +204,7 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
                     conf = builder.getConfiguration();
                 } catch (Exception e) {
                     getLogger().error("Could not configure Database mapping environment", e);
-                    throw new ConfigurationException("Error trying to load configurations");
+                    throw new ConfigurationException("Error trying to load configurations for resource: " + resource.toExternalForm());
                 } finally {
                     if (urlFactory != null) this.manager.release((Component) urlFactory);
                     if (parser != null) this.manager.release((Component) parser);
