@@ -87,7 +87,7 @@ import org.apache.excalibur.source.SourceException;
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.1 2003/10/23 17:17:13 unico Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.2 2003/10/24 08:47:33 cziegeler Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
 implements SourceDescriptor, ThreadSafe, Contextualizable, Composable, 
@@ -153,12 +153,12 @@ Configurable, Initializable, Disposable {
             ContainerUtil.initialize(inspector);
             
             String[] types = inspector.getExposedSourcePropertyTypes();
-            for (int j = 0; i < types.length; i++) {
+            for (int j = 0; j < types.length; j++) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Registering " + inspector 
-                        + " to handle property " + types[i]);
+                        + " to handle property " + types[j]);
                 }
-                m_inspectors.put(types[i],inspector);
+                m_inspectors.put(types[j],inspector);
             }
         }
         // done with these
@@ -168,7 +168,6 @@ Configurable, Initializable, Disposable {
     }
     
     public void dispose() {
-        SourceInspector inspector;
         Iterator iter = m_inspectors.values().iterator();
         while(iter.hasNext()) {
             ContainerUtil.dispose(iter.next());
