@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.woody.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -106,14 +106,14 @@ public interface Widget {
      * may try to convert the request parameter to its native datatype (if it
      * is not a string), but it should not yet generate any validation errors.
      */
-    public void readFromRequest(Request request, Locale locale);
+    public void readFromRequest(FormContext formContext);
 
     /**
      * Validates this widget and returns the outcome. Possible error messages are
      * remembered by the widget itself and will be part of the XML produced by
      * this widget in its {@link #generateSaxFragment} method.
      */
-    public boolean validate(Locale locale);
+    public boolean validate(FormContext formContext);
 
     /**
      * Generates an XML representation of this widget. The startDocument and endDocument

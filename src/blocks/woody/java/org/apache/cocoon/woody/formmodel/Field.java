@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -96,8 +96,8 @@ public class Field extends AbstractWidget {
         conversionFailed = false;
     }
 
-    public void readFromRequest(Request request, Locale locale) {
-        enteredValue = request.getParameter(getFullyQualifiedId());
+    public void readFromRequest(FormContext formContext) {
+        enteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
         validationError = null;
         conversionFailed = false;
 
@@ -112,14 +112,14 @@ public class Field extends AbstractWidget {
 
         // try to convert entered string to the field's native datatype
         if (enteredValue != null) {
-            value = definition.getDatatype().convertFromStringLocalized(enteredValue, locale);
+            value = definition.getDatatype().convertFromStringLocalized(enteredValue, formContext.getLocale());
             if (value == null)
                 conversionFailed = true;
         } else
             value = null;
     }
 
-    public boolean validate(Locale locale) {
+    public boolean validate(FormContext formContext) {
         if (value != null)
             validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
         else if (conversionFailed)

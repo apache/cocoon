@@ -48,45 +48,68 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.samples;
+package org.apache.cocoon.woody;
 
-import org.apache.cocoon.woody.acting.AbstractWoodyAction;
-import org.apache.cocoon.woody.formmodel.Form;
-import org.apache.cocoon.woody.formmodel.Repeater;
-import org.apache.cocoon.woody.formmodel.Field;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.woody.event.ActionEvent;
 
-import java.util.Map;
+import java.util.Locale;
 
 /**
- * An action that creates an instance of a specific example form included with Woody,
- * and adds some rows to its repeater widget. This example is meant to illustrate
- * how you can prepopulate a Form instance before its initial display.
+ * Holds data needed during the processing of a form submit.
  */
-public class InitForm1Action extends AbstractWoodyAction {
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
-            throws Exception {
-        String formSource = parameters.getParameter("form-definition");
-        String formAttribute = parameters.getParameter("attribute-name");
+public class FormContext {
+    private Request request;
+    private Locale locale;
+    private ActionEvent actionEvent;
+    private FormHandler formHandler;
+    private boolean doValidation;
 
-        Form form = formManager.createForm(resolver.resolveURI(formSource));
+    public FormContext(Request request, Locale locale) {
+        this(request, locale, null);
+    }
 
-        Repeater repeater = (Repeater)form.getWidget("contacts");
-        repeater.addRow();
-        Field field = (Field)repeater.getWidget(0, "firstname");
-        field.setValue("Jules");
+    public FormContext(Request request, Locale locale, FormHandler formHandler) {
+        this.request = request;
+        this.locale = locale;
+        this.formHandler = formHandler;
+        doValidation = true;
+    }
 
-        repeater.addRow();
-        field = (Field)repeater.getWidget(1, "firstname");
-        field.setValue("Lucien");
+    /**
+     * Sets the current ActionEvent. An ActionEvent is the result of a certain user
+     * action that caused a form submit. For example, pressing a button.
+     *
+     * <p>This method will be called by the widget that detected an action has been
+     * performed on it. The Event will then be performed after all widgets have been
+     * through the "readFromRequest" stage.
+     *
+     * <p>If an action event is set, validation is automatically disabled.
+     */
+    public void setActionEvent(ActionEvent actionEvent) {
+        if (this.actionEvent != null)
+            throw new RuntimeException("There is already an actionEvent set on this formContext!");
+        doValidation = false;
+        this.actionEvent = actionEvent;
+    }
 
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(formAttribute, form);
+    public ActionEvent getActionEvent() {
+        return actionEvent;
+    }
 
-        return null;
+    public Request getRequest() {
+        return request;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public boolean doValidation() {
+        return doValidation;
+    }
+
+    public FormHandler getFormHandler() {
+        return formHandler;
     }
 }
