@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.129 2000-10-21 13:33:45 greenrd Exp $ 
+  $Id: changes.xml,v 1.130 2000-10-21 14:20:07 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add" due-to="Mahe Vincent" 
+   due-to-email="vincent.mahe@rd.francetelecom.fr">
+   Added installation instructions for JRun 3.0
+  </action>
+  <action dev="RDG" type="add" due-to="James Scott" due-to-email="jscott@hnt.com">
+   Added installation instructions for BEA Weblogic Server 6.0 (beta)
+  </action>
   <action dev="RDG" type="fix" due-to="Drasko Kokic" due-to-email="drasko_kokic@yahoo.com">
    get-header-names now works in request taglib.
   </action>
@@ -26,7 +33,7 @@
   <action dev="RDG" type="fix" due-to="Reichel Volker" due-to-email="Volker.Reichel@freenet.de">
    Fixed some stupid bugs in response taglib
   </action>
-  <action dev="DB" type="update">
+  <action dev="DB" type="add">
    added code to esql logicsheet to deal with queries that return an update count
   </action>
   <action dev="DB" type="fix">
