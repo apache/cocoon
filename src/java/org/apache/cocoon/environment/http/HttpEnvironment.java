@@ -30,7 +30,7 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * 
  * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.16 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.17 2004/05/26 01:41:48 joerg Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment {
 
@@ -49,9 +49,6 @@ public class HttpEnvironment extends AbstractEnvironment {
 
     /** Cache content type as there is no getContentType() in reponse object */
     private String contentType;
-
-    /** Did we redirect ? */
-    private boolean hasRedirected = false;
 
     /**
      * Constructs a HttpEnvironment object from a HttpServletRequest
@@ -211,7 +208,7 @@ public class HttpEnvironment extends AbstractEnvironment {
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
+     * This method replaces {@link #getOutputStream(int)}.
      */
     public OutputStream getOutputStream(final int bufferSize)
     throws IOException {
