@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v11.dtd">
 <document> 
   <header> 
     <title>Configuring the Cocoon Portal</title> 
@@ -55,14 +56,13 @@
 		a <code>global-variable</code> specifying the path to the skin folder.</note>
 	  	<p>The basic cocoon portal skin	is a nice and simple example how to visualize a portal. 
 	  	There are several elements that allow to customize the look and feel of the portal.
-	  	A portal with the basic skin consists of 
+	  	A portal with the basic skin consists of </p>
 	  	<ul>
 	  		<li>a <em>header</em></li>
 	  		<li>a <em>tab row</em></li>
 	  		<li>a <em>content section</em> containing the coplet windows</li>
 	  		<li>and a <em>footer </em></li>
 	  	</ul>
-		</p>
 		<figure alt="Parts of the portal" height="300" src="/images/portal-parts.gif" width="400"></figure>	
 		<p>The tab row is actually a part of the content section. As well, a tab row can
 		be provided to any coplet window.</p>
@@ -70,6 +70,7 @@
   			<title>The skin&apos;s stylesheets</title>
   			<p>If we take a look at the <code>skins/basic/styles</code> directory, we 
   			find a number of stylesheets:
+  			</p>
   			<ul>
   				<li><code>portal-page.xsl</code>: Creates final HTML page</li>
   				<li><code>tab.xsl</code>: layout of the tab row.</li>
@@ -78,7 +79,6 @@
   				<li><code>row.xsl</code>: layout of a row</li>
   				<li><code>login-page.xsl</code>: layout of the login page</li>
   			</ul>
-  			</p>
   			<p>The <code>window.xsl</code> stylesheet determines the layout of a
   			coplet window. Normally, a coplet window will contain a header row with a
   			title and buttons like minimize, close, etc.</p>

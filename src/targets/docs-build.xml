@@ -68,52 +68,55 @@
   </target>
 
   <!-- Create docs -->
-  <target name="docs" depends="prepare-docs, validate-xdocs, docs_done" unless="docs.notrequired" description="Builds the documentation">
+  <target name="docs" depends="prepare-docs, validate-xdocs, docs_done, forrest" unless="docs.notrequired" description="Builds the documentation">
+    <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
 
-    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
-      <arg value="-u${build.docs.loglevel}"/>
-      <arg value="-x../../../cli.xconf"/>
-      <arg value="index.html"/>
-      <classpath>
-        <path refid="documentation.classpath"/>
-      </classpath>
-    </java>
+    <copy todir="${build.docs}" filtering="off">
+      <fileset dir="${build.site}"/>
+    </copy>
+    <copy todir="${build.docs}/apidocs" filtering="off">
+      <fileset dir="${build.javadocs}"/>
+    </copy>
   </target>
 
   <!-- Prepares the printer-docs -->
+<!--
   <target name="prepare-printer-docs" depends="prepare-docs">
     <mkdir dir="${build.context.printer}"/>
-
+-->
     <!-- copy prepared docs -->
+<!--
     <copy todir="${build.context.printer}" filtering="off">
       <fileset dir="${build.context}"/>
     </copy>
-
+-->
     <!-- copy printer skin -->
+<!--
     <copy todir="${build.context.printer}/stylesheets" filtering="off" overwrite="yes">
       <fileset dir="${build.context}/stylesheets/printer_skin"/>
     </copy>
   </target>
-
+-->
   <!-- Set a variable if the generated printer docs are already up-to-date. -->
+<!--
   <target name="printer-docs_check" depends="prepare">
     <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
       <srcfiles dir="." includes="status.xml"/>
       <srcfiles dir="${docs}" includes="**/*.xml"/>
     </uptodate>
   </target>
-
+-->
   <!-- If generated printer docs are already up-to-date, print a message saying so. -->
+<!--
   <target name="printer-docs_done" depends="printer-docs_check" if="printer-docs.notrequired">
-    <echo message="-------------------------------------------------------------"/>
     <echo message="Not rebuilding printer docs, as they are up-to-date:"/>
     <echo message="  ${build.docs.printer}/index.html is more recent than"/>
     <echo message="  status.xml, ${docs}/*.xml"/>
-    <echo message="-------------------------------------------------------------"/>
   </target>
-
+-->
   <!-- Create printer friendly docs -->
+<!--
   <target name="printer-docs" depends="prepare-printer-docs, validate-xdocs, printer-docs_done" description="Builds printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
 
@@ -131,7 +134,7 @@
       </classpath>
     </java>
   </target>
-
+-->
 <!-- === Javadoc/IDLDoc Targets ================================================ -->
 
   <!-- Create IDL API documentation -->
