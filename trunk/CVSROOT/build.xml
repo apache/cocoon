@@ -138,7 +138,7 @@ a Java 1.2 compatible JVM is required for this target.
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.7.5-dev"/>
+    <property name="version" value="1.8-dev"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
@@ -359,7 +359,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="package, docs, javadocs">
+  <target name="dist" depends="package, docs, printer-docs, javadocs">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}/bin"/>
     <mkdir dir="${dist.dir}/lib"/>
