@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.15 2003/03/18 15:23:28 nicolaken Exp $
+  CVS $Id: gump.xml,v 1.16 2003/03/19 10:21:49 nicolaken Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -561,7 +561,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <option project="xmldb" version="supplied"/>
+    <depend project="xmldb" version="supplied"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
