@@ -68,6 +68,19 @@
     </sample>
   </group>
 
+  <group name="DASL">
+    <sample name="DASL query" href="dasl/">
+      This sample shows how to run a query against a DASL 
+      enabled WebDAV server (such as Catacomb or Slide). It assumes that
+      on localhost a DASL enables server is running with a resource 
+      path of /repos (the default place for Catacomb installs). If
+      that's not the case, please change dasl/test.dasl.xml accordingly.
+    </sample>
+    <sample name="Query source" href="dasl/src/test-dasl.xml">
+      View the actual query source.
+    </sample>
+  </group>
+
   <group name="Resources">
     <sample name="webdav.org" href="http://www.webdav.org/">
       The webdav.org website
