@@ -88,8 +88,8 @@
         </td>
       </tr>
     </table>
-    <input type="submit" name="cocoon-action-prev3" value="Prev Page"/>
-    <input type="submit" name="cocoon-action-submit" value="Submit"/>
+    <input type="submit" name="cocoon-method-prev3" value="Prev Page"/>
+    <input type="submit" name="cocoon-method-submit" value="Submit"/>
   </xsl:template>
 
   <xsl:template match="/|*">
