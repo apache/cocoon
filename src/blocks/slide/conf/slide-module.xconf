@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon/input-modules" unless="slide">
+
+  <component-instance 
+    name="slide" 
+    class="org.apache.cocoon.components.modules.input.XMLFileModule"
+    logger="core.modules.slide">
+    <reloadable>false</reloadable>
+    <cacheable>false</cacheable>
+    <file src="context://WEB-INF/slide.xconf"/>
+  </component-instance>
+
+  <component-instance 
+    name="slide-config"
+    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"
+    logger="core.modules.slide-config">
+    <prefix>/slide/namespace[@name='cocoon']/configuration</prefix>
+    <input-module name="slide" />
+  </component-instance>
+  
+</xconf>
