@@ -190,6 +190,9 @@ by the main ones.
     <available property="ora.driver.present" classname="oracle.sql.BLOB">
       <classpath refid="classpath"/>
     </available>
+    <available property="mail.present" classname="javax.mail.Session">
+      <classpath refid="classpath"/>
+    </available>
   </target>
 
   <!-- =================================================================== -->
@@ -211,6 +214,7 @@ by the main ones.
         <exclude name="**/http/RequestWrapper2*.java"/>
         <exclude name="**/http/HttpResponse2*.java"/>
 	<exclude name="**/Ora*.java" unless="ora.driver.present"/>
+	<exclude name="**/Sendmail*.java" unless="mail.present"/>
       </fileset>
     </copy>
   </target>
