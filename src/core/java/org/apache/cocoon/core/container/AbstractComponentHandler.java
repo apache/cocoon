@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -19,13 +19,12 @@ package org.apache.cocoon.core.container;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * This class acts like a Factory to instantiate the correct version
@@ -47,23 +46,21 @@ implements ComponentHandler {
     /** State management boolean stating whether the Handler is initialized or not */
     private boolean initialized = false;
     
-    private ServiceInfo info;
+    /** Information about the component */
+    private ComponentInfo info;
     
     /**
      * Looks up and returns a component handler for a given component class.
      *
      * @param role the component's role. Can be <code>null</code> if the role isn't known.
-     * @param className Class of the component for which the handle is
-     *                       being requested.
-     * @param configuration The configuration for this component.
      * @param componentEnv The component's creation environment.
+     * @param info          The description of the component (configuration, lifecycle etc.)
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    public static ComponentHandler getComponentHandler(
-            String role, 
-            ComponentEnvironment componentEnv,
-            ServiceInfo info) 
+    public static ComponentHandler getComponentHandler(String role, 
+                                                       ComponentEnvironment componentEnv,
+                                                       ComponentInfo info) 
     throws Exception {
         
        // Load the class
@@ -71,8 +68,8 @@ implements ComponentHandler {
         
         try {
             componentClass = componentEnv.loadClass(info.getServiceClassName());
-        } catch(ClassNotFoundException cnfe) {
-            throw new ConfigurationException("Cannot find class " + info.getServiceClassName() + " for component at " +
+        } catch (ClassNotFoundException cnfe) {
+            throw new Exception("Cannot find class " + info.getServiceClassName() + " for component at " +
                     info.getConfiguration().getLocation(), cnfe);
         }
 
@@ -86,17 +83,17 @@ implements ComponentHandler {
 
         if( SingleThreaded.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
-            info.setModel(ServiceInfo.MODEL_PRIMITIVE);
+            info.setModel(ComponentInfo.MODEL_PRIMITIVE);
         }
 
         if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
-            info.setModel(ServiceInfo.MODEL_SINGLETON);
+            info.setModel(ComponentInfo.MODEL_SINGLETON);
         }
 
         if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
-            info.setModel(ServiceInfo.MODEL_POOLED);
+            info.setModel(ComponentInfo.MODEL_POOLED);
         }
 
         if( numInterfaces > 1 ) {
@@ -129,9 +126,9 @@ implements ComponentHandler {
             factory = new ComponentFactory(componentEnv, info);
         }
 
-        if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
+        if( info.getModel() == ComponentInfo.MODEL_POOLED )  {
             handler = new PoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
-        } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
+        } else if( info.getModel() == ComponentInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
         } else {
             // This is a SingleThreaded component
@@ -144,12 +141,12 @@ implements ComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractComponentHandler(ServiceInfo info, Logger logger) {
+    public AbstractComponentHandler(ComponentInfo info, Logger logger) {
         this.logger = logger;
         this.info = info;
     }
     
-    public ServiceInfo getInfo() {
+    public ComponentInfo getInfo() {
         return this.info;
     }
 
@@ -270,10 +267,11 @@ implements ComponentHandler {
 
     /**
      * Create a component handler (version used by XSP)
+     * TODO - perhaps we can remove this later?
      */
     public static ComponentHandler getComponentHandler(Class clazz, Logger logger, Context context, ServiceManager manager, Configuration config) throws Exception {
         ComponentEnvironment env = new ComponentEnvironment(clazz.getClassLoader(), logger, null, null, context, manager);
-        ServiceInfo info = new ServiceInfo();
+        ComponentInfo info = new ComponentInfo();
         info.setServiceClassName(clazz.getName());
         info.setConfiguration(config);
         return getComponentHandler(null, env, info);

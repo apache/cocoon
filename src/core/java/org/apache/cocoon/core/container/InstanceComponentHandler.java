@@ -18,7 +18,7 @@ package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * A component handler for instances created outside the container.
@@ -33,7 +33,7 @@ public class InstanceComponentHandler extends AbstractComponentHandler {
      * Creates a new ComponentHandler.
      */
     public InstanceComponentHandler(Logger logger, Object obj) {
-        super(new ServiceInfo(), logger);
+        super(new ComponentInfo(), logger);
         // For info.getLocation() to work properly
         this.getInfo().setConfiguration(CoreServiceManager.EMPTY_CONFIGURATION);
         this.obj = obj;

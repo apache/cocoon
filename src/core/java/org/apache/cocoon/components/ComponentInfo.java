@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@ import org.apache.avalon.framework.configuration.Configuration;
  *  
  * @version CVS $Id$
  */
-public class ServiceInfo {
+public final class ComponentInfo {
 
+    public static final int MODEL_UNKNOWN   = -1;
     public static final int MODEL_PRIMITIVE = 0;
     public static final int MODEL_SINGLETON = 1;
     public static final int MODEL_POOLED    = 2;
@@ -36,7 +37,7 @@ public class ServiceInfo {
     private String serviceClassName;
     private Configuration configuration;
     
-    public ServiceInfo() {
+    public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
     }
     
@@ -152,11 +153,11 @@ public class ServiceInfo {
         // test model
         final String model = attr.getAttribute("model", null);
         if ( "pooled".equals(model) ) {
-            this.setModel(ServiceInfo.MODEL_POOLED);
+            this.setModel(ComponentInfo.MODEL_POOLED);
             this.setPoolInMethodName(attr.getAttribute("pool-in", null));
             this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
         } else if ( "singleton".equals(model) ) {
-            this.setModel(ServiceInfo.MODEL_SINGLETON);
+            this.setModel(ComponentInfo.MODEL_SINGLETON);
         }
         this.setInitMethodName(attr.getAttribute("init", null));
         this.setDestroyMethodName(attr.getAttribute("destroy", null));
