@@ -72,7 +72,7 @@ import java.util.Map;
  * <p>
  * This class serves two purposes :
  * <ul><li>Avoid explicit enumeration of all needed parameters in
- *         {@link ProcessingNode#invoke(Environment, InvokeContext)},
+ *         {@link ProcessingNode#invoke(org.apache.cocoon.environment.Environment, InvokeContext)},
  *         thus allowing easier addition of new parameters,
  *     <li>Hold pipelines, and provide "just in time" lookup for them.
  * </ul>
@@ -80,7 +80,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.3 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.4 2003/10/07 16:08:33 vgritsenko Exp $
  */
 
 public class InvokeContext implements Recomposable, Disposable, LogEnabled {
