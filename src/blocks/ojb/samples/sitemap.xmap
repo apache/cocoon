@@ -21,9 +21,9 @@
 
   <map:transformers default="xalan">
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-      <catalogues default="form">
+      <catalogues default="other">
         <catalogue id="other" name="OtherMessages" location="context://samples/forms/messages"/>
-        <catalogue id="form" name="FormMessages" location="context://samples/forms/messages"/>
+        <catalogue id="forms" name="FormsMessages" location="context://samples/forms/messages"/>
       </catalogues>
       <cache-at-startup>true</cache-at-startup>
     </map:transformer>
@@ -88,11 +88,11 @@
 
     <map:match pattern="jdo/forms/employee-form-display">
         <map:generate src="forms/employee_template.xml"/>
-        <map:transform type="form"/>
+        <map:transform type="forms"/>
         <map:transform type="i18n">
             <map:parameter name="locale" value="en-US"/>
         </map:transform>
-        <map:transform src="context://samples/forms/xsl/html/forms-default.xsl"/>
+        <map:transform src="context://samples/forms/resources/forms-samples-styling.xsl"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="servletPath" value="{request:servletPath}"/>
