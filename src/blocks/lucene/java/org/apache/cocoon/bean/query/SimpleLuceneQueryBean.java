@@ -16,6 +16,7 @@
 
 package org.apache.cocoon.bean.query;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
@@ -40,7 +41,7 @@ import org.apache.cocoon.ProcessingException;
  *   This Bean is designed to be persistable.
  * </p>
  *
- * @version CVS $Id: SimpleLuceneQueryBean.java,v 1.1 2004/06/21 10:00:20 jeremy Exp $
+ * @version CVS $Id: SimpleLuceneQueryBean.java,v 1.2 2004/06/24 11:31:17 cziegeler Exp $
  */
 public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 
@@ -110,11 +111,6 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 	private String mType;
 
 	/**
-	 * The Bean's searcher.
-	 */
-	private LuceneCocoonSearcher searcher;
-	
-	/**
 	 * Default constructor.
 	 */
 	public SimpleLuceneQueryBean() {
@@ -180,7 +176,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 	 * @exception  ProcessingException thrown by the searcher
 	 * @exception  IOException thrown when the searcher's directory cannot be found
 	 */
-	public List search (LuceneCocoonSearcher searcher) throws java.io.IOException, ProcessingException {
+	public List search (LuceneCocoonSearcher searcher) throws IOException, ProcessingException {
 		BooleanQuery query = new BooleanQuery ();
 		Iterator criteria = mCriteria.iterator ();
 		boolean required = false;
@@ -257,7 +253,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 	/**
 	 * Sets the Bean's Name.
 	 *
-	 * @param id the <code>String</code> name of the Bean. 
+	 * @param name the <code>String</code> name of the Bean. 
 	 */
 	public void setName(String name) {
 		mName = name;

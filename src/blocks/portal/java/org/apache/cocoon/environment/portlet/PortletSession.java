@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
  * @see javax.portlet.PortletSession
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletSession.java,v 1.4 2004/06/18 16:45:57 vgritsenko Exp $
+ * @version CVS $Id: PortletSession.java,v 1.5 2004/06/24 11:29:56 cziegeler Exp $
  */
 public final class PortletSession implements Session {
 
@@ -40,8 +40,8 @@ public final class PortletSession implements Session {
 
     /**
      * Default session scope. One of
-     * {@link javax.portlet.PortletSession.APPLICATION_SCOPE},
-     * {@link javax.portlet.PortletSession.PORTLET_SCOPE}.
+     * {@link javax.portlet.PortletSession#APPLICATION_SCOPE},
+     * {@link javax.portlet.PortletSession#PORTLET_SCOPE}.
      */
     private int scope;
 
