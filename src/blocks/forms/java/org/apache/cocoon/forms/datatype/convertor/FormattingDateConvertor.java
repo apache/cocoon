@@ -25,7 +25,6 @@ import org.apache.cocoon.xml.AttributesImpl;
 import java.util.Locale;
 import java.util.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 /**
  * A Convertor for {@link java.util.Date Date} objects backed by the
@@ -45,7 +44,7 @@ import java.text.SimpleDateFormat;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDateConvertor.java,v 1.4 2004/07/01 07:30:40 bruno Exp $
+ * @version CVS $Id: FormattingDateConvertor.java,v 1.5 2004/07/02 10:09:49 joerg Exp $
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
