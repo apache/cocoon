@@ -106,7 +106,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.8 2003/06/04 14:19:09 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.9 2003/06/06 12:21:10 vgritsenko Exp $
  */
 public class CocoonBean {
 
@@ -468,6 +468,7 @@ public class CocoonBean {
     public void addTarget(String sourceURI) {
         targets.add(new Target(sourceURI, destDir));
     }
+
     public void addTarget(String type, String root, String sourceURI, String destURI){
         targets.add(new Target(type, root, sourceURI, destURI));
     }
@@ -479,6 +480,7 @@ public class CocoonBean {
     public void addTarget(String sourceURI, String destURI){
         targets.add(new Target(sourceURI, destURI));
     }
+
     public void addTargets(List uris) {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
@@ -486,6 +488,7 @@ public class CocoonBean {
             targets.add(target);
         }
     }
+
     /**
      * Process single URI into given output stream.
      *
@@ -1149,15 +1152,16 @@ public class CocoonBean {
      */
     protected static String getClassPath(final String context) {
         StringBuffer buildClassPath = new StringBuffer();
-        String classDir = context + "/WEB-INF/classes";
-        File root = new File(context + "/WEB-INF/lib");
 
+        String classDir = context + "/WEB-INF/classes";
         buildClassPath.append(classDir);
 
+        File root = new File(context + "/WEB-INF/lib");
         if (root.isDirectory()) {
             File[] libraries = root.listFiles();
             Arrays.sort(libraries);
             for (int i = 0; i < libraries.length; i++) {
+                // FIXME: endsWith(".jar") or .zip
                 buildClassPath.append(File.pathSeparatorChar)
                               .append(IOUtils.getFullFilename(libraries[i]));
             }
@@ -1170,10 +1174,10 @@ public class CocoonBean {
 //                      .append(getExtraClassPath(context));
 
         if (log.isDebugEnabled()) {
-            log.debug("Context classpath: " + buildClassPath.toString());
+            log.debug("Context classpath: " + buildClassPath);
         }
         return buildClassPath.toString();
-     }
+    }
 
     public class Target {
         private static final String DEFAULT_TYPE = "default";
@@ -1229,6 +1233,7 @@ public class CocoonBean {
                 throw new ProcessingException("Unknown mapper type: " + this.type);
             }
         }
+
         private String getFinalURIWithDefault(String actualSourceURI){
             return destDir + "/" + actualSourceURI;
         }
@@ -1255,15 +1260,17 @@ public class CocoonBean {
         public String getSourceURI() {
             return root + sourceURI;
         }
+
         // @todo@ this is misusing the 'hashCode' name - hashCodes should be integer it seems, uv
         public String getHashCode() {
             return type + "|" + root +"|" + sourceURI + "|" + destURI;
         }
+
         public OutputStream getOutputStream(String filename) throws IOException, ProcessingException {
             final String finalDestinationURI = this.getFinalURI(filename);
             Source src = (Source) sourceResolver.resolveURI(finalDestinationURI);
             if (!(src instanceof ModifiableSource)) {
-                throw new ProcessingException("Source is not Modifiable: "+finalDestinationURI);
+                throw new ProcessingException("Source is not Modifiable: " + finalDestinationURI);
             }
             ModifiableSource outputSource = (ModifiableSource) src;
             return outputSource.getOutputStream();
