@@ -82,7 +82,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.11 2003/11/20 15:31:29 sylvain Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.12 2004/01/14 06:39:55 coliver Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Serviceable, Contextualizable, Interpreter,
@@ -198,11 +198,11 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      * @exception Exception If an error occurs.
      */
     public boolean process(String uri, Object biz, OutputStream out, Environment env)
-            throws Exception {
-        if (out == null) {
-            throw new NullPointerException("No outputstream specified for process");
+        throws Exception 
+    {
+        if (SourceUtil.indexOfSchemeColon(uri) != -1) {
+            throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
-
         // if the uri starts with a slash, then assume that the uri contains an absolute
         // path, starting from the root sitemap. Otherwise, the uri is relative to the current
         // sitemap.
@@ -215,7 +215,9 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         // Create a wrapper environment for the subrequest to be processed.
         EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
         wrapper.setURI("", uri);
-        wrapper.setOutputStream(out);
+        if (out != null) {
+            wrapper.setOutputStream(out);
+        }
         Map objectModel = env.getObjectModel();
         FlowHelper.setContextObject(objectModel, biz);
 
@@ -233,9 +235,10 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             
             // Process the subrequest
             result = processor.process(wrapper);
-            wrapper.commitResponse();
-            out.flush();
-
+            if (out != null) {
+                wrapper.commitResponse();
+                out.flush();
+            }
             // Return whatever the processor returned us
             return(result);
         } catch (Exception any) {
@@ -255,16 +258,10 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     public void forwardTo(String uri, Object bizData,
                           WebContinuation continuation,
                           Environment environment)
-            throws Exception
+        throws Exception
     {
-        if (SourceUtil.indexOfSchemeColon(uri) != -1)
-            throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
-
-        uri = "cocoon:/" + uri;
-
         Map objectModel = environment.getObjectModel();
-        FlowHelper.setContextObject(objectModel, bizData);
         FlowHelper.setWebContinuation(objectModel, continuation);
-        PipelinesNode.getRedirector(environment).redirect(false, uri);
+        process(uri, bizData, null, environment);
     }
 }
