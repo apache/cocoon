@@ -55,17 +55,20 @@ import java.util.Vector;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.EntityResolver;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.entity.PortletApplicationEntityList;
 import org.apache.pluto.om.entity.PortletApplicationEntityListCtrl;
@@ -80,11 +83,11 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.2 2004/01/27 08:05:34 cziegeler Exp $
+ * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.3 2004/02/07 18:31:16 cziegeler Exp $
  */
 public class PortletDefinitionRegistryImpl 
 extends AbstractLogEnabled
-implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceable {
+implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceable, Disposable {
 
     /** The mapping */    
     public static final String PORTLET_MAPPING = "resource://org/apache/cocoon/portal/pluto/om/portletdefinitionmapping.xml";
@@ -109,6 +112,9 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     /** Our context name */
     protected String contextName;
 
+    /** The entity resolver */
+    protected EntityResolver resolver;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -119,8 +125,22 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) 
+    throws ServiceException {
         this.manager = manager;
+        this.resolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.resolver != null ) {
+            this.manager.release(this.resolver);
+            this.resolver = null;
+        }
+        this.manager = null;
+        this.context = null;
     }
 
     /* (non-Javadoc)
@@ -168,13 +188,11 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
         ((PortletApplicationEntityListCtrl)this.portletApplicationEntities).add("cocoon");
     }
 
-    public PortletApplicationDefinitionList getPortletApplicationDefinitionList()
-    {
+    public PortletApplicationDefinitionList getPortletApplicationDefinitionList() {
         return registry;
     }
 
-    public PortletDefinition getPortletDefinition(ObjectID id)
-    {
+    public PortletDefinition getPortletDefinition(ObjectID id) {
         return (PortletDefinition)portletsKeyObjectId.get(id);
     }
 
@@ -213,6 +231,8 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             
             Unmarshaller unmarshaller = new Unmarshaller(portletXMLMapping);
 			unmarshaller.setIgnoreExtraElements(true);
+            unmarshaller.setEntityResolver(this.resolver);
+            unmarshaller.setValidation(false);
             PortletApplicationDefinitionImpl portletApp = 
                 (PortletApplicationDefinitionImpl)unmarshaller.unmarshal( source );
 
@@ -224,6 +244,8 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
 
                 unmarshaller = new Unmarshaller(webXMLMapping);
 				unmarshaller.setIgnoreExtraElements(true);
+                unmarshaller.setEntityResolver(this.resolver);
+                unmarshaller.setValidation(false);
                 webApp = 
                     (WebApplicationDefinitionImpl)unmarshaller.unmarshal( source );
 

@@ -19,6 +19,12 @@ PUBLIC "ISO 8879:1986//ENTITIES Numeric and Special Graphic//EN//XML"
 -- W3C Document Type Definitions --
 CATALOG "w3c/catalog"
 
+-- Web Application Definitions --
+PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" 
+       "web-app_2_2.dtd"
+PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+       "web-app_2_3.dtd"
+
 -- Document Type Definitions --
 PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
        "document-v10.dtd"
