@@ -4,7 +4,7 @@
   <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
-  <target name="junit-tests" depends="compile-core">
+  <target name="junit-tests" depends="compile-core, compile-deprecated">
     <mkdir dir="${build.test}"/>
 
     <!-- Copy test files to build test dir -->
@@ -73,7 +73,7 @@
   </target>
 
   <!-- Block tests -->
-  <target name="block-tests" depends="compile-core,prepare-blocks">
+  <target name="block-tests" depends="compile-core, compile-deprecated, prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
