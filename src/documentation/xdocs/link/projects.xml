@@ -16,7 +16,7 @@
 <li><link href="http://www.wyona.org/">Wyona CMS</link><br/>
 	Wyona CMS is an Open-Source Content Management and Publishing System written in 100% pure Java.
 	It is based on open standards such as XML ( DOM, SAX) and XSLT.
-	One of it's core components is the pipeline processor Cocoon from the Apache Software Foundation.
+	One of its core components is the pipeline processor Cocoon from the Apache Software Foundation.
 </li>
 <li><link href="http://opensource.yourdecor.ca/faq1/index.html">FAQ Project</link><br/>
 	A web-based, database driven that make use of JSP and XML and Cocoon.
@@ -25,12 +25,12 @@
 	Generate simple websites with XSL.
 </li>
 <li><link href="http://webeditor.sourceforge.net/">WebEditor WCMS</link><br/>
-	webEditor is a web application to manage the content of a news-based web site (you now Slashdot?).
-	It's based on Cocoon, the apache XML web publishing system and Apache/ApacheJServ/Tomcat as Web Server/Servlet platform.
+	webEditor is a web application to manage the content of a news-based web site (you know Slashdot?).
+	It's based on Apache Cocoon and Apache/ApacheJServ/Tomcat as Web Server/Servlet platform.
 </li>
 <li><link href="http://chello.sourceforge.net/">Chello - A minimal Cocoon 2 application</link><br/>
 	Chello is an Open Source minimal Cocoon 2 application. It features project compilation using ANT,
-	unit zesting with JUnit, functional testing with HTTPUnit, continuous integration process with CruiseControl,
+	unit testing with JUnit, functional testing with HTTPUnit, continuous integration process with CruiseControl,
 	documentation generation for Java code using javadoc and XSL Stylesheets using XSLDoc,
 	project documentation using Cocoon and automatic build of web archive file (WAR) for easy distribution.
 </li>
@@ -47,26 +47,23 @@
 	Buglet offers a standardized form for the data associated with bugs.
 </li>
 <li>CocoBlog is a free weblogging software tool based on Apache Cocoon and 
- Apache Xindice. For more information see Ugo Cei weblog at 
+ Apache Xindice. For more information see Ugo Cei's weblog at 
  <link href="http://www.beblogging.com/blog/">http://www.beblogging.com/blog/</link>
 </li>
-<li>Captor is a web-based tool that lets you see the actual XML that is being
-produced by each transformer in a Cocoon pipeline. Source, binaries and
-documentation are available from
- <link href="http://outerthought.net/captor.html">http://outerthought.net/captor.html</link>
-</li>
+<li><link href="http://xreporter.cocoondev.org/">xReporter</link> is an Avalon/Cocoon-based database reporting application that makes use of XML report
+  definitions to produce HTML, CSV, Excel and PDF reports available across a web interface.</li>
 </ul>
 </s1>
 
 <s1 title="Cocoon-related Projects">
 <ul>
 <li><link href="http://editxml.sourceforge.net/">EditXML - Managing XML files for Cocoon</link><br/>
-	he project Edit XML provides a servlet based solution for managing sets of XML files for XML based publishing systems like Cocoon.
+	Edit XML provides a servlet based solution for managing sets of XML files for XML based publishing systems like Cocoon.
 </li>
 <li><link href="http://pollo.sourceforge.net/">Pollo XML Editor (with Cocoon sitemap support)</link><br/>
 	Pollo lets you edit XML files. It's best suited for files which can be represented in a tree structure.
 	It comes with built-in support for Cocoon sitemap files, Ant build files and XML Schemas.
-	The editor has a colourfull tree widget (not the default Swing one!), drag-and-drop support, unlimmited undo, model-view design (open multiple views on the same file), ...
+	The editor has a colourful tree widget (not the default Swing one!), drag-and-drop support, unlimited undo, model-view design (open multiple views on the same file), ...
 </li>
 <li><link href="http://www.plenix.com/dbprism/">DBPrism XML Framework for Oracle DB</link><br/>
 	DBPrism is a servlet engine that works in two different modes: as a standalone servlet, or plugged into the Cocoon publishing framework. 
@@ -74,7 +71,7 @@ documentation are available from
 	Plugged into the Cocoon framework, DBPrism works as a DB Producer, generating dynamic XML from a database.
 </li>
 <li><link href="http://jeuclid.sourceforge.net/">JEuclid - MathML Transformer for Cocoon</link><br/>
-	The project is a component for the Apache Cocoon project(xml.apache.org) which converts MathML documents to GIF images or SVG.
+	The project is a component for the Apache Cocoon project which converts MathML documents to GIF images or SVG.
 </li>
 <li><link href="http://exformula.d-haven.org/">ExFormula - XForms for Cocoon</link><br/>
 	ExFormula is an implementation of the XForms specification.
