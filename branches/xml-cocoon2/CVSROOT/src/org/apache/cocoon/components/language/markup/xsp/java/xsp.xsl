@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-21 22:14:06 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-22 14:59:27 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -379,6 +379,10 @@ Either both 'uri' and 'prefix' or none of them must be specified
         this.characters("<xsl:value-of select="."/>");
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="text()" mode="value">
+    <xsl:value-of select="."/>
   </xsl:template>
 
   <xsl:template match="processing-instruction()">
