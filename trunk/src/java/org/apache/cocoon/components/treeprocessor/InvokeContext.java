@@ -57,6 +57,9 @@ import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
@@ -80,10 +83,10 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.5 2003/11/05 21:29:08 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.6 2003/11/16 14:28:21 unico Exp $
  */
 
-public class InvokeContext implements Recomposable, Disposable, LogEnabled {
+public class InvokeContext implements Serviceable, Disposable, LogEnabled {
 
     private List mapStack = new ArrayList();
     private HashMap nameToMap = new HashMap();
@@ -91,11 +94,11 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
 
     private boolean isBuildingPipelineOnly;
 
-    /** The current component manager, as set by the last call to compose() or recompose() */
-    private ComponentManager currentManager;
+    /** The current component manager, as set by the last call to service() or reservice() (?) */
+    private ServiceManager currentManager;
 
     /** The component manager that was used to get the pipelines */
-    private ComponentManager pipelinesManager;
+    private ServiceManager pipelinesManager;
 
     /** Logger that we will log any messages to */
     private Logger logger;
@@ -111,9 +114,6 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
 
     /** The ProcessingPipeline used */
     protected ProcessingPipeline processingPipeline;
-
-    /** The Selector for the processing pipeline */
-    protected ComponentSelector pipelineSelector;
 
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
@@ -151,20 +151,17 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     /**
      * Composable Interface
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.currentManager = manager;
     }
-
-    /**
-     * Recomposable interface
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
+    
+    public void reservice(ServiceManager manager) throws ServiceException {
 
         this.currentManager = manager;
-
         if (this.processingPipeline != null) {
             this.processingPipeline.reservice(manager);
         }
+
     }
 
     /**
@@ -187,17 +184,18 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
             // Keep current manager for proper release
             this.pipelinesManager = this.currentManager;
 
-            this.pipelineSelector = (ComponentSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
-            this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
+            this.processingPipeline = (ProcessingPipeline) 
+                this.pipelinesManager.lookup(ProcessingPipeline.ROLE);
             this.processingPipeline.reservice( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)
             );
             if (this.isBuildingPipelineOnly) {
-                CocoonComponentManager.addComponentForAutomaticRelease(this.pipelineSelector,
-                                                                       this.processingPipeline,
-                                                                       this.pipelinesManager);
+// TODO: where does this go, RequestLifecycleHelper?
+//                CocoonComponentManager.addComponentForAutomaticRelease(this.pipelineSelector,
+//                                                                       this.processingPipeline,
+//                                                                       this.pipelinesManager);
             }
         }
         return this.processingPipeline;
@@ -316,12 +314,9 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     public void dispose() {
         // Release pipelines, if any
         if (!this.isBuildingPipelineOnly && this.pipelinesManager != null) {
-
-            if ( this.pipelineSelector != null) {
-                this.pipelineSelector.release(this.processingPipeline);
+            if (this.processingPipeline != null) {
+                this.pipelinesManager.release( this.processingPipeline );
                 this.processingPipeline = null;
-                this.pipelinesManager.release( this.pipelineSelector );
-                this.pipelineSelector = null;
             }
             this.pipelinesManager = null;
             this.processingPipelineParameters = null;
