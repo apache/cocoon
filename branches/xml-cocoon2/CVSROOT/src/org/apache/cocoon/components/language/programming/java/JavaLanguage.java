@@ -31,7 +31,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-11 15:06:02 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-18 19:12:09 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -258,8 +258,14 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     return buffer.toString();
   }
 
-  private String expandDirs(String d) {
+  private String expandDirs(String d) throws LanguageException {
     File dir = new File(d);
+	if ( ! dir.isDirectory() ) {
+		throw new LanguageException(
+			"Attempted to retrieve directory listing of non-directory "
+			+ dir.toString()
+		);
+	}
     File[] files = dir.listFiles(new JavaArchiveFilter());
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < files.length; i++) {
