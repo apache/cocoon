@@ -47,7 +47,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * </tbody></table>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SelectMetaInputModule.java,v 1.3 2004/04/28 18:15:58 haul Exp $
+ * @version CVS $Id$
  */
 public class SelectMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -60,10 +60,9 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
     	super();
         this.defaultInput = null; // not needed
     }
-    
-    
+        
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
 
@@ -93,6 +92,7 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
                 this.otherwise = new ModuleHolder(name, others[i], null);
             }
         }
+
         if (whens != null) {
             for (int i = 0; i < whens.length; i++) {
                 String name = whens[i].getAttribute("name");
@@ -101,23 +101,25 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
                     new ModuleHolder(name, whens[i], null));
             }
         }
-
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(String, Configuration, Map)
      */
-    public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         Object result = this.getAttribute(name, modeConf, objectModel, false);
         return result;
     }
 
-    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         Object result = this.getAttribute(name, modeConf, objectModel, true);
         return (result != null ? (Object[]) result : null );
     }
     
-    private Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues) throws ConfigurationException {
+    private Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues)
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -209,7 +211,7 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
      */
     public void compose(ComponentManager manager) throws ComponentException {
         super.compose(manager);
@@ -240,8 +242,9 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
      * @see org.apache.cocoon.components.modules.input.AbstractMetaModule#lazy_initialize()
      */
     public synchronized void lazy_initialize() {
-
-        if (this.initialized) return;
+        if (this.initialized) {
+            return;
+        }
 
         super.lazy_initialize();
         
@@ -258,5 +261,4 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
             }
         }
     }
-
 }
