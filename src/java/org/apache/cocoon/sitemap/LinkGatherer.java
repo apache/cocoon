@@ -70,7 +70,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.3 2003/08/17 13:43:00 upayavira Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.4 2003/08/30 09:51:59 upayavira Exp $
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     private List links;
@@ -102,7 +102,9 @@ public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, Cach
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        return NOPValidity.SHARED_INSTANCE;
+//      Whilst the cache does not store gathered links, this component must be non-cacheable
+//      return NOPValidity.SHARED_INSTANCE;
+        return null;
     }
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri,
