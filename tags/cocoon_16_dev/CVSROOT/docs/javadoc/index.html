@@ -1,0 +1,94 @@
+<head>
+<meta name="author" content="Kenneth Murphy">
+<title>Cocoon - Source Documentation in XML</title>
+</head>
+
+<p><img src="../images/logo.gif" border="0"></p>
+<h1 align="center">Source Documentation via XML</h1>
+<p align="center">by Kenneth Murphy</p>
+<h2 align="left">Introduction</h2>
+<blockquote>We are currently working on enhancing the documentation provided for the
+Cocoon XML publishing framework by converting javadoc commented source code into
+XML for use within Cocoon.</blockquote>
+<h2>The plan</h2>
+<blockquote><p>In order to do this we are currently planning to implement the following
+phases</p>
+<ol>
+  <li>Develop a JavaDoc XML DTD that acts as a data structure representing the
+    information provided by the rootDoc object of the SUN Javadoc program to a
+    plugged doclet. This DTD is intended to closely mirror the look of a raw
+    java source file.</li>
+  <li>Develop a JavaDoc doclet (JavaDocXML) that takes the information from the
+    JavaDoc rootDoc object and converts it into an XML file using the
+    javadoc.dtd.</li>
+  <li>Wrap the javadoc with XML doclet invocation into a cocoon producer as follows:
+    <ul>
+      <li>reads the document from the file system&nbsp;</li>
+      <li>spawns the javadoc tool using the javadoc XML servlet and using the
+parameters found in the "javadoc makefile"&nbsp;</li>
+      <li>produces the XML output as a single document</li>
+      <li>the Cocoon engine process it with the stylesheet indicated (from
+command line or whatever)</li>
+      <li>formats it either as PDF or HTML or whatever depending on the chosen
+        stylesheet. (the HTML formatter will be able to split a single
+XML document into several ones based on special page-break tags or PIs
+or using FO directly)&nbsp;</li>
+      <li>formatter will also be able to react on the SVG namespace
+inlining vector graphics or formatted as raster graphics.</li>
+    </ul>
+  </li>
+  <li>Some final formats we could produce are:
+    <ul>
+      <li>javadoc.dtd ---&gt; javadoc_html.dtd ---&gt; HTML (this would create a
+        javadoc that looks like the current HTML javadoc standard).</li>
+      <li>javadoc.dtd ---&gt; docBook.dtd&nbsp; (this would facilitate printed
+        books based having heavy content about java API's. For example &quot;The
+        JDBC API Tutorial and Reference: 2nd Edition&quot; could make heavy use
+        of this.</li>
+      <li>javadoc.dtd ---&gt; ebook.dtd (this would facilitate the electronic
+        version of documentation)</li>
+      <li>javadoc.dtd ---&gt; ??? ---&gt; pdf&nbsp;</li>
+    </ul>
+  </li>
+  <li>Using this method we will then enhance the existing Cocoon documentation to provide rich documentation
+    using some subset of the above formats.</li>
+  <li>Finally, we can incorporate XML versions of UML vector diagrams to further enhance the
+    source code documentation.</li>
+</ol></blockquote>
+<h2>Progress to date</h2>
+<blockquote><p><b>Current Status:</b> Phase 2</p>
+<p>Items currently under development:</p>
+<ul>
+  <li>Phase 1
+    <ul>
+      <li><a href="javadoc_dtd.txt">javadoc.dtd</a></li>
+      <li><a href="engine_xml.txt">sample</a>
+        (this is a mockup of what the documentation of <a href="engine_java.txt">org.apache.cocoon.Engine</a>
+        would look like in XML)
+        <ul>
+          <li>Note: I still need to update the sample to reflect the use of
+            namespaces and the addition of the interfaceref element</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Phase 2
+    <ul>
+      <li>Working on XML javadoc doclet</li>
+    </ul>
+  </li>
+</ul></blockquote>
+<h2>To do</h2>
+<blockquote><p>Currently, I am needing lots of feedback on the javadoc.dtd. We can't proceed
+to phase 2 until we feel we are on the right track with the DTD. It doesn't need
+to be perfect, but it should be close. When I get the next round of feedback, I
+am planning on adding &quot;import&quot; as an element of class. I am also
+planning on moving the position of the element &quot;doc&quot; to the start of
+each place it is appropriate. They will more closely reflect the source code and
+it just makes since to put the documentation before not after what you are
+talking about.</p>
+</blockquote>
+<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
+$Id: index.html,v 1.1.1.1 1999-11-09 01:51:33 stefano Exp $<br>
+All rights reserved.</font></p>
+

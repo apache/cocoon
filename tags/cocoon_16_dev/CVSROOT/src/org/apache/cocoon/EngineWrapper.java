@@ -1,0 +1,129 @@
+package org.apache.cocoon;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.apache.cocoon.framework.*;
+
+/**
+ * This class implements wrapping methods that allow the engine to be
+ * called even from other APIs or standalone applications.
+ *
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version $Revision: 1.1.1.1 $ $Date: 1999-11-09 01:51:11 $
+ */
+
+public class EngineWrapper extends Engine {
+    
+    public EngineWrapper(Configurations confs) throws Exception {
+        super(confs);
+    }
+
+    public void handle(PrintWriter out, String document) throws Exception {
+        this.handle(new HttpServletRequestImpl(document), new HttpServletResponseImpl(out));
+    }
+    
+    /**
+     * Dummy implementation of the HttpServletRequest class to create a 
+     * fake but funtional request for the main engine.
+     * NOTE: this works only with the default file producer.
+     */
+    public class HttpServletRequestImpl implements HttpServletRequest {
+        
+        private String pathTranslated;
+        
+        public HttpServletRequestImpl(String pathTranslated) {
+            this.pathTranslated = pathTranslated;
+        }
+
+        public String getPathTranslated() {
+            return this.pathTranslated;
+        }
+
+        // FIXME: this is a quick hack to make command line operation work
+        // with FileProducer. Check this when Servlet 2.2 are in place.
+        public String getPathInfo() { return ""; }
+
+        public String getParameter(String name) { return null; }
+        public Enumeration getParameterNames() { return null; }
+        public String[] getParameterValues(String name) { return null; }
+        public int getContentLength() { return -1; }
+        public String getContentType() { return null; }
+        public String getProtocol()  { return "none"; }
+        public String getScheme() { return "none"; }
+        public String getServerName() { return Cocoon.version(); }
+        public int getServerPort() { return -1; }
+        public String getRemoteAddr() { return null; }
+        public String getRemoteHost() { return null; }
+        public ServletInputStream getInputStream() throws IOException { return null; }
+        public Object getAttribute(String name) { return null; }
+        public BufferedReader getReader () throws IOException { return null; }
+        public String getCharacterEncoding () { return null; }
+        public Cookie[] getCookies() { return null; }
+        public String getMethod() { return null; }
+        public String getRequestURI() { return null; }
+        public String getServletPath() { return null; }
+        public String getQueryString() { return null; }
+        public String getRemoteUser() { return null; }
+        public String getAuthType() { return null; }
+        public String getHeader(String name) { return null; }
+        public int getIntHeader(String name) { return -1; }
+        public long getDateHeader(String name) { return -1; }
+        public Enumeration getHeaderNames() { return null; }
+        public HttpSession getSession(boolean create) { return null; }
+        public String getRequestedSessionId() { return null; }
+        public boolean isRequestedSessionIdValid() { return false; }
+        public boolean isRequestedSessionIdFromCookie() { return false; }
+        public boolean isRequestedSessionIdFromURL() { return false; }
+        public Enumeration getAttributeNames() { return null; }
+        public void setAttribute(String name, Object value) {}
+        public HttpSession getSession() { return null; }
+
+        /** @deprecated */
+        public String getRealPath(String path) { return null; }
+        /** @deprecated */
+        public boolean isRequestedSessionIdFromUrl() { return false; }
+    }
+
+    /**
+     * Dummy implementation of the HttpServletResponse class to create a 
+     * fake but funtional response for the main engine.
+     */
+    public class HttpServletResponseImpl implements HttpServletResponse {
+        
+        private PrintWriter out;
+        
+        public HttpServletResponseImpl(PrintWriter out) {
+            this.out = out;
+        }
+
+        public PrintWriter getWriter() throws IOException {
+            return this.out;
+        }
+        
+        public void setContentLength(int len) {}
+        public void setContentType(String type) {}
+        public ServletOutputStream getOutputStream() throws IOException { return null; }
+        public String getCharacterEncoding() { return null; }
+        public void addCookie(Cookie cookie) {}
+        public boolean containsHeader(String name) { return false; }
+        public void setStatus(int sc) {}
+        public void setHeader(String name, String value) {}
+        public void setIntHeader(String name, int value) {}
+        public void setDateHeader(String name, long date) {}
+        public void sendError(int sc, String msg) throws IOException {}
+        public void sendError(int sc) throws IOException {}
+        public void sendRedirect(String location) throws IOException {}
+        public String encodeURL (String url) { return url; }
+        public String encodeRedirectURL (String url) { return url; }
+        
+        /** @deprecated */
+        public void setStatus(int sc, String sm) {}
+        /** @deprecated */
+        public String encodeUrl (String url) { return url; }
+        /** @deprecated */
+        public String encodeRedirectUrl (String url) { return url; }
+    }
+}

@@ -1,0 +1,85 @@
+
+                             C   O   C   O   O   N
+                                
+                      
+  What is it?
+  -----------
+
+  Cocoon is a 100% pure Java publishing framework that relies on 
+  new W3C technologies (such as XML, and XSL) to provide web content.
+
+  The Cocoon project aims to change the way web information is created, 
+  rendered and delivered. This new paradigm is based on fact that document 
+  content, style and logic are often created by different individuals or 
+  working groups.
+  
+  Cocoon aims to a complete separation of the three layers, allowing the 
+  three layers to be indipendently designed, created and managed, reducing 
+  management overhead, increasing work reuse and reducing time to market.
+
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the Apache XML Project 
+  web site (http://xml.apache.org/cocoon/).
+
+
+  Requirements
+  ------------
+
+  The following requirements exist for installing Cocoon:
+  
+   o  A Java 1.1 or later compatible virtual machine (for command line usage).
+
+   o  Server API 2.x Servlet Engine (for servlet usage):
+   
+      Being a 100% pure Java servlet, Cocoon will run on any 2.x compliant 
+      servlet platform.
+
+   o  XML Parser with DOM support:
+   
+      The Cocoon Servlet is based on the W3C Document Object Model to specify 
+      the documents it handles and it's not based on any particular XML parser 
+      implementation using a modular and pluggable interface.
+
+      These are the XML parsers currently supported:
+      
+        1) OpenXML ver 1.0.6+(http://www.openxml.org/)
+        2) IBM XML4J ver. 2.* (http://www.alphaworks.ibm.com/tech/xml/)
+        3) Sun ProjectX (http://developers.java.sun.com/)
+        4) Oracle XML Parser ver 2.* (http://www.oracle.com/xml/)
+        
+   o  XSL Processor with DOM support:
+   
+      These are the XSL processors currently supported:
+      
+        1) XSL:P Processor (http://www.clc-marketing.com/xslp/)
+        2) LotusXSL Processor ver 0.18+ (http://www.alphaworks.ibm.com/tech/LotusXSL/)
+        3) Oracle XSL Processor ver 2.* (http://www.oracle.com/xml/)
+        4) James Clark's XT processor (http://www.jclark.com)
+
+
+  Installation Instructions and Documentation
+  -------------------------------------------
+
+  The documentation available as of the date of this release is
+  included, in HTML format, in the "docs/" directory, and it may
+  be browsed starting from the file called "index.html".
+  
+  Look for the most updated documentation on the Cocoon web site under
+  the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Licensing and legal issues
+  --------------------------
+
+  For legal and licensing issues, please read the LICENSE file.
+
+
+  Thanks for using Cocoon.
+
+                                           The Apache XML Project
+                                           http://xml.apache.org/                                         
+                                           
+  

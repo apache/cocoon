@@ -1,0 +1,48 @@
+Cocoon Samples
+--------------
+
+This directory contains samples to show you the power of the Cocoon Publishing
+Framework. Each subdirectory contains examples of possible uses that should
+give you insights on Cocoon capabilities as well as real-life suggestions on
+how to XML-ize your web-serving environment.
+
+      - hello ................. a simple hello world example
+      - sites ................. some live Apache web sites XML-ized
+      - fo .................... examples regarding XSL formatting objects
+      - wap ................... how to turn your site wireless ready
+      - multi ................. to show multiple xslt transformations
+      - sql ................... how to XML-ize your legacy rational data
+      - dcp ................... how to add dynamic PI evaluation
+      - xsp ................... examples to show XML compiled pages
+
+Filenames
+---------
+
+The XML world is a new one and there are not many "design patterns" that users
+are used to as much as in other web realms. One of the most used file naming
+pattern uses the "<name>.<extension>" notation. We find this highly insufficient
+for the XML world where the ".xml" extention doesn't really mean anything since
+it doesn't indicate _which DTD_ the xml file is using.
+
+The pattern used in Cocoon's examples follows these rules:
+
+ <name>.<doctype>.xml ....................... for XML files
+ <name>.<from-doctype>.<to-doctype>.xsl ..... for XSLT transformation sheets
+ 
+This allows you to understand without opening the file, if the stylesheet you
+are using matches and the processing pipe thus created is significant. For
+example, while the following is correct
+
+   correct.whatever.xml -> simple.whatever.somethingelse.xsl
+   
+since the file "correct" uses the "whatever" doctype and the stylesheet "simple" 
+transforms "whatever" documents into "somethingelse" documents, this is not
+
+   wrong.whatever.xml -> simple.anything.somethingelse.xsl
+   
+since the file "wrong" is a document of type "whatever" and the stylesheet
+"simple" doesn't know how to handle those documents but only "anything" 
+documents.
+
+Note: the doctype is defined as the root element of the XML document which must
+be unique as per XML specification.
