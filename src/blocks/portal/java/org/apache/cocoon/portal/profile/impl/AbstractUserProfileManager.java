@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.5 2003/12/17 15:03:27 cziegeler Exp $
+ * @version CVS $Id: AbstractUserProfileManager.java,v 1.6 2004/02/23 14:52:50 cziegeler Exp $
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
@@ -190,6 +190,37 @@ public abstract class AbstractUserProfileManager
 			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
 
             return copletInstanceDataManager.getCopletInstanceData(copletID);
+        } catch (ServiceException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletData(java.lang.String)
+     */
+    public CopletData getCopletData(String copletDataId) {
+        String layoutKey = this.getDefaultLayoutKey();
+        PortalService service = null;
+        String attribute = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+
+            attribute = "CopletInstanceData:"+layoutKey;
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
+
+            Iterator i = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+            boolean found = false;
+            CopletInstanceData current = null;
+            while ( !found && i.hasNext() ) {
+                current = (CopletInstanceData)i.next();
+                found = current.getCopletData().getId().equals(copletDataId);
+            }
+            if ( found ) {
+                return current.getCopletData();
+            }
+            return null;
         } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {

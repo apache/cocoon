@@ -10,7 +10,7 @@
 		<p>This is a demo of the Cocoon Portal Engine.</p>
         <p>The Cocoon portal page you currently view displays some so called
           <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
-          a select content.</p> 
+          a different content.</p> 
         <p><strong>THIS IS A SAMPLE PORTAL!</strong></p>
         <p>It demonstrates several features of 
           the portal engine, so it's not optimized for production. Make sure 

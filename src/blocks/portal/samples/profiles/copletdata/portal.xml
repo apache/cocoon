@@ -219,6 +219,65 @@
       </aspect>
    </coplet-data>
 
+   <!--
+     +  The basket coplet
+   -->
+   <coplet-data id="BasketContent" name="standard">
+      <title>Basket Item</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/content</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketAdmin" name="standard">
+      <title>Basket Administration</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket-admin</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Basket" name="standard">
+      <title>Basket</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Basket.admin" name="standard">
+      <title>Basket</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket.admin</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSample" name="standard">
+      <title>Basket Sample</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/sample</value>
+      </attribute>
+      <attribute>
+      	<name>basket-link</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>basket-content</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketUploadSample" name="standard">
+      <title>Basket Upload</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/upload-sample</value>
+      </attribute>
+   </coplet-data>
 
 
    <!--

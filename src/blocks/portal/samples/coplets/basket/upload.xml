@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<basket:upload-form method="POST" enctype="multipart/form-data"  xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
+Upload Test
+<basket:upload-item type="file" name="doc"/><br/>
+<input type="submit"/>
+<br/>
+This sample does only work, if you enabled uploads for Cocoon!
+</basket:upload-form>

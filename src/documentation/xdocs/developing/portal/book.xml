@@ -18,6 +18,7 @@
   </menu>
   <menu label="Samples">
     <menu-item label="Form handling" href="forms.html"/>
+    <menu-item label="A Basket" href="basket.html"/>
   </menu>
 </book>
 

@@ -34,6 +34,16 @@
 			</font>
 	    </td>
 		<td align="right" bgColor="{$bgColor}">
+			<xsl:if test="basket-add-link">
+				<a href="{basket-add-link}">
+	  			    <img src="images/basket.gif" border="0" alt="Add Link"/>
+	  			</a>
+			</xsl:if>
+			<xsl:if test="basket-add-content">
+				<a href="{basket-add-content}">
+	  			    <img src="images/basket.gif" border="0" alt="Add Content"/>
+	  			</a>
+			</xsl:if>
 			<xsl:if test="edit-uri">
 				<a href="{edit-uri}">
 	  			    <img src="images/edit.gif" border="0" alt="Edit"/>
