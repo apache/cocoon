@@ -93,7 +93,7 @@
         Enter a query and search the Lucene index2 that you have created
         - using <a href="findIt2?queryString=cocoon">Cocoon Generators</a>.
       </p>
-      <p>
+      <!--<p>
         Construct a query and search the Lucene index2 that you have created
         - using <a href="query/advanced.html">Cocoon Forms</a>.<br/>
         Or enter a word or two in here : 
@@ -101,7 +101,7 @@
         		<input type="text" name="query" size="20" value="cocoon"/>
         		<input type="submit" value="Search" />
         	</form>
-      </p>
+      </p>-->
       
       <h2>Internals</h2>
       <p>
