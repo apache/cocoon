@@ -7,7 +7,7 @@
 	<s1 title="Description">
     <note><strong>SQLProcessor is deprecated and no longer supported,</strong>
      and it is recommended that you use
-     the <connect href="sqltaglib.xml">SQL XSP taglibs</connect>
+     the <connect href="esql.xml">ESQL XSP taglib</connect>
      instead. This documentation is provided for those who
      are still using SQLProcessor.</note>
 

@@ -5,7 +5,15 @@
 <document><header><title>SQL Taglib</title><authors><person name="Donald A. Ball Jr." email="balld@webslingerz.com"/></authors></header><body>
 
 	<s1 title="Description">
-		<p>The SQL logicsheet is an XSP logicsheet that performs sql queries and serializes their results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
+    <note><strong>The SQL logicsheet is deprecated and no longer supported,</strong>
+     and it is recommended that you use
+     the <connect href="esql.xml">ESQL logicsheet</connect>
+     instead. This documentation is provided for those who
+     are still using the SQL logicsheet.</note>
+
+    <p>The SQL logicsheet is an 
+XSP logicsheet that performs sql queries and serializes their 
+results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
 	</s1>
 
 	<s1 title="Installation">
