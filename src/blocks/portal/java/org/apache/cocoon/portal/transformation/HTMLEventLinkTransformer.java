@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Current we only support POSTing of forms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.6 2004/03/31 20:32:45 vgritsenko Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.7 2004/04/01 09:36:56 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -140,6 +140,10 @@ extends AbstractCopletTransformer {
         newAttributes.addCDATAAttribute("coplet", cid.getId());
         newAttributes.addCDATAAttribute("format", "html-form");
         newAttributes.addCDATAAttribute("method", "POST");
+        final String encType = attributes.getValue("enctype");
+        if ( encType != null ) {
+            newAttributes.addCDATAAttribute("enctype", encType);
+        }
         this.xmlConsumer.startPrefixMapping("coplet", CopletTransformer.NAMESPACE_URI);
         this.xmlConsumer.startElement(CopletTransformer.NAMESPACE_URI,
                 CopletTransformer.LINK_ELEM,
