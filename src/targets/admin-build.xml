@@ -4,7 +4,7 @@
   <target name="site" depends="init, forrest, javadocs" description="[admin] Builds the site">
     <mkdir dir="${site}"/>
     <copy todir="${site}" filtering="off">
-      <fileset dir="${build.docs}"/>
+      <fileset dir="${build.site}"/>
     </copy>
     <copy todir="${site}/apidocs" filtering="off">
       <fileset dir="${build.javadocs}"/>
