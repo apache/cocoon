@@ -330,11 +330,6 @@ public abstract class AbstractUserProfileManager
             if ( null == layoutKey ) {
                 layoutKey = this.getDefaultLayoutKey();
             }
-            // FIXME actually this is a hack for full screen
-            Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-            if ( null != l) {
-                return l;
-            }
             
             final String layoutAttributeKey = "Layout:" + layoutKey;
             final String layoutObjectsAttributeKey = "Layout-Map:" + layoutKey;

@@ -426,7 +426,7 @@ public class DefaultLayoutFactory
                 ProfileManager profileManager = service.getComponentManager().getProfileManager();
                 if ( layout instanceof CopletLayout ) {
                     // full screen?
-                    if ( layout.equals(profileManager.getEntryLayout()) ) {
+                    if ( layout.equals(service.getEntryLayout(null)) ) {
                         Event event = new FullScreenCopletEvent(((CopletLayout)layout).getCopletInstanceData(), null);
                         eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
                         eventManager.getPublisher().publish(event);

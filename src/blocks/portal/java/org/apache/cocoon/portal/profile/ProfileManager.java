@@ -50,12 +50,6 @@ public interface ProfileManager extends Component {
 	Layout getPortalLayout(String layoutKey, String layoutID);
     
     /**
-     * FIXME this is for the full-screen function
-     */
-    void setEntryLayout(Layout object);
-    Layout getEntryLayout();
-    
-    /**
      * Change the default layout key for most functions
      */
     void setDefaultLayoutKey(String layoutKey);
@@ -74,22 +68,41 @@ public interface ProfileManager extends Component {
      */
     CopletData getCopletData(String copletDataId);
     
+    /**
+     * This method is invoked when the user logs into the portal.
+     */
     void login();
     
+    /**
+     * This method is invoked when the user logs out of the portal
+     *
+     */
     void logout();
     
+    /**
+     * New coplet instance datas have to be registered using this method.
+     */
     void register(CopletInstanceData coplet);
     
+    /**
+     * Removed coplet instance datas have to be unregistered using this method.
+     */
     void unregister(CopletInstanceData coplet);
 
+    /**
+     * New layouts have to be registered using this method.
+     */
     void register(Layout layout);
     
+    /**
+     * New layouts have to be unregistered using this method.
+     */
     void unregister(Layout layout);
 
     /**
      * Save the profile
      */
-    void saveUserProfiles();
+    void saveUserProfiles(String layoutKey);
     
     /**
      * Get all instances
@@ -101,4 +114,18 @@ public interface ProfileManager extends Component {
      */
     Collection getCopletDatas();
     
+    /**
+     * Copy the current (default) layout and store it under
+     * the provided key.
+     * The copy includes copying of layout objects (with attached
+     * items) and coplet instance datas.
+     */
+    Layout copyProfile(String layoutKey);
+    
+    /**
+     * Store the provided profile under the layoutKey.
+     * This method can be used to overwrite a profile with another
+     * one.
+     */
+    void storeProfile(Layout rootLayout, String layoutKey);
 }

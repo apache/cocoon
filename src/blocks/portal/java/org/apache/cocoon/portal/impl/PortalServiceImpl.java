@@ -36,6 +36,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -44,7 +45,7 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.12 2004/07/11 14:04:34 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -169,4 +170,29 @@ public class PortalServiceImpl
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#setEntryLayout(org.apache.cocoon.portal.layout.Layout)
+     */
+    public void setEntryLayout(String layoutKey, Layout object) {
+        if ( layoutKey == null ) {
+            layoutKey = this.getComponentManager().getProfileManager().getDefaultLayoutKey();
+        }
+        if ( object == null ) {
+            this.removeTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
+        } else {
+            this.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getEntryLayout()
+     */
+    public Layout getEntryLayout(String layoutKey) {
+        if ( layoutKey == null ) {
+            layoutKey = this.getComponentManager().getProfileManager().getDefaultLayoutKey();
+        }
+        return (Layout)this.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
+    }
+
+    
 }

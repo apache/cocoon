@@ -147,8 +147,10 @@ public class AuthenticationProfileManager
         return layout;
     }
     
-    public void saveUserProfiles() {
-        final String layoutKey = this.getDefaultLayoutKey();
+    public void saveUserProfiles(String layoutKey) {
+        if ( layoutKey == null ) {
+            layoutKey = this.getDefaultLayoutKey();
+        }
 		ProfileLS adapter = null;
 		PortalService service = null;
 		try {
