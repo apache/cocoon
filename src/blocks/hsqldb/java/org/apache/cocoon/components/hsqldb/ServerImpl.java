@@ -18,10 +18,6 @@ package org.apache.cocoon.components.hsqldb;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Startable;
@@ -40,7 +36,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.thread.RunnableManager;
 
 /**
- * This class runs an instance of HSQLDB Server.
+ * This class runs an instance of the HSQLDB HSQL protocol network database server.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
@@ -55,9 +51,9 @@ public class ServerImpl extends AbstractLogEnabled
                Serviceable,
                Startable {
 
-    private static final String DEFAULT_TRACE = "false";
-    private static final String DEFAULT_SILENT = "true";
-    private static final String DEFAULT_PORT = "9002";
+    private static final boolean DEFAULT_TRACE = false;
+    private static final boolean DEFAULT_SILENT = true;
+    private static final int DEFAULT_PORT = 9002;
     private static final String CONTEXT_PROTOCOL = "context:/"; 
     private static final String DEFAULT_DB_NAME = "cocoondb";
     private static final String DEFAULT_DB_PATH = "context://WEB-INF/db";
@@ -65,47 +61,40 @@ public class ServerImpl extends AbstractLogEnabled
     /** Cocoon context **/
     private org.apache.cocoon.environment.Context cocoonContext;
     
-    /** Port which HSQLDB server will listen to */
-    private String port;
-
-    /** Arguments for running the server */
-    private String arguments[] = new String[10];
+    /** The HSQLDB HSQL protocol network database server instance **/
+    private org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
 
     /** The threadpool name to be used for daemon thread */
     private String m_daemonThreadPoolName = "daemon";
-
-    /** Check if the server has already been started */
-    private boolean started = false;
 
     /** The {@link ServiceManager} instance */
     private ServiceManager m_serviceManager;
     
     /**
      * Initialize the ServerImpl.
-     * A few options can be used :
-     * <UL>
-     *  <LI>port = port where the server is listening</LI>
-     *  <LI>silent = display all queries</LI>
-     *  <LI>trace = print JDBC trace messages</LI>
-     * </UL>
+     * Posible options:
+     * <ul>
+     *  <li>port = port where the server is listening</li>
+     *  <li>silent = false => display all queries</li>
+     *  <li>trace = print JDBC trace messages</li>
+     *  <li>name = name of the HSQL-DB</li>
+     *  <li>path = path to the database - context-protocol is resolved</li>
+     * </ul>
      */
     public void parameterize(Parameters params)  {
         this.getLogger().debug("Parameterize ServerImpl");
-
-        arguments[0] = "-port";
-        arguments[1] = this.port = params.getParameter("port", DEFAULT_PORT);
-        arguments[2] = "-silent";
-        arguments[3] = params.getParameter("silent", DEFAULT_SILENT);
-        arguments[4] = "-trace";
-        arguments[5] = params.getParameter("trace", DEFAULT_TRACE);
-        arguments[6] = "-no_system_exit";
-        arguments[7] = DEFAULT_SILENT;
+        hsqlServer.setLogWriter(null); /* Remove console log */
+        hsqlServer.setErrWriter(null); /* Remove console log */
+        hsqlServer.setPort(params.getParameterAsInteger("port", DEFAULT_PORT));
+        hsqlServer.setSilent(params.getParameterAsBoolean("silent", DEFAULT_SILENT));
+        hsqlServer.setTrace(params.getParameterAsBoolean("trace", DEFAULT_TRACE));
+        hsqlServer.setNoSystemExit(true);
         if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Configure ServerImpl with port: " + arguments[1]
-                    + ", silent: " + arguments[3]
-                    + ", trace: " +arguments[5]);
+            this.getLogger().debug("Configure ServerImpl with port: " + hsqlServer.getPort()
+                    + ", silent: " + hsqlServer.isSilent()
+                    + ", trace: " + hsqlServer.isTrace());
         }
-        m_daemonThreadPoolName = params.getParameter( "thread-pool-name", m_daemonThreadPoolName );
+        m_daemonThreadPoolName = params.getParameter("thread-pool-name", m_daemonThreadPoolName);
 
         String dbPath = params.getParameter("path", DEFAULT_DB_PATH);
         
@@ -116,20 +105,17 @@ public class ServerImpl extends AbstractLogEnabled
         if (dbPath == null) {
             throw new RuntimeException("The hsqldb cannot be used inside a WAR file.");
         }        
-        
+
         try {
-            arguments[8] = "-database.0";
-            arguments[9] = new File(dbPath).getCanonicalPath();
-            arguments[9] += File.separator + params.getParameter("name", DEFAULT_DB_NAME);
+            hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + params.getParameter("name", DEFAULT_DB_NAME));
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("database is " + arguments[9]);
+                getLogger().debug("database path is " + hsqlServer.getDatabasePath(0,true));
             }
         } catch (MalformedURLException e) {
             getLogger().error("MalformedURLException - Could not get database directory ", e);
         } catch (IOException e) {
             getLogger().error("IOException - Could not get database directory ", e);
         }        
-        
     }
 
     /** Contextualize this class */
@@ -140,82 +126,43 @@ public class ServerImpl extends AbstractLogEnabled
      * @param serviceManager The <@link ServiceManager} instance
      * @throws ServiceException In case we cannot find a service needed
      */
-    public void service( ServiceManager serviceManager )
-    throws ServiceException
-    {
+    public void service(ServiceManager serviceManager) throws ServiceException {
         m_serviceManager = serviceManager;
     }
 
     /** Start the server */
     public void start() {
-        if (!started) {
-            // FIXME (VG): This dirty hack here is till shutdown issue is resolved
-            File file = new File(arguments[9] + ".backup");
-            if (file.exists() && file.delete()) {
-                getLogger().info("HSQLDB backup file has been deleted.");
-            }
-
-            RunnableManager runnableManager = null;
-            try
-            {
-                this.getLogger().debug("Intializing hsqldb server thread");
-                runnableManager = (RunnableManager)m_serviceManager.lookup(RunnableManager.ROLE);
-                runnableManager.execute( m_daemonThreadPoolName, this );
-            }
-            catch( final ServiceException se )
-            {
-                throw new CascadingRuntimeException( "Cannot get RunnableManager", se );
-            }
-            finally
-            {
-                if( null != runnableManager )
-                {
-                    m_serviceManager.release( runnableManager );
-                }
+        RunnableManager runnableManager = null;
+        try {
+            this.getLogger().debug("Intializing hsqldb server thread");
+            runnableManager = (RunnableManager)m_serviceManager.lookup(RunnableManager.ROLE);
+            runnableManager.execute(m_daemonThreadPoolName, this);
+        } catch(final ServiceException se) {
+            throw new CascadingRuntimeException("Cannot get RunnableManager", se);
+        } finally {
+            if (null != runnableManager) {
+                m_serviceManager.release(runnableManager);
             }
         }
     }
 
     /** Stop the server */
     public void stop() {
-        if (started) {
-            try {
-                getLogger().debug("Shutting down HSQLDB");
-                Connection connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:" + this.port, "sa", "");
-                Statement statement = connection.createStatement();
-                statement.executeQuery("SHUTDOWN");
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Shutting down HSQLDB: Ignoring exception: " + e);
-                    }
-                }
-            } catch (Exception e){
-                getLogger().error("Error while shutting down HSQLDB", e);
-            }
-            getLogger().debug("Shutting down HSQLDB: Done");
-        }
+        getLogger().debug("Shutting down HSQLDB");
+        hsqlServer.stop();
+        getLogger().debug("Shutting down HSQLDB: Done");
     }
 
+    /** Run the server */
     public void run() {
-        if(!started) {
-            started = true;
-
-            try {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("HSQLDB Server arguments are as follows:");
-                    for(int i = 0; i < arguments.length; i++) {
-                        getLogger().debug(i + " : " + arguments[i]);
-                    }
-                }
-
-                org.hsqldb.Server.main(arguments);
-            } catch(Exception e){
-                getLogger().error("Got exception", e);
-            } finally {
-                started = false;
-            }
+        if (getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Starting HSQLDB");
+            getLogger().debug(hsqlServer.getProductName() + " " + hsqlServer.getProductVersion() + " arguments are:");
+            getLogger().debug("port: " + hsqlServer.getPort());
+            getLogger().debug("silent: " + hsqlServer.isSilent());
+            getLogger().debug("DB path: " + hsqlServer.getDatabasePath(0,true));
         }
+        this.hsqlServer.start();
+        this.getLogger().debug("Starting HSQLDB: Done");
     }
 }
