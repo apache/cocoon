@@ -28,7 +28,7 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: NetUtilsTestCase.java,v 1.5 2004/03/05 13:03:04 bdelacretaz Exp $
+ * @version CVS $Id: NetUtilsTestCase.java,v 1.6 2004/04/28 22:14:19 ugo Exp $
  */
 public class NetUtilsTestCase extends TestCase
 {
@@ -63,6 +63,7 @@ public class NetUtilsTestCase extends TestCase
      */
     public void testGetPath() throws Exception {
         Object[] test_values = {
+                new String[]{"", ""},
                 new String[]{"/", ""},
                 new String[]{"/foo.bar", ""},
                 new String[]{"foo/bar", "foo"},
