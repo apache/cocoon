@@ -2,6 +2,7 @@
 	ObJectRelationalBridge - Bridging Java objects and relational dabatases
 	This DTD describes the grammar of the Descriptor repository
 	Author: Thomas Mahler, (c) 2000, 2001, 2002, 2003
+    @version $Id: $
   -->
 
 <!--
@@ -42,8 +43,6 @@
 -->
 <!ELEMENT documentation (#PCDATA)>
 
-<!ELEMENT database-repository (jdbc-connection-descriptor*)>
-
 <!--
 	The attribute element allows to add custom attributes.
 
@@ -57,8 +56,7 @@
     define which sequence manager implementation should be used within
     the defined connection.
   -->
-<!ELEMENT jdbc-connection-descriptor (documentation?, attribute*, connection-pool?, sequence-manager?)>
-
+<!ELEMENT jdbc-connection-descriptor (documentation?, attribute*, object-cache?, connection-pool?, sequence-manager?)>
 
 <!--
     The jcdAlias attribute is a shortcut name for the defined connection
@@ -118,8 +116,9 @@
 	jcd-alias CDATA #REQUIRED
     default-connection (true | false) "false"
     platform (Db2 | Hsqldb | Informix | MsAccess | MsSQLServer |
-	          MySQL | Oracle | PostgreSQL | Sybase | SybaseASE|
-              SybaseASA | Sapdb | Firebird | Axion | NonstopSql ) "Hsqldb"
+	          MySQL | Oracle | PostgreSQL | Sybase | SybaseASE |
+              SybaseASA | Sapdb | Firebird | Axion | NonstopSql |
+              Oracle9i ) "Hsqldb"
 	jdbc-level (1.0 | 2.0 | 3.0) "1.0"
 	eager-release (true | false) "false"
     batch-mode (true | false) "false"
@@ -135,6 +134,36 @@
 
 	username CDATA #IMPLIED
 	password CDATA #IMPLIED
+>
+
+
+<!--
+    The object-cache element can be used to specify the ObjectCache
+    implementation used by OJB. There are three levels for
+    declaration:
+        1. in OJB.properties file, to declare the standard (default)
+        ObjectCache implementation.
+        2. on jdbc-connection-descriptor level, to declare ObjectCache implementation
+        on a per connection/user level
+        3. on class-descriptor level, to declare ObjectCache implementation
+        on a per class level
+
+    The priority of the declared object-cache elements are:
+    per class > per jdbc descriptor > standard
+
+    E.g. if you declare ObjectCache 'cacheDef' as standard, set
+    ObjectCache 'cacheA' in class-descriptor for class A and class B
+    does not declare an object-cache element. Then OJB use cacheA as ObjectCache
+    for class A and cacheDef for class B
+-->
+<!ELEMENT object-cache (documentation?, attribute*)>
+
+<!--
+    Attribute 'class' specifies the full qualified class name of
+    the used ObjectCache implementation.
+-->
+<!ATTLIST object-cache
+    class                          CDATA #REQUIRED
 >
 
 
@@ -278,12 +307,20 @@
 
 	A class-descriptor may contain user defined custom attribute elements.
 
+    The insert-procedure, update-procedure and delete-procedure elements
+    identify the procedure/function that is defined in the database which
+    will handle the insertion, update or deletion of an instance of this
+    class.  These elements are all optional.  If they are absent then basic
+    sql statements (INSERT INTO xxx..., UPDATE xxx, DELETE FROM xxx) will
+    be utilized.
+
   -->
 <!ELEMENT class-descriptor
 	((documentation?, extent-class+, attribute*) |
-	(documentation?, extent-class*, field-descriptor+,
+	(documentation?, object-cache?, extent-class*, field-descriptor+,
 	 reference-descriptor*, collection-descriptor*,
-     index-descriptor*, attribute*))>
+     index-descriptor*, attribute*,
+     insert-procedure?, update-procedure?, delete-procedure?))>
 
 
 <!--
@@ -313,15 +350,16 @@
 	propagate to this class.  Currently relevant for the ODMG layer only.
 
 	The optional initialization-method specifies a no-argument instance
-	method that is invoked after reading an instnace from a database row.
+	method that is invoked after reading an instance from a database row.
 	It can be used to do initialization and validations.
 
-	The optional factory-method specifies a static no-argument method
-	(specified by the factory-class attribute)
+	The optional factory-class specifies a factory-class that
 	that is to be used instead of a no argument constructor.
-	If either factory-class or factory-method is specified, the other
-	is mandatory.
-	
+	If the factory-class is specified the factory-method
+	also must be defined.
+	factory-method refers to a static no-argument method
+	of the factory-class class.
+
 	The refresh attribute can be set to true to force OJB to refresh
 	instances when loaded from cache. It's set to false by default.
 
@@ -386,7 +424,9 @@
 	The column attribute specifies the column the persistent classes field
 	is mapped to.
 
-	The jdbc-type attribute specifies the JDBC type of the column.
+	The optional jdbc-type attribute specifies the JDBC type of the column.
+	If not specified OJB tries to identify the JDBC type by inspecting the
+	Java attribute by reflection.
 
 	The primarykey specifies if the column is a primary key column.
 
@@ -448,7 +488,7 @@
 	jdbc-type (BIT | TINYINT | SMALLINT | INTEGER | BIGINT | DOUBLE |
 	           FLOAT | REAL | NUMERIC | DECIMAL | CHAR | VARCHAR |
 	           LONGVARCHAR | DATE | TIME | TIMESTAMP | BINARY |
-	           VARBINARY | LONGVARBINARY | CLOB | BLOB) #REQUIRED
+	           VARBINARY | LONGVARBINARY | CLOB | BLOB | BOOLEAN) #IMPLIED
 	primarykey (true | false) "false"
 	nullable (true | false) "true"
 	indexed (true | false) "false"
@@ -634,7 +674,7 @@
     were set to true, but the auto-update and auto-delete attributes themself
     must be always set to false for use with OTM layer.
 
-	
+
   -->
 <!ATTLIST collection-descriptor
 	name CDATA #IMPLIED
@@ -729,3 +769,127 @@
 <!ELEMENT index-column (documentation?)>
 <!ATTLIST index-column
     name CDATA #REQUIRED>
+
+<!--
+	Identifies the procedure/function that should be used to handle
+    insertions for a specific class-descriptor.
+
+    The nested 'argument' elements define the argument list for the
+    procedure/function as well as the source for each argument.
+
+    The name attribute identifies the name of the procedure/function to use
+
+    The return-field-ref identifies the field-descriptor that will receive
+    the value that is returned by the procedure/function.  If the procedure/
+    function does not include a return value, then do not specify a value
+    for this attribute.
+
+    The include-all-fields attribute indicates if all field-descriptors in
+    the corresponding class-descriptor are to be passed to the procedure/
+    function.  If include-all-fields is 'true', any nested 'argument'
+    elements will be ignored.  In this case, values for all field-descriptors
+    will be passed to the procedure/function.  The order of values that are
+    passed to the procedure/function will match the order of field-descriptors
+    on the corresponding class-descriptor.  If include-all-fields is false,
+    then values will be passed to the procedure/function based on the
+    information in the nested 'argument' elements.
+  -->
+<!ELEMENT insert-procedure
+	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+<!ATTLIST insert-procedure
+	name CDATA #REQUIRED
+    return-field-ref CDATA #IMPLIED
+    include-all-fields (true | false) "false"
+>
+
+<!--
+	Identifies the procedure/function that should be used to handle
+    updates for a specific class-descriptor.
+
+    The nested 'argument' elements define the argument list for the
+    procedure/function as well as the source for each argument.
+
+    The name attribute identifies the name of the procedure/function to use
+
+    The return-field-ref identifies the field-descriptor that will receive
+    the value that is returned by the procedure/function.  If the procedure/
+    function does not include a return value, then do not specify a value
+    for this attribute.
+
+    The include-all-fields attribute indicates if all field-descriptors in
+    the corresponding class-descriptor are to be passed to the procedure/
+    function.  If include-all-fields is 'true', any nested 'argument'
+    elements will be ignored.  In this case, values for all field-descriptors
+    will be passed to the procedure/function.  The order of values that are
+    passed to the procedure/function will match the order of field-descriptors
+    on the corresponding class-descriptor.  If include-all-fields is false,
+    then values will be passed to the procedure/function based on the
+    information in the nested 'argument' elements.
+  -->
+<!ELEMENT update-procedure
+	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+<!ATTLIST update-procedure
+	name CDATA #REQUIRED
+    return-field-ref CDATA #IMPLIED
+    include-all-fields (true | false) "false"
+>
+
+<!--
+	Identifies the procedure/function that should be used to handle
+    deletions for a specific class-descriptor.
+
+    The nested 'runtime-argument' and 'constant-argument' elements define
+    the argument list for the procedure/function as well as the source
+    for each argument.
+
+    The name attribute identifies the name of the procedure/function to use
+
+    The return-field-ref identifies the field-descriptor that will receive
+    the value that is returned by the procedure/function.  If the procedure/
+    function does not include a return value, then do not specify a value
+    for this attribute.
+
+    The include-pk-only attribute indicates if all field-descriptors in
+    the corresponding class-descriptor that are identified as being part of
+    the primary key are to be passed to the procedure/function.  If
+    include-pk-only is 'true', any nested 'argument' elements will be
+    ignored.  In this case, values for all field-descriptors that are identified
+    as being part of the primary key will be passed to the procedure/function.
+    The order of values that are passed to the procedure/function will match
+    the order of field-descriptors on the corresponding class-descriptor.
+    If include-pk-only is false, then values will be passed to the procedure/
+    function based on the information in the nested 'argument' elements.
+  -->
+<!ELEMENT delete-procedure
+	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+<!ATTLIST delete-procedure
+	name CDATA #REQUIRED
+    return-field-ref CDATA #IMPLIED
+    include-pk-only (true | false) "false"
+>
+<!--
+    Defines an argument that is passed to a procedure/function.  Each argument
+    will be set to a value from a field-descriptor or null.
+
+    The field-ref attribute identifies the field-descriptor in the corresponding
+    class-descriptor that provides the value for this argument.  If this attribute
+    is unspecified, then this argument will be set to null.
+-->
+<!ELEMENT runtime-argument
+	(documentation?, attribute*)>
+<!ATTLIST runtime-argument
+	field-ref CDATA #IMPLIED
+    return (true | false) "false"
+>
+<!--
+    Defines a constant value that is passed to a procedure/function.
+
+    The value attribute identifies the value that is passed to the procedure/
+    function.
+-->
+<!ELEMENT constant-argument
+	(documentation?, attribute*)>
+<!ATTLIST constant-argument
+    value CDATA #REQUIRED
+>
+
