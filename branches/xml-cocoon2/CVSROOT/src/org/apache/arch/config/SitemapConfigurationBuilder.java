@@ -23,7 +23,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-03 15:19:13 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 04:57:42 $
  */
 public class SitemapConfigurationBuilder {
 
@@ -33,12 +33,20 @@ public class SitemapConfigurationBuilder {
     public Configuration newConfiguration(String name) {
         return(new ConfigurationImpl (name));
     }
-
-    /**
-     * Add an attribute to this configuration element, returning its old
-     * value or <b>null</b>.
-     */
-    public void addAttribute(String name, String value, Configuration conf) {
-        ((ConfigurationImpl)conf).addAttribute(name,value);
-    }
+ 
+    /** 
+     * Add an attribute to this configuration element, returning its old 
+     * value or <b>null</b>. 
+     */ 
+    public void addAttribute(String name, String value, Configuration conf) { 
+        ((ConfigurationImpl)conf).addAttribute(name,value); 
+    } 
+ 
+    /** 
+     * Add an attribute to this configuration element, returning its old 
+     * value or <b>null</b>. 
+     */ 
+    public void addConfiguration(Configuration child, Configuration conf) { 
+        ((ConfigurationImpl)conf).addConfiguration(child); 
+    } 
 }
