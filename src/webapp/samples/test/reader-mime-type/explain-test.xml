@@ -21,7 +21,7 @@
     <title>reader-mime-type test</title>
     <content>
         <para>Test harness for
-            <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=25121">
+            <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25121">
                 bugzilla 25212
             </a>, test mime-types on map:reader.
         </para>

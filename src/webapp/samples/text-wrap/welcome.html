@@ -25,7 +25,7 @@ Sometimes the lines inside &lt;source&gt; elements are too wide,
 which can make the resulting pages too wide to view on screen or to print.
 The width of the long source line causes the whole page layout to be that
 same width. A web page that is wider than the screen is a complete bastard to
-read - you have to scroll right and left all the time. And printing in 
+read - you have to scroll right and left all the time. And printing in
 landscape orientation is not very nice either.
 (See Bugzilla report
 <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23796">23796</a>.)
@@ -53,7 +53,7 @@ Please help to enhance these solutions so that one can soon be implemented.
 The following examples are deliberately extreme to ensure that the issues
 are triggered.
 </p>
-                                                                            
+
 <h2>Using no special handling</h2>
 <p>No special handling was done for the
 &lt;source&gt; elements. The content is wrapped with a &lt;pre&gt; element.
@@ -118,7 +118,7 @@ Lines are each wrapped with a styled &lt;p&gt; element.
 Sequences of two consecutive spaces are replaced by a non-breaking space
 and a regular space.
 Each line is encased in a &lt;code&gt;&lt;br/&gt;
-This method keeps the text indentation that would be obtained with a &lt;pre&gt; 
+This method keeps the text indentation that would be obtained with a &lt;pre&gt;
 while still allowing line wrapping by the browser.
 This utilises the <a href="http://exslt.org/">exslt extension</a> for strings.
 </p>
@@ -150,7 +150,7 @@ and maybe the Slop Block.
 
 <p>
 See the Bugzilla report
-(<a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23796">23796</a>)
+(<a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=23796">23796</a>)
 and the links to the cocoon-dev and forrest-dev mail discussion.
 </p>
 
