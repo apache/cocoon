@@ -72,7 +72,12 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.2 2004/03/08 14:02:41 cziegeler Exp $
+ * @version CVS $Id: MountTableMatcher.java,v 1.3 2004/03/10 17:58:54 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=mount-table
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
