@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.17 2004/07/11 17:18:37 antonio Exp $
+ * @version CVS $Id$
  */
 public class NetUtils {
 
@@ -50,8 +50,8 @@ public class NetUtils {
     private static BitSet safeCharacters;
 
     private static final char[] hexadecimal =
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-             'A', 'B', 'C', 'D', 'E', 'F'};
+    {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+     'A', 'B', 'C', 'D', 'E', 'F'};
 
     static {
         safeCharacters = new BitSet(256);
@@ -148,7 +148,7 @@ public class NetUtils {
     }
 
     /**
-     * Encode a path as required by the URL specificatin (<a href="http://www.ietf.org/rfc/rfc1738.txt">
+     * Encode a path as required by the URL specification (<a href="http://www.ietf.org/rfc/rfc1738.txt">
      * RFC 1738</a>). This differs from <code>java.net.URLEncoder.encode()</code> which encodes according
      * to the <code>x-www-form-urlencoded</code> MIME format.
      *
@@ -225,7 +225,7 @@ public class NetUtils {
      * extension  component
      *
      * @param uri The filename
-     * @return The filename extension (with starting dot!)
+     * @return The filename extension (with starting dot!) or null if filename extension is not found
      */
     public static String getExtension(String uri) {
         int dot = uri.lastIndexOf('.');
@@ -272,12 +272,12 @@ public class NetUtils {
         }
 
         boolean slash = (path.charAt(path.length() - 1) == '/');
-
+        
         StringBuffer b = new StringBuffer();
         b.append(path);
         if (!slash) {
             b.append('/');
-        }
+        } 
         b.append(resource);
         return b.toString();
     }
@@ -371,7 +371,7 @@ public class NetUtils {
      * Remove parameters from a uri.
      * Resulting Map will have either String for single value attributes,
      * or String arrays for multivalue attributes.
-     *
+     * 
      * @param uri The uri path to deparameterize.
      * @param parameters The map that collects parameters.
      * @return The cleaned uri
@@ -411,7 +411,7 @@ public class NetUtils {
      * Add parameters stored in the Map to the uri string.
      * Map can contain Object values which will be converted to the string,
      * or Object arrays, which will be treated as multivalue attributes.
-     *
+     * 
      * @param uri The uri to add parameters into
      * @param parameters The map containing parameters to be added
      * @return The uri with added parameters
@@ -420,14 +420,14 @@ public class NetUtils {
         if (parameters.size() == 0) {
             return uri;
         }
-
+        
         StringBuffer buffer = new StringBuffer(uri);
         if (uri.indexOf('?') == -1) {
             buffer.append('?');
         } else {
             buffer.append('&');
         }
-
+        
         for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry)i.next();
             if (entry.getValue().getClass().isArray()) {
@@ -479,8 +479,8 @@ public class NetUtils {
      * Remove any authorisation details from a URI
      */
     public static String removeAuthorisation(String uri) {
-        if (uri.indexOf("@") != -1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
-            return uri.substring(0, uri.indexOf(":") + 2) + uri.substring(uri.indexOf("@") + 1);
+        if (uri.indexOf("@")!=-1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
+            return uri.substring(0, uri.indexOf(":")+2)+uri.substring(uri.indexOf("@")+1);
         }
         return uri;
     }
@@ -501,7 +501,7 @@ public class NetUtils {
             urlEncode = null;
             urlDecode = null;    
         }
-    }
+        } 
 
     /**
      * Pass through to the {@link java.net.URLEncoder}. If running under JDK &lt; 1.4,
