@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.4 2000-01-03 18:04:54 ricardo Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.5 2000-01-05 16:12:24 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,7 +55,6 @@ import java.io.*;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
 
-import Jindent;
 import sun.tools.javac.Main;
 
 import org.apache.cocoon.processor.xsp.*;
@@ -63,7 +62,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @@author <a href="mailto:ricardo@@apache.org">Ricardo Rocha</a>
- * @@version $Revision: 1.4 $ $Date: 2000-01-03 18:04:54 $
+ * @@version $Revision: 1.5 $ $Date: 2000-01-05 16:12:24 $
  */
 public class XSPJavaProcessor implements XSPLanguageProcessor {
   // Create class loader
@@ -93,32 +92,12 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     this.format = format;
   }
 
+
   public String formatCode(String code) throws Exception {
+    // FIXME: do nothing for now. In the future, we should hook some
+    // open source java pretty printer or write our own using JavaCC stuff
+    // or similar to allow easier XSP code debugging (SM)
     return code;
-
-    // Commented out while we find an open source code formatter
-/*
-    if (!this.format) {
-      return code;
-    }
-
-    String[] params = {
-      "-m",
-    };
-
-    Jindent.initParser(params);
-
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-    Jindent.parseInputStream(
-      new ByteArrayInputStream(
-        (new String(code)).getBytes()
-      ),
-      out
-    );
-
-    return out.toString();
-*/
   }
 
   public void compile(String filename) throws Exception {
@@ -140,6 +119,11 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     };
 
     ByteArrayOutputStream err = new ByteArrayOutputStream();
+    
+    // FIXME: we should make this reflection based and also allowed other
+    // compilers to be plugged in. Maybe we can steal... ehmmm, borrow.. some
+    // Tomcat code for this :) (SM)
+    
     Main compiler = new Main(err, "javac");
 
     if (!compiler.compile(compilerArgs)) {

@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.3 2000-01-03 01:42:50 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.4 2000-01-05 16:12:23 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,7 +71,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:50 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-05 16:12:23 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -180,21 +180,27 @@ public class XSPProcessor extends AbstractActor
   }
 
   public void init(Configurations conf) {
-    conf = conf.getConfigurations("xsp");
 
     // Initialize repository
+    conf = conf.getConfigurations("xsp");
+        
+    // FIXME: the XSP processor should use the Cocoon internal object store
+    // rather than providing its own. This is a quick and dirty hack to 
+    // make it work with Ricardo's code. But we'll create smoother integration
+    // in future versions (SM)
+    
     String repositoryName = (String) conf.get("repository");
     this.repositoryFile = new File(repositoryName);
     if (!this.repositoryFile.exists()) {
       if (!this.repositoryFile.mkdirs()) {
-        throw new RuntimeException("Can't create XSP repository: "
+        throw new RuntimeException("Can't create store repository: "
           + repositoryFile.getAbsolutePath()
           + ". Make sure it's there or you have writing permissions.");
       }
     }
 
     if (!(this.repositoryFile.canRead() && this.repositoryFile.canWrite())) {
-      throw new RuntimeException("Can't access XSP repository: "
+      throw new RuntimeException("Can't access store repository: "
         + repositoryFile.getAbsolutePath()
         + ". Make sure you have writing permissions.");
     }
