@@ -49,6 +49,7 @@
 
 */
 package org.apache.cocoon.matching;
+
 import java.util.HashMap;
 
 import java.util.Map;
@@ -61,18 +62,19 @@ import org.apache.regexp.REProgram;
 /**
  * Matches the request URIs against a regular expression pattern.
  *
- *@author     <a href="mailto:huber@apache.org">Bernhard Huber</a>
- *@created    03. Jänner 2003
- *@version    CVS $Id: RegexpURIDefaultsMatcher.java,v 1.1 2003/03/09 00:10:12 pier Exp $
+ * @author     <a href="mailto:huber@apache.org">Bernhard Huber</a>
+ * @since 03 January 2003
+ * @version CVS $Id: RegexpURIDefaultsMatcher.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
 public class RegexpURIDefaultsMatcher extends AbstractRegexpMatcher {
+
     /**
      * Match the prepared pattern against the value returned by {@link #getMatchString(Map, Parameters)}.
      *
-     *@param  preparedPattern  Description of the Parameter
-     *@param  objectModel      Description of the Parameter
-     *@param  parameters       Description of the Parameter
-     *@return                  Description of the Return Value
+     * @param  preparedPattern  Description of the Parameter
+     * @param  objectModel      Description of the Parameter
+     * @param  parameters       Description of the Parameter
+     * @return                  Description of the Return Value
      */
     public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) {
 
@@ -108,13 +110,12 @@ public class RegexpURIDefaultsMatcher extends AbstractRegexpMatcher {
         return null;
     }
 
-
     /**
      * Return the request URI.
      *
-     *@param  objectModel  Description of the Parameter
-     *@param  parameters   Description of the Parameter
-     *@return              The matchString value
+     * @param  objectModel  Description of the Parameter
+     * @param  parameters   Description of the Parameter
+     * @return              The matchString value
      */
     protected String getMatchString(Map objectModel, Parameters parameters) {
         String uri = ObjectModelHelper.getRequest(objectModel).getSitemapURI();

@@ -12,7 +12,10 @@ import org.apache.cocoon.environment.SourceResolver;
 
 import java.util.Map;
 
-
+/**
+ *
+ * @version CVS $Id: TestBeanAction.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ */
 public class TestBeanAction extends AbstractAction {
 
   public TestBeanAction() {

@@ -67,6 +67,10 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ *
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.4 2003/03/16 18:03:55 vgritsenko Exp $
+ */
 public class SourceResolverAdapter implements SourceResolver
 {
     private org.apache.excalibur.source.SourceResolver resolver;

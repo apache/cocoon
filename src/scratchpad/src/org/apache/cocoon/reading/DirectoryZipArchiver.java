@@ -82,9 +82,8 @@ import java.util.zip.ZipOutputStream;
  * can't estimate it before actually performing the compression.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:10:12 $
+ * @version CVS $Id: DirectoryZipArchiver.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
-
 public class DirectoryZipArchiver extends AbstractReader {
 
     private Source inputSource;

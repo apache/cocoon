@@ -70,9 +70,10 @@ import org.xml.sax.SAXException;
  * The response encoding is taken as the encoding of the xml-data.
  * </p>
  *
- * @author                           <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @author                           <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version                          CVS $Id: RequestAttributeGenerator.java,v 1.1 2003/03/09 00:10:11 pier Exp $
+ * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ *
  * @cocoon:name                      req-attr
  * @cocoon:status                    scratchpad
  * @cocoon:parameter                 name="attribute-name"
@@ -256,4 +257,3 @@ public class RequestAttributeGenerator extends ComposerGenerator {
         return (charencoding.trim());
     }
 }
-

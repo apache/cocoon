@@ -76,9 +76,8 @@ import org.apache.excalibur.xml.sax.SAXParser;
  *
  * @author <a href="mailto:Erwin.Hermans@cs.kuleuven.ac.be">Erwin Hermans</a>
  *         (Student Computer Science Department KULeuven, 2001-2002)
- * @version 1.0
+ * @version CVS $Id: RMIGenerator.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
  */
-
 public class RMIGenerator extends ComposerGenerator { 
 
 	/**

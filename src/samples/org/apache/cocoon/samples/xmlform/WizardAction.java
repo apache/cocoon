@@ -1,6 +1,6 @@
 /* 
- * $Revision: 1.1 $
- * $Date: 2003/03/09 00:10:04 $
+ * $Revision: 1.2 $
+ * $Date: 2003/03/16 18:03:53 $
  *
  * ====================================================================
  * The Apache Software License, Version 1.1
@@ -67,19 +67,17 @@ import org.apache.cocoon.components.xmlform.FormListener;
 
 import java.util.Map;
 
-
 /**
  * This action demonstrates
  * a relatively complex form handling scenario.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
+ * @version CVS $Id: WizardAction.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
  */
 public class WizardAction
   extends AbstractXMLFormAction
   implements FormListener
-
 {
-
 
   // different form views
   // participating in the wizard

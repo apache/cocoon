@@ -64,8 +64,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *  and write it in a way similar to AWT & Swing Event Handling. Part of this
  *  code is from the SQLTransformer of Donald Ball.
  *
- *@author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- *@author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
+ * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
+ * @author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
+ * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public abstract class AbstractConstrainedTransformer
 		 extends AbstractTransformer {

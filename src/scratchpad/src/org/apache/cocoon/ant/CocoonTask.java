@@ -90,6 +90,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
+ * @version CVS $Id: CocoonTask.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
 public class CocoonTask extends Task {
 

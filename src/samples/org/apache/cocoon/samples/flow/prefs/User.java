@@ -7,9 +7,12 @@
     Date: August 28, 2002
 
  */
-
 package org.apache.cocoon.samples.flow.prefs;
 
+/**
+ *
+ * @version CVS $Id: User.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
+ */
 public class User
 {
   String login;

@@ -53,6 +53,7 @@
  *  <http://www.apache.org/>.
  */
 package org.apache.cocoon.acting;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,22 +72,21 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * This action sets a new LINK_OBJECT entry in the objectModel entry.
  *
- *@author     <a href="mailto:huber@apache.org">Bernhard Huber</a>
- *@created    16. Dezember 2002
- *@version    CVS $Id: LinkTranslatorMapAction.java,v 1.1 2003/03/09 00:10:08 pier Exp $
- *@since      2.1
+ * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
+ * @since 16 December 2002
+ * @version CVS $Id: LinkTranslatorMapAction.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
 public class LinkTranslatorMapAction extends ComposerAction implements ThreadSafe {
 
     /**
      * Execute the LinkTranslatorMapAction.
      *
-     *@param  redirector     Cocoon's redirector
-     *@param  resolver       Cocoon's source resolver, used for testing if a source is resolvable
-     *@param  source         the source, e.g.: index.html
-     *@param  parameters     of this action
-     *@param  objectModel    Description of the Parameter
-     *@exception  Exception  Description of the Exception
+     * @param  redirector     Cocoon's redirector
+     * @param  resolver       Cocoon's source resolver, used for testing if a source is resolvable
+     * @param  source         the source, e.g.: index.html
+     * @param  parameters     of this action
+     * @param  objectModel    Description of the Parameter
+     * @exception  Exception  Description of the Exception
      */
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         Map linkObjectMap = (Map) objectModel.get(Constants.LINK_OBJECT);
@@ -145,10 +145,6 @@ public class LinkTranslatorMapAction extends ComposerAction implements ThreadSaf
 
     /**
      * A special links map
-     *
-     *@author     Administrator
-     *@created    16. Dezember 2002
-     *@version    CVS Version: $Id: LinkTranslatorMapAction.java,v 1.1 2003/03/09 00:10:08 pier Exp $
      */
     public static class LinkPatternHashMap extends HashMap implements LogEnabled {
         Logger logger;
@@ -159,10 +155,10 @@ public class LinkTranslatorMapAction extends ComposerAction implements ThreadSaf
 
 
         /**
-         *Constructor for the LinkPatternHashMap object
+         * Constructor for the LinkPatternHashMap object
          *
-         *@param  pageExtension  Description of the Parameter
-         *@param  path           Description of the Parameter
+         * @param  pageExtension  Description of the Parameter
+         * @param  path           Description of the Parameter
          */
         public LinkPatternHashMap(String path, String pageExtension) {
             this.pageExtension = pageExtension;
@@ -172,9 +168,9 @@ public class LinkTranslatorMapAction extends ComposerAction implements ThreadSaf
 
 
         /**
-         *  Sets the parent attribute of the LinkPatternHashMap object
+         * Sets the parent attribute of the LinkPatternHashMap object
          *
-         *@param  parent  The new parent value
+         * @param  parent  The new parent value
          */
         public void setParent(Map parent) {
             this.parent = parent;
@@ -185,8 +181,8 @@ public class LinkTranslatorMapAction extends ComposerAction implements ThreadSaf
          * assume that LinkTranslator wants to check iff a href link
          * is a URI mapped to some URI.
          *
-         *@param  key  Description of the Parameter
-         *@return      Description of the Return Value
+         * @param  key  Description of the Parameter
+         * @return      Description of the Return Value
          */
         public Object get(Object key) {
             String newHref = null;
@@ -256,13 +252,12 @@ public class LinkTranslatorMapAction extends ComposerAction implements ThreadSaf
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  logger  Description of the Parameter
+         * @param  logger  Description of the Parameter
          */
         public void enableLogging(Logger logger) {
             this.logger = logger;
         }
     }
 }
-

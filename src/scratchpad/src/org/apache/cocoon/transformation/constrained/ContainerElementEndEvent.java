@@ -51,13 +51,12 @@
 
 package org.apache.cocoon.transformation.constrained;
 
-
 import java.util.EventObject;
-
 
 /**
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
+ * @version CVS $Id: ContainerElementEndEvent.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public class ContainerElementEndEvent extends EventObject  {
 
@@ -68,9 +67,7 @@ public class ContainerElementEndEvent extends EventObject  {
 
         super(source);
 
-
         this.elementName       = elementName;
-
     }
 
     public Object getSource() {

@@ -79,6 +79,7 @@ import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
  * A facade for Cocoon processing
  *
  * @author    huber@apache.org
+ * @version CVS $Id: CocoonProcessorDelegate.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
 public class CocoonProcessorDelegate extends AbstractLogEnabled
          implements Contextualizable, Configurable, Initializable {

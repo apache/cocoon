@@ -56,11 +56,11 @@ import org.apache.cocoon.util.IOUtils;
 
 /**
  * Test Cases for the IOUtils Class.
- * @see org.apache.Cocoon.util.IOUtils
+ * @see org.apache.cocoon.util.IOUtils
  *
- * @author     <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Revision: 1.1 $ $Date: 2003/03/09 00:10:41 $
+ * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: IOUtilsTestCase.java,v 1.2 2003/03/16 18:03:56 vgritsenko Exp $
  */
 public class IOUtilsTestCase extends TestCase
 {

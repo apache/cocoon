@@ -85,7 +85,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.4 2003/03/16 18:03:53 vgritsenko Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -194,8 +194,6 @@ public class JSCocoon extends ScriptableObject
         return manager;
     }
 
-
-
     /**
      * Load the file specified as argument. Registers the file with the
      * interpreter and then forces its loading by calling {@link
@@ -203,12 +201,12 @@ public class JSCocoon extends ScriptableObject
      *
      * @param filename a <code>String</code> value
      * @return an <code>Object</code> value
-     * @exception Exception if an error occurs
+     * @exception JavaScriptException if an error occurs
      */
     public Object jsFunction_load(String filename) throws JavaScriptException
     {
-        org.mozilla.javascript.Context cx = 
-            org.mozilla.javascript.Context.getCurrentContext(); 
+        org.mozilla.javascript.Context cx =
+            org.mozilla.javascript.Context.getCurrentContext();
         try {
             Script script = interpreter.compileScript(cx, environment, filename);
             return script.exec(cx, ScriptableObject.getTopLevelScope(this));
@@ -225,16 +223,16 @@ public class JSCocoon extends ScriptableObject
     }
 
     public void jsFunction_forwardTo(String uri, Object bizData, Object cont)
-        throws JavaScriptException 
+        throws JavaScriptException
     {
         try {
             bizData = jsobjectToObject(bizData);
-            
+
             WebContinuation kont = null;
-            
+
             if (cont != null)
                 kont = ((JSWebContinuation)cont).getWebContinuation();
-            
+
             interpreter.forwardTo(uri, bizData, kont, environment);
         } catch (JavaScriptException e) {
             throw e;
@@ -327,7 +325,7 @@ public class JSCocoon extends ScriptableObject
         return hash;
     }
 
-    public static Object jsobjectToObject(Object obj) 
+    public static Object jsobjectToObject(Object obj)
     {
         // unwrap Scriptable wrappers of real Java objects
         if (obj instanceof Wrapper) {
@@ -352,10 +350,10 @@ public class JSCocoon extends ScriptableObject
         Action action = (Action)actionSelector.select(type);
         Map result = null;
         try {
-            result = action.act(redirector, 
+            result = action.act(redirector,
                                 resolver,
                                 this.environment.getObjectModel(),
-                                source, 
+                                source,
                                 jsobjectToParameters(parameters));
         }
         finally {

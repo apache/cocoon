@@ -65,6 +65,7 @@ import org.apache.cocoon.util.NetUtils;
  *   A simple Cocoon crawler
  *
  * @author    huber@apache.org
+ * @version CVS $Id: CocoonCrawling.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
  */
 public class CocoonCrawling extends AbstractLogEnabled {
     private Set visitedAlready;
