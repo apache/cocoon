@@ -31,7 +31,7 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-21 17:35:31 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-23 20:46:19 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer, Processor {
 
@@ -117,7 +117,8 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
     protected synchronized void regenerate (Environment environment) 
     throws Exception { 
         regenerateAsynchronously(environment);
-        regeneration.join();
+        if (regeneration != null)
+            regeneration.join();
     }
 
     public boolean process (Environment environment) 
