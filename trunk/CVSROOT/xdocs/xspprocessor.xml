@@ -902,17 +902,13 @@ xspCurrentNode.appendChild(
           </li>
           <li>
             <code>&lt;xsp:element&gt;</code><br/>
-            This tag is used to dynamically build
-            an element when its attribute values
-            are not known at compile time
+            This tag is a placeholder only, and does not do
+            anything useful.
           </li>
           <li>
             <code>&lt;xsp:attribute&gt;</code><br/>
             This element is used to dynamically provide
-            attribute values for a given element (which
-            can be specified statically as markup or
-            dynamically by means of
-            <code>&lt;xsp:element&gt;</code>).
+            attribute values for a given element.
             This tag is typically used in conjunction
             with <code>&lt;xsp:expr&gt;</code>,
 	    where the substituted expression is
@@ -1126,9 +1122,9 @@ xspCurrentNode.appendChild(
   
         <s3 title="&lt;xsp:element&gt; and &lt;xsp:attribute&gt;">
           <p>
-            The <code>&lt;xsp:element&gt;</code> tag
+            The <code>&lt;xsp:attribute&gt;</code> tag
             (which requires a <code>name</code> attribute)
-            is used in those cases where the element
+            is used in those cases where the attribute
             name is known at compile time, but its
             attribute values are not. For example:
           </p>
