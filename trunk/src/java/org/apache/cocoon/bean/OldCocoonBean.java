@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OldCocoonBean.java,v 1.5 2004/03/08 13:57:38 cziegeler Exp $
+ * @version CVS $Id: OldCocoonBean.java,v 1.6 2004/03/10 17:58:04 unico Exp $
  */
 public class OldCocoonBean extends OldCocoonWrapper {
 
@@ -330,18 +330,10 @@ public class OldCocoonBean extends OldCocoonWrapper {
 
         readChecksumFile();
 
-        if (crawler.getRemainingCount()==0) {
-            super.precompile();
-        } else {
-            Iterator iterator = crawler.iterator();
-            while (iterator.hasNext()) {
-                Target target = (Target) iterator.next();
-                if (precompileOnly) {
-                    processXSP(target.getSourceURI());
-                } else {
-                    processTarget(crawler, target);
-                }
-            }
+        Iterator iterator = crawler.iterator();
+        while (iterator.hasNext()) {
+            Target target = (Target) iterator.next();
+            processTarget(crawler, target);
         }
 
         writeChecksumFile();

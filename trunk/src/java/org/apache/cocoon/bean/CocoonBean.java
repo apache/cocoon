@@ -33,7 +33,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.CompilingProcessor;
+import org.apache.cocoon.ModifiableProcessor;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.container.CocoonContainer;
 import org.apache.cocoon.components.container.ComponentContext;
@@ -73,13 +74,13 @@ public class CocoonBean
         m_properties = new HashMap();
     }
 
-    public CompilingProcessor getRootProcessor() {
+    public ModifiableProcessor getRootProcessor() {
         // TODO - the rootProcessor is never released
         ServiceManager manager = getServiceManager();
 
-        CompilingProcessor rootProcessor = null;
+        ModifiableProcessor rootProcessor = null;
         try {
-            rootProcessor = (CompilingProcessor)manager.lookup( CompilingProcessor.ROLE);
+            rootProcessor = (ModifiableProcessor) manager.lookup(ModifiableProcessor.ROLE);
         } catch ( ServiceException e ) {
             throw new CascadingRuntimeException("Error retrieving root processor", e);
         }

@@ -324,13 +324,13 @@ public class BatchProcessorBean extends ProcessorBean {
         readChecksumFile();
 
         if (m_crawler.getRemainingCount() == 0) {
-            precompile();
+//            precompile();
         } else {
             Iterator iterator = m_crawler.iterator();
             while (iterator.hasNext()) {
                 Target target = (Target) iterator.next();
                 if (isPrecompileOnly()) {
-                    processXSP(target.getSourceURI());
+//                    processXSP(target.getSourceURI());
                 } else {
                     processTarget(m_crawler, target);
                 }

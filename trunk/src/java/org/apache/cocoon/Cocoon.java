@@ -33,7 +33,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -50,16 +49,16 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.39 2004/03/08 13:57:35 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.40 2004/03/10 17:58:04 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type=CompilingProcessor
+ * @avalon.service type=ModifiableProcessor
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=cocoon
  */
 public class Cocoon
         extends AbstractLogEnabled
-        implements CompilingProcessor,
+        implements ModifiableProcessor,
                    Contextualizable,
                    Serviceable,
                    Configurable,
@@ -419,45 +418,6 @@ public class Cocoon
      */
     public Processor getRootProcessor() {
         return this;
-    }
-
-    /**
-     * Process the given <code>Environment</code> to generate Java code for specified XSP files.
-     *
-     * @param fileName a <code>String</code> value
-     * @param environment an <code>Environment</code> value
-     * @exception Exception if an error occurs
-     */
-    public void precompile(String fileName,
-                           Environment environment,
-                           String markupLanguage,
-                           String programmingLanguage)
-    throws Exception {
-        ProgramGenerator programGenerator = null;
-        Source source = null;
-        environment.startingProcessing();
-        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
-
-        try {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("XSP generation begin:" + fileName);
-            }
-
-            programGenerator = (ProgramGenerator) this.serviceManager.lookup(ProgramGenerator.ROLE);
-            source = this.sourceResolver.resolveURI(fileName);
-          /*  CompiledComponent xsp = programGenerator.load(this.serviceManager,
-                    source,
-                    markupLanguage, programmingLanguage, environment);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("XSP generation complete:" + xsp);
-            }
-            */
-        } finally {
-            EnvironmentHelper.leaveProcessor();
-            environment.finishingProcessing();
-            this.sourceResolver.release(source);
-            this.serviceManager.release(programGenerator);
-        }
     }
 
     /**

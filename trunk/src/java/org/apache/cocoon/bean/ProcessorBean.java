@@ -21,7 +21,6 @@ import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.IOUtils;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -53,68 +52,6 @@ public class ProcessorBean extends CocoonBean {
         m_cliContext = new CommandLineContext( getContextURI() );
         m_cliContext.enableLogging( getInitializationLogger() );
     }
-
-    /**
-     * Allow subclasses to recursively precompile XSPs.
-     */
-    protected void precompile() {
-        recursivelyPrecompile( new File(getContextURI()), new File(getContextURI()) );
-    }
-
-    /**
-     * Recurse the directory hierarchy and process the XSP's.
-     * @param contextDir a <code>File</code> value for the context directory
-     * @param file a <code>File</code> value for a single XSP file or a directory to scan recursively
-     */
-    private void recursivelyPrecompile( File contextDir, File file ) {
-        if ( file.isDirectory() ) {
-            String entries[] = file.list();
-            for ( int i = 0; i < entries.length; i++ ) {
-                recursivelyPrecompile( contextDir, new File( file, entries[i] ) );
-            }
-        } else if ( file.getName().toLowerCase().endsWith( ".xmap" ) ) {
-            try {
-                this.processXMAP( IOUtils.getContextFilePath( contextDir.getCanonicalPath(), file.getCanonicalPath() ) );
-            } catch ( Exception e ) {
-                //Ignore for now.
-            }
-        } else if ( file.getName().toLowerCase().endsWith( ".xsp" ) ) {
-            try {
-                this.processXSP( IOUtils.getContextFilePath( contextDir.getCanonicalPath(), file.getCanonicalPath() ) );
-            } catch ( Exception e ) {
-                //Ignore for now.
-            }
-        }
-    }
-
-    /**
-     * Process a single XSP file
-     *
-     * @param uri a <code>String</code> pointing to an xsp URI
-     * @exception Exception if an error occurs
-     */
-    protected void processXSP( String uri ) throws Exception {
-        String markupLanguage = "xsp";
-        String programmingLanguage = "java";
-        Environment env = new LinkSamplingEnvironment( "/", new File( getContextURI() ), m_attributes,
-                null, m_cliContext, getInitializationLogger() );
-        getRootProcessor().precompile( uri, env, markupLanguage, programmingLanguage );
-    }
-
-    /**
-     * Process a single XMAP file
-     *
-     * @param uri a <code>String</code> pointing to an xmap URI
-     * @exception Exception if an error occurs
-     */
-    protected void processXMAP( String uri ) throws Exception {
-        String markupLanguage = "sitemap";
-        String programmingLanguage = "java";
-        Environment env = new LinkSamplingEnvironment( "/", new File(getContextURI()), m_attributes,
-                null, m_cliContext, getInitializationLogger() );
-        getRootProcessor().precompile( uri, env, markupLanguage, programmingLanguage );
-    }
-
 
     /**
      * Samples an URI for its links.

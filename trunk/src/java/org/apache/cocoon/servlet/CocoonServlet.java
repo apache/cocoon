@@ -50,7 +50,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.CompilingProcessor;
+import org.apache.cocoon.ModifiableProcessor;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -70,14 +70,7 @@ import org.apache.cocoon.util.StringUtils;
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.28 2004/03/08 14:03:29 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.29 2004/03/10 17:58:04 unico Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -989,7 +982,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // Get the cocoon engine instance
-        CompilingProcessor processor = getProcessor(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
+        ModifiableProcessor processor = getProcessor(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
 
         // We got it... Process the request
         String uri = request.getServletPath();
@@ -1317,10 +1310,10 @@ public class CocoonServlet extends HttpServlet {
      * Gets the processor.  Reload cocoon if configuration
      * changed or we are reloading.
      */
-    private CompilingProcessor getProcessor(final String pathInfo, final String reloadParam)
+    private ModifiableProcessor getProcessor(final String pathInfo, final String reloadParam)
     throws ServletException {
 
-        CompilingProcessor processor = cocoonBean.getRootProcessor();
+        ModifiableProcessor processor = cocoonBean.getRootProcessor();
         if (this.allowReload) {
             boolean reload = false;
 

@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.language.programming;
+package org.apache.cocoon;
 
 /**
- * This interface defines source beautifying formatting
- *
- * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: CodeFormatter.java,v 1.2 2004/03/08 13:58:32 cziegeler Exp $
+ * TODO: describe class
+ * 
+ * @version CVS $Revision: 1.1 $
  */
-public interface CodeFormatter {
-  /**
-   * Format and beautify a <code>String</code> containing source code
-   *
-   * @param code The input source code
-   * @param encoding The encoding used for constant strings embedded in the
-   * source code
-   * @return The formatted source code
-   */
-  String format(String code, String encoding);
+public interface ModifiableProcessor extends Processor, Modifiable {
+    
+    String ROLE = ModifiableProcessor.class.getName();
+    
 }

@@ -61,7 +61,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OldCocoonWrapper.java,v 1.3 2004/03/08 13:57:38 cziegeler Exp $
+ * @version CVS $Id: OldCocoonWrapper.java,v 1.4 2004/03/10 17:58:04 unico Exp $
  */
 public class OldCocoonWrapper {
 
@@ -430,7 +430,7 @@ public class OldCocoonWrapper {
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment("/", context, attributes,
                                                       null, cliContext, log);
-        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
+//        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
     /**
@@ -444,7 +444,7 @@ public class OldCocoonWrapper {
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment("/", context, attributes,
                                                       null, cliContext, log);
-        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
+//        cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
 

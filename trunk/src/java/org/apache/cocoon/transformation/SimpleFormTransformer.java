@@ -15,16 +15,17 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
-import org.apache.cocoon.components.language.markup.xsp.XSPFormValidatorHelper;
+import org.apache.cocoon.transformation.helpers.FormValidatorHelper;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
@@ -41,8 +42,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Eliminates the need for XSP to use FormValidatorAction or HTML forms.
+/** 
+ * Eliminates the need for XSP to use FormValidatorAction or HTML forms. 
  * Caveat: Select options need a value attribute to work correctly.
  *
  * <p>This transformer fills all HTML 4 form elements with values from
@@ -70,13 +71,13 @@ import java.util.Map;
  *
  * <p><em>Names of error elements are never augmented by prefix, suffix or
  * form name.</em></p>
- *
+ * 
  * <p>Page parts with multiple occurrences depending on the number of
  * actual parameters can be enclosed in &lt;repeat on="expr" using="var"/&gt;
  * elements. <em>expr</em> is used to determine the number of occurrences
  * and <em>var</em> will be expanded with the ordinary number. Repeat elements
  * can be nested.</p>
- *
+ * 
  * <p>Example:</p>
  * <pre>
  *  <repeat on="mult" using="i"><input type="text" name="mult[${i}]"/></repeat>
@@ -93,9 +94,9 @@ import java.util.Map;
  *
  * <p>Configuration elements:
  * <table>
- *   <tr><td>input-module</td><td>(String) InputModule configuration,
+ *   <tr><td>input-module</td><td>(String) InputModule configuration, 
  *           defaults to an empty configuration and the "request-param" module</td></tr>
- *   <tr><td>fixed-attribute</td><td>(String) Name of the attribute used to
+ *   <tr><td>fixed-attribute</td><td>(String) Name of the attribute used to 
  *           indicate that this element should not be changed. ("fixed")</td></tr>
  *   <tr><td>use-form-name</td><td>(boolean) Add the name of the form to the
  *           name of form elements. Uses default Separator , if default separator is null
@@ -103,7 +104,7 @@ import java.util.Map;
  *   <tr><td>use-form-name-twice</td><td>(boolean) Add the name of the form twice to the
  *           name of form elements. This is useful when the form instance has no
  *           all enclosing root tag and the form name is used instead <em>and</em> the
- *           form name needs to be used to find the form data. Uses default Separator ,
+ *           form name needs to be used to find the form data. Uses default Separator , 
  *           if default separator is null or empty, separator is set to "/".("false")</td></tr>
  *   <tr><td>separator</td><td>(String) Separator between form name and element name ("/")
  *           </td></tr>
@@ -138,7 +139,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.10 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.11 2004/03/10 17:58:05 unico Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -270,7 +271,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     protected Map formValues = null;
 
     /**
-     * Keep track of repeater status.
+     * Keep track of repeater status. 
      */
     protected class RepeaterStatus {
         public String var = null;
@@ -289,7 +290,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     }
 
     /**
-     * Keep track of multiple values.
+     * Keep track of multiple values. 
      */
     protected class ValueList {
         private int current = -1;
@@ -317,8 +318,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     }
 
     /** set per instance variables to defaults */
-    public void recycle() {
-        super.recycle();
+    private void reset() {
         this.skipChildrenOnly = false;
         this.values = null;
         this.validationResults = null;
@@ -386,7 +386,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
 
-        this.recycle();
+        this.reset();
 
         super.setup(resolver, objectModel, src, par);
 
@@ -407,7 +407,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (this.ignoreValidation) {
             this.validationResults = null;
         } else {
-            this.validationResults = XSPFormValidatorHelper.getResults(this.objectModel);
+            this.validationResults = FormValidatorHelper.getResults(this.objectModel);
         }
 
         if (this.inputName == null) {
@@ -451,6 +451,14 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     }
 
     /**
+     *  Recycle this component.
+     */
+    public void recycle() {
+        super.recycle();
+        this.reset();
+    }
+
+    /** 
      * Generate string representation of attributes. For debug only.
      */
     protected String printAttributes(Attributes attr) {
@@ -715,7 +723,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                 this.relayStartElement(uri, name, raw, attr);
             } else {
                 ValidatorActionResult validation =
-                    XSPFormValidatorHelper.getParamResult(this.objectModel, aName);
+                    FormValidatorHelper.getParamResult(this.objectModel, aName);
                 String when = attr.getValue("when");
                 String when_ge = attr.getValue("when-ge");
 
@@ -747,8 +755,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
     /**
      * Start processing a form element. Sets protection indicator if attribute
-     * "fixed" is present and either "true" or "yes". Removes attribute "fixed"
-     * if present.
+     * "fixed" is present and either "true" or "yes". Removes attribute "fixed" 
+     * if present. 
      * @param uri The namespace of the element.
      * @param name The local name of the element.
      * @param raw The qualified name of the element.
@@ -783,7 +791,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * Start recording repeat element contents and push repeat expression and
      * variable to repeater stack. Only start recording, if no other recorder is
      * currently running.
-     *
+     * 
      * @param uri
      * @param name
      * @param raw
@@ -812,7 +820,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Stop recording repeat contents and replay required number of times.
      * Stop only if outmost repeat element is ending.
-     *
+     * 
      * @param uri
      * @param name
      * @param raw
@@ -957,7 +965,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Remove extra information from element's attributes. Currently only removes
      * the repeater variable from the element's name attribute if present.
-     *
+     * 
      * @param attr
      * @return modified attributes
      */
@@ -1036,7 +1044,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Obtain values from used InputModule if not done already and return the
      * next value. If no more values exist, returns null.
-     *
+     * 
      * @param name
      * @return
      */
@@ -1066,17 +1074,13 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                 // thus we still have a reference to it
                 values = input.getAttributeValues(name, this.inputConf, objectModel);
                 if (getLogger().isDebugEnabled())
-                    getLogger().debug(
-                        "cached module "
-                            + this.input
-                            + " attribute "
-                            + name
-                            + " returns "
-                            + values);
+                    getLogger().debug("cached module " + this.input
+                                      + " attribute " + name
+                                      + " returns " + values);
             } else {
                 // input was not thread safe
                 // so acquire it again
-                iputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                iputSelector = (ServiceSelector)this.manager.lookup(INPUT_MODULE_SELECTOR);
                 if (this.inputName != null
                     && iputSelector != null
                     && iputSelector.isSelectable(this.inputName)) {
@@ -1113,7 +1117,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
     /**
      * Calls the super's method startTransformingElement.
-     *
+     * 
      * @param uri
      * @param name
      * @param raw
@@ -1130,8 +1134,9 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * ignoreEventsCount if skip is true. Increment can be done either before
      * invoking super's method, so that the element itself is skipped, or afterwards,
      * so that only the children are skipped.
-     *
-     * @param skip only children
+     * 
+     * @param skip
+     * @param skipChildrenOnly 
      * @param uri
      * @param name
      * @param raw
@@ -1140,32 +1145,37 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      */
     protected void relayStartElement(
         boolean skip,
-        boolean children,
+        boolean skipChildrenOnly,
         String uri,
         String name,
         String raw,
         Attributes attr)
         throws SAXException {
 
-        if (skip)
-            this.skipChildrenOnly = children;
-        if (skip && !children)
-            this.ignoreEventsCount++;
         try {
-            super.startTransformingElement(uri, name, raw, attr);
+            if (this.ignoreEventsCount > 0) {
+                this.ignoreEventsCount++;
+                super.startTransformingElement(uri, name, raw, attr);
+            } else {
+                if (skip)
+                    this.skipChildrenOnly = skipChildrenOnly;
+                if (skip && !skipChildrenOnly)
+                    this.ignoreEventsCount++;
+                super.startTransformingElement(uri, name, raw, attr);
+                if (skip && skipChildrenOnly)
+                    this.ignoreEventsCount++;
+            }
         } catch (ProcessingException e) {
             throw new SAXException(e);
         } catch (IOException e) {
             throw new SAXException(e);
         }
-        if (skip && children)
-            this.ignoreEventsCount++;
     }
 
     /**
      * Calls the super's method endTransformingElement and decrements the
      * ignoreEventsCount if larger than zero.
-     *
+     * 
      * @param uri
      * @param name
      * @param raw

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.language.markup.xsp;
+package org.apache.cocoon.transformation.helpers;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -36,10 +36,10 @@ import java.util.Map;
 /**
  * The <code>ValidatorActionResult</code> object helper
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XSPFormValidatorHelper.java,v 1.4 2004/03/08 13:58:31 cziegeler Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: FormValidatorHelper.java,v 1.1 2004/03/10 17:58:05 unico Exp $
  */
-public class XSPFormValidatorHelper {
+public class FormValidatorHelper {
 
     private static Map configurations = new HashMap();
 
@@ -54,7 +54,7 @@ public class XSPFormValidatorHelper {
     String current_parameter = null;
     SourceResolver current_resolver = null;
 
-    public XSPFormValidatorHelper(String descriptor, boolean reloadable,
+    public FormValidatorHelper(String descriptor, boolean reloadable,
                                   Logger logger, SourceResolver resolver) {
         current_descriptor = descriptor;
         current_reloadable = reloadable;
@@ -62,7 +62,7 @@ public class XSPFormValidatorHelper {
         current_resolver = resolver;
     }
 
-    public XSPFormValidatorHelper(String descriptor, boolean reloadable,
+    public FormValidatorHelper(String descriptor, boolean reloadable,
                                   Logger logger, SourceResolver resolver,
                                   String constraintset) {
         current_descriptor = descriptor;
@@ -361,11 +361,11 @@ public class XSPFormValidatorHelper {
         }
 
         ConfigurationHelper conf = null;
-        synchronized (XSPFormValidatorHelper.configurations) {
+        synchronized (FormValidatorHelper.configurations) {
             Source source = null;
             try {
                 source = resolver.resolveURI(descriptor);
-                conf = (ConfigurationHelper) XSPFormValidatorHelper.configurations.get(source.getURI());
+                conf = (ConfigurationHelper) FormValidatorHelper.configurations.get(source.getURI());
                 if (conf == null || (reloadable && conf.lastModified != source.getLastModified())) {
                     logger.debug("(Re)Loading " + descriptor);
 
@@ -379,7 +379,7 @@ public class XSPFormValidatorHelper {
                     conf.lastModified = source.getLastModified();
                     conf.configuration = builder.getConfiguration();
 
-                    XSPFormValidatorHelper.cacheConfiguration(source.getURI(), conf);
+                    FormValidatorHelper.cacheConfiguration(source.getURI(), conf);
                 } else {
                     logger.debug("Using cached configuration for " + descriptor);
                 }
@@ -398,8 +398,8 @@ public class XSPFormValidatorHelper {
      * Cache the configuration so that we can use it later.
      */
     private static void cacheConfiguration(String descriptor, ConfigurationHelper conf) {
-        synchronized (XSPFormValidatorHelper.configurations) {
-            XSPFormValidatorHelper.configurations.put(descriptor, conf);
+        synchronized (FormValidatorHelper.configurations) {
+            FormValidatorHelper.configurations.put(descriptor, conf);
         }
     }
 
@@ -427,7 +427,7 @@ public class XSPFormValidatorHelper {
             }
         }
         if (!found) {
-            logger.debug("XSPFormValidatorHelper.getConfigurationByName: configuration " + name + " not found.");
+            logger.debug("FormValidatorHelper.getConfigurationByName: configuration " + name + " not found.");
             return null;
         }
         return conf[j];
@@ -467,7 +467,7 @@ public class XSPFormValidatorHelper {
             Configuration descr = getConfigurationByName(desc, parameter, logger);
             return constraints.getAttribute(attribute, descr.getAttribute(attribute, ""));
         } catch (Exception e) {
-            logger.debug("XSPFormValidatorHelper.getParameterAttributes Exception " + e);
+            logger.debug("FormValidatorHelper.getParameterAttributes Exception " + e);
         }
         
         return "";
@@ -482,7 +482,7 @@ public class XSPFormValidatorHelper {
      * @return attribute value or <code>null</code>
      */
     public String getParameterAttribute(String attribute) {
-        return XSPFormValidatorHelper.getParameterAttributes(current_descriptor,
+        return FormValidatorHelper.getParameterAttributes(current_descriptor,
                 current_resolver,
                 current_reloadable,
                 current_constraint_set,
@@ -499,7 +499,7 @@ public class XSPFormValidatorHelper {
      * @return attribute value or <code>null</code>
      */
     public String getParameterAttribute(String parameter, String attribute) {
-        return XSPFormValidatorHelper.getParameterAttributes(current_descriptor,
+        return FormValidatorHelper.getParameterAttributes(current_descriptor,
                 current_resolver,
                 current_reloadable,
                 current_constraint_set,
