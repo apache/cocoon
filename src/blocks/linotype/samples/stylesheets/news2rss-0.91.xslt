@@ -25,7 +25,7 @@
    <item>
     <title><xsl:value-of select="n:title"/></title>
 	<link><xsl:value-of select="$home"/>/<xsl:value-of select="../@id"/>/</link>
-	<description><xsl:apply-templates/></description>
+	<description><xsl:apply-templates select="h:body"/></description>
    </item>
   </xsl:template>
 
