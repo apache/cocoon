@@ -622,9 +622,12 @@
         |                        immediate shutdown after a graceful shutdown 
         |                        has been requested.
         +-->
-    <!--
     <thread-factory>org.apache.cocoon.components.thread.DefaultThreadFactory</thread-factory>
     <thread-pools>
+      <!--+
+          | This is the default thread pool. It's use fits best for short 
+          | running background tasks.
+          +-->
       <thread-pool>  
         <name>default</name>
         <priority>NORM</priority>
@@ -637,7 +640,22 @@
         <shutdown-graceful>false</shutdown-graceful>
         <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
       </thread-pool> 
+      <!--+
+          | This thread pool should be used for daemons (permanently running 
+          | threads).
+          +-->
+      <thread-pool>  
+        <name>daemon</name>
+        <priority>NORM</priority>
+        <daemon>true</daemon>
+        <queue-size>0</queue-size>
+        <max-pool-size>-1</max-pool-size>
+        <min-pool-size>1</min-pool-size>
+        <keep-alive-time-ms>60000</keep-alive-time-ms>
+        <block-policy>ABORT</block-policy>
+        <shutdown-graceful>false</shutdown-graceful>
+        <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
+      </thread-pool> 
     </thread-pools>
-    -->
   </runnable-manager>
 </cocoon>
