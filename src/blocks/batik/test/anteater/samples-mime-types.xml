@@ -7,7 +7,7 @@
 
     @author bdelacretaz@apache.org
 
-    $Id: samples-mime-types.xml,v 1.2 2004/02/07 11:55:07 bdelacretaz Exp $
+    $Id: samples-mime-types.xml,v 1.3 2004/02/09 19:34:24 joerg Exp $
  -->
 
 <project name="batik-samples-mime-types" default="batik-samples-mime-types">
@@ -17,75 +17,76 @@
     </group>
 
     <target name="batik-samples-mime-types">
-        <property name="baseUrl" value="${cocoon}/samples/batik"/>
+        <property name="helloWorldBaseUrl" value="${cocoon}/samples/hello-world"/>
+        <property name="batikBaseUrl" value="${cocoon}/samples/batik"/>
 
-        <httpRequest href="${baseUrl}/hello.svg">
+        <httpRequest href="${helloWorldBaseUrl}/hello.svg">
             <match>
                 <header name="Content-type" value="image/svg+xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/hello.jpg">
+        <httpRequest href="${batikBaseUrl}/hello.jpeg">
             <match>
-                <header name="Content-type" value="image/jpg"/>
+                <header name="Content-type" value="image/jpeg"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/hello.png">
+        <httpRequest href="${batikBaseUrl}/hello.png">
             <match>
                 <header name="Content-type" value="image/png"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/batikLogo.svg">
+        <httpRequest href="${batikBaseUrl}/batikLogo.svg">
             <match>
                 <header name="Content-type" value="image/svg+xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/batikLogo.jpg">
+        <httpRequest href="${batikBaseUrl}/batikLogo.jpeg">
             <match>
-                <header name="Content-type" value="image/jpg"/>
+                <header name="Content-type" value="image/jpeg"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/batikLogo.png">
+        <httpRequest href="${batikBaseUrl}/batikLogo.png">
             <match>
                 <header name="Content-type" value="image/png"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/henryV.svg">
+        <httpRequest href="${batikBaseUrl}/henryV.svg">
             <match>
                 <header name="Content-type" value="image/svg+xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/henryV.jpg">
+        <httpRequest href="${batikBaseUrl}/henryV.jpeg">
             <match>
-                <header name="Content-type" value="image/jpg"/>
+                <header name="Content-type" value="image/jpeg"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/henryV.png">
+        <httpRequest href="${batikBaseUrl}/henryV.png">
             <match>
                 <header name="Content-type" value="image/png"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/anne.svg">
+        <httpRequest href="${batikBaseUrl}/anne.svg">
             <match>
                 <header name="Content-type" value="image/svg+xml"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/anne.jpg">
+        <httpRequest href="${batikBaseUrl}/anne.jpeg">
             <match>
-                <header name="Content-type" value="image/jpg"/>
+                <header name="Content-type" value="image/jpeg"/>
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/anne.png">
+        <httpRequest href="${batikBaseUrl}/anne.png">
             <match>
                 <header name="Content-type" value="image/png"/>
             </match>
