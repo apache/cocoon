@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ import java.util.Map;
  *  A simple bean implementation of Notifying.
  *
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id: SimpleNotifyingBean.java,v 1.2 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SimpleNotifyingBean implements Notifying {
 
@@ -34,17 +34,17 @@ public class SimpleNotifyingBean implements Notifying {
     /**
      * The title of the notification.
      */
-    private String title = "";
+    private String title = "Generic notification";
 
     /**
      * The source that generates the notification.
      */
-    private String source = "";
+    private String source = getClass().getName();
 
     /**
      * The sender of the notification.
      */
-    private String sender = "";
+    private String sender = "unknown";
 
     /**
      * The notification itself.
@@ -54,7 +54,7 @@ public class SimpleNotifyingBean implements Notifying {
     /**
      * A more detailed description of the notification.
      */
-    private String description = "No details available.";
+    private String description = "";
 
     /**
      * A HashMap containing extra notifications
@@ -63,15 +63,10 @@ public class SimpleNotifyingBean implements Notifying {
 
 
     public SimpleNotifyingBean() {
-        this.sender = "unknown";
-        setSource(this.getClass().getName());
-        setTitle("Generic notification");
     }
 
     public SimpleNotifyingBean(Object sender) {
         this.sender = sender.getClass().getName();
-        setSource(this.getClass().getName());
-        setTitle("Generic notification");
     }
 
     /**
@@ -100,24 +95,6 @@ public class SimpleNotifyingBean implements Notifying {
     public void setSource(String source) {
         this.source = source;
     }
-
-    /**
-     * Sets the Sender of the SimpleNotifyingBean object
-     *
-     * @param  sender  The new sender value
-    private void setSender(Object sender) {
-        this.sender = sender.getClass().getName();
-    }
-     */
-
-    /**
-     * Sets the Sender of the SimpleNotifyingBean object
-     *
-     * @param  sender  The new sender value
-    private void setSender(String sender) {
-        this.sender = sender;
-    }
-     */
 
     /**
      * Sets the Message of the SimpleNotifyingBean object

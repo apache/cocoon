@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,24 @@ package org.apache.cocoon.components.notification;
 
 import org.apache.cocoon.Constants;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Generates a representations of the specified Notifying Object.
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Notifier.java,v 1.4 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Notifier {
-
-    /*
-     * Generate notification information as a response.
-     * The notification is directly written to the OutputStream.
-     * @param  n The <code>Notifying</code> object
-     * @param outputStream The output stream the notification is written to
-     *        This could be <code>null</code>.
-     * @deprecated There is no way in which this method could understand what mime/type to use. Instead use void notify(Notifying n, OutputStream outputStream, String mimetype), where the mime/type is requested.
-     * @see #notify(Notifying n, OutputStream, String)
-
-    public static String notify(Notifying n, OutputStream outputStream) throws IOException {
-      notify(n, outputStream, "text/html") ;
-      return "text/html";
-    }
-     */
 
     /**
      * Generate notification information as a response.
@@ -71,6 +57,10 @@ public class Notifier {
      *        This could be <code>null</code>.
      */
     private static void notifyHTML(Notifying n, OutputStream outputStream) throws IOException {
+        if (outputStream == null) {
+            return;
+        }
+
         StringBuffer sb = new StringBuffer();
 
         sb.append("<html><head><title>").append(n.getTitle()).append("</title>");
@@ -86,38 +76,33 @@ public class Notifier {
         sb.append("a:active {color: #006666;}");
         sb.append("--></style>");
         sb.append("</head><body>");
-        sb.append("<h1>").append(n.getTitle()).append("</h1>");
-        sb.append("<p><span>Message:</span> ").append(n.getMessage()).append("</p>");
-        sb.append("<p><span>Description:</span> ").append(n.getDescription()).append("</p>");
-        sb.append("<p><span>Sender:</span> ").append(n.getSender()).append("</p>");
-        sb.append("<p><span>Source:</span> ").append(n.getSource()).append("</p>");
+        sb.append("<h1>")
+          .append(StringEscapeUtils.escapeXml(n.getTitle())).append("</h1>");
+        sb.append("<p><span>Message:</span> ")
+          .append(StringEscapeUtils.escapeXml(n.getMessage())).append("</p>");
+        sb.append("<p><span>Description:</span> ")
+          .append(StringEscapeUtils.escapeXml(n.getDescription())).append("</p>");
+        sb.append("<p><span>Sender:</span> ")
+          .append(StringEscapeUtils.escapeXml(n.getSender())).append("</p>");
+        sb.append("<p><span>Source:</span> ")
+          .append(StringEscapeUtils.escapeXml(n.getSource())).append("</p>");
 
-        Map extraDescriptions = n.getExtraDescriptions();
-        Iterator keyIter = extraDescriptions.keySet().iterator();
+        Map extras = n.getExtraDescriptions();
+        Iterator i = extras.keySet().iterator();
+        while (i.hasNext()) {
+            final String key = (String) i.next();
 
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-
-            sb.append("<p><span>").append(key).append("</span><pre>").append(
-                    extraDescriptions.get(key)).append("</pre></p>");
+            sb.append("<p><span>")
+              .append(key).append("</span><pre>")
+              .append(StringEscapeUtils.escapeXml(String.valueOf(extras.get(key))))
+              .append("</pre></p>");
         }
 
         sb.append("<p class='footer'><a href='http://cocoon.apache.org/'>").append(Constants.COMPLETE_NAME).append("</p>");
         sb.append("</body></html>");
 
-        if (outputStream != null)
-            outputStream.write(sb.toString().getBytes());
+        outputStream.write(sb.toString().getBytes());
     }
-
-    /*
-     * Generate notification information in XML format.
-     * @deprecated Using a ContentHandler doesn't mean that a mimetype cannot be specified; it could be svg or
-     * @see #notify(Notifying, ContentHandler, String)
-
-    public static void notify(Notifying n, ContentHandler ch) throws SAXException {
-      notify(n, ch, "text/xml");
-    }
-     */
 
     /**
      * Generate notification information in XML format.
