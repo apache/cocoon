@@ -396,7 +396,7 @@
      </map:match>
 
      <map:match pattern="htmlarea/**">
-       <map:read src="resources/{0}"/>
+       <map:read src="resource://org/apache/cocoon/forms/resources/{0}"/>
      </map:match>
      
      <map:match pattern="htmlarea-display-pipeline">
@@ -422,7 +422,7 @@
      </map:match>
 
      <map:match pattern="resources/**">
-       <map:read src="{0}"/>
+       <map:read src="resource://org/apache/cocoon/forms/{0}"/>
      </map:match>
 
      <!--
