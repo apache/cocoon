@@ -55,7 +55,7 @@ import java.util.Collection;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
- * TODO: describe class
+ * Registry for view related data.
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */

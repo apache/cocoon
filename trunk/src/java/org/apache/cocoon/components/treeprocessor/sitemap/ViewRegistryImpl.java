@@ -53,6 +53,7 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -68,7 +69,7 @@ import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.xml.LocationAugmentationPipe;
 
 /**
- * TODO: describe class
+ * Registry for view related data.
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
@@ -110,12 +111,14 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
     
     public void configure(Configuration configuration) throws ConfigurationException {
         Configuration[] components = configuration.getChildren(COMPONENT_CONFIG);
+        m_componentLabels = new HashMap(components.length);
         for (int i = 0; i < components.length; i++) {
             String idref = components[i].getAttribute(IDREF_ATTR);
             String label = components[i].getAttribute(LABEL_ATTR);
             m_componentLabels.put(idref,splitLabels(label));
         }
         Configuration[] views = configuration.getChildren(VIEW_CONFIG);
+        m_labelViews = new HashMap(views.length);
         for (int i = 0; i < views.length; i++) {
             String idref = views[i].getAttribute(IDREF_ATTR);
             String label = views[i].getAttribute(FROM_LABEL_ATTR,null);
@@ -133,14 +136,13 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
                     throw new ConfigurationException(msg);
                 }
             }
-            m_labelViews.put(label,idref);
+            addViewForLabel(label,idref);
         }
     }
     
     // ---------------------------------------------------- ViewRegistry implementation
     
     public Collection getViewsForStatement(String role, String componentId, Configuration statement) {
-        String statementLabels = statement.getAttribute(LABEL_ATTR, null);
         
         // Compute the views attached to this component
         Set views = null;
@@ -149,9 +151,13 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
         Set labels = new HashSet();
         
         // 1 - labels defined on the component
-        labels.addAll((Collection) m_componentLabels.get(componentId));
+        Collection componentLabels = (Collection) m_componentLabels.get(componentId);
+        if (componentLabels != null) {
+            labels.addAll(componentLabels);
+        }
 
         // 2 - labels defined on this statement
+        String statementLabels = statement.getAttribute(LABEL_ATTR, null);
         if (statementLabels != null) {
             labels.addAll(splitLabels(statementLabels));
         }
@@ -200,6 +206,26 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
         return views;
     }
 
+    /**
+     * Add a view for a label. This is used to register all views that start from
+     * a given label.
+     *
+     * @param label the label (or pseudo-label) for the view
+     * @param view the view name
+     */
+    private void addViewForLabel(String label, String view) {
+        if (this.getLogger().isDebugEnabled()) {
+            getLogger().debug("views:addViewForLabel(" + label + ", " + view + ")");
+        }
+        Set views = (Set) m_labelViews.get(label);
+        if (views == null) {
+            views = new HashSet();
+            m_labelViews.put(label, views);
+        }
+
+        views.add(view);
+    }
+    
     /**
      * Split a list of space/comma separated labels into a Collection
      *
