@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCIncludeAspect.java,v 1.4 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractCIncludeAspect 
     extends AbstractAspect {
@@ -48,7 +48,7 @@ public abstract class AbstractCIncludeAspect
     throws SAXException {
         handler.startPrefixMapping(PREFIX, NAMESPACE);
         AttributesImpl attributes = new AttributesImpl();
-        attributes.addCDATAAttribute("src", source);
+        attributes.addCDATAAttribute(ATTRIBUTE, source);
         handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
         handler.endElement(NAMESPACE, ELEMENT, QELEMENT);
         handler.endPrefixMapping(PREFIX);

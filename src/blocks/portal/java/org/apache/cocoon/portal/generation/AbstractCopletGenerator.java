@@ -17,8 +17,10 @@ package org.apache.cocoon.portal.generation;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.portal.Constants;
@@ -44,7 +46,8 @@ import org.xml.sax.SAXException;
  * @version CVS $Id: AbstractCopletTransformer.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public abstract class AbstractCopletGenerator 
-extends ServiceableGenerator {
+extends ServiceableGenerator
+implements Disposable {
 
     /**
      * Parameter name.
@@ -56,8 +59,8 @@ extends ServiceableGenerator {
      */
     public static final String PORTAL_NAME_PARAM = "portalName";
 
-    /** The portal service */
-    private PortalService _portalService;
+    /** The portal service. @since 2.1.8 */
+    protected PortalService portalService;
     
     /**
      * Try to get the coplet instance data belonging to the current request
@@ -77,16 +80,8 @@ extends ServiceableGenerator {
     /**
      * Get the portal service
      */
-    protected PortalService getPortalService()
-    throws SAXException {
-        if ( this._portalService == null ) {
-            try {
-                this._portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-            } catch (ServiceException se) {
-                throw new SAXException("Unable to get portal service.", se);
-            }
-        }
-        return this._portalService;
+    protected PortalService getPortalService() {
+        return this.portalService;
     }
     
     
@@ -126,14 +121,22 @@ extends ServiceableGenerator {
         return object;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void recycle() {
-        if ( this._portalService != null ) {
-            this.manager.release( this._portalService );
-            this._portalService = null;            
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.portalService);
+            this.portalService = null;
         }
-        super.recycle();
+        super.dispose();
+    }
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
     }
 }

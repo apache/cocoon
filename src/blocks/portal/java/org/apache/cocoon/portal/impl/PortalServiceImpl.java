@@ -194,7 +194,7 @@ public class PortalServiceImpl
             final Configuration current = portals[i];
             final String name = current.getAttribute("name");
             try {
-                PortalComponentManager c = new DefaultPortalComponentManager();
+                PortalComponentManager c = new DefaultPortalComponentManager(this);
                 this.portalComponentManagers.put( name, c );
                 ContainerUtil.enableLogging( c, this.getLogger() );
                 ContainerUtil.contextualize( c, this.context );
