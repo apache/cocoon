@@ -78,7 +78,7 @@
       </xsl:call-template>
     </xsl:variable>
     CompiledExpression <xsl:value-of select="$var-name"/>
-      = jxpathContext.compile("<xsl:value-of select="@test"/>");
+      = JXPathContext.compile("<xsl:value-of select="@test"/>");
   </xsl:template>
 
   <xsl:template match="jpath:for-each | jpath:value-of" mode="compile">
@@ -88,7 +88,7 @@
       </xsl:call-template>
     </xsl:variable>
     CompiledExpression <xsl:value-of select="$var-name"/>
-      = jxpathContext.compile("<xsl:value-of select="@select"/>");
+      = JXPathContext.compile("<xsl:value-of select="@select"/>");
   </xsl:template>
 
   <xsl:template name="get-var-name">
