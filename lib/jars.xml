@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.187 2004/03/09 15:03:37 reinhard Exp $
+    | CVS $Id: jars.xml,v 1.188 2004/03/10 12:56:29 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -1056,7 +1056,7 @@
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/portlet-api-20040121.jar</lib>
+    <lib>portal/lib/portlet-api-20040310.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
   <file>
@@ -1067,7 +1067,7 @@
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/pluto-20040121.jar</lib>
+    <lib>portal/lib/pluto-20040310.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
 </jars>
