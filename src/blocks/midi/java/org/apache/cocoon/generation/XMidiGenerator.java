@@ -29,7 +29,6 @@ import org.apache.cocoon.components.midi.xmidi.Utils;
 import org.apache.cocoon.components.midi.xmidi.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
