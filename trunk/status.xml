@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.172 2003/10/09 12:01:07 ugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.173 2003/10/10 12:06:22 bruno Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="fix" fixes-bug="23648" due-to="Alfred Fuchs" due-to-email="email@alfred-fuchs.de">
+     HTMLGenerator: fixed NullPointerException in case the "HTML" file contained an XML declaration.
+   </action>
    <action dev="UC" type="fix">
     Fixed ResolverImplTestCase so that the "test" build target does not fail (it still depends on the
     deprecated block, though).
