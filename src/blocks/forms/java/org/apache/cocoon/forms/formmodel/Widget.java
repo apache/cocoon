@@ -28,19 +28,13 @@ import java.util.Locale;
  *
  * <ul>
  *  <li>has an id, unique within its parent context widget. See {@link #getId()}.</li>
- *  <li>can have children (see {@link #getWidget(String)}, and can have a parent (see {@link #getParent()}.</li>
+ *  <li>can have a parent (see {@link #getParent()}.</li>
  *  <li>can hold a value (which can be any kind of object). See {@link #getValue()}.</li>
  *  <li>can read its value from a request object (and convert it from a string to its native type).
  *  See {@link #readFromRequest(FormContext)}.</li>
  *  <li>can validate itself. See {@link #validate(FormContext)}.</li>
  *  <li>can generate an XML representation of itself.</li>
  * </ul>
- *
- * <p>Because widgets can have children, the widgets form a widget tree, with its root
- * being the {@link Form} widget.</p>
- *
- * <p>A widget can have only a value, or only child widgets, or can have both a value and child
- * widgets, or can have neither. This all depends on the widget implementation.</p>
  *
  * <p>When a request is submitted, first the {@link #readFromRequest(FormContext)} method of all widgets
  * will be called so that they can read their value(s). Next, the {@link #validate(FormContext)} method will
@@ -54,7 +48,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.7 2004/04/23 13:02:31 mpo Exp $
+ * @version CVS $Id: Widget.java,v 1.8 2004/04/23 23:34:56 joerg Exp $
  */
 public interface Widget {
 

@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.12 2004/04/23 13:02:31 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.13 2004/04/23 23:34:56 joerg Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -74,8 +74,8 @@ public abstract class AbstractWidget implements Widget {
      *
      * If subclasses decide to return <code>null</code> they should also organize 
      * own implementations of {@link #getId()}, {@link #getLocation()},
-     * {@link #validate(FormContext)}, {@link #generateLabel} and
-     * {@link #generateDisplayData} to avoid NPE's.
+     * {@link #validate(FormContext)}, {@link #generateLabel(ContentHandler)} and
+     * {@link #generateDisplayData(ContentHandler)} to avoid NPE's.
      * 
      * @return the widgetDefinition from which this widget was instantiated. 
      *        (@link WidgetDefinition#createInstance()}

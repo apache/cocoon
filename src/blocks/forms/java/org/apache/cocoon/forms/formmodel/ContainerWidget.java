@@ -17,9 +17,12 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.Iterator;
 
 /**
- * Interface to be implemented by Widgets which contain other widgets.
+ * Interface to be implemented by Widgets which contain other widgets. So all
+ * widgets together form a widget tree, with its root being the {@link Form}
+ * widget, the {@link ContainerWidget}s being the branches/forks, and the
+ * {@link Widget}s with values being the leaves.
  *
- * @version $Id: ContainerWidget.java,v 1.3 2004/04/23 13:02:31 mpo Exp $
+ * @version $Id: ContainerWidget.java,v 1.4 2004/04/23 23:34:56 joerg Exp $
  */
 public interface ContainerWidget extends Widget {
     
