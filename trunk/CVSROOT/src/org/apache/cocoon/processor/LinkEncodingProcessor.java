@@ -1,4 +1,4 @@
-/*-- $Id: LinkEncodingProcessor.java,v 1.5 2000-12-12 17:47:59 greenrd Exp $ --
+/*-- $Id: LinkEncodingProcessor.java,v 1.6 2000-12-14 15:53:11 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * Xalan-specific features in your stylesheet.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.5 $ $Date: 2000-12-12 17:47:59 $
+ * @version $Revision: 1.6 $ $Date: 2000-12-14 15:53:11 $
  */
 
 public class LinkEncodingProcessor implements Processor, Status {
@@ -112,7 +112,7 @@ public class LinkEncodingProcessor implements Processor, Status {
         public DefaultLinkPredicate (HttpServletRequest request)
         throws MalformedURLException {
             this.requestBase = new URL 
-              (HttpUtils.getRequestURL (request.getRequestURI ()).toString ());
+              (HttpUtils.getRequestURL (request).toString ());
             this.hostName = requestBase.getHost ();
         }
 
