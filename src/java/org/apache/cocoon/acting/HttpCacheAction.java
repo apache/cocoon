@@ -24,8 +24,8 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -80,11 +80,11 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version CVS $Id: HttpCacheAction.java,v 1.2 2004/07/11 13:08:44 antonio Exp $
+ * @version CVS $Id: HttpCacheAction.java,v 1.3 2004/07/11 13:22:40 antonio Exp $
  */
 public class HttpCacheAction extends AbstractConfigurableAction implements ThreadSafe {
 
-    private SimpleDateFormat formatter = null;
+    private FastDateFormat formatter = null;
     int days = 0;
     int hours = 0;
     int minutes = 0;
@@ -94,9 +94,8 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
     throws ConfigurationException {
         super.configure(configuration);
 
-        /* RFC-822 Date with a GMT based time zone */
-        this.formatter = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss zzz");
-        this.formatter.setTimeZone(DateUtils.UTC_TIME_ZONE);
+        // RFC-822 Date with a GMT based time zone
+        this.formatter = FastDateFormat.getInstance("EEE, dd MMM yyyy kk:mm:ss zzz", DateUtils.UTC_TIME_ZONE);
         this.days = configuration.getChild("days").getValueAsInteger(0);
         this.hours = configuration.getChild("hours").getValueAsInteger(0);
         this.minutes = configuration.getChild("minutes").getValueAsInteger(0);
@@ -111,7 +110,7 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
         Map values = new HashMap(3);
 
         /* Get the current time and output as the last modified header */
-        String value = this.formatter.format(calendar.getTime());
+        String value = this.formatter.format(calendar);
         long maxage = calendar.getTime().getTime();
         response.setHeader("Last-Modified", value);
         values.put("last-modified",  value);
@@ -127,7 +126,7 @@ public class HttpCacheAction extends AbstractConfigurableAction implements Threa
 
         /* If we got more than one second everything is quite normal */
         if (maxage > 1000) {
-            value = this.formatter.format(calendar.getTime());
+            value = this.formatter.format(calendar);
             response.setHeader("Expires", value);
             values.put("expires", value);
 
