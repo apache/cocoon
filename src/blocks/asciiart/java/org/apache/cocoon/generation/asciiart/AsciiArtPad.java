@@ -61,7 +61,7 @@ import org.apache.regexp.RESyntaxException;
  *
  * @author huber@apache.org
  * @since 18. Dezember 2002
- * @version CVS $Id: AsciiArtPad.java,v 1.3 2003/07/03 09:26:04 cziegeler Exp $
+ * @version CVS $Id: AsciiArtPad.java,v 1.4 2003/11/29 15:25:46 nicolaken Exp $
  */
 public class AsciiArtPad {
 
@@ -747,7 +747,7 @@ public class AsciiArtPad {
         final String HLINE_GROUP = "[\\-~=+]";
         final String VLINE_GROUP = "[|+]";
 
-        final String STRING_SUFFIX_GROUP = "[^\\-|+ \\\\]";
+        final String STRING_SUFFIX_GROUP = "[^\\-|~=\\/+ \\\\]";
         //final String STRING_PREFIX_GROUP = "[a-zA-Z0-9_\\*;\\.#]";
         final String STRING_PREFIX_GROUP = STRING_SUFFIX_GROUP;
 
