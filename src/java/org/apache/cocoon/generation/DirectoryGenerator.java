@@ -53,10 +53,12 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 import org.xml.sax.SAXException;
@@ -64,9 +66,12 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Arrays;
@@ -109,15 +114,18 @@ import java.util.Comparator;
  * <dd> Sets the format for the date attribute of each node, as
  * described in java.text.SimpleDateFormat. If unset, the default
  * format for the current locale will be used.
+ * <dt> <i>refreshDelay</i> (optional)
+ * <dd> Sets the delay (in seconds) between checks on the filesystem for changed content.
+ * Defaults to 1 second.
  * </dl>
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.2 2003/05/13 20:19:54 sylvain Exp $
  */
-public class DirectoryGenerator extends ComposerGenerator  {
+public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent  {
   private static final String FILE = "file:";
 
     /** The URI of the namespace of this generator. */
@@ -152,6 +160,12 @@ public class DirectoryGenerator extends ComposerGenerator  {
     protected RE excludeRE;
 
     protected boolean isRequestedDirectory;
+    
+    /** The validity that is being built */
+    protected DirValidity validity;
+    
+    /** The delay between checks to the filesystem */
+    protected long refreshDelay;
 
 
     /**
@@ -185,10 +199,14 @@ public class DirectoryGenerator extends ComposerGenerator  {
         this.reverse = par.getParameterAsBoolean("reverse", false);
 
         String rePattern = par.getParameter("root", null);
+        
+        this.refreshDelay = par.getParameterAsLong("refreshDelay", 1L) * 1000L;
+        
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("depth: " + this.depth);
             this.getLogger().debug("sort: " + this.sort);
             this.getLogger().debug("reverse: " + this.reverse);
+            this.getLogger().debug("refreshDelay: " + this.refreshDelay);
         }
         try {
             this.rootRE = (rePattern == null)?null:new RE(rePattern);
@@ -215,6 +233,26 @@ public class DirectoryGenerator extends ComposerGenerator  {
         this.attributes = new AttributesImpl();
     }
 
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+	 */
+	public Serializable getKey()
+	{
+		return super.source + this.sort + this.depth + this.excludeRE + this.includeRE + this.reverse;
+	}
+
+
+	/**
+	 * Gets the source validity, using a deferred validity object. The validity is initially empty since
+	 * the files that define it are not known before generation has occured. So the returned object is
+	 * kept by the generator and filled with each of the files that are traversed.
+	 * @see DirectoryGenerator.DirValidity
+	 */
+	public SourceValidity getValidity()
+	{
+		this.validity = new DirValidity(this.refreshDelay);
+		return this.validity;
+	}
 
     /**
      * Generate XML data.
@@ -404,6 +442,10 @@ public class DirectoryGenerator extends ComposerGenerator  {
      */
     protected void startNode(String nodeName, File path)
     throws SAXException {
+		if (this.validity != null) {
+			this.validity.addFile(path);
+		}
+
         setNodeAttributes(path);
         super.contentHandler.startElement(URI, nodeName, PREFIX+':'+nodeName, attributes);
     }
@@ -523,6 +565,53 @@ public class DirectoryGenerator extends ComposerGenerator  {
        this.rootRE = null;
        this.includeRE = null;
        this.excludeRE = null;
+       this.validity = null;
 
     }
+
+    /** Specific validity class, that holds all files that have been generated */
+	public static class DirValidity implements SourceValidity {
+		private long expiry;
+		private long delay;
+		List files = new ArrayList();
+		List fileDates = new ArrayList();
+
+		public DirValidity(long delay) {
+			expiry = System.currentTimeMillis() + delay;
+			this.delay = delay;
+		}
+
+		public int isValid() {
+			if (System.currentTimeMillis() <= expiry)
+				return 1;
+
+			//            System.out.println("Regenerating cache validity");
+			expiry = System.currentTimeMillis() + delay;
+			int len = files.size();
+			for (int i = 0; i < len; i++) {
+				File f = (File) files.get(i);
+				if (!f.exists())
+					return -1; // File was removed
+
+				long oldDate = ((Long) fileDates.get(i)).longValue();
+				long newDate = f.lastModified();
+
+				if (oldDate != newDate)
+					return -1;
+			}
+
+			// All content is up to date : update the expiry date
+			expiry = System.currentTimeMillis() + delay;
+			return 1;
+		}
+		
+		public int isValid(SourceValidity newValidity) {
+			return isValid();
+		}
+
+		public void addFile(File f) {
+			files.add(f);
+			fileDates.add(new Long(f.lastModified()));
+		}
+	}
 }
