@@ -514,6 +514,77 @@ which would create the following output:
   letter = g  <br/>  
 ]]> </source>
 </s2>
+<s2 title="eval"> 
+<p>
+The <code>eval</code> tag permits dynamic evaluation of custom tags. 
+</p>
+<source>
+&lt;jx:eval select="Expression"/&gt;
+</source>
+<p>
+Within the body of a macro, information about the current invocation is available via a special variable <code>macro</code>. This variable contains the following properties:
+</p>
+    <table>
+     <tr>
+       <td>
+       Property:
+       </td>
+       <td>
+       Description:
+       </td>
+     </tr>
+     <tr>
+       <td>
+       arguments
+       </td>
+       <td>
+       A map containing the all of the attributes from the tag invocation
+       </td>
+     </tr>
+     <tr>
+       <td>
+       body
+       </td>
+       <td>
+       A reference to the content of the tag invocation
+       </td>
+     </tr>
+   </table>
+<p>
+You can store the value of <code>body</code> in another variable and invoke it later using <code>jx:eval</code>. The <code>select</code> attribute of <code>jx:eval</code> specifies an expression that must evaluate to a macro invocation. For example:
+</p>
+<source>
+<![CDATA[
+
+<jx:set var="tags" value="${java.util.HashMap()}"/>
+
+<jx:macro name="dynamic-tag">
+  <jx:parameter name="id"/>
+  <jx:set var="ignored" value="${tags.put(id, macro.body)}"/>
+</jx:macro>
+
+<dynamic-tag id="example">
+  <em>This tag was invoked dynamically</em>
+</dynamic-tag>
+
+<p>I'm about to invoke a dynamic tag:</p>
+<jx:eval select="${tags.example}"/> 
+
+]]> 
+
+</source>
+<p>
+The above template produces the following output:
+</p>
+<source>
+<![CDATA[
+<p>I'm about to invoke a dynamic tag:</p>
+
+  
+<em>This tag was invoked dynamically</em>
+]]> 
+</source>
+</s2>
 </s1>
 </body>
 </document>
