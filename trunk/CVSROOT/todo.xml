@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.6 1999-12-10 22:34:49 stefano Exp $
+  $Id: todo.xml,v 1.7 1999-12-11 14:23:44 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -15,18 +15,13 @@
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
  
- <action priority="showstopper" assigned-to="SM" context="docs">
+ <action priority="showstopper" context="docs">
   Finish XML-ize the docs (DCP, SQL).
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="admin">
   Write the user selectable error page.
  </action>
-
- <action priority="showstopper" assigned-to="SM" context="admin">
-  Make sure all the java.apache.org stuff is removed.
- </action>
-
 
  <action priority="high" context="code">
   Implement "xsl:output" instead of "cocoon-format" PI and redesign
