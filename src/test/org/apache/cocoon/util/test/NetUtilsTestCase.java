@@ -28,7 +28,7 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: NetUtilsTestCase.java,v 1.6 2004/04/28 22:14:19 ugo Exp $
+ * @version CVS $Id: NetUtilsTestCase.java,v 1.7 2004/04/29 00:21:50 joerg Exp $
  */
 public class NetUtilsTestCase extends TestCase
 {
@@ -206,7 +206,13 @@ public class NetUtilsTestCase extends TestCase
      */
     public void testNormalize() throws Exception {
         Object[] test_values = {
+                new String[]{"", ""},
+                new String[]{"/", "/"},
+                new String[]{"/../", "/../"},
                 new String[]{"/foo/bar", "/foo/bar"},
+                new String[]{"/foo/bar/", "/foo/bar/"},
+                new String[]{"/foo/../bar", "/bar"},
+                new String[]{"/foo/../bar/", "/bar/"},
                 new String[]{"bar", "bar"},
                 new String[]{"foo/../bar", "bar"},
                 new String[]{"foo/./bar", "foo/bar"},
