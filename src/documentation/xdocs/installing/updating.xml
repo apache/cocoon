@@ -6,13 +6,15 @@
   <title>Updating Cocoon</title>
   <authors>
    <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-   <person name="Jörg Heinicke" email="joerg@apache.org"/>
+   <person name="J&#246;rg Heinicke" email="joerg@apache.org"/>
   </authors>
  </header>
 
  <body>
 
  <s1 title="Updating Cocoon">
+  <p>Please take your time and read this document completly before you try to upgrade from
+     a Cocoon 2.0.x version to 2.1 (or above).</p>
   <p>
    This is a brief discussion of the changes between the latest official release @released.version@
    and the current development version of Apache Cocoon. So, if you are interested in
@@ -36,6 +38,31 @@
     <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
       to sitemap's directory. All Cocoon URIs are supported too.</p>
    </s2>
+  <s2 title="Namespace changes">
+    <p>In order to follow strict rules for the namespace handling, some transformers
+       and generators changed their namespace, so if you use any of these components
+       make sure to change the namespaces.</p>
+    <s3 title="Request Generator">
+    <p>RequestGenerator changed namespace from http://xml.apache.org/cocoon/requestgenerator/2.0 to
+       http://apache.org/cocoon/request/2.0.   
+    </p>
+    </s3>
+    <s3 title="I18nTransformer">
+      <p>The I18nTransformer changed its namespace from 
+         http://apache.org/cocoon/i18n/2.0 to http://apache.org/cocoon/i18n/2.1</p>
+    </s3>
+    <s3 title="I18nTransformer">
+      <p>The I18nTransformer changed its namespace from 
+         http://apache.org/cocoon/i18n/2.0 to http://apache.org/cocoon/i18n/2.1</p>
+    </s3>
+  </s2>
+  </s1>
+  <s1 title="Recompiling Own Code">
+    <p>Due to some changes in the logging of Cocoon components, for example own generators,
+       transformers or actions, code compiled for Cocoon 2.0.x will not run using
+       Cocoon 2.1.</p>
+    <p>In order to get your own components running, you only have to recompile your code
+       and then everything should work fine.</p>
   </s1>
   <s1 title="Components">
    <p>
@@ -170,6 +197,13 @@
      <p>So you see, although this is an incompatible change in the Java code, you have only
        little to do to update your Cocoon installation.</p>
     </s3>
+   </s2>
+   <s2 title="File Upload">
+     <p>File upload class name changed from org.apache.cocoon.components.request.multipart.FilePart to
+        org.apache.cocoon.servlet.multipart.Part.
+        File upload method names changed from FilePart.getFilePath() to
+        Part.getUploadName()
+     </p>
    </s2>
   </s1>
  </body>
