@@ -50,66 +50,42 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Pointer;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * ContextJXPathBinding provides an implementation of a {@link Binding} 
- * that narrows the binding scope to some xpath-context on the target 
- * objectModel to load and save from. 
+ * A simple repeater binding that will replace (i.e. delete then re-add all) its
+ * content.
+ * <pre>
+ * &lt;wb:simple-repeater
+ *   id="contacts"
+ *   parent-path="contacts"&gt;
+ *   &lt;<em>... child bindings ...</em>
+ * &lt;/wb:simple-repeater&gt;
+ * </pre>
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ContextJXPathBinding extends ComposedJXPathBindingBase {
+public class SimpleRepeaterJXPathBindingBuilder
+    extends JXpathBindingBuilderBase {
 
-    /** 
-     * the relative contextPath for the sub-bindings of this context
-     */
-    private final String xpath;
+    public JXPathBindingBase buildBinding(
+        Element bindingElem,
+        JXPathBindingManager.Assistant assistant) throws BindingException {
 
-    /**
-     * Constructs ContextJXPathBinding for the specified xpath sub-context
-     */
-    public ContextJXPathBinding(String contextPath, JXPathBindingBase[] childBindings) {
-        super(childBindings);
-        this.xpath = contextPath;
-    }
+        try {
+            String repeaterId = DomHelper.getAttribute(bindingElem, "id");
+            String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
+            String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
 
-    /**
-     * Actively performs the binding from the ObjectModel wrapped in a jxpath 
-     * context to the Woody-form.
-     */
-    public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
-        Pointer ptr = jxpc.getPointer(this.xpath);
-        if (ptr.getNode() != null) {
-            JXPathContext subContext = jxpc.getRelativeContext(ptr);
-            super.loadFormFromModel(frmModel, subContext);
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("done loading " + toString());
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("non-existent path: skipping " + toString());
-            }
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElem);
+
+            return new SimpleRepeaterJXPathBinding(repeaterId, parentPath, rowPath,
+                new ComposedJXPathBindingBase(childBindings));
+        } catch (BindingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BindingException("Error building repeater binding defined at " + DomHelper.getLocation(bindingElem), e);
         }
-    }
-
-    /**
-     * Actively performs the binding from the Woody-form to the ObjectModel 
-     * wrapped in a jxpath context.
-     */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Pointer ptr = jxpc.getPointer(this.xpath);
-        if (ptr.getNode() == null) {
-            jxpc.createPath(this.xpath);
-            // Need to recreate the pointer after creating the path
-            ptr = jxpc.getPointer(this.xpath);
-        }
-        JXPathContext subContext = jxpc.getRelativeContext(ptr);
-        super.saveFormToModel(frmModel, subContext);
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("done saving " + toString());
-    }
-
-    public String toString() {
-        return "ContextJXPathBinding [xpath=" + this.xpath + "]";
     }
 }
