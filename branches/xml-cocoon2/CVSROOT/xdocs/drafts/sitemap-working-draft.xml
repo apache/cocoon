@@ -44,7 +44,7 @@
 
 ==============================================================================
 
-This docuemnt contains an example used as a working draft for 
+This document contains an example used as a working draft for 
 Cocoon architects to test and understand the issues associated with 
 sitemaps and XML publishing in general. It must be considered as a working 
 draft and may be updated at any time.
@@ -127,11 +127,10 @@ methods such as CVS, WebDAV or other forms of databases.
 
 -->
 
-<cocoon xmlns="http://xml.apache.org/cocoon/config/2.0" xmlns:src="http://xml.apache.org/cocoon/loaders">
-
- <!-- here should go Cocoon-specific parameters -->
-
- <sitemap>
+<sitemap 
+    xmlns="http://xml.apache.org/cocoon/sitemap/2.0" 
+    xmlns:src="http://xml.apache.org/cocoon/loaders"
+>
 
   <!-- NOTE (SM)   
 
@@ -154,6 +153,12 @@ methods such as CVS, WebDAV or other forms of databases.
 
           Component ComponentManager.getComponent(String role)
    -->
+   
+   <!-- NOTE (SM)
+       Should we allow Avalon blocks to be accessible directly from here?
+       (this would require Block to implement Component as well)
+   -->
+   
    <component role="pool" src:class="org.apache.cocoon.component.DatabasePool">
     <param name="max-connections">10</param>
    </component>
@@ -250,8 +255,6 @@ methods such as CVS, WebDAV or other forms of databases.
 
   [XXX] Should we use '$1' for both rules? or keep wildcard positioning like shown below?
   
-  [XXX] Should we use a different namespace for the "rule" attribute, like we did for loaders?
-
   -->
 
   <!-- 
@@ -260,7 +263,7 @@ methods such as CVS, WebDAV or other forms of databases.
   <mount uri="^/xerces-[j|c|p]/(.*)$" src:cvs=":pserver:anonymous@xml.apache.org:/home/cvs/xerces-$1/xdocs/$2" rule="regexp"/>
   <mount uri="cocoon/*" src:cvs=":pserver:anonymous@xml.apache.org:/home/cvs/cocoon/xdocs/*"/>
   <mount uri="bugs/*"   src:jar="./apps/bugs.cocoon#*"/>
-  <mount uri="faq/*"    src:jar="jar:./apps/faq-o-matic.cocoon#*"/>
+  <mount uri="faq/*"    src:jar="./apps/faq-o-matic.cocoon#*"/>
   <mount uri="dist/*"   src:local="./dist/*"/>
 
   <!-- 
@@ -319,11 +322,42 @@ methods such as CVS, WebDAV or other forms of databases.
   </process>
 
   <process uri="complex-semantics/*">
-    <semantic-source>
+    <semantic-view>
      <generate type="parser" src:local="./complex-semantics/*"/>
      <filter type="xslt" src:local="./stylesheet/rdf-izer.xsl"/>
      <filter type="xslt" src:local="./stylesheet/xlink-izer.xsl"/>
-    </semantic-source>
+    </semantic-view>
+    <!--
+         The semantic view should contain all the information that semantic
+         crawlers need to fully understand this resource. It normally means
+         that RDF, XLink and PI are contained in this view of the resource
+         and Cocoon will be able to interrupt the pipeline at this point
+         if the client is requesting this.
+         
+         This will be used for offline crawlers, metadata indexers and
+         XML-capable browsers.
+    -->
+    
+    <!-- NOTE (SM)
+    
+         The semantic-view element might become too specific if the new CC/PP
+         user-agent capabilities architecture proposal is implemented. If this
+         happens, the need for multiple pipeline exit points depending on the
+         requestor capabilities will emerge. But this is clearly _way_ too
+         early to expect, anyway...
+         
+         [XXX] should we define more exit points that "end" and "semantic"?
+         
+         [XXX] the use of such element is not very elegant, any 
+               alternative proposal?
+               
+         [XXX] when called internally by the command line wrapper, Cocoon
+               will know the semantic view was called for, but when accessed
+               from the normal HTTP channels, how should Cocoon know that?
+               Should we define our own "semantic" HTTP action? would CC/PP
+               handle this as well?
+    -->         
+    
     <if type="browser accepts text/vnd.wap.wml">
      <filter type="xslt" src:local="./stylesheet/rdf2wml.xsl"/>
      <serialize type="xml"/>
@@ -334,6 +368,24 @@ methods such as CVS, WebDAV or other forms of databases.
     </else>
   </process>
 
+  <process uri="/\([0-9]\{4\}\)/\([0-9]\{2\}\)/\([0-9]\{2\}\)/">
+    <!--
+         Here we implement the ability to indicate semantic information
+         on the processed URI. This is mostly used to avoid to encode
+         URI specific information in the XSP since the sitemap maintainer
+         is the only one responsible to manage the URI space. This removes
+         a URI contract between the XSP writer and the URI space manager, 
+         moving it to parameter names which normally change less frequently.
+     -->
+    <set-parameter name="year" value="$1"/>
+    <set-parameter name="month" value="$2"/>
+    <set-parameter name="day" value="$3"/>
+
+    <generator name="serverpages" src="/dailynews.xsp">
+    <filter type="xslt" src:local="./stylesheet/news.xsl"/>
+    <serializer type="html"/>
+  </process>
+  
   <process uri="*">
    <generate type="parser" src:local="*.xml"/>
    <if test="load greater-then 2.5">
@@ -371,8 +423,6 @@ methods such as CVS, WebDAV or other forms of databases.
    <serializer type="html" status-code="401"/>
   </resource>
 
- </sitemap>
-
-</cocoon>
+</sitemap>
 
 <!-- end of file -->
