@@ -64,7 +64,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.6 2004/03/11 18:46:31 joerg Exp $
+ * @version CVS $Id$
  */
 public class ResourceReader 
 extends AbstractReader 
@@ -74,7 +74,6 @@ implements CacheableProcessingComponent, Parameterizable {
     private static final Map documents = new HashMap();
 
     protected Source inputSource;
-    protected InputStream inputStream;
 
     protected boolean quickTest;
     protected boolean byteRanges;
@@ -173,9 +172,17 @@ implements CacheableProcessingComponent, Parameterizable {
         }
     }
 
-    protected void processStream() throws IOException, ProcessingException {
+    protected void processStream(InputStream inputStream)
+    throws IOException, ProcessingException {
         byte[] buffer = new byte[bufferSize];
         int length = -1;
+
+        // tell the client whether we support byte range requests or not
+        if(byteRanges) {
+            response.setHeader("Accept-Ranges", "bytes");
+        } else {
+            response.setHeader("Accept-Ranges", "none");
+        }
 
         String ranges = request.getHeader("Ranges");
 
@@ -196,8 +203,7 @@ implements CacheableProcessingComponent, Parameterizable {
                     }
                 }
             }
-        }
-        else {
+        } else {
             byteRange = null;
         }
 
@@ -221,8 +227,6 @@ implements CacheableProcessingComponent, Parameterizable {
                 ((HttpResponse)response).setStatus(206);
             }
 
-            response.setHeader("Accept-Ranges", "bytes");
-
             int pos = 0;
             int posEnd;
             while ((length = inputStream.read(buffer)) > -1) {
@@ -233,14 +237,10 @@ implements CacheableProcessingComponent, Parameterizable {
                 }
                 pos += length;
             }
-        }
-        else {
+        } else {
             if (contentLength != -1) {
                 response.setHeader("Content-Length", Long.toString(contentLength));
             }
-
-            // Bug #9539: This resource reader does not support ranges
-            response.setHeader("Accept-Ranges", "none");
 
             while ((length = inputStream.read(buffer)) > -1) {
                 out.write(buffer, 0, length);
@@ -253,12 +253,13 @@ implements CacheableProcessingComponent, Parameterizable {
     /**
      * Generates the requested resource.
      */
-    public void generate() throws IOException, ProcessingException {
+    public void generate()
+    throws IOException, ProcessingException {
         try {
             if (expires > 0) {
                 response.setDateHeader("Expires", System.currentTimeMillis() + expires);
-            }
-            else {
+            } else {
+                // See Bug #14048
                 response.addHeader("Vary", "Host");
             }
 
@@ -267,18 +268,18 @@ implements CacheableProcessingComponent, Parameterizable {
                 response.setDateHeader("Last-Modified", lastModified);
             }
 
+            InputStream inputStream;
             try {
                 inputStream = inputSource.getInputStream();
-            }
-            catch (SourceException se) {
-                throw SourceUtil.handle("Error during resolving of the input stream", se);
+            } catch (SourceException e) {
+                throw SourceUtil.handle("Error during resolving of the input stream", e);
             }
 
-            // Bugzilla Bug 25069, close inputStream in finally block
-            // this will close inputStream even if processStream throws
+            // Bugzilla Bug #25069, close inputStream in finally block.
+            // This will close inputStream even if processStream throws
             // an exception
             try {
-                processStream();
+                processStream(inputStream);
             } finally {
                 if (inputStream != null) {
                     inputStream.close();
@@ -290,8 +291,7 @@ implements CacheableProcessingComponent, Parameterizable {
                 // (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915&w=2 )
                 documents.put(request.getRequestURI(), inputSource.getURI());
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             getLogger().debug("Received an IOException, assuming client severed connection on purpose");
         }
     }

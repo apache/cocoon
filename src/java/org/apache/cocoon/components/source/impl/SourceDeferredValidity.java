@@ -24,7 +24,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SourceDeferredValidity.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class SourceDeferredValidity implements DeferredValidity {
 
@@ -40,5 +40,4 @@ public final class SourceDeferredValidity implements DeferredValidity {
 	public SourceValidity getValidity() {
 		return this.source.getValidity();
 	}
-
 }

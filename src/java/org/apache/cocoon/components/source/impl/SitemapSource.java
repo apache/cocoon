@@ -63,7 +63,7 @@ implements Source, XMLizable {
     private SourceValidity sourceValidity;
 
     /** The system id */
-    private String systemId;
+    private final String systemId;
 
     /** The system id used for caching */
     private String systemIdForCaching;
@@ -78,7 +78,7 @@ implements Source, XMLizable {
     private Processor pipelineProcessor;
 
     /** The environment */
-    private MutableEnvironmentFacade environment;
+    private final MutableEnvironmentFacade environment;
 
     /** The <code>ProcessingPipeline</code> */
     private ProcessingPipeline processingPipeline;
@@ -99,7 +99,7 @@ implements Source, XMLizable {
     private Object processKey;
     
     /** The used protocol */
-    private String protocol;
+    private final String protocol;
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
@@ -320,8 +320,8 @@ implements Source, XMLizable {
      * and content length.
      */
     public void refresh() {
-        reset();
-        init();
+        this.reset();
+        this.init();
     }
 
     /**
@@ -391,7 +391,7 @@ implements Source, XMLizable {
     public void toSAX(ContentHandler contentHandler)
     throws SAXException {
         if (this.needsRefresh) {
-            refresh();
+            this.refresh();
         }
         if (this.exception != null) {
             throw this.exception;
@@ -459,9 +459,10 @@ implements Source, XMLizable {
      * Recyclable
      */
     public void recycle() {
-        reset();
+        this.reset();
         if (this.sourceResolver != null) {
             this.manager.release(this.sourceResolver);
+            this.sourceResolver = null;
         }
     }
 
@@ -491,4 +492,5 @@ implements Source, XMLizable {
     public Iterator getParameterNames() {
         return java.util.Collections.EMPTY_LIST.iterator();
     }
+
 }

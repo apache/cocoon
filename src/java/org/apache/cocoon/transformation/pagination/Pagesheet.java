@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.util.ResizableContainer;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -44,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.6 2004/05/17 16:17:11 vgritsenko Exp $
+ * @version CVS $Id$
  */
 
 /*
@@ -97,8 +96,7 @@ which indicates that:
  6) range link(s) will have an attribute 'range' to indicate the range size
 
 */
-public class Pagesheet extends DefaultHandler
-                       implements Cloneable, Modifiable {
+public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;

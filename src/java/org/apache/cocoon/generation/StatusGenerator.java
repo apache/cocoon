@@ -36,7 +36,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current status of Cocoon.
+ * 
+ * @cocoon.sitemap.component.name   status
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.status
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ * 
  * Potted DTD:
  *
  * <code>
@@ -64,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.8 2004/05/20 10:48:16 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -73,7 +83,6 @@ public class StatusGenerator extends ServiceableGenerator {
      */
     protected StoreJanitor storejanitor;
     protected Store store_persistent;
-
 
     /**
      * The XML namespace for the output document.
@@ -147,7 +156,6 @@ public class StatusGenerator extends ServiceableGenerator {
 
         // The current date and time.
         String dateTime = DateFormat.getDateTimeInstance().format(new Date());
-
         String localHost;
 
         // The local host.
@@ -189,8 +197,7 @@ public class StatusGenerator extends ServiceableGenerator {
         atts.clear();
         // qName = prefix + ':' + localName
         atts.addAttribute(xlinkNamespace, "type", xlinkPrefix + ":type", "CDATA", "simple");
-        atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA",
-            SystemUtils.JAVA_VENDOR_URL);
+        atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA", SystemUtils.JAVA_VENDOR_URL);
         addValue(ch, "java-vendor", SystemUtils.JAVA_VENDOR, atts);
         endGroup(ch);
         // END JRE
@@ -242,8 +249,7 @@ public class StatusGenerator extends ServiceableGenerator {
                         ch.characters(line.toCharArray(), 0, line.length());
                         ch.endElement(namespace, "line", "line");
                     }
-                }
-    
+                } 
                 if (size == 0) {
                     ch.startElement(namespace, "line", "line", atts);
                     String value = "[empty]";
@@ -280,8 +286,7 @@ public class StatusGenerator extends ServiceableGenerator {
                     ch.characters(line.toCharArray(), 0, line.length());
                     ch.endElement(namespace, "line", "line");
                 }
-            }
-    
+            }  
             if (size == 0) {
                 ch.startElement(namespace, "line", "line", atts);
                 String value = "[empty]";
@@ -306,12 +311,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
     private void startGroup(ContentHandler ch, String name, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts); 
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "group", "group", ai);
     }
@@ -328,12 +328,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
     private void addValue(ContentHandler ch, String name, String value, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
         ch.startElement(namespace, "line", "line", new AttributesImpl());
@@ -353,12 +348,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
     private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
 

@@ -51,6 +51,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+* @cocoon.sitemap.component.documentation
  * This transformer triggers for the element <code>include</code> in the
  * namespace "http://apache.org/cocoon/include/1.0".
  * The <code>src</code> attribute contains the url which points to
@@ -58,6 +59,15 @@ import java.util.Map;
  * With the attributes <code>element</code>, <code>ns</code> and
  * <code>prefix</code> it is possible to specify an element
  * which surrounds the included content.
+ *
+ * @cocoon.sitemap.component.name   cinclude
+ * @cocoon.sitemap.component.logger sitemap.transformer.cinclude
+ * @cocoon.sitemap.component.documentation.caching
+ *               See documentation for further information.
+ *
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
  *
  * This transformer also supports a more verbose but flexible version:
  * <cinclude:includexml xmlns:cinclude="http://apache.org/cocoon/include/1.0" ignoreErrors="false">

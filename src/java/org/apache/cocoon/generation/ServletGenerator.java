@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.3 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class ServletGenerator extends ComposerGenerator {
 
@@ -49,8 +49,8 @@ public abstract class ServletGenerator extends ComposerGenerator {
         this.context = ObjectModelHelper.getContext(objectModel);
     }
 
-    /**
-     * Recycle the generator by removing references
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
         super.recycle();
