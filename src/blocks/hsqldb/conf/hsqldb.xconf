@@ -34,7 +34,7 @@
      <parameter name="trace" value="false"/>
      <parameter name="thread-pool-name" value="daemon"/>
      <parameter name="name" value="cocoondb"/>
-     <parameter name="path" value="context://WEB-INF/db"/>     
+     <parameter name="path" value="context://WEB-INF/db"/>
   </hsqldb-server>
 
 </xconf>
