@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp.xsl,v 1.1 2003/03/09 00:06:02 pier Exp $-->
+<!-- $Id: xsp.xsl,v 1.2 2004/02/11 00:36:29 vgritsenko Exp $-->
 <!--
  *****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
@@ -15,7 +15,7 @@
  * XSP Core logicsheet for the Python language
  *
  * @author <a href="mailto:vgritsenko@apache.org>Vadim Gritsenko</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:06:02 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/11 00:36:29 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -666,7 +666,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:otherwise>
         <xsl:value-of select="$zindent"/>
         <xsl:text>page.xspCharacters("</xsl:text>
-        <xsl:value-of select="XSLTExtension:escape($extension, .)"/>
+        <xsl:value-of select="XSLTExtension:escapeJava($extension, .)"/>
         <xsl:text>")
 </xsl:text>
       </xsl:otherwise>
