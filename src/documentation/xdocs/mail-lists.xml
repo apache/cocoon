@@ -96,8 +96,8 @@ and knowledge you can get out of all this open development thing.
   </s1>
   
   <s1 title="Cocoon Users">
-   <p><link href="mailto:cocoon-users-subscribe@xml.apache.org">Subscribe</link>
-      <link href="mailto:cocoon-users-unsubscribe@xml.apache.org">Unsubscribe</link>
+   <p><link href="mailto:users-subscribe@cocoon.apache.org">Subscribe</link>
+      <link href="mailto:users-unsubscribe@cocoon.apache.org">Unsubscribe</link>
    </p>
 
    <p>The general Cocoon list, for problems, bug reports, asking for advice on how
@@ -131,8 +131,8 @@ and knowledge you can get out of all this open development thing.
   </s1>
 
   <s1 title="Cocoon Dev">
-   <p><link href="mailto:cocoon-dev-subscribe@xml.apache.org">Subscribe</link>
-      <link href="mailto:cocoon-dev-unsubscribe@xml.apache.org">Unsubscribe</link>
+   <p><link href="mailto:dev-subscribe@cocoon.apache.org">Subscribe</link>
+      <link href="mailto:dev-unsubscribe@cocoon.apache.org">Unsubscribe</link>
    </p>
 
    <p>This list is for developers <strong>working on</strong> or wanting to work on
@@ -150,8 +150,8 @@ and knowledge you can get out of all this open development thing.
   </s1>
 
   <s1 title="Cocoon Docs">
-   <p><link href="mailto:cocoon-docs-subscribe@xml.apache.org">Subscribe</link>
-      <link href="mailto:cocoon-docs-unsubscribe@xml.apache.org">Unsubscribe</link>
+   <p><link href="mailto:docs-subscribe@cocoon.apache.org">Subscribe</link>
+      <link href="mailto:docs-unsubscribe@cocoon.apache.org">Unsubscribe</link>
    </p>
 
    <p>This list is for everyone (users and developers) to assist with building
@@ -171,8 +171,8 @@ and knowledge you can get out of all this open development thing.
   </s1>
 
   <s1 title="Cocoon Cvs">
-   <p><link href="mailto:cocoon-cvs-subscribe@xml.apache.org">Subscribe</link>
-      <link href="mailto:cocoon-cvs-unsubscribe@xml.apache.org">Unsubscribe</link>
+   <p><link href="mailto:cvs-subscribe@cocoon.apache.org">Subscribe</link>
+      <link href="mailto:cvs-unsubscribe@cocoon.apache.org">Unsubscribe</link>
    </p>
 
    <p>This <strong>read-only</strong> list sends out notification messages detailing
