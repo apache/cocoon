@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.1 2003/11/08 07:59:39 crossley Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.2 2003/11/14 15:45:31 sylvain Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -35,6 +35,12 @@
    <map:match pattern="wrap2para/*">
     <map:generate src="data/{1}.xml"/>
     <map:transform src="xslt/docwrap.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="nbsp/*">
+    <map:generate src="data/{1}.xml"/>
+    <map:transform src="xslt/docnbsp.xsl"/>
     <map:serialize type="html"/>
    </map:match>
 
