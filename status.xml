@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="update">
+      Add support for namespaced XML elements to the JXPath based input
+      modules (includes JXPathMetaModule, XMLFileModule, and others).
+    </action>
     <action dev="AG" type="fix" fixes-bug="34325"i due-to="Joachim Breitsprecher" due-to-email="jb@dserv.net">
       XInclude transformer does not handle fallback correctly.
     </action>
