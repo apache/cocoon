@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.9 2004/04/28 16:34:12 bruno Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.10 2004/04/30 08:37:45 bruno Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     
@@ -81,8 +81,6 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * When overriding one should call <code>super.validate()</code> as the first 
      * statement to keep in sync with this behaviour. 
      * 
-     * @param formContext to be passed to the {@link Widget#validate(FormContext)} 
-     *                    of the contained widgets.
      * @return <code>true</code> only if all contained widgets are valid and the 
      *         extra validation rules on this containment level are ok.
      */
