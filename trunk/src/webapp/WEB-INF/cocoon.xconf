@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<cocoon version="2.1">
+<cocoon version="2.2" proxy-type="none">
 
 <!--+
     |  This is the Apache Cocoon configuration file. This is the place
@@ -26,11 +25,135 @@
       | For production environment, it is advisable to set check-reload to no.
       +-->
   <sitemap
+    id="sitemap"
     file="context://sitemap.xmap"
     check-reload="yes"
-    config="resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml"
     logger="sitemap"
+    activation="inline"
   />
+
+  <!--+
+      | XML Parser
+      |
+      | The default parser used in Apache Cocoon is
+      | org.apache.excalibur.xml.impl.JaxpParser. Apache Cocoon requires a
+      | JAXP 1.1 parser.
+      | If you have problems because your servlet environment uses its own
+      | parser not conforming to JAXP 1.1 try using the alternative
+      | XercesParser instead of the JaxpParser. To activate the XercesParser,
+      | change the class attribute to
+      |   class="org.apache.excalibur.xml.impl.XercesParser"
+      | You will also need to add a system property to your JVM,
+      | probably on the startup of your servlet engine like this:
+      | -Dorg.apache.excalibur.xml.sax.SAXParser=org.apache.excalibur.xml.impl.XercesParser
+      |
+      | Configuration for the JaxpParser (not the XercesParser!):
+      | - validate (boolean, default = false): This parameter causes the parser
+      |     to be a validating parser.
+      |     XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - namespace-prefixes (boolean, default = false) : do we want
+      |     namespaces declarations also as 'xmlns:' attributes ?
+      |     Note : setting this to true confuses some XSL processors
+      |     (e.g. Saxon).
+      | - stop-on-warning (boolean, default = true) : should the parser
+      |     stop parsing if a warning occurs ?
+      | - stop-on-recoverable-error (boolean, default = true) : should the
+      |     parser stop parsing if a recoverable error occurs ?
+      | - reuse-parsers (boolean, default = true) : do we want to reuse
+      |     parsers or create a new parser for each parse ?
+      |     Note : even if this parameter is true, parsers are not recycled
+      |     in case of parsing errors : some parsers (e.g. Xerces) do not like
+      |     to be reused after failure.
+      | - sax-parser-factory (string) : the name of the SAXParserFactory
+      |     implementation class to be used instead of using the standard
+      |     JAXP mechanism (SAXParserFactory.newInstance()). This allows to
+      |     choose unambiguously the JAXP implementation to be used when
+      |     several of them are available in the classpath.
+      | - document-builder-factory (string) : the name of the
+      |     DocumentBuilderFactory implementation to be used (similar to
+      |     sax-parser-factory for DOM).
+      +-->
+  <xml-parser 
+    id="sax-parser"
+    activation="inline"
+    logger="core.xml-parser" 
+    pool-grow="4" pool-max="32" pool-min="8">
+    
+    <parameter name="validate" value="false"/>
+    <parameter name="namespace-prefixes" value="false"/>
+    <parameter name="stop-on-warning" value="true"/>
+    <parameter name="stop-on-recoverable-error" value="true"/>
+    <parameter name="reuse-parsers" value="false"/>
+    <!-- drop-dtd-comments: causes all comment events originating from DTD
+         comments to be dropped right after parsing -->
+    <parameter name="drop-dtd-comments" value="true"/>
+  </xml-parser>
+
+  <!--+
+      | XSLT Processor
+      |
+      | 'incremental-processing' (only works with Xalan) allows the XSLT
+      | processor to start the output of the transformation as soon as possible.
+      | if set to false, the transforer waits until the end of the
+      | transformation to deliver the output.
+      | WARNING: * if you enable incremental-processing, you should be aware of
+      |            the following bug:
+      |            http://nagoya.apache.org/bugzilla/show_bug.cgi?id=13186
+      |          * incremental-processing creates an additional, non-pooled thread.
+      |          * using incremental-processing does not save memory, the input
+      |            tree will still be build completely.
+      |          * incremental processing is a 'static' thing in Xalan: if you
+      |            enable it on one xslt-processor, enable it on all.
+      +-->
+  <xslt-processor id="xslt" logger="core.xslt-processor">
+     <parameter name="use-store" value="false"/>
+     <parameter name="incremental-processing" value="false"/>
+  </xslt-processor>
+
+  <!--+
+      | XSLT Processor using xsltc from Xalan
+      | For Interpreted Xalan use:
+      | <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+      +-->
+  <xslt-processor id="xsltc"
+             logger="core.xslt-processor">
+     <parameter name="use-store" value="false"/>
+     <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
+  </xslt-processor>
+  
+  <!--+
+      | Xalan XSLT Processor
+      +-->
+  <xslt-processor id="xalan" 
+                  logger="core.xslt-processor">
+     <parameter name="use-store" value="false"/>
+     <parameter name="incremental-processing" value="false"/>
+     <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  </xslt-processor>
+
+  <!-- The XMLizers converts different mime-types to XML -->
+  <xmlizer id="xmlizer">
+      <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml" />
+  </xmlizer>
+  
+  <!--+
+      | Saxon XSLT Processor
+      | For old (6.5.2) Saxon use:
+      |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+      | For new (7.x?) Saxon use:
+      |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
+  <component id="saxon"
+             logger="core.xslt-processor">
+     <parameter name="use-store" value="false"/>
+     <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+  </component>
+  +-->
+
+<!-- TODO: entries below are still 2.1 configuration -->
 
 <!-- ========================= Sitemap Flowscript ========================== -->
 
@@ -279,128 +402,8 @@
    <parameter name="verbosity" value="1"/>
   </entity-resolver>
 
-  <!--+
-      | XML Parser
-      |
-      | The default parser used in Apache Cocoon is
-      | org.apache.excalibur.xml.impl.JaxpParser. Apache Cocoon requires a
-      | JAXP 1.1 parser.
-      | If you have problems because your servlet environment uses its own
-      | parser not conforming to JAXP 1.1 try using the alternative
-      | XercesParser instead of the JaxpParser. To activate the XercesParser,
-      | change the class attribute to
-      |   class="org.apache.excalibur.xml.impl.XercesParser"
-      | You will also need to add a system property to your JVM,
-      | probably on the startup of your servlet engine like this:
-      | -Dorg.apache.excalibur.xml.sax.SAXParser=org.apache.excalibur.xml.impl.XercesParser
-      |
-      | Configuration for the JaxpParser (not the XercesParser!):
-      | - validate (boolean, default = false): This parameter causes the parser
-      |     to be a validating parser.
-      |     XML validation is only being used for the documentation build.
-      |     (If you are going to use it elsewhere, then do so with caution.)
-      |     You really should have validated all of your XML documents already,
-      |     according to their proper DTD or schema. Do not expect Cocoon
-      |     to do it.
-      | - namespace-prefixes (boolean, default = false) : do we want
-      |     namespaces declarations also as 'xmlns:' attributes ?
-      |     Note : setting this to true confuses some XSL processors
-      |     (e.g. Saxon).
-      | - stop-on-warning (boolean, default = true) : should the parser
-      |     stop parsing if a warning occurs ?
-      | - stop-on-recoverable-error (boolean, default = true) : should the
-      |     parser stop parsing if a recoverable error occurs ?
-      | - reuse-parsers (boolean, default = true) : do we want to reuse
-      |     parsers or create a new parser for each parse ?
-      |     Note : even if this parameter is true, parsers are not recycled
-      |     in case of parsing errors : some parsers (e.g. Xerces) do not like
-      |     to be reused after failure.
-      | - sax-parser-factory (string) : the name of the SAXParserFactory
-      |     implementation class to be used instead of using the standard
-      |     JAXP mechanism (SAXParserFactory.newInstance()). This allows to
-      |     choose unambiguously the JAXP implementation to be used when
-      |     several of them are available in the classpath.
-      | - document-builder-factory (string) : the name of the
-      |     DocumentBuilderFactory implementation to be used (similar to
-      |     sax-parser-factory for DOM).
-      +-->
-  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser" logger="core.xml-parser" pool-grow="4" pool-max="32" pool-min="8">
-    <parameter name="validate" value="false"/>
-    <parameter name="namespace-prefixes" value="false"/>
-    <parameter name="stop-on-warning" value="true"/>
-    <parameter name="stop-on-recoverable-error" value="true"/>
-    <parameter name="reuse-parsers" value="false"/>
-    <!-- drop-dtd-comments: causes all comment events originating from DTD
-         comments to be dropped right after parsing -->
-    <parameter name="drop-dtd-comments" value="true"/>
-  </xml-parser>
-
-
-  <!--+
-      | XSLT Processor
-      |
-      | 'incremental-processing' (only works with Xalan) allows the XSLT
-      | processor to start the output of the transformation as soon as possible.
-      | if set to false, the transforer waits until the end of the
-      | transformation to deliver the output.
-      | WARNING: * if you enable incremental-processing, you should be aware of
-      |            the following bug:
-      |            http://nagoya.apache.org/bugzilla/show_bug.cgi?id=13186
-      |          * incremental-processing creates an additional, non-pooled thread.
-      |          * using incremental-processing does not save memory, the input
-      |            tree will still be build completely.
-      |          * incremental processing is a 'static' thing in Xalan: if you
-      |            enable it on one xslt-processor, enable it on all.
-      +-->
-  <xslt-processor logger="core.xslt-processor">
-     <parameter name="use-store" value="false"/>
-     <parameter name="incremental-processing" value="false"/>
-  </xslt-processor>
-
-  <!--+
-      | XSLT Processor using xsltc from Xalan
-      | For Interpreted Xalan use:
-      | <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
-      +-->
-  <component logger="core.xslt-processor"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
-             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
-     <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
-  </component>
-  
-  <!--+
-      | Xalan XSLT Processor
-      +-->
-  <component logger="core.xslt-processor"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
-             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
-     <parameter name="incremental-processing" value="false"/>
-     <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
-  </component>
-
-  <!--+
-      | Saxon XSLT Processor
-      | For old (6.5.2) Saxon use:
-      |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-      | For new (7.x?) Saxon use:
-      |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
-  <component logger="core.xslt-processor"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
-             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
-     <parameter name="use-store" value="false"/>
-     <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-  </component>
-  +-->
-
   <!-- Xpath Processor: -->
   <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl" logger="core.xpath-processor"/>
-
-  <!-- The XMLizers converts different mime-types to XML -->
-  <xmlizer>
-      <parser role="org.apache.excalibur.xml.sax.SAXParser"      mime-type="text/xml"/>
-  </xmlizer>
 
 <!-- ============================ Object Stores =========================== -->
 
