@@ -50,24 +50,11 @@
 */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import java.util.StringTokenizer;
-
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Publisher;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.FrameLayout;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
@@ -75,98 +62,34 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.7 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: FrameEventAspect.java,v 1.8 2003/07/14 10:12:13 cziegeler Exp $
  */
-public class FrameEventAspect
-    extends AbstractLogEnabled
-    implements EventAspect, ThreadSafe, Composable {
+public class FrameEventAspect extends AbstractContentEventAspect {
 
-    protected ComponentManager manager;
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
-     */
-    public void process(EventAspectContext context, PortalService service) {
+    protected String getRequestParameterName() {
         // TODO - make this configurable
-        final String requestParameterName = "frame";
-        final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
-        String[] values = request.getParameterValues(requestParameterName);
-        if (values != null) {
-            final Publisher publisher = context.getEventPublisher();
-            for (int i = 0; i < values.length; i++) {
-                final String value = values[i];
-                Event e = null;
-                try {
-                    e = context.getEventConverter().decode(value);
-                    if (null != e) {
-                        publisher.publish(e);
-                    }
-                } catch (Exception ignore) {
-                }
-                if (e == null) {
-                    // Use '|' character as delimiter between Group, ID and URI
-					StringTokenizer tokenizer = new StringTokenizer(value, "|");
-					int tokenNumber = 0;
-					int tokenCount = tokenizer.countTokens();
-					// if only 3 params are in the String
-					if (tokenCount == 2)
-						tokenNumber = tokenNumber + 1;
+        return "frame";
+    }
 
-					String groupKey = null;
-					String id = null;
-                        String uri = null;
-										
-					while (tokenizer.hasMoreTokens())
-					{
-                        	
-						switch (tokenNumber)
-						{
-							case 0 :
-								groupKey = tokenizer.nextToken();
-								break;
-							case 1 :
-								id = tokenizer.nextToken();
-								break;
-							case 2 :
-								uri = tokenizer.nextToken();
-								break;
-                        }
-                        
-						tokenNumber = tokenNumber + 1;
-					} // while
-                    
-					if (tokenCount > 0) {                                            					                        
-                        ProfileManager profileManager = null;
-                        try {
-                            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-                            Layout layout = profileManager.getPortalLayout(groupKey, id );
-                            if ( layout != null ) {
-								if (layout instanceof FrameLayout){
-                                e = new ChangeAspectDataEvent(layout, "frame", uri);
-                                publisher.publish(e);
-								} else {
-									this.getLogger().warn("the configured layout: " + layout.getName() + " is not a FrameLayout.");
-                            }
-                            }
-                        } catch (ComponentException ignore) {
-                        } finally {
-                            this.manager.release( profileManager );
-                        }
-					} else {
-						this.getLogger().warn("data for LinkEvent is not set correctly");
-                    }
-                }
-            }
-        }
-        // and invoke next one
-        context.invokeNext(service);
+    protected int getRequiredValueCount() {
+        return 3;
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(org.apache.cocoon.portal.event.Publisher, org.apache.cocoon.portal.layout.Layout, java.lang.String[])
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
+    protected void publish(Publisher publisher,
+                             Layout layout,
+                             String[] values) {
+        if (layout instanceof FrameLayout) {
+            final Event e = new ChangeAspectDataEvent(layout, "frame", values[2]);
+            publisher.publish(e);
+        } else {
+            this.getLogger().warn(
+                "the configured layout: "
+                    + layout.getName()
+                    + " is not a FrameLayout.");
+        }
     }
 
 }
