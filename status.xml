@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.85 2003/07/11 08:59:03 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.86 2003/07/11 14:20:35 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+   Adding global request lifecycle component.
+  </action>
   <action dev="CZ" type="update">
    The cache used by the caching processing pipeline is now configurable
    allowing to use different caches in different pipelines.

@@ -85,7 +85,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.14 2003/07/10 13:17:04 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.15 2003/07/11 14:17:44 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -93,8 +93,7 @@ implements SourceResolver
 {
  
     /** The key used to store the current process environment */
-    private static final String PROCESS_KEY =
-               "org.apache.cocoon.components.CocoonComponentManager";
+    private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
          
     
     /** The environment information */
@@ -164,7 +163,21 @@ implements SourceResolver
      */
     public static void leaveEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        stack.pop();
+        final Object[] objs = (Object[])stack.pop();
+        if ( stack.isEmpty() ) {
+            final Environment env = (Environment)objs[0];
+            final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
+            if ( globalComponents != null) {
+                
+                final Iterator iter = globalComponents.values().iterator();
+                while ( iter.hasNext() ) {
+                    final Object[] o = (Object[])iter.next();
+                    final Component c = (Component)o[0];
+                    ((CocoonComponentManager)o[1]).releaseRLComponent( c );
+                }
+            }
+            env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
+        }
     }
 
     /**
@@ -288,7 +301,11 @@ implements SourceResolver
             final Map objectModel = ((Environment)objects[0]).getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
             if ( null != desc ) {
-                final Component component = desc.getRequestLifecycleComponent(role);
+                Component component = desc.getRequestLifecycleComponent(role);
+                if (null != component) {
+                    return component;
+                }
+                component = desc.getGlobalRequestLifecycleComponent(role);
                 if (null != component) {
                     return component;
                 }
@@ -321,6 +338,31 @@ implements SourceResolver
             }
         }
         
+        if (null != component && component instanceof GlobalRequestLifecycleComponent) {
+            if (stack == null || stack.empty()) {
+                throw new ComponentException(role, "ComponentManager has no Environment Stack.");
+            }
+            final Object[] objects = (Object[]) stack.getCurrent();
+            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
+            if ( null != desc ) {
+
+                // first test if the parent CM has already initialized this component
+                if ( !desc.containsGlobalRequestLifecycleComponent( role ) ) {
+                    try {
+                        if (component instanceof Recomposable) {
+                            ((Recomposable) component).recompose(this);
+                        }
+                        ((GlobalRequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
+                                                                      objectModel);
+                    } catch (Exception local) {
+                        throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
+                    }
+                    desc.addGlobalRequestLifecycleComponent(role, component, this);
+                }
+            }
+        }
+
         if ( null != component && component instanceof SitemapConfigurable) {
 
             // FIXME: how can we prevent that this is called over and over again?
@@ -351,7 +393,8 @@ implements SourceResolver
             return;
         }
 
-        if ( component instanceof RequestLifecycleComponent) {
+        if ( component instanceof RequestLifecycleComponent
+             || component instanceof GlobalRequestLifecycleComponent) {
             return;
         }
         if ( component == this ) {
@@ -514,15 +557,24 @@ final class EnvironmentDescription {
     
     Environment environment;
     Map         objectModel;
-    Map         requestLifecycleComponents = new HashMap(5);
-    List        autoreleaseComponents      = new ArrayList(2);
-
+    Map         requestLifecycleComponents;
+    List        autoreleaseComponents      = new ArrayList(4);
+    
     /**
      * Constructor
      */
     EnvironmentDescription(Environment env) {
         this.environment = env;
         this.objectModel = env.getObjectModel();
+    }
+
+    Map getGlobalRequestLifcecycleComponents() {    
+        Map m = (Map)environment.getAttribute(GlobalRequestLifecycleComponent.class.getName());
+        if ( m == null ) {
+            m = new HashMap();
+            environment.setAttribute(GlobalRequestLifecycleComponent.class.getName(), m);
+        }
+        return m;
     }
     
     /**
@@ -531,11 +583,14 @@ final class EnvironmentDescription {
      * released.
      */
     void release() {
-        final Iterator iter = this.requestLifecycleComponents.values().iterator();
-        while (iter.hasNext()) {
-            final Object[] o = (Object[])iter.next();
-            final Component component = (Component)o[0];
-            ((CocoonComponentManager)o[1]).releaseRLComponent( component );
+        if ( this.requestLifecycleComponents != null ) {
+            final Iterator iter = this.requestLifecycleComponents.values().iterator();
+            while (iter.hasNext()) {
+                final Object[] o = (Object[])iter.next();
+                final Component component = (Component)o[0];
+                ((CocoonComponentManager)o[1]).releaseRLComponent( component );
+            }
+            this.requestLifecycleComponents.clear();
         }
         
         for(int i = 0; i < autoreleaseComponents.size(); i++) {
@@ -550,7 +605,6 @@ final class EnvironmentDescription {
                 }
             }
         }
-        this.requestLifecycleComponents.clear();
         this.autoreleaseComponents.clear();
         this.environment = null;
         this.objectModel = null;
@@ -563,18 +617,57 @@ final class EnvironmentDescription {
     void addRequestLifecycleComponent(final String role, 
                                       final Component co, 
                                       final ComponentManager manager) {
+        if ( this.requestLifecycleComponents == null ) {
+            this.requestLifecycleComponents = new HashMap();
+        }
         this.requestLifecycleComponents.put(role, new Object[] {co, manager});
     }
     
+    /**
+     * Add a GlobalRequestLifecycleComponent to the environment
+     */
+    void addGlobalRequestLifecycleComponent(final String role, 
+                                      final Component co, 
+                                      final ComponentManager manager) {
+        this.getGlobalRequestLifcecycleComponents().put(role, new Object[] {co, manager});
+    }
+
+    /**
+     * Do we already have a request lifecycle component
+     */
     boolean containsRequestLifecycleComponent(final String role) {
+        if ( this.requestLifecycleComponents == null ) {
+            return false;
+        }
         return this.requestLifecycleComponents.containsKey( role );
     }
     
     /**
+     * Do we already have a global request lifecycle component
+     */
+    boolean containsGlobalRequestLifecycleComponent(final String role) {
+        return this.getGlobalRequestLifcecycleComponents().containsKey( role );
+    }
+
+    /**
      * Search a RequestLifecycleComponent
      */
     Component getRequestLifecycleComponent(final String role) {
+        if ( this.requestLifecycleComponents == null ) {
+            return null;
+        }
         final Object[] o = (Object[])this.requestLifecycleComponents.get(role);
+        if ( null != o ) {
+            return (Component)o[0];
+        }
+        return null;
+    }
+
+    /**
+     * Search a GlobalRequestLifecycleComponent
+     */
+    Component getGlobalRequestLifecycleComponent(final String role) {
+        final Object[] o = (Object[])this.getGlobalRequestLifcecycleComponents().get(role);
         if ( null != o ) {
             return (Component)o[0];
         }
