@@ -44,10 +44,10 @@ public class HttpRequest extends HttpServletRequestWrapper {
     /* The HttpServletRequest interface methods */
 
     public String getRequestURI() {
-        return this.env.getUri();
+        return this.env.getURI();
     }
 
     public StringBuffer getRequestURL() {
-        return new StringBuffer (this.env.getUri());
+        return new StringBuffer (this.env.getURI());
     }
 }

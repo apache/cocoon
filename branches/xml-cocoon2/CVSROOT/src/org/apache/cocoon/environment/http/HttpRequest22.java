@@ -110,7 +110,7 @@ public class HttpRequest implements HttpServletRequest {
     }
 
     public String getRequestURI() {
-        return this.env.getUri();
+        return this.env.getURI();
     }
 
     public String getServletPath() {
