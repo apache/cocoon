@@ -44,9 +44,9 @@ public class Item extends AbstractParameters {
 	public final void setLayout(Layout layout) {
 		this.layout = layout;
 		if(layout != null) {
-		layout.setParent(this);
-  	}
-	}
+            layout.setParent(this);
+        }
+    }
     
     public final CompositeLayout getParent() {
         return this.parentLayout;

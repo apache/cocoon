@@ -118,9 +118,8 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#encodeURL(String url).
      */
     public String encodeURL(String url) {
-        return ContextHelper.getResponse(this.context).encodeURL(url); 
+        return ContextHelper.getResponse(this.context).encodeURL(url);
     }
-
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)

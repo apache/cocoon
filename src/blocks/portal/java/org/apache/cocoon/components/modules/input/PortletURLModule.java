@@ -121,7 +121,7 @@ public class PortletURLModule extends AbstractInputModule implements ThreadSafe 
                     url.setParameter(param, (String) values);
                 } else {
                     url.setParameter(param, (String[]) values);
-                } 
+                }
             }
             return url.toString();
         }

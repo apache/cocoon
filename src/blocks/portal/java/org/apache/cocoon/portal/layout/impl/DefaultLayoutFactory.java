@@ -145,7 +145,7 @@ public class DefaultLayoutFactory
     protected ServiceManager manager;
     
     protected Configuration[] layoutsConf;
-    
+
     protected static long idCounter = System.currentTimeMillis();
 
     /* (non-Javadoc)
@@ -172,7 +172,7 @@ public class DefaultLayoutFactory
         desc.setClassName(layoutConf.getAttribute("class"));        
         desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
         desc.setItemClassName(layoutConf.getAttribute("item-class", null));
-                
+
         // the renderers
         final String defaultRenderer = layoutConf.getChild("renderers").getAttribute("default");
         desc.setDefaultRendererName(defaultRenderer); 
@@ -280,7 +280,7 @@ public class DefaultLayoutFactory
 
             layout.setDescription( layoutDescription );
             layout.setAspectDataHandler((AspectDataHandler)o[1]);
-            
+
             // recursive
             if ( layout instanceof CompositeLayout ) {
                 CompositeLayout composite = (CompositeLayout)layout;

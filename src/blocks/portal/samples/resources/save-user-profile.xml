@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
   limitations under the License.
 -->
 
-<!-- $Id: save-user-profile.xml,v 1.2 2004/03/06 02:26:05 antonio Exp $ 
+<!-- $Id$ 
  Description: This resource save the user profile to a file.
 
 -->
 
 <user xmlns:source="http://apache.org/cocoon/source/1.0" xmlns:session="http://apache.org/cocoon/session/1.0">
     <source:insert>
-    	<source:source>profiles/<session:getxml context="request" path="/parameter/profile"/>/<session:getxml context="request" path="/parameter/portal"/>-user-<session:getxml context="request" path="/parameter/user"/>.xml</source:source>
+    	<source:source>context://samples/blocks/portal/profiles/<session:getxml context="request" path="/parameter/profile"/>/<session:getxml context="request" path="/parameter/portal"/>-user-<session:getxml context="request" path="/parameter/user"/>.xml</source:source>
         <source:path>/</source:path>
         <source:fragment><session:getxml context="request" path="/parameter/content"/></source:fragment>
         <source:replace>*</source:replace>

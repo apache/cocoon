@@ -131,5 +131,4 @@ public class PageLabelEventConverter extends AbstractLogEnabled
     public boolean isMarshallEvents() {
         return this.labelManager.isMarshallEvents();
     }
-
 }

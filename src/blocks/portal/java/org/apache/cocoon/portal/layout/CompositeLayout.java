@@ -72,7 +72,7 @@ public interface CompositeLayout
      * This item is not added to the composite layout
      */
     Item createNewItem();
-    
+
     /**
      * @return Returns the item class name.
      */

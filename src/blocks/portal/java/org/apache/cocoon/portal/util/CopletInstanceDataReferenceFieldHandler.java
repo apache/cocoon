@@ -33,7 +33,7 @@ extends ReferenceFieldHandler {
 		if (copletInstanceData != null) {
 			return copletInstanceData.getId();
 		}
-		return null;
+        return null;
 	}
 
 	public Object newInstance(Object parent) {

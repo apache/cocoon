@@ -32,7 +32,7 @@ public interface ProfileLS {
     
     /** Component role */
     String ROLE = ProfileLS.class.getName();
-    
+
     /** This parameter is used during loading to resolve references */
     String PARAMETER_OBJECTMAP = "objectmap";
     /** This parameter is used to define the profiletype */
