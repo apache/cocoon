@@ -4,7 +4,7 @@
 <document>
   <header>
     <title>Axis RPC Reader in Cocoon</title>
-    <version>0.9</version>
+    <version>1.1</version>
     <type>Technical document</type>
     <authors>
       <person name="Bernhard Huber" email="huber@apache.org"/>
