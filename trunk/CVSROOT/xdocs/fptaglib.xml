@@ -172,7 +172,7 @@
 		<p>I create a <code>label</code> attribute in the <code>input</code> element, using XSP, but the content comes from reading Text from the defaults file (I would have had to set this file up previously as a <code>fp:resource</code>). The default value for the <code>as</code> attribute is "string", so I am leaving it out. I understand Xerces prefers you to write attributes before elements.</p>
 		<p>Next I write, only if someone is POSTing a Form.</p>
 		<p>Write the contents of the <code>fp:write</code> element, in this case the value of the POSTed Form field called "title" (this one), to the <code>title</code> Node of our selected <code>item</code> in the external file, as Text.</p>
-		<p>The <code>fp:write</code> element does not emit anything into the <input/> tag, except status Attributes. </p>
+		<p>The <code>fp:write</code> element does not emit anything into the <code>&lt;input/&gt;</code> tag, except status Attributes. </p>
 		<p>After finishing the write, we read the info back out, this is what ends up being the contents of the <code>input</code> element. I am reading it back out incase I want to display that the user has written etc.</p>
 		<p>Lastly, only get the default value for the field if someone is GETting a Form.</p>
 

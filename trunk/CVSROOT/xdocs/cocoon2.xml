@@ -61,18 +61,18 @@
   careful memory use and tuning of internal components is a key issue. To reach
   this goal, an improved API model was needed. This is now identified in the SAX
   API which is, unlike DOM, event based (so <em>active</em>, in the sense that its
-  design is based the <em>inversion of control</em> principle).</p>
+  design is based on the <em>inversion of control</em> principle).</p>
 
-  <p>The event model allows document producers to trigger producing
-  events that get handled in the various processing stages and get finally
-  formatted in the response stream. This has significant impacts on performance
-  and memory needs:</p>
+  <p>The event model allows document generators to trigger events that get handled 
+  by the various processing stages and get finally
+  serialized onto the response stream. This has a significant impact on both
+  performance (effective and user perceived) and memory needs:</p>
 
   <dl>
     <dt>incremental operation</dt>
     <dd>
-      the response is created
-      during document production. Client's perceived performance is dramatically
+      the response is created during document production. 
+      Client's perceived performance is dramatically
       improved since clients can start receiving data as soon as it is created,
       not after all processing stages have been performed. In those cases where
       incremental operation is not possible (for example, element sorting),
@@ -96,9 +96,9 @@
     </dd>
     <dt>more optimizable code model</dt>
     <dd>
-      modern virtual
-      machines are based on the idea of <em>hot spots</em>, code fragments that
-      are used often and, if optimized, increase the process execution by far.
+      modern virtual machines are based on the idea of <em>hot spots</em>, 
+      code fragments that are used often and, if optimized, increase the process 
+      execution by far.
       This new event model allows easier detection of hot spots since it's a
       method driven operation, rather than a memory driven one. Hot methods can
       be identified earlier and their optimization performed better.
@@ -235,16 +235,16 @@
   that is normally much less than its size.</p>
 
   <p>Also, for performance reasons, Cocoon2 will try to compile
-  everything that is possibly compilable (pages/XSP into producers, stylesheets
-  into processors, etc...) so, in this new model, the <em>processing chain</em>
+  everything that is possibly compilable (pages/XSP into generators, stylesheets
+  into transformers, etc...) so, in this new model, the <em>processing chain</em>
   that generates the page contains (in a direct executable form) all the
   information/logic that handles the requested resource to generate its
   response.</p>
 
   <p>This means that instead of using even-driven request-time DTD
   interpretation (done in all Cocoon1 processors), these will be either compiled
-  into processors directly (XSLT stylesheet compilation) or compiled into
-  producers using logicsheets and XSP which will remove totally the need for
+  into transformers directly (XSLT stylesheet compilation) or compiled into
+  generators using logicsheets and XSP which will remove totally the need for
   request-time interpretation solutions like DCP that will be removed.</p>
 
   <note>Some of these features are already present in latest Cocoon 1.x
@@ -258,74 +258,18 @@
   URI to the proper response-producing pipeline.</p>
 
   <p>The sitemap physically represents the central repository for web site
-  administration, where the URI space and its handling is maintained. An example
-  of the sitemap is given below:</p>
-
-<source>
-<![CDATA[
-  <sitemap>
-   <process match="/press/en/*.html">
-    <generator type="file" src="/docs/english/press/*.xml"/>
-    <filter type="xslt">
-     <parameter name="stylesheet" value="/styles/simple-press-html.xsl"/>
-    </filter>
-    <serializer type="html"/>
-   </process>
-
-   <process match="/press/en/*.pdf">
-    <generator type="file" src="/docs/english/press/*.xml"/>
-    <filter type="xslt">
-     <parameter name="stylesheet" value="/styles/simple-press-pdf.xsl"/>
-    </filter>
-    <serializer type="pdf"/>
-   </process>
-
-   <process match="/">
-    <matcher type="agent">
-     <parameter name="name" value="Mozilla/5.0">
-    </matcher>
-    <generator type="file" src="/docs/root.xml"/>
-    <filter type="xslt">
-     <parameter name="stylesheet" value="/styles/fancy-XUL-view.xsl"/>
-    </filter>
-    <serializer type="html"/>
-   </process>
-
-   <process match="/">
-    <matcher type="agent">
-     <parameter name="capability" value="text/vnd.wap.wml">
-    </matcher>
-    <generator type="file" src="/docs/root.xml"/>
-    <filter type="xslt">
-     <parameter name="stylesheet" value="/styles/WAP-view.xsl"/>
-    </filter>
-    <serializer type="wap"/>
-   </process>
-
-   <process match="/">
-    <generator type="file" src="/docs/root.xml"/>
-    <filter type="xslt">
-     <parameter name="stylesheet" value="/styles/normal-view.xsl"/>
-    </filter>
-    <serializer type="html"/>
-   </process>
-  </sitemap>
-]]>
-</source>
-
-  <note>The sitemap DTD has not yet been standardized and it's not guaranteed
-  to solidify until Cocoon 2.0 is out final. So, the above should be considered
-  just as a preview and not a specification or even a working draft. For more
-  information dig into the development mail list digests.</note>
+  administration, where the URI space and its handling is maintained.</p>
+  
+  <p>Please, refer to the Cocoon2 CVS module for more information on this.</p>
 
 </s1>
 
 <s1 title="Pre-compilation, Pre-generation and Caching">
-  <p>The cache system in Cocoon1 will be ported with no important
+  <p>The cache system in Cocoon1 will be ported with very little
   design changes since it's very flexible and was not polluted by early design
   constraints since it appeared in later versions. The issue regards static file
   caching that, no matter what, will always be slower than direct web server
-  caching.</p>
+  caching, so Cocoon2 will be the most <em>proxy friendly</em> as possible.</p>
 
   <p>To be able to put most of the static part job back on the web
   server (where it belongs), Cocoon2 will greatly improve it's command line
@@ -351,7 +295,7 @@
 </s1>
 
 <s1 title="Development Status">
-  <p>Cocoon2 development already started, but should be considered of pre-alpha
+  <p>Cocoon2 development already started, but should be considered of alpha
   quality. If you dare, you might take a look at it on the <em>xml-cocoon2</em>
   CVS branch in the Cocoon CVS module, or, if you are not a CVS expert, this means
   typing:</p>

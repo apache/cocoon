@@ -3,8 +3,10 @@
 <book software="Cocoon" title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>
+<separator/>
   <page id="install" label="Install" source="installing.xml"/>
-  <page id="install-case" label="Install Case" source="installation-case.xml"/>
+  <page id="install-case-solaris" label="Install on Solaris8" source="installation-case-solaris-8.xml"/>
+  <page id="install-case-windows" label="Install on Win2k" source="installation-case-windows-2000.xml"/>
 <separator/>
   <page id="technologies" label="Technologies" source="technologies.xml"/>
   <page id="infrastructure" label="Infrastructure" source="infrastructure.xml"/>
@@ -12,7 +14,8 @@
   <page id="dynamic" label="Dynamic Content" source="dynamic.xml"/>
 <separator/>
   <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
-  <page id="sqltaglib" label="SQL Logicsheet" source="sqltaglib.xml"/>
+  <page id="sqltaglib" label="SQL XSP Taglib" source="sqltaglib.xml"/>
+  <page id="fp" label="FP XSP Taglib" source="fptaglib.xml"/>
   <page id="connection-pool" label="SQL Conn Pool" source="connection-pool.xml"/>
   <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
   <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
