@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.35 2000-10-15 23:04:07 greenrd Exp $
+  $Id: todo.xml,v 1.36 2000-10-21 14:19:34 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -102,6 +102,9 @@
   </action>
   <action context="code">
    More logicsheets for common requirements.
+  </action>
+  <action context="docs">
+   Some doc pages look screwy in Netscape - fix it.
   </action>
  </actions>
 
