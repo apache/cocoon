@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-
-     Simple stylesheet to verify that files defined in lib/jars.xml
-     actually appear in the lib/ directory, and vice-versa, that files
-     that appear in the lib/ directory have an entry with a
-     description in the lib/jars.xml file.
-
-     Author: Ovidiu Predescu "ovidiu@cup.hp.com"
-     Date: May 22, 2002
-
--->
+<!--+
+    | CVS $Id: check-jars.xsl,v 1.2 2003/03/26 13:49:25 vgritsenko Exp $
+    |
+    | Simple stylesheet to verify that files defined in lib/jars.xml
+    | actually appear in the lib/ directory, and vice-versa, that files
+    | that appear in the lib/ directory have an entry with a
+    | description in the lib/jars.xml file.
+    |
+    | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
+    | Date: May 22, 2002
+    |
+    +-->
 
 <xsl:stylesheet
   version="1.0"
