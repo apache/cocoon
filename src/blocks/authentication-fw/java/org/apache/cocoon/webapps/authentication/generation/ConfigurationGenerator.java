@@ -57,6 +57,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -75,6 +77,7 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -87,7 +90,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.5 2003/09/04 09:38:34 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.6 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ServiceableGenerator {
@@ -99,6 +102,28 @@ extends ServiceableGenerator {
     public static final String REQ_PARAMETER_USER  = "authuser";
 
     private static final String SESSION_CONTEXT_ATTRIBUTE_ADMIN_ROLE = "org.apache.cocoon.webapps.generation.ConfigurationGenerator.simple-role";
+
+    /** The XPath Processor */
+    protected XPathProcessor xpathProcessor;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.xpathProcessor );
+            this.xpathProcessor = null;
+        }
+        super.dispose();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+    }
 
     /**
      * Generate the configuration
@@ -222,10 +247,10 @@ extends ServiceableGenerator {
                         // first delete user
                         Document userDF = this.getUsers(role, null, handler);
                         NodeList users   = null;
-                        if (userDF != null) users = DOMUtil.selectNodeList(userDF, "users/user");
+                        if (userDF != null) users = DOMUtil.selectNodeList(userDF, "users/user", this.xpathProcessor);
                         if (users != null) {
                             for(int i = 0; i < users.getLength(); i++) {
-                                this.deleteUser(role, DOMUtil.getValueOf(users.item(i), "ID"), null, handler);
+                                this.deleteUser(role, DOMUtil.getValueOf(users.item(i), "ID", this.xpathProcessor), null, handler);
                             }
                         }
                         this.deleteRole(role, null, handler);
@@ -314,7 +339,7 @@ extends ServiceableGenerator {
                     Document userDF = this.getUsers(role, id, handler);
                     Element  users   = null;
                     try {
-                        if (userDF != null) users = (Element)DOMUtil.getSingleNode(userDF, "users/user");
+                        if (userDF != null) users = (Element)DOMUtil.getSingleNode(userDF, "users/user", this.xpathProcessor);
                     } catch (javax.xml.transform.TransformerException local) {
                         throw new ProcessingException("TransformerException: " + local, local);
                     }
@@ -357,7 +382,7 @@ extends ServiceableGenerator {
                     Document userDF = this.getUsers(role, id, handler);
                     Element  users   = null;
                     try {
-                        if (userDF != null) users = (Element)DOMUtil.getSingleNode(userDF, "users/user");
+                        if (userDF != null) users = (Element)DOMUtil.getSingleNode(userDF, "users/user", this.xpathProcessor);
                     } catch (javax.xml.transform.TransformerException local) {
                         throw new ProcessingException("TransformerException: " + local, local);
                     }
@@ -394,7 +419,7 @@ extends ServiceableGenerator {
                 Document userDF = this.getUsers(role, null, handler);
                 Node     users   = null;
                 try {
-                    if (userDF != null) users = DOMUtil.getSingleNode(userDF, "users");
+                    if (userDF != null) users = DOMUtil.getSingleNode(userDF, "users", this.xpathProcessor);
                 } catch (javax.xml.transform.TransformerException local) {
                     throw new ProcessingException("TransformerException: " + local, local);
                 }
@@ -406,7 +431,7 @@ extends ServiceableGenerator {
                 Document rolesDF = this.getRoles(handler);
                 Node     roles   = null;
                 try {
-                    if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles");
+                    if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles", this.xpathProcessor);
                 } catch (javax.xml.transform.TransformerException local) {
                     throw new ProcessingException("TransformerException: " + local, local);
                 }
@@ -559,7 +584,7 @@ extends ServiceableGenerator {
             Node node = null;
             if (user != null) {
                 try {
-                    node = DOMUtil.getSingleNode(user, "users/user/ID[text()='"+ID+"']");
+                    node = DOMUtil.getSingleNode(user, "users/user/ID[text()='"+ID+"']", this.xpathProcessor);
                 } catch (javax.xml.transform.TransformerException local) {
                     throw new ProcessingException("Transformer exception: " + local, local);
                 }

@@ -73,13 +73,14 @@ import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.xml.sax.SAXException;
 
 /**
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: DefaultContextManager.java,v 1.5 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
@@ -94,6 +95,9 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
     /** selector for context provider */
     private ServiceSelector contextSelector;
     
+    /** The xpath processor */
+    private XPathProcessor xpathProcessor;
+    
     /* The list of reserved contexts */
     static private final String[] reservedContextNames = {"session",
                                                             "context"};
@@ -104,6 +108,7 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
     throws ServiceException {
         this.manager = manager;
         this.contextSelector = (ServiceSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
     /**
@@ -229,7 +234,7 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
                 context = this.getContext(name);
             } else {
                 Map contexts = this.getSessionContexts(session);
-                context = new SimpleSessionContext();
+                context = new SimpleSessionContext(this.xpathProcessor);
                 context.setup(name, loadURI, saveURI);
                 contexts.put(name, context);
             }
@@ -362,8 +367,10 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
     public void dispose() {
         if ( this.manager != null) {
             this.manager.release( this.contextSelector );
-            this.manager = null;
+            this.manager.release( this.xpathProcessor );
             this.contextSelector = null;
+            this.xpathProcessor = null;
+            this.manager = null;            
         }
     }
 

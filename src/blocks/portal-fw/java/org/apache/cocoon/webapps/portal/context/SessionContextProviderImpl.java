@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -73,20 +74,24 @@ import org.apache.cocoon.webapps.portal.components.PortalManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.xml.sax.SAXException;
 
 /**
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.5 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class SessionContextProviderImpl
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Component, Composable, Contextualizable {
+implements SessionContextProvider, ThreadSafe, Component, Composable, Contextualizable, Disposable {
 
     private ComponentManager manager;
     private Context context;
+    
+    /** The XPath Processor */
+    protected XPathProcessor xpathProcessor;
     
     /**
      * Get the context
@@ -139,7 +144,7 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
                             throw new ProcessingException("Portal context not available outside a coplet.");
                         }
                     }
-                    context = new SessionContextImpl(name, objectModel, portal);
+                    context = new SessionContextImpl(name, objectModel, portal, this.xpathProcessor);
                     objectModel.put(this.getClass().getName()+name, context);
                 } catch (SAXException se) {
                     throw new ProcessingException("SAXException", se);
@@ -181,6 +186,7 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
     /* (non-Javadoc)
@@ -190,4 +196,14 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( (Component)this.xpathProcessor );
+            this.xpathProcessor = null;
+            this.manager = null;
+        }
+    }
 }

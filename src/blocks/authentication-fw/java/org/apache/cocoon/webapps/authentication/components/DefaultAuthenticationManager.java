@@ -91,6 +91,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -99,7 +100,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.21 2003/11/07 11:21:50 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.22 2003/12/18 14:29:03 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -129,6 +130,9 @@ implements AuthenticationManager,
     /** Instantiated authenticators */
     protected Map authenticators = new HashMap();
     
+    /** The xpath processor */
+    protected XPathProcessor xpathProcessor;
+
     /** This is the key used to store the current request state in the request object */
     private static final String REQUEST_STATE_KEY = RequestState.class.getName();
     
@@ -242,7 +246,7 @@ implements AuthenticationManager,
         try {
             Authenticator.AuthenticationResult result = authenticator.authenticate( config, parameters );
             if ( result != null && result.valid ) {
-                AuthenticationContext authContext = new AuthenticationContext(this.context);
+                AuthenticationContext authContext = new AuthenticationContext(this.context, this.xpathProcessor);
                 handler = new UserHandler(config, authContext);
                 // store the authentication data in the context
                 authContext.init(result.result);
@@ -513,6 +517,7 @@ implements AuthenticationManager,
     throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
 	}
 
 	/* (non-Javadoc)
@@ -526,8 +531,10 @@ implements AuthenticationManager,
         }
         if ( this.manager != null) {
             this.manager.release( this.resolver );
-            this.manager = null;
+            this.manager.release(this.xpathProcessor);
             this.resolver = null;
+            this.xpathProcessor = null;
+            this.manager = null;
         }
 	}
 

@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -84,6 +85,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.store.Store;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -99,10 +101,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.10 2003/08/27 09:08:12 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.11 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class PortalManager
-extends AbstractSessionComponent {
+extends AbstractSessionComponent
+implements Disposable {
 
     /** The avalon role */
     public static final String ROLE  = PortalManager.class.getName();
@@ -169,6 +172,9 @@ extends AbstractSessionComponent {
     /** The media manager */
     private MediaManager mediaManager;
     
+    /** The XPath Processor */
+    private XPathProcessor xpathProcessor;
+
     /**
      * Avalon Recyclable Interface
      */
@@ -203,8 +209,19 @@ extends AbstractSessionComponent {
     public void compose(ComponentManager manager)
     throws ComponentException {
         super.compose( manager );
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( (Component)this.xpathProcessor );
+            this.xpathProcessor = null;
+        }
+    }
+
     /**
      * Get the profile store
      */
@@ -399,69 +416,69 @@ extends AbstractSessionComponent {
                     // change : change the coplet
                     //        cache : cleans the cache
                     if (command.equals("delete") && copletID != null) {
-                        Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
+                        Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']", this.xpathProcessor);
                         if (coplet != null) {
                             coplet.getParentNode().removeChild(coplet);
                         }
                     } else if (command.equals("change") && copletID != null) {
-                        Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
+                        Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']", this.xpathProcessor);
                         if (coplet != null) {
                             // now get the information
                             String value;
 
                             value = this.request.getParameter("portaladmin_title");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "title"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "title", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_mand");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/mandatory"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/mandatory", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_sizable");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/sizable"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/sizable", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_active");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/active"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.getSingleNode(coplet, "configuration/active", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_handsize");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesSizable"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesSizable", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_handpar");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesParameters"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesParameters", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_timeout");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/timeout"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/timeout", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_customizable");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/customizable"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/customizable", this.xpathProcessor), value);
 
                             value = this.request.getParameter("portaladmin_persistent");
-                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/persistent"), value);
+                            if (value != null) DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/persistent", this.xpathProcessor), value);
 
                             String resource = this.request.getParameter("portaladmin_resource");
                             if (resource != null) {
-                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "resource");
+                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "resource", this.xpathProcessor);
                                 resourceNode.getParentNode().removeChild(resourceNode);
                                 resourceNode = coplet.getOwnerDocument().createElementNS(null, "resource");
                                 resourceNode.setAttributeNS(null, "uri", resource);
                                 coplet.appendChild(resourceNode);
                             }
                             resource = this.request.getParameter("portaladmin_cust");
-                            boolean isCustom = DOMUtil.getValueAsBooleanOf(coplet, "configuration/customizable", false);
+                            boolean isCustom = DOMUtil.getValueAsBooleanOf(coplet, "configuration/customizable", false, this.xpathProcessor);
                             if (resource != null && isCustom ) {
-                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization");
+                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization", this.xpathProcessor);
                                 if (resourceNode != null) resourceNode.getParentNode().removeChild(resourceNode);
                                 resourceNode = coplet.getOwnerDocument().createElementNS(null, "customization");
                                 resourceNode.setAttributeNS(null, "uri", resource);
                                 coplet.appendChild(resourceNode);
                             }
                             if (!isCustom) {
-                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization");
+                                Element resourceNode = (Element)DOMUtil.getSingleNode(coplet, "customization", this.xpathProcessor);
                                 if (resourceNode != null) resourceNode.getParentNode().removeChild(resourceNode);
                             }
 
                             // transformations
                             value = this.request.getParameter("portaladmin_newxsl");
                             if (value != null) {
-                                Element tNode = (Element)DOMUtil.selectSingleNode(coplet, "transformation");
+                                Element tNode = (Element)DOMUtil.selectSingleNode(coplet, "transformation", this.xpathProcessor);
                                 Element sNode = tNode.getOwnerDocument().createElementNS(null, "stylesheet");
                                 tNode.appendChild(sNode);
                                 sNode.appendChild(sNode.getOwnerDocument().createTextNode(value));
@@ -477,7 +494,7 @@ extends AbstractSessionComponent {
                                 key = (String)keys.nextElement();
                                 if (key.startsWith("portaladmin_xsl_") ) {
                                     value = key.substring(key.lastIndexOf('_')+ 1);
-                                    sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]");
+                                    sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]", this.xpathProcessor);
                                     if (sNode != null) {
                                         String xslName = this.request.getParameter(key);
                                         if (xslName.equals("true") ) xslName = "**STYLESHEET**";
@@ -485,13 +502,13 @@ extends AbstractSessionComponent {
                                     }
                                 } else if (key.startsWith("portaladmin_delxsl_") ) {
                                     value = key.substring(key.lastIndexOf('_')+ 1);
-                                    sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]");
+                                    sNode = (Element)DOMUtil.getSingleNode(coplet, "transformation/stylesheet[position()="+value+"]", this.xpathProcessor);
                                     if (sNode != null) {
                                         sNode.setAttributeNS(null, "delete", "true");
                                     }
                                 }
                             }
-                            NodeList delete = DOMUtil.selectNodeList(coplet, "transformation/stylesheet[@delete]");
+                            NodeList delete = DOMUtil.selectNodeList(coplet, "transformation/stylesheet[@delete]", this.xpathProcessor);
                             if (delete != null) {
                                 for(int i=0; i < delete.getLength(); i++) {
                                     delete.item(i).getParentNode().removeChild(delete.item(i));
@@ -507,7 +524,7 @@ extends AbstractSessionComponent {
 
                         while (!found) {
                             copletID = "S"+index;
-                            coplet = (Element)DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
+                            coplet = (Element)DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']", this.xpathProcessor);
                             if (coplet == null) {
                                 found = true;
                             } else {
@@ -522,15 +539,15 @@ extends AbstractSessionComponent {
 
                         String title = this.request.getParameter("portaladmin_title");
                         if (title == null || title.trim().length() == 0) title = "**NEW COPLET**";
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/mandatory"), "false");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/sizable"), "true");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/active"), "false");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesParameters"), "true");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesSizable"), "false");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "title"), title);
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/visible"), "true");
-                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/size"), "max");
-                        DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets").appendChild(coplet);
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/mandatory", this.xpathProcessor), "false");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/sizable", this.xpathProcessor), "true");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/active", this.xpathProcessor), "false");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesParameters", this.xpathProcessor), "true");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "configuration/handlesSizable", this.xpathProcessor), "false");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "title", this.xpathProcessor), title);
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/visible", this.xpathProcessor), "true");
+                        DOMUtil.setValueOfNode(DOMUtil.selectSingleNode(coplet, "status/size", this.xpathProcessor), "max");
+                        DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets", this.xpathProcessor).appendChild(coplet);
                     } else if (command.equals("save") ) {
 
                         SourceParameters pars = new SourceParameters();
@@ -584,7 +601,7 @@ extends AbstractSessionComponent {
 
                 Document rolesDF = this.getRoles();
                 Node     roles   = null;
-                if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles");
+                if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles", this.xpathProcessor);
                 IncludeXMLConsumer.includeNode(roles, consumer, consumer);
             }
 
@@ -592,7 +609,7 @@ extends AbstractSessionComponent {
 
                 Document rolesDF = this.getRoles();
                 Node     roles   = null;
-                if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles");
+                if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles", this.xpathProcessor);
                 IncludeXMLConsumer.includeNode(roles, consumer, consumer);
 
                 String role = this.request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
@@ -607,7 +624,7 @@ extends AbstractSessionComponent {
                     this.sendEndElementEvent(consumer, "name");
                     Document userDF = this.getUsers(role, null);
                     Node     users = null;
-                    if (userDF != null) users = DOMUtil.getSingleNode(userDF, "users");
+                    if (userDF != null) users = DOMUtil.getSingleNode(userDF, "users", this.xpathProcessor);
                     IncludeXMLConsumer.includeNode(users, consumer, consumer);
                     this.sendEndElementEvent(consumer, "roleusers");
                 }
@@ -673,7 +690,7 @@ extends AbstractSessionComponent {
             // one coplet
             if (state.equals(PortalConstants.STATE_COPLET) ) {
                 if (copletsFragment != null && copletID != null) {
-                    Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']");
+                    Node coplet = DOMUtil.getSingleNode(copletsFragment, "coplets-profile/coplets/coplet[@id='"+copletID+"']", this.xpathProcessor);
                     if (coplet != null) {
                         IncludeXMLConsumer.includeNode(coplet, consumer, consumer);
                     }
@@ -700,7 +717,7 @@ extends AbstractSessionComponent {
                     context.setAttribute(ATTRIBUTE_ADMIN_COPLETS, copletsFragment);
                 }
                 IncludeXMLConsumer.includeNode(DOMUtil.selectSingleNode(copletsFragment,
-                                   "coplets-profile"), consumer, consumer);
+                                   "coplets-profile", this.xpathProcessor), consumer, consumer);
                 consumer.endElement("", PortalConstants.ELEMENT_COPLETS, PortalConstants.ELEMENT_COPLETS);
             }
 
@@ -741,7 +758,7 @@ extends AbstractSessionComponent {
         if (storedProfile != null) {
             DocumentFragment profile = (DocumentFragment)storedProfile.get(PortalConstants.PROFILE_PROFILE);
             try {
-                statusProfile = (Element)DOMUtil.getSingleNode(profile, "profile/status-profile");
+                statusProfile = (Element)DOMUtil.getSingleNode(profile, "profile/status-profile", this.xpathProcessor);
             } catch (javax.xml.transform.TransformerException ignore) {
             }
         }
@@ -1100,7 +1117,7 @@ extends AbstractSessionComponent {
 
                     for(int colindex = 1; colindex <= columns; colindex++) {
                         columnElement = (Element)miscNodes[7 + colindex];
-                        value = DOMUtil.getValueOf(columnElement, "width");
+                        value = DOMUtil.getValueOf(columnElement, "width", this.xpathProcessor);
                         if (value == null) {
                             width[colindex-1] = "" + normalWidth + "%";
                         } else {
@@ -1433,7 +1450,7 @@ extends AbstractSessionComponent {
             if (lastNumber != null) {
                 int value = new Integer(lastNumber).intValue();
                 if (value > 1000000) {
-                    NodeList coplets = DOMUtil.selectNodeList(delta, "profile/portal-profile/descendant::coplet[@id and @number]");
+                    NodeList coplets = DOMUtil.selectNodeList(delta, "profile/portal-profile/descendant::coplet[@id and @number]", this.xpathProcessor);
                     if (coplets != null) {
                         Element copletNode;
                         String oldNumber;
@@ -1444,7 +1461,7 @@ extends AbstractSessionComponent {
                             copletNode = (Element)coplets.item(i);
                             oldNumber = copletNode.getAttributeNS(null, "number");
                             copletId = copletNode.getAttributeNS(null, "id");
-                            statusNode = (Element)DOMUtil.getSingleNode(delta, "status-profile/customization/coplet[@id='"+copletId+"' and @number='"+oldNumber+"']");
+                            statusNode = (Element)DOMUtil.getSingleNode(delta, "status-profile/customization/coplet[@id='"+copletId+"' and @number='"+oldNumber+"']", this.xpathProcessor);
                             copletNode.setAttributeNS(null, "number", ""+(i+1));
                             if (statusNode != null) {
                                 statusNode.setAttributeNS(null, "number", ""+(i+1));
@@ -1461,7 +1478,7 @@ extends AbstractSessionComponent {
         }
 
         // Last part: strip type information
-        NodeList typeElements = DOMUtil.selectNodeList(delta, "descendant::*[@formpath and @formdescription and @formtype]");
+        NodeList typeElements = DOMUtil.selectNodeList(delta, "descendant::*[@formpath and @formdescription and @formtype]", this.xpathProcessor);
         if (typeElements != null) {
             for(int i = 0; i < typeElements.getLength(); i++) {
                 ((Element)typeElements.item(i)).removeAttributeNS(null, "formpath");
@@ -1485,8 +1502,8 @@ extends AbstractSessionComponent {
                       Element          deltaElement)
     throws SAXException, javax.xml.transform.TransformerException {
         // calling method is already synchronized
-        Element originalRoot = (Element)DOMUtil.getSingleNode(original, path);
-        Element baseRoot = (Element)DOMUtil.getSingleNode(base, path);
+        Element originalRoot = (Element)DOMUtil.getSingleNode(original, path, this.xpathProcessor);
+        Element baseRoot = (Element)DOMUtil.getSingleNode(base, path, this.xpathProcessor);
         if (originalRoot != null && baseRoot != null) {
             List nodeStack = new ArrayList();
             String name = baseRoot.getNodeName();
@@ -1914,7 +1931,7 @@ extends AbstractSessionComponent {
         miscNodes[PortalConstants.PROFILE_MISC_MESSAGES_NODE]= DOMUtil.getFirstNodeFromPath(baseProfile, new String[] {"profile","personal-profile","messages"}, false);
         for(int i = 1; i <= PortalConstants.MAX_COLUMNS; i++) {
             miscNodes[7 + i] = DOMUtil.getSingleNode(baseProfile,
-                "profile/portal-profile/content/column[@position='"+i+"']");
+                "profile/portal-profile/content/column[@position='"+i+"']", this.xpathProcessor);
         }
 
         profileMap.put(PortalConstants.PROFILE_MISC_POINTER, miscNodes);
@@ -1933,7 +1950,7 @@ extends AbstractSessionComponent {
             l = coplets.getLength();
             for(i = 0; i < l; i++) {
                 configElement = (Element)coplets.item(i);
-                if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/active")) {
+                if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/active", this.xpathProcessor)) {
 
                     copletID = configElement.getAttributeNS(null, "id");
                     if (configElement.hasAttributeNS(null, "media")) {
@@ -1948,7 +1965,7 @@ extends AbstractSessionComponent {
                     }
 
                     // Now: add the coplet if mandatory and missing
-                    if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/mandatory")) {
+                    if (DOMUtil.getValueAsBooleanOf(configElement, "configuration/mandatory", this.xpathProcessor)) {
                         // get all coplet instances
                         NodeList copletElements;
 
@@ -1956,36 +1973,36 @@ extends AbstractSessionComponent {
                         // search all coplets (columns, header, footer)
                         if (copletMedia == null) {
                             copletElements = DOMUtil.selectNodeList(baseProfile,
-                                "profile/portal-profile/content/column/coplets/coplet[@id='"+copletID+"' and not(@media)]");
+                                "profile/portal-profile/content/column/coplets/coplet[@id='"+copletID+"' and not(@media)]", this.xpathProcessor);
                         } else {
                             copletElements = DOMUtil.selectNodeList(baseProfile,
-                                "profile/portal-profile/content/column/coplets/coplet[@id='"+copletID+"' and media='"+copletMedia+"']");
+                                "profile/portal-profile/content/column/coplets/coplet[@id='"+copletID+"' and media='"+copletMedia+"']", this.xpathProcessor);
                         }
 
                         if (copletElements == null || copletElements.getLength() == 0) {
                             if (copletMedia == null) {
                                 copletElements = DOMUtil.selectNodeList(baseProfile,
-                                   "profile/portal-profile/content/header/coplet[@id='"+copletID+"' and not(@media)]");
+                                   "profile/portal-profile/content/header/coplet[@id='"+copletID+"' and not(@media)]", this.xpathProcessor);
                             } else {
                                 copletElements = DOMUtil.selectNodeList(baseProfile,
-                                   "profile/portal-profile/content/header/coplet[@id='"+copletID+"' and media='"+copletMedia+"']");
+                                   "profile/portal-profile/content/header/coplet[@id='"+copletID+"' and media='"+copletMedia+"']", this.xpathProcessor);
                             }
                         }
 
                         if (copletElements == null || copletElements.getLength() == 0) {
                             if (copletMedia == null) {
                                 copletElements = DOMUtil.selectNodeList(baseProfile,
-                                   "profile/portal-profile/content/footer/coplet[@id='"+copletID+"' and not(@media)]");
+                                   "profile/portal-profile/content/footer/coplet[@id='"+copletID+"' and not(@media)]", this.xpathProcessor);
                             } else {
                                 copletElements = DOMUtil.selectNodeList(baseProfile,
-                                   "profile/portal-profile/content/footer/coplet[@id='"+copletID+"' and media='"+copletMedia+"']");
+                                   "profile/portal-profile/content/footer/coplet[@id='"+copletID+"' and media='"+copletMedia+"']", this.xpathProcessor);
                             }
                         }
 
                         if (copletElements == null || copletElements.getLength() == 0) {
                             // mandatory coplet is not configured, so add it to the first column
                             Node content = DOMUtil.getSingleNode(baseProfile,
-                                  "profile/portal-profile/content/column[@position='1']/coplets");
+                                  "profile/portal-profile/content/column[@position='1']/coplets", this.xpathProcessor);
                             if (content == null)
                                 throw new ProcessingException("Element not found: portal-profile/content/column/coplets");
                             Element el = content.getOwnerDocument().createElementNS(null, "coplet");
@@ -2011,14 +2028,14 @@ extends AbstractSessionComponent {
                         } else {
                             // is any of them visible?
                             boolean found;
-                            boolean origVisible = DOMUtil.getValueAsBooleanOf(configElement, "status/visible");
+                            boolean origVisible = DOMUtil.getValueAsBooleanOf(configElement, "status/visible", this.xpathProcessor);
                             int si, sl;
                             sl = copletElements.getLength();
                             si = 0;
                             found = false;
                             while (si < sl && !found) {
                                 found = DOMUtil.getValueAsBooleanOf(copletElements.item(si),
-                                           "status/visible", origVisible);
+                                           "status/visible", origVisible, this.xpathProcessor);
                                 si++;
                             }
                             if (!found) {
@@ -2077,7 +2094,7 @@ extends AbstractSessionComponent {
                    new String[] {"footer","coplet"});
             } else {
                 copletElements = DOMUtil.selectNodeList(content,
-                   "column[@position='"+(i-1)+"']/coplets/coplet");
+                   "column[@position='"+(i-1)+"']/coplets/coplet", this.xpathProcessor);
             }
             if (copletElements != null && copletElements.getLength() > 0) {
                 Element[] list = new Element[copletElements.getLength()];
@@ -2108,9 +2125,9 @@ extends AbstractSessionComponent {
                                                       defaultCoplets,
                                                       mediaCoplets);
                     if (configElement != null) {
-                        statusCopletElement = (Element)DOMUtil.selectSingleNode(configElement, "status");
-                        statusConfigList = DOMUtil.selectNodeList(statusCopletElement, "*");
-                        statusCopletList = DOMUtil.selectNodeList(currentCoplet, "status/*");
+                        statusCopletElement = (Element)DOMUtil.selectSingleNode(configElement, "status", this.xpathProcessor);
+                        statusConfigList = DOMUtil.selectNodeList(statusCopletElement, "*", this.xpathProcessor);
+                        statusCopletList = DOMUtil.selectNodeList(currentCoplet, "status/*", this.xpathProcessor);
                         // first test if each status is included in the config
                         if (statusCopletList != null) {
                             list_length = statusCopletList.getLength();
@@ -2140,7 +2157,7 @@ extends AbstractSessionComponent {
                         // coplet not in configuration
                         // adopt position of following coplets and then remove
                         String posAttr = currentCoplet.getAttributeNS(null, "position");
-                        NodeList followUps = DOMUtil.selectNodeList(currentCoplet.getParentNode(), "coplet[@position > '"+posAttr+"']");
+                        NodeList followUps = DOMUtil.selectNodeList(currentCoplet.getParentNode(), "coplet[@position > '"+posAttr+"']", this.xpathProcessor);
                         if (followUps != null) {
                             int value;
                             for(int iq = 0; iq < followUps.getLength(); iq++) {
@@ -2223,7 +2240,7 @@ extends AbstractSessionComponent {
         if (layoutValue != null && new Integer(layoutValue).intValue() > 0) {
             layoutColumns = new Integer(layoutValue).intValue();
         }
-        NodeList columnNodes = DOMUtil.selectNodeList(baseProfile, "profile/portal-profile/content/column[@position]");
+        NodeList columnNodes = DOMUtil.selectNodeList(baseProfile, "profile/portal-profile/content/column[@position]", this.xpathProcessor);
         int columns = columnNodes.getLength();
         if (columns != layoutColumns) {
             if (layoutColumnsNode.hasAttributeNS(null, "formtype")) {
@@ -2278,7 +2295,7 @@ extends AbstractSessionComponent {
 
                 // get all nodes
                 boolean changed = false;
-                nodes = DOMUtil.selectNodeList(baseProfile, currentPath);
+                nodes = DOMUtil.selectNodeList(baseProfile, currentPath, this.xpathProcessor);
                 if (nodes != null) {
                     nodes_count = nodes.getLength();
                     for(int m = 0; m < nodes_count; m++) {
@@ -2294,7 +2311,7 @@ extends AbstractSessionComponent {
                 }
                 if (changed && confPaths != null) {
                     currentPath = (String)confPaths.get(i);
-                    nodes = DOMUtil.selectNodeList(baseProfile, currentPath);
+                    nodes = DOMUtil.selectNodeList(baseProfile, currentPath, this.xpathProcessor);
                     if (nodes != null) {
                         nodes_count = nodes.getLength();
                         for(int m = 0; m < nodes_count; m++) {
@@ -2385,13 +2402,13 @@ extends AbstractSessionComponent {
         }
         Map layouts = new HashMap(5, 2);
         Element defLayout = (Element)DOMUtil.getSingleNode(baseProfile,
-                        "profile/layout-profile/portal/layouts/layout[not(@*)]");
+                        "profile/layout-profile/portal/layouts/layout[not(@*)]", this.xpathProcessor);
         Node currentLayout;
         String[] types = this.getMediaManager().getMediaTypes();
 
         for(int i = 0; i < types.length; i++) {
              currentLayout = DOMUtil.getSingleNode(baseProfile,
-               "profile/layout-profile/portal/layouts/layout[media='"+types[i]+"']");
+               "profile/layout-profile/portal/layouts/layout[media='"+types[i]+"']", this.xpathProcessor);
              layouts.put(types[i], (currentLayout == null ? defLayout : currentLayout));
         }
 
@@ -2413,13 +2430,13 @@ extends AbstractSessionComponent {
         }
         Map layouts = new HashMap(5, 2);
         Element defLayout = (Element)DOMUtil.getSingleNode(baseProfile,
-                        "profile/layout-profile/coplets/layouts/layout[not(@*)]");
+                        "profile/layout-profile/coplets/layouts/layout[not(@*)]", this.xpathProcessor);
         Node currentLayout;
         String[] types = this.getMediaManager().getMediaTypes();
 
         for(int i = 0; i < types.length; i++) {
             currentLayout = DOMUtil.getSingleNode(baseProfile,
-               "profile/layout-profile/coplets/layouts/layout[media='"+types[i]+"']");
+               "profile/layout-profile/coplets/layouts/layout[media='"+types[i]+"']", this.xpathProcessor);
            layouts.put(types[i], (currentLayout == null ? defLayout : currentLayout));
         }
 
@@ -2715,7 +2732,7 @@ extends AbstractSessionComponent {
 
              // first: check visibility
             boolean visible = DOMUtil.getValueAsBooleanOf(element,
-                "status/visible");
+                "status/visible", this.xpathProcessor);
             // second: check media
             String media = this.getMediaManager().getMediaType();
             if (visible && copletConf.hasAttributeNS(null, "media")) {
@@ -2728,24 +2745,24 @@ extends AbstractSessionComponent {
                 Object[] loadedCoplet = new Object[8];
                 copletList.add(loadedCoplet);
 
-                boolean isCustomizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/customizable", false);
+                boolean isCustomizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/customizable", false, this.xpathProcessor);
                 if (isCustomizable) {
-                    boolean showCustomizePage = DOMUtil.getValueAsBooleanOf(element, "status/customize", false);
+                    boolean showCustomizePage = DOMUtil.getValueAsBooleanOf(element, "status/customize", false, this.xpathProcessor);
                     boolean hasConfig = false;
                     if (statusProfile != null) {
                         Element customInfo = (Element)DOMUtil.getSingleNode(statusProfile,
-                              "customization/coplet[@id='"+copletID+"' and @number='"+element.getAttributeNS(null, "number")+"']");
+                              "customization/coplet[@id='"+copletID+"' and @number='"+element.getAttributeNS(null, "number")+"']", this.xpathProcessor);
                         hasConfig = (customInfo != null);
                     }
                     if (showCustomizePage || !hasConfig ) {
-                        Node node = DOMUtil.selectSingleNode(element, "status/customize");
+                        Node node = DOMUtil.selectSingleNode(element, "status/customize", this.xpathProcessor);
                         DOMUtil.setValueOfNode(node, "true");
                     } else {
-                        Node node = DOMUtil.selectSingleNode(element, "status/customize");
+                        Node node = DOMUtil.selectSingleNode(element, "status/customize", this.xpathProcessor);
                         DOMUtil.setValueOfNode(node, "false");
                     }
                 } else {
-                    Node node = DOMUtil.selectSingleNode(element, "status/customize");
+                    Node node = DOMUtil.selectSingleNode(element, "status/customize", this.xpathProcessor);
                     DOMUtil.setValueOfNode(node, "false");
                 }
 
@@ -2756,7 +2773,7 @@ extends AbstractSessionComponent {
                 p.setSingleParameterValue(PortalConstants.PARAMETER_ID, copletID);
                 p.setSingleParameterValue(PortalConstants.PARAMETER_NUMBER, element.getAttributeNS(null, "number"));
                 p.setSingleParameterValue(PortalConstants.PARAMETER_MEDIA, media);
-                String isPersistent = DOMUtil.getValueOf(copletConf, "configuration/persistent", "false");
+                String isPersistent = DOMUtil.getValueOf(copletConf, "configuration/persistent", "false", this.xpathProcessor);
                 p.setSingleParameterValue(PortalConstants.PARAMETER_PERSISTENT, isPersistent);
 
                 // the coplet loading is a tricky part:
@@ -2769,7 +2786,7 @@ extends AbstractSessionComponent {
                 loadedCoplet[2] = p;
                 loadedCoplet[3] = element;
                 loadedCoplet[4] = new Long(System.currentTimeMillis());
-                loadedCoplet[5] = new Long(DOMUtil.getValueOf(copletConf, "configuration/timeout", "-1"));
+                loadedCoplet[5] = new Long(DOMUtil.getValueOf(copletConf, "configuration/timeout", "-1", this.xpathProcessor));
                 loadedCoplet[7] = statusProfile;
 
                 CopletThread copletThread = new CopletThread();
@@ -2781,7 +2798,8 @@ extends AbstractSessionComponent {
                                   response,
                                   loadedCoplet,
                                   this.manager,
-                                  this.resolver);
+                                  this.resolver,
+                                  this.xpathProcessor);
                 theThread.start();
                 Thread.yield();
 
@@ -2854,7 +2872,7 @@ extends AbstractSessionComponent {
             // now the status parameter
             // SourceParameters p = DOMUtil.createParameters(DOMUtil.getFirstNodeFromPath(element, new String[] {"status"}, false), null);
             consumer.startElement("", "status", "status", attr);
-            children = DOMUtil.selectNodeList(element, "status/*");
+            children = DOMUtil.selectNodeList(element, "status/*", this.xpathProcessor);
             if (children != null && children.getLength() > 0) {
                 int l = children.getLength();
                 for(int i = 0; i < l; i++) {
@@ -2905,7 +2923,7 @@ extends AbstractSessionComponent {
                 }
             } else {
                 notAvailableMessage = DOMUtil.getValueOf(copletConf,
-                         "configuration/messages/coplet_not_available", notAvailableMessage);
+                         "configuration/messages/coplet_not_available", notAvailableMessage, this.xpathProcessor);
                 consumer.characters(notAvailableMessage.toCharArray(), 0, notAvailableMessage.length());
             }
             consumer.endElement("", "content", "content");
@@ -2954,7 +2972,7 @@ extends AbstractSessionComponent {
         while (node == null && colindex < 13) {
             if (miscNodes[colindex] != null) {
                 node = (Element)DOMUtil.getSingleNode(miscNodes[colindex],
-                        "coplets/coplet[@id='"+copletID+"' and @number='"+copletNr+"']");
+                        "coplets/coplet[@id='"+copletID+"' and @number='"+copletNr+"']", this.xpathProcessor);
                 colindex++;
             } else {
                 colindex = 13;
@@ -2962,11 +2980,11 @@ extends AbstractSessionComponent {
         }
         if (node == null && miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE] != null) {
             node = (Element)DOMUtil.getSingleNode(miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE],
-                      "coplet[@id='"+copletID+"' and @number='"+copletNr+"']");
+                      "coplet[@id='"+copletID+"' and @number='"+copletNr+"']", this.xpathProcessor);
         }
         if (node == null && miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE] != null) {
             node = (Element)DOMUtil.getSingleNode(miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE],
-                      "coplet[@id='"+copletID+"' and @number='"+copletNr+"']");
+                      "coplet[@id='"+copletID+"' and @number='"+copletNr+"']", this.xpathProcessor);
         }
         return node;
     }
@@ -3028,7 +3046,7 @@ extends AbstractSessionComponent {
                 if (copletNr.equals("header")) {
                     copletsNode = miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE];
                     if (copletsNode == null) {
-                        copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/header");
+                        copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/header", this.xpathProcessor);
                         miscNodes[PortalConstants.PROFILE_MISC_HEADER_CONTENT_NODE] = copletsNode;
                     } else { // remove old coplet
                         Node oldCoplet = DOMUtil.getFirstNodeFromPath(copletsNode, new String[] {"coplet"}, false);
@@ -3037,7 +3055,7 @@ extends AbstractSessionComponent {
                 } else if (copletNr.equals("footer")) {
                     copletsNode = miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE];
                     if (copletsNode == null) {
-                        copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/footer");
+                        copletsNode = DOMUtil.selectSingleNode(profile, "profile/portal-profile/content/footer", this.xpathProcessor);
                         miscNodes[PortalConstants.PROFILE_MISC_FOOTER_CONTENT_NODE] = copletsNode;
                     } else { // remove old coplet
                         Node oldCoplet = DOMUtil.getFirstNodeFromPath(copletsNode, new String[] {"coplet"}, false);
@@ -3095,41 +3113,41 @@ extends AbstractSessionComponent {
                 if (coplet != null) {
                     if (requestString.startsWith(PortalManager.REQ_CMD_CLOSE) ||
                         requestString.startsWith(PortalManager.REQ_CMD_HIDE)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/visible");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/visible", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "false");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_OPEN) ||
                         requestString.startsWith(PortalManager.REQ_CMD_SHOW)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/visible");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/visible", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "true");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_MINIMIZE)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/size");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/size", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "min");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_MAXIMIZE)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/size");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/size", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "max");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_CUSTOMIZE)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/customize");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/customize", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "true");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_UPDATE)) {
-                         Node node = DOMUtil.selectSingleNode(coplet, "status/customize");
+                         Node node = DOMUtil.selectSingleNode(coplet, "status/customize", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "false");
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_DELETE)) {
                         // delete the status of the coplet
                         Node statusNode = DOMUtil.getSingleNode(profile,
-                             "profile/status-profile/customization/coplet[@id='"+copletID+"' and @number='"+copletNr+"']");
+                             "profile/status-profile/customization/coplet[@id='"+copletID+"' and @number='"+copletNr+"']", this.xpathProcessor);
                         if (statusNode != null) {
                             statusNode.getParentNode().removeChild(statusNode);
                             Element configElement = this.getCopletConfiguration(copletID,
                                                       (Map)theProfile.get(PortalConstants.PROFILE_DEFAULT_COPLETS),
                                                       (Map)theProfile.get(PortalConstants.PROFILE_MEDIA_COPLETS));
-                            boolean isPersistent = DOMUtil.getValueAsBooleanOf(configElement, "configuration/persistent", false);
+                            boolean isPersistent = DOMUtil.getValueAsBooleanOf(configElement, "configuration/persistent", false, this.xpathProcessor);
                             if (isPersistent) {
                                 // mark the status profile to be saved
                                 theProfile.put(PortalConstants.PROFILE_SAVE_STATUS_FLAG, "true");
                             }
                         }
                         String posAttr = coplet.getAttributeNS(null, "position");
-                        NodeList followUps = DOMUtil.selectNodeList(coplet.getParentNode(), "coplet[@position > '"+posAttr+"']");
+                        NodeList followUps = DOMUtil.selectNodeList(coplet.getParentNode(), "coplet[@position > '"+posAttr+"']", this.xpathProcessor);
                         coplet.getParentNode().removeChild(coplet);
                         coplet = null;
                         if (followUps != null) {
@@ -3143,11 +3161,11 @@ extends AbstractSessionComponent {
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVE)) {
                         if (argument != null) {
                             Element  copletsElement = (Element)DOMUtil.getSingleNode(profile,
-                                  "profile/portal-profile/content/column[@position='"+argument+"']/coplets");
+                                  "profile/portal-profile/content/column[@position='"+argument+"']/coplets", this.xpathProcessor);
                             if (copletsElement != null) {
                                 if (!coplet.getParentNode().equals(copletsElement)) {
                                      String posAttr = coplet.getAttributeNS(null, "position");
-                                     NodeList followUps = DOMUtil.selectNodeList(coplet.getParentNode(), "coplet[@position > '"+posAttr+"']");
+                                     NodeList followUps = DOMUtil.selectNodeList(coplet.getParentNode(), "coplet[@position > '"+posAttr+"']", this.xpathProcessor);
                                      coplet.getParentNode().removeChild(coplet);
                                      // set position attribute
                                      NodeList childs = DOMUtil.getNodeListFromPath(copletsElement, new String[] {"coplet"});
@@ -3168,7 +3186,7 @@ extends AbstractSessionComponent {
                     } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVEROW)) {
                         if (argument != null) {
                             Element newCoplet = (Element)DOMUtil.getSingleNode(coplet.getParentNode(),
-                                                 "coplet[@position='"+argument+"']");
+                                                 "coplet[@position='"+argument+"']", this.xpathProcessor);
                             if (newCoplet != null) {
                                 String position = coplet.getAttributeNS(null, "position");
                                 coplet.removeAttributeNS(null, "position");
@@ -3568,9 +3586,9 @@ extends AbstractSessionComponent {
         profileRoot = profileDoc.createElementNS(null, "profile");
         profile.appendChild(profileRoot);
         profileRoot.appendChild(profileDoc.importNode(DOMUtil.selectSingleNode(layoutFragment,
-                                                                  "layout-profile"), true));
+                                                                  "layout-profile", this.xpathProcessor), true));
         profileRoot.appendChild(profileDoc.importNode(DOMUtil.selectSingleNode(copletsFragment,
-                                                                  "coplets-profile"), true));
+                                                                  "coplets-profile", this.xpathProcessor), true));
 
         // if avalailable append the type profile
         if (adminProfile) {
@@ -3589,7 +3607,7 @@ extends AbstractSessionComponent {
                                    pars, 
                                    this.resolver);
             profileRoot.appendChild(profileDoc.importNode(DOMUtil.selectSingleNode(typeFragment,
-                              "type-profile"), true));
+                              "type-profile", this.xpathProcessor), true));
 
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("type base profile loaded");
@@ -3848,7 +3866,7 @@ extends AbstractSessionComponent {
                 coplet = (Element)list.item(i);
                 copletID = coplet.getAttributeNS(null, "id");
                 copletConfig = this.getCopletConfiguration(copletID, copletConfigs, mediaCopletConfigs);
-                isPersistent = DOMUtil.getValueAsBooleanOf(copletConfig, "configuration/persistent", false);
+                isPersistent = DOMUtil.getValueAsBooleanOf(copletConfig, "configuration/persistent", false, this.xpathProcessor);
                 if (!isPersistent) {
                     coplet.getParentNode().removeChild(coplet);
                 }
@@ -3919,7 +3937,7 @@ extends AbstractSessionComponent {
                                     List typePaths = (List)theProfile.get(PortalConstants.PROFILE_TYPE_CONF_PATHS);
                                     String path = (String)typePaths.get(pathIndex);
                                     if (path != null) {
-                                        NodeList nodes = DOMUtil.selectNodeList(profile, path);
+                                        NodeList nodes = DOMUtil.selectNodeList(profile, path, this.xpathProcessor);
                                         if (nodes != null) {
                                             Node node = nodes.item(place);
                                             if (node != null) {
@@ -3950,7 +3968,7 @@ extends AbstractSessionComponent {
                                     List typePaths = (List)theProfile.get(PortalConstants.PROFILE_TYPE_CONF_PATHS);
                                     String path = (String)typePaths.get(pathIndex);
                                     if (path != null) {
-                                        NodeList nodes = DOMUtil.selectNodeList(profile, path);
+                                        NodeList nodes = DOMUtil.selectNodeList(profile, path, this.xpathProcessor);
                                         if (nodes != null) {
                                             Node node = nodes.item(place);
                                             if (node != null) {
@@ -4031,7 +4049,7 @@ extends AbstractSessionComponent {
                             // search for all "status/customize" nodes and set them
                             // to false
                             NodeList statusNodes = DOMUtil.selectNodeList(profile,
-                                    "profile/portal-profile/content/descendant::status/customize");
+                                    "profile/portal-profile/content/descendant::status/customize", this.xpathProcessor);
                             if (statusNodes != null) {
                                 String value;
                                 for(int l=0; l < statusNodes.getLength(); l++) {
@@ -4108,7 +4126,7 @@ extends AbstractSessionComponent {
             // remove columns and all coplets to the first one
             Node columnNode;
             Node firstColumn = DOMUtil.getSingleNode(profile,
-                        "profile/portal-profile/content/column[@position='1']/coplets");
+                        "profile/portal-profile/content/column[@position='1']/coplets", this.xpathProcessor);
             NodeList firstColumnCoplets = DOMUtil.getNodeListFromPath(firstColumn, new String[] {"coplet"});
             int copletsCount = (firstColumnCoplets == null ? 0 : firstColumnCoplets.getLength());
             for(int i = columnNumber + 1; i <= oldNumber; i++) {

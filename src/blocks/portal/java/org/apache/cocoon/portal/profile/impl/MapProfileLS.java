@@ -57,6 +57,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
@@ -72,26 +73,41 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.5 2003/12/10 17:02:04 cziegeler Exp $
+ * @version CVS $Id: MapProfileLS.java,v 1.6 2003/12/18 14:29:03 cziegeler Exp $
  */
 public class MapProfileLS
     extends AbstractLogEnabled
-    implements Component, Serviceable, ProfileLS, ThreadSafe {
+    implements Component, Serviceable, ProfileLS, ThreadSafe, Disposable {
 
     /** The component manager */
     protected ServiceManager manager;
 
+    /** The XPath Processor */
+    protected XPathProcessor xpathProcessor;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.xpathProcessor );
+            this.xpathProcessor = null;
+            this.manager = null;
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
     protected String getURI(Map keyMap) 
@@ -215,8 +231,8 @@ public class MapProfileLS
 
             parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
             Element element = DOMUtil.getDocumentFragment(parser, new InputStreamReader(source.getInputStream())).getOwnerDocument().getDocumentElement();
-            if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution").trim().equals("success")) {
-                throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message"));
+            if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution", this.xpathProcessor).trim().equals("success")) {
+                throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message", this.xpathProcessor));
             }
 
 		} finally {

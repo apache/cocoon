@@ -70,6 +70,7 @@ import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -83,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.13 2003/10/30 15:46:18 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.14 2003/12/18 14:29:03 cziegeler Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -92,12 +93,14 @@ implements SessionContext {
     protected UserHandler     handler;
     protected SessionContext  authContext;
     protected String          handlerName;
-    protected boolean        initialized;
+    protected boolean         initialized;
     protected Context         context;
+    protected XPathProcessor  xpathProcessor;
     
     /** Constructor */
-    public AuthenticationContext(Context context) {
+    public AuthenticationContext(Context context, XPathProcessor processor) {
         this.context = context;
+        this.xpathProcessor = processor;
     }
     
     /**
@@ -110,7 +113,7 @@ implements SessionContext {
         this.handler = handler;
         this.handlerName = this.handler.getHandlerName();
         try {
-            this.authContext = new SimpleSessionContext();
+            this.authContext = new SimpleSessionContext(this.xpathProcessor);
         } catch (ProcessingException pe) {
             throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }

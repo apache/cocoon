@@ -52,6 +52,7 @@ package org.apache.cocoon.webapps.session.context;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -65,22 +66,26 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.session.SessionConstants;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 /**
  *  Context provider for the temporarily context, the request and the
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.6 2003/10/21 12:39:15 cziegeler Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.7 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Component {
+implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Component, Disposable {
 
     protected Context context;
     
     protected ServiceManager manager;
     
+    /** The xpath processor */
+    protected XPathProcessor xpathProcessor;
+
     /**
      * Get the context
      * @param name The name of the context
@@ -95,12 +100,12 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
         SessionContext context = this.getContext( objectModel, name );
         if ( context == null ) {
             if ( name.equals(SessionConstants.TEMPORARY_CONTEXT) ) {
-                context = new SimpleSessionContext();
+                context = new SimpleSessionContext(this.xpathProcessor);
                 context.setup(name, null, null);
             } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
                 context = new RequestSessionContext();
                 context.setup(name, null, null);
-                ((RequestSessionContext)context).setup( objectModel, this.manager );
+                ((RequestSessionContext)context).setup( objectModel, this.manager, this.xpathProcessor );
             }
             objectModel.put(this.getClass().getName()+name, context);
         }
@@ -142,6 +147,18 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null) {
+            this.manager.release( this.xpathProcessor );
+            this.xpathProcessor = null;
+            this.manager = null;            
+        }
     }
 
 }

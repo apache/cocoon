@@ -64,10 +64,7 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.NodeListImpl;
-import org.apache.xml.utils.PrefixResolverDefault;
-import org.apache.xpath.XPath;
-import org.apache.xpath.XPathContext;
-import org.apache.xpath.objects.XObject;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -81,7 +78,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.6 2003/10/21 12:39:15 cziegeler Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.7 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -101,20 +98,17 @@ implements SessionContext {
     /** save resource */
     private String saveResource;
 
-    // Refactoring of Xpath Functions.
-    private XPathContext xpathSupport;
-    private PrefixResolverDefault prefixResolver;
-    private Map XpathTable;
+    /** The XPath Processor */
+    private XPathProcessor xpathProcessor;
 
-    public SimpleSessionContext()
+    /**
+     * Constructor
+     */
+    public SimpleSessionContext(XPathProcessor xPathProcessor)
     throws ProcessingException {
         data = DOMUtil.createDocument();
         data.appendChild(data.createElementNS(null, "context"));
-
-        // Refactoring of Xpath Functions.
-        xpathSupport = null;
-        prefixResolver = null;
-        XpathTable = new HashMap();
+        this.xpathProcessor = xPathProcessor;
     }
 
     /**
@@ -124,32 +118,9 @@ implements SessionContext {
         return this.name;
     }
 
-    /**
-     * doXPath
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setup(java.lang.String, java.lang.String, java.lang.String)
      */
-    private XObject doXPath(String path)
-    throws javax.xml.transform.TransformerException {
-        // If not there - create or else reset().
-        if (xpathSupport == null) xpathSupport = new XPathContext();
-        else xpathSupport.reset();
-
-        Node namespaceNode = (Node)data;
-
-        if (prefixResolver == null) prefixResolver = new PrefixResolverDefault(
-          (namespaceNode.getNodeType() == Node.DOCUMENT_NODE) ? ((Document) namespaceNode).getDocumentElement() : namespaceNode);
-
-        // Create the XPath object.
-        XPath xpath = (XPath)XpathTable.get(path);
-        if (xpath == null) {
-          xpath = new XPath(path, null, prefixResolver, XPath.SELECT, null);
-          XpathTable.put(path,xpath);
-        }
-
-        // Execute the XPath, and have it return the result
-        int ctxtNode = xpathSupport.getDTMHandleFromNode(data);
-        return xpath.execute(xpathSupport, ctxtNode, prefixResolver);
-    }
-
     public void setup(String value, String loadResource, String saveResource) {
         this.name = value;
         this.loadResource = loadResource;
@@ -162,16 +133,11 @@ implements SessionContext {
         NodeList list;
         path = this.createPath(path);
 
-        try {
-            String[] pathComponents = DOMUtil.buildPathArray(path);
-            if (pathComponents == null) {
-                //list = DOMUtil.selectNodeList(data, path);
-                list = doXPath(path).nodelist();
-            } else {
-                list = DOMUtil.getNodeListFromPath(data, pathComponents);
-            }
-        } catch (javax.xml.transform.TransformerException localException) {
-            throw new ProcessingException("Transforming exception during selectSingleNode with path: '"+path+"'. Exception: " + localException, localException);
+        String[] pathComponents = DOMUtil.buildPathArray(path);
+        if (pathComponents == null) {
+            list = this.xpathProcessor.selectNodeList(this.data, path);
+        } else {
+            list = DOMUtil.getNodeListFromPath(data, pathComponents);
         }
 
         if (list != null && list.getLength() > 0) {
@@ -204,7 +170,7 @@ implements SessionContext {
     public synchronized void setXML(String path, DocumentFragment fragment)
     throws ProcessingException {
         path = this.createPath(path);
-        Node node = DOMUtil.selectSingleNode(data, path);
+        Node node = DOMUtil.selectSingleNode(data, path, this.xpathProcessor);
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             // now we have to serialize the fragment to a string and insert this
             Attr attr = (Attr)node;
@@ -238,7 +204,7 @@ implements SessionContext {
     public synchronized void appendXML(String path, DocumentFragment fragment)
     throws ProcessingException {
         path = this.createPath(path);
-        Node node = DOMUtil.selectSingleNode(data, path);
+        Node node = DOMUtil.selectSingleNode(data, path, this.xpathProcessor);
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             Attr attr;
 
@@ -284,16 +250,11 @@ implements SessionContext {
         NodeList list;
         path = this.createPath(path);
 
-        try {
-            String[] pathComponents = DOMUtil.buildPathArray(path);
-            if (pathComponents == null) {
-                //list = DOMUtil.selectNodeList(data, path);
-                list = doXPath(path).nodelist();
-            } else {
-                list = DOMUtil.getNodeListFromPath(data, pathComponents);
-            }
-        } catch (javax.xml.transform.TransformerException localException) {
-            list = null;
+        String[] pathComponents = DOMUtil.buildPathArray(path);
+        if (pathComponents == null) {
+            list = this.xpathProcessor.selectNodeList(this.data, path);
+        } else {
+            list = DOMUtil.getNodeListFromPath(data, pathComponents);
         }
         if (list != null && list.getLength() > 0) {
             int  len = list.getLength();
@@ -315,7 +276,7 @@ implements SessionContext {
         path = this.createPath(path);
 
         try {
-            result = DOMUtil.getSingleNode(data, path);
+            result = DOMUtil.getSingleNode(data, path, this.xpathProcessor);
             if (result != null) result = result.cloneNode(true);
         } catch (javax.xml.transform.TransformerException localException) {
             throw new ProcessingException("TransformerException: " + localException, localException);
@@ -333,20 +294,15 @@ implements SessionContext {
 
         path = this.createPath(path);
 
-        try {
-            String[] pathComponents = DOMUtil.buildPathArray(path);
-            if (pathComponents == null) {
-                //result = DOMUtil.selectNodeList(data, path);
-                result = doXPath(path).nodelist();
-            } else {
-                result = DOMUtil.getNodeListFromPath(data, pathComponents);
-            }
-            // clone list
-            if (result != null) {
-                result = new NodeListImpl(result);
-            }
-        } catch (javax.xml.transform.TransformerException localException) {
-            throw new ProcessingException("TransformerException: " + localException, localException);
+        String[] pathComponents = DOMUtil.buildPathArray(path);
+        if (pathComponents == null) {
+            result = this.xpathProcessor.selectNodeList(this.data, path);
+        } else {
+            result = DOMUtil.getNodeListFromPath(data, pathComponents);
+        }
+        // clone list
+        if (result != null) {
+            result = new NodeListImpl(result);
         }
 
         return result;
@@ -363,7 +319,7 @@ implements SessionContext {
             data.getFirstChild().appendChild(data.importNode(node, true));
         } else {
             path = this.createPath(path);        
-            Node removeNode = DOMUtil.selectSingleNode(data, path);
+            Node removeNode = DOMUtil.selectSingleNode(data, path, this.xpathProcessor);
             removeNode.getParentNode().replaceChild(data.importNode(node, true), removeNode);
         }
     }
@@ -405,7 +361,7 @@ implements SessionContext {
         String value = null;
 
         path = this.createPath(path); // correct path
-        value = DOMUtil.getValueOf(data, path);
+        value = DOMUtil.getValueOf(data, path, this.xpathProcessor);
 
         return value;
     }
@@ -417,7 +373,7 @@ implements SessionContext {
     throws ProcessingException {
         path = this.createPath(path); // correct path
 
-        Node node = DOMUtil.selectSingleNode(data, path);
+        Node node = DOMUtil.selectSingleNode(data, path, this.xpathProcessor);
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             Attr attr = (Attr)node;
             attr.setNodeValue(value);
@@ -445,16 +401,11 @@ implements SessionContext {
         boolean  streamed = false;
         path = this.createPath(path);
 
-        try {
-            String[] pathComponents = DOMUtil.buildPathArray(path);
-            if (pathComponents == null) {
-                //list = DOMUtil.selectNodeList(data, path);
-                list = doXPath(path).nodelist();
-            } else {
-                list = DOMUtil.getNodeListFromPath(data, pathComponents);
-            }
-        } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException("TransformerException: " + local, local);
+        String[] pathComponents = DOMUtil.buildPathArray(path);
+        if (pathComponents == null) {
+            list = this.xpathProcessor.selectNodeList(this.data, path);
+        } else {
+            list = DOMUtil.getNodeListFromPath(data, pathComponents);
         }
         if (list != null && list.getLength() > 0) {
             streamed = true;
