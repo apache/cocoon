@@ -82,7 +82,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.6 2003/07/21 23:13:01 stefano Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.7 2003/07/28 11:07:31 bruno Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -361,6 +361,22 @@ public class FOM_Cocoon extends ScriptableObject {
         
         public String jsFunction_getProtocol() {
             return request.getProtocol();
+        }
+        
+        public String jsFunction_getServerName() {
+            return request.getServerName();
+        }
+        
+        public String jsFunction_getRemoteAddr() {
+            return request.getRemoteAddr();
+        }
+        
+        public int jsFunction_getServerPort() {
+            return request.getServerPort();
+        }
+        
+        public String jsFunction_getScheme() {
+            return request.getScheme();
         }
     }
 
