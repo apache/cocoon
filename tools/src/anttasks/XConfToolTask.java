@@ -238,7 +238,9 @@ public final class XConfToolTask extends MatchingTask {
 
         // Get 'root' node were 'component' will be inserted into
         String xpath = getAttribute(elem, "xpath", replaceProperties);
-
+        if ( xpath == null ) {
+            throw new IOException("Attribute 'xpath' is required.");    
+        }
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
         // Suspend, because the xpath returned not one node
