@@ -110,7 +110,7 @@
        </ul>
       </xsl:when>
       <xsl:otherwise>
-       <xsl:apply-templates/>
+       <xsl:apply-templates/><xsl:text>&#160;</xsl:text>
       </xsl:otherwise>
      </xsl:choose>
     </td>

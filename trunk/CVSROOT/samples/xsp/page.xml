@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: page.xml,v 1.3 2000-01-03 01:37:23 stefano Exp $ -->
+<!-- Version: $Id: page.xml,v 1.4 2000-01-06 17:55:23 stefano Exp $ -->
 
 <?cocoon-process type="xsp"?>
 <?cocoon-process type="xslt"?>
@@ -20,7 +20,7 @@
   }
   
   private String normalize(String string) {
-   if (string == null || string.equals("")) return "N/A";
+   if (string == null) return "";
    else return string;
   }
  </xsp:logic>

@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: lib-page.xml,v 1.1 2000-01-03 01:37:23 stefano Exp $ -->
+<!-- Version: $Id: lib-page.xml,v 1.2 2000-01-06 17:55:23 stefano Exp $ -->
 
 <?cocoon-process type="xsp"?>
+
+<?cocoon-process type="xslt"?>
+<?xml-stylesheet href="page-html.xsl" type="text/xsl"?>
 
 <xsp:page 
   language="java"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:servlet="http://apache.org/tags/examples/servlet"
-  xmlns:util="http://apache.org/tags/util"
+  xmlns:request="http://apache.org/DTD/XSP/request"
+  xmlns:util="http://apache.org/DTD/XSP/util"
 >
 
 <page>
@@ -33,21 +36,21 @@
  <p>Let's show some useful information with expression evaluation...</p>
  
  <list title="Request Data">
-  <element name="Request method"><servlet:method/></element>
-  <element name="Request URI"><servlet:requestURI/></element>
-  <element name="Request protocol"><servlet:protocol/></element>
-  <element name="Servlet path"><servlet:servletPath/></element>
-  <element name="Path info"><servlet:pathInfo/></element>
-  <element name="Path translated"><servlet:pathTranslated/></element>
-  <element name="Query string"><servlet:queryString/></element>
-  <element name="Content length"><servlet:contentLength/></element>
-  <element name="Content type"><servlet:contentType/></element>
-  <element name="Server name"><servlet:serverName/></element>
-  <element name="Server port"><servlet:serverPort/></element>
-  <element name="Remote user"><servlet:remoteUser/></element>
-  <element name="Remote address"><servlet:remoteAddr/></element>
-  <element name="Remote host"><servlet:remoteHost/></element>
-  <element name="Authorization scheme"><servlet:authType/></element>
+  <element name="Request method"><request:get-method/></element>
+  <element name="Request URI"><request:get-request-uri/></element>
+  <element name="Request protocol"><request:get-protocol/></element>
+  <element name="Servlet path"><request:get-servlet-path/></element>
+  <element name="Path info"><request:get-path-info/></element>
+  <element name="Path translated"><request:get-path-translated/></element>
+  <element name="Query string"><request:get-query-string/></element>
+  <element name="Content length"><request:get-content-length/></element>
+  <element name="Content type"><request:get-content-type/></element>
+  <element name="Server name"><request:get-server-name/></element>
+  <element name="Server port"><request:get-server-port/></element>
+  <element name="Remote user"><request:get-remote-user/></element>
+  <element name="Remote address"><request:get-remote-addr/></element>
+  <element name="Remote host"><request:get-remote-host/></element>
+  <element name="Authorization scheme"><request:get-auth-type/></element>
  </list>
    
  <p>Ok. Now that you know how logic can be transformed into content, let's
@@ -89,9 +92,9 @@
  </servlet:parameters>
     
  <p>All right, the first XSP page is over, but you can see the dynamically syntax highlighted
- <link href="view-source.xml?filename=taglib-page.xml">source of this page</link>,
- <link href="view-source.xml?resource=resource://org/apache/cocoon/example/servlet-java.xsl">the servlet library logicsheet</link>,
- <link href="view-source.xml?resource=resource://org/apache/cocoon/processor/xsp/util-java.xsl">the utility library logicsheet</link>,
+ <link href="view-source.xml?filename=lib-page.xml">source of this page</link>,
+ <link href="view-source.xml?url=resource://org/apache/cocoon/processor/xsp/library/java/request.xsl">the servlet request library logicsheet</link>,
+ <link href="view-source.xml?url=resource://org/apache/cocoon/processor/xsp/library/java/util.xsl">the utility library logicsheet</link>,
  all provided to you by another XSP page.</p>
  
  <p>Enjoy XSP!</p>

@@ -242,7 +242,8 @@
             <xsp:expr>filename</xsp:expr>
           </h3>
       
-          <xsp:expr>
+          <xsp:content>
+           <xsp:expr>
             this.colorize(
               this.xspParser.parse(
                 new InputSource(
@@ -250,7 +251,8 @@
                 )
               ), document
             )
-          </xsp:expr>
+           </xsp:expr>
+          </xsp:content>
         } else if (resourcename != null) {
           URL resource = new URL(resourcename);
           
@@ -258,7 +260,8 @@
             <xsp:expr>resourcename</xsp:expr>
           </h3>
       
-          <xsp:expr>
+          <xsp:content>
+           <xsp:expr>
             this.colorize(
               this.xspParser.parse(
                 new InputSource(
@@ -266,7 +269,8 @@
                 )
               ), document
             )
-          </xsp:expr>
+           </xsp:expr>
+          </xsp:content>
         } else {
           <h3 style="color:navy; text-align: center">
             Need <em>filename</em> or <em>url</em> parameters to work

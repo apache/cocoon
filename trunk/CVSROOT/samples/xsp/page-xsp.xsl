@@ -19,7 +19,7 @@
       }
       
       private String normalize(String string) {
-        if (string == null || string.equals("")) return "N/A";
+        if (string == null) return "";
         else return string;
       }
     </xsp:logic>  
