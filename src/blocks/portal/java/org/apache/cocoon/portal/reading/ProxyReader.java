@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.6 2004/03/19 14:21:06 cziegeler Exp $
  */
 public class ProxyReader extends ServiceableReader {
 
@@ -84,7 +84,6 @@ public class ProxyReader extends ServiceableReader {
         copletInstanceData =
             ProxyTransformer.getInstanceData(
                 this.manager,
-                objectModel,
                 copletID,
                 portalName);
 

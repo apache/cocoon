@@ -50,7 +50,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant).
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.6 2004/03/17 12:09:51 cziegeler Exp $
+ * @version CVS $Id: SessionPostTransformer.java,v 1.7 2004/03/19 14:16:54 cziegeler Exp $
  */
 public class SessionPostTransformer extends SessionPreTransformer {
 
@@ -268,8 +268,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
             pars.setSingleParameterValue("contextname", contextName);
             pars.setSingleParameterValue("path", path);
 
-            this.getContextManager().getContext(contextName).saveXML(path, pars, this.objectModel,
-                                                                     this.resolver, this.manager);
+            this.getContextManager().getContext(contextName).saveXML(path, pars);
 
             // Element: inputxml
         } else if (name.equals(INPUTXML_ELEMENT)) {

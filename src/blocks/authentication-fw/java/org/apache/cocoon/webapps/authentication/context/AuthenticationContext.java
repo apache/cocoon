@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
@@ -49,7 +48,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.16 2004/03/19 13:59:22 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.17 2004/03/19 14:16:54 cziegeler Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -61,11 +60,13 @@ implements SessionContext {
     protected boolean         initialized;
     protected Context         context;
     protected XPathProcessor  xpathProcessor;
+    protected SourceResolver  resolver;
     
     /** Constructor */
-    public AuthenticationContext(Context context, XPathProcessor processor) {
+    public AuthenticationContext(Context context, XPathProcessor processor, SourceResolver resolver) {
         this.context = context;
         this.xpathProcessor = processor;
+        this.resolver = resolver;
     }
     
     /**
@@ -78,7 +79,7 @@ implements SessionContext {
         this.handler = handler;
         this.handlerName = this.handler.getHandlerName();
         try {
-            this.authContext = new SimpleSessionContext(this.xpathProcessor);
+            this.authContext = new SimpleSessionContext(this.xpathProcessor, this.resolver);
         } catch (ProcessingException pe) {
             throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }
@@ -452,10 +453,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void loadXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 
@@ -495,10 +493,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void saveXML(String             path,
-                        SourceParameters parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 

@@ -38,6 +38,7 @@ import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.xml.sax.SAXException;
 
@@ -45,7 +46,7 @@ import org.xml.sax.SAXException;
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.6 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: DefaultContextManager.java,v 1.7 2004/03/19 14:16:55 cziegeler Exp $
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
@@ -63,6 +64,9 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
     /** The xpath processor */
     private XPathProcessor xpathProcessor;
     
+    /** The source resolver */
+    private SourceResolver resolver;
+    
     /* The list of reserved contexts */
     static private final String[] reservedContextNames = {"session",
                                                             "context"};
@@ -74,6 +78,7 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
         this.manager = manager;
         this.contextSelector = (ServiceSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -199,7 +204,7 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
                 context = this.getContext(name);
             } else {
                 Map contexts = this.getSessionContexts(session);
-                context = new SimpleSessionContext(this.xpathProcessor);
+                context = new SimpleSessionContext(this.xpathProcessor, this.resolver);
                 context.setup(name, loadURI, saveURI);
                 contexts.put(name, context);
             }
@@ -333,8 +338,10 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
         if ( this.manager != null) {
             this.manager.release( this.contextSelector );
             this.manager.release( this.xpathProcessor );
+            this.manager.release( this.resolver );
             this.contextSelector = null;
             this.xpathProcessor = null;
+            this.resolver = null;
             this.manager = null;            
         }
     }

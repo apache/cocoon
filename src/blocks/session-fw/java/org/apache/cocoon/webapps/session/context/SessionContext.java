@@ -17,7 +17,6 @@ package org.apache.cocoon.webapps.session.context;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
 
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -27,9 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
  *  Interface for a SessionContext.
@@ -42,7 +39,7 @@ import org.apache.excalibur.source.SourceResolver;
  *  As this context is used in a web context, all methods must be synchronized.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContext.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: SessionContext.java,v 1.4 2004/03/19 14:16:55 cziegeler Exp $
 */
 public interface SessionContext
 extends Serializable {
@@ -175,10 +172,7 @@ extends Serializable {
      * an exception is thrown.
      */
     void loadXML(String path,
-                 SourceParameters parameters,
-                 Map              objectModel,
-                 SourceResolver   resolver,
-                 ServiceManager   manager)
+                 SourceParameters parameters)
     throws SAXException, ProcessingException, IOException;
 
     /**
@@ -187,9 +181,6 @@ extends Serializable {
      * an exception is thrown.
      */
     void saveXML(String path,
-                 SourceParameters parameters,
-                 Map              objectModel,
-                 SourceResolver   resolver,
-                 ServiceManager   manager)
+                 SourceParameters parameters)
     throws SAXException, ProcessingException, IOException;
 }

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.portal.context;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -27,7 +26,6 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -62,7 +60,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.8 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -487,10 +485,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void loadXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support loading.");
     }
@@ -501,10 +496,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void saveXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support saving.");
     }

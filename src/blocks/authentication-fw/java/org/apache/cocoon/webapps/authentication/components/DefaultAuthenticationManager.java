@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.24 2004/03/19 13:59:22 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.25 2004/03/19 14:16:55 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -203,7 +203,7 @@ implements AuthenticationManager,
         try {
             Authenticator.AuthenticationResult result = authenticator.authenticate( config, parameters );
             if ( result != null && result.valid ) {
-                AuthenticationContext authContext = new AuthenticationContext(this.context, this.xpathProcessor);
+                AuthenticationContext authContext = new AuthenticationContext(this.context, this.xpathProcessor, this.resolver);
                 handler = new UserHandler(config, authContext);
                 // store the authentication data in the context
                 authContext.init(result.result);

@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.7 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.8 2004/03/19 14:21:06 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -231,7 +231,7 @@ public class ProxyTransformer
      * Processes the request to the external application
      * @throws SAXException on any exceptions while sending the request.
      */
-    protected void processRequest() throws SAXException {
+    protected void processRequest() {
         try {
             String remoteURI = null;
             try {
@@ -422,8 +422,7 @@ public class ProxyTransformer
      * @return the result as valid W3C DOM XHTML document
      * @throws IOException if any exceptions occure while reading from the url connection.
      */
-    protected Document readXML(HttpURLConnection connection)
-        throws IOException {
+    protected Document readXML(HttpURLConnection connection) {
         try {
             int charEncoding = configuredEncoding;
 
@@ -598,10 +597,9 @@ public class ProxyTransformer
     }
 
     public static CopletInstanceData getInstanceData(ServiceManager manager,
-                                                     Map objectModel,
                                                      String copletID,
                                                      String portalName)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
         // set portal name
         PortalService portalService = null;
         try {
@@ -631,7 +629,7 @@ public class ProxyTransformer
     public static CopletInstanceData getInstanceData(ServiceManager manager,
                                                      Map objectModel,
                                                      Parameters parameters)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
 
         PortalService portalService = null;
         try {

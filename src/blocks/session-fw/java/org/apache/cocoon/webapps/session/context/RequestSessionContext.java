@@ -30,7 +30,6 @@ import org.apache.cocoon.transformation.CIncludeTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
@@ -112,7 +111,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.6 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: RequestSessionContext.java,v 1.7 2004/03/19 14:16:55 cziegeler Exp $
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -201,8 +200,7 @@ implements SessionContext {
     /**
      * Build attributes XML
      */
-    private void buildMiscXML(Element root)
-    throws ProcessingException {
+    private void buildMiscXML(Element root) {
         Document doc = root.getOwnerDocument();
 
         Element node;
@@ -292,8 +290,7 @@ implements SessionContext {
     /**
      * Build cookies XML
      */
-    private void buildCookiesXML(Element root)
-    throws ProcessingException {
+    private void buildCookiesXML(Element root) {
         Document doc = root.getOwnerDocument();
 
         Element cookiesElement = doc.createElementNS(null, "cookies");
@@ -340,8 +337,7 @@ implements SessionContext {
     /**
      * Build headers XML
      */
-    private void buildHeadersXML(Element root)
-    throws ProcessingException {
+    private void buildHeadersXML(Element root) {
         Document doc = root.getOwnerDocument();
         Element headersElement = doc.createElementNS(null, "headers");
         String headerName;
@@ -364,8 +360,7 @@ implements SessionContext {
     /**
      * Build parameter XML
      */
-    private void buildParameterXML(Element root, SAXParser parser)
-    throws ProcessingException {
+    private void buildParameterXML(Element root, SAXParser parser) {
         Document doc = root.getOwnerDocument();
         // include all parameters
         // process "/parameter" and "/parametervalues" at the same time
@@ -650,8 +645,7 @@ implements SessionContext {
     /**
      * Get the request parameter as a String
      */
-    public String getParameter(final String parameterName)
-    throws ProcessingException {
+    public String getParameter(final String parameterName) {
         return this.request.getParameter(parameterName);
     }
 
@@ -661,10 +655,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void loadXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support loading.");
     }
@@ -675,10 +666,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void saveXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support saving.");
     }
