@@ -210,10 +210,11 @@
   <map:readers default="resource">
     <map:reader logger="sitemap.reader.resource" name="resource" pool-max="32" src="org.apache.cocoon.reading.ResourceReader">
       <!--+
-          | Resource reader has three configuration parameters:
+          | Resource reader has these configuration parameters:
       <expires>-1</expires>
       <quick-modified-test>false</quick-modified-test>
       <byte-ranges>true</byte-ranges>
+      <buffer-size>8192</buffer-size>
           +-->
     </map:reader>
     <map:reader logger="sitemap.reader.image" name="image" src="org.apache.cocoon.reading.ImageReader"/>
