@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.32 2003/10/15 14:12:45 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.33 2003/10/22 11:32:18 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -365,7 +365,7 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="stylesheets/system/xml2html.xsl"/>
+      <map:transform src="stylesheets/system/xml2html.xslt"/>
       <map:serialize type="html"/>
     </map:view>
 
