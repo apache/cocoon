@@ -305,26 +305,6 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-portal-fw" status="deprecated" dir="src/blocks/portal-fw">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="portal-fw"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-session-fw"/>
-    <depend project="cocoon-block-authentication-fw"/>
-
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/portal-fw-block.jar"/>
-
-    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
-  </project>
-
   <project name="cocoon-block-databases" status="stable" dir="src/blocks/databases">
     <package>org.apache.cocoon</package>
 
