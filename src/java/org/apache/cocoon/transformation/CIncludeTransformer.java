@@ -31,6 +31,7 @@ import org.apache.cocoon.transformation.helpers.IncludeCacheManagerSession;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
@@ -121,7 +122,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.12 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.13 2004/07/08 07:22:33 tcurdt Exp $
  */
 public class CIncludeTransformer
 extends AbstractSAXTransformer
@@ -134,6 +135,7 @@ implements Disposable, CacheableProcessingComponent {
     public static final String CINCLUDE_INCLUDE_ELEMENT_SELECT_ATTRIBUTE = "select";
     public static final String CINCLUDE_INCLUDE_ELEMENT_NS_ATTRIBUTE = "ns";
     public static final String CINCLUDE_INCLUDE_ELEMENT_PREFIX_ATTRIBUTE = "prefix";
+    public static final String CINCLUDE_INCLUDE_ELEMENT_STRIP_ROOT_ATTRIBUTE = "strip-root";
 
     public static final String CINCLUDE_INCLUDEXML_ELEMENT    = "includexml";
     public static final String CINCLUDE_INCLUDEXML_ELEMENT_IGNORE_ERRORS_ATTRIBUTE = "ignoreErrors";
@@ -253,11 +255,15 @@ implements Disposable, CacheableProcessingComponent {
     throws ProcessingException ,IOException, SAXException {
         if (name.equals(CINCLUDE_INCLUDE_ELEMENT)) {
 
+            String stripRootValue = attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_STRIP_ROOT_ATTRIBUTE); 
+            boolean stripRoot = StringUtils.equals( stripRootValue, "true" );
+            
             this.processCIncludeElement(attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE),
                                         attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_ELEMENT_ATTRIBUTE),
                                         attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_SELECT_ATTRIBUTE),
                                         attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_NS_ATTRIBUTE),
                                         attr.getValue("",CINCLUDE_INCLUDE_ELEMENT_PREFIX_ATTRIBUTE),
+                                        stripRoot, 
                                         false);
 
         // Element: include
@@ -311,6 +317,7 @@ implements Disposable, CacheableProcessingComponent {
                                                     null,
                                                     null,
                                                     null,
+                                                    false,
                                                     this.cacheManager != null);
            if (this.compiling) {
                this.srcAttributes.addAttribute("", CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE, CINCLUDE_SRC_ELEMENT, "CDATA", src);
@@ -458,7 +465,8 @@ implements Disposable, CacheableProcessingComponent {
 
     protected String processCIncludeElement(String src, String element,
                                             String select, String ns, String prefix,
-                                            boolean cache)
+                                            boolean stripRoot,
+                                            boolean cache )
     throws SAXException, IOException {
 
         if (src == null) {
@@ -476,6 +484,7 @@ implements Disposable, CacheableProcessingComponent {
                           + ", select=" + select
                           + ", ns=" + ns
                           + ", prefix=" + prefix
+                          + ", stripRoot=" + stripRoot
                           + ", caching="+cache);
         }
 
@@ -542,6 +551,7 @@ implements Disposable, CacheableProcessingComponent {
                 if ( this.compiling ) {
                     SourceUtil.toSAX(source, mimeType, new IncludeXMLConsumer(this.contentHandler, this.lexicalHandler));
                 } else {
+                    this.filter.setIgnoreRootElement( stripRoot );
                     SourceUtil.toSAX(source, mimeType, this.filter);
                 }
             }
