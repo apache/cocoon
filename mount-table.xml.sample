@@ -21,11 +21,11 @@
       example: mount the woody source samples at "woody-samples/"     
       (don't forget the / at the end of the path name)
    -->
-  <mount uri-prefix="woody-samples" src="../../src/blocks/woody/samples/"/>
+  <mount uri-prefix="woody-samples/" src="../../src/blocks/woody/samples/"/>
 
   
   <!-- example: mount a prototype located elsewhere on the filesystem at "proto/"
        (kept commented as the path is not likely to exist on your filesystem) -->
-  <mount uri-prefix="proto" src="file://c:/my/projects/prototype/"/>
+  <mount uri-prefix="proto/" src="file://c:/my/projects/prototype/"/>
   
 </mount-table>
