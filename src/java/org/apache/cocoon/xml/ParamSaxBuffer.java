@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
 
 /**
  * Modification of the SAX buffer with parameterization capabilities.
@@ -34,6 +35,14 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
  */
 public class ParamSaxBuffer extends SaxBuffer {
+
+   /**
+    * If ch (in characters()) contains an unmatched '{' then
+    * we save the chars from '{' onward in previous_ch.
+    * Next call to characters() prepends the saved chars to ch before processing
+    * (and sets previous_ch to null).
+    */
+    private char[] previous_ch = null;
 
     /**
      * Creates empty SaxBuffer
@@ -51,10 +60,20 @@ public class ParamSaxBuffer extends SaxBuffer {
     /**
      * Parses text and extracts <code>{name}</code> parameters for later
      * substitution.
-     *
-     * FIXME: This method throws exception when '{' and '}' are separated onto two character events
      */
     public void characters(char ch[], int start, int length) throws SAXException {
+
+        if (previous_ch != null) {
+            // prepend char's from previous_ch to ch
+            char[] buf = new char[length + previous_ch.length];
+            System.arraycopy(previous_ch, 0, buf, 0, previous_ch.length);
+            System.arraycopy(ch, start, buf, previous_ch.length, length);
+            ch = buf;
+            start = 0;
+            length += previous_ch.length;
+            previous_ch = null;
+        }
+
         final int end = start + length;
         for (int i = start; i < end; i++) {
             if (ch[i] == '{') {
@@ -73,7 +92,12 @@ public class ParamSaxBuffer extends SaxBuffer {
                     name.append(ch[j]);
                 }
                 if (j == end) {
-                    throw new SAXException("Unclosed '}'");
+                    // '{' without a closing '}'
+                    // save char's from '{' in previous_ch in case the following call to characters()
+                    // provides the '}'
+                    previous_ch = new char[end - i];
+                    System.arraycopy(ch, i, previous_ch, 0, end - i);
+                    break;
                 }
                 addBit(new Parameter(name.toString()));
 
@@ -87,6 +111,59 @@ public class ParamSaxBuffer extends SaxBuffer {
         // Send any tailing characters
         if (start < end) {
             addBit(new Characters(ch, start, end - start));
+        }
+    }
+
+    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+        flushChars();
+        super.endElement(namespaceURI, localName, qName);
+    }
+
+    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+        flushChars();
+        super.ignorableWhitespace(ch, start, length);
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+        flushChars();
+        super.processingInstruction(target, data);
+    }
+
+    public void startDocument() throws SAXException {
+        flushChars();
+        super.startDocument();
+    }
+
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+        flushChars();
+        super.startElement(namespaceURI, localName, qName, atts);
+    }
+
+    public void endDocument() throws SAXException {
+        flushChars();
+        super.endDocument();
+    }
+
+    public void comment(char ch[], int start, int length) throws SAXException {
+        flushChars();
+        super.comment(ch, start, length);
+    }
+
+    public void endDTD() throws SAXException {
+        flushChars();
+        super.endDTD();
+    }
+
+    public void startDTD(String name, String publicId, String systemId) throws SAXException {
+        flushChars();
+        super.startDTD(name, publicId, systemId);
+    }
+
+    private void flushChars() {
+        // Handle saved chars (in case we had a '{' with no matching '}').
+        if (previous_ch != null) {
+            addBit(new Characters(previous_ch, 0, previous_ch.length));
+            previous_ch = null;
         }
     }
 
