@@ -52,12 +52,19 @@ package org.apache.cocoon.reading;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -68,15 +75,27 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * output data in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.7 2004/01/16 13:53:13 unico Exp $
+ * @version CVS $Id: JSPReader.java,v 1.8 2004/01/29 10:33:04 joerg Exp $
  */
-public class JSPReader extends ServiceableReader {
+public class JSPReader extends ServiceableReader implements Configurable {
+
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+
+    // buffer size for IO
+    private int bufferSize;
+
+    // output encoding
+    private String outputEncoding;
+
+    public void configure(Configuration conf) throws ConfigurationException {
+        bufferSize = conf.getChild("buffer-size").getValueAsInteger(DEFAULT_BUFFER_SIZE);
+        outputEncoding = conf.getChild("output-encoding").getValue(null);
+    }
 
     /**
      * Generates the output from JSPEngine.
      */
     public void generate() throws IOException, ProcessingException {
-        
         if (this.source == null) {
             throw new ProcessingException("JSPReader: source JSP is not specified");
         }
@@ -87,7 +106,7 @@ public class JSPReader extends ServiceableReader {
             (HttpServletRequest) super.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
         ServletContext servletContext =
             (ServletContext) super.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT);
-        
+
         // ensure that we are running in a servlet environment
         if (servletResponse == null || servletRequest == null || servletContext == null) {
             throw new ProcessingException("JSPReader can only be used from within a Servlet environment.");
@@ -96,7 +115,7 @@ public class JSPReader extends ServiceableReader {
         JSPEngine engine = null;
         try {
             // TODO (KP): Should we exclude not supported protocols, say 'context'?
-            String url = super.source;
+            String url = this.source;
 
             // absolute path is processed as is
             if (!url.startsWith("/")) {
@@ -120,20 +139,15 @@ public class JSPReader extends ServiceableReader {
             }
 
             byte[] bytes = engine.executeJSP(url, servletRequest, servletResponse, servletContext);
-            
-            // TODO (KP): Make buffer size configurable
-            byte[] buffer = new byte[8192];
-            int length = -1;
 
-            // TODO: Recode from UTF8 to desired output encoding.
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            while ((length = bais.read(buffer)) > -1) {
-                out.write(buffer, 0, length);
-                System.out.write(buffer,0,length);
+            if (this.outputEncoding != null) {
+                recodeResult (bytes, this.outputEncoding);
+            } else {
+                out.write(bytes);
+                out.flush();
             }
-            bais.close();
-            bais = null;
-            out.flush();
+
+            bytes = null;
         } catch (ServletException e) {
             throw new ProcessingException("ServletException while executing JSPEngine", e.getRootCause());
         } catch (IOException e) {
@@ -143,7 +157,24 @@ public class JSPReader extends ServiceableReader {
         } catch (Exception e) {
             throw new ProcessingException("Exception JSPReader.generate()", e);
         } finally {
-            if (engine != null) super.manager.release(engine);
+            if (engine != null) {
+                super.manager.release(engine);
+            }
         }
+    }
+
+    private void recodeResult(byte[] bytes, String encoding) throws IOException {
+        char[] buffer = new char[this.bufferSize];
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        // UTF-8 is the default encoding/contract of the JSPEngine
+        Reader reader = new InputStreamReader(bais, "UTF-8");
+        Writer writer = new OutputStreamWriter(out, encoding);
+
+        int length = -1;
+        while ((length = reader.read(buffer)) > -1) {
+            writer.write(buffer, 0, length);
+        }
+        writer.flush();
     }
 }
