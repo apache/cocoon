@@ -48,7 +48,7 @@ import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.9 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -62,6 +62,9 @@ public class DefaultCopletFactory
     
     protected ServiceSelector storeSelector;
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#prepare(org.apache.cocoon.portal.coplet.CopletData)
+     */
     public void prepare(CopletData copletData)
     throws ProcessingException {
         if ( copletData != null ) {
@@ -83,6 +86,9 @@ public class DefaultCopletFactory
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#prepare(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
     public void prepare(CopletInstanceData copletInstanceData)
     throws ProcessingException {
         if ( copletInstanceData != null ) {
@@ -105,6 +111,9 @@ public class DefaultCopletFactory
     }
 
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletData)
+     */
     public CopletInstanceData newInstance(CopletData copletData)
     throws ProcessingException {
         String name = copletData.getName();

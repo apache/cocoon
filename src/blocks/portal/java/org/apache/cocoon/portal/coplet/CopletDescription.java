@@ -20,13 +20,14 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
 
 
 /**
- * A configured layout
+ * A configured coplet
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletDescription.java,v 1.2 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface CopletDescription
     extends ProducibleDescription  {
 
+    // no additional info for now
 }
