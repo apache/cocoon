@@ -13,13 +13,13 @@
 
  <body>
  <s1 title="What is it?">
-  
+
   <p>
-   <img src="images/cocoon.jpg" alt="Cocoon"/> Cocoon is a 100% pure 
+   <img src="images/cocoon.jpg" alt="Cocoon"/> Cocoon is a 100% pure
    Java publishing framework that relies on new W3C
    technologies (such as DOM, XML, and XSL) to provide web content.
   </p>
- 
+
   <p>
    The Cocoon project aims to change the way web information is created,
    rendered and served. This new paradigm is based on fact that document content, style and
@@ -28,13 +28,13 @@
    designed, created and managed, reducing management overhead, increasing work reuse and
    reducing time to market.
   </p>
-  
+
   <p>
    Read the <connect href="technologies.xml">Introduction on Cocoon
    technologies</connect> white paper to find out more on the subject.
   </p>
  </s1>
- 
+
  <s1 title="What does it do?">
   <p>
    Web content generation is mostly based on HTML, but HTML doesn't separate
@@ -44,7 +44,7 @@
    capabilities to merge them.
   </p>
  </s1>
- 
+
  <s1 title="What does it change for me?">
   <p>
    Even if the most common use of Cocoon is the automatic creation of HTML
@@ -53,7 +53,7 @@
    client-depending transformations such as WML formatting for WAP-enabled
    devices or direct XML serving to XML and XSL aware clients.
   </p>
- 
+
   <p>
    The Cocoon model allows web sites to be highly structured and
    well designed, reducing duplication efforts and site management costs by
@@ -63,12 +63,12 @@
    resource management by giving to each individual its job and reducing to a
    minimum the cross-talks between different working contexts.
   </p>
-    
+
   <p>
    To do this, the Cocoon model divides the development of web content in three
    separate levels:
   </p>
-  
+
   <dl>
     <dt>XML creation</dt>
     <dd>the XML file is created by the <em>content owners</em>. They do not
@@ -76,12 +76,12 @@
      particular chosen DTD/namespace. This layer is always performed by humans directly
      through normal text editors or XML-aware tools/editors.</dd>
     <dt>XML processing</dt>
-    <dd>the requested XML file is processed and the logic contained in its 
+    <dd>the requested XML file is processed and the logic contained in its
      logicsheet is applied. Unlike other dynamic content generators, the logic
      is separated from the content file.</dd>
     <dt>XSL rendering</dt>
     <dd>the created document is then rendered by applying an XSL
-     stylesheet to it and formatting it to the specified resource type 
+     stylesheet to it and formatting it to the specified resource type
      (HTML, PDF, XML, WML, XHTML)</dd>
   </dl>
  </s1>
@@ -115,7 +115,7 @@
   </p>
   <p>
    Another problem is the intrinsic impossibility of page-compiling all the three
-   processing layers, due to the post-processing requirements of XSL styling. This 
+   processing layers, due to the post-processing requirements of XSL styling. This
    problem will be solved (hopefully!) with the availability of XSL-enabled
    web browsers since the XSL rendering would be then
    performed on client side reducing the server work.
@@ -126,33 +126,40 @@
   <p>
    Here is the <link href="http://xml.apache.org/dist/">download area</link>.
   </p>
+  <note>
+   Since Cocoon requires many different packages to work (Xerces, Xalan, FOP, etc...)
+   but sometimes there are small incompatibilities between them that make the
+   installation harder, we decided to help you by placing all the required
+   binary libraries inside the Cocoon distribution. So, after you
+   downloaded the latest Cocoon distribution, <b>you don't need anything else</b>.
+  </note>
  </s1>
- 
+
  <s1 title="How do I Contribute?">
   <p>
-   The Cocoon Project is an open volunteer project based on the spirit of the 
-   <link href="http://www.apache.org">Apache Software Foundation</link> (ASF). 
-   This means that there are lots of ways to contribute to the project, either 
-   with direct participation (coding, documenting, answering questions, 
-   proposing ideas, reporting bugs, suggesting bug-fixes, etc..) or by resource 
-   donation (money, time, publicity, hardware, software, conference 
+   The Cocoon Project is an open volunteer project based on the spirit of the
+   <link href="http://www.apache.org">Apache Software Foundation</link> (ASF).
+   This means that there are lots of ways to contribute to the project, either
+   with direct participation (coding, documenting, answering questions,
+   proposing ideas, reporting bugs, suggesting bug-fixes, etc..) or by resource
+   donation (money, time, publicity, hardware, software, conference
    presentations, speeches, etc...).
   </p>
   <p>
-   For direct participation, we suggest you to subscribe to the 
-   <link href="http://xml.apache.org/mail.html">Cocoon mail lists</link> 
-   (follow the link for information on how to subscribe and to access the mail 
+   For direct participation, we suggest you to subscribe to the
+   <link href="http://xml.apache.org/mail.html">Cocoon mail lists</link>
+   (follow the link for information on how to subscribe and to access the mail
    list archives), to checkout the <link href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/">
-   latest and greatest code</link> (which you found in the xml-cocoon module in 
-   the xml.apache.org CVS code repository, or from the 
-   <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>), 
+   latest and greatest code</link> (which you found in the xml-cocoon module in
+   the xml.apache.org CVS code repository, or from the
+   <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>),
    control the <connect href="../todo.xml">todo</connect>
    list and jump in. Document writers are usually the most wanted people so if
    you like to help but you're not familiar with technical details, don't worry:
    we have work for you.
   </p>
   <p>
-   For money funding in particular, the Cocoon Project and the ASF in general 
+   For money funding in particular, the Cocoon Project and the ASF in general
    is closely collaborating with the <link href="http://www.sourcexchange.com">Collab.net
    SourceXchange</link> program that will provide a legal, solid and well
    established resource for money collecting to fund direct software production
@@ -168,7 +175,7 @@
    contribute, so, please, help us by placing the cocoon logo somewhere in your
    site to indicate that you are using and supporting the Cocoon Project.
   </p>
-  
+
   <p>
    Thank you very much. <img src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
   </p>
