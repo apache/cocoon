@@ -48,16 +48,19 @@
 
   <!-- repeater requires unique identification mechanism of the row-nodes -->
   <!-- (it is of course possible to implement other binding strategies) -->
+  <!-- important note: the row-path is used inside jxpath-createPath context,
+       as a consequence it cannot have dependent children or predicates -->
   <fb:repeater id="contacts"
     parent-path="."
     row-path="contacts"
     unique-row-id="id"
     unique-path="@id">
 
-	<!-- compare to xml-binding: the convertor is not needed here -->
+    <fb:identity>
+      <!-- compare to xml-binding: the convertor is not needed here -->
+      <fb:value id="id" path="@id"/>
+    </fb:identity>
 
-    <!-- important note: the row-path is used inside jxpath-createPath context,
-    as a consequence it cannot have dependent children or predicates -->
 
     <fb:on-bind>
       <!-- executed on updates AND right after the insert -->

@@ -29,7 +29,7 @@ import java.util.Locale;
  * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.3 2004/03/12 03:31:39 joerg Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -153,5 +153,21 @@ public class ValueJXPathBinding extends JXPathBindingBase {
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.updateBinding.enableLogging(logger);
+    }
+
+    public String getFieldId() {
+        return this.fieldId;
+    }
+
+    public String getXPath() {
+        return this.xpath;
+    }
+
+    public Convertor getConvertor() {
+        return this.convertor;
+    }
+
+    public Locale getConvertorLocale() {
+        return this.convertorLocale;
     }
 }

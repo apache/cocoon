@@ -28,7 +28,13 @@
 <!ATTLIST actions
 	priority (high | medium | low) #REQUIRED
 >
-<!ELEMENT action (#PCDATA | link | br | code)*>
+<!ELEMENT changes (release+)>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+	version CDATA #REQUIRED
+	date CDATA #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code | ul)*>
 <!ATTLIST action
 	context (build | code | docs) #IMPLIED
 	assigned-to CDATA #IMPLIED
@@ -38,24 +44,20 @@
 	due-to CDATA #IMPLIED
 	due-to-email CDATA #IMPLIED
 >
-<!ELEMENT changes (release+)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT br EMPTY>
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link
 	href CDATA #REQUIRED
 >
-<!ELEMENT release (action+)>
-<!ATTLIST release
-	version CDATA #REQUIRED
-	date CDATA #REQUIRED
->
+<!ELEMENT ul (li)+>
+<!ELEMENT li (#PCDATA | link | br | code | ul)*>
 <!ENTITY eacute           "&#x000E9;">
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.274 2004/03/11 14:21:56 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.275 2004/03/12 03:31:40 joerg Exp $:-->
 
 <status>
  <developers>
@@ -210,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="update" fixes-bug="27600">
+     CForms: Change the syntax for repeater row identity handling.
+   </action>
    <action dev="CZ" type="update">
      An internal redirect is now handled the same way as an external redirect would be handled.
      This includes that the error handler of the called pipeline is invoked in case of an error.
@@ -253,7 +258,8 @@
                    to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"</li>
                <li>from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
                    to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"</li>
-           </ul></li>
+           </ul>
+       </li>
        <li>Java packages moved from org.apache.cocoon.woody to org.apache.cocoon.forms</li>
      </ul>
    </action> 

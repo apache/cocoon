@@ -69,18 +69,19 @@
   <fb:multi-value id="drinks" parent-path="drinks" row-path="drink"/>
 
   <!-- repeater requires unique identification mechanism of the row-nodes -->
+  <!-- important note: the row-path is used inside jxpath-createPath context,
+       as a consequence it cannot have dependent children or predicates -->
   <fb:repeater id="contacts"
     parent-path="contacts"
-    row-path="contact"
-    unique-row-id="id"
-    unique-path="@id"
-    >
-    
-    <!-- optional convertor to use for mapping the unique id -->
-    <fd:convertor datatype="long" />
-        
-    <!-- important note: the row-path is used inside jxpath-createPath context,
-         as a consequence it cannot have dependent children or predicates -->
+    row-path="contact">
+
+    <fb:identity>
+      <fb:value id="id" path="@id">
+        <!-- optional convertor to use for mapping the unique id -->
+        <fd:convertor datatype="long" />
+      </fb:value>
+    </fb:identity>
+
 
     <fb:on-bind>
         <!-- executed on updates AND right after the insert -->
