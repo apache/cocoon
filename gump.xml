@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.139 2004/04/06 04:36:43 joerg Exp $
+    | CVS $Id: gump.xml,v 1.140 2004/04/09 12:26:26 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -71,6 +71,7 @@
     <depend project="commons-lang"/>
 
     <depend project="cocoon-javac"/>
+    <depend project="cocoon-javacImpl"/>
     <depend project="rhino-cocoondev"/>
     <depend project="jisp"/>
     <depend project="jing"/>
@@ -1262,6 +1263,11 @@
   <project name="cocoon-javac">
     <package>org.tempuri.javac</package>
     <jar name="lib/core/javacApi-0.9.jar" id="api"/>
+  </project>
+
+  <project name="cocoon-javacImpl">
+    <package>org.tempuri.javacImpl</package>
+    <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
   </project>
 
 </module>
