@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.17 2003/05/08 20:42:15 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.18 2003/05/15 14:10:20 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -121,10 +121,30 @@
      <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
     </map:serializer>
     <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-grow="2" pool-max="64" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
+      <!--+
+          | You can choose from Strict, Transitional, or Frameset XHTML.
+          | For Strict XHTML, set doctype to:
+          |   <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
+          |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
+          | For Transitional XHTML, set doctype to:
+          |   <doctype-public>-//W3C//DTD XHTML 1.0 Transitional//EN</doctype-public>
+          |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</doctype-system>
+          | For Frameset XHTML, set doctype to:
+          |   <doctype-public>-//W3C//DTD XHTML 1.0 Frameset//EN</doctype-public>
+          |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd</doctype-system>
+          |
+          | Default XHTML doctype in Cocoon is XHTML Strict. If you want to use more than one
+          | XHTML DTD simulteneously, you can define several XHTML serializers.
+          +-->
       <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
       <encoding>UTF-8</encoding>
     </map:serializer>
+    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml11" pool-grow="2" pool-max="64" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
+      <doctype-public>-//W3C//DTD XHTML 1.1//EN</doctype-public>
+      <doctype-system>http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</doctype-system>
+      <encoding>UTF-8</encoding>
+    </map:serializer>   
     <map:serializer logger="sitemap.serializer.text" mime-type="text/plain" name="text" src="org.apache.cocoon.serialization.TextSerializer"/>
     <map:serializer logger="sitemap.serializer.vrml" mime-type="model/vrml" name="vrml" src="org.apache.cocoon.serialization.TextSerializer"/>
     <map:serializer logger="sitemap.serializer.zip"  mime-type="application/zip" name="zip" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
