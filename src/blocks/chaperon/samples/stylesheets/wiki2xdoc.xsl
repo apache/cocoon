@@ -16,7 +16,7 @@
     <title><xsl:value-of select="st:section/st:title/st:textsequence"/></title>
    </header>
    <body>
-    <xsl:apply-templates select="st:paragraphs/st:paragraph/st:*" mode="paragraph"/>  
+    <xsl:apply-templates select="st:paragraphs/st:paragraph/*" mode="paragraph"/>  
     <xsl:apply-templates select="st:section"/>
    </body>
   </document>
@@ -25,21 +25,21 @@
  <xsl:template match="st:section">
   <section>
    <title><xsl:value-of select="st:title/st:textsequence"/></title>
-   <xsl:apply-templates select="st:paragraphs/st:paragraph/st:*|st:paragraphs/st:subsection" mode="paragraph"/>
+   <xsl:apply-templates select="st:paragraphs/st:paragraph/*|st:paragraphs/st:subsection" mode="paragraph"/>
   </section>
  </xsl:template>
 
  <xsl:template match="st:subsection" mode="paragraph">
   <section>
    <title><xsl:value-of select="st:subtitle/st:textsequence"/></title>
-   <xsl:apply-templates select="st:subparagraphs/st:paragraph/st:*|st:subparagraphs/st:subsubsection" mode="paragraph"/>
+   <xsl:apply-templates select="st:subparagraphs/st:paragraph/*|st:subparagraphs/st:subsubsection" mode="paragraph"/>
   </section>
  </xsl:template>
 
  <xsl:template match="st:subsubsection" mode="paragraph">
   <section>
    <title><xsl:value-of select="st:subsubtitle/st:textsequence"/></title>
-   <xsl:apply-templates select="st:subsubparagraphs/st:paragraph/st:*" mode="paragraph"/>
+   <xsl:apply-templates select="st:subsubparagraphs/st:paragraph/*" mode="paragraph"/>
   </section>
  </xsl:template>
 
@@ -51,7 +51,7 @@
 
  <xsl:template match="st:textsequence" mode="paragraph">
   <p>
-   <xsl:apply-templates select="st:textblock/st:*|st:break"/>
+   <xsl:apply-templates select="st:textblock/*|st:break"/>
   </p>
  </xsl:template>
 
@@ -73,7 +73,7 @@
 
  <xsl:template match="st:tabletitle">
   <th>
-   <xsl:apply-templates select="st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textblock/*"/>
   </th>
  </xsl:template>
 
@@ -85,7 +85,7 @@
 
  <xsl:template match="st:tablecolumn">
   <td>
-   <xsl:apply-templates select="st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textblock/*"/>
   </td>
  </xsl:template>
 
@@ -191,7 +191,7 @@
 
  <xsl:template match="st:bulletedlistitem" >
   <li>
-   <xsl:apply-templates select="st:textsequence/st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
   </li>
  </xsl:template>
 
@@ -203,7 +203,7 @@
 
  <xsl:template match="st:numberedlistitem1" >
   <li>
-   <xsl:apply-templates select="st:textsequence/st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
   </li>
  </xsl:template>
 
@@ -215,7 +215,7 @@
     
  <xsl:template match="st:numberedlistitem2" >
   <li>
-   <xsl:apply-templates select="st:textsequence/st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
   </li>
  </xsl:template>
 
@@ -227,7 +227,7 @@
     
  <xsl:template match="st:numberedlistitem3" >
   <li>
-   <xsl:apply-templates select="st:textsequence/st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
   </li>
  </xsl:template>
 
