@@ -29,7 +29,7 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.4 2001-02-15 12:54:44 dims Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.5 2001-02-19 16:58:52 prussell Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
@@ -79,7 +79,11 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
     }
 
     public URL getURL(URL base, String location) throws MalformedURLException {
-        return getURL(base.toExternalForm() + location);
+        if ( base != null ) { 
+            return getURL(base.toExternalForm() + location);
+        } else {
+            return getURL(location);    
+        }
     }
 
     /**
