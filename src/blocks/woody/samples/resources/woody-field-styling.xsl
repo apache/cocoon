@@ -20,7 +20,7 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: woody-field-styling.xsl,v 1.46 2004/03/09 13:54:02 reinhard Exp $
+      | Version CVS $Id: woody-field-styling.xsl,v 1.47 2004/04/21 13:53:56 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -238,6 +238,22 @@
       +-->
   <xsl:template match="wi:output | wi:field[wi:styling/@type='output']" priority="2">
     <xsl:copy-of select="wi:value/node()"/>
+  </xsl:template>
+
+  <!--+
+      | Labels for form elements.
+      +-->
+  <xsl:template match="wi:*" mode="label">
+    <label for="{@id}" title="{wi:hint}">
+      <xsl:copy-of select="wi:label/node()"/>
+    </label>
+  </xsl:template>
+
+  <!--+
+      | Labels for pure outputs must not contain <label/> as there is no element to point to.
+      +-->
+  <xsl:template match="wi:output | wi:field[wi:styling/@type='output']" mode="label">
+    <xsl:copy-of select="wi:label/node()"/>
   </xsl:template>
 
   <!--+

@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.5 2004/03/30 12:19:44 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.6 2004/04/21 13:53:56 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -239,6 +239,22 @@
       +-->
   <xsl:template match="fi:output | fi:field[fi:styling/@type='output']" priority="2">
     <xsl:copy-of select="fi:value/node()"/>
+  </xsl:template>
+
+  <!--+
+      | Labels for form elements.
+      +-->
+  <xsl:template match="fi:*" mode="label">
+    <label for="{@id}" title="{fi:hint}">
+      <xsl:copy-of select="fi:label/node()"/>
+    </label>
+  </xsl:template>
+
+  <!--+
+      | Labels for pure outputs must not contain <label/> as there is no element to point to.
+      +-->
+  <xsl:template match="fi:output | fi:field[fi:styling/@type='output']" mode="label">
+    <xsl:copy-of select="fi:label/node()"/>
   </xsl:template>
 
   <!--+
