@@ -17,24 +17,24 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>XML:DB Generator</title>
-		<version>0.1</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
-		 </authors>
-		 <abstract>This document describes the XML:DB generator of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Warning!">
+  <header>
+    <title>XML:DB Generator</title>
+    <version>0.1</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
+     </authors>
+     <abstract>This document describes the XML:DB generator of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Warning!">
       <p>
         The XML:DB generators are currently unmaintained and going to be 
         deprecated soon. Please use the XML:DB pseudo-protocol instead.
       </p>  
     </s1>
-		<s1 title="XML:DB Generator">
-			<p>
+    <s1 title="XML:DB Generator">
+      <p>
          Generates XML documents out of an XML:DB compliant database. XML:DB
          is a generic API developed by the XML:DB group in order to allow access
          via a consistent API to the upcoming XML databases such as dbXML,
@@ -69,5 +69,5 @@
          end of the <code>base</code> tag.
       </p>
     </s1>
-	</body>
+  </body>
 </document>

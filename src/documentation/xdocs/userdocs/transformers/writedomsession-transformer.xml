@@ -17,25 +17,25 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Write DOM Session Transformer</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-			<person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
-			<person name="Davanum Srinivas" email="dims@yahoo.com"/>
-		 </authors>
-		 <abstract>This document describes the write dom session transformer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Write DOM Session Transformer">
-			<p>Make a DOM object from SAX events and write it to the session.</p>
-			<ul>
-				<li>Name : writeDOMsession</li>
-				<li>Class: org.apache.cocoon.transformation.WriteDOMSessionTransformer</li>
-				<li>Cacheable: no.</li>
-			</ul>
+  <header>
+    <title>Write DOM Session Transformer</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+      <person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
+      <person name="Davanum Srinivas" email="dims@yahoo.com"/>
+     </authors>
+     <abstract>This document describes the write dom session transformer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Write DOM Session Transformer">
+      <p>Make a DOM object from SAX events and write it to the session.</p>
+      <ul>
+        <li>Name : writeDOMsession</li>
+        <li>Class: org.apache.cocoon.transformation.WriteDOMSessionTransformer</li>
+        <li>Cacheable: no.</li>
+      </ul>
 <p>
 If you only use the FilterTransformer in combination with the SQLTransformer, 
 you have to query the database each time the user wants to see another part of 
@@ -72,6 +72,6 @@ transformed XML also.
 The WriteDOMSessionTransformer is a standalone component, you don't need to use 
 it in combination with the SQLTransformer.
 </p>
-		</s1>
-	</body>
+    </s1>
+  </body>
 </document>

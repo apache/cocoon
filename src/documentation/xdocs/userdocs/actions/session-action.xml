@@ -42,7 +42,7 @@
 <source>
 <![CDATA[
     <map:act type="session"/>
-]]>	
+]]>  
 </source>
      <p>This is the equivalent to specify the 'action' parameter
        with the value 'create':</p>
@@ -51,7 +51,7 @@
     <map:act type="session">
         <map:parameter name="action" value="create"/>
     </map:act>
-]]>	
+]]>  
 </source>
    </s2>
    <s2 title="Terminating a Session">
@@ -63,7 +63,7 @@
     <map:act type="session">
         <map:parameter name="action" value="terminate"/>
     </map:act>
-]]>	
+]]>  
 </source>
      <p>This terminates the session immediately.</p>
      <p>You can optionally specifiy the 'mode' parameter which controlls
@@ -77,7 +77,7 @@
         <map:parameter name="action" value="terminate"/>
         <map:parameter name="mode" value="if-unused"/>
     </map:act>
-]]>	
+]]>  
 </source>
    </s2>
    </s1>

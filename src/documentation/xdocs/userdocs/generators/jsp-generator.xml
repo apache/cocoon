@@ -17,18 +17,18 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>JSP Generator</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-		 </authors>
-		 <abstract>This document describes the jsp generator of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="JSP Generator">
-			<p>The JspGenerator selects a JSPEngine component. The JSPEngine component
+  <header>
+    <title>JSP Generator</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+     </authors>
+     <abstract>This document describes the jsp generator of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="JSP Generator">
+      <p>The JspGenerator selects a JSPEngine component. The JSPEngine component
                           launches a JSP servlet engine of your servlet container, 
                           feeds the HttpRequest into the 
                           JSP servlet engine, and pipes the jsp response as SAX events into Cocoon.
@@ -40,15 +40,15 @@
                           You may specify your JSP pages either as JSP scriptlets or as JSP-XML.
                           But keep in mind that your JSP output should be valid XML.
                         </p>
-			<ul>
-				<li>Name : jsp</li>
-				<li>Class: org.apache.cocoon.generation.JspGenerator</li>
-				<li>Cacheable: no</li>
-			</ul>
+      <ul>
+        <li>Name : jsp</li>
+        <li>Class: org.apache.cocoon.generation.JspGenerator</li>
+        <li>Cacheable: no</li>
+      </ul>
 <source><![CDATA[
 <map:generate type="jsp"/>
 ]]></source>
-		</s1>
+    </s1>
                 <s1 title="JSPEngine">
                   <p>As JSP servlet engines are implemented differently, you may have to
                     select the appropriate JSPEngine component. 
@@ -144,5 +144,5 @@
 ]]></source>
                   </s2>
                 </s1>
-	</body>
+  </body>
 </document>

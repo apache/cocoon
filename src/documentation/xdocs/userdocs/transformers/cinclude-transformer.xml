@@ -132,75 +132,75 @@
 ]]></source>
   </s1>
 <s1 title="Including External XML (simple)">
-		  <p>One feature of the cinclude transformer (this is currently not
-		     supported by the caching cinclude transformer) is including XML from
-			 external sources, e.g. files or from an HTTP server. 
-			 The <code>cinclude:includexml</code> tag starts including of XML:</p> 
-		  <source>
+      <p>One feature of the cinclude transformer (this is currently not
+         supported by the caching cinclude transformer) is including XML from
+       external sources, e.g. files or from an HTTP server. 
+       The <code>cinclude:includexml</code> tag starts including of XML:</p> 
+      <source>
 &lt;cinclude:includexml&gt;  &lt;!-- Include XML from HTTP server --&gt;
      &lt;cinclude:src&gt;http://external.news.com/flashnews.xml&lt;/cinclude:src&gt;
 &lt;/cinclude:includexml&gt;
 </source> 
-		  <p> This would be a simple way of "get"ting XML data from an
-			 external site. Using this method it is also possible to pass parameters in the
-			 url - just as you would in a "get" sent from a browser.</p> 
-		  <source>
+      <p> This would be a simple way of "get"ting XML data from an
+       external site. Using this method it is also possible to pass parameters in the
+       url - just as you would in a "get" sent from a browser.</p> 
+      <source>
 &lt;cinclude:includexml&gt;  &lt;!-- Include XML from HTTP server --&gt;
     &lt;cinclude:src&gt;http://external.news.com/flashnews.xml?id=1234&amp;myname=matthew&lt;/cinclude:src&gt;
 &lt;/cinclude:includexml&gt;
 </source> 
-		  <p>If the external XML is not valid or not available, the 
-			 transformer signals an error to the pipeline and the document containing the
-			 include command is not available.</p> 
-		  <p>For this purpose the <code>ignoreErrors</code> attribute can be
-			 used:</p> 
-		  <source>
+      <p>If the external XML is not valid or not available, the 
+       transformer signals an error to the pipeline and the document containing the
+       include command is not available.</p> 
+      <p>For this purpose the <code>ignoreErrors</code> attribute can be
+       used:</p> 
+      <source>
 &lt;cinclude:includexml ignoreErrors="true"&gt;
 ...
 &lt;/cinclude:includexml&gt;</source> 
-		</s1> 
-		<s1 title="Including External XML (advanced)">
-		  <p>The above section shows you how to include XML data from an
-			 external source such as an HTTP server using the simple "get" method supplied
-			 in the HTTP protocol. For more advanced uses you will wish to be able to send
-			 "Post" or other HTTP methods to the server. In addition you may want to
-			 actually send XML data to the server - just as you would using an HTML form.
-			 The format of this resource is slightly more complicated:</p> 
-		  <source>
+    </s1> 
+    <s1 title="Including External XML (advanced)">
+      <p>The above section shows you how to include XML data from an
+       external source such as an HTTP server using the simple "get" method supplied
+       in the HTTP protocol. For more advanced uses you will wish to be able to send
+       "Post" or other HTTP methods to the server. In addition you may want to
+       actually send XML data to the server - just as you would using an HTML form.
+       The format of this resource is slightly more complicated:</p> 
+      <source>
 &lt;?xml version="1.0"?&gt;
 &lt;data xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
 &lt;cinclude:includexml&gt;
     &lt;cinclude:src&gt;http://itsunshine/tamino/blah&lt;/cinclude:src&gt;
     &lt;cinclude:configuration&gt;
-	&lt;cinclude:parameter&gt;
-	  &lt;cinclude:name&gt;method&lt;/cinclude:name&gt;
-	  &lt;cinclude:value&gt;POST&lt;/cinclude:value&gt;
-	&lt;/cinclude:parameter&gt;
+  &lt;cinclude:parameter&gt;
+    &lt;cinclude:name&gt;method&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;POST&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
     &lt;/cinclude:configuration&gt;
     &lt;cinclude:parameters&gt;
       &lt;cinclude:parameter&gt;
-	  &lt;cinclude:name&gt;message&lt;/cinclude:name&gt;
-	  &lt;cinclude:value&gt;Hi there&lt;/cinclude:value&gt;
-	&lt;/cinclude:parameter&gt;
-	&lt;cinclude:parameter&gt;
-	  &lt;cinclude:name&gt;_Process&lt;/cinclude:name&gt;
-	  &lt;cinclude:value&gt;&lt;name&gt;matti&lt;/name&gt;&lt;age&gt;36&lt;/age&gt;&lt;/cinclude:value&gt;
-	&lt;/cinclude:parameter&gt;
+    &lt;cinclude:name&gt;message&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;Hi there&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
+  &lt;cinclude:parameter&gt;
+    &lt;cinclude:name&gt;_Process&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;&lt;name&gt;matti&lt;/name&gt;&lt;age&gt;36&lt;/age&gt;&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
     &lt;/cinclude:parameters&gt;
 &lt;/cinclude:includexml&gt;
 &lt;/data&gt;
-		</source> 
-		  <p>Lets look at the tags. The tag <code>cinclude:src</code> defines the address of the
-			 resource we want to access and then comes a list of (optional)
-			 connection-specific parameters (enclosed in the <code>cinclude:configuration</code> tag).
-			 In this example the HTTP-method ("POST") is passed into the connection. The
-			 format of these parameters is discussed next.</p> 
-		  <p>Then comes the list of parameters we wish to pass into the
-			 function. Each parameter defined has a name and a value. The value can either
-			 be text or XML.</p> 
-		  <p>The format of the parameters is the same as for the connection
-			 configuration.</p> 
-		</s1> 
+    </source> 
+      <p>Lets look at the tags. The tag <code>cinclude:src</code> defines the address of the
+       resource we want to access and then comes a list of (optional)
+       connection-specific parameters (enclosed in the <code>cinclude:configuration</code> tag).
+       In this example the HTTP-method ("POST") is passed into the connection. The
+       format of these parameters is discussed next.</p> 
+      <p>Then comes the list of parameters we wish to pass into the
+       function. Each parameter defined has a name and a value. The value can either
+       be text or XML.</p> 
+      <p>The format of the parameters is the same as for the connection
+       configuration.</p> 
+    </s1> 
   <s1 title="Caching">
    <p>This transformer includes XML in the current stream and acts therefore
       as a kind of (dynamic) content aggregation. However, the included content

@@ -201,14 +201,14 @@
         in the <code>cocoon.xconf</code> file.
       </p>
       <s2 title="example">
-				<p>This would set up the crawler to crawl all of your site, except pages in the 'search' section, also we are telling the crawler to use a non-standard cocoon-view for getting the links in documents, called <code>my-search-links</code>. </p>
+        <p>This would set up the crawler to crawl all of your site, except pages in the 'search' section, also we are telling the crawler to use a non-standard cocoon-view for getting the links in documents, called <code>my-search-links</code>. </p>
 <source><![CDATA[
 <cocoon-crawler logger="core.search.crawler">
   <exclude>.*/search/.*</exclude>
   <link-view-query>cocoon-view=my-search-links</link-view-query>
 </cocoon-crawler>
 ]]></source>
-      	<p>This tells the indexer to use the non-standard 'my-search-content' view to retrieve the content for indexing. Also it tells the indexer that we would like to have any <code>title</code> or <code>subtitle</code> XML elements in the document added to the index as stored fields, so they can be retrieved and displayed to the user with any hits they get.</p>
+        <p>This tells the indexer to use the non-standard 'my-search-content' view to retrieve the content for indexing. Also it tells the indexer that we would like to have any <code>title</code> or <code>subtitle</code> XML elements in the document added to the index as stored fields, so they can be retrieved and displayed to the user with any hits they get.</p>
 <source><![CDATA[
 <lucene-xml-indexer logger="core.search.lucene">
   <store-fields>title, subtitle</store-fields>
@@ -221,15 +221,15 @@
         <code>sitemap.xmap</code> file.
       </p>
       <s2 title="example">
-				<p>This would generate a document from a search, getting the query and other information from request parameters.</p>
+        <p>This would generate a document from a search, getting the query and other information from request parameters.</p>
 <source><![CDATA[
 <map:generate type="search"/>
 ]]></source>
-      	<p>This would generate a document from a search, getting the query from the sitemap parameter '1' and other information from request parameters.</p>
+        <p>This would generate a document from a search, getting the query from the sitemap parameter '1' and other information from request parameters.</p>
 <source><![CDATA[
 <map:generate type="search">
   <map:parameter name="query" value="{1}"/>
-</map:generate>	
+</map:generate>  
 ]]></source>
       </s2>
     </s1>
@@ -296,26 +296,26 @@
     <s1 title="Extending the Sample">
       <p>
         It is easy to extend the search sample to display more information about the search hit than just the url of the resource.</p>
-			<p>In order to show, for example, the title and summary of a document, these first need to be added to the search index as 'Stored Fields'. Then when the documents are found during a search, that information is available to display, from the search engine itself.</p>
+      <p>In order to show, for example, the title and summary of a document, these first need to be added to the search index as 'Stored Fields'. Then when the documents are found during a search, that information is available to display, from the search engine itself.</p>
       <p>First, decide which fields you want to store.</p>
       <p>Decide where is the best place in your pipeline for content to be extracted for indexing, it might not always be the default view 'content'.</p>
       <p>Next, decide if you need an XSLT transformation on your documents, to make them more suitable for indexing. This may include deciding on one of several titles in your document, what part of your document gets added to the summary etc. You might want to strip certain tags out because you don't want their content searched. You might be able to raise hit scores on documents by re-arranging content, or keeping larger amounts of content in fewer tags.</p>
-			<p>Now you tell the search engine (in cocoon.xconf) which tags you'd like storing.</p>
+      <p>Now you tell the search engine (in cocoon.xconf) which tags you'd like storing.</p>
 <source><![CDATA[
 <lucene-xml-indexer logger="core.search.lucene">
   <store-fields>title, summary</store-fields>
   <content-view-query>cocoon-view=search-content</content-view-query>
 </lucene-xml-indexer>
 ]]></source>
-			<p>This example tells the indexer to store any tags called 'title' or 'summary' it finds in your documents. It also tells the indexer to get it's content from the view called 'search-content'.</p>
+      <p>This example tells the indexer to store any tags called 'title' or 'summary' it finds in your documents. It also tells the indexer to get it's content from the view called 'search-content'.</p>
 <source><![CDATA[
 <map:view from-label="search" name="search">
   <map:transform src="search-filter.xsl"/>
   <map:serialize type="xml"/>
 </map:view>
 ]]></source>
-			<p>This is how you might setup that custom view in your sitemap. You would then add a label attribute <code>label="search"</code> to the appropriate place in your pipelines. See the section on views for more information.</p>
-			<p>After you have re-indexed the site, when you do searches, the new fields will be available in the XML output by Lucene, in the form of a <code>search:field</code> tag, you will need to modify your XSLT that displays the hits to show this.</p>
+      <p>This is how you might setup that custom view in your sitemap. You would then add a label attribute <code>label="search"</code> to the appropriate place in your pipelines. See the section on views for more information.</p>
+      <p>After you have re-indexed the site, when you do searches, the new fields will be available in the XML output by Lucene, in the form of a <code>search:field</code> tag, you will need to modify your XSLT that displays the hits to show this.</p>
 <source><![CDATA[
 <xsl:template match="search:hit">
   <tr>

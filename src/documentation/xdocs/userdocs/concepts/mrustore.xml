@@ -89,7 +89,7 @@
       if the MRUMemoryStore has reached its maximum object limit, or the JVM 
       memory consumption is over the heap size limit. See StoreJanitor user 
       docs for more information.</li>
-	</ol>
+  </ol>
   </s1>
   </body>
 </document>
