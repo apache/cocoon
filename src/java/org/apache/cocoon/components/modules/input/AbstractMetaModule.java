@@ -71,7 +71,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.6 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.7 2004/02/15 19:06:52 haul Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -258,6 +258,21 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         return (Iterator) this.get(OP_NAMES, null, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
     }
 
+    protected Object getValue(String attr, Map objectModel, ModuleHolder holder) throws ConfigurationException{
+        return this.getValue(attr, objectModel, holder.input, holder.name, holder.config);
+    }
+
+    protected Object getValue(String attr, Map objectModel, ModuleHolder staticHolder, ModuleHolder dynamicHolder) throws ConfigurationException{
+        return this.getValue(attr, objectModel, staticHolder.input, staticHolder.name, dynamicHolder.config);
+    }
+
+    protected Object[] getValues(String attr, Map objectModel, ModuleHolder holder) throws ConfigurationException{
+        return this.getValues(attr, objectModel, holder.input, holder.name, holder.config);
+    }
+
+    protected Object[] getValues(String attr, Map objectModel, ModuleHolder staticHolder, ModuleHolder dynamicHolder) throws ConfigurationException{
+        return this.getValues(attr, objectModel, staticHolder.input, staticHolder.name, dynamicHolder.config);
+    }
 
     /**
      * Get an attribute's value from a (usually statically assigned) Input
