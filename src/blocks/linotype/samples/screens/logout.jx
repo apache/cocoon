@@ -1,0 +1,12 @@
+<html>
+<head>
+ <title>Bye!</title>
+ <META HTTP-EQUIV="refresh" CONTENT="2;URL=#{$request/contextPath}/"/>
+ <link rel="stylesheet" type="text/css" href="#{$request/contextPath}/styles/main.css"/>
+</head>
+<body>
+
+<h1 align="center"><a href="#{$request/contextPath}/">See ya!</a></h1>
+
+</body>
+</html>
