@@ -155,9 +155,11 @@
 
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
+    <!-- (RP) commented out as trunk doesn't support a dynamic documentation 
     <copy file="${documentation}/sitemap-localdocs.xmap"
       tofile="${build.webapp.docs}/sitemap.xmap" overwrite="true"/>
-
+    -->
+    
     <copy todir="${build.webapp.docs}" filtering="off">
       <fileset dir="${documentation}">
         <include name="images/**"/>
@@ -165,9 +167,11 @@
     </copy>
 
     <!-- patch the welcome page to tell we have documentation to show -->
+    <!-- (RP) commented out as trunk doesn't support a dynamic documentation 
     <xpatch file="${build.webapp}/welcome.xml"
             srcdir="${documentation}"
             includes="**/*.xwelcome"/>
+    -->
   </target>
 
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-test-suite,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
