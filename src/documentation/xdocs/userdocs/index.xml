@@ -24,8 +24,10 @@
     look at the <link href="../developing/webapps/index.html">web application documentation</link>.</p>
   <p>
    If you've been writing web applications with any other system you should 
-   also take a look at Cocoon <link href="flow/index.html">Flowscript</link>,
-   which makes writing complex Web applications easy with Cocoon. Complex multi-page interactions can be <link href="flow/continuations.html">described</link> easily as blocking function calls.
+   also take a look at Cocoon <link href="flow/index.html">Control Flow</link>,
+   which makes writing complex Web applications easy with Cocoon. Complex multi-page 
+   interactions can be <link href="flow/continuations.html">described</link> easily as 
+   blocking function calls.
   </p>
   <p>
   Come back often...this guide is being updated regularly.
