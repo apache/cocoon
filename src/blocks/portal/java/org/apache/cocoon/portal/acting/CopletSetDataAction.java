@@ -35,7 +35,7 @@ import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
  * Using this action, you can set values in a coplet
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CopletSetDataAction.java,v 1.4 2004/06/21 11:09:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CopletSetDataAction 
 extends ServiceableAction {
@@ -57,9 +57,6 @@ extends ServiceableAction {
                 copletId = (String)context.get(Constants.COPLET_ID_KEY);
             } else {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
-            
-                // set portal name
-                portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
             }
         
             if (copletId == null) {

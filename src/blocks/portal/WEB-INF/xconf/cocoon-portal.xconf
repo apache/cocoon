@@ -30,6 +30,7 @@
   <input-modules>
       <component-instance logger="core.modules.input" name="coplet" class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
       <component-instance logger="core.modules.input" name="portal-layout" class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
+      <component-instance logger="core.modules.input" name="portal-skin" class="org.apache.cocoon.portal.components.modules.input.SkinModule"/>
   </input-modules>
   
  <!-- Event Aspect configuration -->
