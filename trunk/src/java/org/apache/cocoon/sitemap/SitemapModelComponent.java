@@ -60,16 +60,19 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *
+ * This interface marks a component as a sitemap component that is used
+ * in the processing phase, like a generator, a transformer, a serializer
+ * or a reader.
+ * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: SitemapModelComponent.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: SitemapModelComponent.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
  */
 public interface SitemapModelComponent extends Component {
     /**
      * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
-        SAXException, IOException;
+    void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 
+    throws ProcessingException, SAXException, IOException;
 }

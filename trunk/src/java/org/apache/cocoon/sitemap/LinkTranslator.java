@@ -68,18 +68,19 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.2 2003/08/17 13:43:00 upayavira Exp $
+ * @version CVS $Id: LinkTranslator.java,v 1.3 2003/09/05 11:40:41 cziegeler Exp $
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
+    
     private Map links;
 
     /**
      * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
-        SAXException, IOException {
-            this.links = (Map)objectModel.get(Constants.LINK_OBJECT);
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 
+    throws ProcessingException, SAXException, IOException {
+        this.links = (Map)objectModel.get(Constants.LINK_OBJECT);
     }
 
     /**
@@ -102,15 +103,19 @@ public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, Ca
         return NOPValidity.SHARED_INSTANCE;
     }
 
-    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri,
-        String name, String raw, Attributes attr) throws SAXException {
-            String newHref = (String)this.links.get(href);
-            super.simpleLink((newHref != null) ? newHref : href, role, arcrole, title, show, actuate, uri, name, raw, attr);
+    public void simpleLink(String href, String role, String arcrole, 
+                           String title, String show, String actuate, String uri,
+                           String name, String raw, Attributes attr) 
+    throws SAXException {
+        final String newHref = (String)this.links.get(href);
+        super.simpleLink((newHref != null) ? newHref : href, role, arcrole, title, show, actuate, uri, name, raw, attr);
     }
 
-    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw,
-        Attributes attr) throws SAXException {
-            String newHref = (String)this.links.get(href);
-            super.startLocator((newHref != null) ? newHref : href, role, title, label, uri, name, raw, attr);
+    public void startLocator(String href, String role, String title, 
+                             String label, String uri, String name, String raw,
+                             Attributes attr) 
+    throws SAXException {
+        final String newHref = (String)this.links.get(href);
+        super.startLocator((newHref != null) ? newHref : href, role, title, label, uri, name, raw, attr);
     }
 }
