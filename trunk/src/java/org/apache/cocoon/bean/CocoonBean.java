@@ -86,7 +86,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.30 2003/09/22 22:51:02 joerg Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.31 2003/10/01 20:27:49 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -488,9 +488,9 @@ public class CocoonBean extends CocoonWrapper {
                 if (null == allTranslatedLinks.get(linkTarget.getSourceURI())) {
                     try {
                         final String mimeType = 
-                                getType(target.getDeparameterizedSourceURI(), target.getParameters());
-                        target.setMimeType(mimeType);
-                        allTranslatedLinks.put(target.getSourceURI(), target.getDestinationURI());
+                                getType(linkTarget.getDeparameterizedSourceURI(), linkTarget.getParameters());
+                        linkTarget.setMimeType(mimeType);
+                        allTranslatedLinks.put(linkTarget.getSourceURI(), linkTarget.getDestinationURI());
                         log.info("  Link translated: " + linkTarget.getSourceURI());
                         targets.add(linkTarget);
                     } catch (ProcessingException pe) {
