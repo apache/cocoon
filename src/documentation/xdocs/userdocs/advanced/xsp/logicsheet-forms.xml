@@ -21,7 +21,7 @@
 
    <p>
     Two different packages deal with validating user input:<link
-     href="../../howto/xmlform-wizard/howto-xmlform-wizard.html">XMLForm</link>
+     href="../../../howto/xmlform-wizard/howto-xmlform-wizard.html">XMLForm</link>
     which tries to stay as close as possible with the <link
      href="http://www.w3.org">W3C</link> <link
      href="http://www.w3.org/MarkUp/Forms/">XForms</link> working draft.

@@ -34,7 +34,7 @@
             functionality of Cocoon will be an important feature for Cocoon's
             viability as a broadly used application framework. Though the
             documentation on 
-            <link href="../developing/extending.html">"Extending Cocoon"</link>
+            <link href="../userdocs/developer/extending.html">"Extending Cocoon"</link>
             (at least at this writing) seems to have a hard time imagining
             applications for custom generators outside of the bizarre, I
             imagine several scenarios which could call for it:</p>

@@ -127,7 +127,7 @@
       <p>
         <!-- Links to related components pages. -->
         A general documentation about selectors is available at
-        <link href="../concepts/matchers_selectors.html">Matchers and Selectors</link>.
+        <link href="../../user/advanced/matchers_selectors.html">Matchers and Selectors</link>.
       </p>
     </s1>
   </body>

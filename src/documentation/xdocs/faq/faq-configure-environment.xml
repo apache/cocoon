@@ -267,7 +267,7 @@ $> $TOMCAT_HOME/bin/startup.sh -f server.xml
 
    <p>
      Another solution is to use PJA library. Read 'Linux/Headless/Batik'
-     section in the <link href="../installing/index.html">Cocoon installation guide</link>.
+     section in the <link href="../userdocs/installation/index.html">Cocoon installation guide</link>.
    </p>
   </answer>
 </faq>

@@ -19,7 +19,7 @@ Matchers are executed during pipeline setup. They determine which pipeline will 
 In the sitemap file, each matcher has a unique name which is mapped to a java class. One matcher name must be declared as the default matcher. Each matcher may have additional configuration information specified in child elements.
   </p>
   <p>
- For more conceptual information about matchers see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>. For detailed descriptions about all of the available Cocoon matchers, see the user's guide document <link href="../userdocs/components/matchers/matchers.html">Matchers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+ For more conceptual information about matchers see <link href="../userdocs/user/advanced/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>. For detailed descriptions about all of the available Cocoon matchers, see the user's guide document <link href="../userdocs/components/matchers/matchers.html">Matchers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
   </p>
 </answer>
 
