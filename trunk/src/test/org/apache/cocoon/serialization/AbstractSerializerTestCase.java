@@ -25,6 +25,9 @@ import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceResolverAdapter;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -40,7 +43,7 @@ import org.xml.sax.SAXException;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractSerializerTestCase.java,v 1.3 2004/03/08 14:04:20 cziegeler Exp $
+ * @version CVS $Id: AbstractSerializerTestCase.java,v 1.4 2004/03/31 12:57:02 cziegeler Exp $
  */
 public abstract class AbstractSerializerTestCase extends FortressTestCase {
     private HashMap objectmodel = new HashMap();
@@ -94,6 +97,11 @@ public abstract class AbstractSerializerTestCase extends FortressTestCase {
             serializer = (Serializer) selector.select(type);
             assertNotNull("Test lookup of serializer", serializer);
 
+            if ( serializer instanceof SitemapModelComponent ) {
+                ((SitemapModelComponent)serializer).setup(new SourceResolverAdapter(resolver),
+                    objectmodel, null, parameters);
+            }
+
             document = new ByteArrayOutputStream();
             serializer.setOutputStream(document);
 
@@ -111,6 +119,9 @@ public abstract class AbstractSerializerTestCase extends FortressTestCase {
         } catch (IOException ioe) {
             getLogger().error("Could not execute test", ioe);
             fail("Could not execute test:"+ioe.toString());
+        } catch (ProcessingException pe) {
+            getLogger().error("Could not execute test", pe);
+            fail("Could not execute test:"+pe.toString());
         } finally {
             if (serializer!=null) {
                 selector.release(serializer);

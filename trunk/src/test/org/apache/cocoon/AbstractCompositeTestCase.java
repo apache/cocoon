@@ -38,6 +38,7 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -55,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.12 2004/03/08 14:04:02 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.13 2004/03/31 12:57:02 cziegeler Exp $
  */
 public abstract class AbstractCompositeTestCase extends FortressTestCase
 {
@@ -308,6 +309,11 @@ public abstract class AbstractCompositeTestCase extends FortressTestCase
             serializer = (Serializer) lookup(Serializer.ROLE + "/" + type);
             assertNotNull("Test lookup of serializer", serializer);
 
+            if ( serializer instanceof SitemapModelComponent ) {
+                ((SitemapModelComponent)serializer).setup(new SourceResolverAdapter(resolver),
+                    objectmodel, null, parameters);
+            }
+            
             document = new ByteArrayOutputStream();
             serializer.setOutputStream(document);
 
@@ -325,6 +331,10 @@ public abstract class AbstractCompositeTestCase extends FortressTestCase
         } catch (IOException ioe) {
             getLogger().error("Could not execute test", ioe);
             fail("Could not execute test:"+ioe.toString());
+        } catch (ProcessingException pe) {
+            getLogger().error("Could not execute test", pe);
+            pe.printStackTrace();
+            fail("Could not execute test:"+pe.toString());
         } finally {
             if (serializer!=null) {
                 release(serializer);

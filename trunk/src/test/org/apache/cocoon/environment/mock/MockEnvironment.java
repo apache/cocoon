@@ -31,8 +31,6 @@ public class MockEnvironment implements Environment {
 
     private String uri;
     private String uriprefix;
-    private String rootcontext;
-    private String context;
     private String view;
     private String action;
     private String contenttype;
