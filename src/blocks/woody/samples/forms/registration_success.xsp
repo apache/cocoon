@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp">
+
+  <xsp:structure>
+    <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
+  </xsp:structure>
+
+  <html>
+    <body>
+      <xsp:logic>
+        // get reference to form and some of the widgets on it
+        Form form = (Form)request.getAttribute("registrationform");
+        Field name = (Field)form.getWidget("name");
+      </xsp:logic>
+
+      Registration was successful for <xsp:expr>name.getValue()</xsp:expr>
+    </body>
+  </html>
+</xsp:page>
