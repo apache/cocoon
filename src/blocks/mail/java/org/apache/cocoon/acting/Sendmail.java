@@ -37,27 +37,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 /**
- * The Sendmail action class sends email.
- * The action minimally needs four parameters:
- *
- * <dl>
- *   <dt>from</dt>
- *   <dd>the email address the mail appears to be from</dd>
- *   <dt>to</dt>
- *   <dd>the email address the mail it sent to. This can
- *       be multiple addresses separated with commas.</dd>
- *   <dt>subject</dt>
- *   <dd>the subject line of the email</dd>
- *   <dt>src</dt>
- *   <dd>A url specifying the source of the text body of the email</dd>
- *   <dt>srcMimeType</dt>
- *   <dd>The optional Mime Type of the  source of the text body of the email
- *       if you specified src</dd>
- *   <dt>body</dt>
- *   <dd>the text body of the email, if src is specified, body will be ignored</dd>
- * </dl>
- *
- * The following optionals parameters can be used:
+ * The Sendmail action class sends email. Action supports following
+ * parameters:
  *
  * <dl>
  *   <dt>smtp-host</dt>
@@ -69,14 +50,31 @@ import javax.mail.internet.AddressException;
  *   <dt>smtp-password</dt>
  *   <dd>The smtp user's password. If smtp-user and smtp-host not
  *       specified, default from cocoon.xconf will be used.</dd>
+ *   <dt>from</dt>
+ *   <dd>the email address the mail appears to be from</dd>
+ *   <dt>to</dt>
+ *   <dd>the email address(es) the mail it sent to. This can
+ *       be multiple addresses separated with commas.</dd>
+ *   <dt>replyTo</dt>
+ *   <dd>the email address(es) replies should be sent to. This can
+ *       be multiple addresses separated with commas.</dd>
  *   <dt>cc</dt>
- *   <dd>an email address of someone, who should receive a
+ *   <dd>an email address(es) of someone, who should receive a
  *       carbon copy. This can also be a list of multiple addresses
  *       separated by commas.</dd>
  *   <dt>bcc</dt>
- *   <dd>an email address of someone, who should receive a black
+ *   <dd>an email address(es) of someone, who should receive a black
  *       carbon copy. This can also be a list of multiple addresses
  *       separated by commas.</dd>
+ *   <dt>subject</dt>
+ *   <dd>the subject line of the email</dd>
+ *   <dt>src</dt>
+ *   <dd>A url specifying the source of the text body of the email</dd>
+ *   <dt>srcMimeType</dt>
+ *   <dd>The optional Mime Type of the  source of the text body of the email
+ *       if you specified src</dd>
+ *   <dt>body</dt>
+ *   <dd>the text body of the email, if src is specified, body will be ignored</dd>
  *   <dt>charset</dt>
  *   <dd>the character set, which should be used the encode the body text.
  *       This parameter is only used, if no attachements are send.</dd>
@@ -90,6 +88,10 @@ import javax.mail.internet.AddressException;
  *       {@link org.apache.cocoon.servlet.multipart.Part}
  *       object.</dd>
  * </dl>
+ *
+ * <p>
+ * Minimally, <code>from</code>, <code>to</code>, <code>body</code> parameters
+ * should be specified. Rest of parameters are optional.</p>
  *
  * <p>
  * The class loads all of these parameters from the sitemap, except the
@@ -163,10 +165,6 @@ public class Sendmail extends ServiceableAction
 
         MailSender mms = null;
         try {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("act start");
-            }
-
             Request request = ObjectModelHelper.getRequest(objectModel);
 
             // FIXME Remove support of old smtphost parameter
@@ -197,6 +195,9 @@ public class Sendmail extends ServiceableAction
             }
             if (parameters.isParameter("to")) {
                 mms.setTo(parameters.getParameter("to", null));
+            }
+            if (parameters.isParameter("replyTo")) {
+                mms.setReplyTo(parameters.getParameter("replyTo", null));
             }
             if (parameters.isParameter("cc")) {
                 mms.setCc(parameters.getParameter("cc", null));
@@ -244,10 +245,6 @@ public class Sendmail extends ServiceableAction
             }
 
             mms.send();
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("act stop");
-            }
 
             success = true;
             status = new HashMap(3);
