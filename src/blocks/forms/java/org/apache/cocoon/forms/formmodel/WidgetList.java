@@ -33,11 +33,9 @@ import org.xml.sax.SAXException;
  * This implements a type-aware List of Widgets that automatically can distribute
  * the common Widget operations over the contained Widgets.
  *  
- * @version $Id: ContainerDelegate.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: WidgetList.java,v 1.1 2004/04/21 20:30:49 mpo Exp $
  */
-public class ContainerDelegate {
-//TODO: consider renaming the ContainerDelegate to what it is: WidgetList 
-// (a type aware collection of widgets?)    
+public class WidgetList {
 
     private static final String WIDGETS_EL = "widgets";
     
@@ -58,7 +56,7 @@ public class ContainerDelegate {
      * Constructs ContainerDelegate to store and jointly manage a list of 
      * contained widgets.
      */
-    public ContainerDelegate() {
+    public WidgetList() {
         widgets = new ArrayList();
         widgetsById = new HashMap();
     }
