@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: util.xsl,v 1.2 2003/03/11 03:00:19 vgritsenko Exp $-->
+<!-- $Id: util.xsl,v 1.3 2003/03/13 14:13:08 stevenn Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author ported by <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/03/11 03:00:19 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/03/13 14:13:08 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -270,4 +270,13 @@
           String.valueOf(<xsl:copy-of select="$format"/>).trim())
     </xsp:expr>
   </xsl:template>
+
+  <!-- 
+        Returns value of a sitemap parameter, null if that parameter is undeclared
+        "name" attribute should be specified.
+  -->
+  <xsl:template match="util:get-sitemap-parameter">
+    <xsp:expr>(parameters.getParameter("<xsl:value-of select="@name"/>", null))</xsp:expr>
+  </xsl:template>
+
 </xsl:stylesheet>
