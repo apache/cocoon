@@ -133,7 +133,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.7 2003/12/08 10:00:02 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.8 2004/02/13 11:50:49 gianugo Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -148,6 +148,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
     protected static final String RESOURCE_NODE_NAME = "resource";
 
     protected static final String RES_NAME_ATTR_NAME = "name";
+    protected static final String URI_ATTR_NAME = "uri";
     protected static final String LASTMOD_ATTR_NAME = "lastModified";
     protected static final String DATE_ATTR_NAME = "date";
     protected static final String SIZE_ATTR_NAME = "size";
@@ -522,6 +523,8 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         attributes.clear();
         attributes.addAttribute("", RES_NAME_ATTR_NAME,RES_NAME_ATTR_NAME,
                                 "CDATA", source.getName());
+        attributes.addAttribute("", URI_ATTR_NAME,URI_ATTR_NAME,
+                                "CDATA", source.getURI());
         attributes.addAttribute("", LASTMOD_ATTR_NAME, LASTMOD_ATTR_NAME,
                                 "CDATA", Long.toString(source.getLastModified()));
         attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME,
