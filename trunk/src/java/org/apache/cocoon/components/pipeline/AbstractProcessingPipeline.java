@@ -79,6 +79,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -91,7 +92,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.13 2003/10/30 14:05:13 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.14 2003/10/31 11:22:17 sylvain Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -402,6 +403,15 @@ public abstract class AbstractProcessingPipeline
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next());
+            }
+
+            if (this.serializer instanceof SitemapModelComponent) {
+                ((SitemapModelComponent)this.serializer).setup(
+                this.processor.getEnvironmentHelper(),
+                    environment.getObjectModel(),
+                    this.serializerSource,
+                    this.serializerParam
+                );
             }
 
             String mimeType = this.serializer.getMimeType();

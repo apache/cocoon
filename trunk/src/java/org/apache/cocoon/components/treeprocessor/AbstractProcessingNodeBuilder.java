@@ -59,16 +59,18 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.2 2003/10/30 13:02:31 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.3 2003/10/31 11:22:17 sylvain Exp $
  */
 
 
@@ -114,10 +116,13 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
         Configuration[] children = config.getChildren("parameter");
 
         if (children.length == 0) {
-            return null;
+            // Parameters are only the component's location
+            return Collections.singletonMap(Constants.SITEMAP_PARAMETERS_LOCATION, config.getLocation());
         }
 
-        Map params = new HashMap();
+        Map params = new HashMap(children.length+1);
+        // Add the location information as a parameter
+        params.put(Constants.SITEMAP_PARAMETERS_LOCATION, config.getLocation());
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             if (true) { // FIXME : check namespace

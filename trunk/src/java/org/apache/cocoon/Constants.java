@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.11 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.12 2003/10/31 11:22:16 sylvain Exp $
  */
 public final class Constants {
 
@@ -306,6 +306,12 @@ public final class Constants {
      * FIXME(GP): Isn't this Action specific only?
      */
     public static final boolean DESCRIPTOR_RELOADABLE_DEFAULT = true;
+    
+    /**
+     * The special parameter passed to each sitemap component (matchers, generators, etc) that
+     * contains the location of the sitemap statement where this component is used.
+     */
+    public static final String SITEMAP_PARAMETERS_LOCATION = "org.apache.cocoon.sitemap/Location";
 }
 
 
