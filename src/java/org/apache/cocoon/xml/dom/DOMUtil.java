@@ -82,7 +82,7 @@ import javax.xml.transform.TransformerException;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.5 2003/08/15 15:55:02 haul Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
 */
 public final class DOMUtil {
 
@@ -1024,7 +1024,7 @@ public final class DOMUtil {
                     l = childs.getLength();
                     while (found == false && m < l) {
                         item = childs.item(m);
-                        if (item.getNodeType() == Document.ELEMENT_NODE
+                        if (item.getNodeType() == Node.ELEMENT_NODE
                             && item.getLocalName().equals(path[i]) == true) {
                             found = true;
                             contextNode = item;
@@ -1064,7 +1064,7 @@ public final class DOMUtil {
             l = childs.getLength();
             while (found == false && i < l) {
                 item = childs.item(i);
-                if (item.getNodeType() == Document.ELEMENT_NODE
+                if (item.getNodeType() == Node.ELEMENT_NODE
                     && path[startIndex].equals(
                         item.getLocalName() != null ? item.getLocalName() : item.getNodeName())
                         == true) {
@@ -1132,7 +1132,7 @@ public final class DOMUtil {
                 l = childs.getLength();
                 while (m < l) {
                     item = childs.item(m);
-                    if (item.getNodeType() == Document.ELEMENT_NODE) {
+                    if (item.getNodeType() == Node.ELEMENT_NODE) {
                         // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
                         if (path[startIndex]
                             .equals(
@@ -1152,7 +1152,7 @@ public final class DOMUtil {
                 l = childs.getLength();
                 while (m < l) {
                     item = childs.item(m);
-                    if (item.getNodeType() == Document.ELEMENT_NODE) {
+                    if (item.getNodeType() == Node.ELEMENT_NODE) {
                         // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
                         if (path[startIndex]
                             .equals(

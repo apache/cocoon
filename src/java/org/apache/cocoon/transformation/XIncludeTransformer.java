@@ -84,11 +84,11 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.9 2003/09/23 22:46:44 vgritsenko Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.10 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
-    private SourceResolver resolver;
-    protected ComponentManager manager = null;
+    protected SourceResolver resolver;
+    protected ComponentManager manager;
     private XIncludePipe xIncludePipe;
 
     public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";

@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.4 2003/09/18 12:11:50 upayavira Exp $
+ * @version CVS $Id: NetUtils.java,v 1.5 2003/09/24 21:41:11 cziegeler Exp $
  */
 
 public class NetUtils {
@@ -205,7 +205,7 @@ public class NetUtils {
         }
 
         for (int i = 0; i < path.length(); i++) {
-            int c = (int) path.charAt(i);
+            int c = path.charAt(i);
             if (safeCharacters.get(c)) {
                 rewrittenPath.append((char)c);
             } else {
@@ -222,8 +222,8 @@ public class NetUtils {
                     // Converting each byte in the buffer
                     byte toEncode = ba[j];
                     rewrittenPath.append('%');
-                    int low = (int) (toEncode & 0x0f);
-                    int high = (int) ((toEncode & 0xf0) >> 4);
+                    int low = (toEncode & 0x0f);
+                    int high = ((toEncode & 0xf0) >> 4);
                     rewrittenPath.append(hexadecimal[high]);
                     rewrittenPath.append(hexadecimal[low]);
                 }

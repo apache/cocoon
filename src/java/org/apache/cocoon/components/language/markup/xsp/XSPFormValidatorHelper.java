@@ -72,7 +72,7 @@ import java.util.Map;
  * The <code>ValidatorActionResult</code> object helper
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XSPFormValidatorHelper.java,v 1.2 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: XSPFormValidatorHelper.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
  */
 public class XSPFormValidatorHelper {
 
@@ -157,7 +157,7 @@ public class XSPFormValidatorHelper {
     public static ValidatorActionResult getParamResult(Map objectModel,
                                                        String name) {
         ValidatorActionResult result = ValidatorActionResult.NOTPRESENT;
-        Map param_result = (Map) getResults(objectModel);
+        Map param_result = getResults(objectModel);
         if (param_result != null) {
             result = (ValidatorActionResult) param_result.get(name);
         }
@@ -173,7 +173,7 @@ public class XSPFormValidatorHelper {
      */
     public ValidatorActionResult getParamResult(Map objectModel) {
         ValidatorActionResult result = ValidatorActionResult.NOTPRESENT;
-        Map param_result = (Map) getResults(objectModel);
+        Map param_result = getResults(objectModel);
         if (param_result != null) {
             result = (ValidatorActionResult) param_result.get(current_parameter);
         }
@@ -504,7 +504,7 @@ public class XSPFormValidatorHelper {
         } catch (Exception e) {
             logger.debug("XSPFormValidatorHelper.getParameterAttributes Exception " + e);
         }
-        ;
+        
         return "";
     }
 

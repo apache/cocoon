@@ -73,13 +73,10 @@ import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
@@ -150,7 +147,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.5 2003/07/29 12:32:18 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -549,9 +546,9 @@ implements Disposable, CacheableProcessingComponent {
                     NodeList list = processor.selectNodeList(document, select);
                     int length = list.getLength();
                     for (int i=0; i<length; i++) {
-                          IncludeXMLConsumer.includeNode((Node)list.item(i),
-                                               (ContentHandler)this,  
-                                               (LexicalHandler)this);
+                          IncludeXMLConsumer.includeNode(list.item(i),
+                                               this,  
+                                               this);
                     }
                 } finally {
                     this.manager.release((Component)parser);

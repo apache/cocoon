@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.12 2003/08/13 17:12:25 sylvain Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.13 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -759,11 +759,11 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     // Component manager for this component
-    private ComponentManager manager;
+    protected ComponentManager manager;
 
     private SourceResolver sourceResolver;
 
-    private Map objectModel;
+    protected Map objectModel;
 
     // Current state of the transformer. The value is STATE_OUTSIDE by default.
     private int current_state;
@@ -816,7 +816,7 @@ public class I18nTransformer extends AbstractTransformer
     private MessageFormat formatter;
 
     // Current locale
-    private Locale locale;
+    protected Locale locale;
 
     // Date and number elements and params formatting attributes with values.
     private HashMap formattingParams;
@@ -828,7 +828,7 @@ public class I18nTransformer extends AbstractTransformer
     private Map catalogues = new HashMap();
 
     // Dictionary loader factory
-    private BundleFactory factory;
+    protected BundleFactory factory;
 
     //
     // i18n configuration variables
@@ -1083,7 +1083,7 @@ public class I18nTransformer extends AbstractTransformer
      * REVISIT (MC): when we can get the resolver anywhere, we can pass the
      * configuration object directly to XMLResourceBundle.
      */
-    private void configureFactory(String location) throws Exception {
+    protected void configureFactory(String location) throws Exception {
         // configure the factory to log correctly and cache catalogues
         DefaultConfiguration configuration =
                 new DefaultConfiguration("name", "location");
@@ -1185,7 +1185,7 @@ public class I18nTransformer extends AbstractTransformer
                 current_state == STATE_INSIDE_OTHERWISE)
                 && !translate_copy) {
 
-            ; // Output nothing
+            // Output nothing
         } else {
             super.endElement(uri, name, raw);
         }
@@ -1542,7 +1542,7 @@ public class I18nTransformer extends AbstractTransformer
                 if (formattingParams.get(I18N_VALUE_ATTRIBUTE) == null) {
                     formattingParams.put(I18N_VALUE_ATTRIBUTE, textValue);
                 } else {
-                    ; // ignore the text inside of date element
+                    // ignore the text inside of date element
                 }
                 break;
 
@@ -1963,7 +1963,7 @@ public class I18nTransformer extends AbstractTransformer
             to_fmt.setMaximumFractionDigits(309);
             for (int i = value.length() - 1;
                  i >= 0 && value.charAt(i) != dec; i--, decAt++) {
-                ;
+                
             }
 
             if (decAt < value.length())to_fmt.setMinimumFractionDigits(decAt);

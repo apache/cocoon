@@ -92,7 +92,7 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.2 2003/07/03 09:43:25 upayavira Exp $
+ * @version CVS $Id: ImageReader.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
  */
 final public class ImageReader extends ResourceReader {
 
@@ -196,8 +196,8 @@ final public class ImageReader extends ResourceReader {
                 JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(inputStream);
                 Raster original = decoder.decodeAsRaster();
                 JPEGDecodeParam decodeParam = decoder.getJPEGDecodeParam();
-                double ow = (double) decodeParam.getWidth();
-                double oh = (double) decodeParam.getHeight();
+                double ow = decodeParam.getWidth();
+                double oh = decodeParam.getHeight();
                 AffineTransformOp filter = new AffineTransformOp(getTransform(ow, oh, width, height), AffineTransformOp.TYPE_BILINEAR);
                 WritableRaster scaled = filter.createCompatibleDestRaster(original);
                 filter.filter(original, scaled);

@@ -80,7 +80,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.6 2003/09/17 01:13:44 joerg Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.7 2003/09/24 21:41:11 cziegeler Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -377,7 +377,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         // if so, inherit these pipeline-hints (these hints can be overriden by local pipeline-hints)
         try {
             SitemapComponentSelector  selector = (SitemapComponentSelector)this.manager.lookup(role + "Selector");
-            componentHintParams = (String) selector.getPipelineHint(hint);
+            componentHintParams = selector.getPipelineHint(hint);
         }
         catch (Exception ex) {
             if (this.getLogger().isWarnEnabled()) {
