@@ -27,6 +27,7 @@ import org.apache.cocoon.caching.SimpleCacheKey;
 import org.apache.cocoon.components.cron.ConfigurableCronJob;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 
 /**
@@ -57,24 +58,23 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * </ul>
  *  
  * @since 2.1.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UpdateTarget.java,v 1.4 2004/03/23 16:28:54 unico Exp $
+ * @version CVS $Id: UpdateTarget.java,v 1.5 2004/03/24 15:19:20 unico Exp $
  */
 public class UpdateTarget extends AbstractLogEnabled
 implements Serviceable, ConfigurableCronJob {
     
     // service dependencies
-    protected ServiceManager manager;
-    protected SourceResolver resolver;
+    private ServiceManager manager;
+    private SourceResolver resolver;
     
     // configuration
-    protected String uri;
-    protected String cacheRole;
-    protected int expires;
-    protected boolean failSafe;
+    private String uri;
+    private String cacheRole;
+    private int expires;
+    private boolean failSafe;
     
     // the key under which to store the CachedResponse in the Cache
-    protected SimpleCacheKey cacheKey;
+    private SimpleCacheKey cacheKey;
     
         
     // ---------------------------------------------------- Lifecycle
@@ -109,8 +109,8 @@ implements Serviceable, ConfigurableCronJob {
      */
     public void execute(String name) {
         if (this.uri != null) {
-            if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("Refreshing " + this.uri);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Refreshing " + this.uri);
             }
             
             Source source = null;
@@ -120,7 +120,18 @@ implements Serviceable, ConfigurableCronJob {
                 cache = (Cache) this.manager.lookup(this.cacheRole);
                 source = this.resolver.resolveURI(this.uri);
                 
+                // check if the source is really expired and invalid
                 CachedSourceResponse response = (CachedSourceResponse) cache.get(this.cacheKey);
+                if (response != null) {
+                    final SourceValidity sourceValidity = response.getValidityObjects()[1];
+                    if (CachingSource.isValid(sourceValidity, source)) {
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Cached response is still valid " +                                "for source " + this.uri + ".");
+                        }
+                        response.getValidityObjects()[0] = new ExpiresValidity(this.expires * 1000);
+                        return;
+                    }
+                }
                 
                 if (source.exists()) {
                     
@@ -133,7 +144,9 @@ implements Serviceable, ConfigurableCronJob {
                     }
                     
                     // create a new cached response
-                    response = new CachedSourceResponse(new ExpiresValidity(this.expires * 1000));
+                    final ExpiresValidity cacheValidity = new ExpiresValidity(this.expires * 1000);
+                    final SourceValidity sourceValidity = source.getValidity();
+                    response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
                     
                     // only create objects that have previously been used
                     if (binary != null) {
@@ -146,17 +159,23 @@ implements Serviceable, ConfigurableCronJob {
                     }
                     // meta info is always set
                     response.setExtra(CachingSource.readMeta(source));
-                    
                     cache.store(this.cacheKey, response);
                 }
                 else if (response != null) {
+                    // FIXME: There is a potential problem when the parent
+                    // source has not yet been updated thus listing this
+                    // source still as one of its children. We'll have to remove 
+                    // the parent's cached response here too.
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Source " + this.uri + " no longer exists." +                            " Throwing out cached response.");
+                    }
                     cache.remove(this.cacheKey);
                 }
             } catch (Exception e) {
                 if (!failSafe) {
                     // the content expires, so remove it
                     cache.remove(cacheKey);
-                    getLogger().warn("Exception during updating " + this.uri, e);
+                    getLogger().warn("Exception during updating of source " + this.uri, e);
                 }
                 else {
                     getLogger().warn("Updating of source " + this.uri + " failed. " +

@@ -30,8 +30,8 @@ public final class CachedSourceResponse extends CachedResponse {
     private byte[] m_xml;
     private Serializable m_extra;
     
-    public CachedSourceResponse(SourceValidity validity) {
-        super(validity, null);
+    public CachedSourceResponse(SourceValidity[] validities) {
+        super(validities, null);
     }
     
     public byte[] getBinaryResponse() {
