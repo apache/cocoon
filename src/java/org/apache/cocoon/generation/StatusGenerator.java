@@ -64,7 +64,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.7 2004/05/19 11:32:02 cziegeler Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.8 2004/05/20 10:48:16 cziegeler Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -107,8 +107,7 @@ public class StatusGenerator extends ServiceableGenerator {
         if ( this.manager.hasService(Store.PERSISTENT_STORE) ) {
             this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
-            getLogger().info("Persistent Store is not available. We will use the general store instead.");
-            this.store_persistent = (Store)this.manager.lookup(Store.ROLE);
+            getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
         }
     }
     
