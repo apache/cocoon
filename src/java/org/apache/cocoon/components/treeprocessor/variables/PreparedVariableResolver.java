@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,79 +35,83 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.10 2004/05/06 19:27:55 upayavira Exp $
+ * @version CVS $Id$
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
-    
+
     private ComponentManager manager;
     private ComponentSelector selector;
     private List tokens;
     private boolean needsMapStack;
-    
+
     private static final int OPEN = -2;
     private static final int CLOSE = -3;
     private static final int COLON = -4;
     private static final int TEXT = -5;
-    private static final int EVAL = -6;
     private static final int EXPR = -7;
-    private static final int SITEMAP_VAR = -8;
-    private static final int PREFIXED_SITEMAP_VAR = -9;
+    private static final int SITEMAP_VAR = -9;
     private static final int THREADSAFE_MODULE = -10;
     private static final int STATEFUL_MODULE = -11;
     private static final int ROOT_SITEMAP_VARIABLE = 0;
     private static final int ANCHOR_VAR = -1;
-    
+
     private static Token COLON_TOKEN = new Token(COLON);
     private static Token OPEN_TOKEN = new Token(OPEN);
-    private static Token CLOSE_TOKEN = new Token(CLOSE);    
+    private static Token CLOSE_TOKEN = new Token(CLOSE);
     private static Token EMPTY_TOKEN = new Token(EXPR);
-    
+
     public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
-        
+
         super(expr);
         this.manager = manager;
         this.selector = null;
-        
+
         int openCount = 0;
         int closeCount = 0;
-        
+
         needsMapStack = false;
-            
+
         tokens = new ArrayList();
-        int pos=0;
+        int pos = 0;
         int i;
         boolean escape = false;
-        for (i=0;i< expr.length();i++) {
+
+        for (i = 0; i < expr.length(); i++) {
             char c = expr.charAt(i);
             if (escape) {
                 escape = false;
-            } else if (c=='\\' && i< expr.length()) {
-                char nextChar = expr.charAt(i+1);
+            } else if (c == '\\' && i < expr.length()) {
+                char nextChar = expr.charAt(i + 1);
                 if (nextChar == '{' || nextChar == '}') {
-                    expr = expr.substring(0, i) + expr.substring(i+1);
+                    expr = expr.substring(0, i) + expr.substring(i + 1);
                     escape = true;
                     i--;
                 }
-            } else if (c=='{') {
-                if (i> pos) {
+            } else if (c == '{') {
+                if (i > pos) {
                     tokens.add(new Token(expr.substring(pos, i)));
                 }
+
                 openCount++;
                 tokens.add(OPEN_TOKEN);
+
                 int colonPos = indexOf(expr, ":", i);
                 int closePos = indexOf(expr, "}", i);
-                int openPos  = indexOf(expr, "{", i);
+                int openPos = indexOf(expr, "{", i);
+
                 if (openPos < colonPos && openPos < closePos) {
-                    throw new PatternException("Invalid '{' at position "+ i + " in expression " + expr);
-                } else if (colonPos < closePos) {
+                    throw new PatternException("Invalid '{' at position " + i + " in expression \"" + expr + "\"");
+                }
+
+                if (colonPos < closePos) {
                     // we've found a module
                     Token token;
-                    String module = expr.substring(i+1, colonPos);
-                    
+                    String module = expr.substring(i + 1, colonPos);
+
                     if (module.equals("sitemap")) {
                         // Explicit prefix for sitemap variable
                         needsMapStack = true;
-                        token = new Token(PREFIXED_SITEMAP_VAR);
+                        token = new Token(SITEMAP_VAR);
                     } else if (module.startsWith("#")) {
                         // anchor syntax refering to a name result level
                         needsMapStack = true;
@@ -117,59 +121,60 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                         token = getNewModuleToken(module);
                     }
                     tokens.add(token);
-                    i = colonPos-1;
+                    i = colonPos - 1;
                 } else {
                     // Unprefixed name : sitemap variable
                     needsMapStack = true;
-                    tokens.add(getNewSitemapToken(expr.substring(i+1, closePos)));
-                    i = closePos-1;
+                    tokens.add(getNewSitemapToken(expr.substring(i + 1, closePos)));
+                    i = closePos - 1;
                 }
-                pos=i+1;
-            } else if (c=='}') {
-                if (i>0 && expr.charAt(i-1) == '\\') {
+
+                pos = i + 1;
+            } else if (c == '}') {
+                if (i > 0 && expr.charAt(i - 1) == '\\') {
                     continue;
                 }
-                if (i> pos) {
+                if (i > pos) {
                     tokens.add(new Token(expr.substring(pos, i)));
                 }
+
                 closeCount++;
                 tokens.add(CLOSE_TOKEN);
-                pos=i+1;
-            } else if (c==':') {
-                if (tokens.size()>0) {
-                    int lastTokenType = ((Token)tokens.get(tokens.size()-1)).getType();
-                    if (lastTokenType != PREFIXED_SITEMAP_VAR &&
+                pos = i + 1;
+            } else if (c == ':') {
+                if (i != pos || tokens.size() == 0) {
+                    // this colon isn't part of a module reference
+                    continue;
+                }
+
+                int lastTokenType = ((Token) tokens.get(tokens.size() - 1)).getType();
+                if (lastTokenType != SITEMAP_VAR &&
                         lastTokenType != ANCHOR_VAR &&
                         lastTokenType != THREADSAFE_MODULE &&
                         lastTokenType != STATEFUL_MODULE) {
-                            continue;
-                    }
-                }
-                if (i != pos || tokens.size()==0) {
-                    // this colon isn't part of a module reference 
                     continue;
                 }
-                if (i> pos) {
-                    tokens.add(new Token(expr.substring(pos, i)));
-                }
+
                 tokens.add(COLON_TOKEN);
-                pos=i+1;
+                pos = i + 1;
             }
         }
-        if (i> pos) {
+
+        if (i > pos) {
             tokens.add(new Token(expr.substring(pos, i)));
         }
+
         if (openCount != closeCount) {
             throw new PatternException("Mismatching braces in expression: " + expr);
         }
     }
-    
+
     private int indexOf(String expr, String chr, int pos) {
         int location;
         return (location = expr.indexOf(chr, pos+1))!=-1 ? location : expr.length();
     }
-    
-    private Token getNewSitemapToken(String variable) { 
+
+    private Token getNewSitemapToken(String variable) {
         if (variable.startsWith("/")) {
             return new Token(ROOT_SITEMAP_VARIABLE, variable.substring(1));
         } else {
@@ -194,7 +199,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 throw new PatternException("Cannot access input modules selector", ce);
             }
         }
-        
+
         // Get the module
         InputModule module;
         try {
@@ -204,7 +209,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 "' in expression '" + this.originalExpr + "'", ce);
         }
         Token token;
-        
+
         // Is this module threadsafe ?
         if (module instanceof ThreadSafe) {
             token = new Token(THREADSAFE_MODULE, module);
@@ -215,11 +220,11 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         }
         return token;
     }
-    
+
     public final String resolve(InvokeContext context, Map objectModel) throws PatternException {
         List mapStack = null; // get the stack only when necessary - lazy inside the loop
         int stackSize = 0;
-        
+
         if (needsMapStack) {
             if (context == null) {
                 throw new PatternException("Need an invoke context to resolve " + this);
@@ -273,8 +278,6 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                     break;
                 case OPEN:
                 case COLON:
-                case EVAL:
-                case SITEMAP_VAR:
                 case ANCHOR_VAR:
                 case THREADSAFE_MODULE:
                 case STATEFUL_MODULE:
@@ -293,19 +296,19 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
     private Token processModule(Token module, Token expr, Map objectModel, InvokeContext context, List mapStack, int stackSize) throws PatternException {
         int type = module.getType();
-        
+
         if (type == ANCHOR_VAR) {
             Map levelResult = context.getMapByAnchor(module.getStringValue());
-    
+
             if (levelResult == null) {
               throw new PatternException("Error while evaluating '" + this.originalExpr +
                 "' : no anchor '" + String.valueOf(module.getStringValue()) + "' found in context");
             }
-    
+
             Object result = levelResult.get(expr.getStringValue());
             return new Token(EXPR, result==null ? "" : result.toString());
         } else if (type == THREADSAFE_MODULE) {
-            try {                    
+            try {
                 InputModule im = module.getModule();
                 Object result = im.getAttribute(expr.getStringValue(), null, objectModel);
                 return new Token(EXPR, result==null ? "" : result.toString());
@@ -314,28 +317,28 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 throw new PatternException("Cannot get variable '" + expr.getStringValue() +
                     "' in expression '" + this.originalExpr + "'", confEx);
             }
-             
+
         } else if (type == STATEFUL_MODULE) {
             InputModule im = null;
             String moduleName = module.getStringValue();
             try {
                 im = (InputModule)this.selector.select(moduleName);
-                                
+
                 Object result = im.getAttribute(expr.getStringValue(), null, objectModel);
                 return new Token(EXPR, result==null ? "" : result.toString());
 
             } catch(ComponentException compEx) {
                 throw new PatternException("Cannot get module '" + moduleName +
                     "' in expression '" + this.originalExpr + "'", compEx);
-                                    
+
             } catch(ConfigurationException confEx) {
                 throw new PatternException("Cannot get variable '" + expr.getStringValue() +
                     "' in expression '" + this.originalExpr + "'", confEx);
-                                    
+
             } finally {
                 this.selector.release(im);
             }
-        } else if (type == PREFIXED_SITEMAP_VAR) {
+        } else if (type == SITEMAP_VAR) {
             // Prefixed sitemap variable must be parsed at runtime
             String variable = expr.getStringValue();
             Token token;
@@ -356,7 +359,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             throw new PatternException("Unknown token type: " + expr.getType());
         }
     }
-    
+
     private Token processVariable(Token expr, List mapStack, int stackSize) throws PatternException {
         int type = expr.getType();
         String value = expr.getStringValue();
@@ -369,12 +372,12 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 throw new PatternException("Error while evaluating '" + this.originalExpr +
                     "' : not so many levels");
             }
-    
+
             Object result = ((Map)mapStack.get(stackSize - type)).get(value);
             return new Token(EXPR, result==null ? "" : result.toString());
         }
     }
-    
+
     public final void dispose() {
         if (this.selector != null) {
             for (Iterator i = tokens.iterator(); i.hasNext();) {
@@ -391,7 +394,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     }
 
     private static class Token {
-    
+
         private Object value;
         private int type;
 
@@ -399,37 +402,26 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             if (type==EXPR) {
                 this.value="";
             } else {
-                this.value = null; 
-            } 
+                this.value = null;
+            }
             this.type = type;
         }
 
         public Token(int type, String value) {
             this.value = value;
-            this.type = type;      
+            this.type = type;
         }
-        
+
         public Token(int type, InputModule module) {
             this.value = module;
-            this.type = type;      
-        }
-        
-        public Token(char c) {
-            this.value = null;
-            if (c=='{') {
-                this.type = OPEN;
-            } else if (c=='}') {
-                this.type = CLOSE;
-            } else if (c==':') {
-                this.type = COLON;
-            }
+            this.type = type;
         }
 
         public Token(String value) {
             this.type = TEXT;
             this.value = value;
         }
-      
+
         public int getType() {
           return type;
         }
@@ -441,11 +433,11 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 return null;
             }
         }
-        
+
         public boolean hasType(int type){
             return this.type == type;
         }
-        
+
         public boolean equals(Object o) {
             if (o instanceof Token) {
                 return ((Token)o).hasType(this.type);
@@ -453,7 +445,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 return false;
             }
         }
-      
+
         public void merge(Token newToken) {
             this.value = this.value + newToken.getStringValue();
         }
