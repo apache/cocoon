@@ -1,5 +1,5 @@
 /*
-* Copyright 1999-2004 The Apache Software Foundation
+* Copyright 1999-2005 The Apache Software Foundation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,10 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-importPackage(Packages.org.apache.excalibur.source);
-//importPackage(Packages.java.io);
-
-var resolver = cocoon.getComponent(SourceResolver.ROLE);
+var resolver = cocoon.getComponent(Packages.org.apache.excalibur.source.SourceResolver.ROLE);
 
 function view() {
 
@@ -136,3 +133,11 @@ function exists(page)  {
     return exists;
 }
 
+function mathexp() {
+    var value;
+    if ( cocoon.request.getParameter("text") != null )
+        value = cocoon.request.getParameter("text");
+    else
+        value = "3*a-5*6/7 + ( b-c)*5- b";
+    cocoon.sendPage("mathexp-view.html", {"value" : value});
+}
