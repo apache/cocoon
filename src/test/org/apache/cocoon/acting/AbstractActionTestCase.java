@@ -51,28 +51,26 @@
 
 package org.apache.cocoon.acting;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
-import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Testcase for  action components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractActionTestCase.java,v 1.1 2003/04/19 16:11:17 stephan Exp $
+ * @version CVS $Id: AbstractActionTestCase.java,v 1.2 2003/07/10 00:25:25 ghoward Exp $
  */
 public abstract class AbstractActionTestCase extends ExcaliburTestCase
 {

@@ -51,15 +51,13 @@
 
 package org.apache.cocoon.generation;
 
-import java.util.HashMap;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.AbstractCompositeTestCase;
 
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.4 2003/04/29 10:45:03 stephan Exp $
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.5 2003/07/10 00:25:25 ghoward Exp $
  */
 public class FileGeneratorTestCase extends AbstractCompositeTestCase {
 

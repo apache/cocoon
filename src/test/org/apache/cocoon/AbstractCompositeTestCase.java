@@ -52,8 +52,8 @@
 package org.apache.cocoon;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -66,12 +66,12 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
-import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.WhitespaceFilter;
@@ -81,19 +81,15 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Testcase for action, generator and transformer components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.3 2003/05/04 19:01:59 stephan Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.4 2003/07/10 00:25:25 ghoward Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
