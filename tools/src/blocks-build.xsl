@@ -307,17 +307,17 @@ select="@project"/>-tests</xsl:for-each></xsl:attribute>
          <javac srcdir="{string('${blocks}')}/{$block-name}/test"
                 destdir="{string('${build.blocks}')}/{$block-name}/test"
                 fork="true">
-            <classpath refid="test.classpath"/>
-            <classpath refid="{$block-name}.classpath"/>
             <classpath>
+               <path refid="test.classpath"/>
+               <path refid="{$block-name}.classpath"/>
                <pathelement location="{string('${build.test}')}"/>
             </classpath>
          </javac>
 
          <junit printsummary="yes" haltonfailure="yes" fork="yes">
-            <classpath refid="test.classpath"/>
-            <classpath refid="{$block-name}.classpath"/>
             <classpath>
+               <path refid="test.classpath"/>
+               <path refid="{$block-name}.classpath"/>
                <pathelement location="{string('${build.test}')}"/>
                <pathelement location="{string('${build.blocks}')}/{$block-name}/test"/>
             </classpath>
