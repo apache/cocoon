@@ -702,6 +702,9 @@ public class CoreServiceManager
             String uri = src.getURI();
             
             if (!loadedURIs.contains(uri)) {
+                if ( this.getLogger().isDebugEnabled() ) {
+                    this.getLogger().debug("Loading configuration from: " + uri);
+                }
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
