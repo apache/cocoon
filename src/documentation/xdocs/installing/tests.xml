@@ -4,8 +4,8 @@
 <document>
  <header>
   <title>Testing your Apache Cocoon</title>
-  <version>1.0</version> 
-  <type>Technical document</type> 
+  <version>1.1</version>
+  <type>Technical document</type>
   <authors>
    <person name="Bernhard Huber" email="huber@apache.org"/>
    <person name="Stephan Michels" email="stephan@apache.org"/>
@@ -17,8 +17,13 @@
  <s1 title="Overview of testing procedures">
   <p>
    There are some initial procedures available for you to ensure that
-   Apache Cocoon can run properly on your particular computing platform.
-   (You can build upon this infrastructure to add your own tests.)
+   Apache Cocoon can run properly on your particular computing platform
+   and that the components do function properly.
+  </p>
+  <p>
+   You can build upon this infrastructure to add your own tests, and to
+   ensure that development work proceeds smoothly. The tests are located
+   in the <code>src/test/</code> directory.
   </p>
  </s1>
 
