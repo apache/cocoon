@@ -64,9 +64,8 @@ import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
- *
+ * Warning - API very unstable.  Do not use!  
+ * 
  * Simple action to cause notification of a NamedEvent to an EventAwareCacheImpl.
  * The event name is taken from a sitemap parameter named "event".
  * 
@@ -76,7 +75,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This is used in the Event based cache example. 
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $CVS$
+ * @version CVS $Id: CacheEventAction.java,v 1.3 2003/07/13 04:39:12 ghoward Exp $
  */
 public class CacheEventAction extends ComposerAction implements ThreadSafe {
 
@@ -100,9 +99,10 @@ public class CacheEventAction extends ComposerAction implements ThreadSafe {
             if (eventName == null || "".equals(eventName)) {
                 return null;
             }
-            ((EventAwareCacheImpl)cache).processEvent(new NamedEvent(eventName));
+            ((EventAwareCacheImpl)cache).processEvent(
+                                                new NamedEvent(eventName));
         }
-        this.manager.release( cache );
+        this.manager.release(cache);
         return EMPTY_MAP;
     }
 }
