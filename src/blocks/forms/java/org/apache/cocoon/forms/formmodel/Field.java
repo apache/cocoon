@@ -43,7 +43,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id: Field.java,v 1.6 2004/04/10 13:41:41 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
@@ -265,6 +265,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         } else if (getFieldDefinition().getSelectionList() != null) {
             getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
         }
+
+        // include some info about the datatype
+        definition.getDatatype().generateSaxFragment(contentHandler, locale);
+
         contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
     }
 
