@@ -34,7 +34,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 

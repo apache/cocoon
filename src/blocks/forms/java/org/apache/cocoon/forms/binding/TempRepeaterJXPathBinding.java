@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 

@@ -27,7 +27,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * class that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -48,6 +48,9 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
         this.classBinding = null;
     }
 
+    /**
+     * Recursively resolves references.
+     */
     private void resolve() throws BindingException {
         classBinding = getClass(widgetId);
         if (classBinding == null) {
