@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.87 2001-03-03 16:05:05 prussell Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.88 2001-03-06 21:55:39 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -374,8 +374,8 @@
         /* the &lt;code&gt;ResourcePipeline&lt;/code&gt; used to collect the sitemap
            components to produce the requested resource */
         ResourcePipeline pipeline = new ResourcePipeline ();
-        pipeline.compose(this.manager);
         pipeline.setLogger(getLogger());
+        pipeline.compose(this.manager);
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values
            delivered from matchers and selectors to replace occurences of
            XPath kind expressions in values of src attribute used with
@@ -422,6 +422,7 @@
           private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e)
           throws Exception {
             ResourcePipeline pipeline = new ResourcePipeline ();
+            pipeline.setLogger(getLogger());
             pipeline.compose(this.manager);
             List listOfMaps = (List)(new ArrayList());
             Map map;
@@ -799,8 +800,16 @@
 
     <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
     {
-      boolean result = pipeline.process(environment);
-      pipeline.dispose();
+      boolean result = false;
+
+      try {
+          result = pipeline.process(environment);
+      } catch (Exception pipelineException<xsl:value-of select="generate-id(.)"/>) {
+          getLogger().debug("Error processing pipeline", pipelineException<xsl:value-of select="generate-id(.)"/>);
+      } finally {
+          pipeline.dispose();
+      }
+
       if(true) return result;
     }
   </xsl:template> <!-- match="map:serialize" -->
@@ -815,7 +824,19 @@
     </xsl:call-template>
 
     <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
-    if(true)return pipeline.process (environment);
+    {
+      boolean result = false;
+
+      try {
+          result = pipeline.process(environment);
+      } catch (Exception RpipelineException<xsl:value-of select="generate-id(.)"/>) {
+          getLogger().debug("Error processing pipeline", RpipelineException<xsl:value-of select="generate-id(.)"/>);
+      } finally {
+          pipeline.dispose();
+      }
+
+      if(true) return result;
+    }
   </xsl:template> <!-- match="map:read" -->
 
   <!-- generate the code to invoke a sub sitemap  -->

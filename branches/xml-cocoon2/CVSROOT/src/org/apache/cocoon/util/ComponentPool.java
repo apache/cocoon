@@ -157,6 +157,7 @@ public class ComponentPool implements Pool, ThreadSafe, Loggable {
     public Poolable get()
         throws Exception
     {
+        log.debug("Component Pool - getting Resource:" + this.m_factory.getCreatedClass().getName());
         return get(DEFAULT_WAIT_TIME);
     }
 
@@ -233,6 +234,7 @@ public class ComponentPool implements Pool, ThreadSafe, Loggable {
      */
     public void put(Poolable resource)
     {
+        log.debug("Component Pool - returning Resource:" + this.m_factory.getCreatedClass().getName());
         int pos = -1;
 
         synchronized(this) {
