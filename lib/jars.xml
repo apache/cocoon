@@ -490,7 +490,7 @@
 	<title>Continuations-based JavaScript engine</title>
 	<description>Rhino is an implementation of JavaScript in Java.</description>
 	<used-by>Control flow</used-by>
-	<lib>core/rhino1.5r4-continuations-20030317.jar</lib>
+	<lib>core/rhino1.5r4-continuations-20030323.jar</lib>
 	<homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
  </file>
 <!-- <file name="spark">
