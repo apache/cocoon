@@ -127,7 +127,7 @@ implements ComponentHandler {
             
         } else if (StandaloneServiceSelector.class.isAssignableFrom(componentClass)) {
             // Special factory for StandaloneServiceSelector
-            factory = new StandaloneServiceSelector.Factory(env, roleManager, info);
+            factory = new StandaloneServiceSelector.Factory(env, roleManager, info, role);
                 
         } else {
             factory = new ComponentFactory(env, info);

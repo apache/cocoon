@@ -65,10 +65,6 @@ implements ServiceManager, Configurable {
      */
     private final List newComponentHandlers = new ArrayList();
 
-    /** Temporary list of parent-aware components.  Will be null for most of
-     * our lifecycle. */
-    private ArrayList parentAwareComponents = new ArrayList();
-
     /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
@@ -105,6 +101,13 @@ implements ServiceManager, Configurable {
      */
     public void contextualize( final Context context ) {
         this.context = context;
+    }
+    
+    public void setRoleManager (RoleManager rm) {
+        if (rm != null) {
+            // Override the one eventually got in the parent (see constructor)
+            this.roleManager = new RoleManager(rm);
+        }
     }
 
     /* (non-Javadoc)
@@ -181,30 +184,6 @@ implements ServiceManager, Configurable {
             }
         }
         this.newComponentHandlers.clear();
-        
-        // Initialize parent aware components
-        if (this.parentAwareComponents == null) {
-            throw new ServiceException(null, "CoreServiceManager already initialized");
-        }
-
-        // Set parents for parentAware components
-        Iterator iter = this.parentAwareComponents.iterator();
-        while (iter.hasNext()) {
-            String role = (String)iter.next();
-            if ( this.parentManager != null && this.parentManager.hasService( role ) ) {
-                // lookup new component
-                Object component = null;
-                try {
-                    component = this.lookup( role );
-                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
-                } catch (ServiceException ignore) {
-                    // we don't set the parent then
-                } finally {
-                    this.release( component );
-                }
-            }
-        }
-        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
         
 //        Object[] keyArray = this.componentHandlers.keySet().toArray();
 //        java.util.Arrays.sort(keyArray);
@@ -498,9 +477,6 @@ implements ServiceManager, Configurable {
             throw new ServiceException( role, "Could not set up component handler.", e );
         }
         
-        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
-            this.parentAwareComponents.add(role);
-        }
         // Initialize shadow selector now, it will feed this service manager
         if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
             try {

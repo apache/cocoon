@@ -426,20 +426,22 @@ implements ServiceSelector, Serviceable, Configurable {
      * @param locator
      * @throws ServiceException
      */
-    public void setParentLocator(ServiceManager locator, String role)
+    private void setParentLocator(ServiceManager locator, String role)
     throws ServiceException {
         if (this.parentSelector != null) {
             throw new ServiceException(null, "Parent selector is already set");
         }
         this.parentLocator = locator;
         
-        // Get the parent, unwrapping it as far as needed
-        Object parent = locator.lookup(role);
-        
-        if (parent instanceof CocoonServiceSelector) {
-            this.parentSelector = (CocoonServiceSelector)parent;
-        } else {
-            throw new IllegalArgumentException("Parent selector is not an extended component selector (" + parent + ")");
+        if (locator != null && locator.hasService(role)) {
+            // Get the parent, unwrapping it as far as needed
+            Object parent = locator.lookup(role);
+            
+            if (parent instanceof CocoonServiceSelector) {
+                this.parentSelector = (CocoonServiceSelector)parent;
+            } else {
+                throw new IllegalArgumentException("Parent selector is not an extended component selector (" + parent + ")");
+            }
         }
     }
 
@@ -457,11 +459,13 @@ implements ServiceSelector, Serviceable, Configurable {
     public static class Factory extends ComponentFactory {
         
         private final RoleManager roleManager;
+        private final String role;
         
-        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info) 
+        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info, String role) 
         throws Exception {
             super(env, info);
             this.roleManager = roleManager;
+            this.role = role;
         }
         
         protected void setupObject(Object obj)
@@ -474,6 +478,12 @@ implements ServiceSelector, Serviceable, Configurable {
             
             component.setLoggerManager(this.environment.loggerManager);
             component.setRoleManager(this.roleManager);
+
+            ServiceManager manager = this.environment.serviceManager;
+            if (manager instanceof CoreServiceManager) {
+                // Can it be something else?
+                component.setParentLocator( ((CoreServiceManager)manager).parentManager, this.role);
+            }
             
             ContainerUtil.configure(component, this.serviceInfo.getConfiguration());
             ContainerUtil.initialize(component);
