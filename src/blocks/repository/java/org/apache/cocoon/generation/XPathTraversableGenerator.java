@@ -24,21 +24,18 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.TraversableSource;
-import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -96,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.5 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.6 2004/03/24 12:26:54 unico Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -115,8 +112,6 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	protected String xpath = null;
 	/** The XPath processor. */
 	protected XPathProcessor processor = null;
-	/** The parser for the XML snippets to be included. */
-	protected DOMParser parser = null;
     /** The prefix resolver for namespaced queries */
 	protected XPathPrefixResolver prefixResolver;
     /** The cocoon context used for mime-type mappings */
@@ -182,15 +177,12 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
-        parser = (DOMParser)manager.lookup(DOMParser.ROLE);
     }
 
     public void dispose() {
         if ( this.manager != null ) {
             this.manager.release( processor );
-            this.manager.release( parser );
             this.processor = null;
-            this.parser = null;
         }
         super.dispose();
     }
@@ -219,31 +211,29 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	 * @param in  the Source the XPath is performed on.
 	 * @throws SAXException  if something goes wrong while adding the XML snippet.
 	 */
-    protected void performXPathQuery(TraversableSource in)
-      throws SAXException {
-      doc = null;
-      try {
-        doc = parser.parseDocument(new InputSource(in.getInputStream()));
-      } catch (SAXException se) {
-         this.getLogger().error("Warning:" + in.getName()
-          + " is not a valid XML document. Ignoring");
-      } catch (Exception e) {
-         this.getLogger().error("Unable to resolve and parse document" + e);
-       }
-       if (doc != null) {
-         NodeList nl = processor.selectNodeList(doc.getDocumentElement(), xpath, this.prefixResolver);
-         final String id = in.getName();
-         AttributesImpl attributes = new AttributesImpl();
-         attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR,
-          " CDATA", id);
-         attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA",
-           xpath);
-         super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
-         DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
-         for (int i = 0; i < nl.getLength(); i++)
-           ds.stream(nl.item(i));
-         super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
-      }
+    protected void performXPathQuery(TraversableSource in) throws SAXException {
+        doc = null;
+        try {
+            doc = SourceUtil.toDOM(this.manager, in);
+        } catch (SAXException se) {
+             this.getLogger().error("Warning:" + in.getName()
+              + " is not a valid XML document. Ignoring");
+        } catch (Exception e) {
+             this.getLogger().error("Unable to resolve and parse document" + e);
+         }
+         if (doc != null) {
+             NodeList nl = processor.selectNodeList(doc.getDocumentElement(), xpath, this.prefixResolver);
+             final String id = in.getName();
+             AttributesImpl attributes = new AttributesImpl();
+             attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR," CDATA", id);
+             attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA",xpath);
+             super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
+             DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
+             for (int i = 0; i < nl.getLength(); i++) { 
+                 ds.stream(nl.item(i));
+             }
+             super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
+        }
     }
 
     /**
