@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.6 2003/05/11 11:09:46 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.7 2003/05/18 14:00:43 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -269,11 +269,13 @@ public class XMLFileModule extends AbstractJXPathModule
         if (modeConf != null) {
             fileConf = modeConf.getChild("file", false);
             if (fileConf == null) {
-                getLogger().error("Error: missing 'file' child element at "+modeConf.getLocation());
+                getLogger().warn("Error: missing 'file' child element at "+modeConf.getLocation());
+                /*
                 throw new ConfigurationException(
                         "Error in dynamic configuration of XMLFileModule: " +
                         "missing 'file' child element at " + 
                         modeConf.getLocation());
+                */
             }
             hasDynamicConf = true;
         }
