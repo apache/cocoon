@@ -15,7 +15,6 @@
  <s1 title="Timeframe">
   <p>This is the current time frame for the next releases:</p>
   <ul>
-   <li>Not schedulded yet : 2.1 Alpha</li>
    <li>Not schedulded yet : 2.1 Beta 1</li>
    <li>On request         : 2.0.5 (bug fix release)</li>
   </ul>
@@ -23,20 +22,7 @@
 
  <s1 title="Version 2.1 Beta 1">
 <ul>
-<li>apply patches</li>
-<li>test flowmap + docs + etc</li>
-<li>documentation to be published by Forrest</li>
-<li>finish the document
- <link href="../installing/updating.html">Updating Cocoon</link>
-which describes the major changes since 2.0.2
-</li>
-<li>finish the
- <link href="samples.html">refactoring of samples</link></li>
-<li>finish to move scratchpad stuff in main trunk</li>
-<li>more tests and examples on the flowmap. Seems to me that this 
-strategic stuff has been a set a bit aside due to lack of time.</li>
-<li>Move complete Source implementation to Excalibur</li>
-<li>Change implementation for SitemapConfigurable</li>
+<li>Attend to the <link href="../todo.html">To Do List</link></li>
 </ul>
  </s1>
  <s1 title="Version 2.2 Beta 1">
@@ -51,7 +37,6 @@ strategic stuff has been a set a bit aside due to lack of time.</li>
 <li>We have many open bugs in bugzilla. These must be reviewed
     and then solved (or declared invalid etc).</li>
 <li>Documentation updates (this area lacks most).
-    We could move this to the final release.
 Documentation must be happening all the time, and not left
 until last.</li>
 <li>Checking what to backport. We have components in the
