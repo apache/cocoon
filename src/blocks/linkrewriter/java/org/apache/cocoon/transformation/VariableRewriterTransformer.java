@@ -57,11 +57,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -172,10 +169,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: VariableRewriterTransformer.java,v 1.5 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: VariableRewriterTransformer.java,v 1.6 2003/10/21 13:23:27 cziegeler Exp $
  */
 public class VariableRewriterTransformer
-    extends AbstractSAXTransformer implements Composable, Initializable, Configurable
+    extends AbstractSAXTransformer implements Initializable, Disposable
 {
 
     private static String NAMESPACE="";
@@ -198,14 +195,13 @@ public class VariableRewriterTransformer
 
     private String badLinkStr;
 
-    private ComponentManager componentManager;
-
     /**
      * Configure this component from the map:transformer block.  Called before
      * initialization and setup.
      */
     public void configure(Configuration conf)
-        throws ConfigurationException {
+    throws ConfigurationException {
+        super.configure(conf);
         this.origConf = conf;
     }
  
@@ -215,7 +211,7 @@ public class VariableRewriterTransformer
     public void initialize() throws Exception {
         this.namespaceURI = NAMESPACE;
         this.modHelper = new XSPModuleHelper();
-        modHelper.setup(this.componentManager);
+        modHelper.setup(this.manager);
     }
 
     /**
@@ -380,10 +376,12 @@ public class VariableRewriterTransformer
     }
     
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.componentManager = manager;
+    public void dispose() {
+        if ( this.modHelper != null ) {
+            this.modHelper.releaseAll();
+            this.modHelper = null;
+        }
     }
-    
 }
