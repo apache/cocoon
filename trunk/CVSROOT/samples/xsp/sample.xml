@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xsp"?>
+
+<?cocoon-process type="xslt"?>
+<?xml-stylesheet href="sample.xsl" type="text/xsl"?>
+
+<xsp:page
+  language="java"
+  xmlns:util="http://www.plenix.com/xsp/util"
+  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
+>
+
+  <page>
+   <title>A Simple XSP Page</title>
+
+   <p>
+    Hi, I've been hit <util:counter/> times.
+   </p>
+
+   <p>
+     <a href="view-source.xml?filename=sample.xml">Source Code</a>
+   </p>
+  </page>
+</xsp:page>

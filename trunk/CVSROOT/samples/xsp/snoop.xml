@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xsp"?>
+
+<?cocoon-process type="xslt"?>
+<?xml-stylesheet href="sample.xsl" type="text/xsl"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
+>
+
+  <page>
+    <title>
+      Snoop XSP Page
+    </title>
+
+
+    <ul>
+      <li>
+        <p>Parameter values (try your own!)</p>
+    
+        <table border="1" align="center">
+          <tr>
+            <th>Name</th>
+            <th>Value(s)</th>
+          </tr>
+    
+          <xsp:logic>
+            Enumeration enum = request.getParameterNames();
+            while (enum.hasMoreElements()) {
+              String parameterName = (String) enum.nextElement();
+              String[] parameterValues =
+	        request.getParameterValues(parameterName);
+    
+              <xsp:content>
+                <tr>
+                  <td valign="top">
+                    <xsp:expr>parameterName</xsp:expr>
+                  </td>
+    
+                  <td>
+                  <xsp:logic>
+                    for (int i = 0; i &lt; parameterValues.length; i++) {
+                      <xsp:content>
+                        <xsp:expr>parameterValues[i]</xsp:expr>
+                        <br/>
+                      </xsp:content>
+                    }
+                  </xsp:logic>
+                  </td>
+                </tr>
+              </xsp:content>
+            }
+          </xsp:logic>
+        </table>
+      </li>
+
+      <li>
+        <p>Request Attributes:</p>
+
+        <table border="1" align="center">
+          <tr>
+            <td>Protocol</td>
+            <td><xsp:expr>request.getProtocol()</xsp:expr></td>
+          </tr>
+          <tr>
+            <td>Scheme</td>
+            <td><xsp:expr>request.getScheme()</xsp:expr></td>
+          </tr>
+          <tr>
+            <td>Server Name</td>
+            <td><xsp:expr>request.getServerName()</xsp:expr></td>
+          </tr>
+          <tr>
+            <td>Server Port</td>
+            <td><xsp:expr>request.getServerPort()</xsp:expr></td>
+          </tr>
+          <tr>
+            <td>Remote Address</td>
+            <td><xsp:expr>request.getRemoteAddr()</xsp:expr></td>
+          </tr>
+          <tr>
+            <td>Remote Host</td>
+            <td><xsp:expr>request.getRemoteHost()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Character Encoding</td>
+            <td><xsp:expr>request.getCharacterEncoding()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Content Length</td>
+            <td><xsp:expr>request.getContentLength()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Content Type</td>
+            <td><xsp:expr>request.getContentType()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Servlet Path</td>
+            <td><xsp:expr>request.getServletPath()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Request URI</td>
+            <td><xsp:expr>request.getRequestURI()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Path Translated</td>
+            <td><xsp:expr>request.getPathTranslated()</xsp:expr>&#160;</td>
+          </tr>
+          <tr>
+            <td>Path Info</td>
+            <td><xsp:expr>request.getPathInfo()</xsp:expr>&#160;</td>
+          </tr>
+        </table>
+	<br/>
+      </li>
+    </ul>
+
+    <p>
+      <a href="view-source.xml?filename=snoop.xml">Source Code</a>
+    </p>
+
+  </page>
+</xsp:page>
