@@ -84,7 +84,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
  * @since 2.1
- * @version CVS $Id: JXPathExceptionSelector.java,v 1.1 2003/04/17 13:36:09 cziegeler Exp $
+ * @version CVS $Id: JXPathExceptionSelector.java,v 1.2 2003/05/07 05:09:38 vgritsenko Exp $
  */
 
 public class JXPathExceptionSelector
@@ -123,7 +123,7 @@ public class JXPathExceptionSelector
     /**
      * Compute the exception type, given the configuration and the exception stored in the object model.
      * 
-     * @see ObjectModelHelper#getThrowable()
+     * @see ObjectModelHelper#getThrowable(java.util.Map)
      */
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
 
