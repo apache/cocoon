@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.38 2000-12-13 13:30:27 greenrd Exp $-->
+<!-- $Id: esql.xsl,v 1.39 2000-12-13 13:40:34 greenrd Exp $-->
 <!--
 
  ============================================================================
@@ -461,7 +461,7 @@
   <xsl:variable name="content">
     <xsl:choose>
       <xsl:when test="@root">
-        <xsl:call-template name="add-xml-decl">
+        <!-- <xsl:call-template name="add-xml-decl"> not needed -->
         <xsl:text>"&lt;</xsl:text>
         <xsl:value-of select="@root"/>
         <xsl:text>&gt;"+</xsl:text>
@@ -471,7 +471,7 @@
         <xsl:text>&gt;"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="add-xml-decl">
+        <!-- <xsl:call-template name="add-xml-decl"> not needed -->
         <xsl:call-template name="get-string"/>
       </xsl:otherwise>
     </xsl:choose>
@@ -568,6 +568,7 @@
   </xsl:choose>
 </xsl:template>
 
+<!-- added by mistake. Not needed, I think - RDG
 <xsl:template name="add-xml-decl">
   <xsl:choose>
     <xsl:when test="@encoding">
@@ -579,6 +580,7 @@
   </xsl:choose>
   +
 </xsl:template>
+-->
 
 <xsl:template match="@*|node()" priority="-1">
   <xsl:copy>
