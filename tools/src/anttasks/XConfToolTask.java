@@ -40,7 +40,6 @@ import org.xml.sax.SAXException;
 /**
  * Ant task to patch xmlfiles.
  *
- * 
  * replace-properties no|false,anything else
  * xpath: xpath expression for context node
  * unless-path: xpath expression that must return empty node set
@@ -59,7 +58,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.26 $ $Date: 2004/05/07 18:32:45 $
+ * @version CVS $Id$
  */
 public final class XConfToolTask extends MatchingTask {
 

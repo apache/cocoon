@@ -46,7 +46,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.14 $ $Date: 2004/05/08 02:54:45 $
+ * @version CVS $Id$
  */
 public final class SitemapTask extends AbstractQdoxTask {
 

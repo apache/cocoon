@@ -40,9 +40,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/05/03 09:00:28 $
+ * @version CVS $Id$
  */
 public final class DocumentCache {
 
