@@ -79,6 +79,10 @@ public class Field extends AbstractWidget {
         this.definition = fieldDefinition;
     }
 
+    public FieldDefinition getFieldDefinition() {
+        return this.definition;
+    }
+
     public String getId() {
         return definition.getId();
     }

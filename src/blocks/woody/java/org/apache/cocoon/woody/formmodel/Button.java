@@ -76,7 +76,7 @@ public class Button extends AbstractWidget {
 
     public void readFromRequest(FormContext formContext) {
         String value = formContext.getRequest().getParameter(getFullyQualifiedId());
-        if (value != null && value.equals("selected")) {
+        if (value != null) {
             formContext.setActionEvent(new ActionEvent() {
                 public String getActionCommand() {
                     return definition.getActionCommand();
