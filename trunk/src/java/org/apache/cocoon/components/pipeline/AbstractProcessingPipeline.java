@@ -73,6 +73,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.generation.Generator;
@@ -90,7 +91,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.12 2003/10/29 14:42:59 vgritsenko Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.13 2003/10/30 14:05:13 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -385,7 +386,7 @@ public abstract class AbstractProcessingPipeline
         try {
             // setup the generator
             this.generator.setup(
-                this.processor.getSourceResolver(),
+                this.processor.getEnvironmentHelper(),
                 environment.getObjectModel(),
                 generatorSource,
                 generatorParam
@@ -397,7 +398,7 @@ public abstract class AbstractProcessingPipeline
 
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer)transformerItt.next();
-                trans.setup(this.processor.getSourceResolver(),
+                trans.setup(this.processor.getEnvironmentHelper(),
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next());
@@ -503,7 +504,7 @@ public abstract class AbstractProcessingPipeline
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
         // TODO (CZ) Get the processor set via IoC
-        this.processor = CocoonComponentManager.getCurrentProcessor();
+        this.processor = EnvironmentHelper.getCurrentProcessor();
         if ( !checkPipeline() ) {
             throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
@@ -570,7 +571,7 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         try {
             String mimeType;
-            this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
+            this.reader.setup(this.processor.getEnvironmentHelper(),environment.getObjectModel(),readerSource,readerParam);
             mimeType = this.reader.getMimeType();
             if ( mimeType != null ) {
                 environment.setContentType(mimeType);
