@@ -91,9 +91,18 @@
         shorthand="persistent-store"
         default-class="org.apache.cocoon.components.store.impl.DefaultPersistentStore"/>
 -->
+  <!-- Normally uses the org.apache.excalibur.store.impl.StoreJanitorImpl as
+       the default-class but as that uses its own Thread spawning there is
+       the org.apache.cocoon.components.store.impl.CocoonStoreJanitor class
+       to use a daemon thread from the org.apache.cocoon.components.thread.RunnableManager
+       component 
+       NOT: As soon as our patch has been accepted by the Excalibur community and an
+            excalibur-store has been release we can switch back to the original 
+            org.apache.excalibur.store.impl.StoreJanitorImpl class
+  -->
   <role name="org.apache.excalibur.store.StoreJanitor"
        shorthand="store-janitor"
-       default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
+       default-class="org.apache.cocoon.components.store.impl.CocoonStoreJanitor"/>
 
   <!--=========================================================================
        Sitemap engine
