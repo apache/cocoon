@@ -39,6 +39,7 @@ import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.environment.http.RequestWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -52,8 +53,6 @@ import org.apache.log.Category;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.LogTarget;
 
-import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
-
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
@@ -62,7 +61,7 @@ import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.67 $ $Date: 2001-02-27 15:20:48 $
+ * @version CVS $Revision: 1.1.4.68 $ $Date: 2001-02-27 15:57:10 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -282,12 +281,12 @@ public class CocoonServlet extends HttpServlet {
 
         if (contentType.startsWith("multipart/form-data")) {
             try {
-                req = new MaybeUploadRequestWrapper(request,
-                                                    this.uploadDir,
-                                                    CocoonServlet.ALLOW_OVERWRITE,
-                                                    CocoonServlet.SILENTLY_RENAME);
+                req = new RequestWrapper(request,
+                                         this.uploadDir,
+                                         CocoonServlet.ALLOW_OVERWRITE,
+                                         CocoonServlet.SILENTLY_RENAME);
             } catch (Exception e) {
-                log.warn("Could not create MaybeUploadRequestWrapper", e);
+                log.warn("Could not create RequestWrapper", e);
                 req = request;
             }
         }

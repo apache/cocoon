@@ -21,8 +21,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
-
 /**
  *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
@@ -49,8 +47,8 @@ public class HttpRequest implements HttpServletRequest {
     /* The HttpServletRequest interface methods */
 
     public Object get(String name) {
-        if (this.req instanceof MaybeUploadRequestWrapper) {
-            return ((MaybeUploadRequestWrapper) this.req).get(name);
+        if (this.req instanceof RequestWrapper) {
+            return ((RequestWrapper) this.req).get(name);
         } else {
             String[] values = this.getParameterValues(name);
 

@@ -12,8 +12,6 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
-
 /**
  *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
@@ -40,8 +38,8 @@ public class HttpRequest extends HttpServletRequestWrapper {
     /* The HttpServletRequest interface methods */
 
     public Object get(String name) {
-        if (this.req instanceof MaybeUploadRequestWrapper) {
-            return ((MaybeUploadRequestWrapper) this.req).get(name);
+        if (this.req instanceof RequestWrapper) {
+            return ((RequestWrapper) this.req).get(name);
         } else {
             String[] values = this.getParameterValues(name);
 

@@ -210,6 +210,7 @@ by the main ones.
     <copy todir="${build.src}" filtering="on">
       <fileset dir="${src.dir}">
         <exclude name="**/http/HttpRequest2*.java"/>
+        <exclude name="**/http/RequestWrapper2*.java"/>
         <exclude name="**/http/HttpResponse2*.java"/>
       </fileset>
     </copy>
@@ -222,6 +223,9 @@ by the main ones.
     <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest23.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
         filtering="on"/>
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/RequestWrapper23.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/RequestWrapper.java"
+        filtering="on"/>
     <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse23.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
         filtering="on"/>
@@ -233,6 +237,9 @@ by the main ones.
   <target name="prepare-src-22" depends="prepare-src-23" unless="servlet23.present">
     <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest22.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
+        filtering="on"/>
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/RequestWrapper22.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/RequestWrapper.java"
         filtering="on"/>
     <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse22.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
