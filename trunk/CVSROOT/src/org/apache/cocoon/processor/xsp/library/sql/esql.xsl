@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.54 2001-01-22 23:49:44 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.55 2001-01-26 22:20:16 balld Exp $-->
 <!--
 
  ============================================================================
@@ -218,6 +218,9 @@
         String dburl = null;
         String username = null;
         String password = null;
+        int use_limit_clause = 0;
+        static final int LIMIT_CLAUSE_POSTGRESQL = 1;
+        static final int LIMIT_CLAUSE_MYSQL = 2;
       }
       class EsqlQuery {
         String query;
@@ -258,6 +261,7 @@
   <xsl:variable name="password"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:password"/></xsl:call-template></xsl:variable>
   <xsl:variable name="pool"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:pool"/></xsl:call-template></xsl:variable>
   <xsl:variable name="autocommit"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:autocommit"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="use-limit-clause"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:use-limit-clause"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     if (_esql_connection != null) {
       _esql_connections.push(_esql_connection);
@@ -322,6 +326,28 @@
       } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
         throw new RuntimeException("Error setting connection autocommit");
       }
+      <xsl:if test="esql:use-limit-clause">
+        {
+          String _esql_use_limit_clause = String.valueOf(<xsl:copy-of select="$use-limit-clause"/>);
+          if ("".equals(_esql_use_limit_clause)) {
+            try {
+              if (_esql_connection.connection.getMetaData().getURL().startsWith("jdbc:postgresql:")) {
+                _esql_connection.use_limit_clause = _esql_connection.LIMIT_CLAUSE_POSTGRESQL;
+              } else if (_esql_connection.connection.getMetaData().getURL().startsWith("jdbc:mysql:")) {
+                _esql_connection.use_limit_clause = _esql_connection.LIMIT_CLAUSE_MYSQL;
+              }
+            } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+              throw new RuntimeException("Error accessing connection metadata: "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage());
+            }
+          } else if ("postgresql".equals(_esql_use_limit_clause)) {
+            _esql_connection.use_limit_clause = _esql_connection.LIMIT_CLAUSE_POSTGRESQL;
+          } else if ("mysql".equals(_esql_use_limit_clause)) {
+            _esql_connection.use_limit_clause = _esql_connection.LIMIT_CLAUSE_MYSQL;
+          } else {
+            throw new RuntimeException("Invalid limit clause: "+_esql_use_limit_clause);
+          }
+        }
+      </xsl:if>
       <xsl:apply-templates/>
     } finally {
       try {
@@ -352,6 +378,7 @@
 <xsl:template match="esql:connection/esql:password"/>
 <xsl:template match="esql:connection/esql:pool"/>
 <xsl:template match="esql:connection/esql:autocommit"/>
+<xsl:template match="esql:connection/esql:use-limit-clause"/>
 
 <xsl:template match="esql:connection//esql:execute-query">
   <xsl:variable name="query"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:query"/></xsl:call-template></xsl:variable>
@@ -369,6 +396,27 @@
     try {
       _esql_query.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skiprows"/>));
     } catch (NumberFormatException e) {}
+    if (_esql_connection.use_limit_clause &gt; 0) {
+      if (_esql_query.max_rows &gt; -1) {
+        if (_esql_query.skip_rows &gt; 0) {
+          if (_esql_connection.use_limit_clause == _esql_connection.LIMIT_CLAUSE_POSTGRESQL) {
+            _esql_query.query += " LIMIT "+_esql_query.max_rows+","+_esql_query.skip_rows;
+          } else if (_esql_connection.use_limit_clause == _esql_connection.LIMIT_CLAUSE_MYSQL) {
+            _esql_query.query += " LIMIT "+_esql_query.skip_rows+","+_esql_query.max_rows;
+          }
+        } else {
+          _esql_query.query += " LIMIT "+_esql_query.max_rows;
+        }
+      } else {
+        if (_esql_query.skip_rows &gt; 0) {
+          if (_esql_connection.use_limit_clause == _esql_connection.LIMIT_CLAUSE_POSTGRESQL) {
+            _esql_query.query += " OFFSET "+_esql_query.skip_rows;
+          } else if (_esql_connection.use_limit_clause == _esql_connection.LIMIT_CLAUSE_MYSQL) {
+            throw new RuntimeException("Limit clause may not be used for this query - mysql has not semantics for skipping rows with no maximum");
+          }
+        }
+      }
+    }
     try {
       <xsl:choose>
         <!-- this is a prepared statement -->
@@ -409,11 +457,12 @@
           _esql_query.results = _esql_query.statement.execute(_esql_query.query);
         </xsl:otherwise>
       </xsl:choose>
+      System.err.println("QUERY: "+_esql_query.query);
       if (_esql_query.results) {
         _esql_query.resultset = _esql_query.statement.getResultSet();
         _esql_query.resultset_metadata = _esql_query.resultset.getMetaData();
         _esql_query.position = 0;
-        if (_esql_query.skip_rows &gt; 0) {
+        if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.skip_rows &gt; 0) {
           while (_esql_query.resultset.next()) {
             _esql_query.position++;
             if (_esql_query.position == _esql_query.skip_rows) {
@@ -485,10 +534,11 @@
   <xsp:logic>
     while (_esql_query.resultset.next()) {
       <xsl:apply-templates/>
-      _esql_query.position++;
-      if (_esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
+      if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
+        _esql_query.position++;
         break;
       }
+      _esql_query.position++;
     }
   </xsp:logic>
 </xsl:template>
