@@ -66,6 +66,7 @@ function Form(formDef, attrName) {
         this.attrName = attrName;
         this.lastWebContinuation = null;
         this.rootContinuation = null;
+        this.binding = null;
         this.woody = new Woody();
     } finally {
         cocoon.releaseComponent(formMgr);
@@ -171,11 +172,47 @@ Form.prototype.getSubmitId = function() {
     return this.submitId;
 }
 
+Form.prototype.createBinding = function(bindingURI) {
+    var bindingManager = null;
+    var source = null;
+    var resolver = null;
+    try {
+        bindingManager = cocoon.getComponent(Packages.org.apache.cocoon.woody.binding.BindingManager.ROLE);
+        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
+        source = resolver.resolveURI(bindingURI);
+        this.binding = bindingManager.createBinding(source);
+    } finally {
+        if (source != null)
+            resolver.release(source);
+        cocoon.releaseComponent(bindingManager);
+        cocoon.releaseComponent(resolver);
+    }
+}
+
+Form.prototype.load = function(object) {
+    if (this.binding == null)
+        throw new Error("Binding not configured for this form.");
+    this.binding.loadFormFromModel(this.form, object);
+}
+
+Form.prototype.save = function(object) {
+    if (this.binding == null)
+        throw new Error("Binding not configured for this form.");
+    this.binding.saveFormToModel(this.form, object);
+}
+
 function woody(form_function, form_definition, attribute_name) {
+    var form = new Form(form_definition, attribute_name);
     var args = new Array(arguments.length - 3 + 1);
-    args[0] = new Form(form_definition, attribute_name);
+    args[0] = form;
     for (var i = 3; i < arguments.length; i++) {
         args[i-2] = arguments[i];
     }
+
+    // set the binding on the form if there's any
+    var bindingURI = cocoon.parameters["bindingURI"];
+    if (bindingURI != null)
+        form.createBinding(bindingURI);
+
     this[form_function].apply(this, args);
 }
