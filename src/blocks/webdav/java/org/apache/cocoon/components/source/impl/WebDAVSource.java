@@ -93,10 +93,10 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  *  A source implementation to get access to WebDAV repositories. Use it
@@ -105,7 +105,7 @@ import org.w3c.dom.NodeList;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.11 2003/11/21 11:48:14 unico Exp $
+ *  @version $Id: WebDAVSource.java,v 1.12 2003/11/22 13:03:38 gcasper Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -774,20 +774,18 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     public SourceProperty getSourceProperty (String namespace, String name)
     throws SourceException {
 
+          Vector propNames = new Vector(1);
+          propNames.add(new PropertyName(namespace,name));
           Enumeration props= null;
           org.apache.webdav.lib.Property prop = null;
           try {
-              Enumeration responses = this.resource.propfindMethod(0);
+              Enumeration responses = this.resource.propfindMethod(0, propNames);
               while (responses.hasMoreElements()) {
                   ResponseEntity response = (ResponseEntity)responses.nextElement();
                   props = response.getProperties();
-                  while (props.hasMoreElements()) {
+                  if (props.hasMoreElements()) {
                       prop = (Property) props.nextElement();
-
-                      if (namespace.equals(prop.getNamespaceURI())
-                          && name.equals(prop.getLocalName())){
-                          return new SourceProperty(prop.getElement());
-                      }
+                      return new SourceProperty(prop.getElement());
                   }
               }
           } catch (Exception e) {
@@ -825,22 +823,26 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     throws SourceException {
 
         try {
-            Document doc = sourceproperty.getValue().getOwnerDocument();
-            DocumentFragment frag = doc.createDocumentFragment();
+			Node node = null;
             NodeList list = sourceproperty.getValue().getChildNodes();
             for (int i=0; i<list.getLength(); i++) {
-                if (list.item(i) instanceof Element)
-                    frag.appendChild(list.item(i));
+                if ((list.item(i) instanceof Text && !"".equals(list.item(i).getNodeValue()))
+                    || list.item(i) instanceof Element) {
+                    
+                    node = list.item(i);
+                    break;
+                }
             }
 
             Properties format = new Properties();
             format.put(OutputKeys.METHOD, "xml");
             format.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            String prop = XMLUtils.serializeNode(frag, format);
+            String prop = XMLUtils.serializeNode(node, format);
             
             this.resource.proppatchMethod(
                    new PropertyName(sourceproperty.getNamespace(),sourceproperty.getName()),
                    prop, true);
+
         } catch (Exception e) {
             throw new SourceException("Could not set property ", e);
         }
