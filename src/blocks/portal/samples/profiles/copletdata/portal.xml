@@ -116,13 +116,23 @@
       </attribute>
    </coplet-data>
 
-   <!-- The portal introduction coplet -->
+   <!-- 
+     + The portal introduction coplet 
+   -->
    <coplet-data id="Portal-Intro" name="standard">
       <title>Introduction</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-intro.html</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Portal-Demo" name="standard">
+      <title>Introduction</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-demo.html</value>
       </attribute>
    </coplet-data>
    <coplet-data id="Portal-Right" name="standard">
@@ -133,7 +143,6 @@
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-right.html</value>
       </attribute>
    </coplet-data>
-
    <coplet-data id="Portal-Left" name="standard">
       <title>Left</title>
       <coplet-base-data>URICoplet</coplet-base-data>
@@ -142,7 +151,6 @@
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-left.html</value>
       </attribute>
    </coplet-data>
-
    <coplet-data id="Portal-Bottom" name="standard">
       <title>Bottom</title>
       <coplet-base-data>URICoplet</coplet-base-data>
@@ -152,16 +160,19 @@
       </attribute>
    </coplet-data>
 
+   <!--
+     +  The Gallery coplets
+   -->
    <coplet-data id="Gallery" name="standard">
       <title>Picture Gallery</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/gallery</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/gallery/browser</value>
       </attribute>
       <attribute>
       	<name>image-dir</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">gallery/samplepics</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">samplepics</value>
       </attribute>
       <attribute>
       	<name>image-include</name>
@@ -177,8 +188,23 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/galleryviewer</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/gallery/viewer</value>
       </attribute>
    </coplet-data>
 
+   <!--
+     +  The login coplet
+   -->
+   <coplet-data id="Login" name="standard">
+      <title>Login</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/login/coplet</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </aspect>
+   </coplet-data>
 </coplets>

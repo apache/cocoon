@@ -76,11 +76,14 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: AbstractUserProfileManager.java,v 1.5 2003/12/17 15:03:27 cziegeler Exp $
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#login()
+     */
     public void login() {
         super.login();
         // TODO - we should move most of the stuff from getPortalLayout to here
@@ -88,6 +91,9 @@ public abstract class AbstractUserProfileManager
         this.getPortalLayout(null, null);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#logout()
+     */
     public void logout() {
         final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
@@ -97,18 +103,20 @@ public abstract class AbstractUserProfileManager
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute("CopletInstanceData:"+layoutKey);
-            Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
-            while ( iter.hasNext() ) {
-                CopletInstanceData cid = (CopletInstanceData) iter.next();
-                CopletAdapter adapter = null;
-                try {
-                    adapter = (CopletAdapter)adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
-                    adapter.logout( cid );
-                } finally {
-                    adapterSelector.release( adapter );
+            if ( copletInstanceDataManager != null ) {
+                Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+                while ( iter.hasNext() ) {
+                    CopletInstanceData cid = (CopletInstanceData) iter.next();
+                    CopletAdapter adapter = null;
+                    try {
+                        adapter = (CopletAdapter)adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                        adapter.logout( cid );
+                    } finally {
+                        adapterSelector.release( adapter );
+                    }
                 }
             }
-
+            
             service.removeAttribute("CopletData:"+layoutKey);
             service.removeAttribute("CopletInstanceData:"+layoutKey);
             service.removeAttribute("Layout:"+layoutKey);
@@ -168,6 +176,9 @@ public abstract class AbstractUserProfileManager
 		}
 	}
 	
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
+     */
     public CopletInstanceData getCopletInstanceData(String copletID) {
         String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
@@ -186,6 +197,9 @@ public abstract class AbstractUserProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
+     */
     public List getCopletInstanceData(CopletData data) {
         String layoutKey = this.getDefaultLayoutKey();
         List coplets = new ArrayList();

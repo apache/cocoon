@@ -2,38 +2,18 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+<!-- This sitemap just forwards the request to the corresponding coplet
+     sub sitemap -->
 <map:pipelines>
     
   <map:pipeline>	
 
-	<map:match pattern="gallery/images/*.jpg">
-    	<map:read mime-type="image/jpg" src="gallery/samplepics/{1}.jpg"/>
-   	</map:match>
-
-    <!-- this is a gallery coplet -->
-    <map:match pattern="gallery">
-        <map:generate type="directory" src="{coplet:copletData/attributes/image-dir}">
-            <map:parameter name="include" value="{coplet:copletData/attributes/image-include}"/>
-        </map:generate>
-        <map:transform src="gallery/dir2pic.xsl">
-            <map:parameter name="dirprefix" value="{coplet:copletData/attributes/image-uri-prefix}"/>
-        </map:transform>
-        <map:transform type="xslt" src="gallery/gallery.xsl">
-            <map:parameter name="pic" value="{coplet:attributes/picture}"/>
-            <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/>
-        </map:transform>
-        <map:transform type="portal-coplet"/>
-        <map:serialize type="xml"/>
-    </map:match>
-    <map:match pattern="galleryviewer">
-        <map:generate src="gallery/picture.xml"/>
-        <map:transform type="xslt" src="gallery/picture.xsl">
-            <map:parameter name="pic" value="{coplet:attributes/picture}"/>
-        </map:transform>
-        <map:serialize type="xml"/>
-    </map:match>
+   <map:match pattern="*/**">
+     <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+   </map:match>
 
   </map:pipeline>
 
 </map:pipelines>
+
 </map:sitemap>
