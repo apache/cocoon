@@ -86,7 +86,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.6 2003/06/11 23:15:56 joerg Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.7 2003/09/23 22:46:44 vgritsenko Exp $
  */
 public class XSPUtil {
 
@@ -256,9 +256,7 @@ public class XSPUtil {
         try {
             return getContents(source.getInputStream());
         } finally {
-            if (source != null) {
-                resolver.release(source);
-            }
+            resolver.release(source);
         }
     }
 

@@ -83,7 +83,7 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.1 2003/06/27 20:10:42 stefano Exp $
+ * @version    CVS $Id: Paginator.java,v 1.2 2003/09/23 22:46:44 vgritsenko Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Composable, Disposable, CacheableProcessingComponent {
@@ -95,6 +95,7 @@ public class Paginator extends AbstractTransformer
     private ComponentManager manager;
     private SAXParser parser;
     private Store store;
+    private SourceResolver resolver;
     private Source inputSource;
     private int page;
     private int item;
@@ -147,13 +148,14 @@ public class Paginator extends AbstractTransformer
                         throws ProcessingException, SAXException,
                                IOException {
 
-        if (src==null) {
+        if (src == null) {
             throw new ProcessingException("I need the paginate instructions (pagesheet) to continue. Set the 'src' attribute.");
         }
 
         try {
             this.level = 0;
             this.prefixMapping = false;
+            this.resolver = resolver;
             this.inputSource = resolver.resolveURI(src);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Using pagesheet: '"+
@@ -195,9 +197,18 @@ public class Paginator extends AbstractTransformer
             // implementation is not reentrant.
             this.pagesheet = (Pagesheet) this.pagesheet.clone();
         } catch (SourceException se) {
-            throw new ProcessingException("Could not retrieve source '"+src+
-                                          "'", se);
+            throw new ProcessingException("Could not retrieve source '" +
+                                          src + "'", se);
         }
+    }
+
+    public void recycle() {
+        if (null != this.inputSource) {
+            this.resolver.release(this.inputSource);
+            this.inputSource = null;
+        }
+        this.resolver = null;
+        super.recycle();
     }
 
     /**
