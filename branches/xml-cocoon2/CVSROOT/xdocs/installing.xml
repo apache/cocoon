@@ -44,8 +44,9 @@
       <s2 title="Step-by-step installation instructions for Windows">
         <ol> 
           <li>Download
-            <link href="ftp://cvsgui.sourceforge.net/pub/cvsgui/WinCvs11b16.zip">WinCVS
-              (v1.16 beta)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);</li> 
+            <link href="ftp://cvsgui.sourceforge.net/pub/cvsgui/WinCvs120.zip">WinCVS
+              (v1.2)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);
+          </li>
           <li>Install it;</li> 
           <li>Start it;</li> 
           <li>Click on admin-&gt;preferences;</li> 
