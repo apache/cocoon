@@ -21,7 +21,7 @@ import javax.jdo.PersistenceManager;
 
 import org.apache.cocoon.components.flow.java.*;
 import org.apache.cocoon.forms.binding.*;
-import org.apache.cocoon.forms.flow.java.AbstractFormFlow;
+import org.apache.cocoon.forms.flow.java.*;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.ojb.broker.components.PBFactory;
 import org.apache.cocoon.ojb.samples.EmployeeDAO;
@@ -29,7 +29,7 @@ import org.apache.cocoon.ojb.samples.bean.Employee;
 import org.apache.ojb.broker.*;
 import org.apache.ojb.broker.query.*;
 
-public class PersistenceFlow extends AbstractFormFlow {
+public class PersistenceFlow extends AbstractCocoonFlow {
 
     private transient PersistenceBroker broker = null;
 
@@ -46,15 +46,15 @@ public class PersistenceFlow extends AbstractFormFlow {
         // Fill some initial data to the bean
         employee.setId(1);
         // Load form descriptor
-        Form form = loadForm("forms/employee.xml");
+        FormInstance form = new FormInstance("forms/employee.xml");
         // Load form binding
-        Binding binding = loadBinding("forms/employee-binding.xml");
+        form.createBinding("forms/employee-binding.xml");
         // Load the Bean to the form
-        binding.loadFormFromModel(form, employee);
+        form.load(employee);
         // Let Cocoon Forms handle the form
-        showForm(form, "form/employee");
+        form.show("form/employee");
         // Update the Bean based on user input
-        binding.saveFormToModel(form, employee);
+        form.save(employee);
         // Update Bean in Database
         broker.store(employee);
         // Send response to the user
@@ -77,15 +77,15 @@ public class PersistenceFlow extends AbstractFormFlow {
         // Load bean based on the given PrimaryKey
         employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
         // Load form descriptor
-        Form form = loadForm("forms/employee.xml");
+        FormInstance form = new FormInstance("forms/employee.xml");
         // Load form binding
-        Binding binding = loadBinding("forms/employee-binding.xml");
+        form.createBinding("forms/employee-binding.xml");
         // Load the Bean to the form
-        binding.loadFormFromModel(form, employee);
+        form.load(employee);
         // Let Cocoon Forms handle the form
-        showForm(form, "form/employee");
+        form.show("form/employee");
         // Update the Bean based on user input
-        binding.saveFormToModel(form, employee);
+        form.save(employee);
 
         // Update Bean in Database
         broker.store(employee);
