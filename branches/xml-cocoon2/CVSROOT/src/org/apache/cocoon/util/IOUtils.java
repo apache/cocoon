@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-11 15:06:12 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-21 14:54:35 $
  */
 public class IOUtils {
 
@@ -199,6 +199,17 @@ public class IOUtils {
       LogKit.getLoggerFor("cocoon").debug("IOUtils.getFullFilename", e);
       return file.getAbsolutePath();
     }
+  }
+
+  /**
+   * Return the path within a base directory
+   */
+  public static String getContextFilePath(String contextDir, String filePath) {
+      if (filePath.startsWith(contextDir)) {
+          return filePath.substring(contextDir.length());
+      }
+
+      return filePath;
   }
 
   /**
