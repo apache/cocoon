@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.130 2004/03/03 10:21:15 antonio Exp $
+    | CVS $Id: jars.xml,v 1.131 2004/03/05 08:04:28 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -326,16 +326,6 @@
   </file>
 
   <file>
-    <title>LogFactor5</title>
-    <description>
-      LogFactor5 is a graphical logkit browser, distributed as a part of Log4J.
-    </description>
-    <used-by>Cocoon logging</used-by>
-    <lib>optional/logfactor5-1.2.8.jar</lib>
-    <homepage>http://jakarta.apache.org/log4j/docs/lf5/overview.html</homepage>
-  </file>
-
-  <file>
     <title>The XSLT processor</title>
     <description>
       Xalan is an XSLT processor that fully supports the W3C specs.
@@ -390,17 +380,6 @@
     <used-by>JISP file storage</used-by>
     <lib>core/jisp-2.5.1.jar</lib>
     <homepage>http://www.coyotegulch.com/jisp/</homepage>
-  </file>
-
-  <file>
-    <title>Java Formatter</title>
-    <description>
-      This program formats Java code with consistent indentation and so
-      forth, to make it easier to read and maintain.
-    </description>
-    <used-by>Cocoon</used-by>
-    <lib>optional/jstyle.jar</lib>
-    <homepage>http://www.redrival.com/greenrd/java/jstyle/</homepage>
   </file>
 
   <file>
@@ -477,14 +456,6 @@
     <used-by>Control flow</used-by>
     <lib>core/javacImpl-0.9.jar</lib>
     <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
-  </file>
-
-  <file>
-    <title>Castor</title>
-    <description></description>
-    <used-by>CastorTransformer and precept</used-by>
-    <lib>optional/castor-0.9.5.1-xml.jar</lib>
-    <homepage>http://castor.exolab.org</homepage>
   </file>
 
   <file>
