@@ -15,43 +15,15 @@
  */
 package org.apache.cocoon.servlet;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
@@ -75,17 +47,43 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.commons.lang.BooleanUtils;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
-
 import org.apache.log.ContextMap;
+import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
-import org.apache.log.ErrorHandler;
-import org.apache.log.util.DefaultErrorHandler;
 import org.apache.log.output.ServletOutputLogTarget;
+import org.apache.log.util.DefaultErrorHandler;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -97,18 +95,19 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.28 2004/05/11 17:20:40 joerg Exp $
+ * @version CVS $Id$
  */
 public class CocoonServlet extends HttpServlet {
 
-    /** Application <code>Context</code> Key for the servlet configuration
-     *  @since 2.1.3
+    /**
+     * Application <code>Context</code> Key for the servlet configuration
+     * @since 2.1.3
      */
     public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
 
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
-        + Constants.COMPLETE_NAME + " in ";
+            + Constants.COMPLETE_NAME + " in ";
 
     // Used by "show-time"
     static final float SECOND = 1000;
@@ -249,19 +248,20 @@ public class CocoonServlet extends HttpServlet {
 
         super.init(conf);
 
-		// Check the init-classloader parameter only if it's not already true.
-		// This is useful for subclasses of this servlet that override the value
-		// initially set by this class (i.e. false).
-		if (!this.initClassLoader) {
-			this.initClassLoader = getInitParameterAsBoolean("init-classloader", false);
-		}
+        // Check the init-classloader parameter only if it's not already true.
+        // This is useful for subclasses of this servlet that override the value
+        // initially set by this class (i.e. false).
+        if (!this.initClassLoader) {
+            this.initClassLoader = getInitParameterAsBoolean("init-classloader", false);
+        }
 
         if (this.initClassLoader) {
             // Force context classloader so that JAXP can work correctly
             // (see javax.xml.parsers.FactoryFinder.findClassLoader())
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
 
         String value;
@@ -294,7 +294,7 @@ public class CocoonServlet extends HttpServlet {
                     this.workDir = workDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.workDir = new File(servletContextPath , workDirParam);
+                    this.workDir = new File(servletContextPath, workDirParam);
                 }
             }
         } else {
@@ -318,7 +318,7 @@ public class CocoonServlet extends HttpServlet {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("getResource for /WEB-INF: " + path);
             }
-            path = path.substring(0,path.length() - "WEB-INF".length());
+            path = path.substring(0, path.length() - "WEB-INF".length());
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Path for Root: " + path);
             }
@@ -372,7 +372,7 @@ public class CocoonServlet extends HttpServlet {
                     this.uploadDir = uploadDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.uploadDir = new File(servletContextPath , uploadDirParam);
+                    this.uploadDir = new File(servletContextPath, uploadDirParam);
                 }
             }
             if (getLogger().isDebugEnabled()) {
@@ -397,12 +397,12 @@ public class CocoonServlet extends HttpServlet {
             this.allowOverwrite = false;
             this.silentlyRename = false;
         } else if ("allow".equalsIgnoreCase(overwriteParam)) {
-           this.allowOverwrite = true;
-           this.silentlyRename = false; // ignored in this case
+            this.allowOverwrite = true;
+            this.silentlyRename = false; // ignored in this case
         } else {
-           // either rename is specified or unsupported value - default to rename.
-           this.allowOverwrite = false;
-           this.silentlyRename = true;
+            // either rename is specified or unsupported value - default to rename.
+            this.allowOverwrite = false;
+            this.silentlyRename = true;
         }
 
         this.maxUploadSize = getInitParameterAsInteger("upload-max-size", MAX_UPLOAD_SIZE);
@@ -419,7 +419,7 @@ public class CocoonServlet extends HttpServlet {
                     this.cacheDir = cacheDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    this.cacheDir = new File(servletContextPath , cacheDirParam);
+                    this.cacheDir = new File(servletContextPath, cacheDirParam);
                 }
             }
             if (getLogger().isDebugEnabled()) {
@@ -443,7 +443,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // get allow reload parameter, default is true
-		this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
+        this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
         value = conf.getInitParameter("show-time");
         this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
@@ -463,12 +463,12 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
-        this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
+        this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
 
-		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
+        this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
-		this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
+        this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
 
         this.requestFactory = new RequestFactory(this.autoSaveUploads,
                                                  this.uploadDir,
@@ -488,7 +488,8 @@ public class CocoonServlet extends HttpServlet {
         if (this.initClassLoader) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
 
         if (this.cocoon != null) {
@@ -503,7 +504,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
-            ((Disposable)this.parentComponentManager).dispose();
+            ((Disposable) this.parentComponentManager).dispose();
         }
     }
 
@@ -539,7 +540,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     protected String getClassPath() throws ServletException {
+    protected String getClassPath() throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
 
         File root = null;
@@ -607,12 +608,12 @@ public class CocoonServlet extends HttpServlet {
         }
 
         buildClassPath.append(File.pathSeparatorChar)
-                      .append(System.getProperty("java.class.path"));
+                      .append(SystemUtils.JAVA_CLASS_PATH);
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(getExtraClassPath());
         return buildClassPath.toString();
-     }
+    }
 
     private File extractLibraries() {
         try {
@@ -631,7 +632,7 @@ public class CocoonServlet extends HttpServlet {
             }
 
             List libList = new ArrayList();
-            for(StringTokenizer st = new StringTokenizer(libValue, " "); st.hasMoreTokens();) {
+            for (StringTokenizer st = new StringTokenizer(libValue, " "); st.hasMoreTokens();) {
                 libList.add(st.nextToken());
             }
 
@@ -650,7 +651,7 @@ public class CocoonServlet extends HttpServlet {
             this.getLogger().warn("Extracting libraries into " + root);
             byte[] buffer = new byte[65536];
             for (Iterator i = libList.iterator(); i.hasNext();) {
-                String libName = (String)i.next();
+                String libName = (String) i.next();
 
                 long lastModified = -1;
                 try {
@@ -674,7 +675,7 @@ public class CocoonServlet extends HttpServlet {
                     try {
                         os = new FileOutputStream(lib);
                         int count;
-                        while((count = is.read(buffer)) > 0) {
+                        while ((count = is.read(buffer)) > 0) {
                             os.write(buffer, 0, count);
                         }
                     } finally {
@@ -702,55 +703,55 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     protected String getExtraClassPath() throws ServletException {
-         String extraClassPath = this.getInitParameter("extra-classpath");
-         if (extraClassPath != null) {
-             StringBuffer sb = new StringBuffer();
-             StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
-             int i = 0;
-             while (st.hasMoreTokens()) {
-                 String s = st.nextToken();
-                 if (i++ > 0) {
-                     sb.append(File.pathSeparatorChar);
-                 }
-                 if ((s.charAt(0) == File.separatorChar) ||
-                     (s.charAt(1) == ':')) {
-                     if (getLogger().isDebugEnabled()) {
-                         getLogger().debug ("extraClassPath is absolute: " + s);
-                     }
-                     sb.append(s);
+    protected String getExtraClassPath() throws ServletException {
+        String extraClassPath = this.getInitParameter("extra-classpath");
+        if (extraClassPath != null) {
+            StringBuffer sb = new StringBuffer();
+            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
+            int i = 0;
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken();
+                if (i++ > 0) {
+                    sb.append(File.pathSeparatorChar);
+                }
+                if ((s.charAt(0) == File.separatorChar) ||
+                        (s.charAt(1) == ':')) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("extraClassPath is absolute: " + s);
+                    }
+                    sb.append(s);
 
-                     addClassLoaderDirectory(s);
-                 } else {
-                     if (s.indexOf("${") != -1) {
-                         String path = StringUtils.replaceToken(s);
-                         sb.append(path);
-                         if (getLogger().isDebugEnabled()) {
-                             getLogger().debug ("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
-                         }
-                         addClassLoaderDirectory(path);
-                     } else {
-                         String path = null;
-                         if (this.servletContextPath != null) {
-                             path = this.servletContextPath + s;
-                             if (getLogger().isDebugEnabled()) {
-                                 getLogger().debug ("extraClassPath is not absolute pre-pending context path: " + path);
-                             }
-                         } else {
-                             path = this.workDir.toString() + s;
-                             if (getLogger().isDebugEnabled()) {
-                                 getLogger().debug ("extraClassPath is not absolute pre-pending work-directory: " + path);
-                             }
-                         }
-                         sb.append(path);
-                         addClassLoaderDirectory(path);
-                     }
-                 }
-             }
-             return sb.toString();
-         }
-         return "";
-     }
+                    addClassLoaderDirectory(s);
+                } else {
+                    if (s.indexOf("${") != -1) {
+                        String path = StringUtils.replaceToken(s);
+                        sb.append(path);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
+                        }
+                        addClassLoaderDirectory(path);
+                    } else {
+                        String path = null;
+                        if (this.servletContextPath != null) {
+                            path = this.servletContextPath + s;
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("extraClassPath is not absolute pre-pending context path: " + path);
+                            }
+                        } else {
+                            path = this.workDir.toString() + s;
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("extraClassPath is not absolute pre-pending work-directory: " + path);
+                            }
+                        }
+                        sb.append(path);
+                        addClassLoaderDirectory(path);
+                    }
+                }
+            }
+            return sb.toString();
+        }
+        return "";
+    }
 
     /**
      * Set up the log level and path.  The default log level is
@@ -770,13 +771,13 @@ public class CocoonServlet extends HttpServlet {
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
-        formatter.setFormat( "%7.7{priority} %{time}   [%8.8{category}] " +
-                             "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}" );
-        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter );
+        formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
+                            "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
+        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter);
 
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
-        defaultHierarchy.setErrorHandler(errorHandler );
+        defaultHierarchy.setErrorHandler(errorHandler);
         defaultHierarchy.setDefaultLogTarget(servTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
@@ -812,7 +813,7 @@ public class CocoonServlet extends HttpServlet {
 
                 // test if this is a qualified url
                 InputStream is = null;
-                if ( logkitConfig.indexOf(':') == -1) {
+                if (logkitConfig.indexOf(':') == -1) {
                     is = this.servletContext.getResourceAsStream(logkitConfig);
                     if (is == null) is = new FileInputStream(logkitConfig);
                 } else {
@@ -875,7 +876,7 @@ public class CocoonServlet extends HttpServlet {
         URL result;
         try {
             // test if this is a qualified url
-            if ( usedFileName.indexOf(':') == -1) {
+            if (usedFileName.indexOf(':') == -1) {
                 result = this.servletContext.getResource(usedFileName);
             } else {
                 result = new URL(usedFileName);
@@ -888,12 +889,14 @@ public class CocoonServlet extends HttpServlet {
 
         if (result == null) {
             File resultFile = new File(usedFileName);
-            if (resultFile.isFile()) try {
-                result = resultFile.getCanonicalFile().toURL();
-            } catch (Exception e) {
-                String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
-                getLogger().error(msg, e);
-                throw new ServletException(msg, e);
+            if (resultFile.isFile()) {
+                try {
+                    result = resultFile.getCanonicalFile().toURL();
+                } catch (Exception e) {
+                    String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
+                    getLogger().error(msg, e);
+                    throw new ServletException(msg, e);
+                }
             }
         }
 
@@ -956,15 +959,15 @@ public class CocoonServlet extends HttpServlet {
                     continue;
                 }
                 try {
-                    String key = property.substring(0,property.indexOf('='));
+                    String key = property.substring(0, property.indexOf('='));
                     String value = property.substring(property.indexOf('=') + 1);
                     if (value.indexOf("${") != -1) {
-                         value = StringUtils.replaceToken(value);
+                        value = StringUtils.replaceToken(value);
                     }
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("setting " + key + "=" + value);
                     }
-                    systemProps.setProperty(key,value);
+                    systemProps.setProperty(key, value);
                 } catch (Exception e) {
                     if (getLogger().isWarnEnabled()) {
                         getLogger().warn("Could not set property: " + property, e);
@@ -988,7 +991,8 @@ public class CocoonServlet extends HttpServlet {
         if (this.initClassLoader) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
 
         // remember when we started (used for timing the processing)
@@ -1188,7 +1192,7 @@ public class CocoonServlet extends HttpServlet {
             }
 
             try {
-                ServletOutputStream out = res.getOutputStream();
+                OutputStream out = res.getOutputStream();
                 out.flush();
                 out.close();
             } catch (SocketException se) {
@@ -1295,7 +1299,7 @@ public class CocoonServlet extends HttpServlet {
      */
     protected synchronized ComponentManager getParentComponentManager() {
         if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
-            ((Disposable)parentComponentManager).dispose();
+            ((Disposable) parentComponentManager).dispose();
         }
 
         parentComponentManager = null;
@@ -1334,7 +1338,8 @@ public class CocoonServlet extends HttpServlet {
         if (this.initClassLoader) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
 
         updateEnvironment();
@@ -1347,11 +1352,11 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().info("Reloading from: " + configFile.toExternalForm());
             }
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            ContainerUtil.enableLogging(c, getCocoonLogger() );
-            c.setLoggerManager( getLoggerManager() );
+            ContainerUtil.enableLogging(c, getCocoonLogger());
+            c.setLoggerManager(getLoggerManager());
             ContainerUtil.contextualize(c, this.appContext);
             final ComponentManager parent = this.getParentComponentManager();
-            if ( parent != null ) {
+            if (parent != null) {
                 ContainerUtil.compose(c, parent);
             }
             if (this.enableInstrumentation) {
@@ -1398,8 +1403,7 @@ public class CocoonServlet extends HttpServlet {
      * @return an <code>InstrumentManager</code> instance
      */
     private InstrumentManager getInstrumentManager()
-        throws Exception
-    {
+    throws Exception {
         String imConfig = getInitParameter("instrumentation-config");
         if (imConfig == null) {
             throw new ServletException("Please define the init-param 'instrumentation-config' in your web.xml");
@@ -1495,52 +1499,53 @@ public class CocoonServlet extends HttpServlet {
      * is empty.
      */
     public String getInitParameter(String name) {
-    	String result = super.getInitParameter(name);
-    	if (result != null) {
-    		result = result.trim();
-    		if (result.length() == 0) {
-    			result = null;
-    		}
-    	}
+        String result = super.getInitParameter(name);
+        if (result != null) {
+            result = result.trim();
+            if (result.length() == 0) {
+                result = null;
+            }
+        }
 
-    	return result;
+        return result;
     }
 
     /** Convenience method to access servlet parameters */
     protected String getInitParameter(String name, String defaultValue) {
-    	String result = getInitParameter(name);
-    	if (result == null) {
-    		if (getLogger() != null && getLogger().isDebugEnabled()) {
-    			getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-    		}
-    		return defaultValue;
-    	} else {
-    		return result;
-    	}
+        String result = getInitParameter(name);
+        if (result == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
+        } else {
+            return result;
+        }
     }
 
     /** Convenience method to access boolean servlet parameters */
     protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
-    	String value = getInitParameter(name);
-    	if (value != null) {
-            return BooleanUtils.toBoolean(value);
+        String value = getInitParameter(name);
+        if (value == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
         }
-		if (getLogger() != null && getLogger().isDebugEnabled()) {
-			getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-		}
-		return defaultValue;
+
+        return BooleanUtils.toBoolean(value);
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {
-    	String value = getInitParameter(name);
-    	if (value == null) {
-			if (getLogger() != null && getLogger().isDebugEnabled()) {
-				getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-			}
-			return defaultValue;
-    	} else {
-    		return Integer.parseInt(value);
-    	}
+        String value = getInitParameter(name);
+        if (value == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
+        } else {
+            return Integer.parseInt(value);
+        }
     }
 
     protected Logger getLogger() {
