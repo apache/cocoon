@@ -199,6 +199,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="fix">
+    Removing dependency from the Cocoon core to JTidy.
+  </action>
   <action dev="VG" type="fix" fixes-bug="18683">
     Sync XML:DB source with 2.0 branch: Conect to the XML:DB once, from the
     XMLDBSourceFactory.
