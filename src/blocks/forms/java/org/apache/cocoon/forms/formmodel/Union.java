@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.3 2004/04/12 14:05:09 tim Exp $
+ * @version $Id: Union.java,v 1.4 2004/04/13 21:28:24 sylvain Exp $
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";
@@ -66,18 +66,17 @@ public class Union extends AbstractContainerWidget {
         return ELEMENT;
     }
 
-    public Object getOldValue() {
-        return ((Field)caseWidget).getOldValue();
-    }
-
     public Object getValue() {
         return caseWidget.getValue();
     }
 
     public void readFromRequest(FormContext formContext) {
+        // Ensure the case widget has read its value
+        caseWidget.readFromRequest(formContext);
+        
         Widget widget;
         // Read current case from request
-        String value = (String)getOldValue();
+        String value = (String)getValue();
         if (value != null && !value.equals(""))
             if ((widget = getWidget(value)) != null)
                 widget.readFromRequest(formContext);
@@ -91,7 +90,7 @@ public class Union extends AbstractContainerWidget {
         Widget widget;
         boolean valid = true;
         // Read current case from request
-        String value = (String)getOldValue();
+        String value = (String)getValue();
         if (value != null && !value.equals(""))
             if ((widget = getWidget(value)) != null)
                 valid = valid & widget.validate(formContext);

@@ -43,16 +43,15 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.6 2004/04/10 13:41:41 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.7 2004/04/13 21:28:24 sylvain Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
     
-    private final FieldDefinition definition;
+    private final FieldDefinition fieldDefinition;
 
     protected String enteredValue;
     protected Object value;
-    private Object oldValue;
 
     // At startup, we don't need to parse (both enteredValue and value are null),
     // but need to validate (error if field is required)
@@ -63,19 +62,15 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
 
     public Field(FieldDefinition fieldDefinition) {
-        this.definition = fieldDefinition;
+        this.fieldDefinition = fieldDefinition;
     }
 
     public final FieldDefinition getFieldDefinition() {
-        return this.definition;
+        return this.fieldDefinition;
     }
 
     protected WidgetDefinition getDefinition() {
-        return this.definition;
-    }
-
-    public Object getOldValue() {
-        return oldValue;
+        return this.fieldDefinition;
     }
 
     public Object getValue() {
@@ -158,9 +153,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
         }
-        // If set comes before a form is first sent then the new value will be the old value by the time of the next form request.
-        // If the set occurs in an event handler then again the new value will be the old value by the time of the next form request.
-        this.oldValue = newValue;
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -178,16 +170,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             }
         }
 
-        // TODO: This cause validation to occur too early.
-        getValue();
-        this.oldValue = value;
-
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
             // TODO: Hmmm...
-            //getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
-            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, getValue()));
+            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
@@ -257,7 +244,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
 
         // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
+        fieldDefinition.generateDisplayData(contentHandler);
 
         // generate selection list, if any
         if (selectionList != null) {
@@ -267,13 +254,13 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
 
         // include some info about the datatype
-        definition.getDatatype().generateSaxFragment(contentHandler, locale);
+        fieldDefinition.getDatatype().generateSaxFragment(contentHandler, locale);
 
         contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
+        fieldDefinition.generateLabel(contentHandler);
     }
 
     /**
