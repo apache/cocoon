@@ -20,11 +20,15 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.util.DomHelper;
@@ -40,10 +44,10 @@ import org.xml.sax.InputSource;
  * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package </a>.
  * 
- * @version CVS $Id: JXPathBindingManager.java,v 1.3 2004/06/01 10:51:28 bruno Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.4 2004/06/15 07:33:43 sylvain Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled implements
-        BindingManager, Serviceable, Disposable, Initializable, Configurable,
+        BindingManager, Contextualizable, Serviceable, Disposable, Initializable, Configurable,
         ThreadSafe {
 
     private static final String PREFIX = "CocoonFormBinding:";
@@ -58,7 +62,13 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
 
     private CacheManager cacheManager;
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
+	private Context avalonContext;
+
+	public void contextualize(Context context) throws ContextException {
+		this.avalonContext = context;
+	}
+
+	public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
         this.datatypeManager = (DatatypeManager) serviceManager
                 .lookup(DatatypeManager.ROLE);
@@ -74,8 +84,13 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
     public void initialize() throws Exception {
         bindingBuilderSelector = new SimpleServiceSelector("binding",
                 JXPathBindingBuilderBase.class);
-        bindingBuilderSelector.enableLogging(getLogger());
-        bindingBuilderSelector.configure(configuration.getChild("bindings"));
+        LifecycleHelper.setupComponent(
+        		bindingBuilderSelector,
+			getLogger(),
+			this.avalonContext,
+			this.serviceManager,
+			null, // RoleManager,
+			configuration.getChild("bindings"));
     }
 
     public Binding createBinding(Source source) throws BindingException {

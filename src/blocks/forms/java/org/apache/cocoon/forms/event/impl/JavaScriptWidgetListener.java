@@ -24,6 +24,8 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
+import org.apache.cocoon.forms.event.CreateEvent;
+import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
@@ -34,7 +36,7 @@ import org.mozilla.javascript.Script;
  * Listeners built by {@link org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.4 2004/04/27 12:02:13 bruno Exp $
+ * @version CVS $Id: JavaScriptWidgetListener.java,v 1.5 2004/06/15 07:33:43 sylvain Exp $
  */
 public abstract class JavaScriptWidgetListener {
     
@@ -91,6 +93,17 @@ public abstract class JavaScriptWidgetListener {
         }
 
         public void valueChanged(ValueChangedEvent event) {
+            super.callScript(event);
+        }
+    }
+    
+    public static class JSCreateListener extends JavaScriptWidgetListener implements CreateListener {
+
+        public JSCreateListener(Script script, Context context) {
+            super(script, context);
+        }
+
+        public void widgetCreated(CreateEvent event) {
             super.callScript(event);
         }
     }

@@ -16,36 +16,55 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.javascript.ScriptableMap;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Script;
+import org.mozilla.javascript.Scriptable;
 
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.6 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.7 2004/06/15 07:33:43 sylvain Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
+	private final Context avalonContext;
     private final String id;
     private final String path;
-    private final Script loadScript;
-    private final Script saveScript;
+    private final Function loadScript;
+    private final Function saveScript;
+    private final Scriptable childBindings;
+    
+    final static String[] LOAD_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
+    final static String[] SAVE_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
 
     public JavaScriptJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts, String id,
-            String path, Script loadScript, Script saveScript) {
+    		    Context context, JXPathBindingBuilderBase.CommonAttributes commonAtts, String id,
+            String path, Function loadScript, Function saveScript, Map childBindings) {
         super(commonAtts);
         this.id = id;
         this.path = path;
         this.loadScript = loadScript;
         this.saveScript = saveScript;
+        this.avalonContext = context;
+        
+        // Set parent on child bindings
+        for(Iterator iter = childBindings.values().iterator(); iter.hasNext(); ) {
+        		((Binding)iter.next()).setParent(this);
+        }
+        
+        this.childBindings = new ScriptableMap(childBindings);
     }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) {
@@ -55,19 +74,22 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             // Move to widget context
             Pointer pointer = jctx.getPointer(this.path);
     
-            // FIXME: remove this ugly hack and get the request from the
-            // Avalon context once binding builder are real components
-            Map objectModel = EnvironmentHelper.getCurrentEnvironment().getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
 
             try {
-                Map values = new HashMap(3);
-                values.put("widget", widget);
-                values.put("jxpathPointer", pointer);
-                if (pointer.getNode() != null) {
-                    values.put("jxpathContext", jctx.getRelativeContext(pointer));
-                }
+//                Map values = new HashMap(3);
+//                values.put("widget", widget);
+//                values.put("jxpathPointer", pointer);
+//                if (pointer.getNode() != null) {
+//                    values.put("jxpathContext", jctx.getRelativeContext(pointer));
+//                }
+//                values.put("childBindings", this.childBindings);
+                
+                JXPathContext newCtx = pointer.getNode() == null ? null :
+                	    jctx.getRelativeContext(pointer);
 
-                JavaScriptHelper.execScript(this.loadScript, values, objectModel);
+                JavaScriptHelper.callFunction(this.loadScript, frmModel,
+                		new Object[] {widget, pointer, newCtx, this.childBindings}, objectModel);
     
             } catch(RuntimeException re) {
                 // rethrow
@@ -90,16 +112,16 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             Pointer pointer = jctx.createPath(this.path);
             JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
             try {
-                // FIXME: remove this ugly hack and get the request from the Avalon context once
-                // binding builder are real components
-                Map objectModel = EnvironmentHelper.getCurrentEnvironment().getObjectModel();
+                Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
 
-                Map values = new HashMap();
-                values.put("widget", widget);
-                values.put("jxpathContext", widgetCtx);
-                values.put("jxpathPointer", pointer);
+//                Map values = new HashMap();
+//                values.put("widget", widget);
+//                values.put("jxpathContext", widgetCtx);
+//                values.put("jxpathPointer", pointer);
+//                values.put("childBindings", this.childBindings);
 
-                JavaScriptHelper.execScript(this.saveScript, values, objectModel);
+                JavaScriptHelper.callFunction(this.saveScript, frmModel,
+                		new Object[] {widget, pointer, widgetCtx, this.childBindings}, objectModel);
 
             } catch(RuntimeException re) {
                 // rethrow

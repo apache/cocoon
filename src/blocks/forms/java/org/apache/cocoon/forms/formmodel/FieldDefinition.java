@@ -15,16 +15,21 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.event.CreateEvent;
+
 /**
  * The {@link WidgetDefinition} part of a Field widget, see {@link Field} for more information.
  * 
- * @version $Id: FieldDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: FieldDefinition.java,v 1.2 2004/06/15 07:33:44 sylvain Exp $
  */
 public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
     private boolean required;
 
     public Widget createInstance() {
         Field field = new Field(this);
+        if (this.createListener != null) {
+            this.createListener.widgetCreated(new CreateEvent(field));
+        }
         return field;
     }
 

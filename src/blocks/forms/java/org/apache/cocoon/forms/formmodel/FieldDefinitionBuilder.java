@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {FieldDefinition}s.
  *
- * @version $Id: FieldDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
+ * @version $Id: FieldDefinitionBuilder.java,v 1.4 2004/06/15 07:33:44 sylvain Exp $
  */
 public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
@@ -59,6 +59,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
         setDisplayData(widgetElement, fieldDefinition);
         setValidators(widgetElement, fieldDefinition);
+        setCreateListeners(widgetElement, fieldDefinition);
 
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         fieldDefinition.setRequired(required);

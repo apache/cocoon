@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.17 2004/06/09 13:50:43 danielf Exp $
+ * @version CVS $Id: Form.js,v 1.18 2004/06/15 07:33:44 sylvain Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -39,6 +39,8 @@ function Form(uri) {
         this.form = formMgr.createForm(src);
         this.binding = null;
         this.eventHandler = null;
+        // FIXME : hack needed because FOM doesn't provide access to the context
+        this.avalonContext = formMgr.getAvalonContext();
         // TODO : do we keep this ?
         this.formWidget = new Widget(this.form);
 
@@ -121,8 +123,8 @@ Form.prototype.showForm = function(uri, bizData) {
 
         // Prematurely add the bizData as in the object model so that event listeners can use it
         // (the same is done by cocoon.sendPage())
-        // FIXME: hack because object model isn't available in flowscript.
-        var objectModel = org.apache.cocoon.environment.internal.EnvironmentHelper.getCurrentEnvironment().getObjectModel();
+        // FIXME : hack needed because FOM doesn't provide access to the object model
+        var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
         org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
 
         finished = this.form.process(formContext);
