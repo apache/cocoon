@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * Creates Manifest file with the all the JARs and modification dates
  * in the specified directory.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/08 14:04:19 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/03/10 09:08:25 $
  */
 
 public final class ManifestToolTask extends Task {
@@ -89,7 +91,6 @@ public final class ManifestToolTask extends Task {
                     w.write("\n");
                 }
             }
-
         }
         w.close();
     }

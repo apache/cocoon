@@ -1,4 +1,19 @@
 <?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:output method="xml" indent="yes"/>
@@ -13,7 +28,7 @@
         </fileset>
         <fileset dir="{string('${lib.endorsed}')}">
           <include name="*.jar"/>
-        </fileset>    
+        </fileset>
         <!-- Currently, we have no JVM dependent libraries
           <fileset dir="{string('${lib.core}/jvm${target.vm}')}">
              <include name="*.jar"/>
@@ -27,6 +42,7 @@
         </fileset>
         <path location="{string('${build.mocks}')}"/>
         <path location="{string('${build.dest}')}"/>
+        <pathelement path="{string('${build.webapp.webinf}/classes/')}"/>
       </path>
 
       <path id="test.classpath">
@@ -157,18 +173,28 @@
                splitindex="true"
                windowtitle="{string('${Name}')} API {string('${version}')} [{string('${TODAY}')}]"
                doctitle="{string('${Name}')} API {string('${version}')}"
-               bottom="Copyright &#169; {string('${year}')} Apache Software Foundation. All Rights Reserved."
+               bottom="Copyright &#169; {string('${year}')} The Apache Software Foundation. All Rights Reserved."
                stylesheetfile="{string('${resources.javadoc}')}/javadoc.css"
                useexternalfile="yes"
                additionalparam="{string('${javadoc.additionalparam}')}"
                maxmemory="128m">
+               
+        <link offline="true" href="http://avalon.apache.org/framework/api" packagelistloc="${{resources.javadoc}}/avalon-framework"/>
+        <link offline="true" href="http://avalon.apache.org/excalibur/api" packagelistloc="${{resources.javadoc}}/avalon-excalibur"/>
+        <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api" packagelistloc="${{resources.javadoc}}/xerces"/>
+        <link offline="true" href="http://xml.apache.org/xalan-j/apidocs" packagelistloc="${{resources.javadoc}}/xalan"/>
+        <link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api" packagelistloc="${{resources.javadoc}}/j2se"/>
+        <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${{resources.javadoc}}/j2ee"/>
 
-        <link offline="true" href="http://avalon.apache.org/api" packagelistloc="${resources.javadoc}/avalon"/>
-        <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api" packagelistloc="${resources.javadoc}/xerces"/>
-        <link offline="true" href="http://xml.apache.org/xalan-j/apidocs" packagelistloc="${resources.javadoc}/xalan"/>
-        <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api" packagelistloc="${resources.javadoc}/j2se"/>
-        <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
-
+        <tag name="avalon.component"   scope="types"   description="Avalon component" />
+        <tag name="avalon.service"     scope="types"   description="Implements service:" />
+        <!-- FIXME: javadoc or ant seems to not understand these
+        <tag name="x-avalon.info"      scope="types"   description="Shorthand:" />
+        <tag name="x-avalon.lifestyle" scope="types"   description="Lifestyle:" />
+        -->
+        <tag name="avalon.context"     scope="methods" description="Requires entry:" />
+        <tag name="avalon.dependency"  scope="methods" description="Requires component:" />
+      
         <packageset dir="{string('${java}')}">
           <include name="**"/>
         </packageset>
@@ -180,10 +206,15 @@
             <include name="**"/>
           </packageset>
         </xsl:for-each>
-        <classpath refid="classpath"/>
-        <xsl:for-each select="$cocoon-blocks">
-          <classpath refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
-        </xsl:for-each>
+        <classpath>
+          <fileset dir="{string('${tools.lib}')}">
+            <include name="*.jar"/>
+          </fileset>
+          <path refid="classpath" />
+          <xsl:for-each select="$cocoon-blocks">
+            <path refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
+          </xsl:for-each>
+        </classpath>
       </javadoc>
     </target>
 
@@ -255,9 +286,7 @@
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
 
     <target name="{@name}-excluded" if="exclude.block.{$block-name}">
-      <echo message="-----------------------------------------------"/>
-      <echo message="ATTENTION: {$block-name} is excluded from the build."/>
-      <echo message="-----------------------------------------------"/>
+      <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
     </target>
 
     <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
@@ -280,11 +309,12 @@
       <available property="{$block-name}.has.mocks" type="dir" file="{string('${blocks}')}/{$block-name}/mocks/"/>
 
       <xsl:if test="@status='unstable'">
-        <echo message="-----------------------------------------------"/>
-        <echo message="ATTENTION: {$block-name} is marked unstable."/>
-        <echo message="It should be considered alpha quality"/>
-        <echo message="which means that its API might change without notice."/>
-        <echo message="-----------------------------------------------"/>
+        <echo message="==================== WARNING ======================="/>
+        <echo message=" Block '{$block-name}' should be considered unstable."/>
+        <echo message="----------------------------------------------------"/>
+        <echo message="         This means that its API, schemas "/>
+        <echo message="  and other contracts might change without notice."/>
+        <echo message="===================================================="/>
       </xsl:if>
 
       <antcall target="{$block-name}-compile"/>
@@ -328,7 +358,7 @@
       <antcall target="{$block-name}-webinf"/>
     </target>
 
-    <target name="{$block-name}-prepare">
+    <target name="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
@@ -346,8 +376,8 @@
 
       <mkdir dir="{string('${build.blocks}')}/{$block-name}/conf"/>
       <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/conf">
-        <fileset dir="{string('${blocks}')}/{$block-name}/conf">
-          <include name="**/*.x*"/>
+        <fileset dir="{string('${blocks}')}/{$block-name}">
+          <include name="conf**/*.x*"/>
         </fileset>
       </copy>
 
@@ -385,6 +415,7 @@
            available - to the usual java source directory.
            If someone knows a better solution...
       -->
+      <!-- Currently, we have no JVM dependent sources
       <condition property="dependend.vm" value="{string('${target.vm}')}">
         <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
       </condition>
@@ -393,7 +424,7 @@
           <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
         </not>
       </condition>
-
+      -->
       <javac destdir="{string('${build.blocks}')}/{$block-name}/dest"
              debug="{string('${compiler.debug}')}"
              optimize="{string('${compiler.optimize}')}"
@@ -402,12 +433,14 @@
              nowarn="{string('${compiler.nowarn}')}"
              compiler="{string('${compiler}')}">
         <src path="{string('${blocks}')}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
         <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+        -->
         <classpath refid="{$block-name}.classpath"/>
         <exclude name="**/samples/**/*.java"/>
       </javac>
 
-      <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar">
+      <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar" index="true">
         <fileset dir="{string('${build.blocks}')}/{$block-name}/dest">
           <include name="org/**"/>
           <include name="META-INF/**"/>
@@ -424,7 +457,9 @@
              nowarn="{string('${compiler.nowarn}')}"
              compiler="{string('${compiler}')}">
         <src path="{string('${blocks}')}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
         <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+        -->
         <classpath refid="{$block-name}.classpath"/>
         <include name="**/samples/**/*.java"/>
       </javac>
@@ -505,14 +540,14 @@
         <fileset dir="{string('${blocks}')}/{$block-name}/test" excludes="**/*.java"/>
       </copy>
 
-      <javac srcdir="{string('${blocks}')}/{$block-name}/test"
-             destdir="{string('${build.blocks}')}/{$block-name}/test"
-             fork="true"
+      <javac destdir="{string('${build.blocks}')}/{$block-name}/test"
              debug="{string('${compiler.debug}')}"
              optimize="{string('${compiler.optimize}')}"
              deprecation="{string('${compiler.deprecation}')}"
              target="{string('${target.vm}')}"
-             nowarn="{string('${compiler.nowarn}')}">
+             nowarn="{string('${compiler.nowarn}')}"
+             compiler="{string('${compiler}')}">
+        <src path="{string('${blocks}')}/{$block-name}/test"/>
         <classpath>
           <path refid="test.classpath"/>
           <path refid="{$block-name}.classpath"/>
@@ -521,6 +556,7 @@
       </javac>
 
       <junit printsummary="yes" haltonfailure="yes" fork="yes">
+        <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
         <classpath>
           <path refid="test.classpath"/>
           <path refid="{$block-name}.classpath"/>
