@@ -1,8 +1,9 @@
 //
-// CVS $Id: xmlForm.js,v 1.4 2003/03/20 02:46:32 vgritsenko Exp $
+// CVS $Id: xmlForm.js,v 1.5 2003/03/22 22:51:35 coliver Exp $
 //
 // XMLForm Support
 //
+
 
 /**
  * Creates a new JavaScript wrapper of a Form object
@@ -15,7 +16,7 @@
 
 function XForm(id, validatorNS, validatorDoc, scope) {
     if (scope != "request") {
-	cocoon.createSession();
+        cocoon.createSession();
     }
     this.id = id;
     this.lastContinuation = null;
@@ -90,6 +91,15 @@ XForm.prototype.addViolation = function(xpath, message) {
 }
 
 /**
+ * Does this form have violations?
+ * @return [Boolean] true if violations have been added to this form
+ */
+XForm.prototype.hasViolations = function() {
+    var set = this.form.violationsAsSortedSet;
+    return set != null && set.size() > 0;
+}
+
+/**
  * Computes the value of an xpath expression against the model of this form
  * @param expr [String] xpath expression
  * @return [Object] result of computing <code>expr</code>
@@ -115,6 +125,7 @@ XForm.prototype._sendView = function(uri, lastCont, timeToLive) {
   if (bizData == undefined) {
       bizData = null;
   }
+
   cocoon.forwardTo("cocoon://" + cocoon.environment.getURIPrefix() + uri,
                    bizData, kont);
   this.lastContinuation = kont;
@@ -174,8 +185,7 @@ XForm.prototype.sendView = function(phase, uri, validator) {
             validator(this);
         }
         this.form.validate(phase);
-        if (this.form.violationsAsSortedSet == null ||
-            this.form.violationsAsSortedSet.size() == 0) {
+        if (!this.hasViolations()) {
             break;
         }
     }
@@ -257,28 +267,29 @@ function xmlForm(application, id, validator_ns, validator_doc, scope) {
     }
     var command = getCommand();
     if (command != undefined) {
-        var xform = XForm.forms[id];
-        if (xform != undefined) {
-            // invoke a continuation 
-            var continuationsMgr =
-                cocoon.componentManager.lookup(Packages.org.apache.cocoon.components.flow.ContinuationsManager.ROLE);
-            var wk = continuationsMgr.lookupWebContinuation(command);
-            cocoon.componentManager.release(continuationsMgr);
-            if (wk != null) {
-                var jswk = wk.userObject;
-                xform.form.clearViolations();
-                jswk.continuation(jswk);
-            }
+        // invoke a continuation 
+        var continuationsMgr =
+            cocoon.componentManager.lookup(Packages.org.apache.cocoon.components.flow.ContinuationsManager.ROLE);
+        var wk = continuationsMgr.lookupWebContinuation(command);
+        cocoon.componentManager.release(continuationsMgr);
+        if (wk != null) {
+            var jswk = wk.userObject;
+            jswk.continuation(jswk);
+            // note: not reached
         }
         handleInvalidContinuation(command);
         return;
     } 
-    // Just start a new instance of the application
-    cocoon.session.removeAttribute(id);
-    var args = new Array(arguments.length - 5 + 1);
-    args[0] = new XForm(id, validator_ns, validator_doc, scope);
-    for (var i = 5; i < arguments.length; i++) {
-	args[i-4] = arguments[i];
+    if (id != null) {
+        // Just start a new instance of the application
+        var args = new Array(arguments.length - 5 + 1);
+        args[0] = new XForm(id, validator_ns, validator_doc, scope);
+        for (var i = 5; i < arguments.length; i++) {
+            args[i-4] = arguments[i];
+        }
+        this[application].apply(this, args);
+    } else {
+        handleInvalidContinuation(command);
     }
-    this[application].apply(this, args);
 }
+
