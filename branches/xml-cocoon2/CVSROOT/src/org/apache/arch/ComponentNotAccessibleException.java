@@ -8,18 +8,30 @@
 package org.apache.arch;
 
 /**
- * This interface identifies classes that can be used as components
- * by a <code>Composer</code>.
- * <br>
- * A <code>Component</code> must always declare an empty constructor.
+ * This exception is thrown by the <code>ComponentManager</code> when a
+ * <code>Component</code> cannot be accessed.
  *
- * @author <a href="mailto:scoobie@betaversion.org">Federico Barbieri</a>
- *         (Betaversion Productions)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:18:58 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:18:58 $
  */
-public interface Component {
+public class ComponentNotAccessibleException extends RuntimeException {
+
+    /** The nested exception. */
+    private Exception exception=null;
+
+    /**
+     * Construct a new <code>ComponentNotAccessibleException</code> instance.
+     */
+    public ComponentNotAccessibleException(String message, Exception e) {
+        super(message);
+        this.exception=e;
+    }
+
+    /**
+     * Return the nested <code>Exception</code>
+     */
+    public Exception getException() {
+        return(this.exception);
+    }
 }

@@ -5,24 +5,22 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.arch;
 
 /**
- * This interface is the dual interface of the <code>java.lang.Runnable</code>
- * interface and provides a hook to safely stop the thread of execution.
+ * This exception is thrown by the <code>ComponentManager</code> when a
+ * <code>Component</code> cannot be found.
  *
- * @author <a href="mailto:scoobie@betaversion.org">Federico Barbieri</a>
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 1999-12-11 23:28:47 $
+ * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
+ *         (Apache Software Foundation, Exoffice Technologies)
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 01:18:58 $
  */
+public class ComponentNotFoundException extends RuntimeException {
 
-public interface Stoppable extends Runnable {
-    
-    /*
-     * Stops the current thread of execution.
+    /**
+     * Construct a new <code>ComponentNotFoundException</code> instance.
      */
-    void stop();
-    
+    public ComponentNotFoundException(String message) {
+        super(message);
+    }
 }
