@@ -53,23 +53,19 @@ package org.apache.cocoon.generation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import org.apache.cocoon.components.jxforms.xmlform.Form;
-import org.apache.cocoon.components.jxforms.validation.Violation;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.jxforms.validation.Violation;
+import org.apache.cocoon.components.jxforms.xmlform.Form;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
@@ -187,7 +183,7 @@ public class JXFormsGenerator extends AbstractGenerator {
         throws SAXParseException {
         if (expr == null) return null;
         try {
-            return context.compile(expr);
+            return JXPathContext.compile(expr);
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(),
                                         location, exc);
