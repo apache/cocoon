@@ -26,7 +26,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * JUnit Testcase for {@link DOMBuilder}.
  * 
- * @version CVS $Id: DOMBuilderTestCase.java,v 1.1 2004/05/07 10:47:14 ugo Exp $
+ * @version CVS $Id: DOMBuilderTestCase.java,v 1.2 2004/05/07 13:11:26 ugo Exp $
  */
 public class DOMBuilderTestCase extends TestCase {
 
@@ -39,7 +39,8 @@ public class DOMBuilderTestCase extends TestCase {
     }
 
     /**
-     * Test if two consecutive "characters" events result in the concatenation
+     * Test if two consecutive "characters" events result in two text nodes
+     * whose concatenation is equal to the concatenation
      * of the two strings (cfr. bug #26219).
      * 
      * @throws SAXException
@@ -57,6 +58,7 @@ public class DOMBuilderTestCase extends TestCase {
         builder.endDocument();
         Document dom = builder.getDocument();
         assertEquals("Content of root element not what expected", "ABCDEF", 
-                dom.getDocumentElement().getFirstChild().getNodeValue());
+                dom.getDocumentElement().getFirstChild().getNodeValue()
+                + dom.getDocumentElement().getLastChild().getNodeValue());
     }
 }
