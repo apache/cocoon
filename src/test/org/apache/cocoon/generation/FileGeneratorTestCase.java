@@ -52,20 +52,21 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.AbstractCompositeTestCase;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.5 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.6 2003/11/26 16:27:22 stephan Exp $
  */
-public class FileGeneratorTestCase extends AbstractCompositeTestCase {
+public class FileGeneratorTestCase extends SitemapComponentTestCase {
 
     public FileGeneratorTestCase(String name) {
         super(name);
     }
 
     public void testFileGenerator() {
+
+        System.out.println("testFileGenerator()");
 
         String type = "file";
         String src = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";

@@ -15,6 +15,7 @@
           <exclude name="**/AllTest.class" />
           <exclude name="**/*$$*Test.class" />
           <exclude name="**/Abstract*.class" />
+          <exclude name="**/SitemapComponentTestCase*"/>
         </fileset>
       </batchtest>
     </junit>

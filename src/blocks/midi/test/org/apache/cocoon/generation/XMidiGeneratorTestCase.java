@@ -52,13 +52,13 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.AbstractCompositeTestCase;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  * Test case for the MIDIGenerator
  * @author Mark Leicester
  */
-public class XMidiGeneratorTestCase extends AbstractCompositeTestCase
+public class XMidiGeneratorTestCase extends SitemapComponentTestCase
 {
 
   public XMidiGeneratorTestCase(String name)
