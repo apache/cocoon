@@ -104,7 +104,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: JXPathMetaModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: JXPathMetaModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JXPathMetaModule extends AbstractMetaModule implements Configurable, ThreadSafe {
 

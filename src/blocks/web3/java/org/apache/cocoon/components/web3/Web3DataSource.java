@@ -62,7 +62,7 @@ import java.lang.Exception;
  * The standard interface for R3DataSources in Web3.
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:06:36 $
+ * @version CVS $Id: Web3DataSource.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
  */
 public interface Web3DataSource extends Component, Configurable, 
     Initializable, Disposable, Composable {

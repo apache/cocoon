@@ -50,12 +50,11 @@
 */
 package org.apache.cocoon.precept.stores.bean.test;
 
-
-/*
- * @version: Mar 20, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 20, 2002
+ * @version CVS $Id: SystemBean.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class SystemBean {
 
     private String os;

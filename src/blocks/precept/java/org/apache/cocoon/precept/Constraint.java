@@ -53,11 +53,11 @@ package org.apache.cocoon.precept;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-/*
- * @version: Mar 14, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 14, 2002
+ * @version CVS $Id: Constraint.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public interface Constraint {
     public boolean isSatisfiedBy(Object value, Context context);
 

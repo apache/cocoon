@@ -71,9 +71,8 @@ import java.io.InputStream;
  * method.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:07:03 $
+ * @version CVS $Id: AvalonToCocoonSource.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
-
 public final class AvalonToCocoonSource
     implements ModifiableSource {
 

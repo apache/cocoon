@@ -64,7 +64,8 @@ import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
 /**
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: SourceTag.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public class SourceTag extends XMLProducerTagSupport implements Composable {
     private String src;

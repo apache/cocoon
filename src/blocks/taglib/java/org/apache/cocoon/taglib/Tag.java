@@ -65,9 +65,10 @@ import org.xml.sax.SAXException;
  * instead of writing to a OutputStream. The equivalent to the JSPEngine
  * is implemented as a Transformer.
  * 
- * @see TagTransformer
+ * @see org.apache.cocoon.transformation.TagTransformer
  * 
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: Tag.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public interface Tag extends Component {
     
@@ -94,8 +95,8 @@ public interface Tag extends Component {
     /**
      * Process the end tag for this instance.
      *
-     * @returns EVAL_PAGE.
-     * @throws SAXException.
+     * @return EVAL_PAGE
+     * @throws SAXException
      */
     int doEndTag(String namespaceURI, String localName, String qName) throws SAXException;
 
@@ -107,14 +108,14 @@ public interface Tag extends Component {
      * attributes have been set too. When this method is invoked, the body
      * has not yet been evaluated.
      *
-     * @returns EVAL_BODY or SKIP_BODY.
+     * @return EVAL_BODY or SKIP_BODY.
      */
     int doStartTag(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException;
 
     /**
      * Get the parent (closest enclosing tag handler) for this tag handler.
      *
-     * @returns the current parent or null if none.
+     * @return the current parent or null if none.
      */
     Tag getParent();
 

@@ -62,11 +62,11 @@ import org.apache.regexp.RESyntaxException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-/*
- * @version: Mar 21, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 21, 2002
+ * @version CVS $Id: RegexprConstraint.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class RegexprConstraint extends AbstractConstraint implements Configurable, SingleThreaded {
     private String expressionString;
     private RE expression;

@@ -93,9 +93,8 @@ import java.util.Properties;
  * @deprecated Use the new Avalon Excalibur Source Resolving
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version $Id: AbstractStreamSource.java,v 1.1 2003/03/09 00:06:59 pier Exp $
+ * @version CVS $Id: AbstractStreamSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
-
 public abstract class AbstractStreamSource extends AbstractLogEnabled
     implements ModifiableSource {
 // FIXME(SW) : this implements *Modifiable*Source just to call refresh()

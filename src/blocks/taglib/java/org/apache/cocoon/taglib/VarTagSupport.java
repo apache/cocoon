@@ -63,7 +63,8 @@ import org.apache.commons.jxpath.JXPathContext;
 /**
  * Add support for setting and getting variables
  * 
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: VarTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public abstract class VarTagSupport extends TagSupport implements Composable {
     protected String var;

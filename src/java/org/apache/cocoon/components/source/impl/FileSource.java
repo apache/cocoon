@@ -70,9 +70,8 @@ import org.apache.excalibur.source.impl.URLSource;
  * A <code>ModifiableSource</code> for 'file:/' system IDs.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: FileSource.java,v 1.1 2003/03/09 00:09:14 pier Exp $
+ * @version CVS $Id: FileSource.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
-
 public class FileSource
     extends URLSource
     implements ModifiableSource {

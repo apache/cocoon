@@ -126,7 +126,8 @@ import java.util.Map;
  *
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version 0.2 -- 2002/02/03
+ * @since 2002/02/03
+ * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */

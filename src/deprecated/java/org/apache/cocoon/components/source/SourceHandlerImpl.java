@@ -79,7 +79,7 @@ import java.util.Map;
  * @deprecated The Avalon Excalibur Source Resolving is now used.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version $Id: SourceHandlerImpl.java,v 1.1 2003/03/09 00:07:01 pier Exp $
+ * @version CVS $Id: SourceHandlerImpl.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
 public final class SourceHandlerImpl extends AbstractLogEnabled
     implements Configurable, Disposable, Composable, Contextualizable, SourceHandler {

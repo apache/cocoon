@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SlideSource.java,v 1.2 2003/03/13 18:49:42 stephan Exp $
+ * @version CVS $Id: SlideSource.java,v 1.3 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,

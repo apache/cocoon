@@ -55,6 +55,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
+ * @version CVS $Id: FlowNodeBuilder.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class FlowNodeBuilder
   extends AbstractParentProcessingNodeBuilder

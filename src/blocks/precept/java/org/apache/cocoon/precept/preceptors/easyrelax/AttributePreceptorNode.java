@@ -50,16 +50,15 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-
 import java.util.Iterator;
 
 import org.apache.cocoon.precept.Constraint;
 import org.apache.cocoon.precept.Preceptor;
 
-
-/*
- * @version: Feb 22, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 22, 2002
+ * @version CVS $Id: AttributePreceptorNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
 public class AttributePreceptorNode extends AbstractPreceptorNode {
 

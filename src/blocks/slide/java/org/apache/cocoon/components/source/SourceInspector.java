@@ -66,7 +66,7 @@ import org.apache.cocoon.components.source.helpers.SourceProperty;
  * A source inspector helps to get properties from sources
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SourceInspector.java,v 1.1 2003/03/09 00:06:18 pier Exp $
+ * @version CVS $Id: SourceInspector.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public interface SourceInspector extends Component {
 

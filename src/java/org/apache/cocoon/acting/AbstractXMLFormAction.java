@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2003/03/09 00:08:38 $
+ * $Revision: 1.2 $
+ * $Date: 2003/03/16 17:49:11 $
  *
  * ====================================================================
  * The Apache Software License, Version 1.1
@@ -106,6 +106,7 @@ import java.util.Map;
  * Torsten Curdt.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
+ * @version CVS $Id: AbstractXMLFormAction.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public abstract class AbstractXMLFormAction
         extends ConfigurableComposerAction

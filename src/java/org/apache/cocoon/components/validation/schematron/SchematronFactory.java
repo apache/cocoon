@@ -70,6 +70,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
+ * @version CVS $Id: SchematronFactory.java,v 1.3 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class SchematronFactory extends SchemaFactory {
 

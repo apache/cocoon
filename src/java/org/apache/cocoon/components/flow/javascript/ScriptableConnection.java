@@ -68,8 +68,8 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
+ * @version CVS $Id: ScriptableConnection.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
  */
-
 public class ScriptableConnection extends ScriptableObject {
 
     Connection connection;

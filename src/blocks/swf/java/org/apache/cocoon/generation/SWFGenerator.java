@@ -72,9 +72,8 @@ import java.util.Map;
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: SWFGenerator.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
-
-
 public class SWFGenerator extends FileGenerator implements Configurable {
     private boolean pVerbose = false;
     private SWFReader parser;

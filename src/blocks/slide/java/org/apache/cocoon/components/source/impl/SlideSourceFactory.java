@@ -77,7 +77,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  * A factory for sources from a Jakarta Slide repository.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SlideSourceFactory.java,v 1.1 2003/03/09 00:06:21 pier Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public class SlideSourceFactory extends AbstractLogEnabled
   implements SourceFactory, ThreadSafe, Composable, Contextualizable {

@@ -92,7 +92,8 @@ import org.apache.commons.jxpath.servlet.KeywordVariables;
  * The "session" variable will be undefined if there is no session for this servlet.
  * JXPath does not automatically create sessions.
  *
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: JXPathCocoonContexts.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public final class JXPathCocoonContexts implements RequestLifecycleComponent, Recyclable {
     public static final String ROLE = JXPathCocoonContexts.class.getName();

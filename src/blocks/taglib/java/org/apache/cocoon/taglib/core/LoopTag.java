@@ -66,9 +66,9 @@ import org.apache.cocoon.taglib.Tag;
  * Migration from JSTL1.0
  * @see javax.servlet.jsp.jstl.core.LoopTag
  *
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: LoopTag.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
-
 public interface LoopTag extends Tag {
 
     /**

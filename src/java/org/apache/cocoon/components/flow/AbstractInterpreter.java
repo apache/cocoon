@@ -76,6 +76,7 @@ import java.util.ArrayList;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
+ * @version CVS $Id: AbstractInterpreter.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,

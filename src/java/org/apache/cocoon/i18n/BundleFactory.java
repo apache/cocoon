@@ -61,7 +61,7 @@ import org.apache.avalon.framework.component.ComponentSelector;
  * particular types of resource bundles, implementors of Bundle interface.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version $Id: BundleFactory.java,v 1.1 2003/03/09 00:09:32 pier Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public interface BundleFactory extends ComponentSelector {
 

@@ -97,9 +97,9 @@ import org.xml.sax.SAXException;
  * Migration from JSTL1.0
  * @see javax.servlet.jsp.jstl.core.LoopTagSupport
  *
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: LoopTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
-
 public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, IterationTag //, TryCatchFinally
 {
     //*********************************************************************

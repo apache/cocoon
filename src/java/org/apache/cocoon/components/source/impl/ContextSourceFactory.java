@@ -77,7 +77,7 @@ import org.apache.cocoon.environment.Context;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version $Id: ContextSourceFactory.java,v 1.1 2003/03/09 00:09:14 pier Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled

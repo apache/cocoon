@@ -65,7 +65,7 @@ import java.util.*;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version $Id: RequestWrapper.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version CVS $Id: RequestWrapper.java,v 1.2 2003/03/16 17:49:14 vgritsenko Exp $
  */
 public final class RequestWrapper implements Request {
 

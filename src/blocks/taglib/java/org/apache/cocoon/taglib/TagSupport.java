@@ -67,7 +67,8 @@ import org.xml.sax.SAXException;
 /**
  * Abstract implementation for all Tags
  * 
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: TagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recyclable {
     protected String var;
@@ -86,7 +87,7 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
      *
      * @param from The instance from where to start looking.
      * @param klass The subclass of Tag or interface to be matched
-     * @returns the nearest ancestor that implements the interface
+     * @return the nearest ancestor that implements the interface
      * or is an instance of the class specified
      */
     public static final Tag findAncestorWithClass(Tag from, Class klass) {
@@ -113,8 +114,8 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
     /**
      * Process the end tag for this instance.
      *
-     * @returns EVAL_PAGE.
-     * @throws SAXException.
+     * @return EVAL_PAGE.
+     * @throws SAXException
      */
     public int doEndTag(String namespaceURI, String localName, String qName) throws SAXException {
         return EVAL_PAGE;
@@ -128,7 +129,7 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
      * attributes have been set too. When this method is invoked, the body
      * has not yet been evaluated.
      *
-     * @returns EVAL_BODY or SKIP_BODY.
+     * @return EVAL_BODY or SKIP_BODY.
      */
     public int doStartTag(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         return EVAL_BODY;
@@ -161,7 +162,7 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
     /**
      * Get the parent (closest enclosing tag handler) for this tag handler.
      *
-     * @returns the current parent, or null if none.
+     * @return the current parent, or null if none.
      */
     public final Tag getParent() {
         return parent;
@@ -184,7 +185,7 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
      * This value is *not* reset by doEndTag() and must be explicitly reset
      * by a Tag implementation.
      *
-     * @param parent, the parent tag, or null.
+     * @param parent the parent tag, or null.
      */
     public final void setParent(Tag parent) {
         this.parent = parent;

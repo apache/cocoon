@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-
 import org.apache.cocoon.precept.Preceptor;
 
 import org.apache.cocoon.precept.Constraint;
@@ -58,11 +57,11 @@ import org.apache.cocoon.precept.Constraint;
 
 import java.util.*;
 
-/*
- * @version: Feb 22, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 22, 2002
+ * @version CVS $Id: ElementPreceptorNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class ElementPreceptorNode extends AbstractPreceptorNode {
 
     public final static int UNBOUND = -1;

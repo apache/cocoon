@@ -109,8 +109,8 @@ import org.xml.sax.helpers.AttributesImpl;
  *       ...
  * </pre></tt>
  *
- * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version    CVS $Id: EncodeURLTransformer.java,v 1.2 2003/03/15 20:21:00 stefano Exp $
+ * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -350,7 +350,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.2 2003/03/15 20:21:00 stefano Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
      */
     public class ElementAttributeMatching {
         /**

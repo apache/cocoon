@@ -48,6 +48,10 @@ package org.apache.cocoon.components.flow.javascript;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.mozilla.javascript.*;
 
+/**
+ *
+ * @version CVS $Id: ScriptablePropertyHandler.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 
     public Object getProperty(Object obj, String propertyName) {

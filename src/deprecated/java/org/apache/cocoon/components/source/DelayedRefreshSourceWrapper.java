@@ -67,7 +67,7 @@ import java.io.InputStream;
  *
  * @deprecated by the Avalon Exalibur Source Resolving
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: DelayedRefreshSourceWrapper.java,v 1.1 2003/03/09 00:07:00 pier Exp $
+ * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
 public final class DelayedRefreshSourceWrapper implements Source, ModifiableSource, XMLizable {
 

@@ -66,8 +66,8 @@ import de.tivano.flash.swf.publisher.SWFWriter;
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: SWFSerializer.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
-
 public class SWFSerializer extends AbstractSerializer implements Configurable {
     private final static String mimeType = "application/x-shockwave-flash";
 

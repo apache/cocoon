@@ -57,11 +57,11 @@ import org.xml.sax.SAXException;
 
 import java.util.Collection;
 
-/*
- * @version: Mar 15, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 15, 2002
+ * @version CVS $Id: Instance.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public interface Instance extends Component {
     public String ROLE = "org.apache.cocoon.precept.Instance";
 

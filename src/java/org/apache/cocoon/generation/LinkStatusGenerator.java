@@ -85,6 +85,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class LinkStatusGenerator extends ComposerGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */

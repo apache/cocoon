@@ -52,10 +52,10 @@ package org.apache.cocoon.precept.stores.dom.simple;
 
 import java.util.Collection;
 
-/*
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @version CVS $Id: AttributeNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class AttributeNode extends Node {
 
     public AttributeNode(String name, Collection constraints) {
@@ -66,5 +66,4 @@ public class AttributeNode extends Node {
         sb.append(" ").append(name).append("=");
         sb.append("\"").append(String.valueOf(getValue())).append("\"");
     }
-
 }

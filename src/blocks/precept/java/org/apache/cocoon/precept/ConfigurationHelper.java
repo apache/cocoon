@@ -51,16 +51,13 @@
 
 package org.apache.cocoon.precept;
 
-
 import org.apache.avalon.framework.configuration.Configuration;
 
-
-/*
- * @version: Mar 26, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 26, 2002
+ * @version CVS $Id: ConfigurationHelper.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
-
 public class ConfigurationHelper {
 
     public final static String toString(Configuration conf) {

@@ -69,8 +69,8 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
-
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
     private ComponentManager manager;

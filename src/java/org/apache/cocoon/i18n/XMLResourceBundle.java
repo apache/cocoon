@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version $Id: XMLResourceBundle.java,v 1.1 2003/03/09 00:09:32 pier Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class XMLResourceBundle
     extends ResourceBundle

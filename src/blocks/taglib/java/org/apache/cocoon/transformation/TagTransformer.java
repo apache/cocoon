@@ -87,6 +87,7 @@ import org.xml.sax.SAXException;
  * Transformer which implements the dynamic Tag functionalty.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: TagTransformer.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
  */
 public class TagTransformer
     extends AbstractXMLProducer

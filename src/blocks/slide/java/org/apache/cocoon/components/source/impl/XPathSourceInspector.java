@@ -79,7 +79,7 @@ import java.io.IOException;
  * This source inspector inspects XML files with a xpath expression
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: XPathSourceInspector.java,v 1.1 2003/03/09 00:06:21 pier Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe, Parameterizable {

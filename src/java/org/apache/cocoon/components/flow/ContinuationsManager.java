@@ -61,6 +61,7 @@ package org.apache.cocoon.components.flow;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
+ * @version CVS $Id: ContinuationsManager.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public interface ContinuationsManager
 {

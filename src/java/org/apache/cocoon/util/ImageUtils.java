@@ -59,8 +59,8 @@ import java.io.FileInputStream;
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
+ * @version CVS $Id: ImageUtils.java,v 1.2 2003/03/16 17:49:16 vgritsenko Exp $
  */
-
 final public class ImageUtils {
 
     final public static ImageProperties getImageProperties(File file) throws FileNotFoundException, IOException, FileFormatException {

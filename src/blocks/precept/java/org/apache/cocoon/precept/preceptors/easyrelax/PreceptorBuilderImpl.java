@@ -74,12 +74,11 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-
-/*
- * @version: Feb 23, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Feb 23, 2002
+ * @version CVS $Id: PreceptorBuilderImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class PreceptorBuilderImpl extends AbstractXMLConsumer implements PreceptorBuilder, Composable, Disposable, Poolable {
     //public final static String ROLE = "org.apache.cocoon.precept.PreceptorBuilderImpl";
 

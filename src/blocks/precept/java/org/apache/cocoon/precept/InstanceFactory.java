@@ -49,7 +49,6 @@
 
 */
 
-
 package org.apache.cocoon.precept;
 
 import java.util.HashMap;
@@ -67,11 +66,11 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.precept.preceptors.PreceptorBuilder;
 
-/*
- * @version: Mar 18, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 18, 2002
+ * @version CVS $Id: InstanceFactory.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
  */
-
 public class InstanceFactory extends AbstractLogEnabled implements Component, Configurable, Composable, ThreadSafe {
 
     public final static String ROLE = "org.apache.cocoon.precept.InstanceFactory";

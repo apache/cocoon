@@ -71,21 +71,20 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
+
 /**
  * Transforms a document with XMLForm
  * elements into a document in the same namespace,
  * but with populated values for the XPath references
  * to the form's model attributes
  *
- *
  * @author Ivelin Ivanov <ivelin@apache.org>, June 2002
  * @author Andrew Timberlake <andrew@timberlake.co.za>, June 2002
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * 
+ * @version CVS $Id: XMLFormTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
  */
-
 public class XMLFormTransformer extends AbstractSAXTransformer
 {
 

@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax.constraints;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,12 +67,11 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-
-/*
- * @version: Mar 21, 2002
+/**
  * @author Torsten Curdt <tcurdt@dff.st>
+ * @since Mar 21, 2002
+ * @version CVS $Id: ChoiceConstraint.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
  */
-
 public class ChoiceConstraint extends AbstractConstraint implements Configurable, SingleThreaded {
 
     public Collection validValues = new ArrayList();

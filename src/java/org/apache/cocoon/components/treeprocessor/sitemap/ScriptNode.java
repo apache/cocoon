@@ -56,6 +56,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
+ * @version CVS $Id: ScriptNode.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class ScriptNode extends AbstractProcessingNode
 {

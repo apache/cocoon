@@ -78,8 +78,6 @@
 package org.apache.cocoon.util;
 
 /**
- * @author  Christoph Grein
- * @version 1.1
  * A factory for the creation of enumeration types (missing in Java).
  * The same operations are provided as for Ada, only representation
  * specification is missing (which does not seem to make much sense
@@ -87,6 +85,9 @@ package org.apache.cocoon.util;
  * Enumeration classes are to be derived from this class thereby
  * making the constructors private to inhibit creation outside of
  * the derived class.
+ *
+ * @author Christoph Grein
+ * @version CVS $Id: EnumerationFactory.java,v 1.2 2003/03/16 17:49:16 vgritsenko Exp $
  */
 public class EnumerationFactory {
 

@@ -9,6 +9,8 @@ import org.apache.avalon.framework.logger.Logger;
  * Implements a Rhino JavaScript {@link
  * org.mozilla.javascript.ErrorReporter}. 
  * Like ToolErrorReporter but logs to supplied logger instead of stdout
+ *
+ * @version CVS $Id: JSErrorReporter.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JSErrorReporter implements ErrorReporter
 {

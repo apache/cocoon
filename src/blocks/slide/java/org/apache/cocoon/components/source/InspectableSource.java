@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceException;
  * A source, which owns meta informations in form of properties
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version $Id: InspectableSource.java,v 1.1 2003/03/09 00:06:18 pier Exp $
+ * @version CVS $Id: InspectableSource.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
  */
 public interface InspectableSource extends Source {
 

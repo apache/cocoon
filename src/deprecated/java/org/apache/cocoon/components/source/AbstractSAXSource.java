@@ -75,9 +75,8 @@ import java.io.InputStream;
  *
  * @deprecated Use the new Avalon Excalibur Source Resolving
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version $Id: AbstractSAXSource.java,v 1.1 2003/03/09 00:06:59 pier Exp $
+ * @version CVS $Id: AbstractSAXSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
-
 public abstract class AbstractSAXSource
   implements Source {
 

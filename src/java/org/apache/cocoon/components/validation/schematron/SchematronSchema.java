@@ -64,6 +64,7 @@ import java.util.List;
  * http://www.ascc.net/xml/resource/schematron/Schematron2000.html
  * 
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: SchematronSchema.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class SchematronSchema implements Schema {
 

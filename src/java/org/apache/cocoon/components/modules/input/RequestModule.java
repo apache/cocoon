@@ -70,7 +70,7 @@ import java.util.Map;
  * an exception will be thrown.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version $Id: RequestModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: RequestModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class RequestModule extends AbstractJXPathModule
     implements ThreadSafe {

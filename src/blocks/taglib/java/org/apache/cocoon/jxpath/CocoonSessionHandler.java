@@ -61,7 +61,8 @@ import org.apache.commons.jxpath.servlet.Util;
  * Implementation of the DynamicPropertyHandler interface that provides
  * access to attributes of a Cocoon Session.
  *
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: CocoonSessionHandler.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
 public class CocoonSessionHandler implements DynamicPropertyHandler {
 

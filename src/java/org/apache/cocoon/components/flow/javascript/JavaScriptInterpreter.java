@@ -81,6 +81,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable

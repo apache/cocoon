@@ -79,9 +79,9 @@ import org.xml.sax.SAXException;
  * Migration from JSTL1.0
  * @see org.apache.taglibs.standard.tag.common.core
  * 
- * @author: <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a> 
+ * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @version CVS $Id: ForEachSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
  */
-
 public abstract class ForEachSupport extends LoopTagSupport {
 
     //*********************************************************************
