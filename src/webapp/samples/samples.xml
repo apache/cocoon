@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.35 2004/03/20 13:28:29 crossley Exp $
+    | CVS $Id: samples.xml,v 1.36 2004/03/21 03:19:55 crossley Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -128,11 +128,12 @@
     </sample>
   </group>
 
-  <group name="Back">
-    <sample name="Front page" href="..">
-    </sample>
+  <group name="Documentation">
     <sample name="Core Documentation" href="../docs/">
-      Documentation is generated from the xml source.
+      Generated from the xml source.
+    </sample>
+    <sample name="Back" href="..">
+      To the front page.
     </sample>
   </group>
 </samples>
