@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.151 2004/05/08 12:39:20 antonio Exp $
+    | CVS $Id: gump.xml,v 1.152 2004/05/08 14:14:23 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -98,6 +98,8 @@
     <jar name="cocoon-tests.jar"/>
 
     <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
+
+    <junitreport nested="build/cocoon-@@DATE@@/test/output"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org">
       <regexp pattern="/BUILD FAILED/" subject="Build Failure - Cocoon"/>
