@@ -34,7 +34,7 @@ import org.apache.cocoon.selection.Selector;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
+ * @version CVS $Id: SitemapExecutor.java,v 1.5 2004/06/24 13:18:01 cziegeler Exp $
  */
 public interface SitemapExecutor {
     
@@ -110,4 +110,15 @@ public interface SitemapExecutor {
      */
     void popVariables(ExecutionContext context,
                       Map              objectModel);
+    
+    /**
+     * Enter a new sitemap
+     * @param context     The execution context
+     * @param objectModel The object model
+     * @param source The uri of the sitemap
+     * @return The uri of the sitemap to read
+     */
+    String enterSitemap(ExecutionContext context, 
+                        Map              objectModel,
+                        String           source);
 }

@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.14 2004/06/08 13:09:27 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.15 2004/06/24 13:18:01 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode 
 implements Disposable {
@@ -62,10 +62,13 @@ implements Disposable {
         this.checkReload = checkReload;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
-        Map objectModel = env.getObjectModel();
+        final Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
@@ -73,6 +76,8 @@ implements Disposable {
         if (resolvedSource.length()==0) {
             throw new ProcessingException("Source of mount statement is empty"); 
         }
+        
+        resolvedSource = this.executor.enterSitemap(this, objectModel, resolvedSource);
         TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
 
         String oldPrefix = env.getURIPrefix();
@@ -135,5 +140,6 @@ implements Disposable {
         while(iter.hasNext()) {
             ((TreeProcessor)iter.next()).dispose();
         }
+        this.processors.clear();
     }
 }
