@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * This generator generates the portal for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalGenerator.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.3 2003/05/04 20:54:29 cziegeler Exp $
 */
 public final class PortalGenerator
 extends ComposerGenerator {
@@ -75,26 +75,26 @@ extends ComposerGenerator {
     throws IOException, SAXException, ProcessingException {
 
         PortalManager portal = null;
+        FormManager formManager = null;
         try {
+            // FIXME - workaround for form handling
+            formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
+            // no need do to anything here with the form manager:)
+
             portal = (PortalManager) this.manager.lookup(PortalManager.ROLE);
             this.xmlConsumer.startDocument();
 
             final Request request = ObjectModelHelper.getRequest(this.objectModel);
             if (request.getSession(false) != null) {
-                // FIXME - workaround for form handling
-                FormManager formManager = null;
-                try {
-                    formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
-                    // no need do to anything here :)
-                } finally {
-                    this.manager.release( (Component)formManager);
-                }
+
                 portal.showPortal(this.xmlConsumer, false, false);
+
             }
             this.xmlConsumer.endDocument();
         } catch (ComponentException ce) {
             throw new ProcessingException("Lookup of PortalManager failed.", ce);
         } finally {
+            this.manager.release( (Component)formManager);
             this.manager.release(portal);
         }
     }
