@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.6 $ $Date: 2004/05/03 09:00:28 $
+ * @version CVS $Revision: 1.7 $ $Date: 2004/05/03 09:14:01 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -57,6 +57,8 @@ public final class SitemapTask extends AbstractQdoxTask {
     public static final String LOGGER_TAG = "cocoon.sitemap.component.logger";
     /** The label for views (optional) */
     public static final String LABEL_TAG  = "cocoon.sitemap.component.label";
+    /** The mime type for serializers and readers (optional) */
+    public static final String MIMETYPE_TAG  = "cocoon.sitemap.component.mimetype";
     /** If this tag is specified, the component is not added to the sitemap (optional) */
     public static final String HIDDEN_TAG = "cocoon.sitemap.component.hide";
     /** If this tag is specified no documentation is generated (optional) */
@@ -316,12 +318,20 @@ public final class SitemapTask extends AbstractQdoxTask {
             // test for label
             this.addAttribute(node, LABEL_TAG, "label", null);
 
+            // pooling?
             if ( this.javaClass.isA("org.apache.avalon.excalibur.pool.Poolable") ) {
                 // TODO - Think about default values
                 this.addAttribute(node, POOL_MIN_TAG, "pool-min", null);
                 this.addAttribute(node, POOL_MAX_TAG, "pool-max", null);
                 this.addAttribute(node, POOL_GROW_TAG, "pool-grow", null);
             }
+            
+            // mime-type
+            if ( this.javaClass.isA("org.apache.cocoon.sitemap.SitemapOutputComponent") ) {
+                this.addAttribute(node, MIMETYPE_TAG, "mime-type", null);
+            }
+            
+            // append node
             parent.appendChild(node);
             newLine(parent);
             
