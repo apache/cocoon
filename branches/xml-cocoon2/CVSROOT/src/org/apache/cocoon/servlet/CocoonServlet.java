@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.75 $ $Date: 2001-04-03 06:26:20 $
+ * @version CVS $Revision: 1.1.4.76 $ $Date: 2001-04-03 10:52:19 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -138,12 +138,9 @@ public class CocoonServlet extends HttpServlet {
 
         this.appContext.put(Constants.CONTEXT_ROOT_PATH, context.getRealPath("/"));
 
-        String value = conf.getInitParameter("allow-reload");
-        if (value == null || value.equals("yes") == true) {
-            this.allowReload = true;
-        } else {
-            this.allowReload = false;
-        }
+        // get allow reload parameter
+        this.allowReload = "yes".equals(conf.getInitParameter("allow-reload"));
+
         this.createCocoon();
     }
 
