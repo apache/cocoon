@@ -227,6 +227,7 @@ public class BetwixtTransformer
         try {
             if (this.beanWriter == null) {
                 this.beanWriter = new SAXBeanWriter(this.contentHandler);
+                this.beanWriter.setCallDocumentEvents(false);
 
                 synchronized (BetwixtTransformer.class) {
                     if (introspector == null) {
