@@ -54,8 +54,6 @@ import java.awt.Color;
 import java.io.OutputStream;
 
 import org.apache.avalon.excalibur.pool.Poolable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -86,10 +84,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.9 2003/10/09 15:26:54 sylvain Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.10 2003/11/20 15:13:36 joerg Exp $
  */
 public class SVGSerializer extends SVGBuilder
-implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
+implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
 
     /**
      * Get the context
@@ -211,13 +209,6 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
                 throw new ConfigurationException("No field available for parameter \"" + name + "\"", ex);
             }
         }
-    }
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) {
     }
 
     /**
