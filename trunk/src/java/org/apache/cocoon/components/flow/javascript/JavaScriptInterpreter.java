@@ -90,7 +90,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.15 2003/04/01 19:19:30 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.16 2003/04/27 08:37:28 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -518,6 +518,9 @@ public class JavaScriptInterpreter extends AbstractInterpreter
     private Script compileScript(Context cx, Scriptable scope,
                                  Source src) throws Exception {
         InputStream is = src.getInputStream();
+        if (is == null) {
+            throw new ResourceNotFoundException(src.getURI() + ": not found");
+        }
         Reader reader = new BufferedReader(new InputStreamReader(is));
         Script compiledScript = cx.compileReader(scope, reader,
                                                  src.getURI(), 
